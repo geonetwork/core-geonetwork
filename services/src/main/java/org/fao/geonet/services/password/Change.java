@@ -45,6 +45,7 @@ import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -59,8 +60,8 @@ public class Change extends NotInReadOnlyModeService {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	    this.stylePath = appPath + Geonet.Path.XSLT_FOLDER + FS + "services" + FS + "account" + FS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+	    this.stylePath = appPath.resolve(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
 	}
 
 	// --------------------------------------------------------------------------
@@ -122,7 +123,7 @@ public class Change extends NotInReadOnlyModeService {
 		root.addContent(new Element("adminEmail").setText(adminEmail));
 		root.addContent(new Element("password").setText(password));
 		
-		String emailXslt = stylePath + template;
+		Path emailXslt = stylePath.resolve(template);
 		Element elEmail = Xml.transform(root, emailXslt);
 
 		String subject = elEmail.getChildText("subject");
@@ -138,7 +139,7 @@ public class Change extends NotInReadOnlyModeService {
 	}
 
 	private static String FS = File.separator;
-	private String stylePath;
+	private Path stylePath;
 	private static final String CHANGE_KEY = "changeKey";
 	private static final String PWD_CHANGED_XSLT = "password-changed-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";

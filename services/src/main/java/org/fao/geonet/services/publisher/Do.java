@@ -24,12 +24,9 @@
 package org.fao.geonet.services.publisher;
 
 
-import javax.servlet.ServletContext;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -41,10 +38,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -120,7 +117,7 @@ public class Do implements Service {
 	 * new nodes, restart is needed.
 	 * 
 	 */
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		Log.createLogger(MODULE);
 	}
 
@@ -233,9 +230,7 @@ public class Do implements Service {
     		        return addExternalFile(action, gs, file, metadataUuid, metadataTitle, metadataAbstract);
     		    } else {
     		        // Get ZIP file from data directory
-                    File dir = new File(Lib.resource
-                            .getDir(context, access, metadataId));
-                    File f = new File(dir, file);
+                    Path f = Lib.resource.getDir(context, access, metadataId).resolve(file);
                     return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
     		    }
     		}
@@ -353,11 +348,11 @@ public class Do implements Service {
 	 * 
 	 * @param action
 	 * @param gs
-	 * @param file
-	 * @return
+	 * @param f
+     *@param file  @return
 	 * @throws java.io.IOException
 	 */
-	private Element addZipFile(ACTION action, GeoServerRest gs, File f, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
+	private Element addZipFile(ACTION action, GeoServerRest gs, Path f, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		if (f == null) {
 			return report(EXCEPTION, null,
@@ -430,9 +425,9 @@ public class Do implements Service {
 		return report;
 	}
 
-	private boolean publishVector(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
+	private boolean publishVector(Path f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 
-		String ds = f.getName();
+		String ds = f.getFileName().toString();
 		String dsName = ds.substring(0, ds.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {
@@ -519,8 +514,8 @@ public class Do implements Service {
         }
         return false;
     }
-	private boolean publishRaster(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
-		String cs = f.getName();
+	private boolean publishRaster(Path f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
+		String cs = f.getFileName().toString();
 		String csName = cs.substring(0, cs.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {

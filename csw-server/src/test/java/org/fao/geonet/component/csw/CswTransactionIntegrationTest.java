@@ -14,13 +14,12 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,7 +27,9 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_CSW;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_OGC;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test Csw Transaction handling.
@@ -328,14 +329,14 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setUuid(PHOTOGRAPHIC_UUID);
         metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
-        final String schemaDir = _schemaManager.getSchemaDir("iso19139");
+        final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
                 SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
                 SearchManager.makeField("_isTemplate", "n", true, true),
                 SearchManager.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-                MetadataType.METADATA, false);
+                MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {

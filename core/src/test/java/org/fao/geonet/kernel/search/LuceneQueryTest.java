@@ -1,27 +1,27 @@
 package org.fao.geonet.kernel.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import jeeves.server.ServiceConfig;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.utils.IO;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for building Lucene queries.
@@ -45,11 +45,11 @@ public class LuceneQueryTest {
         _analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer(), analyzers);
 
         final String configFile = "/WEB-INF/config-lucene.xml";
-        final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent()+"/";
+        final Path appDir = IO.toPath(LuceneQueryTest.class.getResource(configFile).toURI()).getParent().getParent();
         final GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
         dataDirectory.init("test", appDir, new ServiceConfig(), null);
         LuceneConfig lc = new LuceneConfig();
-        lc._geonetworkDataDirectory = dataDirectory;
+        lc.geonetworkDataDirectory = dataDirectory;
         final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
         lc._appContext = context;
         context.refresh();

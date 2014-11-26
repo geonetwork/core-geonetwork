@@ -22,22 +22,22 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import java.util.Hashtable;
-import java.util.List;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequest_;
 import org.fao.geonet.repository.specification.SearchRequestSpecs;
 import org.fao.geonet.repository.statistic.DateInterval;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
-import org.fao.geonet.Util;
-
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Service to get the db-stored requests information group by a date (year, month, day)
@@ -55,10 +55,10 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     static final String BY_DAY = "DAY";
     static final String BY_HOUR = "HOUR";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
 
-        queryFragments = new Hashtable<String, DateInterval>(4);
+        queryFragments = new Hashtable<>(4);
 
         queryFragments.put(BY_HOUR, new DateInterval.Hour());
         queryFragments.put(BY_DAY, new DateInterval.Day());
@@ -90,8 +90,7 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
 
             // TODO : if ByServiceType
             if (byType) {
-                final List<String> serviceTypes = requestRepository.selectAllDistinctAttributes(SearchRequest_
-                        .service);
+                final List<String> serviceTypes = requestRepository.selectAllDistinctAttributes(SearchRequest_.service);
                 for (String serviceType : serviceTypes) {
                     Element results = buildQuery(requestRepository, serviceType, dateFrom, dateTo, graphicType);
 
@@ -110,13 +109,9 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
         }
 
         final ISODate oldestRequestDate = requestRepository.getOldestRequestDate();
-        SearchStatistics.addSingleDBValueToElement(elResp,
-                oldestRequestDate,
-                "dateMin", "min");
+        elResp.addContent(new Element("dateMin").setText(oldestRequestDate.getDateAndTime()));
         final ISODate mostRecentRequestDate = requestRepository.getMostRecentRequestDate();
-        SearchStatistics.addSingleDBValueToElement(elResp,
-                mostRecentRequestDate ,
-                "dateMax", "max");
+        elResp.addContent(new Element("dateMax").setText(mostRecentRequestDate.getDateAndTime()));
 
         return elResp;
     }

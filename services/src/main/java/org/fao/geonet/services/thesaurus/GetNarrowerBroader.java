@@ -38,12 +38,14 @@ import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Returns a list of keywords given a list of thesaurus
  */
 
 public class GetNarrowerBroader implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

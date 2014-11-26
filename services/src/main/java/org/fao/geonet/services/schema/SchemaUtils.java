@@ -21,26 +21,26 @@
 
 package org.fao.geonet.services.schema;
 
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -61,7 +61,6 @@ public class SchemaUtils {
 
 	private Element processSchema(ServiceContext context, String schema, String fname, URL url, String uuid, SchemaManager scm, boolean add) throws Exception {
 
-		File zipArchive = null;
 		boolean deleteTempZip = false;
 
 		// -- get the URL of schema zip archive from a metadata record if uuid set
@@ -108,10 +107,11 @@ public class SchemaUtils {
 			}
 		}
 
+        Path zipArchive;
 		// -- get the schema zip archive from the net
 		if (url != null) { 
 			XmlRequest strReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(url);
-			zipArchive = File.createTempFile("schema",".zip");
+			zipArchive = Files.createTempDirectory("schema");
 			deleteTempZip = true;
 
 			// FIXME: add proxy credentials etc to strReq
@@ -119,51 +119,50 @@ public class SchemaUtils {
 
 
 		} else {
-			zipArchive = new File(fname);
+			zipArchive = IO.toPath(fname);
 		}
 
 		Element response = doSchema(context, scm, schema, zipArchive, add);
-		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
+		if (deleteTempZip) IO.deleteFile(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element doSchema(ServiceContext context, SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception {
+	private Element doSchema(ServiceContext context, SchemaManager scm, String schema, Path zipArchive, boolean add) throws Exception {
 
-		Element response = new Element("response");
+        Element response = new Element("response");
 
-		long fsize = 0;
-		if (zipArchive.exists()) {
-			fsize = zipArchive.length();
-		} else {
-     	throw new OperationAbortedEx("Zip Archive doesn't exist");
-		}
+        long fsize;
+        if (Files.exists(zipArchive)) {
+            fsize = Files.size(zipArchive);
+        } else {
+            throw new OperationAbortedEx("Zip Archive doesn't exist");
+        }
 
-		// -- check that the archive actually has something in it
-		if (fsize == 0) {
-     	throw new OperationAbortedEx("Schema archive has zero size");
-		}
+        // -- check that the archive actually has something in it
+        if (fsize == 0) {
+            throw new OperationAbortedEx("Schema archive has zero size");
+        }
 
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(zipArchive));
 
-		// -- supply the stream containing the schema zip archive to the schema 
-		// -- manager
-		try {
-			if (add) {
-				scm.addPluginSchema(context.getApplicationContext(), schema, inputStream);
-			} else {
-				scm.updatePluginSchema(context.getApplicationContext(), schema, inputStream);
-			}
-     	response.setAttribute("status", "ok");
-     	response.setAttribute("message", "Schema "+schema+" has been added/updated");
-		} catch (Exception e) {
-			e.printStackTrace();
-     	throw new OperationAbortedEx("Schema add/update failed: "+e.getMessage());
-		}
 
-		return response;
-	}
+        // -- supply the stream containing the schema zip archive to the schema
+        // -- manager
+        try (FileSystem zipFs = ZipUtil.openZipFs(zipArchive)) {
+            if (add) {
+                scm.addPluginSchema(context.getApplicationContext(), schema, zipFs);
+            } else {
+                scm.updatePluginSchema(context.getApplicationContext(), schema, zipFs);
+            }
+            response.setAttribute("status", "ok");
+            response.setAttribute("message", "Schema " + schema + " has been added/updated");
+        } catch (Exception e) {
+            throw new OperationAbortedEx("Schema add/update failed: " + e.getMessage(), e);
+        }
+
+        return response;
+    }
 
 	// --------------------------------------------------------------------------
 

@@ -51,16 +51,19 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.xml.stream.FactoryConfigurationError;
 
 //=============================================================================
 /** 
@@ -239,9 +242,9 @@ class Harvester implements IHarvester<HarvestResult>
 	    //--- apply stylesheet from output schema - stylesheet can be optional
 			//--- in case the server can do XSL transformations for us (eg. deegree 
 			//--- 2.2)
-			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
+			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
 	    if (!params.stylesheet.trim().equals("")) {
-	    	xml = Xml.transform(xml, stylesheetDirectory + "/" + params.stylesheet, ssParams);
+	    	xml = Xml.transform(xml, stylesheetDirectory.resolve(params.stylesheet), ssParams);
 	    }
 	   
 		 	log.info("Applying "+stylesheetDirectory + "/" + params.stylesheet);
@@ -255,39 +258,36 @@ class Harvester implements IHarvester<HarvestResult>
 	
 	private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
             throws FactoryConfigurationError, Exception {
-		
-		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
-		req.setRequest(xmlQuery);
-		Lib.net.setupProxy(context, req);
-		
-		File tempFile = File.createTempFile("temp-", ".xml");
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
+        req.setRequest(xmlQuery);
+        Lib.net.setupProxy(context, req);
 
-		try {
-			// Read response into temporary file 
-			req.executeLarge(tempFile);
+        Path tempFile = Files.createTempFile("temp-", ".xml");
 
-	    	List<Namespace> namespaces = new ArrayList<Namespace>();
-	    	namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
-	    	
-	        XmlElementReader reader = new XmlElementReader(new FileInputStream(tempFile), "gml:featureMembers/*", namespaces);
-					if (!reader.hasNext()) {
-	    			namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
-						reader = new XmlElementReader(new FileInputStream(tempFile), "wfs:FeatureCollection/gml:featureMember", namespaces);
-					}
-	        
-	        while (reader.hasNext()) {
-						stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
-	    			Element records = Xml.transform(reader.next(), stylesheetDirectory + "/" + params.stylesheet, ssParams);
-	
-	    			harvest(records, fragmentHarvester);
-	        }
-		} finally {
-	        if (!tempFile.delete() && tempFile.exists()) {
-	            log.warning("Unable to delete tempFile: "+tempFile);
-	        }
+        // Read response into temporary file
+        req.executeLarge(tempFile);
 
-		}
-				
+        List<Namespace> namespaces = new ArrayList<Namespace>();
+        namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
+
+        XmlElementReader reader;
+        try (InputStream fin = Files.newInputStream(tempFile)) {
+            reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
+        }
+        if (!reader.hasNext()) {
+            namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
+            try (InputStream fin = Files.newInputStream(tempFile)) {
+                reader = new XmlElementReader(fin, "wfs:FeatureCollection/gml:featureMember", namespaces);
+
+            }
+        }
+
+        while (reader.hasNext()) {
+            stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
+            Element records = Xml.transform(reader.next(), stylesheetDirectory.resolve(params.stylesheet), ssParams);
+
+            harvest(records, fragmentHarvester);
+        }
     }
 
 	/** 
@@ -389,7 +389,7 @@ class Harvester implements IHarvester<HarvestResult>
 	private HarvestResult   result;
 	private UUIDMapper     localUuids;
 	private String	 		metadataGetService;
-	private String	 		 stylesheetDirectory;
+	private Path stylesheetDirectory;
 	private Map<String,Object> ssParams = new HashMap<String,Object>();
     /**
      * Contains a list of accumulated errors during the executing of this harvest.

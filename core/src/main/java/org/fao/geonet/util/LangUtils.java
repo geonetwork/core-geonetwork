@@ -1,16 +1,18 @@
 package org.fao.geonet.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LangUtils {
 
@@ -23,22 +25,24 @@ public class LangUtils {
      * @return
      */
     public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
         XmlCacheManager cacheManager = context.getXmlCacheManager();
-        File loc = new File(appPath, "loc");
+        Path loc = appPath.resolve("loc");
         String typeWithExtension = "xml"+File.separator+type+".xml";
         Map<String, String> translations = new HashMap<String, String>();
-        
-        for (File file : loc.listFiles()) {
-            if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
-                String translation = Xml.selectString(xml, key);
-                if(translation != null && !translation.trim().isEmpty()) {
-                    translations.put(file.getName(), translation);
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc)) {
+            for (Path path : paths) {
+                if(Files.isDirectory(path) && Files.exists(path.resolve(typeWithExtension))) {
+                    final String filename = path.getFileName().toString();
+                    Element xml = cacheManager.get(context, true, loc, typeWithExtension, filename, filename);
+                    String translation = Xml.selectString(xml, key);
+                    if(translation != null && !translation.trim().isEmpty()) {
+                        translations.put(filename, translation);
+                    }
                 }
             }
         }
-        
+
         return translations;
     }
     /**

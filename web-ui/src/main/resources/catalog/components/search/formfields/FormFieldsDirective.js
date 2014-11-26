@@ -1,8 +1,8 @@
 (function() {
 
-  goog.provide('gn_form_fields_directive');
+  goog.provide('gn_formfields_directive');
 
-  angular.module('gn_form_fields_directive', [])
+  angular.module('gn_formfields_directive', [])
   /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:gnTypeahead
@@ -21,14 +21,20 @@
         options: '=gnTypeahead'
       },
       link: function(scope, element, attrs) {
+        var config = scope.options.config || {};
         var doLink = function(data, remote) {
           var conf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            limit: 10000000,
+            sorter: function(a,b) {
+              if(a.name< b.name) return -1;
+              else if(a.name>b.name) return 1;
+              else return 0;
+            }
           };
 
           if (data) {
-            conf.limit = 5;
             conf.local = data;
           } else if (remote) {
             conf.remote = remote;
@@ -44,12 +50,13 @@
           var field = $(element).tagsinput('input');
           field.typeahead({
             minLength: 0,
+            hint: true,
             highlight: true
-          }, {
+          }, angular.extend({
             name: 'datasource',
             displayKey: 'name',
             source: engine.ttAdapter()
-          }).on('typeahead:selected', function(event, datum) {
+          }, config)).on('typeahead:selected', function(event, datum) {
             field.typeahead('val', '');
             $(element).tagsinput('add', datum);
           });
@@ -74,7 +81,9 @@
           scope.options.promise.then(doLink);
         } else if (scope.options.mode == 'remote') {
           doLink(null, scope.options.remote);
-        };
+        } else if (scope.options.mode == 'local') {
+          doLink(scope.options.data);
+        }
 
       }
     }

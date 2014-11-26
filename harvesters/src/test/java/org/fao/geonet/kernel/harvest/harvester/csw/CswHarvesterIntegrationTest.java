@@ -1,17 +1,18 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
 import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.MockXmlRequest;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.util.Map;
 import javax.annotation.Nullable;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Integration Test for the Csw Harvester class.
@@ -48,23 +49,48 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
             public boolean apply(@Nullable HttpRequestBase input) {
 
                 final boolean isHttpPost = input instanceof HttpPost;
-                final boolean correctPath = input.getURI().toString().equalsIgnoreCase(REQUEST);
-                if (!(isHttpPost && correctPath)) {
+                final boolean correctPath = input.getURI().toString().startsWith(REQUEST);
+                if (!correctPath) {
                     return false;
                 }
-                final Element xml;
-                try {
-                    xml = Xml.loadStream(((HttpPost) input).getEntity().getContent());
-                } catch (Throwable e) {
-                    return false;
-                }
-                final boolean isGetRecords = "GetRecords".equalsIgnoreCase(xml.getName());
-                final Element queryEl = xml.getChild("Query", Csw.NAMESPACE_CSW);
-                final String typeNames = queryEl.getAttributeValue("typeNames");
-                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") && typeNames.contains("csw:Record");
-                final boolean isSummary = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText().equals("summary");
-                final boolean noQueryFilter = queryEl.getChildren().size() == 1;
 
+                String request,typeNames, elementSetName;
+                final boolean noQueryFilter;
+
+                if (isHttpPost) {
+                    final Element xml;
+                    try {
+                        xml = Xml.loadStream(((HttpPost) input).getEntity().getContent());
+                    } catch (Throwable e) {
+                        return false;
+                    }
+                    request = xml.getName();
+                    final Element queryEl = xml.getChild("Query", Csw.NAMESPACE_CSW);
+                    typeNames = queryEl.getAttributeValue("typeNames");
+                    elementSetName = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText();
+                    noQueryFilter = queryEl.getChildren().size() == 1;
+                } else {
+                    final String[] params = input.getURI().getQuery().split("\\&");
+                    Map<String, String> paramMap = Maps.newHashMap();
+                    for (String param : params) {
+                        final String[] split = param.split("=");
+                        String key = split[0].toLowerCase();
+                        String value = "";
+                        if (split.length > 1) {
+                            value = split[1];
+                        }
+                        paramMap.put(key, value);
+                    }
+
+                    request = paramMap.get("request");
+                    typeNames = paramMap.get("typenames");
+                    elementSetName = paramMap.get("elementsetname");
+                    noQueryFilter = paramMap.get("query") == null || paramMap.get("query").isEmpty();
+                }
+
+                final boolean isGetRecords = "GetRecords".equalsIgnoreCase(request);
+                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") && typeNames.contains("csw:Record");
+                final boolean isSummary = elementSetName.equals("summary");
                 return isGetRecords && correctTypeNames && isSummary && noQueryFilter;
             }
         }).thenReturn(fileStream("getRecords.xml"));

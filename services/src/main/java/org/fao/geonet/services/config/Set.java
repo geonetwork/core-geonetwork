@@ -35,7 +35,6 @@ import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -60,7 +59,7 @@ public class Set implements Service {
      */
     private boolean reloadServices = false;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(java.nio.file.Path appPath, ServiceConfig params) throws Exception {
         reloadServices = "y".equalsIgnoreCase(params.getValue("reloadServices", "n"));
     }
 

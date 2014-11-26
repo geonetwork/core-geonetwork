@@ -87,18 +87,27 @@
         ],
         view: new ol.View({
           center: mapsConfig.center,
-          zoom: 0
+          zoom: 2
         })
       });
 
       /** Facets configuration */
-      searchSettings.facetsConfig = {
-        keyword: 'keywords',
-        orgName: 'orgNames',
-        denominator: 'denominator',
-        format: 'formats',
-        createDateYear: 'createDateYears'
-      };
+      searchSettings.facetsConfig = [{
+        key: 'keyword',
+        value: 'keywords'
+      },{
+        key: 'orgName',
+        value: 'orgNames'
+      },{
+        key: 'denominator',
+        value: 'denominators'
+      },{
+        key: 'format',
+        value: 'formats'
+      },{
+        key: 'createDateYear',
+        value: 'createDateYears'
+      }];
 
       /* Pagination configuration */
       searchSettings.paginationInfo = {

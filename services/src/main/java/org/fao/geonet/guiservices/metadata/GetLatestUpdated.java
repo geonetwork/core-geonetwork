@@ -23,6 +23,7 @@
 
 package org.fao.geonet.guiservices.metadata;
 
+import java.nio.file.Path;
 import java.util.Map;
 
 import jeeves.constants.Jeeves;
@@ -62,7 +63,7 @@ public class GetLatestUpdated implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		String sMaxItems           = config.getValue("maxItems",           "10");
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");

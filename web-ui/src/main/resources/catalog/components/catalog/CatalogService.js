@@ -94,7 +94,7 @@
            */
         importMd: function(data) {
           return $http({
-            url: 'md.insert@json',
+            url: 'md.insert?_content_type=json',
             method: 'POST',
             data: $.param(data),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}

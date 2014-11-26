@@ -14,6 +14,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ import java.util.Set;
  * @author Jose García
  */
 public class ReportUsers  implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // --------------------------------------------------------------------------

@@ -23,9 +23,7 @@ package org.fao.geonet.kernel.harvest.harvester.z3950;
 
 import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
@@ -41,7 +39,6 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -55,8 +52,14 @@ import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nonnull;
-import java.util.*;
 
 //=============================================================================
 
@@ -219,9 +222,9 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                 log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
 
 			boolean transformIt = false;
-			String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
+			Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
 			if (!params.importXslt.equals("none")) {
-				thisXslt = thisXslt + params.importXslt;
+				thisXslt = thisXslt.resolve(params.importXslt);
 				transformIt = true;
 			}
 

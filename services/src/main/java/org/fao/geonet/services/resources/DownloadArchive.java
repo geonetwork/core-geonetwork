@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.resources;
 
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
@@ -36,8 +37,8 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -51,17 +52,14 @@ import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 //=============================================================================
 
@@ -71,7 +69,7 @@ import java.util.zip.ZipOutputStream;
 public class DownloadArchive implements Service
 {
 	private static String FS = File.separator;
-	private String stylePath;
+	private Path stylePath;
 
 	//----------------------------------------------------------------------------
 	//---
@@ -79,8 +77,8 @@ public class DownloadArchive implements Service
 	//---
 	//----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
 	}
 
 	//----------------------------------------------------------------------------
@@ -101,15 +99,15 @@ public class DownloadArchive implements Service
 
 		//--- resource required is public (thumbnails)
 		if (access.equals(Params.Access.PUBLIC)) { 
-			File dir = new File(Lib.resource.getDir(context, access, id));
+			Path dir = Lib.resource.getDir(context, access, id);
 			String fname = Util.getParam(params, Params.FNAME);
 
 			if (fname.contains("..")) {
 				throw new BadParameterEx("Invalid character found in resource name.", fname);
 			}
 			
-			File file = new File(dir, fname);
-			return BinaryFile.encode(200, file.getAbsolutePath(),false);
+			Path file = dir.resolve(fname);
+			return BinaryFile.encode(200, file, false).getElement();
 		}
 
 		//--- from here on resource required is private datafile(s)
@@ -155,121 +153,107 @@ public class DownloadArchive implements Service
 		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 
 		// set up zip output stream
-		File zFile = File.createTempFile(username+"_"+info.getUuid(),".zip");
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zFile));
+		Path zFile = Files.createTempFile(username+"_"+info.getUuid(),".zip");
+        try (FileSystem zipFs = ZipUtil.openZipFs(zFile)) {
+            //--- now add the files chosen from the interface and record in 'downloaded'
+            Element downloaded = new Element("downloaded");
+            Path dir = Lib.resource.getDir(context, access, id);
 
-		//--- because often content has already been compressed
-   	out.setLevel(Deflater.NO_COMPRESSION);
+            @SuppressWarnings("unchecked")
+            List<Element> files = params.getChildren(Params.FNAME);
+            for (Element elem : files) {
+                String fname = elem.getText();
 
-		//--- now add the files chosen from the interface and record in 'downloaded'
-		Element downloaded = new Element("downloaded");
-		File dir = new File(Lib.resource.getDir(context, access, id));
+                if (fname.contains("..")) {
+                    continue;
+                }
 
-		@SuppressWarnings("unchecked")
-        List<Element> files = params.getChildren(Params.FNAME);
-		for (Element elem : files) {
-			String fname = elem.getText();
+                Path file = dir.resolve(fname);
+                if (!Files.exists(file)) throw new ResourceNotFoundEx(file.toAbsolutePath().normalize().toString());
 
-			if (fname.contains("..")) {
-				continue;
-			}
-			
-			File file = new File(dir, fname);
-			if (!file.exists()) throw new ResourceNotFoundEx(file.getAbsolutePath());
+                Element fileInfo = new Element("file");
 
-			Element fileInfo = new Element("file");
+                BinaryFile details = BinaryFile.encode(200, file.toAbsolutePath().normalize(), false);
+                String remoteURL = details.getElement().getAttributeValue("remotepath");
+                if (remoteURL != null) {
+                    if (context.isDebugEnabled())
+                        context.debug("Downloading " + remoteURL + " to archive " + zFile.getFileName());
+                    fileInfo.setAttribute("size", "unknown");
+                    fileInfo.setAttribute("datemodified", "unknown");
+                    fileInfo.setAttribute("name", remoteURL);
+                    notifyAndLog(doNotify, id, info.getUuid(), access, username, remoteURL + " (local config: " + file.toAbsolutePath()
+                            .normalize() + ")", context);
+                    fname = details.getElement().getAttributeValue("remotefile");
+                } else {
+                    if (context.isDebugEnabled())
+                        context.debug("Writing " + fname + " to archive " + zFile.getFileName());
+                    fileInfo.setAttribute("size", Files.size(file) + "");
+                    fileInfo.setAttribute("name", fname);
+                    Date date = new Date(Files.getLastModifiedTime(file).toMillis());
+                    fileInfo.setAttribute("datemodified", sdf.format(date));
+                    notifyAndLog(doNotify, id, info.getUuid(), access, username, file.toAbsolutePath().normalize().toString(), context);
+                }
+                final Path dest = zipFs.getPath(fname);
+                try (OutputStream zos = Files.newOutputStream(dest)) {
+                    details.write(zos);
+                }
+                downloaded.addContent(fileInfo);
+            }
 
-			Element details = BinaryFile.encode(200, file.getAbsolutePath(), false);
-			String remoteURL = details.getAttributeValue("remotepath");
-			if (remoteURL != null) {
-                if(context.isDebugEnabled())
-                    context.debug("Downloading "+remoteURL+" to archive "+zFile.getName());
-				fileInfo.setAttribute("size","unknown");
-				fileInfo.setAttribute("datemodified","unknown");
-				fileInfo.setAttribute("name",remoteURL);
-				notifyAndLog(doNotify, id, info.getUuid(), access, username, remoteURL+" (local config: "+file.getAbsolutePath()+")", context);
-				fname = details.getAttributeValue("remotefile");
-			} else {
-                if(context.isDebugEnabled())
-                    context.debug("Writing "+fname+" to archive "+zFile.getName());
-				fileInfo.setAttribute("size",file.length()+"");
-				fileInfo.setAttribute("name",fname);
-				Date date = new Date(file.lastModified());
-				fileInfo.setAttribute("datemodified",sdf.format(date));
-				notifyAndLog(doNotify, id, info.getUuid(), access, username, file.getAbsolutePath(), context);
-			}
-			addFile(out, file.getAbsolutePath(), details, fname);
-			downloaded.addContent(fileInfo);
+            //--- get metadata
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+
+            if (elMd == null)
+                throw new MetadataNotFoundEx("Metadata not found - deleted?");
+
+            //--- manage the download hook
+            IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean
+                    ("resourceDownloadHandler");
+            Element response = downloadHook.onDownloadMultiple(context, params, Integer.parseInt(id), files);
+
+            // Return null to do the default processing. TODO: Check to move the code to the default hook.
+            if (response != null) {
+                return response;
+
+            } else {
+                //--- transform record into brief version
+                Path briefXslt = stylePath.resolve(Geonet.File.METADATA_BRIEF);
+                Element elBrief = Xml.transform(elMd, briefXslt);
+
+                //--- create root element for passing all the info we've gathered
+                //--- to license annex xslt generator
+                Element root = new Element("root");
+                elBrief.setAttribute("changedate", info.getDataInfo().getChangeDate().getDateAndTime());
+                elBrief.setAttribute("currdate", now());
+                root.addContent(elBrief);
+                root.addContent(downloaded);
+                root.addContent(entered);
+                root.addContent(userDetails);
+                if (context.isDebugEnabled())
+                    context.debug("Passed to metadata-license-annex.xsl:\n " + Xml.getString(root));
+
+                //--- create the license annex html file using the info in root element and
+                //--- add it to the zip stream
+                Path licenseAnnexXslt = stylePath.resolve(Geonet.File.LICENSE_ANNEX_XSL);
+                try (OutputStream las = Files.newOutputStream(zipFs.getPath(Geonet.File.LICENSE_ANNEX))) {
+                    Xml.transform(root, licenseAnnexXslt, las);
+                }
+
+                //--- if a license is specified include any license files mirrored locally
+                //--- for inclusion
+                includeLicenseFiles(context, zipFs, root);
+
+                //--- export the metadata as a partial mef/zip file and add that to the zip
+                //--- stream FIXME: some refactoring required here to avoid metadata
+                //--- being read yet again(!) from the database by the MEF exporter
+                Path outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true);
+                final Path toPath = zipFs.getPath("metadata.zip");
+                Files.copy(outmef, toPath);
+            }
+            return BinaryFile.encode(200, zFile.toAbsolutePath().normalize(), true).getElement();
+        }
     }
-
-		//--- get metadata
-        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element elMd = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-
-		if (elMd == null)
-			throw new MetadataNotFoundEx("Metadata not found - deleted?");
-
-        //--- manage the download hook
-        IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
-        Element response = downloadHook.onDownloadMultiple(context, params, Integer.parseInt(id), files);
-
-        // Return null to do the default processing. TODO: Check to move the code to the default hook.
-        if (response != null) {
-            return response;
-
-        } else {
-		//--- transform record into brief version
-		String briefXslt = stylePath + Geonet.File.METADATA_BRIEF;
-		Element elBrief = Xml.transform(elMd, briefXslt);
-
-		//--- create root element for passing all the info we've gathered 
-		//--- to license annex xslt generator
-		Element root = new Element("root");
-		elBrief.setAttribute("changedate",info.getDataInfo().getChangeDate().getDateAndTime());
-		elBrief.setAttribute("currdate",now());
-		root.addContent(elBrief);
-		root.addContent(downloaded);
-		root.addContent(entered);
-		root.addContent(userDetails);
-        if(context.isDebugEnabled())
-            context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
-
-		//--- create the license annex html file using the info in root element and
-		//--- add it to the zip stream
-		String licenseAnnexXslt = stylePath + Geonet.File.LICENSE_ANNEX_XSL;
-		File licenseAnnex = File.createTempFile(username+"_"+info.getUuid(),".annex");
-		FileOutputStream las = new FileOutputStream(licenseAnnex);
-		Xml.transform(root, licenseAnnexXslt, las);
-		las.close();
-        InputStream in = null;
-        try {
-            in = new FileInputStream(licenseAnnex);
-    		addFile(out, Geonet.File.LICENSE_ANNEX, in);
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-		//--- if a license is specified include any license files mirrored locally 
-		//--- for inclusion
-		includeLicenseFiles(context, out, root);
-		
-		//--- export the metadata as a partial mef/zip file and add that to the zip
-		//--- stream FIXME: some refactoring required here to avoid metadata 
-		//--- being read yet again(!) from the database by the MEF exporter
-		String outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true);
-		FileInputStream in2 = null;
-		try {
-            in2 = new FileInputStream(outmef);
-    		addFile(out, "metadata.zip", in2);
-		} finally {
-		    IOUtils.closeQuietly(in2);
-		}
-
-		//--- now close the zip file and send it out
-		if (out != null) out.close();
-		return BinaryFile.encode(200, zFile.getAbsolutePath(),true);
-        }
-	}
 
 	//----------------------------------------------------------------------------
 	//---
@@ -278,7 +262,7 @@ public class DownloadArchive implements Service
 	//----------------------------------------------------------------------------
 	
 	private void includeLicenseFiles(ServiceContext context,
-								ZipOutputStream out, Element root) throws Exception,
+								FileSystem zipFs, Element root) throws Exception,
 								MalformedURLException, FileNotFoundException, IOException {
 		Element license = Xml.selectElement(root, "metadata/*/licenseLink");
 		if (license != null) {
@@ -286,27 +270,26 @@ public class DownloadArchive implements Service
             if(context.isDebugEnabled())
                 context.debug("license URL = " + licenseURL);
 
-			String licenseFilesPath = getLicenseFilesPath(licenseURL, context);
+			Path licenseFilesDir = getLicenseFilesPath(licenseURL, context);
             if(context.isDebugEnabled())
-                context.debug(" licenseFilesPath = " + licenseFilesPath);
+                context.debug(" licenseFilesPath = " + licenseFilesDir);
 
-			if (licenseFilesPath != null) {
-				File licenseFilesDir = new File(licenseFilesPath);
-				File[] licenseFiles = licenseFilesDir.listFiles();
-				if (licenseFiles == null) return;
-				for (File licenseFile : licenseFiles) {
-                    if(context.isDebugEnabled())
-                        context.debug("adding " + licenseFile.getAbsolutePath() + " to zip file");
-					InputStream in = new FileInputStream(licenseFile);
-					addFile(out, licenseFile.getName(), in);
-				}
+			if (licenseFilesDir != null && Files.exists(licenseFilesDir)) {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(licenseFilesDir)) {
+                    for (Path licenseFile : paths) {
+                        if(context.isDebugEnabled()) {
+                            context.debug("adding " + licenseFile + " to zip file");
+                        }
+                        Files.copy(licenseFile, zipFs.getPath(licenseFile.getFileName().toString()));
+                    }
+                }
 			}
 		}
 	}
 
 	//----------------------------------------------------------------------------
 	
-	private String getLicenseFilesPath(String licenseURL, ServiceContext context) throws MalformedURLException {
+	private Path getLicenseFilesPath(String licenseURL, ServiceContext context) throws MalformedURLException {
 		// TODO: Ideally this method should probably read an xml file to map
 		// license url's to the sub-directory containing mirrored files
 		// but for the moment we'll just use the url path to identify this
@@ -318,53 +301,25 @@ public class DownloadArchive implements Service
             context.debug("licenseFilesPath= " + licenseFilesPath);
 
 		//--- Get local mirror directory for license files
-		String path    = context.getAppPath();
-        if(context.isDebugEnabled())
-            context.debug("path= " + path);
+        Path path = context.getAppPath();
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig configHandler = gc.getBean(ServiceConfig.class);
-		String licenseDir = configHandler.getValue(Geonet.Config.LICENSE_DIR);
-        if(context.isDebugEnabled())
-            context.debug("licenseDir= " + licenseDir);
-		if (licenseDir == null) return null;
+		String licenseDirAsString = configHandler.getValue(Geonet.Config.LICENSE_DIR);
+		if (licenseDirAsString == null) return null;
 
-		File directory = new File(licenseDir);
-		if (!directory.isAbsolute()) licenseDir = path + licenseDir;
+		Path licenseDir = IO.toPath(licenseDirAsString);
+		if (!licenseDir.isAbsolute()) licenseDir = path.resolve(licenseDir);
+
+        if(context.isDebugEnabled()) {
+            context.debug("licenseDir = " + licenseDir);
+        }
 
 		//--- return license files directory
-		return licenseDir + '/' + licenseFilesPath;
+		return licenseDir.resolve(licenseFilesPath);
 	}
 
-	//----------------------------------------------------------------------------
-	
-	private void addFile(ZipOutputStream zos, String path, Element details, String name) throws Exception {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-		BinaryFile.write(details, zos);
-		zos.closeEntry();
-	}
-
-	//----------------------------------------------------------------------------
-	
-	private void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in) throws IOException {
-		ZipEntry entry = null;
-		try {
-    		entry = new ZipEntry(name);
-    		zos.putNextEntry(entry);
-    		BinaryFile.copy(in, zos);
-		} finally {
-		    try {
-    		    if(zos != null) {
-    		        zos.closeEntry();
-    		    }
-		    } finally {
-		        IOUtils.closeQuietly(in);
-		    }
-		}
-	}
-
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 	
 	private static String now() {
 		Calendar cal = Calendar.getInstance();

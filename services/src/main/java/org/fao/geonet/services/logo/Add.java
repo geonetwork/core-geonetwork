@@ -36,14 +36,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Controller("admin.logo.upload")
 public class Add implements ApplicationContextAware {
-	private volatile String logoDirectory;
+	private volatile Path logoDirectory;
 
 	private ApplicationContext context;
 
@@ -51,7 +51,7 @@ public class Add implements ApplicationContextAware {
 		this.context = context;
 	}
 
-	@RequestMapping(value = "/{lang}/admin.logo.upload@json", 
+	@RequestMapping(value = "/{lang}/admin.logo.upload",
 			consumes = { MediaType.ALL_VALUE }, 
 			produces = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody
@@ -65,10 +65,9 @@ public class Add implements ApplicationContextAware {
 	public @ResponseBody
 	StatusResponse exec(@RequestParam("fname") MultipartFile fname)
 			throws Exception {
-		BufferedOutputStream stream = null;
 
 		try {
-            String logoDir;
+            Path logoDir;
             synchronized (this) {
                 if(this.logoDirectory == null) {
                     this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(context);
@@ -86,34 +85,27 @@ public class Add implements ApplicationContextAware {
 				throw new Exception("Logo name is not defined.");
 			}
 
-			File serverFile = new File(logoDir,
-					fname.getOriginalFilename());
-			if (serverFile.exists()) {
-                IO.delete(serverFile, true, "Deleting server file");
-				serverFile = new File(logoDir,
-						fname.getOriginalFilename());
+			Path serverFile = logoDir.resolve(fname.getOriginalFilename());
+			if (Files.exists(serverFile)) {
+                IO.deleteFile(serverFile, true, "Deleting server file");
+				serverFile = logoDir.resolve(fname.getOriginalFilename());
 			}
 
-			if (!serverFile.createNewFile()){
-                throw new RuntimeException("Unable to create file: " + serverFile);
+            serverFile = Files.createFile(serverFile);
+
+			try (OutputStream stream = Files.newOutputStream(serverFile)) {
+
+                int read;
+                byte[] bytes = new byte[1024];
+
+                InputStream is = fname.getInputStream();
+
+                while ((read = is.read(bytes)) != -1) {
+                    stream.write(bytes, 0, read);
+                }
             }
-
-			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-
-			int read = 0;
-			byte[] bytes = new byte[1024];
-
-			InputStream is = fname.getInputStream();
-
-			while ((read = is.read(bytes)) != -1) {
-				stream.write(bytes, 0, read);
-			}
 		} catch (Exception e) {
 			return new StatusResponse(e.getMessage());
-		} finally {
-			if (stream != null) {
-				stream.close();
-			}
 		}
 
 		return new StatusResponse("Logo added.");

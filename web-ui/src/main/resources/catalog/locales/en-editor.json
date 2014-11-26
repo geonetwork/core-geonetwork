@@ -128,7 +128,7 @@
     "schematron-rules-inspire": "INSPIRE rules",
     "schematron-rules-iso": "ISO rules",
     "searchACRS": " or search for a coordinate system ...",
-    "searchAContact": "Search for a contact ...",
+    "searchAcontact": "Search contact ...",
     "setAndReplaceExtent": "Replace existing extent",
     "setCRS": "Set coordinate reference system",
     "setDynamicGraphicOverview": "Set graphic overview (using GetMap request URL)",
@@ -167,6 +167,7 @@
     "yearAndMonthMode": "Year and month",
     "yearMode": "Year only",
     "yourMetadata": "Your metadata",
-    "searchKeyword": "Search keyword ...",
-    "searchOrTypeKeyword": "Type or search keyword ..."
+    "searchKeyword": "Search ...",
+    "searchOrTypeKeyword": "Type or search ...",
+    "tagsAllowed": " tag(s) allowed"
 }

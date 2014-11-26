@@ -23,54 +23,51 @@
 
 package org.fao.geonet.services.logo;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Delete implements Service {
-	private volatile String logoDirectory;
+    private volatile Path logoDirectory;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-       synchronized (this) {
-            if(logoDirectory == null) {
-                logoDirectory = Resources.locateHarvesterLogosDir(context);
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+
+        if (logoDirectory == null) {
+            synchronized (this) {
+                if (logoDirectory == null) {
+                    logoDirectory = Resources.locateHarvesterLogosDir(context);
+                }
             }
         }
 
-		String file = Util.getParam(params, Params.FNAME);
-		
-		if (file.contains("..")) {
-			throw new BadParameterEx("Invalid character found in resource name.", file);
-		}
-		
-		if ("".equals(file)) {
-			throw new Exception("Logo name is not defined.");
-		}
-				
-		File logoFile = new File(logoDirectory, file);
+        String file = Util.getParam(params, Params.FNAME);
 
-		Element response = new Element("response");
-		if (logoFile.exists()) {
-			if (logoFile.delete()) {
-				response.addContent(new Element("status")
-						.setText("Logo removed."));
-			} else {
-				throw new Exception("Unable to remove logo.");
-			}
-		} else {
-			throw new Exception("Logo does not exist.");
-		}
-		return response;
-	}
+        if (file.contains("..")) {
+            throw new BadParameterEx("Invalid character found in resource name.", file);
+        }
+
+        if ("".equals(file)) {
+            throw new Exception("Logo name is not defined.");
+        }
+
+        Path logoFile = logoDirectory.resolve(file);
+
+        Element response = new Element("response");
+        Files.delete(logoFile);
+        response.addContent(new Element("status")
+                .setText("Logo removed."));
+        return response;
+    }
 }

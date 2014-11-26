@@ -24,19 +24,18 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -48,6 +47,8 @@ import org.fao.oaipmh.responses.Record;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.nio.file.Path;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
@@ -116,7 +117,7 @@ public class GetRecord implements OaiPmhService {
                 }
             }
         } else {
-            String schemaDir = sm.getSchemaDir(schema);
+            Path schemaDir = sm.getSchemaDir(schema);
             if (Lib.existsConverter(schemaDir, prefix)) {
                 final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
                 Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)

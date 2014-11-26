@@ -43,7 +43,7 @@
           <li ng-repeat="link in downloads">
             <a href="{{link.url}}" download="{{link.desc}}">
               <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-              {{link.desc}} </a></li>
+              {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
         </ul>
       </div>
 

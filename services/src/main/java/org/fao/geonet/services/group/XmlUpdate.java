@@ -33,10 +33,11 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import javax.annotation.Nonnull;
 
 public class XmlUpdate extends NotInReadOnlyModeService {
-    public void init(final String appPath, final ServiceConfig params) throws Exception {
+    public void init(final Path appPath, final ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="systemInfo" class="org.fao.geonet.SystemInfo">
+        <constructor-arg value="${stagingProfile}" />
+        <constructor-arg value="${build.timestamp}" />
+        <constructor-arg value="${geonetwork.version}" />
+        <constructor-arg value="${geonetwork.subversion}" />
+        <constructor-arg value="${os.name} ${os.version} ${os.arch}" />
+        <constructor-arg value="${java.version}" />
+        <constructor-arg value="${java.vm.vendor}" />
+    </bean>
+</beans>

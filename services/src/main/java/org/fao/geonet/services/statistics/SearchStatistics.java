@@ -22,23 +22,35 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
+import com.google.common.collect.Lists;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
+import org.fao.geonet.services.statistics.response.GeneralSearchStats;
+import org.fao.geonet.services.statistics.response.IpStats;
+import org.fao.geonet.services.statistics.response.SearchTypeStats;
+import org.fao.geonet.services.statistics.response.TermFieldStats;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.SQLException;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import static java.lang.Math.max;
 import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasHits;
 import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasService;
 import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.popularitySum;
@@ -53,87 +65,119 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * <li>Number of record views</li>
  * </ul>
  */
-public class SearchStatistics extends NotInReadOnlyModeService {
-
-    private static final String NUMBER_OF_SEARCH_QUERY = "SELECT COUNT(*) AS total " +
-                                                         "FROM Requests WHERE service = ?";
-
-    private static final String NUMBER_SEARCH_BY_X_QUERY = "SELECT count(*) / ? AS avg FROM Requests " +
-                                                           "WHERE service = ? ";
-
-    private static final String NUMBER_VIEWS_BY_X_QUERY = "SELECT sum(popularity) / ? AS avg FROM Metadata";
-
-    private static final String NUMBER_OF_SEARCHES_WITH_NO_HITS_QUERY =
-            "SELECT count(*) AS total FROM Requests WHERE hits = 0 AND service = ?";
-
+@Controller("search.statistics")
+public class SearchStatistics {
     private static final String SERVICE_PARAM = "service";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
+    private SearchRequestRepository requestRepository;
+    @Autowired
+    private MetadataRepository metadataRepository;
 
-    @Override
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        String service = Util.getParam(params, SERVICE_PARAM);
-        Element response = new Element("response");
-
-        final SearchRequestRepository requestRepository = context.getBean(SearchRequestRepository.class);
+    @RequestMapping(value = {"/{lang}/statistics-search"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public GeneralSearchStats generalSearchStats(@RequestParam(SERVICE_PARAM) String service) throws Exception {
+        final GeneralSearchStats stats = new GeneralSearchStats();
 
         ISODate begin = requestRepository.getOldestRequestDate();
         ISODate end = requestRepository.getMostRecentRequestDate();
         if (begin == null || end == null) {
-            return response;    // No stats available.
+            return stats;
         }
         DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin.getDateAndTime());
         DateTime endDate = ISODate.parseBasicOrFullDateTime(end.getDateAndTime());
         int days = Days.daysBetween(beginDate, endDate).getDays();
-        int nonZeroDays = days == 0 ? 1 : days;
+        int nonZeroDays = max(1, days);
         int months = Months.monthsBetween(beginDate, endDate).getMonths();
-        int nonZeroMonths = months == 0 ? 1 : months;
-        response.addContent(new Element("activity_days").setText(days + ""));
-        response.addContent(new Element("activity_months").setText(months + ""));
+        int nonZeroMonths = max(1, months);
 
+        stats.setActivityDays(days);
+        stats.setActivityMonths(months);
 
         // Total number of searches
         long total = requestRepository.count(hasService(service));
-        addSingleDBValueToElement(response, total, "total_searches", "total");
+        stats.setTotalSearches(total);
 
         // Average searches by day
         long avgPerDay = total / nonZeroDays;
-        addSingleDBValueToElement(response, avgPerDay, "avg_searches_by_day", "avg");
+        stats.setAvgSearchesPerDay(avgPerDay);
 
         // Average searches by month
         long avgPerMonth = total / nonZeroMonths;
-        addSingleDBValueToElement(response, avgPerMonth, "avg_searches_by_month", "avg");
+        stats.setAvgSearchersPerMonth(avgPerMonth);
 
         // Average views by day
-        final int views = context.getBean(MetadataRepository.class).getMetadataStatistics().getTotalStat(popularitySum(),
-                Optional.<Specification<Metadata>>absent());
+        final int views = metadataRepository.getMetadataStatistics().getTotalStat(popularitySum(), Optional.<Specification<Metadata>>absent());
         int viewsByDay = views / nonZeroDays;
-        addSingleDBValueToElement(response, viewsByDay, "avg_views_by_day", "avg");
+        stats.setAvgViewsPerDay(viewsByDay);
 
         // Average views by month
         int viewsByMonth = views / nonZeroMonths;
-        addSingleDBValueToElement(response, viewsByMonth, "avg_views_by_month", "avg");
+        stats.setAvgViewsPerMonth(viewsByMonth);
 
         // Number of search with no hits
         long noHits = requestRepository.count(where(hasService(service)).and(hasHits(0)));
-        addSingleDBValueToElement(response, noHits, "total_searches_with_no_hits", "total");
+        stats.setSearchesWithNoHits(noHits);
 
-        return response;
+        return stats;
     }
 
-    /**
-     * Add a new element with the value found.
-     *
-     * @param response
-     * @param elementName
-     * @param queryFieldName
-     * @throws SQLException
-     */
-    protected static void addSingleDBValueToElement(Element response, Object value,
-                                                    String elementName, String queryFieldName)
-            throws SQLException {
-        response.addContent(new Element(elementName).setText("" + value));
+    @RequestMapping(value = {"/{lang}/statistics-search-ip"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public List<IpStats> searchIpStats() {
+        final String queryString =
+                "select ipAddress, sum(hits) as sumhit from SearchRequest where autogenerated = FALSE group " +
+                                   "by ipAddress order by sumhit desc";
+        final Query query = entityManager.createQuery(queryString);
+        @SuppressWarnings("unchecked")
+        final List<Object[]> resultList = query.getResultList();
+        return Lists.transform(resultList, new Function<Object[], IpStats>() {
+            @Nonnull
+            @Override
+            public IpStats apply(@Nonnull Object[] input) {
+                return new IpStats((String)input[0], (Long)input[1]);
+            }
+        });
+    }
+
+    @RequestMapping(value = {"/{lang}/statistics-search-by-service-type"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public List<SearchTypeStats> searchServiceTypeStats() {
+        final String queryString =
+                "select service, count(id) as nbsearch from SearchRequest group by service order by nbsearch desc";
+        final Query query = entityManager.createQuery(queryString);
+        @SuppressWarnings("unchecked")
+        final List<Object[]> resultList = query.getResultList();
+        return Lists.transform(resultList, new Function<Object[], SearchTypeStats>() {
+            @Nonnull
+            @Override
+            public SearchTypeStats apply(@Nonnull Object[] input) {
+                return new SearchTypeStats((String) input[0], (Long) input[1]);
+            }
+        });
+    }
+
+    @RequestMapping(value = {"/{lang}/statistics-search-fields"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public List<TermFieldStats> searchFieldsStats() {
+        final String queryString = "SELECT COUNT(r.id) AS total, p.termField, r.service "
+                          + "                    FROM SearchRequest r JOIN r.params p "
+                          + "                    group by r.service, p.termField order by r.service, total desc";
+        final Query query = entityManager.createQuery(queryString);
+        @SuppressWarnings("unchecked")
+        final List<Object[]> resultList = query.getResultList();
+        return Lists.transform(resultList, new Function<Object[], TermFieldStats>() {
+            @Nonnull
+            @Override
+            public TermFieldStats apply(@Nonnull Object[] input) {
+                return new TermFieldStats((Long) input[0], (String) input[1], (String) input[2]);
+            }
+        });
     }
 }

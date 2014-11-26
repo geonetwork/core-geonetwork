@@ -8,20 +8,24 @@ import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.imageio.ImageIO;
 
 import static org.fao.geonet.domain.Pair.read;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test CreateMetadata
@@ -36,8 +40,6 @@ public class CreateTest extends AbstractServiceIntegrationTest {
     private MetadataRepository _metadataRepo;
     @Autowired
     private GroupRepository _groupRepo;
-    @Autowired
-    private SourceRepository _sourceRepo;
 
     @Test
     public void testCreateNormalMetadata() throws Exception {
@@ -66,18 +68,18 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
         final String id = importMetadata(context);
 
-        String mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-        String mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, id);
-        final File smallImage = new File(mdPublicDataDir, "small.gif");
-        final File largeImage = new File(mdPublicDataDir, "large.gif");
+        Path mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        Path mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, id);
+        final Path smallImage = mdPublicDataDir.resolve("small.gif");
+        final Path largeImage = mdPublicDataDir.resolve("large.gif");
         createImage(GIF, smallImage);
         createImage(GIF, largeImage);
 
-        final File privateImage = new File(mdPrivateDataDir, "privateFile.gif");
+        final Path privateImage = mdPrivateDataDir.resolve("privateFile.gif");
         createImage(GIF, privateImage);
 
-        _dataManager.setThumbnail(context, id, true, smallImage.getAbsolutePath(), false);
-        _dataManager.setThumbnail(context, id, false, largeImage.getAbsolutePath(), false);
+        _dataManager.setThumbnail(context, id, true, smallImage.toAbsolutePath().normalize().toString(), false);
+        _dataManager.setThumbnail(context, id, false, largeImage.toAbsolutePath().normalize().toString(), false);
 
         int sampleGroup = _groupRepo.findByName("sample").getId();
         final Element params = createParams(
@@ -92,29 +94,41 @@ public class CreateTest extends AbstractServiceIntegrationTest {
         final String newId = element.getChildText(Geonet.Elem.ID);
         assertNotNull(_metadataRepo.findOne(newId));
 
-        File newPublicMdDataDir = new File(Lib.resource.getDir(context, Params.Access.PUBLIC, newId));
-        assertTrue(new File(newPublicMdDataDir, smallImage.getName()).exists());
-        assertTrue(new File(newPublicMdDataDir, largeImage.getName()).exists());
-        assertEquals(2, newPublicMdDataDir.list().length);
+        Path newPublicMdDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, newId);
+        assertTrue(Files.exists(newPublicMdDataDir.resolve(smallImage.getFileName())));
+        assertTrue(Files.exists(newPublicMdDataDir.resolve(largeImage.getFileName())));
 
-        File newPrivateMdDataDir = new File(Lib.resource.getDir(context, Params.Access.PRIVATE, newId));
-        assertTrue(newPrivateMdDataDir.exists());
-        assertNotNull(newPrivateMdDataDir.list());
-        assertEquals(1, newPrivateMdDataDir.list().length);
-        assertTrue(new File(newPrivateMdDataDir, privateImage.getName()).exists());
+        final int expected = 2;
+        assertFilesInDirectory(newPublicMdDataDir, expected);
+
+        Path newPrivateMdDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, newId);
+        assertTrue(Files.exists(newPrivateMdDataDir));
+        assertFilesInDirectory(newPrivateMdDataDir, 1);
+        assertTrue(Files.exists(newPrivateMdDataDir.resolve(privateImage.getFileName())));
     }
 
-    private String createImage(String format, File outFile) throws IOException {
+    protected void assertFilesInDirectory(Path newPublicMdDataDir, int expected) throws IOException {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(newPublicMdDataDir)) {
+            int count = 0;
+            for (Path path : paths) {
+                count++;
+            }
+            assertEquals(expected, count);
+        }
+    }
+
+    private String createImage(String format, Path outFile) throws IOException {
 
         BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g2d = image.createGraphics();
         g2d.drawRect(1, 1, 5, 5);
         g2d.dispose();
+        try (OutputStream out = Files.newOutputStream(outFile)) {
+            final boolean writerWasFound = ImageIO.write(image, format, out);
+            assertTrue(writerWasFound);
+        }
 
-        final boolean writerWasFound = ImageIO.write(image, format, outFile);
-        assertTrue(writerWasFound);
-
-        return outFile.getAbsolutePath();
+        return outFile.toAbsolutePath().normalize().toString();
     }
 
     @Test

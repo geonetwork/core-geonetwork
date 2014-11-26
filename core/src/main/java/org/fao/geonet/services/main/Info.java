@@ -23,19 +23,12 @@
 
 package org.fao.geonet.services.main;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -74,12 +67,18 @@ import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
     private static final String INDEX = "index";
-
-	private String xslPath;
-	private String otherSheets;
+    private Path xslPath;
+	private Path otherSheets;
 	private ServiceConfig _config;
 
 	//--------------------------------------------------------------------------
@@ -94,10 +93,10 @@ public class Info implements Service {
      * @param config
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
-		xslPath = appPath + Geonet.Path.STYLESHEETS+ "/xml";
-		otherSheets = appPath + Geonet.Path.STYLESHEETS;
+		xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
+		otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
 		_config = config;
 	}
 
@@ -225,7 +224,7 @@ public class Info implements Service {
 		}
 		
 		result.addContent(getEnv(context));
-		Element response = Xml.transform(result, xslPath +"/info.xsl");
+		Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
 
         return response;
 	}
@@ -438,7 +437,7 @@ public class Info implements Service {
 
 	private Element getTemplates(ServiceContext context) throws Exception
 	{
-		String styleSheet = otherSheets +"/portal-present.xsl";
+		Path styleSheet = otherSheets.resolve("portal-present.xsl");
 		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
 		Element root   = new Element("root");
 

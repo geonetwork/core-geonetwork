@@ -26,19 +26,21 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +53,7 @@ import java.util.List;
 
 public class PrepareFileDownload implements Service
 {
-	private String appPath;
+	private Path appPath;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -59,7 +61,7 @@ public class PrepareFileDownload implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		this.appPath = appPath;
 	}
@@ -101,7 +103,7 @@ public class PrepareFileDownload implements Service
 		response.addContent(new Element("id").setText(id));
 
 		//--- transform record into brief version
-		String briefXslt = appPath + "xsl/metadata-brief.xsl";
+        Path briefXslt = appPath.resolve("xsl/metadata-brief.xsl");
 		Element elBrief = Xml.transform(elMd, briefXslt);
 
 		XPath xp;
@@ -125,8 +127,7 @@ public class PrepareFileDownload implements Service
 
 	//--------------------------------------------------------------------------
 	/** Process the links to downloadable files */
-	private Element processDownloadLinks( ServiceContext context, String id, String siteURL, List<Element> elems, Element response )
-	{
+	private Element processDownloadLinks( ServiceContext context, String id, String siteURL, List<Element> elems, Element response ) throws IOException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         for (Element elem : elems) {
@@ -156,11 +157,11 @@ public class PrepareFileDownload implements Service
                             }
                         }
 
-                        File dir = new File(Lib.resource.getDir(context, access, id));
-                        File file = new File(dir, fname);
-                        if (file.exists()) {
-                            size = file.length();
-                            Date date = new Date(file.lastModified());
+                        Path dir = Lib.resource.getDir(context, access, id);
+                        Path file = dir.resolve(fname);
+                        if (Files.exists(file)) {
+                            size = Files.size(file);
+                            Date date = new Date(Files.getLastModifiedTime(file).toMillis());
                             dateModified = sdf.format(date);
                             found = true;
                         }

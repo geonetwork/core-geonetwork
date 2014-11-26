@@ -17,7 +17,12 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.File;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *  Class to apply replacements to a metadata selection.
@@ -180,7 +185,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                 processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
 
                 // Get changes
-                String filePath2 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-extract-changes.xsl";
+                Path filePath2 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-extract-changes.xsl");
                 List<Element> changesEl = Xml.transform(processedMetadata, filePath2).getChildren("change");
 
                 boolean hasChanges = (changesEl.size() > 0);
@@ -199,7 +204,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                 // --- save metadata and return status
                 if ((changesEl.size() > 0) && (!params.getChildText("test").equalsIgnoreCase("true"))) {
                     // Clean geonet:changes elements
-                    String filePath3 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-clean-changes.xsl";
+                    Path filePath3 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-clean-changes.xsl");
                     processedMetadata = Xml.transform(processedMetadata, filePath3);
 
                     dataMan.updateMetadata(context, id, processedMetadata,

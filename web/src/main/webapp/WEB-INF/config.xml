@@ -303,7 +303,6 @@
 
   <include>config/config-service-statistics.xml</include>
 
-  <include>config/config-service-admin-csw.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
 

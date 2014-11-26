@@ -24,6 +24,7 @@
 package org.fao.geonet.services.register;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 import jeeves.constants.Jeeves;
@@ -51,7 +52,6 @@ import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
@@ -63,7 +63,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	private static final String PROFILE_TEMPLATE = "profileTemplate";
 	private static final String PROFILE = "RegisteredUser";
 	private static String FS = File.separator;
-	private String stylePath;
+	private Path stylePath;
 	private static final String PASSWORD_EMAIL_XSLT = "registration-pwd-email.xsl";
 	private static final String PROFILE_EMAIL_XSLT = "registration-prof-email.xsl";
 
@@ -73,7 +73,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------
@@ -84,8 +84,9 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
 	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
-		
-		this.stylePath = context.getBean(GeonetworkDataDirectory.class).getWebappDir() + Geonet.Path.XSLT_FOLDER + FS + "services" + FS + "account" + FS;
+
+        final GeonetworkDataDirectory dataDir = context.getBean(GeonetworkDataDirectory.class);
+        this.stylePath = dataDir.resolveWebResource(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
 
 		String surname = Util.getParam(params, Params.SURNAME);
 		String name = Util.getParam(params, Params.NAME);
@@ -186,7 +187,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    root.addContent(new Element("password").setText(password));
 	    
 		String template = Util.getParam(params, Params.TEMPLATE, PASSWORD_EMAIL_XSLT);
-	    String emailXslt = stylePath + template;
+	    Path emailXslt = stylePath.resolve(template);
 	    Element elEmail = Xml.transform(root, emailXslt);
 	    
 		String email = Util.getParam(params, Params.EMAIL);
@@ -217,7 +218,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    root.addContent((Element)params.clone());
 	    
 		String profileTemplate = Util.getParam(params, PROFILE_TEMPLATE, PROFILE_EMAIL_XSLT);
-	    String emailXslt = stylePath + profileTemplate;
+	    Path emailXslt = stylePath.resolve(profileTemplate);
 	    Element elEmail = Xml.transform(root, emailXslt);
 	    
 	    String subject = elEmail.getChildText("subject");

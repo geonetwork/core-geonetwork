@@ -48,6 +48,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
@@ -67,7 +68,7 @@ public class Rate extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

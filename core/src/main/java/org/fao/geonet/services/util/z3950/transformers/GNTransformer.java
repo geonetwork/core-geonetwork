@@ -18,11 +18,12 @@
 package org.fao.geonet.services.util.z3950.transformers;
 
 import jeeves.constants.Jeeves;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.ContextContainer;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.guiservices.schemas.GetSchemaInfo;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.input.DOMBuilder;
 import org.jzkit.search.util.RecordConversion.FragmentTransformationException;
 import org.jzkit.search.util.RecordConversion.FragmentTransformer;
@@ -30,13 +31,14 @@ import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.nio.file.Path;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.Map;
 
 public class GNTransformer extends FragmentTransformer {
 
-	private String stylesheet;
+	private Path stylesheetPath;
 	private DocumentBuilder htmldb = null;
 
 	@SuppressWarnings("rawtypes")
@@ -44,14 +46,14 @@ public class GNTransformer extends FragmentTransformer {
 		super(from,to,properties,context,ctx);
 		this.ctx = ctx;
 
-		stylesheet = (String)properties.get("Sheet");
+        String stylesheet = (String) properties.get("Sheet");
 		if (stylesheet == null) {
 			Log.error(Geonet.SEARCH_ENGINE, "Failed to get name of stylesheet from properties - looking for property with name 'Sheet' - found instead: "+properties);
 			return;
 		} 
 
 		try {
-			stylesheet = ctx.getResource(stylesheet).getFile().getAbsolutePath();
+			stylesheetPath = IO.toPath(ctx.getResource(stylesheet).getURI());
             if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                 Log.debug(Geonet.SEARCH_ENGINE, "Stylesheet for "+from+" to "+to+" is "+stylesheet);
 		} catch (Exception e) {
@@ -95,7 +97,7 @@ public class GNTransformer extends FragmentTransformer {
 			org.jdom.Element metadata = new org.jdom.Element(Geonet.Elem.METADATA);
 			metadata.addContent(jdomDoc.detachRootElement());
 			root.addContent(metadata);
-			elem = Xml.transform(root, stylesheet);
+			elem = Xml.transform(root, stylesheetPath);
 			
 		} catch (Exception e) {
 			throw new FragmentTransformationException(e.getMessage());

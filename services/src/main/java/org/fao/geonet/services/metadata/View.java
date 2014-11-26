@@ -41,13 +41,15 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.nio.file.Path;
+
 /**
  * Retrieves a particular metadata. Access is restricted
  */
 
 public class View extends ShowViewBaseService {
 	public void
-    init(String appPath, ServiceConfig params) throws Exception {
+    init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
 	}
 
