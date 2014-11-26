@@ -175,5 +175,6 @@
     "current": "actuel",
     "searchKeyword": "Rechercher ...",
     "searchOrTypeKeyword": "Saisir ou rechercher ...",
-  "tagsAllowed": " mot(s) clé(s) autorisé(s)"
+    "tagsAllowed": " mot(s) clé(s) autorisé(s)",
+    "suggestionListError": "Oops, il y a eu un problème lors de l'analyse des suggestions !"
 }

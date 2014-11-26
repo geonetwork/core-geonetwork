@@ -171,5 +171,6 @@
     "current": "current",
     "searchKeyword": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
-    "tagsAllowed": " tag(s) allowed"
+    "tagsAllowed": " tag(s) allowed",
+    "suggestionListError": "Oops, something went wrong when retrieving suggestions!"
 }
