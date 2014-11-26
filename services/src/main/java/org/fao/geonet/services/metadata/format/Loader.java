@@ -3,6 +3,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -57,7 +58,7 @@ public enum Loader {
 			 */
 			private String urlParam;
 			
-			public void init(String appPath, ServiceConfig params) {
+			public void init(Path appPath, ServiceConfig params) {
 				theNSs = new ArrayList<Namespace>();
 				theNSs.add(Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"));
 				theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
@@ -135,7 +136,7 @@ public enum Loader {
 			
 			private transient Show showService;
 			
-			public void init(String appPath, ServiceConfig params) throws Exception {
+			public void init(Path appPath, ServiceConfig params) throws Exception {
 				showService = new Show();
 				showService.init(appPath, params);
 			}
@@ -177,7 +178,7 @@ public enum Loader {
 		};
 		
 
-		public abstract void init(String appPath, ServiceConfig params) throws Exception;
+		public abstract void init(Path appPath, ServiceConfig params) throws Exception;
 		public abstract void validateParams(Element params);
 		
 		/**

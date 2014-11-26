@@ -35,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -482,8 +483,8 @@ public final class XslUtil
         String wysiwygEnabled = settingManager.getValue(Geonet.Settings.WYSIWYG_EDITOR);
         String markupType = settingManager.getValue(Geonet.Settings.WIKI_SYNTAX);
         if(Geonet.Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
-            String styleSheetPath = context.getAppPath() + File.separator + "xsl" + File.separator + "strip-wiki-markup.xsl";
-            
+            Path styleSheetPath =  context.getAppPath().resolve("xsl").resolve("strip-wiki-markup.xsl");
+
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("markupType", markupType);
             params.put("outputType", mefOutput);
