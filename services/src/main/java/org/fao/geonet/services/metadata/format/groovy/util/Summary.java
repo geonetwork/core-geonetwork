@@ -78,7 +78,7 @@ public class Summary {
 
 
                 link.linksHtml(linksHtml, functions, env);
-                linksHtml.append("    </div>");
+                linksHtml.append("    </div></div>");
             }
         }
 

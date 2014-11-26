@@ -15,7 +15,9 @@ import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
@@ -53,6 +55,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
     SchemaManager schemaManager;
     @Autowired
     SettingManager settingManager;
+    @Autowired
+    DataManager dataManager;
 
     protected int id;
     protected String xml;
@@ -80,7 +84,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(false);
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
-        this.id = metadataRepository.save(metadata).getId();
+        this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), false, true, false,
+                UpdateDatestamp.NO, false, false).getId();
     }
 
     protected abstract File getTestMetadataFile();

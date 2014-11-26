@@ -1,12 +1,15 @@
 package common
 
+import org.fao.geonet.services.metadata.format.FormatType
+
 public class Functions {
     def handlers;
     def f
     def env
 
     def isHtmlOutput = {
-        env.formatType.name() == "html" || env.formatType.name() == "pdf"
+        env.formatType == FormatType.html || env.formatType == FormatType.pdf ||
+                env.formatType == FormatType.testpdf
     }
 
     /**

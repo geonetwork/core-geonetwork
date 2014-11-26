@@ -8,6 +8,7 @@ import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * This class is the actual object passed to the Groovy script.  It looks up in the current ThreadLocal the environment object for the
@@ -94,6 +95,11 @@ public class EnvironmentProxy implements Environment {
     @Override
     public Element getMetadataElement() {
         return get().getMetadataElement();
+    }
+
+    @Override
+    public Map<String, Collection<String>> getIndexInfo() throws Exception {
+        return get().getIndexInfo();
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Contains methods for accessing data regarding the current user and request, such as the current UI language, username, the
@@ -71,6 +72,10 @@ public interface Environment {
      */
     public Element getMetadataElement();
 
+    /**
+     * Returns the data in the index for the current metadata.
+     */
+    public Map<String, Collection<String>> getIndexInfo() throws Exception;
     /**
      * Get a Spring Bean from Spring Application Context.
      *

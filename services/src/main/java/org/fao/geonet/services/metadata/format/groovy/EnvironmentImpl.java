@@ -1,18 +1,31 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import jeeves.server.context.ServiceContext;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -29,7 +42,8 @@ public class EnvironmentImpl implements Environment {
     private final Metadata metadataInfo;
     private final String locUrl;
     private final Element jdomMetadata;
-    private final ApplicationContext applicationContext;
+    private final ServiceContext serviceContext;
+    private Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         jdomMetadata = fparams.metadata;
@@ -46,7 +60,7 @@ public class EnvironmentImpl implements Environment {
             }
         }
 
-        this.applicationContext = fparams.context.getApplicationContext();
+        this.serviceContext = fparams.context;
     }
 
     /**
@@ -142,7 +156,33 @@ public class EnvironmentImpl implements Environment {
     }
 
     @Override
+    public synchronized Map<String, Collection<String>> getIndexInfo() throws Exception {
+        if (this.indexInfo == null) {
+            final SearchManager searchManager = getBean(SearchManager.class);
+
+            try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
+                TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
+                IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
+                Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
+                searcher.search(query, collector);
+                ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+
+                Multimap<String, String> fields = HashMultimap.create();
+                for (ScoreDoc scoreDoc : topDocs) {
+                    Document doc = searcher.doc(scoreDoc.doc);
+                    for (IndexableField field : doc) {
+                        fields.put(field.name(), field.stringValue());
+                    }
+                }
+                this.indexInfo = fields;
+            }
+
+        }
+        return Collections.unmodifiableMap(this.indexInfo.asMap());
+    }
+
+    @Override
     public <T> T getBean(Class<T> clazz) {
-        return this.applicationContext.getBean(clazz);
+        return this.serviceContext.getBean(clazz);
     }
 }

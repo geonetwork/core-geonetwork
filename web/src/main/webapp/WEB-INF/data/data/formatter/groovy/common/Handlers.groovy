@@ -138,8 +138,8 @@ public class Handlers {
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
-    <script src="$libJs"></script>
+    <link rel="stylesheet" href="http://tc-geocat.dev.bgdi.ch/geonetwork/static/metadata_formatter.css"/>
+    <script src="http://tc-geocat.dev.bgdi.ch/geonetwork/static/lib.js"></script>
 </head>
 <body>
 <div class="container gn-metadata-view">

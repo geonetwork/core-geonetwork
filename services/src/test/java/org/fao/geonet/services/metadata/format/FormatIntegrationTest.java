@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -125,7 +126,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
-            final MockHttpServletResponse response = new MockHttpServletResponse();
+            MockHttpServletResponse response = new MockHttpServletResponse();
             formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
             final String view = response.getContentAsString();
             try {
@@ -133,6 +134,15 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
                 assertFalse(formatter.getSchema() + "/" + formatter.getId(), html.getChildren().isEmpty());
             } catch (Throwable e) {
                 e.printStackTrace();
+                fail(formatter.getSchema() + " > " + formatter.getId());
+            }
+            try {
+                response = new MockHttpServletResponse();
+                formatService.exec("eng", "pdf", "" + id, null, formatter.getId(), "true", false, request, response);
+                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
+                System.exit(0);
+            } catch (Throwable t) {
+                t.printStackTrace();
                 fail(formatter.getSchema() + " > " + formatter.getId());
             }
         }

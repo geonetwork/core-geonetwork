@@ -56,16 +56,40 @@ class SummaryFactory {
         return summary
     }
 
-    static def configureLinks(GPathResult metadata, iso19139.Handlers isoHandler, Summary summary) {
-        def links = metadata.'gmd:distributionInfo'.'*'.'gmd:transferOptions'.'*'.'gmd:onLine'.'*'.children{
-            it.name().endsWith(":linkage")
-        }
+    static def configureLinks(GPathResult metadata, isoHandler, Summary summary) {
+        def env = isoHandler.env
+        Collection<String> links = env.indexInfo['link'];
         if (!links.isEmpty()) {
             StaticLinkBlock linkBlock = new StaticLinkBlock("links");
             summary.links.add(linkBlock)
             links.each { link ->
-                def href = isoHandler.isofunc.isoURL(link)
-                linkBlock.links.put("", new Link(href, text))
+                def linkParts = link.split("\\|")
+                def title = linkParts[0];
+                def href = linkParts[2];
+                def mimetype = linkParts[4].toLowerCase();
+                if (title.trim().isEmpty()) {
+                    title = href;
+                }
+
+                def type = "link";
+                if (mimetype.contains("kml")) {
+                    type = "kml";
+                } else if (mimetype.contains("OGC:")) {
+                    type = "ogc";
+                } else if (mimetype.contains("wms")) {
+                    type = "wms";
+                } else if (mimetype.contains("download")) {
+                    type = "download";
+                } else if (mimetype.contains("link")) {
+                    type = "link";
+                } else if (mimetype.contains("wfs")) {
+                    type = "wfs";
+                }
+                if (!(env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf)) {
+                    href = "javascript:window.open('${href.replace("'", "\\'")}', '${env.metadataUUID.replace('\'', '_')}_link')"
+                }
+                def linkType = new LinkType(type, null)
+                linkBlock.links.put(linkType, new Link(href, title))
             }
         }
 
@@ -80,7 +104,7 @@ class SummaryFactory {
         Environment env = isoHandler.env
 
         def linkBlockName = "hierarchy"
-        if (env.formatType == FormatType.pdf) {
+        if (env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf) {
             createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler)
         } else {
             createDynamicHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler, env)
@@ -105,7 +129,7 @@ class SummaryFactory {
   var typeTranslations = {
 $typeTranslations
   };
-  \$.ajax('xml.relation?id=${env.metadataId}&type=${relatedTypes.join("|")}', {
+  \$.ajax('xml.relation?id=${env.metadataId}&amp;type=${relatedTypes.join("|")}', {
     dataType: "json",
     success: function (data) {
       var types = {};
@@ -141,7 +165,7 @@ $typeTranslations
 
           var obj = { url: url, title: title};
 
-          if (title && uuid) {
+          if (title &amp;&amp; uuid) {
             if (types[type]) {
               types[type].push (obj);
             } else {

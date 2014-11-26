@@ -26,13 +26,10 @@ package org.fao.geonet.kernel.search;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
-
-import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
@@ -40,7 +37,11 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DocumentStoredFieldVisitor;
-import org.apache.lucene.facet.*;
+import org.apache.lucene.facet.FacetResult;
+import org.apache.lucene.facet.Facets;
+import org.apache.lucene.facet.FacetsCollector;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.LabelAndValue;
 import org.apache.lucene.facet.taxonomy.DocValuesOrdinalsReader;
 import org.apache.lucene.facet.taxonomy.OrdinalsReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyFacetCounts;
@@ -50,12 +51,32 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.MultiCollector;
+import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.PrefixQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
@@ -77,16 +98,26 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * search metadata locally using lucene.
@@ -148,29 +179,33 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
 		// Open the IndexReader first, and then the TaxonomyReader.
-        if(Log.isDebugEnabled(Geonet.LUCENE))
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
+        }
         
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		_language = determineLanguage(srvContext, request, _sm.getSettingInfo());
 
-        if(Log.isDebugEnabled(Geonet.LUCENE))
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
+        }
 
         initSearchRange(srvContext);
-        if(Log.isDebugEnabled(Geonet.LUCENE))
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
-        computeQuery(srvContext, request, config);
-        if(Log.isDebugEnabled(Geonet.LUCENE))
-            Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
-		performQuery(srvContext, getFrom()-1, getTo(), buildSummary);
-		updateSearchRange(request);
-		
-		if (_logSearch) {
-		    logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
         }
-	}
+        computeQuery(srvContext, request, config);
+        if(Log.isDebugEnabled(Geonet.LUCENE)) {
+            Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
+        }
+        performQuery(srvContext, getFrom() - 1, getTo(), buildSummary);
+        updateSearchRange(request);
+
+        if (_logSearch) {
+            logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
+        }
+    }
 
     public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
             SearchManager sm) {
@@ -615,12 +650,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
         
 		if (srvContext != null) {
-			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-	
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
 
-            Set<Integer> userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
+            Set<Integer> userGroups = srvContext.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||

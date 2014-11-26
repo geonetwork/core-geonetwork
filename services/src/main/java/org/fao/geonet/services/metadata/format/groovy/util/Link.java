@@ -7,7 +7,7 @@ package org.fao.geonet.services.metadata.format.groovy.util;
  */
 public class Link {
     private final String href;
-    public final String text;
+    private final String text;
 
     public Link(String href, String text) {
         this.href = href;
@@ -15,6 +15,10 @@ public class Link {
     }
 
     public String getHref() {
-        return href;
+        return href.replace("&", "&amp;");
+    }
+
+    public String getText() {
+        return text.replace("&", "&amp;");
     }
 }
