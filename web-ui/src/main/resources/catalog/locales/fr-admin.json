@@ -820,7 +820,7 @@
     "thredds-createAtomicSubtemplatesHelp": " ",
     "thredds-createCollectionDatasetMd": "Créer des métadonnées pour les collections d'un ensemble de données",
     "thredds-createCollectionDatasetMdHelp": " ",
-    "thredds-createCollectionSubtemplates": "Créer des sous-modèles de fragments et de leurs XLink au niveau du modèle
+    "thredds-createCollectionSubtemplates": "Créer des sous-modèles de fragments et de leurs XLink au niveau du modèle",
     "thredds-createCollectionSubtemplatesHelp": " ",
     "thredds-createServiceMd": "Créer des métadonnées de type ISO19119 pour tous les services du catalogue",
     "thredds-createServiceMdHelp": " ",
