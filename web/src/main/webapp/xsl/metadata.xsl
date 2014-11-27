@@ -1840,35 +1840,66 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="attribute"/>
 		<xsl:param name="jsAction"/>
-		
-		<!-- Define the element to look for. -->
-		<xsl:variable name="parentName">
-			<xsl:choose>
-				<!-- In dublin core element contains value.
-					In ISO, attribute also but element contains characterString which contains the value -->
-				<xsl:when test="$attribute=true() or $schema = 'dublin-core'">
-					<xsl:value-of select="name(.)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="name(parent::node())"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
+
 		<!-- Look for the helper -->
 		<xsl:variable name="helper">
-			<xsl:choose>
-			  <xsl:when test="starts-with($schema,'iso19139') and not(/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper)">
-					<!-- Fallback to iso19139 helper for ISO profil if not exist ... -->
-					<xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName]/helper"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		
+            <!--  NB the current context is (e.g.) gco:CharacterString etc, not the gco:code element which is its parent-->
+
+            <!-- Generate a complete context as a string -->
+            <xsl:variable name="fullcontext">
+                <xsl:for-each select="ancestor::*">/<xsl:value-of select="name()" /></xsl:for-each>
+            </xsl:variable>
+            <!--  Got to take 6 chars ("/root/") off the front, and substring is 1-indexed -->
+            <xsl:variable name="context"><xsl:value-of select="substring($fullcontext, 7)"/></xsl:variable>
+            <!-- Get the parent as a string -->
+            <xsl:variable name="parentName">
+                <xsl:choose>
+                    <!-- In dublin core elements contains values.
+                         In ISO attributes contains values,
+                     -->
+                    <xsl:when test="$attribute=true() or $schema = 'dublin-core'">
+                        <xsl:value-of select="name(.)"/>
+                    </xsl:when>
+                    <!-- In ISO elements contain CharacterString or LanguageCode etc which contain the value
+                     -->
+                    <xsl:otherwise>
+                        <xsl:value-of select="name(../..)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <!-- Get the name as a string -->
+            <xsl:variable name="name"><xsl:value-of select="name(..)" /></xsl:variable>
+
+            <xsl:choose>
+                <!-- Exact schema, name and full context match -->
+                <xsl:when test="$schema != 'iso19139' and starts-with($schema,'iso19139') and /root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context = $context]/helper">
+                    <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context = $context]/helper/*"/>
+                </xsl:when>
+                <!-- Exact schema, name and parent-only context match -->
+                <xsl:when test="$schema != 'iso19139' and starts-with($schema,'iso19139') and /root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context = $parentName]/helper">
+                    <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context = $parentName]/helper/*"/>
+                </xsl:when>
+                <!-- Exact schema, name match -->
+                <xsl:when test="$schema != 'iso19139' and starts-with($schema,'iso19139') and /root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context = '' or not(@context))]/helper">
+                    <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context = '' or not(@context))]/helper/*"/>
+                </xsl:when>
+
+                <!-- ISO19139 schema, name and full context match -->
+                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $name and @context = $context]/helper">
+                    <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $name and @context = $context]/helper/*"/>
+                </xsl:when>
+                <!-- ISO19139 schema, name and parent-only context match -->
+                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $name and @context = $parentName]/helper">
+                    <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $name and @context = $parentName]/helper/*"/>
+                </xsl:when>
+                <!-- ISO19139 schema, name match -->
+                <xsl:otherwise>
+                    <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $name and (@context = '' or not(@context))]/helper/*"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+
 		<!-- Display the helper list -->
 		<xsl:if test="normalize-space($helper)!=''">
 		  <xsl:variable name="list" select="exslt:node-set($helper)"/>
