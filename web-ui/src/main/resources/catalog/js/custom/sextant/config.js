@@ -86,9 +86,7 @@
 
       var searchMap = new ol.Map({
         layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
+          gnMap.createLayerForType('wmts')
         ],
         view: new ol.View({
           center: mapsConfig.center,
