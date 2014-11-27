@@ -19,6 +19,12 @@
     <module>iso19110</module>
     <module>iso19115</module>
     <module>iso19139</module>
+    <module>iso19139.sextant</module>
+    <module>iso19139.myocean</module>
+    <module>iso19139.myocean.short</module>
+    <module>iso19139.emodnet.chemistry</module>
+    <module>iso19139.emodnet.hydrography</module>
+    <module>iso19139.sdn-product</module>
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
