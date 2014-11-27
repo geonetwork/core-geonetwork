@@ -7624,6 +7624,18 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
     display: none !important;
   }
 }
+.loading {
+  position: absolute;
+  top: 1.8em;
+  font-size: 40px;
+  left: 50%;
+  margin-left: 20px;
+  text-shadow: 0 0 1px white;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1em;
+  padding: .2em;
+}
 .gn-facet .list-group-item {
   border-width: 0;
   border-radius: 0;
@@ -7778,7 +7790,7 @@ select[multiple][hitsperpage-combo] select {
 .gn-searchform label {
   font-weight: normal;
 }
-.gn-searchform input,
+.gn-searchform input[type='text'],
 .gn-searchform select {
   height: 30px;
   padding: 5px 10px;
@@ -7786,14 +7798,14 @@ select[multiple][hitsperpage-combo] select {
   line-height: 1.5;
   border-radius: 3px;
 }
-select.gn-searchform input,
+select.gn-searchform input[type='text'],
 select.gn-searchform select {
   height: 30px;
   line-height: 30px;
 }
-textarea.gn-searchform input,
+textarea.gn-searchform input[type='text'],
 textarea.gn-searchform select,
-select[multiple].gn-searchform input,
+select[multiple].gn-searchform input[type='text'],
 select[multiple].gn-searchform select {
   height: auto;
 }
@@ -7975,21 +7987,23 @@ select[multiple].gn-searchform select {
   body > div,
   .container-fluid,
   .hfull,
-  .tab-pane,
-  .tab-content {
+  .tab-pane {
     height: 100%;
     overflow: hidden;
+  }
+  .tab-content {
+    height: calc(100% - 3.9em);
   }
   .container-fluid {
     height: calc(100% - 5.4em);
   }
-  [search-results],
-  .panel-body {
-    height: calc(100% - 11em);
+  [search-results] {
+    height: calc(100% - 3.8em - 51px);
     overflow: auto;
   }
   .gn-searchform {
-    height: calc(100% - 12em );
+    height: calc(100% - 55px);
+    overflow: auto;
   }
 }
 .navbar {
@@ -8018,6 +8032,9 @@ select[multiple].gn-searchform select {
 .gn-search-page .nav-pills .badge {
   background: #428bca;
 }
+.datepicker {
+  height: auto;
+}
 [data-ng-search-form] .gn-top-search {
   text-align: center;
   background: #f5f5f5;
@@ -8043,6 +8060,57 @@ select[multiple].gn-searchform select {
   top: 1.75em;
   left: 50%;
   margin-left: 64px;
+}
+[data-ng-search-form] input[type="checkbox"] {
+  margin-left: 0;
+  margin-right: 10px;
+}
+[data-ng-search-form] [gn-map-field] {
+  width: calc(100% + 30px);
+  margin-left: -15px;
+  border-radius: 0;
+  background: #fff;
+  border: none;
+}
+[data-ng-search-form] [gn-map-field] .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  opacity: .80;
+}
+[data-ng-search-form] .inner-spinner {
+  position: absolute;
+  top: 1.3em;
+  right: 1.6em;
+}
+[data-ng-search-form] .sxt-categorytree {
+  font-family: arial, tahoma, helvetica, sans-serif;
+  font-size: 11px;
+}
+[data-ng-search-form] .sxt-categorytree input[type='checkbox'] {
+  margin-right: 3px;
+}
+[data-ng-search-form] .sxt-categorytree ul ul {
+  display: none;
+}
+[data-ng-search-form] .sxt-categorytree ul {
+  padding-left: 15px;
+}
+[data-ng-search-form] .sxt-categorytree ul li {
+  display: block;
+  padding: 10px -10px;
+  margin-bottom: -1px;
+}
+[data-ng-search-form] .sxt-categorytree ul li label {
+  margin-bottom: 2px;
+}
+[data-ng-search-form] .sxt-categorytree ul li label .fa {
+  font-size: 15px;
+}
+[data-ng-search-form] .sxt-categorytree > ul {
+  padding-left: 0;
+  padding-top: 12px;
 }
 ul.gn-resultview li.list-group-item {
   background-color: #EFEFEF;
@@ -8091,6 +8159,7 @@ ul.gn-resultview li.list-group-item .gn-md-links .dropdown-menu li a {
 }
 ul.gn-resultview li.list-group-item .gn-md-links button {
   width: 120px;
+  margin: 0 3px;
 }
 ul.gn-resultview li.list-group-item .caret {
   color: #f28033;

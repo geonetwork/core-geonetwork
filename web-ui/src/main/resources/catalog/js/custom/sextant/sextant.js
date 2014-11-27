@@ -6,12 +6,14 @@
   goog.require('gn_search_sextant_config');
   goog.require('sxt_panier_directive');
   goog.require('gn_thesaurus');
+  goog.require('sxt_categorytree');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
     'sxt_panier_directive',
-    'gn_thesaurus'
+    'gn_thesaurus',
+    'sxt_categorytree'
   ]);
 
   module.value('sxtGlobals', {});
@@ -74,25 +76,6 @@
       };
 
 
-///////////////////////////////////////////////////////////////////
-      $scope.getAnySuggestions = function(val) {
-        var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHFIRST'));
-
-        return $http.get(url, {
-        }).then(function(res){
-          return res.data[1];
-        });
-      };
-
-      $scope.$watch('searchObj.advancedMode', function(val) {
-        if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
-          setTimeout(function(){
-            searchMap.updateSize();
-          }, 0);
-        }
-      });
-
       //Check if a added layer is NcWMS
       viewerMap.getLayers().on('add', function(e) {
         var layer = e.element;
@@ -150,6 +133,20 @@
           $scope.mainTabs.panier.titleInfo += 1;
         }
       };
+    }]);
+
+  module.controller('gnsSextantSearchForm', [
+    '$scope', 'suggestService',
+    function($scope, suggestService) {
+      $scope.groupPublishedOptions = {
+        mode: 'remote',
+        remote: {
+          url : suggestService.getUrl('QUERY', '_groupPublished', 'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
     }]);
 
   module.directive('sxtFixMdlinks', [

@@ -6,22 +6,26 @@
   html, body,
   body > div,
   .container-fluid,
-  .hfull, .tab-pane, .tab-content,
+  .hfull, .tab-pane,
   {
     height: 100%;
     overflow: hidden;
   }
-
+  .tab-content {
+    height: ~"calc(100% - 3.9em)";
+  }
   .container-fluid {
     height: ~"calc(100% - 5.4em)";
   }
-  [search-results],
-  .panel-body {
-    height: ~"calc(100% - 11em)";
+  [search-results]
+  {
+    height: ~"calc(100% - 3.8em - 51px)";
     overflow: auto;
   }
-  .gn-searchform {
-    height: ~"calc(100% - 12em )";
+  .gn-searchform
+  {
+    height: ~"calc(100% - 55px)";
+    overflow: auto;
   }
 }
 
@@ -56,6 +60,10 @@
   }
 }
 
+.datepicker {
+  height: auto;
+}
+
 [data-ng-search-form] {
   .gn-top-search {
     text-align: center;
@@ -81,6 +89,54 @@
       top: 1.75em;
       left: 50%;
       margin-left: 64px;
+    }
+  }
+  input[type="checkbox"] {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  [gn-map-field] {
+    width: ~"calc(100% + 30px)";
+    margin-left: -15px;
+    border-radius: 0;
+    background: #fff;
+    border: none;
+    .btn {
+      .btn-sm;
+      opacity: .80;
+    }
+  }
+  .inner-spinner {
+    position: absolute;
+    top: 1.3em;
+    right: 1.6em;
+  }
+  .sxt-categorytree {
+    font-family: arial, tahoma, helvetica, sans-serif;
+    font-size: 11px;
+    input[type='checkbox'] {
+      margin-right: 3px;
+    }
+    ul ul {
+      display: none;
+    }
+    ul {
+      padding-left:15px;
+      li {
+        display: block;
+        padding: 10px -10px;
+        margin-bottom: -1px;
+        label {
+          margin-bottom: 2px;
+          .fa {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+    > ul {
+      padding-left:0;
+      padding-top:12px;
     }
   }
 }
@@ -133,6 +189,7 @@ ul.gn-resultview {
       }
       button {
         width: 120px;
+        margin: 0 3px;
       }
     }
     .caret {
