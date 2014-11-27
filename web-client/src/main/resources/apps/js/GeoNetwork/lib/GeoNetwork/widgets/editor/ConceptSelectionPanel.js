@@ -58,7 +58,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  
          *  TODO : add support for changing search language
          */
-        lang: null,
+        lang: ['eng', 'fre'],
         /** api: config[searchOnThesaurusSelection] 
          *  ``String`` trigger search when thesaurus change. Only for default mode. 
          *  if combo or list mode use, the list of keyword is loaded automatically.
@@ -128,6 +128,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``String`` thesaurus to use.
          */
         thesaurus: null,
+
         /** api: config[initialKeyword] 
          *  ``Array`` A list of initial keywords
          */
@@ -166,15 +167,30 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  ``Ext.data.Record`` A record object for the keyword
      */
     KeywordRecord: Ext.data.Record.create([{
-            name: 'value'
-        }, {
-            name: 'definition'
-        }, {
-            name: 'thesaurus',
-            mapping: 'thesaurus/key'
-        }, {
-            name: 'uri'
-        }]),
+      name: 'value',
+      convert: function (v, n) {
+        var valueNode = Ext.DomQuery.selectNode('values/value[language='+catalogue.lang+']',n);
+        var otherLang = catalogue.lang == 'fre' ? 'eng' : 'fre';
+        var value;
+
+        if(valueNode) {
+          value = catalogue.getNodeText(valueNode);
+        }
+        if(!value || value == '') {
+          valueNode = Ext.DomQuery.selectNode('values/value[language='+otherLang+']',n);
+          value = catalogue.getNodeText(valueNode);
+        }
+        return value;
+      }
+    }, {
+      name: 'definition'
+    }, {
+      name: 'thesaurus',
+      mapping: 'thesaurus/key'
+    }, {
+      name: 'uri'
+    }]),
+
     /** private: property[keywordStore] 
      *  ``Ext.data.Store`` Store of keywords in current search
      */
@@ -217,6 +233,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // Load all keyword for the current thesaurus
         this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
         this.keywordStore.baseParams.maxResults = this.maxKeywords;
+
         this.keywordStore.on('load', function (store, records) {
         	
         	// Insert a blank record on top
@@ -349,7 +366,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             dataFields: ["value", "thesaurus"],
             //toData: [],
             toStore: this.selectedKeywordStore,
-            msWidth: 350,
+            msWidth: 400,
             msHeight: 260,
             valueField: "value",
             toSortField: undefined,
@@ -474,7 +491,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                             '?thesaurus=' + this.thesaurusIdentifier + 
                             '&id=' + ids.join(',') +
                             '&multiple=' + (ids.length > 1 ? true : false) +
-                            transfo;
+                            transfo+
+                            '&lang=eng,fre';;
         
         // Call transformation service
         Ext.Ajax.request({
@@ -599,7 +617,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 pNewSearch: true,
                 pTypeSearch: 1,
                 pThesauri: '',
-                pMode: 'searchBox'
+                pMode: 'searchBox',
+                pLang: this.lang
             },
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
@@ -622,9 +641,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
-        
-        
-        
+
+
         // One store for current selected keyword
         // When a keyword is added or removed, a XML
         // snippet corresponding to the selection is asked to 
@@ -694,7 +712,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             pNewSearch: true,
             pTypeSearch: 2, // Exact match
             pMode: 'searchBox',
-            pThesauri: thesaurus
+            pThesauri: thesaurus,
+            pLang: this.lang
         };
         
         if (this.identificationMode === 'uri') {
@@ -841,7 +860,8 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                                 '?thesaurus=' + thesaurus.get('id') + 
                                                 '&id=' + 
                                                 '&multiple=false' +
-                                                '&transformation=to-iso19139-keyword';
+                                                '&transformation=to-iso19139-keyword'+
+                                                '&lang=eng,fre';
                             
                             Ext.Ajax.request({
                                 url: url,

@@ -1130,7 +1130,6 @@
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-    
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>

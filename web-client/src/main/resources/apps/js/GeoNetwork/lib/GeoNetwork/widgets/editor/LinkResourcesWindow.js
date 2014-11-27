@@ -1301,12 +1301,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             var layerTitle = '';
             
             Ext.each(this.layerNames, function(rec) {
-                this.layerName += rec.get('name') + ',';
-                layerTitle += encodeURIComponent(rec.get('title')) + ',';
+                this.layerName += rec.get('name') + ',,';
+                layerTitle += encodeURIComponent(rec.get('title')) + ',,';
             }, this);
             
-            this.layerName = this.layerName.substring(this.layerName, this.layerName.length-1);
-            layerTitle = layerTitle.substring(layerTitle, layerTitle.length-1);
+            this.layerName = this.layerName.substring(this.layerName, this.layerName.length-2);
+            layerTitle = layerTitle.substring(layerTitle, layerTitle.length-2);
         }
         
         if (this.type === 'parent') {

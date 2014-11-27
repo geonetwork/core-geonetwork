@@ -1319,7 +1319,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     }
 
                     for (LabelAndValue result : facetResults.labelValues) {
-                        System.out.println(result.label + "=" + result.value);
                         facetValues.put(result.label, result.value);
                     }
 

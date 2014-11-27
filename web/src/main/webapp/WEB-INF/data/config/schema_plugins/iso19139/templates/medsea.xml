@@ -1,12 +1,12 @@
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                 xmlns:gts="http://www.isotc211.org/2005/gts"
                  xmlns:gmx="http://www.isotc211.org/2005/gmx"
                  xmlns:gco="http://www.isotc211.org/2005/gco"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xmlns:gml="http://www.opengis.net/gml">
+                 xmlns:gml="http://www.opengis.net/gml"
+                 xmlns:geonet="http://www.fao.org/geonetwork">
   <gmd:fileIdentifier>
-    <gco:CharacterString>93e5e55d-8e4b-4c3a-a0b4-5a833998614c</gco:CharacterString>
+    <gco:CharacterString>a3e7b692-907b-4a3c-9f92-62bd177ab8de</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
     <gco:CharacterString>eng</gco:CharacterString>
@@ -19,6 +19,9 @@
     <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
                       codeListValue="dataset"/>
   </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName gco:nilReason="missing">
+    <gco:CharacterString/>
+  </gmd:hierarchyLevelName>
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
       <gmd:organisationName gco:nilReason="missing">
@@ -42,10 +45,10 @@
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
   <gmd:dateStamp>
-    <gco:DateTime>2014-08-13T13:08:03</gco:DateTime>
+    <gco:DateTime>2014-10-08T14:35:32</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+    <gco:CharacterString>ISO 19115:2003/19139 - MedSea Checkpoint</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
     <gco:CharacterString>1.0</gco:CharacterString>
@@ -64,7 +67,7 @@
           <gmd:dimensionSize>
             <gco:Integer/>
           </gmd:dimensionSize>
-          <gmd:resolution>
+          <gmd:resolution gco:nilReason="inapplicable">
             <gco:Measure uom=""/>
           </gmd:resolution>
         </gmd:MD_Dimension>
@@ -103,7 +106,7 @@
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>Medsea template to use for dataset or collection</gco:CharacterString>
+            <gco:CharacterString>Medsea template</gco:CharacterString>
           </gmd:title>
           <gmd:date>
             <gmd:CI_Date>
@@ -116,8 +119,8 @@
           </gmd:date>
           <gmd:identifier>
             <gmd:MD_Identifier>
-              <gmd:code gco:nilReason="missing">
-                <gco:CharacterString/>
+              <gmd:code>
+                <gco:CharacterString>MEDSEA_</gco:CharacterString>
               </gmd:code>
             </gmd:MD_Identifier>
           </gmd:identifier>
@@ -126,9 +129,12 @@
       <gmd:abstract>
         <gco:CharacterString>Use this template to describe information in the context of the Medsea project</gco:CharacterString>
       </gmd:abstract>
-      <gmd:purpose>
-        <gco:CharacterString>-- Provider specification --</gco:CharacterString>
+      <gmd:purpose gco:nilReason="missing">
+        <gco:CharacterString/>
       </gmd:purpose>
+      <gmd:credit gco:nilReason="missing">
+        <gco:CharacterString/>
+      </gmd:credit>
       <gmd:status>
         <gmd:MD_ProgressCode codeListValue="onGoing"
                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"/>
@@ -151,7 +157,7 @@
           </gmd:contactInfo>
           <gmd:role>
             <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                             codeListValue=""/>
+                             codeListValue="resourceProvider"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
@@ -172,7 +178,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>MedSea challenges</gco:CharacterString>
+                <gco:CharacterString>Challenges</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -188,7 +194,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.challenges">geonetwork.thesaurus.external.theme.medsea.challenges</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.challenges">geonetwork.thesaurus.external.theme.medsea.challenges</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -205,7 +211,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>MedSea environmental matrix</gco:CharacterString>
+                <gco:CharacterString>Environmental matrix</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -221,7 +227,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.environmental.matrix</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.environmental.matrix</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -230,22 +236,20 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv"
-                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns:gmx="http://www.isotc211.org/2005/gmx">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                                    codeListValue="parameter"/>
+                                    codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>parameter.seadatanet-ocean-discovery-parameter.rdf</gco:CharacterString>
+                <gco:CharacterString>Production mode</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:DateTime>2014-08-13T12:56:09</gco:DateTime>
+                    <gco:Date>2014-08-11</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -256,7 +260,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet-ocean-discovery-parameter">geonetwork.thesaurus.local.parameter.seadatanet-ocean-discovery-parameter</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.production.mode</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -265,9 +269,40 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv"
-                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns:gmx="http://www.isotc211.org/2005/gmx"
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="parameter"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary (P02)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:DateTime>2014-10-08T14:01:28</gco:DateTime>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet-ocean-discovery-parameter">geonetwork.thesaurus.local.parameter.seadatanet-ocean-discovery-parameter</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords
                          xlink:href="local://eng/xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;amp;multiple=false"
                          xlink:show="replace">
           <gmd:keyword>
@@ -296,7 +331,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -305,9 +340,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv"
-                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns:gmx="http://www.isotc211.org/2005/gmx">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -315,7 +348,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>MedSea processing level of characteristics</gco:CharacterString>
+                <gco:CharacterString>Processing level of characteristics</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -331,7 +364,172 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.level.of.characteristics">geonetwork.thesaurus.external.theme.medsea.level.of.characteristics</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.level.of.characteristics">geonetwork.thesaurus.external.theme.medsea.level.of.characteristics</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>SDN EDMERP Identifier</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2014-08-11</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.sdn.edmerp.identifier">geonetwork.thesaurus.external.theme.medsea.sdn.edmerp.identifier</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="contact"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>SDN EDMO Identifier</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2014-10-08</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.contact.seadatanet.edmo">geonetwork.thesaurus.local.contact.seadatanet.edmo</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Data delivery mechanisms</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2014-08-11</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.data.delivery.mechanism">geonetwork.thesaurus.external.theme.medsea.data.delivery.mechanism</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>BODC Parameter Usage Vocabulary (P01)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:DateTime>2014-11-25T09:05:00</gco:DateTime>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet.parameter.usage.P01">geonetwork.thesaurus.local.parameter.seadatanet.parameter.usage.P01</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>SeaDataNet Agreed Parameter Groups (P03)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:DateTime>2014-10-29T19:05:26</gco:DateTime>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.seadatanet.parameter.groups.P03">geonetwork.thesaurus.local.parameter.seadatanet.parameter.groups.P03</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -357,63 +555,6 @@
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
-      <gmd:aggregationInfo>
-        <gmd:MD_AggregateInformation>
-          <gmd:aggregateDataSetName>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString>-- Program name --</gco:CharacterString>
-              </gmd:title>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:date>
-                    <gco:Date/>
-                  </gmd:date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                         codeListValue="creation"/>
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </gmd:CI_Citation>
-          </gmd:aggregateDataSetName>
-          <gmd:associationType>
-            <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
-                                        codeListValue="crossReference"/>
-          </gmd:associationType>
-          <gmd:initiativeType>
-            <gmd:DS_InitiativeTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_InitiativeTypeCode"
-                                       codeListValue="program"/>
-          </gmd:initiativeType>
-        </gmd:MD_AggregateInformation>
-      </gmd:aggregationInfo>
-      <gmd:aggregationInfo>
-        <gmd:MD_AggregateInformation>
-          <gmd:aggregateDataSetName>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString>-- EDMERP project name --</gco:CharacterString>
-              </gmd:title>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                         codeListValue=""/>
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </gmd:CI_Citation>
-          </gmd:aggregateDataSetName>
-          <gmd:associationType>
-            <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
-                                        codeListValue="crossReference"/>
-          </gmd:associationType>
-          <gmd:initiativeType>
-            <gmd:DS_InitiativeTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_InitiativeTypeCode"
-                                       codeListValue="project"/>
-          </gmd:initiativeType>
-        </gmd:MD_AggregateInformation>
-      </gmd:aggregationInfo>
       <gmd:spatialRepresentationType>
         <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector"
                                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"/>
@@ -435,8 +576,8 @@
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>oceans</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
-      <gmd:environmentDescription>
-        <gco:CharacterString>-- Intended use description --</gco:CharacterString>
+      <gmd:environmentDescription gco:nilReason="missing">
+        <gco:CharacterString/>
       </gmd:environmentDescription>
       <gmd:extent>
         <gmd:EX_Extent>
@@ -493,9 +634,6 @@
           <gmd:version>
             <gco:CharacterString>3.2.1</gco:CharacterString>
           </gmd:version>
-          <gmd:amendmentNumber gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:amendmentNumber>
         </gmd:MD_Format>
       </gmd:distributionFormat>
       <gmd:transferOptions>
@@ -508,6 +646,22 @@
               <gmd:protocol>
                 <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
               </gmd:protocol>
+              <gmd:name gco:nilReason="missing">
+                <gco:CharacterString/>
+              </gmd:name>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>DOI</gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>Identifier of the dataset in the catalogue</gco:CharacterString>
+              </gmd:name>
             </gmd:CI_OnlineResource>
           </gmd:onLine>
         </gmd:MD_DigitalTransferOptions>
@@ -522,39 +676,33 @@
             <gmd:MD_ScopeCode codeListValue="dataset"
                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"/>
           </gmd:level>
-          <gmd:levelDescription/>
-          <gmd:levelDescription/>
         </gmd:DQ_Scope>
       </gmd:scope>
       <gmd:report>
         <gmd:DQ_DomainConsistency>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>Responsiveness</gco:CharacterString>
+          </gmd:nameOfMeasure>
           <gmd:result>
-            <gmd:DQ_ConformanceResult>
-              <gmd:specification>
-                <gmd:CI_Citation>
-                  <gmd:title gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:title>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date/>
-                      </gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                             codeListValue="publication"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </gmd:CI_Citation>
-              </gmd:specification>
-              <gmd:explanation gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:explanation>
-              <gmd:pass>
-                <gco:Boolean>false</gco:Boolean>
-              </gmd:pass>
-            </gmd:DQ_ConformanceResult>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_DomainConsistency>
+      </gmd:report>
+      <gmd:report>
+        <gmd:DQ_DomainConsistency>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>Reliability</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
           </gmd:result>
         </gmd:DQ_DomainConsistency>
       </gmd:report>
@@ -565,8 +713,8 @@
           </gmd:statement>
           <gmd:processStep>
             <gmd:LI_ProcessStep>
-              <gmd:description>
-                <gco:CharacterString>-- Production and quality assessment specifications reference --</gco:CharacterString>
+              <gmd:description gco:nilReason="missing">
+                <gco:CharacterString/>
               </gmd:description>
             </gmd:LI_ProcessStep>
           </gmd:processStep>

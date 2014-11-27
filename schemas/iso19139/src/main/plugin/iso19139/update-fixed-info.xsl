@@ -416,4 +416,78 @@
       </xsl:copy>
 	</xsl:template>
 
+
+  <!-- MedSea specific templates -->
+  <xsl:template
+          match="gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
+                  gmd:code/gco:CharacterString"
+          priority="200">
+
+    <xsl:variable name="prefix" select="'MEDSEA_'"/>
+    <xsl:variable name="currentIdentifier" select="."/>
+    <xsl:variable name="hasLinkage"
+                  select="count(ancestor-or-self::gmd:MD_Metadata/
+                          gmd:distributionInfo/gmd:MD_Distribution/
+                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
+                          gmd:onLine[2]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
+    <!-- Compute resource identifier based on the following rules:
+    if online resource available, concatenate the MEDSEA_<Online resource name>
+    if not the identifier starts with MEDSEA_<whatever>
+    -->
+    <xsl:copy>
+      <xsl:choose>
+        <xsl:when test="$hasLinkage">
+          <xsl:variable name="linkageName"
+                        select="ancestor-or-self::gmd:MD_Metadata/
+                            gmd:distributionInfo/gmd:MD_Distribution/
+                            gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
+                            gmd:onLine[2]/gmd:CI_OnlineResource/gmd:name"/>
+
+          <xsl:value-of select="concat($prefix, $linkageName)"/>
+        </xsl:when>
+        <xsl:when test="starts-with($currentIdentifier, $prefix)">
+          <xsl:value-of select="$currentIdentifier"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="concat($prefix, $currentIdentifier)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Force resolution nilReason attribute to be
+  set to inapplicable in case of null value.
+  -->
+  <xsl:template
+          match="gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:spatialRepresentationInfo/gmd:MD_Georectified/
+                gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"
+          priority="200">
+    <xsl:variable name="hasNilReason"
+                  select="@gco:nilReason != ''"/>
+    <xsl:variable name="isNullValue"
+                  select="normalize-space(gco:Measure/text()) = ''"/>
+    <xsl:copy>
+      <xsl:choose>
+        <!-- Drop nilReason attribute if no value -->
+        <xsl:when test="not($isNullValue)"></xsl:when>
+        <!-- Preserve nilReason attribute if existing -->
+        <xsl:when test="$hasNilReason">
+          <xsl:copy-of select="@gco:nilReason"/>
+        </xsl:when>
+        <!-- Set to inapplicable by default -->
+        <xsl:when test="$isNullValue">
+          <xsl:attribute name="gco:nilReason" select="'inapplicable'"/>
+        </xsl:when>
+        <!-- Which means that you can't have a value with a nilReason attribute. -->
+      </xsl:choose>
+      <xsl:copy-of select="*"/>
+    </xsl:copy>
+  </xsl:template>
+
+
 </xsl:stylesheet>

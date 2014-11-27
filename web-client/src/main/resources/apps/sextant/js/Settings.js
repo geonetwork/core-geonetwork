@@ -61,7 +61,7 @@ GeoNetwork.Settings.privileges = {
 
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
                                        {name: 'keywords'},
-//                                       {name: 'inspireThemes'},
+                                       {name: 'inspireThemes'},
                                        {name: 'denominators'},
                                        {name: 'createDateYears'}];
 GeoNetwork.Settings.facetMaxItems = 5;
@@ -117,6 +117,6 @@ GeoNetwork.AnnuaireGroupMapping = {
       "or MYOCEAN-SERVICES-AND-DATASETS " +
       "or MYOCEAN-SPECIFIC-CORE " +
       "or MYOCEAN-UPSTREAM-PRODUCTS",
-  "iso19139.sdn-product" : "EMODNET_Chemistry " +
-      "or SEADATANET"
+  "iso19139.sdn-product" : "CONTACTS_EDMO " +
+      "or CONTACTS_EDMERP"
 };

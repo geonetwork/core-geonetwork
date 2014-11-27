@@ -568,7 +568,10 @@ GeoNetwork.util.SearchFormTools = {
                 store: new Ext.data.ArrayStore({
                     id: 0,
                     fields: ['id', 'name'],
-                    data: [['n', OpenLayers.i18n('md')], ['y', OpenLayers.i18n('tpl')]]
+                    data: [
+                      ['n', OpenLayers.i18n('md')],
+                      ['s', OpenLayers.i18n('subtpl')],
+                      ['y', OpenLayers.i18n('tpl')]]
                 }),
                 valueField: 'id',
                 displayField: 'name',

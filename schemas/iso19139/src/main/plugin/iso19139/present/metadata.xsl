@@ -3989,7 +3989,6 @@
 		>
 		<xsl:param name="schema" />
 		<xsl:param name="edit" />
-
 		<!-- Define a rows variable if form element as
 			to be a textarea instead of a simple text input.
 			This parameter define the number of rows of the textarea. -->
@@ -4023,7 +4022,6 @@
 			<xsl:with-param name="rows" select="$rows" />
 		</xsl:call-template>
 	</xsl:template>
-
 
 
 	<!-- =====================================================================				

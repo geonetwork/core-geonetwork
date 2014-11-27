@@ -456,51 +456,59 @@
 								<xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gmd:EX_TemporalExtent']/label)"/>
 							</xsl:with-param>
 							<xsl:with-param name="content">
-								<xsl:apply-templates mode="simpleElement" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:beginPosition">
-									<xsl:with-param name="schema"  select="$schema"/>
-									<xsl:with-param name="edit"   select="$edit"/>
-									<xsl:with-param name="text">
-										<xsl:variable name="ref" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:beginPosition/geonet:element/@ref"/>
-										<xsl:variable name="format">
-											<xsl:choose>
-												<xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
-												<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
-											</xsl:choose>
-										</xsl:variable>
-										
-										<xsl:call-template name="calendar">
-											<xsl:with-param name="ref" select="$ref"/>
-											<xsl:with-param name="date" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:beginPosition"/>
-											<xsl:with-param name="format" select="$format"/>
-										</xsl:call-template>
-										
-									</xsl:with-param>
-								</xsl:apply-templates>
-								
-								<xsl:apply-templates mode="simpleElement" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:endPosition">
-									<xsl:with-param name="schema"  select="$schema"/>
-									<xsl:with-param name="edit"   select="$edit"/>
-									<xsl:with-param name="text">
-										<xsl:variable name="ref" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:endPosition/geonet:element/@ref"/>
-										<xsl:variable name="format">
-											<xsl:choose>
-												<xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
-												<xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
-											</xsl:choose>
-										</xsl:variable>
-										
-										<xsl:call-template name="calendar">
-											<xsl:with-param name="ref" select="$ref"/>
-											<xsl:with-param name="date" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:*/gml:endPosition"/>
-											<xsl:with-param name="format" select="$format"/>
-										</xsl:call-template>
-									</xsl:with-param>
-								</xsl:apply-templates>
+
+                <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+                                        gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/
+                                          gmd:extent/gml:TimePeriod">
+
+
+                  <xsl:apply-templates mode="simpleElement"
+                                       select="gml:*/gml:beginPosition">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                    <xsl:with-param name="text">
+                      <xsl:variable name="ref" select="gml:*/gml:beginPosition/geonet:element/@ref"/>
+                      <xsl:variable name="format">
+                        <xsl:choose>
+                          <xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                          <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:variable>
+
+                      <xsl:call-template name="calendar">
+                        <xsl:with-param name="ref" select="$ref"/>
+                        <xsl:with-param name="date" select="gml:*/gml:beginPosition"/>
+                        <xsl:with-param name="format" select="$format"/>
+                      </xsl:call-template>
+
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+
+                  <xsl:apply-templates mode="simpleElement" select="gml:*/gml:endPosition">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                    <xsl:with-param name="text">
+                      <xsl:variable name="ref" select="gml:*/gml:endPosition/geonet:element/@ref"/>
+                      <xsl:variable name="format">
+                        <xsl:choose>
+                          <xsl:when test="gco:Date"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+                          <xsl:otherwise><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:variable>
+
+                      <xsl:call-template name="calendar">
+                        <xsl:with-param name="ref" select="$ref"/>
+                        <xsl:with-param name="date" select="gml:*/gml:endPosition"/>
+                        <xsl:with-param name="format" select="$format"/>
+                      </xsl:call-template>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </xsl:for-each>
 								
 							</xsl:with-param>
 							<xsl:with-param name="helpLink">
 								<xsl:call-template name="getHelpLink">
-									<xsl:with-param name="name"   select="name(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod)"/>
+									<xsl:with-param name="name"   select="name(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod)"/>
 									<xsl:with-param name="schema" select="$schema"/>
 								</xsl:call-template>
 							</xsl:with-param>

@@ -6,7 +6,7 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
   <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges">
-    <dc:title>MedSea challenges</dc:title>
+    <dc:title>Challenges</dc:title>
     <dc:description></dc:description>
     <dcterms:issued>2014-08-11</dcterms:issued>
     <dcterms:modified>2014-08-11</dcterms:modified>
@@ -46,6 +46,12 @@
     <skos:prefLabel xml:lang="en">Marine environment</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
     <skos:prefLabel xml:lang="fr">Marine environment</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#river-inputs">
+    <skos:prefLabel xml:lang="en">River inputs</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">River inputs</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
 </rdf:RDF>

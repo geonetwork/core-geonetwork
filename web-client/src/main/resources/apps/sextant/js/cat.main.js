@@ -173,8 +173,8 @@ cat.app = function() {
         win.show();
     }
     
-    function edit(metadataId, create, group, child, isTemplate, schema) {
-        var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
+    function edit(metadataId, create, group, child, isTemplate, schema, record) {
+        var record = record || catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
 
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
@@ -227,9 +227,24 @@ cat.app = function() {
         }
 
         if (metadataId) {
+          var recordStandard = record && record.get('standardName');
+
+          // Open Angular metadata editor for MedSea records.
+          if (recordStandard && recordStandard.indexOf('MedSea') !== -1) {
+            var url = 'catalog.edit#/';
+            if (create) {
+              url += 'create/from/' + metadataId +
+                '/in/' + group;
+            } else {
+              url += 'metadata/' + metadataId + '/tab/characteristics';
+            }
+            window.open(
+              catalogue.services.rootUrl + url)
+          } else {
             this.editorWindow.show();
             var recordSchema = record && record.get('schema');
             this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
+          }
         }
     }
 
@@ -906,6 +921,12 @@ cat.app = function() {
           } else {
             facetConfig = GeoNetwork.Settings.facetListConfig;
           }
+
+          Ext.each(facetConfig, function(cfg) {
+            if(cfg.name == 'inspireThemes') {
+              cfg.name = 'inspireThemes_' + catalogue.lang.substr(0,2);
+            }
+          });
 
           facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,

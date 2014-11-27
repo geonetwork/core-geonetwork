@@ -24,7 +24,7 @@
 					<gmd:address>
 						<gmd:CI_Address>
 							<gmd:electronicMailAddress>
-								<gco:CharacterString>mail@mail.com</gco:CharacterString>
+								<gco:CharacterString>sextant@ifremer.fr</gco:CharacterString>
 							</gmd:electronicMailAddress>
 						</gmd:CI_Address>
 					</gmd:address>
@@ -103,7 +103,7 @@
 					<gmd:code>
 						<!-- MANDATORY: coordinate reference system of the product among EPSG labels at http://spatialreference.org/ref/epsg/ -->
 						<!-- Controlled vocabulary from Geonetwork embeded GeoTools database -->
-						<gco:CharacterString>WGS84 / Simple Mercator (EPSG:41001)</gco:CharacterString>
+						<gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
 					</gmd:code>
 					<gmd:codeSpace>
 						<gco:CharacterString>EPSG</gco:CharacterString>
@@ -137,7 +137,7 @@
 					</gmd:date>
 					<gmd:edition>
 						<!-- OPTIONAL: version of the product (depends on observation datasets and algorithm -->
-						<gco:CharacterString>2.1</gco:CharacterString>
+						<gco:CharacterString>1.0</gco:CharacterString>
 					</gmd:edition>
 					<gmd:editionDate>
 						<!-- MANDATORY: latest update date for the product (ie for the data of the product) -->
@@ -316,7 +316,7 @@
 			<gmd:spatialResolution>
 				<gmd:MD_Resolution>
 					<gmd:distance>
-						<gco:Distance uom="km">1</gco:Distance>
+						<gco:Distance uom="degree">1</gco:Distance>
 					</gmd:distance>
 				</gmd:MD_Resolution>
 			</gmd:spatialResolution>

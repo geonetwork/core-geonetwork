@@ -85,10 +85,14 @@
   <add-extent-from-geokeywordsHelp>Analyse les mots clés de type géographique et ajoute les emprises correspondantes.</add-extent-from-geokeywordsHelp>
 
 
+
+
   <!-- Medsea-->
   <medsea>MedSea</medsea>
   <medsea-metadata>Metadata</medsea-metadata>
+  <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
+  <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
   <datasources>Data sources</datasources>
   <overview>Overview</overview>
   <spatialCoverage>Spatial coverage</spatialCoverage>
@@ -96,15 +100,16 @@
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
   <edmerpName>EDMREP name</edmerpName>
-  <dataProvider>Data provider</dataProvider>
-  <uniqueIdentifier>Unique identifier</uniqueIdentifier>
-  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <edmoName>EDMO name</edmoName>
+  <dataProvider>Data provider*</dataProvider>
+  <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
+  <environmental-matrix>Environmental matrix*</environmental-matrix>
   <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
-  <level-of-characteristics>Level of characteristicss</level-of-characteristics>
-  <providerSpecification>Purpose of characteristics production (provider specification)</providerSpecification>
+  <level-of-characteristics>Level of characteristics</level-of-characteristics>
+  <providerSpecification>Purpose of characteristics production (provider specification)*</providerSpecification>
   <processStepReference>Production and quality assessment specifications reference</processStepReference>
-  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge</useOfTheCharacteristics>
-  <intendedUse>Intended use description</intendedUse>
+  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
+  <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
@@ -113,23 +118,17 @@
   <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
-  <dataPolicy>Data policy</dataPolicy>
-  <costBasis>Cost basis</costBasis>
-  <dataFormats>Data formats</dataFormats>
+  <dataPolicy>Data policy*</dataPolicy>
+  <costBasis>Cost basis*</costBasis>
+  <dataFormats>Data formats*</dataFormats>
+  <temporalExtent>Temporal extent*</temporalExtent>
+  <responsiveness>Responsiveness*</responsiveness>
+  <reliability>Reliability</reliability>
+  <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
+  <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>
+  <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
+  <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
+  <challenge>Challenge*</challenge>
 
-  <p03-field-missing>
-    <div class="text-danger">P03 thesaurus is missing.</div>
-  </p03-field-missing>
-  <p01-field-missing>
-    <div class="text-danger">P01 thesaurus is missing.</div>
-  </p01-field-missing>
 
-  <production-mode-field-missing>
-    <div class="text-danger">Use resource maintenance to store production mode ?</div>
-  </production-mode-field-missing>
-
-  <sdn-edmerp>
-    <div class="text-info">Choose a project from the
-      <a href="http://seadatanet.maris2.nl/v_edmerp/search.asp">European Directory of Marine Environmental Research Projects</a></div>
-  </sdn-edmerp>
 </strings>

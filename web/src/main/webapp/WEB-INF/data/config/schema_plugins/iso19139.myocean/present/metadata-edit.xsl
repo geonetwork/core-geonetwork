@@ -26,7 +26,20 @@
 			</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>-->
-	
+
+	<!-- removing gmd:credit to use a simple input type=text instead of a textarea
+		for the field (see metadata-edit.xsl from regular iso19139 schema line 3769
+		for original template -->
+	<xsl:template mode="iso19139.myocean" match="gmd:credit[gco:CharacterString]">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		<xsl:variable name="class" />
+		<xsl:call-template name="localizedCharStringField">
+			<xsl:with-param name="schema" select="$schema" />
+			<xsl:with-param name="edit" select="$edit" />
+			<xsl:with-param name="class" select="$class" />
+		</xsl:call-template>
+	</xsl:template>
 
 	<xsl:template mode="iso19139.myocean" match="gmd:contact|gmd:pointOfContact|gmd:citedResponsibleParty|gmd:distributorContact" priority="99">
 		<xsl:param name="schema"/>
@@ -459,9 +472,12 @@
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>
-				
-				
-				
+
+				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
+
 				<!--<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
                                                                 gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']">
                     <xsl:with-param name="schema" select="$schema"/>
@@ -817,6 +833,20 @@
                             <gmd:extent>
                                 <gml:TimePeriod
 						-->
+
+            <!-- Using gmd:extent//gml:description or
+            gml:TimePeriod/*/gml:description instead of
+            gmd:extent/gml:TimePeriod/gml:description because in the
+            metadocument, an extra element <gml:TimePeriodTypeGROUP_ELEMENT0>
+            is added in between. -->
+            <xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+									gmd:EX_Extent/gmd:temporalElement/
+									gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:description">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit"   select="$edit"/>
+              <xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/description"/>
+            </xsl:apply-templates>
+
 						<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent/gmd:temporalElement/
 							gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]">
@@ -1121,9 +1151,8 @@
 												value="{$value}" size="30"/>											
 											
 											<div class="slidingWindow">
-												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
+												<label style="margin:0"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
 												<br/>
-												<label>
 													<select id="_{$id}_s" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
@@ -1132,34 +1161,36 @@
 															</xsl:if>
 															- (before processing time)</option>
 													</select>
-													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
+
+                        <label for="_{$id}_s_month">
+
+                        <xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
-												<input type="number" min="0" class="md small" 
-													id="_{$id}_s_month" 
+												<input type="number" min="0" class="md small"
+													id="_{$id}_s_month"
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-months}" size="5"/>
-												<label for="_{$id}_s_month">
+												<label for="_{$id}_s_day">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
-												<input type="number" min="0" class="md small" 
-													id="_{$id}_s_day" 
+												<input type="number" min="0" class="md small"
+													id="_{$id}_s_day"
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-days}" size="5"/>
 												<label for="_{$id}_s_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
-												<input type="number" min="0" class="md small" 
+												<input type="number" min="0" class="md small"
 													id="_{$id}_s_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-hours}" size="5"/>
 											</div>
 											<div class="slidingWindow">
-												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
+												<label style="margin:0"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
 												<br/>
-												<label>
 													<select id="_{$id}_e" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
@@ -1168,14 +1199,17 @@
 															</xsl:if>
 															- (before processing time)</option>
 													</select>
-													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
-												</label>
-												<input type="number" min="0" class="md small" 
+
+                        <label for="_{$id}_e_month">
+                          <xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
+                        </label>
+
+                        <input type="number" min="0" class="md small"
 													id="_{$id}_e_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$end-months}" size="5"/>
-												<label for="_{$id}_e_month">
+												<label for="_{$id}_e_day">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
 												<input type="number" min="0" class="md small" 
@@ -1195,8 +1229,6 @@
 										</xsl:with-param>
 									</xsl:apply-templates>
 								</xsl:for-each>
-					
-								
 								
 								<!--<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 									gmd:EX_Extent[not(gmd:description)]/gmd:temporalElement[1]/
@@ -1309,6 +1341,52 @@
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:for-each>
+				
+				<!-- production unit -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgProductionUnit"/>
+						<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
+							<xsl:apply-templates mode="iso19139.myocean" select=".">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
+				
+				<!-- Dissemination unit -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='distributor']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgDisseminationUnit"/>
+						<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
+							<xsl:apply-templates mode="iso19139.myocean" select=".">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>				
 				
 				<xsl:if test="$edit">
 					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 

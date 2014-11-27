@@ -250,6 +250,57 @@ form.gn-tab-inspire {
   }
 }
 
+form.gn-tab-characteristics, form.gn-tab-datasources,
+form.gn-tab-overview, form.gn-tab-spatialCoverage,
+form.gn-tab-timeCoverage, form.gn-tab-accessibility,
+form.gn-tab-medsea-metadata {
+  /* Do not highlight ISO mandatory fields */
+  .control-label {
+    color: inherit;
+  }
+
+  /* Do not display remove control ... */
+  .btn.fa.fa-times.text-danger {
+    display: none;
+  }
+
+
+    /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector='tagsinput'] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .control-label {
+    text-align: left !important;
+  }
+}
+
+/* ... except for EDMERP and EDMO fields */
+form.gn-tab-datasources {
+  div.gn-extra-field > label {
+    visibility: visible !important;
+  }
+  /* Display remove action for the third and fifth
+  form field in this tab. It should select EDMERP
+  and EDMO field if the record follow the guideline. */
+  .gn-field:nth-of-type(3) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
+    display: block;
+  }
+}
+
+form.gn-tab-timeCoverage {
+  div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well {
+    display: block !important;
+    visibility: visible !important;
+  }
+}
+
+
 /* Onlinesrc styles */
 .onlinesrc-container {
   width: 680px;

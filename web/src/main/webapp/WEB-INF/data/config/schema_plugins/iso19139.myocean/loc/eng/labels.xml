@@ -175,4 +175,8 @@
                 Committee (EPSG)</option>
         </helper>
     </element>
+	<element name="gmd:credit">
+		<label>Credit</label>
+		<description>Credit</description>
+	</element>
 </labels>

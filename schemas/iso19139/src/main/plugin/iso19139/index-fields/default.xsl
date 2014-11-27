@@ -287,14 +287,21 @@
                     <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
                   </xsl:call-template>
                 </xsl:variable>
-                <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
-                          	<Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
-                            <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
-                          	<Field name="inspirecat" string="true" store="false" index="true"/>
-                          </xsl:if>
-                        </xsl:if>
-                    </xsl:if>
-                </xsl:for-each>
+                <xsl:variable name="frenchInspireTheme">
+                  <xsl:call-template name="translateInspireThemeToFrench">
+                    <xsl:with-param name="keyword" select="string(.)"/>
+                    <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                  </xsl:call-template>
+                </xsl:variable>
+                <Field name="inspireTheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
+                <Field name="inspireTheme_fr" string="{$frenchInspireTheme}" store="true" index="true"/>
+                <Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
+                <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
+                <Field name="inspirecat" string="true" store="false" index="true"/>
+              </xsl:if>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
 
         <!-- Index thesaurus name to easily search for records
         using keyword from a thesaurus. -->
@@ -841,16 +848,26 @@
 	<!-- each containing a skos:definition and skos:prefLabel for each language -->
 	<!-- This template finds the provided keyword in the skos:prefLabel elements and
 	      returns the English one from the same skos:Concept -->
-	<xsl:template name="translateInspireThemeToEnglish">
-		<xsl:param name="keyword"/>
-		<xsl:param name="inspireThemes"/>
+  <xsl:template name="translateInspireThemeToEnglish">
+    <xsl:param name="keyword"/>
+    <xsl:param name="inspireThemes"/>
 
     <xsl:value-of select="$inspireThemes/skos:prefLabel[
           @xml:lang='en' and
           ../skos:prefLabel = $keyword]/text()"/>
-	</xsl:template>	
+  </xsl:template>
 
-	<xsl:template name="determineInspireAnnex">
+  <xsl:template name="translateInspireThemeToFrench">
+    <xsl:param name="keyword"/>
+    <xsl:param name="inspireThemes"/>
+
+    <xsl:value-of select="$inspireThemes/skos:prefLabel[
+            @xml:lang='fr' and
+            ../skos:prefLabel = $keyword]/text()"/>
+</xsl:template>
+
+
+  <xsl:template name="determineInspireAnnex">
 		<xsl:param name="keyword"/>
 		<xsl:param name="inspireThemes"/>
 		<xsl:variable name="englishKeywordMixedCase">

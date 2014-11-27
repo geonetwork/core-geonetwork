@@ -1293,6 +1293,15 @@
 		<description>Location (address) for on-line access using a Uniform Resource Locator address
             or similar addressing scheme such as http://www.statkart.no/isotc211</description>
 		<condition>mandatory</condition>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="http://www.seadatanet.org/Metadata/EDMED-Datasets">http://www.seadatanet.org/Metadata/EDMED-Datasets</option>
+      <option value="http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI">http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI</option>
+      <option value="http://inspire-geoportal.ec.europa.eu/">http://inspire-geoportal.ec.europa.eu/</option>
+      <option value="http://www.myocean.eu/">http://www.myocean.eu/</option>
+      <option value="http ://www.mongoos.eu/">http ://www.mongoos.eu/</option>
+    </helper>
 	</element>
 	<element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
 		<label>Maintenance and update frequency</label>
@@ -1420,6 +1429,20 @@
 		<label>Name of the resource</label>
 		<description>Name of the online resource</description>
 	</element>
+  <element name="gmd:name" context="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:name" id="400.0">
+    <label>Name of the resource</label>
+    <description>Name of the online resource</description>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="SDN EDMED">SDN EDMED</option>
+      <option value="SDN CDI">SDN CDI</option>
+      <option value="INSPIRE Geoportal/">INSPIRE Geoportal</option>
+      <option value="MyOcean">MyOcean</option>
+      <option value="Mongoos">Mongoos</option>
+    </helper>
+  </element>
+
 	<element name="gmd:name" context="gmd:CI_Series" id="404.0">
 		<label>Name</label>
 		<description>Name of the series, or aggregate dataset, of which the dataset is a
@@ -1796,6 +1819,16 @@
 		<description>Other restrictions and legal prerequisites for accessing and using the
             resource</description>
 		<condition>conditional</condition>
+    <!-- MedSea list of values -->
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
+            editorMode="radio">
+      <option value="Restricted">Restricted</option>
+      <option value="Accessible under moratorium">Accessible under moratorium</option>
+      <option value="Unrestricted">Unrestricted</option>
+      <option value="Unknown">Unknown</option>
+    </helper>
 	</element>
 	<element name="gmd:page" id="406.0">
 		<label>Page</label>
@@ -2005,6 +2038,15 @@
 	<element name="gmd:resolution" id="182.0">
 		<label>Resolution</label>
 		<description>Degree of detail in the grid dataset</description>
+    <helper relAtt="uom">
+      <option value="" title="second">seconds</option>
+      <option value="" title="minute">minutes</option>
+      <option value="" title="hour">hours</option>
+      <option value="" title="hour">hours</option>
+      <option value="" title="day">days</option>
+      <option value="" title="month">months</option>
+      <option value="" title="year">years</option>
+    </helper>
 	</element>
 	<element name="gmd:resourceConstraints" id="35.0">
 		<label>Resource constraints</label>
@@ -2303,6 +2345,18 @@
 		<label>Use limitation</label>
 		<description>Limitation affecting the fitness for use of the resource. Example, _not to be
             used for navigation_</description>
+
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
+            editorMode="radio">
+      <option value="No charge">No charge</option>
+      <option value="Distribution cost charge">Distribution cost charge</option>
+      <option value="Collection cost charge">Collection cost charge</option>
+      <option value="Commercial cost charge">Commercial cost charge</option>
+      <option value="Cost charge depends on intented use and category of users">Cost charge depends on intented use and category of users</option>
+      <option value="Unknown">unknown</option>
+    </helper>
     <helper>
       <option value="No condition applies">No condition applies</option>
       <option value="Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>
@@ -2334,20 +2388,34 @@
 		<description>Explanation of the application of the legal constraints or other restrictions
             and legal prerequisites for obtaining and using the resource or metadata</description>
 	</element>
-	<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
+	<!--<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
 		<condition>mandatory</condition>
 		<label>Value</label>
 		<description>Quantitative value or values, content determined by the evaluation procedure
             used</description>
-	</element>
-	<element name="gmd:value">
-		<label>Value</label>
-		<description />
-	</element>
+	</element>-->
 	<element name="gmd:value" id="544.0" context="gmd:MD_Type">
 		<label>Value</label>
 		<description>Data type value</description>
 	</element>
+  <element name="gmd:value" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_QuantitativeResult/gmd:value">
+    <label>Value</label>
+    <description>Quantitative value or values, content determined by the evaluation procedure
+      used</description>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:DQ_DomainConsistency' and
+              contains(gmd:nameOfMeasure/gco:CharacterString, 'Responsiveness')]">
+      <option value="&lt;15mn (on-line download)">&lt;15mn (on-line download)</option>
+      <option value="Less than 3 hours">Less than 3 hours</option>
+      <option value="Less than 24 hours">Less than 24 hours</option>
+      <option value="Less than 1 week">Less than 1 week</option>
+      <option value="More than 1 week">More than 1 week</option>
+    </helper>
+  </element>
+  <element name="gmd:value">
+    <label>Value</label>
+    <description />
+  </element>
 	<element name="gmd:valueType" id="134.0">
 		<label>Value type</label>
 		<description>Quantitative conformance quality level value or range of values</description>

@@ -275,7 +275,24 @@ GeoNetwork.Util = {
         var updatePermalink = function() {
             var link = l;
             if (typeof(l) == 'function') {
-                link = l.apply(scope);
+
+              var url;
+
+              if(document.URL.indexOf('?') >= 0) {
+                // delete all search params already in the url
+                var getParams = document.URL.split('?');
+                var params = Ext.urlDecode(getParams[1]);
+                for(var p in params) {
+                  if(p.indexOf('s_') == 0) {
+                    delete params[p];
+                  }
+                  if(params[p] == 'undefined') {
+                    params[p] = true;
+                  }
+                }
+                url = getParams[0] + '?' + Ext.urlEncode(params);
+              }
+              link = l.apply(scope, [url]);
             }
             var id = 'permalink-' + permalinkMenu.getId();
             permalinkMenu.update('<input id="' + id + '" value="' + link + '"/>'

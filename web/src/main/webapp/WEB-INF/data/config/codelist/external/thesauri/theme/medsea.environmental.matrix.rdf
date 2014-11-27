@@ -6,7 +6,7 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
   <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix">
-    <dc:title>MedSea environmental matrix</dc:title>
+    <dc:title>Environmental matrix</dc:title>
     <dc:description></dc:description>
     <dcterms:issued>2014-08-11</dcterms:issued>
     <dcterms:modified>2014-08-11</dcterms:modified>

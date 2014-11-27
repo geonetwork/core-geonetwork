@@ -40,7 +40,8 @@ cat.lang.en = {
     ,"onlineResFromMD": "From metadatas"
     ,"onlineResFromManual": "Manual input "
     ,"refineSearch": "Refine search"
-    ,"inspirethemes": "Inspire themes"
+    ,"inspireThemes": "Inspire themes"
+    ,"inspireThemes_en": "Inspire themes"
     ,"onlineResExits" : "Online resource already exists"
     ,"onlineResExitsMsg" : "Online resource already exists with the key<ul><li>name</li><li>protocol</li><li>url</li></ul>"
 };

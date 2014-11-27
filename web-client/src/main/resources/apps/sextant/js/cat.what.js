@@ -145,7 +145,7 @@ cat.what = function() {
         label: {eng: 'Sextant', fre:'Sextant'}},
         {
           id: 'external.theme.inspire-theme',
-          field: 'inspiretheme_en',
+          field: 'inspireTheme_en',
           tree: false,
           label: {eng: 'INSPIRE', fre:'INSPIRE'}}];
 

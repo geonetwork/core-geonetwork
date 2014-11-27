@@ -666,7 +666,14 @@ GeoNetwork.map.ExtentMap = function(){
                                 
                                 // Refresh all inputs
                                 watchRadios(this.watchedBbox, this.eltRef);
-                                
+
+                                // Update validation
+                                $(wsen[0]).onkeyup();
+                                $(wsen[1]).onkeyup();
+                                $(wsen[2]).onkeyup();
+                                $(wsen[3]).onkeyup();
+
+
                             }.bind({
                                 watchedBbox: watchedBbox,
                                 eltRef: eltRef

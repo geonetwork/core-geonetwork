@@ -365,6 +365,7 @@
 						<gmd:EX_TemporalExtent>
 							<gmd:extent>
 								<gml:TimePeriod gml:id="extent">
+										<gml:description/>
 										<gml:beginPosition>2010-10-05</gml:beginPosition>
 										<gml:endPosition indeterminatePosition="unknown"/>
 								</gml:TimePeriod>

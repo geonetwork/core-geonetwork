@@ -673,6 +673,7 @@ div.x-tip-body div.help {
  * is not an option.
  */
 .myocean * .gmdalternateTitle span.buttons,
+.myocean * .gmdcredit span.buttons,
 .sdnProduct * .gmdalternateTitle span.buttons,
 .sdnProduct * .gmdresolution span.buttons,
 .sdnProduct * .gmduseLimitation span.buttons {
@@ -784,8 +785,38 @@ input[type="text"] {
 	font-weight: 700 !important;
 }
 
+/* Editor styling ajustments */
+input.md {
+    margin-right: 10px;
+}
+.metadata #editForm * label {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.slidingWindow select {
+    margin-right: 20px;
+    float: left;
+}
+.slidingWindow {
+    padding-bottom: 8px;
+}
+
+.slidingWindow label{
+    margin-top: 3px;
+}
+
+.thesaurusPicker * fieldset legend {
+    padding-left: 0px;
+}
+.thesaurusPicker * .x-table-layout-cell > div.x-panel {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .sxt-glyph {
     float: right;
     font-size: 1.8em;
     color: #565656;
+    margin-top: -3px;
+    padding-right: 4px;
 }
