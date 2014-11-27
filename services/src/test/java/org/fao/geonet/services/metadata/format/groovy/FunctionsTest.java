@@ -17,7 +17,7 @@ import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -30,14 +30,15 @@ import java.util.Map;
 import static org.fao.geonet.services.metadata.format.groovy.Functions.LANG_CODELIST_NS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FunctionsTest {
-    private static final String schema = "iso19139";
-    private static FormatterParams fparams;
-    private static Functions functions;
+    private final String schema = "iso19139";
+    private FormatterParams fparams;
+    private Functions functions;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         fparams = new FormatterParams() {
             @Override
             public boolean isDevMode() {
@@ -77,8 +78,8 @@ public class FunctionsTest {
             }
 
             @Override
-            protected synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
-                return new Element("loc"); // todo tests
+            protected boolean isDevMode(ServiceContext context) {
+                return false;
             }
         };
 
@@ -161,13 +162,58 @@ public class FunctionsTest {
 
     @Test
     public void testTranslate() throws Exception {
+        final Path schemaDir = IO.toPath(FunctionsTest.class.getResource("translation-test/schema-dir/formatter/config.properties").toURI())
+                .getParent().getParent();
+
+        SchemaManager schemaManager = Mockito.mock(SchemaManager.class);
+        Mockito.when(schemaManager.getSchemaDir("parent-schema")).thenReturn(schemaDir.getParent().resolve("parent-schema"));
+
         ServiceContext context = Mockito.mock(ServiceContext.class);
+        Mockito.when(context.getAppPath()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
+        Mockito.when(context.getBean(SchemaManager.class)).thenReturn(schemaManager);
+        Mockito.when(context.getXmlCacheManager()).thenReturn(new XmlCacheManager());
         Mockito.doCallRealMethod().when(context).setAsThreadLocal();
         context.setAsThreadLocal();
-        Mockito.when(context.getAppPath()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
-        Mockito.when(context.getXmlCacheManager()).thenReturn(new XmlCacheManager());
+        fparams.context = context;
+        fparams.schema = "schema";
+        fparams.schemaDir = schemaDir;
+        fparams.formatDir = schemaDir.getParent().resolve("formatter-dir");
 
-        assertEquals("Abstract", functions.translate("abstract"));
+        assertEquals("FormatterStrings", functions.translate("formatter-strings"));
+        final String inBoth = functions.translate("in-both");
+        assertTrue(inBoth.equals("In Both strings") || inBoth.equals("In Both other-strings"));
+        assertEquals("In Both other-strings", functions.translate("in-both", "other-strings"));
+        assertEquals("In Both strings", functions.translate("in-both", "strings"));
+        assertEquals("Schema Normal Strings XML", functions.translate("schema-strings"));
+        assertEquals("Parent Schema Normal Strings XML", functions.translate("parent-schema-strings"));
+        assertEquals("Parent Schema More Strings XML", functions.translate("parent-schema-more"));
+        final String inBothParent = functions.translate("in-both-parent");
+        assertTrue(inBothParent.equals("In Both Parent Strings XML") || inBothParent.equals("In Both Parent More Strings XML"));
+        assertEquals("In Both Parent Strings XML", functions.translate("in-both-parent", "strings"));
+        assertEquals("In Both Parent More Strings XML", functions.translate("in-both-parent", "more-strings"));
+        assertEquals("This String is here for testing don't delete", functions.translate("testString"));
+    }
+
+    @Test
+    public void testTranslateNoLocDir() throws Exception {
+        final Path schemaDir = IO.toPath(FunctionsTest.class.getResource("translation-test/schema-dir/formatter/config.properties").toURI())
+                .getParent().getParent();
+
+        SchemaManager schemaManager = Mockito.mock(SchemaManager.class);
+        Mockito.when(schemaManager.getSchemaDir("parent-schema")).thenReturn(schemaDir.getParent().resolve("parent-schema"));
+
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+        Mockito.when(context.getAppPath()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
+        Mockito.when(context.getBean(SchemaManager.class)).thenReturn(schemaManager);
+        Mockito.when(context.getXmlCacheManager()).thenReturn(new XmlCacheManager());
+        Mockito.doCallRealMethod().when(context).setAsThreadLocal();
+        context.setAsThreadLocal();
+        fparams.context = context;
+        fparams.schema = "schema";
+        fparams.schemaDir = schemaDir;
+        fparams.formatDir = schemaDir.getParent().resolve("doesnotexist");
+
+        // no exception? good
     }
 
     private static Object[] sort(Object[] sort) {

@@ -55,9 +55,6 @@ public class FormatterParams {
         return this.format.getSchemaLocalizations(this.context);
     }
 
-    public Element getPluginLocResources(String language) throws Exception {
-        return this.format.getPluginLocResources(this.context, this.formatDir, language);
-    }
     public boolean isDevMode() {
         return this.format.isDevMode(this.context);
     }

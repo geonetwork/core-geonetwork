@@ -66,6 +66,8 @@ import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.google.common.io.Files.getNameWithoutExtension;
+
 /**
  * Allows a user to display a metadata with a particular formatters
  *
@@ -259,30 +261,51 @@ public class Format extends AbstractFormatService {
      * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
      * of the returned element.
      */
-    protected synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+        final Element pluginLocResources = getPluginLocResources(context, formatDir);
+        Element translations = pluginLocResources.getChild(lang);
+        if (translations == null) {
+            if (pluginLocResources.getChildren().isEmpty()) {
+                translations = new Element(lang);
+            } else {
+                translations = (Element) pluginLocResources.getChildren().get(0);
+            }
+        }
+        return translations;
+    }
+    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir) throws Exception {
         final String formatDirPath = formatDir.toString();
-        Element resources = this.pluginLocs.get(formatDirPath);
-        if (isDevMode(context) || resources == null) {
-            resources = new Element("loc");
+        Element allLangResources = this.pluginLocs.get(formatDirPath);
+        if (isDevMode(context) || allLangResources == null) {
+            allLangResources = new Element("loc");
             Path baseLoc = formatDir.resolve("loc");
-            Path locDir = findLocDir(lang, baseLoc);
-
-            final String locDirName = locDir.getFileName().toString();
-            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDirName));
-            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDirName);
-
-            resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
-
-            if (Files.exists(locDir)) {
-                try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
-                    for (Path file : paths) {
-                        resources.addContent(Xml.loadFile(file));
+            if (Files.exists(baseLoc)) {
+                try (DirectoryStream<Path> locDirs = Files.newDirectoryStream(baseLoc)) {
+                    for (Path locDir : locDirs) {
+                        final String locDirName = getNameWithoutExtension(locDir.getFileName().toString());
+                        Element resources = new Element(locDirName);
+                        if (Files.exists(locDir)) {
+                            try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
+                                for (Path file : paths) {
+                                    final Element fileElements = Xml.loadFile(file);
+                                    final String fileName = getNameWithoutExtension(file.getFileName().toString());
+                                    fileElements.setName(fileName);
+                                    if (!fileElements.getChildren().isEmpty()) {
+                                        resources.addContent(fileElements);
+                                    }
+                                }
+                            }
+                        }
+                        if (!resources.getChildren().isEmpty()) {
+                            allLangResources.addContent(resources);
+                        }
                     }
                 }
             }
-            this.pluginLocs.put(formatDirPath, resources);
+
+            this.pluginLocs.put(formatDirPath, allLangResources);
         }
-        return resources;
+        return allLangResources;
     }
 
     private Path findLocDir(String lang, Path baseLoc) throws IOException {

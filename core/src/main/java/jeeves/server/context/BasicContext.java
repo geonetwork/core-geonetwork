@@ -111,7 +111,7 @@ public class BasicContext implements Logger {
     }
     //--------------------------------------------------------------------------
 
-    public final @Nonnull <T> T getBean(Class<T> beanType) {
+    public @Nonnull <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
     }
 

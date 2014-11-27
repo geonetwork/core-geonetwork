@@ -18,6 +18,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.ConfigFile;
+import org.fao.geonet.services.metadata.format.FormatterConstants;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.fao.geonet.util.LangUtils;
@@ -47,6 +48,7 @@ public class Functions {
     private final List<SchemaLocalization> schemaLocalizations;
     private final IsoLanguageRepository languageRepo;
     private final Environment env;
+    private final FormatterParams fparams;
     private SchemaPlugin schemaPlugin;
 
     public Functions(FormatterParams fparams, Environment env, IsoLanguageRepository languageRepo, SchemaManager schemaManager) throws Exception {
@@ -58,6 +60,7 @@ public class Functions {
         this.schemaLocalizations = Collections.unmodifiableList(tmpLocalizations);
         this.env = env;
         this.schemaPlugin = SchemaManager.getSchemaPlugin(fparams.context, fparams.schema);
+        this.fparams = fparams;
     }
 
     private void addParentLocalizations(SchemaManager schemaManager, Map<String, SchemaLocalization> allLocalizations, ArrayList<SchemaLocalization> tmpLocalizations, ConfigFile config) throws IOException {
@@ -185,21 +188,21 @@ public class Functions {
         return codelistTranslation(codelist, value, "description");
     }
 
-    private String codelistTranslation(String codelist, String value, String type) throws Exception {
+    private String codelistTranslation(String codelist, String context, String type) throws Exception {
 
         if (LANG_CODELIST_NS.equals(codelist)) {
-            return translateLanguageCode(value);
+            return translateLanguageCode(context);
         }
 
         codelist = extractCodeListName(codelist);
 
         for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
-            Element codelistEl = schemaLocalization.getCodeListIndex(this.env.getLang3()).get(codelist, value);
+            Element codelistEl = schemaLocalization.getCodeListIndex(this.env.getLang3()).get(codelist, context);
             if (codelistEl != null) {
                 return codelistEl.getChildText(type);
             }
         }
-        return value;
+        return context;
     }
 
     private String translateLanguageCode(String value) {
@@ -306,18 +309,30 @@ public class Functions {
     }
 
     /**
-     * Obtain strings from the web/src/main/webapp/loc/???/formatter.xml .
+     * Obtain strings from the formatter, the formatter's schema shared translations or web/src/main/webapp/loc/???/formatter.xml .
      *
      * @param key the key to use for looking up the translation
      */
-    public String translate(String key) throws JDOMException, IOException {
-        final Map<String, String> translations = LangUtils.translate(ServiceContext.get(), "formatter", key);
-        String value = translations.get(env.getLang3());
-        if (value == null) {
-            value = translations.get(Geonet.DEFAULT_LANGUAGE);
+    public String translate(String key) throws Exception {
+        return translate(key, null);
+    }
+    /**
+     * Obtain strings from the formatter, the formatter's schema shared translations or web/src/main/webapp/loc/???/formatter.xml.
+     *
+     * @param key the key to use for looking up the translation
+     * @param file the name of the xml file to get the strings from (without the .xml).  This may be null in which case all files will
+     *             be searched. if null then for the shared translations the formatter.xml file will be used
+     *            (web/src/main/webapp/loc/???/formatter.xml) and all the formatter translation files will be searched.
+     *             If this is non-null then the formatter translation file will be used if found in the file and the method will
+     *             fallback to searching web/src/main/webapp/loc/???/&amp;file>.xml
+     */
+    public String translate(String key, String file) throws Exception {
+        String value = translateFromFormatterResources(key, file);
+        if (value == null || value.isEmpty()) {
+            value = translateFromSchema(fparams.schemaDir, key, file);
         }
-        if (value == null && !translations.isEmpty()) {
-            value = translations.values().iterator().next();
+        if (value == null || value.isEmpty()) {
+            value = translateFromShared(key, file == null ? "formatter" : file);
         }
         if (value == null || value.isEmpty()) {
             return key;
@@ -325,7 +340,65 @@ public class Functions {
         return value;
     }
 
+    private String translateFromSchema(Path schemaDir, String key, String file) throws Exception {
+        final Path formatterDir = schemaDir.resolve(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
+        final Element translations = getFormatterTranslations(formatterDir);
+        Element currLanTranslations = translations.getChild(env.getLang3());
+        String translation = translateFrom(key, file, currLanTranslations);
+        if (translation == null) {
+            final ConfigFile configFile = new ConfigFile(formatterDir, false, schemaDir);
+            if (configFile.dependOn() != null) {
+                final SchemaManager schemaManager = fparams.context.getBean(SchemaManager.class);
+                final Path parentSchemaDir = schemaManager.getSchemaDir(configFile.dependOn());
+                translation = translateFromSchema(parentSchemaDir, key, file);
+            }
+        }
+        return translation;
+    }
+
+    private String translateFromFormatterResources(String key, String file) throws Exception {
+        final Element translations = getFormatterTranslations(fparams.formatDir);
+        Element currLanTranslations = translations.getChild(env.getLang3());
+        return translateFrom(key, file, currLanTranslations);
+    }
+
+    private String translateFrom(String key, String file, Element currLanTranslations) {
+        String translation = null;
+        if (file == null) {
+            @SuppressWarnings("unchecked")
+            List<Element> files = currLanTranslations.getChildren();
+            for (Element element : files) {
+                translation = element.getChildText(key);
+                if (translation != null) {
+                    break;
+                }
+            }
+        } else {
+            final Element fileTranslations = currLanTranslations.getChild(file);
+            if (fileTranslations != null) {
+                translation = fileTranslations.getChildText(key);
+            }
+        }
+        return translation;
+    }
+
+    protected String translateFromShared(String key, String file) throws JDOMException, IOException {
+        final Map<String, String> translations = LangUtils.translate(ServiceContext.get(), file, key);
+        String value = translations.get(env.getLang3());
+        if (value == null) {
+            value = translations.get(Geonet.DEFAULT_LANGUAGE);
+        }
+        if (value == null && !translations.isEmpty()) {
+            value = translations.values().iterator().next();
+        }
+        return value;
+    }
+
     public SchemaPlugin getSchemaPlugin() {
         return this.schemaPlugin;
+    }
+
+    private Element getFormatterTranslations(Path dir) throws Exception {
+       return fparams.format.getPluginLocResources(fparams.context, dir);
     }
 }
