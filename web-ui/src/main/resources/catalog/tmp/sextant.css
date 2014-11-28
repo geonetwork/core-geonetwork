@@ -7996,9 +7996,10 @@ select[multiple].gn-searchform select {
   }
   .container-fluid {
     height: calc(100% - 5.4em);
+    padding: 0 5px;
   }
   [search-results] {
-    height: calc(100% - 3.8em - 51px);
+    height: 100%;
     overflow: auto;
   }
   .gn-searchform {
@@ -8111,6 +8112,18 @@ select[multiple].gn-searchform select {
 [data-ng-search-form] .sxt-categorytree > ul {
   padding-left: 0;
   padding-top: 12px;
+}
+[data-ng-search-form] .panel-heading {
+  padding: 5px 10px;
+  height: auto;
+  line-height: inherit;
+}
+[data-ng-search-form] .panel-heading [data-gn-pagination] > li > a {
+  background-color: transparent;
+  border: none;
+}
+[data-ng-search-form] .sxt-center-panel {
+  padding: 0;
 }
 ul.gn-resultview li.list-group-item {
   background-color: #EFEFEF;

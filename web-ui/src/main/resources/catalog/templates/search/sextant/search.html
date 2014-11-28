@@ -13,7 +13,8 @@
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
             <div class="row hfull">
-              <div class="col-md-3 maincol hfull">
+
+              <div class="col-md-3 maincol hfull sxt-left-panel">
                 <div class="panel panel-default hfull">
                   <div class="panel-body gn-searchform">
                     <div data-ng-include="'../../catalog/templates/search/sextant/searchForm.html'"></div>
@@ -28,28 +29,19 @@
                 </div>
               </div>
 
-
-              <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+              <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull sxt-center-panel">
                 <div class="panel panel-default hfull" ng-show="!initial">
                   <div class="panel-heading">
-                    <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
-                            ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
-                    <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
-                    <div gn-selection-widget results="searchResults"></div>
-                    <div sortby-combo params="searchObj.params"></div>
+                    <div sortby-combo params="searchObj.params" class="pull-right"></div>
+                    <div data-gn-pagination="paginationInfo"></div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
                   <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
                   </div>
-                  <div class="panel-footer">
-                    <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
-                    <div data-gn-pagination="paginationInfo"></div>
-                  </div>
                 </div>
               </div>
 
-
-              <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+              <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull sxt-right-panel">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <span data-translate>Refine search</span>
