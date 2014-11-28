@@ -20,10 +20,8 @@ import org.fao.geonet.services.metadata.format.groovy.CurrentLanguageHolder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
  * Contains methods for efficiently accessing the translations in a schema's labels and codelists files.
@@ -116,7 +116,7 @@ public class SchemaLocalizations {
         HttpServletRequest request = attributes.getRequest();
 
         ServletContext context = request.getSession().getServletContext();
-        final WebApplicationContext appContext = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
+        final ApplicationContext appContext = getApplicationContextFromServletContext(context);
         final String lang3 = ServiceRequestFactory.extractLanguage(request.getPathInfo());
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
         CurrentLanguageHolder languageHolder = new CurrentLanguageHolder() {
