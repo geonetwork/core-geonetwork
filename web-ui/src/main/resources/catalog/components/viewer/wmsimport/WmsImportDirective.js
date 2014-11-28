@@ -56,9 +56,6 @@
               scope.capability = capability;
             });
         };
-        var layer = gnNcWms.createNcWmsLayer();
-        ngeoDecorateLayer(layer);
-        scope.map.addLayer(layer);
       }
     };
   }]);
