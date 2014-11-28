@@ -41,6 +41,9 @@
           });
 
           layers.forEach(function(layer) {
+            if (!layer.getVisible()) {
+              return;
+            }
             var uri = layer.getSource().getGetFeatureInfoUrl(e.coordinate,
               map.getView().getResolution(), map.getView().getProjection(), {
                 INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
