@@ -43,7 +43,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
         FormatterParams fparams = getFormatterFormatterParamsPair
                 (request, formatterId).two();
         Environment env = new EnvironmentImpl(fparams, mapper);
-        final Functions functions = new Functions(fparams, env, langRepo, schemaManager);
+        final Functions functions = new Functions(fparams, env);
 
 //        measureFormatterPerformance(request, formatterId);
 

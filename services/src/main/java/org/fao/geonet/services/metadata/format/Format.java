@@ -48,6 +48,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -322,25 +323,6 @@ public class Format extends AbstractFormatService {
             }
         }
         return locDir;
-    }
-
-    /**
-     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema plugin
-     *
-     * @return Map(SchemaName, SchemaLocalizations)
-     */
-    protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
-            throws IOException, JDOMException {
-
-        Map<String, SchemaLocalization> localization = Maps.newHashMap();
-        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
-        final Set<String> allSchemas = schemaManager.getSchemas();
-        for (String schema : allSchemas) {
-            Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
-            localization.put(schema, new SchemaLocalization(context, schema, schemaInfo));
-        }
-
-        return localization;
     }
 
     protected boolean isDevMode(ServiceContext context) {

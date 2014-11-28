@@ -23,19 +23,6 @@
 
 package jeeves.server.sources.http;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.JeevesContextLoaderListener;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
@@ -44,12 +31,23 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 //=============================================================================
 
@@ -60,7 +58,6 @@ public class JeevesServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-    public static final String NODES_INIT_PARAM = "nodes";
     private boolean initialized = false;
 
     //---------------------------------------------------------------------------

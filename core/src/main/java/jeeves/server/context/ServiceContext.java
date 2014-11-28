@@ -26,7 +26,6 @@ package jeeves.server.context;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -243,13 +242,6 @@ public class ServiceContext extends BasicContext {
                                            + request.getResultString());
             throw new ServiceExecutionFailedException(request.getService(), e);
         }
-    }
-
-    /**
-     * Get the XmlCacheManager instance.
-     */
-    public XmlCacheManager getXmlCacheManager() {
-        return getBean(XmlCacheManager.class);
     }
     public Map<String, String> getResponseHeaders() {
         return _responseHeaders;

@@ -128,7 +128,7 @@ public class ThesaurusRequest extends Request {
             Map<String, String> categoryLabels = categoryTranslations.get(categoryLabelKey);
             if(categoryLabels == null) {
                 try {
-                    categoryLabels = LangUtils.translate(serviceContext, "categories", categoryLabelKey);
+                    categoryLabels = LangUtils.translate(serviceContext.getApplicationContext(), "categories", categoryLabelKey);
                     categoryTranslations.put(categoryLabelKey, categoryLabels);
                 } catch (JDOMException e) {
                     Log.debug(Geonet.THESAURUS_MAN,

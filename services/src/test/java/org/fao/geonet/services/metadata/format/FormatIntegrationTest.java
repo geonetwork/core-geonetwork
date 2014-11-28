@@ -18,8 +18,13 @@ import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -31,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import javax.servlet.ServletContext;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
@@ -154,6 +160,15 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecXslt() throws Exception {
+        final ServletContext context = _applicationContext.getBean(ServletContext.class);
+        MockHttpServletRequest request = new MockHttpServletRequest(context, "GET", "http://localhost:8080/geonetwork/srv/eng/md.formatter");
+        request.setPathInfo("/eng/md.formatter");
+
+        WebApplicationContext webAppContext = new GenericWebApplicationContext((DefaultListableBeanFactory) _applicationContext.getBeanFactory());
+        request.getServletContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, webAppContext);
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+
+        RequestContextHolder.setRequestAttributes(requestAttributes);
         final String formatterName = "xsl-test-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.xsl");
         final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
@@ -162,13 +177,12 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String functionsXslName = "functions.xsl";
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
-        MockHttpServletRequest request = new MockHttpServletRequest();
-
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
         final String viewXml = response.getContentAsString();
         final Element view = Xml.loadString(viewXml, false);
         assertEqualsText("fromFunction", view, "*//p");
+        assertEqualsText("Title", view, "*//div[@class='tr']");
     }
 
     @Test

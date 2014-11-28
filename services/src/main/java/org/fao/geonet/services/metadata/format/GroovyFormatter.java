@@ -107,7 +107,7 @@ public class GroovyFormatter implements FormatterImpl {
 
             Handlers handlers = new Handlers(fparams, schemaShared.getParent(), baseShared.getParent(), this.templateCache);
             Environment env = new EnvironmentProxy();
-            Functions functions = new Functions(fparams, env, isoLanguageRepository, this.schemaManager);
+            Functions functions = new Functions(fparams, env);
             Binding binding = new Binding();
             binding.setVariable("handlers", handlers);
             binding.setVariable("env", env);

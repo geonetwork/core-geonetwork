@@ -6,9 +6,7 @@ import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class Summary {
         this.functions = functions;
     }
 
-    public FileResult getResult() throws IOException, JDOMException {
+    public FileResult getResult() throws Exception {
         HashMap<String, Object> params = Maps.newHashMap();
 
         params.put("logo", logoHtml());
@@ -61,7 +59,7 @@ public class Summary {
     /**
      * Adds Links section to the params.  This implementation adds an empty string because this summary does not have links.
      */
-    protected void addLinks(HashMap<String, Object> params) throws JDOMException, IOException {
+    protected void addLinks(HashMap<String, Object> params) throws Exception {
         StringBuilder linksHtml = new StringBuilder();
         for (LinkBlock link : links) {
             if (!link.isEmpty()) {
@@ -85,7 +83,7 @@ public class Summary {
         params.put("links", linksHtml);
     }
 
-    private String abstrHtml() throws JDOMException, IOException {
+    private String abstrHtml() throws Exception {
         if (abstr == null || abstr.isEmpty()) {
             return "";
         }

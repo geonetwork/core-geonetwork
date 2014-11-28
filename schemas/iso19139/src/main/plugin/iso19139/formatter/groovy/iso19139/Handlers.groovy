@@ -34,14 +34,18 @@ public class Handlers {
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         //handlers.add 'gmd:identificationInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:MD_DataIdentification'), f.&nodeLabel)
-        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Contact'), f.&nodeLabel)
-        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Address'), f.&nodeLabel)
-        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Telephone'), f.&nodeLabel)
-        handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
 
-        handlers.add 'gmd:referenceSystemIdentifier', commonHandlers.flattenedEntryEl({it.'gmd:RS_Identifier'}, f.&nodeLabel)
-        handlers.add 'gmd:identificationInfo', commonHandlers.processChildren{it.children()}
+
+//        handlers.skip 'gmd:contactInfo', commonHandlers.selectIsotype('gmd:CI_Contact')
+//        handlers.skip 'gmd:address', commonHandlers.selectIsotype('gmd:CI_Address')
+//        handlers.skip 'gmd:phone', commonHandlers.selectIsotype('gmd:CI_Telephone')
+        handlers.skip 'gmd:contactInfo', {it.'gmd:CI_Contact'}
+        handlers.skip 'gmd:address', {it.'gmd:CI_Address'}
+        handlers.skip 'gmd:phone', {it.'gmd:CI_Telephone'}
+        handlers.skip 'gmd:onlineResource', {it.'gmd:CI_OnlineResource'}
+        handlers.skip 'gmd:referenceSystemIdentifier', {it.'gmd:RS_Identifier'}
+        handlers.skip 'gmd:identificationInfo', {it.children()}
 
         handlers.add 'gmd:locale', localeEl
         handlers.add 'gmd:CI_Date', ciDateEl
@@ -153,15 +157,20 @@ public class Handlers {
             ch.name() == 'gmd:CI_ResponsibleParty' || ch['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
         }
 
-        def childrenToProcess = [
+        def generalChildren = [
                 party.'gmd:individualName',
                 party.'gmd:organisationName',
                 party.'gmd:positionName',
-                party.'gmd:role']
+                party.'gmd:role'
+        ]
+        def general = handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: handlers.processElements(generalChildren)])
+        def groups = party.'gmd:contactInfo'.'*'.'*'
+
+        def half = (int) Math.round((groups.size()) / 2)
 
         def output = '<div class="row">'
-        output += commonHandlers.func.textColEl(handlers.processElements(childrenToProcess), 6)
-        output += commonHandlers.func.textColEl(handlers.processElements([party.'gmd:contactInfo'.'*']), 6)
+        output += commonHandlers.func.textColEl(general.toString() + handlers.processElements(groups.take(half - 1)), 6)
+        output += commonHandlers.func.textColEl(handlers.processElements(groups.drop(half - 1)), 6)
         output += '</div>'
 
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])

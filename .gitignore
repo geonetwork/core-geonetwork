@@ -60,3 +60,4 @@ web-ui-docs/node
 web-ui-docs/node_modules
 out/
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/schemaplugin-uri-catalog.xml
+web/geonetwork.trace.db.old

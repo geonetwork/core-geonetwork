@@ -4,9 +4,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class StaticLinkBlock extends LinkBlock {
     }
 
     @Override
-    public void linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException {
+    public void linksHtml(StringBuilder xml, Functions functions, Environment env) throws Exception {
         for (Map.Entry<LinkType, Collection<Link>> entry : links.asMap().entrySet()) {
             LinkType linkType = entry.getKey();
             xml.append("        <div class=\"col-xs-12\" style=\"background-color: #F7EEE1;\">");

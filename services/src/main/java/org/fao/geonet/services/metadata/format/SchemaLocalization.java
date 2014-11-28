@@ -3,11 +3,11 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class SchemaLocalization {
     public final String schema;
     private final Map<String, XmlFile> schemaInfo;
-    private final ServiceContext context;
+    private final ApplicationContext context;
     /**
      * A Map &lt;3CharlangId, Table&lt;elementName, parentElemName, Element containing label child and description child>>
      * <p/>
@@ -37,7 +37,7 @@ public class SchemaLocalization {
     private final Map<String, ImmutableTable<String, String, Element>> codeListIndex = Maps.newHashMap();
 
 
-    public SchemaLocalization(ServiceContext context, String schema, Map<String, XmlFile> schemaInfo) {
+    public SchemaLocalization(ApplicationContext context, String schema, Map<String, XmlFile> schemaInfo) {
         this.schema = schema;
         this.schemaInfo = schemaInfo;
         this.context = context;

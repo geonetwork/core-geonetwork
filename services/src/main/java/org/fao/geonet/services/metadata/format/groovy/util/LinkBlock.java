@@ -23,5 +23,5 @@ public abstract class LinkBlock {
         return nameKey;
     }
     public abstract boolean isEmpty();
-    public abstract void linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException;
+    public abstract void linksHtml(StringBuilder xml, Functions functions, Environment env) throws Exception;
 }

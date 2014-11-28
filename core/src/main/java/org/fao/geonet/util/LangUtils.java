@@ -1,16 +1,18 @@
 package org.fao.geonet.util;
 
-import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,10 +26,13 @@ public class LangUtils {
      * @param key the key to look up.  may contain / but cannot start with one.  for example: categories/water
      * @return
      */
-    public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
-        Path appPath = context.getAppPath();
-        XmlCacheManager cacheManager = context.getXmlCacheManager();
+    public static Map<String, String> translate(ApplicationContext context, String type, String key) throws JDOMException, IOException {
+        Path appPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
         Path loc = appPath.resolve("loc");
+        if (!Files.exists(loc)) {
+            return Collections.emptyMap();
+        }
         String typeWithExtension = "xml/" + type + ".xml";
         Map<String, String> translations = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc, IO.DIRECTORIES_FILTER)) {
@@ -53,7 +58,7 @@ public class LangUtils {
     /**
      * same as translate(context, "string", key)
      */
-    public static Map<String, String> translate(ServiceContext context, String key) throws JDOMException, IOException {
+    public static Map<String, String> translate(ApplicationContext context, String key) throws JDOMException, IOException {
         return translate(context, "strings", key);
     }
 

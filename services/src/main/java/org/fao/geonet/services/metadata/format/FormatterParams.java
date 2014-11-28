@@ -4,9 +4,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -49,10 +47,6 @@ public class FormatterParams {
 
     public String getLocUrl() {
         return url;
-    }
-
-    public Map<String, SchemaLocalization> getSchemaLocalizations() throws IOException, JDOMException {
-        return this.format.getSchemaLocalizations(this.context);
     }
 
     public boolean isDevMode() {

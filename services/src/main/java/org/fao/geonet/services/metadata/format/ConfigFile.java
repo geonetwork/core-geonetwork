@@ -130,13 +130,6 @@ public class ConfigFile {
                             "strings will be loaded");
                 out.println(LOAD_STRINGS_PROP + "=true");
                 out.println("");
-                out.println("# " + SCHEMAS_TO_LOAD_PROP + " - defines which schema localization files should be loaded and added to the" +
-                            " xml document before view.xsl is applied");
-                out.println("# if a comma separated list then only those schemas will be loaded");
-                out.println("# " + SCHEMAS_TO_LOAD_PROP + "=none");
-                out.println("# " + SCHEMAS_TO_LOAD_PROP + "=iso19115,fgdc-std,iso19139,csw-record,iso19110");
-                out.println(SCHEMAS_TO_LOAD_PROP + "=all");
-                out.println("");
                 out.println("# " + APPLICABLE_SCHEMAS + " - defines which metadata schemas this bundle applies to.  ");
                 out.println("# For example one can specify only iso19139 or a comma separated list of schemas (or all)");
                 out.println("# " + APPLICABLE_SCHEMAS + "=iso19115,fgdc-std,iso19139,csw-record,iso19110");

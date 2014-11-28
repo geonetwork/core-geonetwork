@@ -140,7 +140,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
             final String formatterId = "full_view";
             FormatterParams fparams = getFormatterFormatterParamsPair(request, formatterId).two();
             Environment env = new EnvironmentImpl(fparams, mapper);
-            functions = new Functions(fparams, env, langRepo, schemaManager);
+            functions = new Functions(fparams, env);
 
 //        measureFormatterPerformance(request, formatterId);
 

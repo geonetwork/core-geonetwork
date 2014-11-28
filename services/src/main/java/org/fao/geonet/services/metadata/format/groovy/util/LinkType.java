@@ -1,9 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.util;
 
 import org.fao.geonet.services.metadata.format.groovy.Functions;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +46,7 @@ public class LinkType {
         return name.hashCode();
     }
 
-    public String getName(Functions functions) throws JDOMException, IOException {
+    public String getName(Functions functions) throws Exception {
         return functions.translate(name);
     }
 }

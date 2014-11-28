@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.Sets;
 import org.fao.geonet.Constants;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -13,12 +14,14 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static java.nio.file.Files.getLastModifiedTime;
 import static java.nio.file.Files.readAllBytes;
+import static org.fao.geonet.services.metadata.format.SchemaLocalizations.loadSchemaLocalizations;
 
 /**
  * Strategy for formatting using an xslt based formatter.
@@ -45,7 +48,6 @@ public class XsltFormatter implements FormatterImpl {
         }
 
         String lang = fparams.config.getLang(fparams.context.getLanguage());
-        Iterable<SchemaLocalization> localization = fparams.format.getSchemaLocalizations(fparams.context).values();
 
         Element root = new Element("root");
 
@@ -67,6 +69,10 @@ public class XsltFormatter implements FormatterImpl {
 
         String schemasToLoad = fparams.config.schemasToLoad();
         if (!"none".equalsIgnoreCase(schemasToLoad)) {
+            SchemaManager schemaManager = fparams.context.getBean(SchemaManager.class);
+            Collection<SchemaLocalization> localization = loadSchemaLocalizations(fparams.context.getApplicationContext(),
+                    schemaManager).values();
+
             for (SchemaLocalization schemaLocalization : localization) {
                 String currentSchema = schemaLocalization.schema.trim();
                 if ("all".equalsIgnoreCase(schemasToLoad) || schemasToLoadList.contains(currentSchema.toLowerCase())) {

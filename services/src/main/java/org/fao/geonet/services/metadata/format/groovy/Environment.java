@@ -19,15 +19,7 @@ import java.util.Map;
  *
  * @author Jesse on 10/20/2014.
  */
-public interface Environment {
-    /**
-     * 3 letter language code of the UI.
-     */
-    public String getLang3();
-    /**
-     * 2 letter language code of the UI.
-     */
-    public String getLang2();
+public interface Environment extends CurrentLanguageHolder {
     /**
      * Return the id of the metadata
      */

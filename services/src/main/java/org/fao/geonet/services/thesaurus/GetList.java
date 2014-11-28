@@ -100,7 +100,7 @@ public class GetList implements Service {
 			elFname.addContent(fname);
 			
 			Element elTitle = new Element("title");
-			String title = currentTh.getTitles(context).get(context.getLanguage());
+			String title = currentTh.getTitles(context.getApplicationContext()).get(context.getLanguage());
 			if(title == null) {
 				title = currentTh.getTitle();
 			}
