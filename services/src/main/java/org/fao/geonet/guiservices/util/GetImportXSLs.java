@@ -62,7 +62,7 @@ public class GetImportXSLs implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String dir = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+		String dir = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS;
 
 		String sheets[] = new File(dir).list();
 

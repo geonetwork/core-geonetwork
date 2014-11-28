@@ -115,7 +115,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
+        <div class="form-group gn-field gn-{substring-after(name(), ':')} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
             id="gn-el-{$editInfo/@ref}">
           <label
               for="gn-field-{$editInfo/@ref}"
@@ -236,7 +236,7 @@
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
-      class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
+      class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
       <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
         <xsl:if test="$xpath and $withXPath">
@@ -322,7 +322,11 @@
       <xsl:value-of select="$isExisting"/>/
       <xsl:value-of select="$id"/>
     </xsl:message>-->
-    <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+
+    <xsl:variable name="firstFieldKey"
+                  select="$template/values/key[position() = 1]/@label"/>
+
+    <div class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
          id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
 
       <label class="col-sm-2 control-label">
@@ -334,7 +338,7 @@
         is the first element of its kind in the form. The key for a template
         field is {schemaIdentifier}|{firstTemplateFieldKey} -->
         <input type="hidden"
-               data-gn-field-tooltip="{$schema}|{$template/values/key[position() = 1]/@label}"/>
+               data-gn-field-tooltip="{$schema}|{$firstFieldKey}"/>
 
         <!-- Create a title indicating that the element is missing in the current
         record. A checkbox display the template field to be populated. -->
@@ -566,9 +570,10 @@
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
-  
+      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
+
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
            id="gn-el-{$id}">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
@@ -577,7 +582,6 @@
           </xsl:if>
         </label>
         <div class="col-sm-9">
-          
           <xsl:choose>
             <!-- When element have different types, provide
                   a list of those types to be selected. The type list

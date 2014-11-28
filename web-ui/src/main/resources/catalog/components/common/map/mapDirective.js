@@ -221,7 +221,7 @@
                    parseFloat(region.south),
                    parseFloat(region.east),
                    parseFloat(region.north)];
-
+                 scope.location = region.name;
                  reprojExtent('md', 'map');
                  reprojExtent('md', 'form');
                  setDcOutput();

@@ -161,8 +161,7 @@
           .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update') +
-            '@json', body, {
+            ($scope.harvesterNew ? 'add' : 'update'), body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
           loadHarvesters();

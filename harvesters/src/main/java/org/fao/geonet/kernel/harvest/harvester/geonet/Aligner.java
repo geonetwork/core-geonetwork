@@ -35,6 +35,7 @@ import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -249,7 +250,7 @@ public class Aligner extends BaseAligner
         Map<String, Pair<String, Element>> mdFiles =
                 new HashMap<String, Pair<String, Element>>();
         for (Path file : files) {
-            if (Files.isDirectory(file)) {
+            if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
                 try {
                     String metadataSchema = dataMan.autodetectSchema(metadata, null);
@@ -447,25 +448,27 @@ public class Aligner extends BaseAligner
                     md, processName, processParams, log);
         }
         // insert metadata
-        String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, md, ri.uuid, Integer.parseInt(params.ownerId), group, siteId,
-                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.lookup(isTemplate)).
+                setCreateDate(new ISODate(createDate)).
+                setChangeDate(new ISODate(changeDate));
+        metadata.getSourceInfo().
+                setSourceId(siteId).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
-        dataMan.setHarvestedExt(iId, params.uuid);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
-
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOne(iId);
-
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
-
-        metadata = metadataRepository.findOne(iId);
+        String id = String.valueOf(metadata.getId());
 
 		if(!localRating) {
 			String rating = general.getChildText("rating");
@@ -486,18 +489,17 @@ public class Aligner extends BaseAligner
         Files.createDirectories(priDir);
 
         if (params.createRemoteCategory) {
-    		Element categs = info.getChild("categories");
-    		if (categs != null) {
-    		    Importer.addCategoriesToMetadata(metadata, categs, context);
-    		}
-		}
+            Element categs = info.getChild("categories");
+            if (categs != null) {
+                Importer.addCategoriesToMetadata(metadata, categs, context);
+            }
+        }
         if (((ArrayList<Group>)params.getGroupCopyPolicy()).size() == 0) {
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-        metadataRepository.save(metadata);
-//        dataMan.flush();
+        context.getBean(MetadataRepository.class).save(metadata);
 
         dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
@@ -734,8 +736,7 @@ public class Aligner extends BaseAligner
         }
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Metadata metadata;
-        if (!ri.isMoreRecentThan(date))
-		{
+        if (!ri.isMoreRecentThan(date)) {
             if(log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
@@ -764,7 +765,7 @@ public class Aligner extends BaseAligner
 		}
 
         metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);
 
 		Element general = info.getChild("general");
@@ -919,7 +920,8 @@ public class Aligner extends BaseAligner
         // which will be handle in addMetadata/updateMetadata.
         request.addParam("version", "2");
         request.addParam("relation", "false");
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
+		request.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/en/" + Geonet.Service.MEF_EXPORT);
 
 		Path tempFile = Files.createTempFile("temp-", ".dat");
 		request.executeLarge(tempFile);

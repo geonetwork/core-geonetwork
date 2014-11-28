@@ -48,15 +48,15 @@
       ['$q', '$http', '$cacheFactory',
        function($q, $http, $cacheFactory) {
          /**
-          * Cache field info and codelist info
-          *
-          * TODO: Maybe we could improve caching ?
-          * On page load, many codelist are retrieved
-          * and the first one is not returned before
-          * others are requested and as such are not
-          * yet populated in the cache. Not sure how
-          * this could be improved ?
-          */
+         * Cache field info and codelist info
+         *
+         * TODO: Maybe we could improve caching ?
+         * On page load, many codelist are retrieved
+         * and the first one is not returned before
+         * others are requested and as such are not
+         * yet populated in the cache. Not sure how
+         * this could be improved ?
+         */
          var infoCache = $cacheFactory('infoCache');
 
          return {
@@ -75,7 +75,8 @@
                  return requestBody;
                };
 
-               $http.post('md.element.info?_content_type=json', getPostRequestBody(), {
+               $http.post('md.element.info?_content_type=json',
+               getPostRequestBody(), {
                  headers: {'Content-type': 'application/xml'}
                }).
                success(function(data) {
@@ -86,11 +87,11 @@
              return defer.promise;
            },
            /**
-            * Retrieve field information (ie. name, description, helpers).
-            * Information are cached in the infoCache.
-            *
-            * Return a promise.
-            */
+           * Retrieve field information (ie. name, description, helpers).
+           * Information are cached in the infoCache.
+           *
+           * Return a promise.
+           */
            getElementInfo: function(config) {
              //<request>
              //  <element schema="iso19139"
@@ -123,7 +124,7 @@
                if (requestBody === null) {
                  defer.reject({error: 'Invalid config.', config: config});
                } else {
-                 $http.post('md.element.info@json', requestBody, {
+                 $http.post('md.element.info?_content_type=json', requestBody, {
                    headers: {'Content-type': 'application/xml'}
                  }).
                  success(function(data) {

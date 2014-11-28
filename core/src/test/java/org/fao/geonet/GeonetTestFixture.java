@@ -9,7 +9,6 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.DirectoryFactory;
@@ -54,8 +53,9 @@ import static org.junit.Assert.assertTrue;
  * @author Jesse on 11/5/2014.
  */
 public class GeonetTestFixture {
-    private volatile static FileSystem templateFs;
-    private volatile static Path templateDataDirectory;
+    private static final FileSystemPool FILE_SYSTEM_POOL = new FileSystemPool();
+
+    private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
@@ -65,24 +65,14 @@ public class GeonetTestFixture {
     protected DataStore dataStore;
 
 
-    private FileSystem currentFs;
-    /**
-     * Contain all datadirectories for all nodes.
-     */
-    private Path _dataDirContainer;
+    private FileSystemPool.CreatedFs currentFs;
 
-    /**
-     * Default node data directory
-     */
-    private Path _dataDirectory;
     private static LuceneConfig templateLuceneConfig;
     private static SearchManager templateSearchManager;
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);
-        if (currentFs != null) {
-            currentFs.close();
-        }
+        FILE_SYSTEM_POOL.release(currentFs);
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
@@ -92,10 +82,9 @@ public class GeonetTestFixture {
         if (templateFs == null) {
             synchronized (GeonetTestFixture.class) {
                 if (templateFs == null) {
-                    templateFs = Jimfs.newFileSystem("template", Configuration.unix());
-                    IO.setFileSystemThreadLocal(templateFs);
+                    templateFs = FILE_SYSTEM_POOL.getTemplate();
 
-                    templateDataDirectory = templateFs.getPath("data");
+                    Path templateDataDirectory = templateFs.dataDir;
                     IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream.Filter<Path>() {
                         @Override
                         public boolean accept(Path entry) throws IOException {
@@ -127,23 +116,19 @@ public class GeonetTestFixture {
         }
 
         final String fsName = test.getClass().getSimpleName().replaceAll("[^a-z0-9A-Z]", "") + UUID.randomUUID().toString();
-        currentFs = Jimfs.newFileSystem(fsName, Configuration.unix());
-        IO.setFileSystemThreadLocal(currentFs);
-        _dataDirContainer = currentFs.getPath("nodes");
-        _dataDirectory = _dataDirContainer.resolve("default_data_dir");
-        Files.createDirectories(_dataDirContainer);
+        currentFs = FILE_SYSTEM_POOL.get(fsName);
 
-        IO.copyDirectoryOrFile(templateDataDirectory, _dataDirectory, true);
-
-        assertTrue(Files.isDirectory(_dataDirectory.resolve("config")));
-        assertTrue(Files.isDirectory(_dataDirectory.resolve("data")));
+        assertTrue(Files.isDirectory(currentFs.dataDir.resolve("config")));
+        assertTrue(Files.isDirectory(currentFs.dataDir.resolve("data")));
 
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         configureNodeId(test);
 
 
-        final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, _dataDirectory);
+        final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, currentFs.dataDir);
         configureNewSchemaManager(dataDir, webappDir);
+
+        assertCorrectDataDir();
 
         _directoryFactory.resetIndex();
 
@@ -152,7 +137,7 @@ public class GeonetTestFixture {
         _applicationContext.getBean(DataManager.class).init(test.createServiceContext(), false);
 
 
-        addSourceUUID();
+        addSourceUUID(dataDir);
 
         final DataSource dataSource = _applicationContext.getBean(DataSource.class);
         try (Connection conn = dataSource.getConnection()) {
@@ -161,14 +146,14 @@ public class GeonetTestFixture {
     }
 
 
-    protected void configureNewSchemaManager(GeonetworkDataDirectory dataDir, Path webappDir) throws IOException {
+    protected void configureNewSchemaManager(GeonetworkDataDirectory dataDir, Path webappDir) throws Exception {
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
         schemaManager.configureFrom(templateSchemaManager, webappDir, dataDir);
         assertRequiredSchemas(schemaManager);
     }
 
-    protected void addSourceUUID() {
-        String siteUuid = _dataDirectory.getFileName().toString();
+    protected void addSourceUUID(GeonetworkDataDirectory dataDirectory) {
+        String siteUuid = dataDirectory.getSystemDataDir().getFileName().toString();
         _applicationContext.getBean(SettingManager.class).setSiteUuid(siteUuid);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
@@ -208,10 +193,15 @@ public class GeonetTestFixture {
         return geonetworkDataDirectory;
     }
 
-    protected void configureNodeId(AbstractCoreIntegrationTest test) {
+    protected void configureNodeId(AbstractCoreIntegrationTest test) throws IOException {
         NodeInfo nodeInfo = _applicationContext.getBean(NodeInfo.class);
         nodeInfo.setId(test.getGeonetworkNodeId());
         nodeInfo.setDefaultNode(test.isDefaultNode());
+
+        if (!test.isDefaultNode()) {
+            Path dataDir = currentFs.dataDirContainer.resolve(currentFs.dataDir.getFileName() + "_" + test.getGeonetworkNodeId());
+            IO.copyDirectoryOrFile(currentFs.dataDir, dataDir, false);
+        }
     }
 
     protected ServiceConfig registerServiceConfigAndInitDatastoreTable(AbstractCoreIntegrationTest test) throws IOException {
@@ -256,7 +246,7 @@ public class GeonetTestFixture {
     }
 
     public Path getDataDirContainer() {
-        return this._dataDirContainer;
+        return this.currentFs.dataDirContainer;
     }
 
     public void assertCorrectDataDir() throws Exception {
@@ -283,8 +273,8 @@ public class GeonetTestFixture {
                 Files.walkFileTree(templateSchemaDir, new CompareDataDirectory(templateSchemaDir, thisContextSchemaDir));
             }
 
-            Files.walkFileTree(templateDataDirectory, new CompareDataDirectory(templateDataDirectory, _dataDirectory));
-            Files.walkFileTree(_dataDirectory, new CompareDataDirectory(_dataDirectory, templateDataDirectory));
+            Files.walkFileTree(templateFs.dataDir, new CompareDataDirectory(templateFs.dataDir, dataDirectory.getSystemDataDir()));
+            Files.walkFileTree(dataDirectory.getSystemDataDir(), new CompareDataDirectory(dataDirectory.getSystemDataDir(), templateFs.dataDir));
 
         }
     }

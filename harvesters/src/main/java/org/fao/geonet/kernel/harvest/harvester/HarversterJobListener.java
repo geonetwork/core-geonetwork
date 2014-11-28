@@ -39,7 +39,7 @@ public class HarversterJobListener implements JobListener {
         if (context.getJobInstance() instanceof HarvesterJob) {
 
             HarvesterJob harvesterJob = (HarvesterJob) context.getJobInstance();
-            AbstractHarvester harvester = null;
+            AbstractHarvester<?> harvester = null;
             for (HarvestManager manager : listOfManager) {
                 harvester = manager.getHarvester(harvesterJob.getHarvesterId());
                 if (harvester != null) {

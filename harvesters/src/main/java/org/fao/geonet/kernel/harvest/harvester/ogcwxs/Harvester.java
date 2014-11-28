@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -33,9 +32,11 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -45,8 +46,8 @@ import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
@@ -68,15 +69,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -337,29 +334,30 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
         // Save iso19119 metadata in DB
 		log.info("  - Adding metadata for services with " + uuid);
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
 
         //
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
+         Metadata metadata = new Metadata().setUuid(uuid);
+         metadata.getDataInfo().
+                 setSchemaId(schema).
+                 setRoot(md.getQualifiedName()).
+                 setType(MetadataType.METADATA);
+         metadata.getSourceInfo().
+                 setSourceId(params.uuid).
+                 setOwner(Integer.parseInt(params.ownerId));
+         metadata.getHarvestInfo().
+                 setHarvested(true).
+                 setUuid(params.uuid).
+                 setUri(params.url);
 
-		int iId = Integer.parseInt(id);
+         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+
+         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+         String id = String.valueOf(metadata.getId());
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-         context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-             @Override
-             public void apply(@Nonnull Metadata entity) {
-                 addCategories(entity, params.getCategories(), localCateg, context, log, null);
-             }
-         });
-
-         dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
-		 dataMan.setTemplate(iId, MetadataType.METADATA, null);
 
          dataMan.flush();
 
@@ -497,23 +495,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private WxSLayerRegistry addLayerMetadata (Element layer, Element capa) throws JDOMException
 	{
 		
-		DateFormat df 		= new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date dt 			= new Date ();
 		WxSLayerRegistry reg= new WxSLayerRegistry ();
 		String schema;
 		String mdXml;
-		String date 		= df.format (dt);
 		//--- Loading stylesheet
 		Path styleSheet 	= schemaMan.getSchemaDir(params.outputSchema).
                 resolve(Geonet.Path.CONVERT_STYLESHEETS).
                 resolve("OGCWxSGetCapabilitiesto19119").
                 resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilitiesLayer-to-19139.xsl");
 		Element xml 		= null;
-		
-		boolean exist;
-		boolean loaded 		= false;
-		
-		if (params.ogctype.substring(0,3).equals("WMS")) {
+
+        boolean exist;
+        boolean loaded = false;
+
+        if (params.ogctype.substring(0,3).equals("WMS")) {
 			Element name;
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
 				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
@@ -652,26 +647,37 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             //
             //  insert metadata
             //
-            String group = null, isTemplate = null, docType = null, title = null, category = null;
-            boolean ufo = false, indexImmediate = false;
-            
 			schema = dataMan.autodetectSchema (xml);
-			
-            reg.id = dataMan.insertMetadata(context, schema, xml, reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, category, date, date, ufo, indexImmediate);
+            Metadata metadata = new Metadata().setUuid(reg.uuid);
+            metadata.getDataInfo().
+                    setSchemaId(schema).
+                    setRoot(xml.getQualifiedName()).
+                    setType(MetadataType.METADATA);
+            metadata.getSourceInfo().
+                    setSourceId(params.uuid).
+                    setOwner(Integer.parseInt(params.ownerId));
+            metadata.getHarvestInfo().
+                    setHarvested(true).
+                    setUuid(params.uuid).
+                    setUri(params.url);
+            if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
+                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOneByName(params.datasetCategory);
 
-			int iId = Integer.parseInt(reg.id);
+                if (metadataCategory == null) {
+                    throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);
+                }
+                metadata.getCategories().add(metadataCategory);
+            }
+            metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+
+            reg.id = String.valueOf(metadata.getId());
+
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
             addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
-				dataMan.setCategory (context, reg.id, params.datasetCategory);
-            }
-
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
 
             dataMan.flush();
 

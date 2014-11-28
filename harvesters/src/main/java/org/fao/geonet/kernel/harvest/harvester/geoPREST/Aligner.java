@@ -27,10 +27,12 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -40,7 +42,6 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -50,7 +51,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -164,24 +164,27 @@ public class Aligner extends BaseAligner
 		// insert metadata
 		//
 		int userid = 1;
-		String group = null, isTemplate = null, docType = null, title = null, category = null;
-		boolean ufo = false, indexImmediate = false;
-		String id = dataMan.insertMetadata(context, schema, md, ri.uuid, userid, group, params.uuid, isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setChangeDate(new ISODate(ri.changeDate)).
+                setCreateDate(new ISODate(ri.changeDate));
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(userid);
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
-
-        dataMan.flush();
 
         dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
@@ -232,7 +235,7 @@ public class Aligner extends BaseAligner
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
                 dataMan.flush();
 
                 dataMan.indexMetadata(id, false);
