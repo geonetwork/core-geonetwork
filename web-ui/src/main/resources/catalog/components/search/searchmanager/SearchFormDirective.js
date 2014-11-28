@@ -139,6 +139,7 @@
         }
 
         facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
+        $scope.$broadcast('beforesearch');
         var params = angular.copy($scope.searchObj.params);
         angular.extend(params, facetsParams);
 
