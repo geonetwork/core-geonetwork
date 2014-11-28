@@ -20,7 +20,7 @@
         var mapElement = $(map.getTarget());
         mapElement.find('.ol-overlaycontainer-stopevent').append(element);
 
-        var format = new ol.format.GetFeatureInfo();
+        var format = new ol.format.WMSGetFeatureInfo();
         var fo = new ol.FeatureOverlay();
         fo.setMap(map);
 
@@ -90,10 +90,10 @@
   .filter('attributes', function() {
     return function(properties) {
       var props = {};
-      var exclude = ['FID', 'boundedBy', 'the_geom'];
+      var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
       Object.keys(properties).forEach(function(k) {
         if (exclude.indexOf(k) !== -1) return;
-        props[k] = properties[k];
+        props[k] = properties[k].toString();
       });
       return props;
     };
