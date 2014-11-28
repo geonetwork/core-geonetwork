@@ -1,12 +1,14 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import groovy.util.slurpersupport.GPathResult;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The class that does the actual transforming of the Metadata XML.
@@ -26,40 +28,13 @@ class TransformEngine {
         String oldMode = context.getCurrentMode();
         try {
             context.setCurrentMode(mode);
-            Sorter sorter = null;
-            if (sortByElement != null) {
-                sorter = this.handlers.findSorter(context, sortByElement);
-            }
-            if (sorter == null) {
-                Logging.debug("Not sorting input elements.  No sorter found for sortElement:%s. ", sortByElement);
-                processUnsorted(selection, resultantXml, context);
-            } else {
-                Logging.debug("Sorting with: %2$s for sortElement:%1$s.", sortByElement, sorter);
-                processSorted(selection, resultantXml, context, sorter);
-            }
+
+            List<GPathResult> flattenedSelection = flattenGPathResults(selection);
+            processChildren(context, sortByElement, flattenedSelection, resultantXml);
 
             return resultantXml.toString();
         } finally {
             context.setCurrentMode(oldMode);
-        }
-    }
-
-    private void processSorted(Iterable selection, StringBuilder resultantXml, TransformationContext context, Sorter sorter) throws IOException {
-        List<GPathResult> flattenedSelection = flattenGPathResults(selection);
-        Collections.sort(flattenedSelection, sorter);
-        for (GPathResult el : flattenedSelection) {
-            processElement(context, el, resultantXml);
-        }
-    }
-
-    private void processUnsorted(Iterable selection, StringBuilder resultantXml, TransformationContext context) throws IOException {
-        for (Object path : selection) {
-            final GPathResult gpath = (GPathResult) path;
-            if (!gpath.isEmpty()) {
-                for (Object el : gpath) {
-                    processElement(context, (GPathResult) el, resultantXml);
-                }
-            }
         }
     }
 
@@ -76,47 +51,14 @@ class TransformEngine {
         return result;
     }
 
-    private void processChildren(TransformationContext context, GPathResult md,
-                                 StringBuilder resultantXml, SkipElement skipElement) throws IOException {
-        final GPathResult childrenPath;
-        if (skipElement == null) {
-            childrenPath = md.children();
-        } else {
-            childrenPath = skipElement.selectChildren(md);
-        }
-        if (Logging.isDebugMode()) {
-            Logging.debug("Starting to process %2$d children of: %1$s.", md, childrenPath.size());
-        }
+    Collection<GPathResult> processElement(TransformationContext context, GPathResult elem, List<GPathResult> siblings, StringBuilder resultantXml) throws IOException {
         @SuppressWarnings("unchecked")
-        final Iterator children = childrenPath.iterator();
-        if (!children.hasNext()) {
-            return;
-        }
-
-        Sorter sorter = this.handlers.findSorter(context, md);
-
-        if (sorter == null) {
-            while (children.hasNext()) {
-                processElement(context, (GPathResult) children.next(), resultantXml);
-            }
-        } else {
-            @SuppressWarnings("unchecked")
-            List<GPathResult> sortedChildren = childrenPath.list();
-            Collections.sort(sortedChildren, sorter);
-
-            for (GPathResult child : sortedChildren) {
-                processElement(context, child, resultantXml);
-            }
-        }
-    }
-
-
-    void processElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
+        List<GPathResult> handledSiblings = Lists.newArrayList(elem);
         Logging.debug("Starting to process element: %s", elem);
         boolean processChildren = true;
         for (SkipElement skipElement : this.handlers.getSkipElements()) {
             if (skipElement.select(context, elem)) {
-                processChildren(context, elem, resultantXml, skipElement);
+                processChildren(context, elem, processSkipElements(elem, skipElement), resultantXml);
                 processChildren = false;
             }
         }
@@ -124,7 +66,14 @@ class TransformEngine {
         if (processChildren) {
             for (Handler handler : this.handlers.getHandlers().get(context.getCurrentMode())) {
                 if (handler.select(context, elem)) {
-                    handler.handle(context, elem, resultantXml);
+                    if (handler.isGroup()) {
+                        for (GPathResult sibling : siblings) {
+                            if (handler.select(context, sibling)) {
+                                handledSiblings.add(sibling);
+                            }
+                        }
+                    }
+                    handler.handle(context, handledSiblings, resultantXml);
                     processChildren = false;
                     break;
                 }
@@ -133,7 +82,47 @@ class TransformEngine {
 
         if (processChildren) {
             Logging.debug("No Handler found for element: %s", elem);
-            processChildren(context, elem, resultantXml, null);
+            processChildren(context, elem, processSkipElements(elem, null), resultantXml);
+        }
+
+        return handledSiblings;
+    }
+
+    private void processChildren(TransformationContext context, GPathResult md, List<GPathResult> sortedChildren,
+                                 StringBuilder resultantXml) throws IOException {
+        if (sortedChildren.isEmpty()) {
+            return;
+        }
+
+        if (md != null) {
+            Sorter sorter = this.handlers.findSorter(context, md);
+            if (sorter != null) {
+                Collections.sort(sortedChildren, sorter);
+            }
+        }
+        final Set<GPathResult> visitedByGroup = Sets.newIdentityHashSet();
+        int size = sortedChildren.size();
+        for (int i = 0; i < size; i++) {
+            GPathResult child = sortedChildren.get(i);
+
+            if (!visitedByGroup.contains(child)) {
+                visitedByGroup.addAll(processElement(context, child, sortedChildren.subList(i + 1, size), resultantXml));
+            }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private List<GPathResult> processSkipElements(GPathResult md, SkipElement skipElement) {
+        GPathResult childrenPath;
+        if (skipElement == null) {
+            childrenPath = md.children();
+        } else {
+            childrenPath = skipElement.selectChildren(md);
+        }
+        if (Logging.isDebugMode()) {
+            Logging.debug("Starting to process %2$d children of: %1$s.", md, childrenPath.size());
+        }
+        return childrenPath.list();
+    }
+
 }

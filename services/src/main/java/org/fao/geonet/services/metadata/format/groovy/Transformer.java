@@ -66,6 +66,7 @@ public class Transformer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void processRoot(TransformationContext context, Map<String, String> namespaceUriToPrefix, XmlSlurper xmlSlurper,
                              StringBuilder resultantXml, Content root) throws IOException, SAXException {
         // later for performance we could start a thread to write to a PipedInputStream and parse the PipedOutputStream
@@ -78,7 +79,7 @@ public class Transformer {
         createPath(root.getParentElement(), path);
 
         context.setRootPath(path.toString());
-        handlers.transformationEngine.processElement(context, md, resultantXml);
+        handlers.transformationEngine.processElement(context, md, md.children().list(), resultantXml);
     }
 
     private void createPath(Element node, StringBuilder path) {

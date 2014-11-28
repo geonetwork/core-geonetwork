@@ -4,6 +4,9 @@ import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 /**
  * Methods for logging the handling of elements in this formatter.
  *
@@ -16,6 +19,26 @@ public class Logging {
             Object[] objs = new Object[objects.length + 1];
             System.arraycopy(objects, 0, objs, 1, objects.length);
             objs[0] = "'" + createPath(elem) + "'";
+            debug(String.format(message, objs));
+        }
+    }
+    static void debug(String message, Collection<GPathResult> elem, Object... objects) {
+        if (isDebugMode()) {
+            Object[] objs = new Object[objects.length + 1];
+            System.arraycopy(objects, 0, objs, 1, objects.length);
+            StringBuilder builder = new StringBuilder();
+            if (elem.isEmpty()) {
+                builder.append("No Paths");
+            } else {
+                final Iterator<GPathResult> iterator = elem.iterator();
+                GPathResult first = iterator.next();
+                builder.append(createPath(first));
+                while (iterator.hasNext()) {
+                    GPathResult next = iterator.next();
+                    builder.append(",").append(next.name());
+                }
+            }
+            objs[0] = "'" + builder + "'";
             debug(String.format(message, objs));
         }
     }

@@ -133,7 +133,7 @@ handlers.add ~/...:title/, { el ->
  * - formatter/groovy directory
  * - schema_plugins/<schema>/formatter/groovy
  */
-handlers.withPath ~/[^>]+>gmd:identificationInfo>.+extent>.+>gmd:geographicElement/, Iso19139Functions.&handleExtent
+handlers.withPath ~/[^>]+>gmd:identificationInfo>.+topicCategory>gmd:MD_TopicCategoryCode/, Iso19139Functions.&handleTopic
 
 /*
  * This example is similar but the class is from the <root formatter dir>/groovy
@@ -316,4 +316,16 @@ def sortVal = { el ->
  */
 handlers.sort name:'Sort data identification children', select: 'gmd:MD_DataIdentification', priority: 5, {el1, el2 ->
     sortVal(el1) - sortVal(el2)
+}
+
+/*
+ * The following handler will accept a list of elements to the closure instead of a single element. Like the typical handler.
+ *
+ * A typical use would be to have a single header/label for all elements and list the values in a column under the header/label.
+ *
+ * When the select matches an element the rest of the siblings will be matched with the select and all of the selected elements
+ * will be passed to the handler. The selected elements will be skipped when normal processing is continued.
+ */
+handlers.add name: 'extent handler', select: 'gmd:extent', group: true, {els ->
+    "<span class='extents'>${els.size()}</span>"
 }

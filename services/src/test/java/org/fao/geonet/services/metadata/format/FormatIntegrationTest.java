@@ -257,6 +257,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertElement(view, "body//span[@class = 'fileId']", this.uuid, 1);
         assertElement(view, "body//span[@class = 'creatorTranslated']", "Creator", 1);
 
+        assertElement(view, "body//span[@class = 'extents']", "2", 1);
+
         assertNull(Xml.selectElement(view, "body//h1[text() = 'Reference System Information']"));
     }
 

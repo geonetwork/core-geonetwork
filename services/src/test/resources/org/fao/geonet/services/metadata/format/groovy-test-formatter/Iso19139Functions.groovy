@@ -1,5 +1,5 @@
 public class Iso19139Functions {
-    static def handleExtent() {
+    static def handleTopic() {
         return '<p class="formatter">fromFormatterGroovy</p>'
     }
 }

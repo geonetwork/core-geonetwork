@@ -35,6 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -161,7 +162,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
             TransformationContext context = new TransformationContext();
             context.setThreadLocal();
             StringBuilder result = new StringBuilder();
-            handler.handle(context, elem, result);
+            handler.handle(context, Collections.singletonList(elem), result);
             return result.toString();
         } finally {
             EnvironmentProxy.clearContext();
