@@ -9,7 +9,9 @@ public class Matchers {
     def simpleElements = ['gco:Decimal', 'gco:Integer', 'gco:Scale', 'gco:Angle', 'gco:Measure', 'gco:Distance',
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
 
-    def skipContainers = ['gmd:CI_Series', 'gmd:MD_ReferenceSystem']
+    def skipContainers = ['gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:graphicOverview', 'gmd:identificationInfo',
+                          'gmd:descriptiveKeywords', 'gmd:contactInfo', 'gmd:address', 'gmd:phone', 'gmd:onlineResource',
+                          'gmd:referenceSystemIdentifier']
 
     def isSimpleEl = {el ->
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
@@ -45,7 +47,7 @@ public class Matchers {
     }
 
     def isSkippedContainer = { el ->
-        skipContainers.any{it == el.name()}
+        skipContainers.contains(el.name())
 }
 
 }

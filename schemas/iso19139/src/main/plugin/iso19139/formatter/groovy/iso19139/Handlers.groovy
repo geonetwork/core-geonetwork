@@ -33,27 +33,17 @@ public class Handlers {
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
-        //handlers.add 'gmd:identificationInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:MD_DataIdentification'), f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
 
-
-//        handlers.skip 'gmd:contactInfo', commonHandlers.selectIsotype('gmd:CI_Contact')
-//        handlers.skip 'gmd:address', commonHandlers.selectIsotype('gmd:CI_Address')
-//        handlers.skip 'gmd:phone', commonHandlers.selectIsotype('gmd:CI_Telephone')
-        handlers.skip 'gmd:contactInfo', {it.'gmd:CI_Contact'}
-        handlers.skip 'gmd:address', {it.'gmd:CI_Address'}
-        handlers.skip 'gmd:phone', {it.'gmd:CI_Telephone'}
-        handlers.skip 'gmd:onlineResource', {it.'gmd:CI_OnlineResource'}
-        handlers.skip 'gmd:referenceSystemIdentifier', {it.'gmd:RS_Identifier'}
-        handlers.skip 'gmd:identificationInfo', {it.children()}
+        handlers.skip matchers.isSkippedContainer, {it.children()}
 
         handlers.add 'gmd:locale', localeEl
         handlers.add 'gmd:CI_Date', ciDateEl
         handlers.add 'gmd:CI_Citation', citationEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
-        handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
 
-        handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
+        handlers.add name: 'identificationInfo elements', select: {it.parent().name() == 'gmd:identificationInfo'}, commonHandlers.entryEl(f.&nodeLabel, {el -> 'gmd_identificationInfo'})
+        handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel, addPackageViewClass)
 
         commonHandlers.addDefaultStartAndEndHandlers();
         addExtentHandlers()
@@ -64,6 +54,8 @@ public class Handlers {
             return v1 - v2
         }
     }
+
+    def addPackageViewClass = {el -> if (packageViews.contains(el.name())) return el.name().replace(':', '_')}
 
     def addExtentHandlers() {
         handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
@@ -203,5 +195,4 @@ public class Handlers {
 
             return  rootPackageOutput.toString() + otherPackageData
     }
-
 }

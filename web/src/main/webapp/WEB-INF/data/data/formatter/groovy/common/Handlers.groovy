@@ -23,21 +23,25 @@ public class Handlers {
         handlers.end htmlOrXmlEnd
     }
 
+    def entryEl(labeller) {
+        return entryEl(labeller, null)
+    }
     /**
      * Creates a function that will process all children and sort then according to the sorter that applies to the elements. Then
      * returns the default html for the container elements.
      *
      * @param labeller a function for creating a label from the element
+     * @param classer a function taking the element class(es) to add to the entry element.  The method should return a string.
      */
-    def entryEl(labeller) {
+    def entryEl(labeller, classer) {
         return { el ->
             def childData = handlers.processElements(el.children(), el);
             def replacement = [label: labeller(el), childData: childData, name:'']
 
-            def parent = el.parent()
-            if(el.parent().is(el) || parent.parent().is(parent)) {
-                replacement.name = el.name().replace(":","_");
+            if (classer != null) {
+                replacement.name = classer(el);
             }
+
             if (!childData.isEmpty()) {
                 return handlers.fileResult('html/2-level-entry.html', replacement)
             }
