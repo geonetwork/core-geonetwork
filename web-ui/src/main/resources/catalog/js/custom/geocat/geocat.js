@@ -68,12 +68,12 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
-    'goDecorateInteraction',
+    'ngeoDecorateInteraction',
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             goDecorateInteraction, gnMap) {
+             ngeoDecorateInteraction, gnMap) {
 
       // data store for types field
       $scope.types = ['any',
@@ -134,7 +134,7 @@
       drawInteraction.on('drawstart', function(){
         featureOverlay.getFeatures().clear();
       });
-      goDecorateInteraction(drawInteraction, map);
+      ngeoDecorateInteraction(drawInteraction, map);
 
       $scope.$watch('restrictArea', function(v){
         if(angular.isDefined(v)) {

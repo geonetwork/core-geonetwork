@@ -6,16 +6,16 @@
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
-    'go'
+    'ngeo'
   ]);
 
   module.provider('gnMap', function() {
     this.$get = [
-      'goDecorateLayer',
+      'ngeoDecorateLayer',
       'gnOwsCapabilities',
       'gnConfig',
       '$log',
-      function(goDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -222,7 +222,7 @@
               isNcwms: options.isNcwms,
               cextent: options.extent
             });
-            goDecorateLayer(olLayer);
+            ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
             if (index) {

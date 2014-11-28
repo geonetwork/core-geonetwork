@@ -33,11 +33,11 @@
       ])
 
       .directive('gnDrawBboxBtn', [
-        'goDecorateInteraction',
+        'ngeoDecorateInteraction',
         '$parse',
         'gnSearchSettings',
         'gnMap',
-        function(goDecorateInteraction, $parse, gnSearchSettings, gnMap) {
+        function(ngeoDecorateInteraction, $parse, gnSearchSettings, gnMap) {
           return {
             restrict: 'A',
             scope: true,
@@ -45,7 +45,7 @@
               var dragbox = new ol.interaction.DragBox({
                 style: gnSearchSettings.olStyles.drawBbox
               });
-              goDecorateInteraction(dragbox, $scope.map);
+              ngeoDecorateInteraction(dragbox, $scope.map);
               $scope.interaction = dragbox;
             }],
             link: function(scope, element, attrs) {

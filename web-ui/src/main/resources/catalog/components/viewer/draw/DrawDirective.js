@@ -13,8 +13,8 @@
    * The server list is given in global properties.
    */
   module.directive('gnDraw', [
-    'goDecorateInteraction',
-    function(goDecorateInteraction) {
+    'ngeoDecorateInteraction',
+    function(ngeoDecorateInteraction) {
       return {
         restrict: 'A',
         replace: false,
@@ -177,7 +177,7 @@
                 source: source
               }));
           drawPolygon.on('drawend', onDrawend);
-          goDecorateInteraction(drawPolygon, map);
+          ngeoDecorateInteraction(drawPolygon, map);
           scope.drawPolygon = drawPolygon;
 
           var drawPoint = new ol.interaction.Draw(({
@@ -185,7 +185,7 @@
                 source: source
               }));
           drawPoint.on('drawend', onDrawend);
-          goDecorateInteraction(drawPoint, map);
+          ngeoDecorateInteraction(drawPoint, map);
           scope.drawPoint = drawPoint;
 
           var drawLine = new ol.interaction.Draw(({
@@ -193,7 +193,7 @@
                 source: source
               }));
           drawLine.on('drawend', onDrawend);
-          goDecorateInteraction(drawLine, map);
+          ngeoDecorateInteraction(drawLine, map);
           scope.drawLine = drawLine;
 
           var drawText = new ol.interaction.Draw(({
@@ -206,7 +206,7 @@
             evt.feature.setStyle(textFeatStyleFn);
             onDrawend();
           });
-          goDecorateInteraction(drawText, map);
+          ngeoDecorateInteraction(drawText, map);
           scope.drawText = drawText;
 
           var select = new ol.interaction.Select();
@@ -221,7 +221,7 @@
                 this.clear();
                 scope.$apply();
               });
-          goDecorateInteraction(deleteF, map);
+          ngeoDecorateInteraction(deleteF, map);
           scope.deleteF = deleteF;
 
           Object.defineProperty(scope, 'modifying', {
@@ -270,8 +270,8 @@
     }]);
 
   module.directive('gnStyleForm', [
-    'goDecorateInteraction',
-    function(goDecorateInteraction) {
+    'ngeoDecorateInteraction',
+    function(ngeoDecorateInteraction) {
       return {
         restrict: 'A',
         replace: false,
