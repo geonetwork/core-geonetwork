@@ -87,6 +87,7 @@
       // Manage sextantTheme thesaurus translation
       gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme', 200, 1).then(function(data) {
         sxtGlobals.sextantTheme = data;
+        $scope.$broadcast('sextantThemeLoaded');
       });
 
 ///////////////////////////////////////////////////////////////////
@@ -136,8 +137,9 @@
     }]);
 
   module.controller('gnsSextantSearchForm', [
-    '$scope', 'suggestService',
-    function($scope, suggestService) {
+    '$scope', 'suggestService', 'gnSearchSettings',
+    function($scope, suggestService, searchSettings) {
+
       $scope.groupPublishedOptions = {
         mode: 'remote',
         remote: {
@@ -146,6 +148,8 @@
           wildcard: 'QUERY'
         }
       };
+
+      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
 
     }]);
 

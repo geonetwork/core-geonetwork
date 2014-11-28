@@ -45,7 +45,10 @@
         </div>
 
         <!--Category Tree-->
-        <div sxt-category-tree class="sxt-categorytree"></div>
+        <div ng-repeat="t in thesaurus">
+          {{t.label.eng}}
+          <div sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
+        </div>
 
         <!--downloadable / visualisable checkboxes-->
         <div class="form-group" ng-if="advanced">

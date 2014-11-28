@@ -128,6 +128,19 @@
         icon: 'fa-th-list'
       }];
 
+      searchSettings.defaultListOfThesaurus = [{
+          id: 'local.theme.sextant-theme',
+          labelFromThesaurus: true,
+          field: 'sextantTheme',
+          tree: true,
+          label: {eng: 'Sextant', fre:'Sextant'}
+        },{
+          id: 'external.theme.inspire-theme',
+          field: 'inspireTheme_en',
+          tree: false,
+          label: {eng: 'INSPIRE', fre:'INSPIRE'}
+      }];
+
       /* Hits per page combo values configuration */
       searchSettings.hitsperpageValues = [3,10,20,50,100];
 
