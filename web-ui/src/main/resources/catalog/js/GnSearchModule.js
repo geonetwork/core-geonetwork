@@ -15,7 +15,7 @@
     'gn_viewer',
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',
-    'go'
+    'ngeo'
   ]);
 
   module.constant('gnSearchSettings', {});

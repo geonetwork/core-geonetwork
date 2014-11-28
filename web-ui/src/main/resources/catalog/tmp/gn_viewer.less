@@ -9,8 +9,11 @@
     height: 100%;
     min-height: 100%;
   }
-  [go-map] {
+  [ngeo-map] {
     width: 100%;
+    &.loading:hover {
+      cursor: wait;
+    }
   }
   .search-container {
     position: absolute;
@@ -480,4 +483,58 @@
     padding-left: 15px;
     padding-right: 15px;
   }
+
+  [gn-gfi] {
+
+    .results {
+      position: absolute;
+      bottom: 1em;
+      left: 1em;
+      width: 35em;
+      background: rgba(255,255,255,.8);
+      margin-bottom: 0;
+      max-height: 40em;
+      overflow: auto;
+      .panel-heading,
+      .panel-footer {
+        background: transparent;
+        padding: .25em 1em;
+      }
+      .panel-heading {
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+      }
+      .list-group {
+        ul {
+          padding-left: 0;
+          list-style: none;
+        }
+        h5 {
+          padding-left: 1em;
+        }
+      }
+      span {
+        display: inline-block;
+        max-width: 20em;
+        vertical-align: top;
+        .text-overflow();
+      }
+      b {
+        text-transform: capitalize;
+        display: inline-block;
+        width: 12em;
+        text-align: right;
+      }
+      .close {
+        padding-top: .3em;
+        &:hover {
+          background: transparent;
+        }
+      }
+    }
+
+  }
+
 }

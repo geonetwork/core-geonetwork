@@ -1,0 +1,28 @@
+<div ng-show="results.length > 0" class="results panel panel-default">
+
+  <div class="panel-heading">
+    <button type="button" class="btn btn-default close" ng-click="close()">
+      &times;
+    </button>
+    <h5>
+      <span translate>Results</span>
+      <span></span>
+    </h5>
+  </div>
+
+  <ul class="list-group" ng-repeat="(key, group) in results | groupBy: 'layer'">
+    <h5>{{key}}</h5>
+    <li class="list-group-item" ng-repeat="result in group">
+      <ul>
+        <li ng-repeat="(attr, value) in result.getProperties() | attributes">
+        <b>{{attr | lowercase}}</b>:
+        <span ng-bind-html="value | linky:'_blank'"></span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="panel-footer">
+  </div>
+
+</div>

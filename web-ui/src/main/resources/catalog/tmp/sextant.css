@@ -6442,7 +6442,6 @@ button.close {
   background-color: transparent;
   padding: 0;
   margin: 0;
-  width: auto !important;
   max-width: inherit;
 }
 .bootstrap-tagsinput input:focus {
@@ -7021,8 +7020,11 @@ button.close {
   height: 100%;
   min-height: 100%;
 }
-[gn-main-viewer] [go-map] {
+[gn-main-viewer] [ngeo-map] {
   width: 100%;
+}
+[gn-main-viewer] [ngeo-map].loading:hover {
+  cursor: wait;
 }
 [gn-main-viewer] .search-container {
   position: absolute;
@@ -7605,6 +7607,54 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+[gn-main-viewer] [gn-gfi] .results {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+  width: 35em;
+  background: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0;
+  max-height: 40em;
+  overflow: auto;
+}
+[gn-main-viewer] [gn-gfi] .results .panel-heading,
+[gn-main-viewer] [gn-gfi] .results .panel-footer {
+  background: transparent;
+  padding: .25em 1em;
+}
+[gn-main-viewer] [gn-gfi] .results .panel-heading {
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+[gn-main-viewer] [gn-gfi] .results .list-group ul {
+  padding-left: 0;
+  list-style: none;
+}
+[gn-main-viewer] [gn-gfi] .results .list-group h5 {
+  padding-left: 1em;
+}
+[gn-main-viewer] [gn-gfi] .results span {
+  display: inline-block;
+  max-width: 20em;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[gn-main-viewer] [gn-gfi] .results b {
+  text-transform: capitalize;
+  display: inline-block;
+  width: 12em;
+  text-align: right;
+}
+[gn-main-viewer] [gn-gfi] .results .close {
+  padding-top: .3em;
+}
+[gn-main-viewer] [gn-gfi] .results .close:hover {
+  background: transparent;
+}
 /* An update to 3.2 could provide responsive class
   for block or inline layout.
   http://getbootstrap.com/css/#responsive-utilities
@@ -7690,6 +7740,9 @@ select[multiple][hitsperpage-combo] select {
   font-size: 14px;
 }
 /* typeahead styles */
+.twitter-typeahead {
+  width: 100%;
+}
 .tt-query {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -7700,8 +7753,7 @@ select[multiple][hitsperpage-combo] select {
   pointer-events: none;
 }
 .tt-dropdown-menu {
-  width: 422px;
-  margin-top: 7px;
+  margin-top: 4px;
   margin-left: -8px;
   padding: 8px 0;
   background-color: #fff;
@@ -7713,9 +7765,12 @@ select[multiple][hitsperpage-combo] select {
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  max-height: 350px;
+  overflow-y: auto;
+  width: inherit;
 }
 .tt-suggestion {
-  padding: 3px 20px;
+  padding: 3px 10px;
 }
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
@@ -7723,34 +7778,106 @@ select[multiple][hitsperpage-combo] select {
 }
 .tt-suggestion p {
   margin: 0;
+  margin-top: 2px;
+  line-height: normal;
+}
+.tt-hint {
+  color: #999;
+  width: 100% !important;
+  border: none !important;
+}
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .tt-input {
+  width: 100% !important;
+  border: none !important;
 }
 /** Enf of typeahead styles */
 .bootstrap-tagsinput {
   width: 100%;
 }
+.bootstrap-tagsinput .tag-content {
+  display: inline-block;
+  max-width: 10em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .tagsinput-clear,
 .tagsinput-trigger {
   position: absolute;
   top: 4px;
-  right: 36px;
+  right: 26px;
 }
 .tagsinput-trigger {
-  top: .45em;
+  top: .575em;
   right: 20px;
   font-size: 16px;
   font-weight: normal;
-}
-.gn-resultview li:hover {
-  cursor: pointer;
-  background-color: #428bca;
 }
 [gn-bootstrap-datepicker].input-group[class*="col-"] {
   padding-left: 15px;
   padding-right: 15px;
 }
-.gn-advanced-searchform .panel.col-md-4 {
-  padding-left: 0;
-  padding-right: 0;
+.gn-searchform {
+  font-size: 90%;
+}
+.gn-searchform .backtonormal {
+  margin-bottom: -20px;
+}
+.gn-searchform label {
+  font-weight: normal;
+}
+.gn-searchform input,
+.gn-searchform select {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+select.gn-searchform input,
+select.gn-searchform select {
+  height: 30px;
+  line-height: 30px;
+}
+textarea.gn-searchform input,
+textarea.gn-searchform select,
+select[multiple].gn-searchform input,
+select[multiple].gn-searchform select {
+  height: auto;
+}
+.gn-searchform .form-group {
+  margin-bottom: 10px;
+}
+.gn-searchform .bootstrap-tagsinput {
+  padding: 0;
+}
+.gn-searchform .advanced .bootstrap-tagsinput {
+  margin-bottom: 0;
+}
+.gn-searchform .tt-dropdown-menu {
+  left: 6px !important;
+  width: 100%;
+}
+.gn-searchform legend {
+  font-size: 1em;
+  font-style: italic;
+  padding-top: .4em;
+  margin-bottom: 12px;
+}
+.gn-searchform .bootstrap-tagsinput .label {
+  background-color: #428bca;
+  font-size: 12px;
+  font-weight: normal;
+  margin: 2px;
+}
+.gn-searchform .bootstrap-tagsinput .label[href]:hover,
+.gn-searchform .bootstrap-tagsinput .label[href]:focus {
+  background-color: #3071a9;
 }
 [gn-selection-widget] {
   display: inline-block;
@@ -7765,6 +7892,13 @@ select[multiple][hitsperpage-combo] select {
 [gn-selection-widget] .btn-group [type=checkbox] {
   visibility: hidden;
   pointer-events: none;
+}
+[ngeo-map] {
+  width: 100%;
+  height: 200px;
+}
+.collapse-text-toggle {
+  color: grey;
 }
 [search-results] h4 {
   font-size: 15px;
@@ -7824,10 +7958,6 @@ select[multiple][hitsperpage-combo] select {
 .gn-resultview .categories i[href]:focus {
   background-color: #31b0d5;
 }
-.gn-resultview .img-thumbnail {
-  margin-left: 1em;
-  max-height: 140px;
-}
 .gn-resultview p {
   font-size: .9em;
 }
@@ -7837,6 +7967,8 @@ select[multiple][hitsperpage-combo] select {
 }
 .gn-resultview li:hover {
   background: #f6fcfd;
+  cursor: pointer;
+  background-color: #428bca;
 }
 [data-ng-search-form] .whidden,
 [ng-search-form] .whidden,
@@ -7916,12 +8048,17 @@ select[multiple][hitsperpage-combo] select {
 .gn-search-page .nav-pills .badge {
   background: #428bca;
 }
+.gn-resultview .img-thumbnail {
+  margin-left: 1em;
+  max-height: 140px;
+}
 [data-ng-search-form] .gn-top-search {
   text-align: center;
   background: #f5f5f5;
   border: 1px solid #dddddd;
-  padding: 1em;
+  padding: 8px;
   margin: 0 15px;
+  margin-bottom: 10px;
   vertical-align: middle;
   border-radius: 3px;
   position: relative;
@@ -7941,13 +8078,6 @@ select[multiple][hitsperpage-combo] select {
   left: 50%;
   margin-left: 64px;
 }
-.gn-advanced-searchform label {
-  font-weight: normal;
-}
-.gn-advanced-searchform .col-md-4 {
-  padding-top: 1.3em;
-  padding-bottom: 1.3em;
-}
 [gn-main-viewer] {
   position: absolute;
   left: 0;
@@ -7956,7 +8086,6 @@ select[multiple][hitsperpage-combo] select {
   top: calc(98px + 1.6em);
   border: 1px solid #dddddd;
 }
-[gn-main-viewer] [go-map] {
+[gn-main-viewer] [ngeo-map] {
   height: 100%;
 }
-/*# sourceMappingURL=sextant.css.map */
