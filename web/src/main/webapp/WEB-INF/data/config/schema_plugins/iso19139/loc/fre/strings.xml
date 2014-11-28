@@ -99,7 +99,7 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMREP name</edmerpName>
+  <edmerpName>EDMERP name</edmerpName>
   <edmoName>EDMO name</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
