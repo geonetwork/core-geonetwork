@@ -17,7 +17,9 @@
     'gnMap',
     '$translate',
     'gnViewerSettings',
-    function (gnOwsCapabilities, gnMap, $translate, gnViewerSettings) {
+    'gnNcWms',
+    'ngeoDecorateLayer',
+    function (gnOwsCapabilities, gnMap, $translate, gnViewerSettings, gnNcWms, ngeoDecorateLayer) {
     return {
       restrict: 'A',
       replace: true,
@@ -59,9 +61,9 @@
   }]);
 
   module.directive('gnKmlImport', [
-    'goDecorateLayer',
+    'ngeoDecorateLayer',
       'gnAlertService',
-    function (goDecorateLayer, gnAlertService) {
+    function (ngeoDecorateLayer, gnAlertService) {
       return {
         restrict: 'A',
         replace: true,
@@ -113,7 +115,7 @@
           };
 
           $scope.addToMap = function(layer, map) {
-            goDecorateLayer(layer);
+            ngeoDecorateLayer(layer);
             layer.displayInLayerManager = true;
             map.getLayers().push(layer);
             map.getView().fitExtent(layer.getSource().getExtent(),
