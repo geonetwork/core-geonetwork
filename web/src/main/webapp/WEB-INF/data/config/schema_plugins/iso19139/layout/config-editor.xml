@@ -1462,7 +1462,9 @@
         <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
         <thesaurus key="external.theme.medsea.data.delivery.mechanism" maxtags="1"/>
-        <thesaurus key="external.theme.seadatanet.parameter.groups.P03" maxtags="1"/>
+        <thesaurus key="local.parameter.seadatanet.parameter.groups.P03" maxtags="1"/>
+        <thesaurus key="local.parameter.seadatanet.parameter.usage.P01" maxtags="1"/>
+        <thesaurus key="local.parameter.seadatanet-ocean-discovery-parameter" maxtags="1"/>
       </thesaurusList>
       <tab id="characteristics" mode="flat" default="true">
         <section>
@@ -1738,7 +1740,7 @@
           <field
               name="processStepReference"
               xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
-                gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description"/>
+                gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
           <field
               name="useOfTheCharacteristics"
