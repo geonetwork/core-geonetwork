@@ -67,8 +67,8 @@
           <gmd:dimensionSize>
             <gco:Integer/>
           </gmd:dimensionSize>
-          <gmd:resolution gco:nilReason="inapplicable">
-            <gco:Measure uom=""/>
+          <gmd:resolution>
+            <gco:Measure uom="">1</gco:Measure>
           </gmd:resolution>
         </gmd:MD_Dimension>
       </gmd:axisDimensionProperties>
@@ -77,10 +77,10 @@
                                  codeListValue=""/>
       </gmd:cellGeometry>
       <gmd:transformationParameterAvailability>
-        <gco:Boolean/>
+        <gco:Boolean>true</gco:Boolean>
       </gmd:transformationParameterAvailability>
       <gmd:checkPointAvailability>
-        <gco:Boolean/>
+        <gco:Boolean>true</gco:Boolean>
       </gmd:checkPointAvailability>
     </gmd:MD_Georectified>
   </gmd:spatialRepresentationInfo>
@@ -685,6 +685,12 @@
           </gmd:nameOfMeasure>
           <gmd:result>
             <gmd:DQ_QuantitativeResult>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="time">
+                  <gml:identifier codeSpace="">time</gml:identifier>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
               <gmd:value>
                 <gco:Record/>
               </gmd:value>
@@ -699,6 +705,12 @@
           </gmd:nameOfMeasure>
           <gmd:result>
             <gmd:DQ_QuantitativeResult>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="unknown">
+                  <gml:identifier codeSpace="">unknown</gml:identifier>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
               <gmd:value>
                 <gco:Record/>
               </gmd:value>
@@ -711,13 +723,6 @@
           <gmd:statement gco:nilReason="missing">
             <gco:CharacterString/>
           </gmd:statement>
-          <gmd:processStep>
-            <gmd:LI_ProcessStep>
-              <gmd:description gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:description>
-            </gmd:LI_ProcessStep>
-          </gmd:processStep>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </gmd:DQ_DataQuality>
