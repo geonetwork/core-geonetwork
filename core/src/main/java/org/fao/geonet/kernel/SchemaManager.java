@@ -48,6 +48,8 @@ import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.NioPathAwareCatalogResolver;
+import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -143,6 +145,8 @@ public class SchemaManager {
         this.defaultSchema = schemaManager.defaultSchema;
         this.createOrUpdateSchemaCatalog = schemaManager.createOrUpdateSchemaCatalog;
 
+        addResolverRewriteDirectives(dataDir);
+
         this.hmSchemas.clear();
         this.hmSchemas.putAll(schemaManager.hmSchemas);
 
@@ -152,7 +156,13 @@ public class SchemaManager {
         numberOfCoreSchemasAdded = schemaManager.numberOfCoreSchemasAdded;
 
     }
-	/**
+
+    private void addResolverRewriteDirectives(GeonetworkDataDirectory dataDir) {
+        NioPathAwareCatalogResolver.addRewriteDirective(new PrefixUrlRewrite("sharedFormatterDir/",
+                dataDir.getFormatterDir().toAbsolutePath().toUri() + "/"));
+    }
+
+    /**
      * initialize and configure schema manager. should only be on startup.
 		*
 		* @param basePath the web app base path

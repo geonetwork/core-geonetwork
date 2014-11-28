@@ -4,7 +4,7 @@
     xmlns:gnf="http://www.fao.org/geonetwork/functions"
     exclude-result-prefixes="tr gnf">
 
-    <xsl:include href="@@formatterDir@@/functions.xsl" />
+    <xsl:include href="sharedFormatterDir/functions.xsl" />
 
     <xsl:template match="/" >
         <html>

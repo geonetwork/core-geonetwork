@@ -174,8 +174,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
         final Path formatterDir = this.dataDirectory.getFormatterDir();
         IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
-        final String functionsXslName = "functions.xsl";
-        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
+        IO.copyDirectoryOrFile(testFormatter.getParent().resolve("functions.xsl"), formatterDir, true);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);

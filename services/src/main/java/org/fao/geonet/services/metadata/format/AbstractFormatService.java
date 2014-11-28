@@ -43,7 +43,9 @@ abstract class AbstractFormatService {
                 md = metadataRepository.findOne(Integer.parseInt(id));
             } catch (NumberFormatException e) {
                 md = metadataRepository.findOneByUuid(id);
-                uuid = id;
+                if (md != null) {
+                    uuid = id;
+                }
             }
         }
 

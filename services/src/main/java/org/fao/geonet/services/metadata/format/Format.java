@@ -218,8 +218,7 @@ public class Format extends AbstractFormatService {
     }
 
     public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,
-                                               Boolean hide_withheld)
-            throws Exception {
+                                               Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(this.metadataRepository, id, uuid);
         Element metadata = xmlSerializer.removeHiddenElements(false, md);
