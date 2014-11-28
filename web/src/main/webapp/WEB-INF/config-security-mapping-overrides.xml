@@ -16,6 +16,11 @@
 			   <!-- There always has to be one intercept url you can replace it -->
 			    <sec:intercept-url pattern="/srv/.*/null!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			    
+			    <!-- During development we want to protect the site with a login. just ask for login on the initial page -->
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/search!?.*" access="hasAnyRole('Editor','UserAdmin', 'Administrator', 'RegisteredUser')"></sec:intercept-url>
+<!-- 			    
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/home!?.*" access="hasAnyRole('Editor','UserAdmin', 'Administrator', 'RegisteredUser')"></sec:intercept-url>
+ -->                
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>
