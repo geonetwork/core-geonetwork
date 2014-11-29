@@ -1901,6 +1901,24 @@
             </template>
           </field>
 
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+            <template>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:version>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+
           <field name="responsiveness"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
