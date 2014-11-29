@@ -1,4 +1,4 @@
-package org.fao.geonet.services.metadata.format.groovy;
+package org.fao.geonet.services.metadata.format.groovy.template;
 
 import java.nio.file.Path;
 import java.util.Map;

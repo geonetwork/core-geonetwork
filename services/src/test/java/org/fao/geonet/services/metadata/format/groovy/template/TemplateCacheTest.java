@@ -1,4 +1,4 @@
-package org.fao.geonet.services.metadata.format.groovy;
+package org.fao.geonet.services.metadata.format.groovy.template;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;

@@ -1,4 +1,4 @@
-package org.fao.geonet.services.metadata.format.groovy;
+package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
@@ -72,7 +72,7 @@ public class TemplateCache {
         this.concurrencyLevel = concurrencyLevel;
     }
 
-    synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
+    public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
                                              Map<String, Object> substitutions) throws IOException {
         Path file = formatterDir.resolve(path);
         String template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
