@@ -30,6 +30,13 @@ public class Handlers {
         handlers.add name: 'Boolean Elements', select: matchers.isBooleanEl, isoBooleanEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
+        handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, {keywords ->
+            def output = new StringBuilder()
+            keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each{
+                output.append("<dd>").append(it).append("</dd>")
+            }
+            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(keywords[0]), childData: output])
+        }
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
