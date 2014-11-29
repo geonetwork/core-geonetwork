@@ -15,12 +15,15 @@ import java.util.List;
  * @author Jesse on 11/29/2014.
  */
 public abstract class TNode {
-    private final String start, end;
+    private static final TextContentParser PARSER = new TextContentParser();
+    private final TextBlock start, end;
+    private TextBlock content;
+
     private List<TNode> children = Lists.newArrayList();
     protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
 
 
-    public TNode(String localName, String qName, Attributes attributes) throws IOException {
+    public TNode(String qName, Attributes attributes) throws IOException {
         StringBuilder start = new StringBuilder();
         StringBuilder end = new StringBuilder();
         start.append("<").append(qName);
@@ -28,8 +31,8 @@ public abstract class TNode {
 
         end.append("\n</").append(qName).append(">");
 
-        this.start = start.toString();
-        this.end = end.toString();
+        this.start = PARSER.parse(start.toString());
+        this.end = PARSER.parse(end.toString());
     }
 
     public void writeAttributes(Attributes attributes, Appendable appendable) throws IOException {
@@ -43,14 +46,17 @@ public abstract class TNode {
      */
     public final void render(TRenderContext context) throws IOException {
         if (canRender(context)) {
-            context.append(start);
+            start.render(context);
             writeAttributes(customAttributes(context), context);
             context.append(">");
             for (TNode child : children) {
                 child.render(context);
             }
             writeCustomChildData(context);
-            context.append(end);
+            if (content != null) {
+                content.render(context);
+            }
+            end.render(context);
         }
     }
 
@@ -76,5 +82,9 @@ public abstract class TNode {
      */
     public void addChild(TNode node) {
         this.children.add(node);
+    }
+
+    public void setTextContent(String text) {
+        this.content = PARSER.parse(text);
     }
 }

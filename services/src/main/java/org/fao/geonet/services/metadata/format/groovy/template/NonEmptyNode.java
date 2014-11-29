@@ -22,8 +22,8 @@ import java.io.IOException;
 public class NonEmptyNode extends TNode {
     private final String expr;
 
-    public NonEmptyNode(String localName, String qName, Attributes attributes, String expr) throws IOException {
-        super(localName, qName, attributes);
+    public NonEmptyNode(String qName, Attributes attributes, String expr) throws IOException {
+        super(qName, attributes);
         this.expr = expr;
     }
 

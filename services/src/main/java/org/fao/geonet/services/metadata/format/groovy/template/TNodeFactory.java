@@ -13,7 +13,9 @@ import java.util.List;
  * @author Jesse on 11/29/2014.
  */
 public abstract class TNodeFactory {
-    static final List<String> ATTRIBUTE_NAME_PREFIXES = Lists.newArrayList("", "x-", "data-");
+    public static final String FMT_PREFIX = "fmt-";
+    static final List<String> ATTRIBUTE_NAME_PREFIXES = Lists.newArrayList(FMT_PREFIX, "x-" + FMT_PREFIX, "data-" + FMT_PREFIX);
+
     /**
      * Test if this node factory can process the current node.
      */
@@ -26,14 +28,15 @@ public abstract class TNodeFactory {
 
     protected String getValue(Attributes attributes, String name) {
         for (String attributeNamePrefix : ATTRIBUTE_NAME_PREFIXES) {
-            final String value = attributes.getValue(attributeNamePrefix + name);
-            if (value != null) {
-                return value;
+            final int index = attributes.getIndex(attributeNamePrefix + name);
+            if (index > -1) {
+                return attributes.getValue(index);
             }
         }
 
         return null;
     }
+
     protected boolean hasAttribute(Attributes attributes, String... attNames) {
         for (String att : attNames) {
             if (getValue(attributes, att) != null) {

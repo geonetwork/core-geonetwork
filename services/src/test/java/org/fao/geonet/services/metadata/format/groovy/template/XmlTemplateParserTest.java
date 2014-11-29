@@ -22,6 +22,7 @@ public class XmlTemplateParserTest {
 
         Map<String, Object> model = Maps.newHashMap();
         model.put("title", "Title");
+        model.put("lang", "en");
         model.put("body", "y");
         model.put("div", "Div Data");
 

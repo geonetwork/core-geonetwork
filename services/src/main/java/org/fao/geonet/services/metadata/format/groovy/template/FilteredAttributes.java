@@ -21,7 +21,7 @@ public class FilteredAttributes implements Attributes {
             }
         }
         for (int i = 0; i < unfiltered.getLength(); i++) {
-            String attName = unfiltered.getLocalName(i);
+            String attName = unfiltered.getQName(i);
             if (!allExcludes.contains(attName)) {
                 filtered.add(unfiltered.getQName(i), unfiltered.getValue(i));
             }

@@ -8,8 +8,8 @@ import java.io.IOException;
  * @author Jesse on 11/29/2014.
  */
 public class SimpleTNode extends TNode {
-    public SimpleTNode(String localName, String qName, Attributes attributes) throws IOException {
-        super(localName, qName, attributes);
+    public SimpleTNode(String qName, Attributes attributes) throws IOException {
+        super(qName, attributes);
     }
 
     @Override

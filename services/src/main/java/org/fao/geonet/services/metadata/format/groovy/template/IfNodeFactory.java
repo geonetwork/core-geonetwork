@@ -26,7 +26,7 @@ public class IfNodeFactory extends TNodeFactory {
         final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, ACCEPTED);
         switch (attributeAndValue.one()) {
             case NON_EMPTY:
-                return new NonEmptyNode(localName, qName, filteredAttributes, attributeAndValue.two());
+                return new NonEmptyNode(qName, filteredAttributes, attributeAndValue.two());
             default:
                 throw new IllegalStateException(
                         "applicable must be called before this method to ensure that the element is supported: "
