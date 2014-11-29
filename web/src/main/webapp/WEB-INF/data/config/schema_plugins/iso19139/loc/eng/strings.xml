@@ -116,6 +116,7 @@
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
+  <otherP01>Other parameter Usage Vocabulary</otherP01>
   <costBasis>Cost basis*</costBasis>
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>

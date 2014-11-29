@@ -1502,6 +1502,12 @@
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
                 'seadatanet.parameter.usage.P01')]"/>
+          <field
+                  name="otherP01"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords/gmd:MD_Keywords
+                [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:title/*/text(),
+                'Parameter Usage Vocabulary (other)')]/gmd:keyword"/>
 
           <field
               name="inspireTheme"
