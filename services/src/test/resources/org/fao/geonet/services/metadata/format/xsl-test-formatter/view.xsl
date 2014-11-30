@@ -9,7 +9,7 @@
     <xsl:template match="/" >
         <html>
             <body>
-                <div class="tr"><xsl:value-of select="tr:node-label(tr:create('iso19139'), 'gmd:title', null)"/> </div>
+                <div class="tr"><xsl:value-of select="tr:node-label(tr:create('iso19139'), 'gmd:title', 'gmd:parent')"/> </div>
                 <xsl:copy-of select="gnf:p()" />
             </body>
         </html>

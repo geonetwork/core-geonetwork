@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.Weigher;
-import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.metadata.format.ConfigFile;
@@ -27,10 +26,10 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  */
 @Component
 public class TemplateCache {
-    private static final Weigher<Path, String> STRING_LENGTH_WEIGHER = new Weigher<Path, String>()  {
+    private static final Weigher<Path, TNode> STRING_LENGTH_WEIGHER = new Weigher<Path, TNode>()  {
         @Override
-        public int weigh(Path key, String value) {
-            return key.toString().length() + value.length();
+        public int weigh(Path key, TNode value) {
+            return key.toString().length() + (int) value.getUnparsedSize();
         }
     };
 
@@ -40,10 +39,14 @@ public class TemplateCache {
     @VisibleForTesting
     @Autowired
     SchemaManager schemaManager;
+    @VisibleForTesting
+    @Autowired
+    TemplateParser xmlTemplateParser;
+
 
 
     private int maxSizeKB = 100000;
-    Cache<Path, String> canonicalFileNameToText;
+    Cache<Path, TNode> canonicalFileNameToText;
     private int concurrencyLevel = 4;
 
     @PostConstruct
@@ -75,31 +78,31 @@ public class TemplateCache {
     public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
                                              Map<String, Object> substitutions) throws IOException {
         Path file = formatterDir.resolve(path);
-        String template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
+        TNode template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
         Path fromParentSchema = null;
 
         if (!this.systemInfo.isDevMode()) {
             if (template != null) {
-                return new FileResult(file, template, substitutions);
+                return new FileResult(template, substitutions);
             }
 
             file = schemaDir.resolve(path);
             template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
             if (template != null) {
-                return new FileResult(file, template, substitutions);
+                return new FileResult(template, substitutions);
             }
             fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             if (fromParentSchema != null) {
                 template = this.canonicalFileNameToText.getIfPresent(toRealPath(fromParentSchema));
                 if (template != null) {
-                    return new FileResult(fromParentSchema, template, substitutions);
+                    return new FileResult(template, substitutions);
                 }
             }
 
             file = rootFormatterDir.resolve(path);
             template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
             if (template != null) {
-                return new FileResult(file, template, substitutions);
+                return new FileResult(template, substitutions);
             }
         }
 
@@ -127,10 +130,10 @@ public class TemplateCache {
                                                "\t * " + rootFormatterDir);
         }
 
-        template = new String(Files.readAllBytes(file), Constants.CHARSET);
+        template = xmlTemplateParser.parse(file);
         this.canonicalFileNameToText.put(toRealPath(file), template);
 
-        return new FileResult(file, template, substitutions);
+        return new FileResult(template, substitutions);
     }
 
     private Path toRealPath(Path file) throws IOException {

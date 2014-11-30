@@ -21,6 +21,7 @@ public abstract class TNode {
 
     private List<TNode> children = Lists.newArrayList();
     protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
+    private long unparsedSize;
 
     public TNode(String qName, Attributes attributes) throws IOException {
         this.qName = qName;
@@ -114,6 +115,14 @@ public abstract class TNode {
     }
 
     public void setTextContent(String text) throws IOException {
-        addChild(new TextContentNode(PARSER.parse(text)));
+        addChild(new TNodeTextContent(PARSER.parse(text)));
+    }
+
+    public long getUnparsedSize() {
+        return unparsedSize;
+    }
+
+    public void setUnparsedSize(long unparsedSize) {
+        this.unparsedSize = unparsedSize;
     }
 }

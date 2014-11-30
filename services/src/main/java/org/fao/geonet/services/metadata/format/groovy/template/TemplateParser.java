@@ -8,8 +8,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,29 +28,50 @@ import javax.xml.parsers.SAXParserFactory;
  * @author Jesse on 11/29/2014.
  */
 @Component
-public class XmlTemplateParser {
+public class TemplateParser {
+    public static final TextContentParser TEXT_CONTENT_PARSER = new TextContentParser();
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     List<TNodeFactory> tnodeFactories;
 
-    public TNode parse(Path path) throws ParserConfigurationException, SAXException, IOException {
+    public TNode parse(Path path) {
 
-        try (InputStream in = Files.newInputStream(path)) {
-            return parse(in);
+        try {
+            final TNode root = parse(Files.readAllBytes(path), TemplateType.fromPath(path));
+            root.setUnparsedSize(Files.size(path));
+            return root;
+        } catch (IOException e) {
+            throw new TemplateException(e);
+        } catch (TemplateException e) {
+            throw new TemplateException("Error when parsing " + path + ":" , e.getCause());
         }
 
     }
 
-    public TNode parse(InputStream in) throws ParserConfigurationException, SAXException, IOException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser = factory.newSAXParser();
-        Handler handler = new Handler(tnodeFactories);
+    public TNode parse(byte[] in, TemplateType type) {
+        switch (type) {
+            case XML:
+                try {
+                    SAXParserFactory factory = SAXParserFactory.newInstance();
+                    SAXParser saxParser = factory.newSAXParser();
+                    Handler handler = new Handler(tnodeFactories);
 
-        InputSource source = new InputSource(in);
-        source.setEncoding(Constants.ENCODING);
+                    InputSource source = new InputSource(new ByteArrayInputStream(in));
+                    source.setEncoding(Constants.ENCODING);
 
-        saxParser.parse(source, handler);
-        return handler.root;
+                    saxParser.parse(source, handler);
+                    return handler.root;
+                } catch (ParserConfigurationException | SAXException | IOException e) {
+                    throw new TemplateException(e);
+                }
+            default:
+                try {
+                    final String unparsedText = new String(in, Constants.ENCODING);
+                    return new TNodeTextContent(TEXT_CONTENT_PARSER.parse(unparsedText));
+                } catch (IOException e) {
+                    throw new TemplateException(e);
+                }
+        }
     }
 
     private static class Handler extends DefaultHandler {

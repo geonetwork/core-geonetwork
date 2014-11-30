@@ -1,9 +1,10 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
-import java.nio.file.Path;
+import org.fao.geonet.Constants;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * One of the results the closure of a file handler can return.  It will load a file and replace all ${key} values (where key is in the
@@ -12,33 +13,23 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/16/2014.
  */
 public class FileResult {
-    private static final Pattern KEY_PATTERN = Pattern.compile("\\$\\{([^{}]+)}");
-    private final String template;
+    private final TNode template;
     private final Map<String, Object> substitutions;
-    private final Path file;
 
-    public FileResult(Path file, String template, Map<String, Object> substitutions) {
-        this.file = file;
+    public FileResult(TNode template, Map<String, Object> substitutions) {
         this.template = template;
         this.substitutions = substitutions;
     }
 
     @Override
     public String toString() {
-        final Matcher matcher = KEY_PATTERN.matcher(template);
-        StringBuilder finalData = new StringBuilder();
-        int start = 0;
-        while (matcher.find()) {
-            String key = matcher.group(1).trim();
-            Object value = this.substitutions.get(key);
-            if (value == null) {
-                value = "";
-            }
-            finalData.append(template.substring(start, matcher.start()));
-            finalData.append(value);
-            start = matcher.end();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        TRenderContext context = new TRenderContext(out, substitutions);
+        try {
+            template.render(context);
+            return out.toString(Constants.ENCODING);
+        } catch (IOException e) {
+            throw new TemplateException(e);
         }
-        finalData.append(template.substring(start, template.length()));
-        return finalData.toString();
     }
 }

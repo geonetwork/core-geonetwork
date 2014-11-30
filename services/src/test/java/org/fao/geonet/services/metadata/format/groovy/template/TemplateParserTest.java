@@ -4,24 +4,24 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.utils.IO;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class XmlTemplateParserTest {
+public class TemplateParserTest {
 
     @Test
     public void testParseIfTemplate() throws Exception {
-        final XmlTemplateParser parser = new XmlTemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryNonEmpty());
-        final InputStream stream = XmlTemplateParserTest.class.getResourceAsStream("non-empty-template.html");
-        final TNode parseTree = parser.parse(stream);
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("non-empty-template.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
         Map<String, Object> model = Maps.newHashMap();
         model.put("title", "Title");
@@ -65,10 +65,9 @@ public class XmlTemplateParserTest {
 
     @Test
     public void testRepeat() throws Exception {
-        final XmlTemplateParser parser = new XmlTemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryRepeat());
-        final InputStream stream = XmlTemplateParserTest.class.getResourceAsStream("repeat-template.html");
-        final TNode parseTree = parser.parse(stream);
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("repeat-template.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
         Map<String, Object> model = Maps.newHashMap();
         Map<String, Object> row1 = Maps.newLinkedHashMap();
@@ -89,10 +88,9 @@ public class XmlTemplateParserTest {
 
     @Test(expected = TemplateException.class)
     public void testRepeatNotMapWhenMapRequired() throws Exception {
-        final XmlTemplateParser parser = new XmlTemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryRepeat());
-        final InputStream stream = XmlTemplateParserTest.class.getResourceAsStream("repeat-template.html");
-        final TNode parseTree = parser.parse(stream);
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("repeat-template.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
         Map<String, Object> model = Maps.newHashMap();
         model.put("maps", Lists.newArrayList(Lists.newArrayList("elem1")));
@@ -103,10 +101,9 @@ public class XmlTemplateParserTest {
 
     @Test(expected = TemplateException.class)
     public void testMultipleDirectivesPerElem() throws Exception {
-        final XmlTemplateParser parser = new XmlTemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryNonEmpty(), new TNodeFactoryRepeat());
-        final InputStream stream = XmlTemplateParserTest.class.getResourceAsStream("multiple-directives-per-el-template.html");
-        parser.parse(stream);
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("multiple-directives-per-el-template.html");
+        parser.parse(IO.toPath(url.toURI()));
     }
 
     public void assertCorrectRender(TNode parseTree, Map<String, Object> model, String expected) throws IOException {
@@ -117,4 +114,9 @@ public class XmlTemplateParserTest {
         assertEquals(expected + "\n" + result, expected.replaceAll("\\n|\\r|\\s+", ""), result.toString().replaceAll("\\n|\\r|\\s+", ""));
     }
 
+    public static TemplateParser createTestParser() {
+        final TemplateParser parser = new TemplateParser();
+        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryNonEmpty(), new TNodeFactoryRepeat());
+        return parser;
+    }
 }
