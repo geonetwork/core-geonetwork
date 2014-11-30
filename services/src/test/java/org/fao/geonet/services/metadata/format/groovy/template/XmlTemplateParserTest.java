@@ -71,18 +71,18 @@ public class XmlTemplateParserTest {
         final TNode parseTree = parser.parse(stream);
 
         Map<String, Object> model = Maps.newHashMap();
-        Map<String, Object> row1 = Maps.newHashMap();
+        Map<String, Object> row1 = Maps.newLinkedHashMap();
         row1.put("key1", "value1");
         row1.put("key2", "value2");
-        Map<String, Object> row2 = Maps.newHashMap();
+        Map<String, Object> row2 = Maps.newLinkedHashMap();
         row2.put("key1", "value3");
         row2.put("key2", "value4");
         model.put("maps", Lists.<Object>newArrayList(row1, row2));
         model.put("type", "x");
 
         String expected = "<html>" +
-                          "<div>true - false - 0<div>0 - x - key1 - value1</div><div>1 - x - key2 - value2</div></div>" +
-                          "<div>false - true - 1<div>0 - x - key1 - value3</div><div>1 - x - key1 - value4</div></div>" +
+                          " <div> true - false - 0<div>0 - x - key1 - value1</div><div>1 - x - key2 - value2</div> </div>" +
+                          " <div> false - true - 1<div>0 - x - key1 - value3</div><div>1 - x - key2 - value4</div> </div>" +
                           "</html>";
         assertCorrectRender(parseTree, model, expected);
     }
@@ -95,7 +95,7 @@ public class XmlTemplateParserTest {
         final TNode parseTree = parser.parse(stream);
 
         Map<String, Object> model = Maps.newHashMap();
-        model.put("maps", Lists.newArrayList(Lists.newArrayList()));
+        model.put("maps", Lists.newArrayList(Lists.newArrayList("elem1")));
         model.put("type", "x");
         String expected = "This doesn't matter because the render should fail";
         assertCorrectRender(parseTree, model, expected);
@@ -114,7 +114,7 @@ public class XmlTemplateParserTest {
         TRenderContext context = new TRenderContext(result, model);
         parseTree.render(context);
 
-        assertEquals(expected, result.toString().replaceAll("\\n|\\r", "").replaceAll("\\s+", " "));
+        assertEquals(expected + "\n" + result, expected.replaceAll("\\n|\\r|\\s+", ""), result.toString().replaceAll("\\n|\\r|\\s+", ""));
     }
 
 }

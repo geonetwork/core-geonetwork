@@ -5,10 +5,10 @@ import java.io.IOException;
 /**
  * @author Jesse on 11/30/2014.
  */
-public class TextContentNode extends TNode {
+public class TNodeTextContent extends TNode {
     private final TextBlock textContent;
 
-    public TextContentNode(TextBlock textContent) throws IOException {
+    public TNodeTextContent(TextBlock textContent) throws IOException {
         super("", EMPTY_ATTRIBUTES);
         this.textContent = textContent;
     }

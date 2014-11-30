@@ -81,7 +81,7 @@ public class TNodeRepeatIter extends TNode {
     static void addIndexInfo(Map<String, Object> newModelMap, int index, int total) {
         newModelMap.put(INDEX_KEY, index);
         newModelMap.put(FIRST_KEY, index == 0);
-        newModelMap.put(LAST_KEY, total == index);
+        newModelMap.put(LAST_KEY, (total - 1) == index);
         newModelMap.put(ODD_KEY, (index % 2) == 1);
         newModelMap.put(EVEN_KEY, (total % 2) == 0);
         newModelMap.put(MIDDLE_KEY, (total / 2) == index);

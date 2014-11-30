@@ -36,7 +36,7 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
         Matcher mapMatcher = MAP_PATTERN.matcher(contextName);
         if (mapMatcher.matches()) {
-            return new TNodeRepeatMap(qName, attributes, key, mapMatcher.group(1), mapMatcher.group(2));
+            return new TNodeRepeatMap(qName, filteredAttributes, key, mapMatcher.group(1), mapMatcher.group(2));
         } else {
             return new TNodeRepeatIter(qName, filteredAttributes, key, contextName);
         }
