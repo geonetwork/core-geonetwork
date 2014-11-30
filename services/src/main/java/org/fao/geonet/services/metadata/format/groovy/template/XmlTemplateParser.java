@@ -66,14 +66,21 @@ public class XmlTemplateParser {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             try {
+                TNodeFactory found = null;
                 for (TNodeFactory factory : factories) {
                     if (factory.applicable(localName, qName, attributes)) {
+                        if (found != null) {
+                            throw new TemplateException(
+                                    "More than one directive attribute was found on " + qName + "\nFound: " +
+                                    found.getClass().getSimpleName() + " and " + factory.getClass().getSimpleName());
+                        }
                         setCurrentNode(factory.create(localName, qName, attributes));
-                        return;
+                        found = factory;
                     }
                 }
-
-                setCurrentNode(new SimpleTNode(qName, attributes));
+                if (found == null) {
+                    setCurrentNode(new SimpleTNode(qName, attributes));
+                }
             } catch (IOException e) {
                 throw new TemplateException(e);
             }
@@ -98,7 +105,11 @@ public class XmlTemplateParser {
         public void characters(char[] ch, int start, int length) throws SAXException {
             final char[] content = new char[length];
             System.arraycopy(ch, start, content, 0, length);
-            this.stack.peek().setTextContent(new String(content));
+            try {
+                this.stack.peek().setTextContent(new String(content));
+            } catch (IOException e) {
+                throw new TemplateException(e);
+            }
         }
     }
 }

@@ -13,16 +13,6 @@ public class SimpleTNode extends TNode {
     }
 
     @Override
-    protected void writeCustomChildData(TRenderContext context) {
-
-    }
-
-    @Override
-    protected Attributes customAttributes(TRenderContext context) {
-        return EMPTY_ATTRIBUTES;
-    }
-
-    @Override
     protected boolean canRender(TRenderContext context) {
         return true;
     }

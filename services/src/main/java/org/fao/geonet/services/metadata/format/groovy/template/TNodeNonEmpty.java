@@ -19,22 +19,12 @@ import java.io.IOException;
  * @author Jesse on 11/29/2014.
  */
 @Component
-public class NonEmptyNode extends TNode {
+public class TNodeNonEmpty extends TNode {
     private final String expr;
 
-    public NonEmptyNode(String qName, Attributes attributes, String expr) throws IOException {
+    public TNodeNonEmpty(String qName, Attributes attributes, String expr) throws IOException {
         super(qName, attributes);
         this.expr = expr;
-    }
-
-    @Override
-    protected void writeCustomChildData(TRenderContext context) {
-        // no implementation
-    }
-
-    @Override
-    protected Attributes customAttributes(TRenderContext context) {
-        return EMPTY_ATTRIBUTES;
     }
 
     @Override

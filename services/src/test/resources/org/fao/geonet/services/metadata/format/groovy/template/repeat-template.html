@@ -1,0 +1,5 @@
+<html>
+  <div fmt-repeat="map in maps">
+      {{$first}} - {{$last}} - {{$index}}<div fmt-repeat="(key, val) in map">{{$index}} - {{type}} - {{key}} - {{val}}</div>
+  </div>
+</html>

@@ -16,26 +16,29 @@ import java.util.List;
  */
 public abstract class TNode {
     private static final TextContentParser PARSER = new TextContentParser();
-    private final TextBlock start, end;
-    private TextBlock content;
+    protected final TextBlock attributes, end;
+    protected final String qName;
 
     private List<TNode> children = Lists.newArrayList();
     protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
 
-
     public TNode(String qName, Attributes attributes) throws IOException {
+        this.qName = qName;
         StringBuilder start = new StringBuilder();
         StringBuilder end = new StringBuilder();
-        start.append("<").append(qName);
-        writeAttributes(attributes, start);
+        renderAttributes(attributes, start);
 
         end.append("\n</").append(qName).append(">");
 
-        this.start = PARSER.parse(start.toString());
+        this.attributes = PARSER.parse(start.toString());
         this.end = PARSER.parse(end.toString());
     }
 
-    public void writeAttributes(Attributes attributes, Appendable appendable) throws IOException {
+    public List<TNode> getChildren() {
+        return children;
+    }
+
+    public void renderAttributes(Attributes attributes, Appendable appendable) throws IOException {
         for (int i = 0; i < attributes.getLength(); i++) {
             appendable.append(" ").append(attributes.getQName(i)).append("=\"").append(attributes.getValue(i)).append("\"");
         }
@@ -44,20 +47,42 @@ public abstract class TNode {
     /**
      * Render the currentNode.
      */
-    public final void render(TRenderContext context) throws IOException {
+    public void render(TRenderContext context) throws IOException {
         if (canRender(context)) {
-            start.render(context);
-            writeAttributes(customAttributes(context), context);
+            context.append("<").append(qName);
+
+            if (writeAttributes(context)) {
+                attributes.render(context);
+            }
+            final Attributes customAttributes = customAttributes(context);
+            if (customAttributes != null) {
+                renderAttributes(customAttributes, context);
+            }
             context.append(">");
-            for (TNode child : children) {
-                child.render(context);
+
+            if (writeChildren(context)) {
+                for (TNode child : children) {
+                    appendCustomChildData(context, child);
+                    child.render(context);
+                }
             }
-            writeCustomChildData(context);
-            if (content != null) {
-                content.render(context);
-            }
+
             end.render(context);
         }
+    }
+
+    /**
+     * If true and canRender then write all the children.
+     */
+    protected boolean writeChildren(TRenderContext context) {
+        return true;
+    }
+
+    /**
+     * If true and canRender then the attributes defined on the element will be on the element definition. Otherwise no attributes will be written.
+     */
+    protected boolean writeAttributes(TRenderContext context) {
+        return true;
     }
 
     /**
@@ -65,12 +90,16 @@ public abstract class TNode {
      * <p/>
      * The child nodes will be processed by the render method.
      */
-    protected abstract void writeCustomChildData(TRenderContext context);
+    protected void appendCustomChildData(TRenderContext context, TNode nextChild) throws IOException {
+        // no op
+    }
 
     /**
      * Get attributes from implementation class.
      */
-    protected abstract Attributes customAttributes(TRenderContext context);
+    protected Attributes customAttributes(TRenderContext context) {
+        return null;
+    }
 
     /**
      * Check if this node (and subtree) should be rendered.
@@ -84,7 +113,7 @@ public abstract class TNode {
         this.children.add(node);
     }
 
-    public void setTextContent(String text) {
-        this.content = PARSER.parse(text);
+    public void setTextContent(String text) throws IOException {
+        addChild(new TextContentNode(PARSER.parse(text)));
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class TNodeFactory {
     public static final String FMT_PREFIX = "fmt-";
-    static final List<String> ATTRIBUTE_NAME_PREFIXES = Lists.newArrayList(FMT_PREFIX, "x-" + FMT_PREFIX, "data-" + FMT_PREFIX);
+    public static final List<String> ATTRIBUTE_NAME_PREFIXES = Lists.newArrayList(FMT_PREFIX, "x-" + FMT_PREFIX, "data-" + FMT_PREFIX);
 
     /**
      * Test if this node factory can process the current node.
