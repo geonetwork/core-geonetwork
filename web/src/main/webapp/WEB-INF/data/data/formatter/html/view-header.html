@@ -1,19 +1,21 @@
-<script type="application/javascript">document.title="${pageTitle}"</script>
+<div>
+<script type="application/javascript" fmt-non-empty="pageTitle">document.title="{{pageTitle}}"</script>
 <h1>
-    <button type="button" class="btn btn-default toggler">
-        ${logo}
+    <button type="button" class="btn btn-default toggler"  fmt-non-empty="logo">
+        {{logo}}
     </button>
-    <span style="padding: 20px">${title}</span>
+    <span style="padding: 20px">{{title}}</span>
 </h1>
 <div class="target">
-    ${thumbnail}
+    <div fmt-non-empty="thumbnail">{{thumbnail}}</div>
     <div style="padding: 20px">
 
-        ${abstract}
+        {{abstract}}
 
-        ${links}
+        {{links}}
     </div>
 </div>
-${navBar}
+{{navBar}}
 
-${content}
+{{content}}
+</div>

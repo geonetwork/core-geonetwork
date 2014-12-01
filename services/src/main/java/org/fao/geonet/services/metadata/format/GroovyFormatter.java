@@ -18,7 +18,7 @@ import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
-import org.fao.geonet.services.metadata.format.groovy.TemplateCache;
+import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
 import org.fao.geonet.utils.IO;
 import org.jdom.Namespace;

@@ -3,7 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.FileResult;
+import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 

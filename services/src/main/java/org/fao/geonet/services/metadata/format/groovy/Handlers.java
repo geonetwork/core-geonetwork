@@ -11,6 +11,8 @@ import groovy.lang.GString;
 import groovy.util.ClosureComparator;
 import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
+import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -294,7 +296,7 @@ public class Handlers {
 
     /**
      * Create a FileResult object as a result from a handler function.
-     * See {@link org.fao.geonet.services.metadata.format.groovy.FileResult}
+     * See {@link org.fao.geonet.services.metadata.format.groovy.template.FileResult}
      * <p/>
      * File resolution is done by searching:
      * <ul>

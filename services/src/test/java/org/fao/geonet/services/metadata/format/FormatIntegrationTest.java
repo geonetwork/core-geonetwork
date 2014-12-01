@@ -3,7 +3,6 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
-import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
@@ -28,11 +27,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -150,8 +147,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             try {
                 response = new MockHttpServletResponse();
                 formatService.exec("eng", "pdf", "" + id, null, formatter.getId(), "true", false, request, response);
-                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
-                System.exit(0);
+//                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
+//                System.exit(0);
             } catch (Throwable t) {
                 t.printStackTrace();
                 fail(formatter.getSchema() + " > " + formatter.getId());
@@ -210,7 +207,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
         final String viewString = response.getContentAsString();
-        com.google.common.io.Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
+//        com.google.common.io.Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         final Element view = Xml.loadString(viewString, false);
         assertEquals("html", view.getName());
@@ -236,9 +233,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertElement(view, "body//p[@class = 'code']/span[@class='value']", "WGS 1984", 1);
 
         // Check that the handlers.add 'gmd:CI_OnlineResource', { el -> handler is applied
-        assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource", 1);
-        assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM", 1);
-        assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource\n", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM\n", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "\n", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='label']", "URL:", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='value']", "http://services.sandre.eaufrance.fr/geo/ouvrage", 1);
 
