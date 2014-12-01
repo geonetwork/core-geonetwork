@@ -1,16 +1,26 @@
 <div>
-<script type="application/javascript" fmt-non-empty="pageTitle">document.title="{{pageTitle}}"</script>
+<script type="application/javascript" fmt-if="pageTitle">document.title="{{pageTitle}}"</script>
 <h1>
-    <button type="button" class="btn btn-default toggler"  fmt-non-empty="logo">
-        {{logo}}
+    <button type="button" class="btn btn-default toggler">
+        <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
+        <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
     </button>
     <span style="padding: 20px">{{title}}</span>
 </h1>
 <div class="target">
-    <div fmt-non-empty="thumbnail">{{thumbnail}}</div>
+    <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
     <div style="padding: 20px">
 
-        {{abstract}}
+        <h3 fmt-if="abstract">
+            <button type="button" class="btn btn-default toggler">
+                <i class="fa fa-arrow-circle-down"></i>
+            </button>
+            <span fmt-translate="">abstract</span>
+        </h3>
+
+        <div class="target">
+            Abstract {uuid}
+        </div>
 
         {{links}}
     </div>

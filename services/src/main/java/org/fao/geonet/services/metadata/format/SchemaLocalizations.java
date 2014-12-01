@@ -181,7 +181,7 @@ public class SchemaLocalizations {
         return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "description");
     }
 
-    private String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName,  String type) throws Exception {
+    public String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName,  String type) throws Exception {
         if (qualifiedParentNodeName == null) {
             qualifiedParentNodeName = "";
         }
@@ -242,7 +242,7 @@ public class SchemaLocalizations {
         return codelistTranslation(codelist, value, "description");
     }
 
-    private String codelistTranslation(String codelist, String context, String type) throws Exception {
+    public String codelistTranslation(String codelist, String context, String type) throws Exception {
 
         if (LANG_CODELIST_NS.equals(codelist)) {
             return translateLanguageCode(context);

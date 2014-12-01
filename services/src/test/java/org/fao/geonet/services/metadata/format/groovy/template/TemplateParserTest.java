@@ -4,13 +4,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class TemplateParserTest {
 
     @Test
-    public void testParseIfTemplate() throws Exception {
+    public void testParseIfDirective() throws Exception {
         final TemplateParser parser = createTestParser();
         final URL url = TemplateParserTest.class.getResource("non-empty-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
@@ -64,7 +67,38 @@ public class TemplateParserTest {
     }
 
     @Test
-    public void testRepeat() throws Exception {
+    public void testTranslateDirective() throws Exception {
+        final Functions mock = Mockito.mock(Functions.class);
+        Mockito.when(mock.translate("testString", null)).thenReturn("translation null");
+        Mockito.when(mock.translate("testString", "file")).thenReturn("translation file");
+        Mockito.when(mock.codelistTranslation("testString", null, "name")).thenReturn("translation codelist null name");
+        Mockito.when(mock.codelistTranslation("testString", "context1", "desc")).thenReturn("translation codelist desc context1");
+        Mockito.when(mock.codelistTranslation("testString", "context2", "desc")).thenReturn("translation codelist desc context2");
+        Mockito.when(mock.nodeTranslation("testString", "context", "name")).thenReturn("translation node name context");
+        Mockito.when(mock.nodeTranslation("testString", null, "desc")).thenReturn("translation node desc null");
+        Functions.setThreadLocal(mock);
+
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("translate.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
+
+        String expected = "<html>\n"
+                          + "    <div>translation null</div>\n"
+                          + "    <div>translation null</div>\n"
+                          + "    <div>translation file</div>\n"
+                          + "    <div>translation file</div>\n"
+                          + "    <div>translation codelist null name</div>\n"
+                          + "    <div>translation codelist desc context1</div>\n"
+                          + "    <div>translation codelist desc context2</div>\n"
+                          + "    <div>translation node name context</div>\n"
+                          + "    <div>translation node desc null</div>\n"
+                          + "</html>";
+
+        assertCorrectRender(parseTree, Collections.<String, Object>emptyMap(), expected);
+    }
+
+    @Test
+    public void testRepeatDirective() throws Exception {
         final TemplateParser parser = createTestParser();
         final URL url = TemplateParserTest.class.getResource("repeat-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
@@ -109,6 +143,7 @@ public class TemplateParserTest {
     public void assertCorrectRender(TNode parseTree, Map<String, Object> model, String expected) throws IOException {
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         TRenderContext context = new TRenderContext(result, model);
+
         parseTree.render(context);
 
         assertEquals(expected + "\n" + result, expected.replaceAll("\\n|\\r|\\s+", ""), result.toString().replaceAll("\\n|\\r|\\s+", ""));
@@ -116,7 +151,7 @@ public class TemplateParserTest {
 
     public static TemplateParser createTestParser() {
         final TemplateParser parser = new TemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryNonEmpty(), new TNodeFactoryRepeat());
+        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryIf(), new TNodeFactoryRepeat(), new TNodeFactoryTranslate());
         return parser;
     }
 }

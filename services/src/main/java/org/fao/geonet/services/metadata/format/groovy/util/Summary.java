@@ -44,11 +44,11 @@ public class Summary {
     public FileResult getResult() throws Exception {
         HashMap<String, Object> params = Maps.newHashMap();
 
-        params.put("logo", logoHtml());
+        params.put("logo", logo);
         params.put("title", title != null ? title : "");
         params.put("pageTitle", title != null ? title.replace('"', '\'') : "");
         params.put("abstract", abstrHtml());
-        params.put("thumbnail", thumbnailHtml());
+        params.put("thumbnail", thumbnailUrl());
         addLinks(params);
         params.put("navBar", navBar);
         params.put("content", content);
@@ -102,7 +102,7 @@ public class Summary {
                 + "    </div>\n";
     }
 
-    String thumbnailHtml() {
+    String thumbnailUrl() {
         String img;
         if (this.smallThumbnail != null) {
             img = this.smallThumbnail;
@@ -112,22 +112,14 @@ public class Summary {
             return "";
         }
 
-        String logoUrl;
+        String thumbnailUrl;
         if (img.startsWith("http://") || img.startsWith("https://")) {
-            logoUrl = img;
+            thumbnailUrl = img;
         } else {
-            logoUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
+            thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
 
         }
-        return "<img src=\"" + logoUrl + "\"></img>";
-    }
-
-    String logoHtml() {
-        if (logo != null) {
-            return "<img style=\"max-width: 128px\" src=\"" + logo + "\"></img>";
-        } else {
-            return "<i class=\"fa fa-arrow-circle-down\"></i>";
-        }
+        return thumbnailUrl;
     }
 
     public void setLogo(String logo) {

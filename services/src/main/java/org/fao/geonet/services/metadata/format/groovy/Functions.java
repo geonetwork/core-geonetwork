@@ -27,6 +27,9 @@ import java.util.Map;
  * @author Jesse on 10/16/2014.
  */
 public class Functions extends SchemaLocalizations {
+
+    private static ThreadLocal<Functions> threadLocal = new InheritableThreadLocal<>();
+
     private final Environment env;
     private final FormatterParams fparams;
     private SchemaPlugin schemaPlugin;
@@ -37,6 +40,14 @@ public class Functions extends SchemaLocalizations {
         this.env = env;
         this.schemaPlugin = SchemaManager.getSchemaPlugin(fparams.context, fparams.schema);
         this.fparams = fparams;
+        threadLocal.set(this);
+    }
+
+    public static Functions getThreadLocal() {
+        return threadLocal.get();
+    }
+    public static void setThreadLocal(Functions functions) {
+        threadLocal.set(functions);
     }
 
     /**
