@@ -24,7 +24,7 @@
        */
       loadLogo = function() {
         $scope.logos = [];
-        $http.get('admin.logo.list@json?type=icons').success(function(data) {
+        $http.get('admin.logo.list?_content_type=json&type=icons').success(function(data) {
           $scope.logos = data[0];
         }).error(function(data) {
           // TODO

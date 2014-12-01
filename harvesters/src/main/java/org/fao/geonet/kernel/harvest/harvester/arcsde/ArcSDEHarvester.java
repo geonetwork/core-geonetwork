@@ -42,7 +42,6 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -54,7 +53,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 
 /**
  * 
@@ -254,7 +252,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
         dataMan.flush();
 
@@ -298,7 +296,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                 setHarvested(true).
                 setUuid(params.uuid);
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 

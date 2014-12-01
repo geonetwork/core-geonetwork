@@ -175,7 +175,7 @@ public class Info implements Service
 	{
         @Override
         public boolean accept(Path icon) throws IOException {
-            if (!Files.isRegularFile(icon))
+            if (icon == null || !Files.isRegularFile(icon))
                 return false;
 
             String name = icon.getFileName().toString();

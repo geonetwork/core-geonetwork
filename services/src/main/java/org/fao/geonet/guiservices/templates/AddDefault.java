@@ -121,7 +121,6 @@ public class AddDefault implements Service {
                         //
                         // insert metadata
                         //
-                        String groupOwner = "1";
                         Metadata metadata = new Metadata().setUuid(uuid);
                         metadata.getDataInfo().
                                 setSchemaId(schemaName).

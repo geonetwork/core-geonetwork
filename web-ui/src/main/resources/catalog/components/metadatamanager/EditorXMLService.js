@@ -7,27 +7,56 @@
       ['gn_schema_manager_service']);
 
   module.value('gnXmlTemplates', {
-    CRS: '<gmd:referenceSystemInfo ' +
-        "xmlns:gmd='http://www.isotc211.org/2005/gmd' " +
-        "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
-        '<gmd:MD_ReferenceSystem>' +
-        '<gmd:referenceSystemIdentifier>' +
-        '<gmd:RS_Identifier>' +
-        '<gmd:code>' +
-        '<gco:CharacterString>{{description}}' +
-        '</gco:CharacterString>' +
-        '</gmd:code>' +
-        '<gmd:codeSpace>' +
-        '<gco:CharacterString>{{codeSpace}}</gco:CharacterString>' +
-        '</gmd:codeSpace>' +
-        '<gmd:version>' +
-        '<gco:CharacterString>{{version}}</gco:CharacterString>' +
-        '</gmd:version>' +
-        '</gmd:RS_Identifier>' +
-        '</gmd:referenceSystemIdentifier>' +
-        '</gmd:MD_ReferenceSystem>' +
-        '</gmd:referenceSystemInfo>'
-  });
+    CRS: {iso19139: '<gmd:referenceSystemInfo ' +
+          "xmlns:gmd='http://www.isotc211.org/2005/gmd' " +
+          "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+          '<gmd:MD_ReferenceSystem>' +
+          '<gmd:referenceSystemIdentifier>' +
+          '<gmd:RS_Identifier>' +
+          '<gmd:code>' +
+          '<gco:CharacterString>{{description}}' +
+          '</gco:CharacterString>' +
+          '</gmd:code>' +
+          '<gmd:codeSpace>' +
+          '<gco:CharacterString>{{codeSpace}}</gco:CharacterString>' +
+          '</gmd:codeSpace>' +
+          '<gmd:version>' +
+          '<gco:CharacterString>{{version}}</gco:CharacterString>' +
+          '</gmd:version>' +
+          '</gmd:RS_Identifier>' +
+          '</gmd:referenceSystemIdentifier>' +
+          '</gmd:MD_ReferenceSystem>' +
+          '</gmd:referenceSystemInfo>',
+      'iso19115-3': '<mdb:referenceSystemInfo ' +
+          "xmlns:mrs='http://www.isotc211.org/namespace/mrs/1.0/2014-07-11' " +
+          "xmlns:mcc='http://www.isotc211.org/namespace/mcc/1.0/2014-07-11' " +
+          "xmlns:mdb='http://www.isotc211.org/namespace/mdb/1.0/2014-07-11' " +
+          "xmlns:cit='http://www.isotc211.org/namespace/cit/1.0/2014-07-11' " +
+          "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+          '<mrs:MD_ReferenceSystem>' +
+          '  <mrs:referenceSystemIdentifier>' +
+          '    <mcc:MD_Identifier>' +
+          '      <mcc:authority>' +
+          '       <cit:CI_Citation>' +
+          '         <cit:title>' +
+          '  <gco:CharacterString>{{authority}}</gco:CharacterString>' +
+          '         </cit:title>' +
+          '       </cit:CI_Citation>' +
+          '     </mcc:authority>' +
+          '     <mcc:code>' +
+          '       <gco:CharacterString>{{code}}</gco:CharacterString>' +
+          '     </mcc:code>' +
+          '     <mcc:codeSpace>' +
+          '  <gco:CharacterString>{{description}}</gco:CharacterString>' +
+          '     </mcc:codeSpace>' +
+          '     <mcc:version>' +
+          '       <gco:CharacterString>{{version}}</gco:CharacterString>' +
+          '     </mcc:version>' +
+          '   </mcc:MD_Identifier>' +
+          ' </mrs:referenceSystemIdentifier>' +
+          '</mrs:MD_ReferenceSystem>' +
+          '</mdb:referenceSystemInfo>'
+    }});
 
   module.factory('gnEditorXMLService',
       ['gnNamespaces',
@@ -39,36 +68,38 @@
            var nsDeclaration = [];
            if (ns.length === 2) {
              nsDeclaration = ['xmlns:', ns[0], "='",
-                              gnNamespaces[ns[0]], "'"];
+               gnNamespaces[ns[0]], "'"];
            }
            return nsDeclaration.join('');
          };
          return {
            /**
-            * Create a referenceSystemInfo XML snippet replacing
-            * description, codeSpace and version properties of
-            * the CRS.
-            */
-           buildCRSXML: function(crs) {
-             var replacement = ['description', 'codeSpace', 'version'];
-             var xml = gnXmlTemplates.CRS;
+           * Create a referenceSystemInfo XML snippet replacing
+           * description, codeSpace and version properties of
+           * the CRS.
+           */
+           buildCRSXML: function(crs, schema) {
+             var replacement = ['description', 'codeSpace',
+               'authority', 'code', 'version'];
+             var xml = gnXmlTemplates.CRS[schema] ||
+             gnXmlTemplates.CRS['iso19139'];
              angular.forEach(replacement, function(key) {
                xml = xml.replace('{{' + key + '}}', crs[key]);
              });
              return xml;
            },
            /**
-            * Create an XML snippet to be inserted in a form field.
-            * The element name will be the parent element of the
-            * snippet provided.
-            *
-            * The element namespace should be defined
-            * in the list of gnNamespaces.
-            */
+           * Create an XML snippet to be inserted in a form field.
+           * The element name will be the parent element of the
+           * snippet provided.
+           *
+           * The element namespace should be defined
+           * in the list of gnNamespaces.
+           */
            buildXML: function(elementName, snippet) {
              if (snippet.match(/^<\?xml/g)) {
                var xmlDeclaration =
-                   '<?xml version="1.0" encoding="UTF-8"?>';
+               '<?xml version="1.0" encoding="UTF-8"?>';
                snippet = snippet.replace(xmlDeclaration, '');
              }
 
@@ -81,9 +112,9 @@
              return tokens.join('');
            },
            /**
-            * Build an XML snippet for the element name
-            * and xlink provided.
-            */
+           * Build an XML snippet for the element name
+           * and xlink provided.
+           */
            buildXMLForXlink: function(elementName, xlink) {
              var nsDeclaration = getNamespacesForElement(elementName);
 

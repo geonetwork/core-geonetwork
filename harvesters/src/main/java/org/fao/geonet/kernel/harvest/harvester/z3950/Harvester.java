@@ -343,7 +343,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                             setUuid(params.uuid).
                             setUri(params.name);
 
-                    addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+                    addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
                     metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
                     id = String.valueOf(metadata.getId());

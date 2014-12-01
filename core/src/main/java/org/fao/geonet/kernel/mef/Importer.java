@@ -143,7 +143,7 @@ public class Importer {
 
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<String, Pair<String, Element>>();
                 for (Path file : metadataXmlFiles) {
-                    if (java.nio.file.Files.isRegularFile(file)) {
+                    if (file != null && java.nio.file.Files.isRegularFile(file)) {
                         Element metadata = Xml.loadFile(file);
                         try {
                             String metadataSchema = dm.autodetectSchema(metadata, null);

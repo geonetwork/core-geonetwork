@@ -701,6 +701,12 @@
               ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
+          <systemProperties>
+            <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+              <value>500000</value>
+            </systemProperty>
+          </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
         </configuration>

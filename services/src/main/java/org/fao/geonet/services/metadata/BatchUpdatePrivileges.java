@@ -51,13 +51,13 @@ import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
  * Stores all operations allowed for a metadata.
  */
 public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

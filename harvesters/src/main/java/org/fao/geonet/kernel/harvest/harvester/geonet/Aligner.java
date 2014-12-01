@@ -250,7 +250,7 @@ public class Aligner extends BaseAligner
         Map<String, Pair<String, Element>> mdFiles =
                 new HashMap<String, Pair<String, Element>>();
         for (Path file : files) {
-            if (Files.isDirectory(file)) {
+            if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
                 try {
                     String metadataSchema = dataMan.autodetectSchema(metadata, null);
@@ -464,7 +464,7 @@ public class Aligner extends BaseAligner
                 setHarvested(true).
                 setUuid(params.uuid);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
@@ -736,8 +736,7 @@ public class Aligner extends BaseAligner
         }
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Metadata metadata;
-        if (!ri.isMoreRecentThan(date))
-		{
+        if (!ri.isMoreRecentThan(date)) {
             if(log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
@@ -766,7 +765,7 @@ public class Aligner extends BaseAligner
 		}
 
         metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);
 
 		Element general = info.getChild("general");
