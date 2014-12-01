@@ -19,9 +19,7 @@
   ]);
 
   module.constant('gnSearchSettings', {});
-  module.constant('gnViewerSettings', {
-     proxyUrl: '../../proxy?url='
-  });
+  module.constant('gnViewerSettings', {});
 
   //Define the translation files to load
   module.constant('$LOCALES', ['core', 'search']);

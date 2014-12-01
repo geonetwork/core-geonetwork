@@ -6,8 +6,8 @@
   ]);
 
   module.provider('gnOwsCapabilities', function () {
-    this.$get = ['$http', 'gnUrlUtils', 'gnViewerSettings', '$q',
-      function ($http, gnUrlUtils, gnViewerSettings, $q) {
+    this.$get = ['$http', 'gnUrlUtils', 'gnGlobalSettings', '$q',
+      function ($http, gnUrlUtils, gnGlobalSettings, $q) {
 
         var displayFileContent = function (data) {
           var layers = [];
@@ -79,7 +79,7 @@
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
-                var proxyUrl = gnViewerSettings.proxyUrl + encodeURIComponent(url);
+                var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
                 $http.get(proxyUrl, {
                   cache: true
                 })
