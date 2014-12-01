@@ -348,9 +348,7 @@
               scope.mode = 'url';
 
               // the form parms that will be submited
-              scope.searchObj = {
-                params: {}
-              };
+              scope.params = {};
 
               // Tells if we need to display layer grid and send
               // layers to the submit
@@ -391,7 +389,7 @@
                 if (scope.mode == 'upload') {
                   scope.submit();
                 } else {
-                  gnOnlinesrc.addOnlinesrc(scope.searchObj.params, scope.popupid);
+                  gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid);
                 }
               };
 
@@ -409,9 +407,14 @@
                */
               scope.loadWMSCapabilities = function() {
                 if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getCapabilities(scope.searchObj.params.url)
-                  .then(function(layers) {
-                        scope.layers = layers;
+                  gnOwsCapabilities.getCapabilities(scope.params.url)
+                  .then(function(capabilities) {
+                        scope.layers = [];
+                        angular.forEach(capabilities.layers, function(l) {
+                          if(angular.isDefined(l.Name)) {
+                            scope.layers.push(l);
+                          }
+                        });
                       });
                 }
               };
@@ -422,8 +425,8 @@
                * layer grid and call or not a getCapabilities.
                */
               scope.$watch('params.protocol', function() {
-                if (!angular.isUndefined(scope.searchObj.params.protocol)) {
-                  scope.isWMSProtocol = (scope.searchObj.params.protocol.
+                if (!angular.isUndefined(scope.params.protocol)) {
+                  scope.isWMSProtocol = (scope.params.protocol.
                       indexOf('OGC:WMS') >= 0);
                   scope.loadWMSCapabilities();
                 }
@@ -434,7 +437,7 @@
                * if the protocol is WMS
                */
               scope.$watch('params.url', function() {
-                if (!angular.isUndefined(scope.searchObj.params.url)) {
+                if (!angular.isUndefined(scope.params.url)) {
                   scope.loadWMSCapabilities();
                 }
               });
