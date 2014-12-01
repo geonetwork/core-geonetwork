@@ -6,13 +6,13 @@
 			<tr ng-repeat="layer in layers | orderBy:'title':reverse"  ng-click="select(layer)"
 				class="
             {{($first) ? 'row-first ' : ''}}
-            {{(layerSelected.name == layer.name) ? 'success ' : ''}}
-            {{(layerHovered.name == layer.name) ? 'pending ' : ''}}"
+            {{(layerSelected.Name == layer.Name) ? 'success ' : ''}}
+            {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}"
         data-ng-class="{'success': selection.indexOf(layer) >= 0}">
 				<td class="add col-first">
 					<div class="icon-zoom-in"></div>
 				</td>
-				<td> {{layer.name}}
+				<td> {{layer.Title}}
             </td>
 <!-- 				<td class="title"> {{layer.title}}
             </td>
