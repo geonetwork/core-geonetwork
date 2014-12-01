@@ -1,0 +1,79 @@
+@import "gn_search.less";
+
+.navbar {
+  margin-bottom: 14px;
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    font-size: 16px;
+  }
+}
+
+.jumbotron {
+  padding: 150px 100px;
+}
+
+.gn-search-page {
+  .nav-pills {
+    margin-bottom: 1em;
+    text-align: center;
+    li {
+      display: inline-block;
+      float: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .badge {
+      background: @brand-primary;
+    }
+  }
+}
+
+.gn-resultview {
+  .img-thumbnail {
+    margin-left: 1em;
+    max-height: 140px;
+  }
+}
+[data-ng-search-form] {
+  .gn-top-search {
+    text-align: center;
+    background: @panel-default-heading-bg;
+    border: 1px solid @panel-default-border;
+    padding: 8px;
+    margin: 0 15px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    border-radius: 3px;
+    position: relative;
+    [typeahead] {
+      width: 300px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    [typeahead-popup] {
+      text-align: left;
+      width: 300px;
+    }
+    .inner-spinner {
+      position: absolute;
+      top: 1.75em;
+      left: 50%;
+      margin-left: 64px;
+    }
+  }
+}
+
+[gn-main-viewer] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: ~"calc(98px + 1.6em)";
+  border: 1px solid @panel-default-border;
+  [ngeo-map] {
+    height: 100%;
+  }
+}
