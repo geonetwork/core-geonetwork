@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
 import org.fao.geonet.Constants;
@@ -165,7 +166,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         request.setPathInfo("/eng/md.formatter");
 
         WebApplicationContext webAppContext = new GenericWebApplicationContext((DefaultListableBeanFactory) _applicationContext.getBeanFactory());
-        request.getServletContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, webAppContext);
+
+        final String applicationContextAttributeKey = "srv";
+        request.getServletContext().setAttribute(applicationContextAttributeKey, webAppContext);
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
@@ -175,6 +178,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final Path formatterDir = this.dataDirectory.getFormatterDir();
         IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve("functions.xsl"), formatterDir, true);
+        JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(applicationContextAttributeKey);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);

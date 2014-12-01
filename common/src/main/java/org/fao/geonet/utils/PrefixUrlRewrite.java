@@ -29,22 +29,7 @@ public class PrefixUrlRewrite implements ResolverRewriteDirective {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PrefixUrlRewrite that = (PrefixUrlRewrite) o;
-
-        if (!prefix.equals(that.prefix)) return false;
-        if (!replacement.equals(that.replacement)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = prefix.hashCode();
-        result = 31 * result + replacement.hashCode();
-        return result;
+    public Object getKey() {
+        return prefix;
     }
 }

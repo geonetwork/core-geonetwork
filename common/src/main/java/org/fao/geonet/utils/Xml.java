@@ -592,8 +592,8 @@ public final class Xml
                 Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
                 //e.printStackTrace();
             } finally {
-                Transformer t = transFact.newTransformer(srcSheet);
                 transFact.setURIResolver(new JeevesURIResolver());
+                Transformer t = transFact.newTransformer(srcSheet);
                 if (params != null) {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         t.setParameter(param.getKey(), param.getValue());

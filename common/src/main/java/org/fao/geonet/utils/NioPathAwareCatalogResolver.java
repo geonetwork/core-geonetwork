@@ -1,6 +1,6 @@
 package org.fao.geonet.utils;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.xml.sax.InputSource;
@@ -11,7 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
+import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
@@ -20,7 +20,7 @@ import javax.xml.transform.stream.StreamSource;
 * @author Jesse on 11/4/2014.
 */
 public class NioPathAwareCatalogResolver extends CatalogResolver {
-    private static final Set<ResolverRewriteDirective> urlRewriteDirectives = Sets.newHashSet();
+    private static final Map<Object, ResolverRewriteDirective> urlRewriteDirectives = Maps.newHashMap();
     public NioPathAwareCatalogResolver(CatalogManager catMan) {
         super(catMan);
     }
@@ -45,7 +45,7 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
 
     @Override
     public Source resolve(String href, String base) throws TransformerException {
-        for (ResolverRewriteDirective urlRewrite : urlRewriteDirectives) {
+        for (ResolverRewriteDirective urlRewrite : urlRewriteDirectives.values()) {
             if (urlRewrite.appliesTo(href)) {
                 href = urlRewrite.rewrite(href);
                 break;
@@ -71,6 +71,6 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
     }
 
     public static void addRewriteDirective(ResolverRewriteDirective urlRewrite) {
-        urlRewriteDirectives.add(urlRewrite);
+        urlRewriteDirectives.put(urlRewrite.getKey(), urlRewrite);
     }
 }
