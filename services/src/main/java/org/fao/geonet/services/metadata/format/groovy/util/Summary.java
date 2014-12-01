@@ -30,7 +30,8 @@ public class Summary {
     private String largeThumbnail;
     private String title = "";
     private String abstr = "";
-    private String navBar = "";
+    private List<NavBarItem> navBar = Lists.newArrayList();
+    private List<NavBarItem> navBarOverflow = Lists.newArrayList();
     private String content = "";
 
     public List<LinkBlock> links = Lists.newArrayList();
@@ -47,10 +48,11 @@ public class Summary {
         params.put("logo", logo);
         params.put("title", title != null ? title : "");
         params.put("pageTitle", title != null ? title.replace('"', '\'') : "");
-        params.put("abstract", abstrHtml());
+        params.put("abstract", abstr);
         params.put("thumbnail", thumbnailUrl());
         addLinks(params);
         params.put("navBar", navBar);
+        params.put("navBarOverflow", navBarOverflow);
         params.put("content", content);
 
         return handlers.fileResult("html/view-header.html", params);
@@ -81,25 +83,6 @@ public class Summary {
         }
 
         params.put("links", linksHtml);
-    }
-
-    private String abstrHtml() throws Exception {
-        if (abstr == null || abstr.isEmpty()) {
-            return "";
-        }
-
-        String translatedTitle = functions.translate("abstract");
-
-        return "    <h3>\n"
-                + "        <button type=\"button\" class=\"btn btn-default toggler\">\n"
-                + "            <i class=\"fa fa-arrow-circle-down\"></i>\n"
-                + "        </button>\n"
-                + "        " + translatedTitle + "\n"
-                + "    </h3>\n"
-                + "\n"
-                + "    <div class=\"target\">\n"
-                + "        " + abstr + "\n"
-                + "    </div>\n";
     }
 
     String thumbnailUrl() {
@@ -142,8 +125,12 @@ public class Summary {
         this.abstr = abstr;
     }
 
-    public void setNavBar(String navBar) {
+    public void setNavBar(List<NavBarItem> navBar) {
         this.navBar = navBar;
+    }
+
+    public void setNavBarOverflow(List<NavBarItem> navBarOverflow) {
+        this.navBarOverflow = navBarOverflow;
     }
 
     public void setContent(String content) {

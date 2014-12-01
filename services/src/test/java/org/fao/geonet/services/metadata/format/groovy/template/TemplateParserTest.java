@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
+import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -71,6 +72,7 @@ public class TemplateParserTest {
         final Functions mock = Mockito.mock(Functions.class);
         Mockito.when(mock.translate("testString", null)).thenReturn("translation null");
         Mockito.when(mock.translate("testString", "file")).thenReturn("translation file");
+        Mockito.when(mock.translate("nameKey", null)).thenReturn("Translated After resolve");
         Mockito.when(mock.codelistTranslation("testString", null, "name")).thenReturn("translation codelist null name");
         Mockito.when(mock.codelistTranslation("testString", "context1", "desc")).thenReturn("translation codelist desc context1");
         Mockito.when(mock.codelistTranslation("testString", "context2", "desc")).thenReturn("translation codelist desc context2");
@@ -92,9 +94,10 @@ public class TemplateParserTest {
                           + "    <div>translation codelist desc context2</div>\n"
                           + "    <div>translation node name context</div>\n"
                           + "    <div>translation node desc null</div>\n"
+                          + "    <div>Translated After resolve</div>\n"
                           + "</html>";
 
-        assertCorrectRender(parseTree, Collections.<String, Object>emptyMap(), expected);
+        assertCorrectRender(parseTree, Collections.<String, Object>singletonMap("key", "nameKey"), expected);
     }
 
     @Test
@@ -117,6 +120,34 @@ public class TemplateParserTest {
                           " <div> true - false - 0<div>0 - x - key1 - value1</div><div>1 - x - key2 - value2</div> </div>" +
                           " <div> false - true - 1<div>0 - x - key1 - value3</div><div>1 - x - key2 - value4</div> </div>" +
                           "</html>";
+        assertCorrectRender(parseTree, model, expected);
+    }
+
+    @Test
+    public void testRepeatDirectiveObject() throws Exception {
+        final Functions mock = Mockito.mock(Functions.class);
+        Mockito.when(mock.translate("name1", null)).thenReturn("Name 1");
+        Mockito.when(mock.translate("name2", null)).thenReturn("Name 2");
+        Functions.setThreadLocal(mock);
+
+        final TemplateParser parser = createTestParser();
+        final URL url = TemplateParserTest.class.getResource("repeat-object-template.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
+
+        Map<String, Object> model = Maps.newHashMap();
+        final NavBarItem item1 = new NavBarItem();
+        item1.setRel("rel1");
+        item1.setNameKey("name1");
+        final NavBarItem item2 = new NavBarItem();
+        item2.setRel("rel2");
+        item2.setNameKey("name2");
+        model.put("items", Lists.newArrayList(item1, item2));
+
+        String expected = "<ul>\n"
+                          + "    <li><a rel=\".rel1\">Name 1</a></li>\n"
+                          + "    <li><a rel=\".rel2\">Name 2</a></li>\n"
+                          + "</ul>";
+
         assertCorrectRender(parseTree, model, expected);
     }
 

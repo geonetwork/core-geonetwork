@@ -4,6 +4,7 @@ import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -71,16 +72,47 @@ public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
 
         @Override
         public void setTextContent(String text) throws IOException {
+            if (text.isEmpty()) {
+                return;
+            }
             try {
-                addChild(translator.translate(text));
+                addChild(new Node(text));
             } catch (Exception e) {
                 throw new TemplateException(e);
+            }
+        }
+
+        private class Node extends TNode {
+            private final String text;
+
+            public Node(String text) throws IOException {
+                super("", EMPTY_ATTRIBUTES);
+                this.text = text;
+            }
+
+            @Override
+            protected boolean canRender(TRenderContext context) {
+                return true;
+            }
+
+            @Override
+            public void render(TRenderContext context) throws IOException {
+                final TextBlock block = TEXT_CONTENT_PARSER.parse(text);
+
+                final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                block.render(new TRenderContext(stream, context.getModel()));
+
+                try {
+                    translator.translate(stream.toString()).render(context);
+                } catch (Exception e) {
+                    throw new TemplateException(e);
+                }
             }
         }
     }
 
     private interface Translator {
-        TNode translate(String text) throws Exception;
+        TextBlock translate(String text) throws Exception;
     }
 
     private static class CodeListTranslator implements Translator{
@@ -92,9 +124,9 @@ public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
             this.context = context;
         }
 
-        public TNode translate(String text) throws Exception {
+        public TextBlock translate(String text) throws Exception {
             final String translation = Functions.getThreadLocal().codelistTranslation(text, context, type);
-            return new TNodeTextContent(TEXT_CONTENT_PARSER.parse(translation));
+            return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
 
@@ -107,9 +139,9 @@ public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
             this.context = context;
         }
 
-        public TNode translate(String text) throws Exception {
+        public TextBlock translate(String text) throws Exception {
             final String translation = Functions.getThreadLocal().nodeTranslation(text, context, type);
-            return new TNodeTextContent(TEXT_CONTENT_PARSER.parse(translation));
+            return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
     private static class DefaultTranslator implements Translator {
@@ -119,9 +151,9 @@ public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
             this.file = file;
         }
 
-        public TNode translate(String text) throws Exception {
+        public TextBlock translate(String text) throws Exception {
             final String translation = Functions.getThreadLocal().translate(text, file);
-            return new TNodeTextContent(TEXT_CONTENT_PARSER.parse(translation));
+            return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
 

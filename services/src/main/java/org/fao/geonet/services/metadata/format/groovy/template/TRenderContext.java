@@ -2,12 +2,16 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
+import org.springframework.beans.BeanUtils;
 
+import java.beans.PropertyDescriptor;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -67,14 +71,62 @@ public class TRenderContext implements Appendable, Closeable {
     }
 
     public Object getModelValue(String expr) {
-        final Object value = this.model.get(expr);
+        final int indexOfDot = expr.indexOf('.');
+        if (indexOfDot > -1) {
+            String key = expr.substring(0, indexOfDot);
+            final String property = expr.substring(indexOfDot + 1);
+            return getModelValue(key, property);
+        }
+
+        return getModelValue(expr, null);
+    }
+
+    private Object getModelValue(String expr, String property) {
+        Object value = this.model.get(expr.trim());
         if (value == null && parent != null) {
-            return parent.getModelValue(expr);
+            value = parent.getModelValue(expr);
+        }
+        if (property == null) {
+            return value;
+        }
+
+        return getProperty(value, property);
+    }
+
+    private Object getProperty(Object value, String property) {
+        int indexOfDot = property.indexOf('.');
+        while (indexOfDot > -1) {
+            String prop = property.substring(0, indexOfDot);
+            property = property.substring(indexOfDot + 1);
+
+            value = safeGetProperty(value, prop);
+
+            indexOfDot = property.indexOf('.');
+        }
+
+        return safeGetProperty(value, property);
+    }
+
+    private Object safeGetProperty(Object value, String prop) {
+        try {
+            final PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), prop);
+            if (propertyDescriptor == null) {
+                throw new TemplateException("There is no property: " + prop + " on object: " + value + " (" + value.getClass() + ")");
+            }
+            Method method = propertyDescriptor.getReadMethod();
+            method.setAccessible(true);
+            value = method.invoke(value);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new TemplateException(e);
         }
         return value;
     }
 
     public TRenderContext childContext(Map<String, Object> newModel) {
         return new TRenderContext(this, newModel, outputStream, writer);
+    }
+
+    public Map<String, Object> getModel() {
+        return this.model;
     }
 }

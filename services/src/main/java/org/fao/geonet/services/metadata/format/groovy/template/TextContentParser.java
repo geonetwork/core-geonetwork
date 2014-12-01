@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * @author Jesse on 11/29/2014.
  */
 public class TextContentParser {
-    private final static Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{\\{(\\S+)\\}\\}");
+    private final static Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{\\{(\\s*\\S+\\s*)\\}\\}");
 
     public TextBlock parse(String text) {
         TextBlock textBlock = new TextBlock();

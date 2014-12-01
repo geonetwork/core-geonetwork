@@ -115,6 +115,9 @@ public abstract class TNode {
     }
 
     public void setTextContent(String text) throws IOException {
+        if (text.isEmpty()) {
+            return;
+        }
         addChild(new TNodeTextContent(PARSER.parse(text)));
     }
 
