@@ -98,7 +98,7 @@
       function loadUsers() {
         $scope.isLoadingUsers = true;
         $http.get('admin.user.list@json').success(function(data) {
-          $scope.users = data;
+          $scope.users = data.users;
           $scope.isLoadingUsers = false;
         }).error(function(data) {
           // TODO
@@ -171,14 +171,14 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
 
-        $http.get('admin.user@json?id=' + u.id)
+        $http.get('admin.user@json?id=' + u.value.id)
           .success(function(data) {
               $scope.userSelected = data;
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
 
               // Load user group and then select user
-              $http.get('admin.usergroups.list@json?id=' + u.id)
+              $http.get('admin.usergroups.list@json?id=' + u.value.id)
               .success(function(groups) {
                     $scope.userGroups = groups;
                   }).error(function(data) {
@@ -193,7 +193,7 @@
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
           template: 'y or n',
-          _owner: u.id,
+          _owner: u.value.id,
           sortBy: 'title'
         });
 
