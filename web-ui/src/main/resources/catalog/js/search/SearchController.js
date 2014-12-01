@@ -26,7 +26,9 @@
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
         params: {},
-        permalink: true
+        permalink: true,
+        sortbyValues: gnSearchSettings.sortbyValues,
+        hitsperpageValues: gnSearchSettings.hitsperpageValues
       };
 
       /** Facets configuration */

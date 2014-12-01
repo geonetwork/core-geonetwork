@@ -21,7 +21,7 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope, $location, gnSearchSettings,
+  var searchFormController = function($scope, $location,
                                       gnSearchManagerService, gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
@@ -39,6 +39,8 @@
     };
 
     $scope.searching = 0;
+
+    $scope.paginationInfo = $scope.paginationInfo || {};
 
     /**
      * Tells if there is a pagination directive nested to this one.
@@ -178,7 +180,9 @@
       } else {
         $scope.searchObj.params = {};
       }
-      $scope.searchObj.params.sortBy = gnSearchSettings.sortbyValues[0];
+      if(angular.isArray($scope.searchObj.sortbyValues)) {
+        $scope.searchObj.params.sortBy = $scope.searchObj.sortbyValues[0];
+      }
 
       self.resetPagination();
       $scope.currentFacets = [];
@@ -186,7 +190,7 @@
       $scope.$broadcast('resetSelection');
     };
     $scope.$on('resetSearch', function(evt, searchParams) {
-      resetSearch(searchParams);
+      $scope.controller.resetSearch(searchParams);
     });
 
     $scope.$on('clearResults', function() {
@@ -202,7 +206,6 @@
   searchFormController['$inject'] = [
     '$scope',
     '$location',
-    'gnSearchSettings',
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata'

@@ -116,13 +116,14 @@
                   <button class="btn btn-default filter" ng-class="{ active: collapsed }"
                     ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
                   <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
-                  <div sortby-combo params="searchObj.params"></div>
+                  <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
                 </div>
                 <div data-gn-facet-breadcrumb="currentFacets"></div>
                 <div gn-results-container data-ng-class="{'bg-success' : searching}"
                   search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
                 <div class="panel-footer">
-                  <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
+                  <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"
+                       gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
                   <div data-gn-pagination="paginationInfo"></div>
                 </div>
               </div>

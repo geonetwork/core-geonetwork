@@ -143,20 +143,19 @@
           };
         }])
 
-      .directive('sortbyCombo', ['gnSearchSettings',
-        function(gnSearchSettings) {
+      .directive('sortbyCombo', [
+        function() {
           return {
             restrict: 'A',
             require: '^ngSearchForm',
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/sortByCombo.html',
             scope: {
-              params: '='
+              params: '=',
+              values: '=gnSortbyValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.values = gnSearchSettings.sortbyValues;
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
-
               scope.search = function() {
                 searchFormCtrl.triggerSearch(true);
               }
@@ -165,18 +164,18 @@
           };
         }])
 
-      .directive('hitsperpageCombo', ['gnSearchSettings',
-        function(gnSearchSettings) {
+      .directive('hitsperpageCombo', [
+        function() {
           return {
             restrict: 'A',
             require: '^ngSearchForm',
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/hitsperpageCombo.html',
             scope: {
-              pagination: '=paginationCfg'
+              pagination: '=paginationCfg',
+              values: '=gnHitsperpageValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.values = gnSearchSettings.hitsperpageValues;
               scope.updatePagination = function() {
                 searchFormCtrl.resetPagination();
                 searchFormCtrl.triggerSearch();
