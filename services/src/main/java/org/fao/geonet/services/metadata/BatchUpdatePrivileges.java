@@ -39,7 +39,11 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 
@@ -57,84 +61,83 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-		AccessManager accessMan = gc.getBean(AccessManager.class);
-		UserSession   us = context.getUserSession();
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
+        UserSession us = context.getUserSession();
 
-		context.info("Get selected metadata");
-		SelectionManager sm = SelectionManager.getManager(us);
+        context.info("Get selected metadata");
+        SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<String> notFound = new HashSet<String>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> metadata = new HashSet<>();
+        Set<String> notFound = new HashSet<>();
+        Set<Integer> notOwner = new HashSet<>();
 
-		synchronized(sm.getSelection(SELECTION_METADATA)) {
-		for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext();) {
-			String uuid = iter.next();
+        synchronized (sm.getSelection(SELECTION_METADATA)) {
+            for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext(); ) {
+                String uuid = iter.next();
 
-			//--- check access
+                //--- check access
 
-			Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
-			if (info == null) {
-				notFound.add(uuid);
-			} else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
-				notOwner.add(info.getId());
-			} else {
+                Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+                if (info == null) {
+                    notFound.add(uuid);
+                } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+                    notOwner.add(info.getId());
+                } else {
 
-				//--- remove old operations
-				boolean skip = false;
+                    //--- remove old operations
+                    boolean skip = false;
 
-				//--- in case of owner, privileges for groups 0,1 and GUEST are 
-				//--- disabled and are not sent to the server. So we cannot remove them
-				boolean isAdmin = Profile.Administrator == us.getProfile();
-				boolean isReviewer= Profile.Reviewer == us.getProfile();
+                    //--- in case of owner, privileges for groups 0,1 and GUEST are
+                    //--- disabled and are not sent to the server. So we cannot remove them
+                    boolean isAdmin = Profile.Administrator == us.getProfile();
+                    boolean isReviewer = Profile.Reviewer == us.getProfile();
 
-				if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
-                    skip = true;
+                    if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
+                        skip = true;
+                    }
+
+                    dm.deleteMetadataOper(context, "" + info.getId(), skip);
+
+                    //--- set new ones
+                    @SuppressWarnings("unchecked")
+                    List<Element> list = params.getChildren();
+
+                    for (Element el : list) {
+                        String name = el.getName();
+
+                        if (name.startsWith("_")) {
+                            StringTokenizer st = new StringTokenizer(name, "_");
+
+                            String groupId = st.nextToken();
+                            String operId = st.nextToken();
+
+                            dm.setOperation(context, "" + info.getId(), groupId, operId);
+                        }
+                    }
+                    metadata.add(info.getId());
                 }
+            }
+        }
 
-				dm.deleteMetadataOper(context, "" + info.getId(), skip);
+        //--- reindex metadata
+        context.info("Re-indexing metadata");
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+        r.process();
 
-				//--- set new ones
-				@SuppressWarnings("unchecked")
-                List<Element> list = params.getChildren();
-
-				for (Element el : list) {
-					String name  = el.getName();
-
-					if (name.startsWith("_")) {
-						StringTokenizer st = new StringTokenizer(name, "_");
-
-						String groupId = st.nextToken();
-						String operId  = st.nextToken();
-
-						dm.setOperation(context, "" + info.getId(), groupId, operId);
-					}
-				}
-				metadata.add(info.getId());
-			}
-		}
-		}
-
-		//--- reindex metadata
-		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
-		r.process();
-
-		// -- for the moment just return the sizes - we could return the ids
-		// -- at a later stage for some sort of result display
-		return new Element(Jeeves.Elem.RESPONSE)
-					.addContent(new Element("done")    .setText(metadata.size()+""))
-					.addContent(new Element("notOwner").setText(notOwner.size()+""))
-					.addContent(new Element("notFound").setText(notFound.size()+""));
-	}
+        // -- for the moment just return the sizes - we could return the ids
+        // -- at a later stage for some sort of result display
+        return new Element(Jeeves.Elem.RESPONSE)
+                .addContent(new Element("done").setText(metadata.size() + ""))
+                .addContent(new Element("notOwner").setText(notOwner.size() + ""))
+                .addContent(new Element("notFound").setText(notFound.size() + ""));
+    }
 }

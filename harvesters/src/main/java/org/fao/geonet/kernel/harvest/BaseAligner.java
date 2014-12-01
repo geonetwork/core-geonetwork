@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +78,9 @@ public abstract class BaseAligner {
                     log.warning("Unable to map category: "+catId+" to a category in Geonetwork");
                 }
             }
+        }
+        if (saveMetadata) {
+            context.getBean(MetadataRepository.class).save(metadata);
         }
     }
 
