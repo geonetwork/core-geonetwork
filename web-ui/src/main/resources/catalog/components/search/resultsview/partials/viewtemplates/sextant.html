@@ -9,10 +9,10 @@
 
       <div class="media-body">
         <h4>
-          {{md.title || md.defaultTitle}}
+          {{::md.title || ::md.defaultTitle}}
         </h4>
         <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail pull-right" ng-if="md.getThumbnails().small"/>
-        <p class="text-justify">{{md.abstract}}</p>
+        <p class="text-justify">{{::md.abstract}}</p>
         <blockquote ng-if="md.getContacts().resource">{{md.getContacts().resource}}</blockquote>
       </div>
     </div>
