@@ -18,11 +18,13 @@
     return {
       restrict: 'A',
       scope: {
-        options: '=gnTypeahead'
+        options: '=gnTypeahead',
+        gnValues: '='
       },
       link: function(scope, element, attrs) {
         var config = scope.options.config || {};
         var doLink = function(data, remote) {
+
           var conf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -61,20 +63,75 @@
             $(element).tagsinput('add', datum);
           });
 
+          /** Binds input content to model values */
+          var stringValues = [];
+          var prev = stringValues.slice();
+
+          // ui -> model
+          $(element).on('itemAdded', function(event) {
+            if (stringValues.indexOf(event.item.id) === -1) {
+              stringValues.push(event.item.id);
+              prev = stringValues.slice();
+              scope.gnValues = stringValues.join(' OR ');
+              scope.$apply();
+            }
+
+          });
+          $(element).on('itemRemoved', function(event) {
+            var idx = stringValues.indexOf(event.item.id);
+            if (idx !== -1) {
+              stringValues.splice(idx, 1);
+              prev = stringValues.slice();
+              scope.gnValues = stringValues.join(' OR ');
+              scope.$apply();
+            }
+          });
+
+          // model -> ui
+          scope.$watch("gnValues", function() {
+            if(angular.isDefined(scope.gnValues) && scope.gnValues != '') {
+              stringValues = scope.gnValues.split(' OR ');
+            }
+            else {
+              stringValues = [];
+            }
+
+            var added = stringValues.filter(function(i) {return prev.indexOf(i) === -1;}),
+                removed = prev.filter(function(i) {return stringValues.indexOf(i) === -1;}),
+                i;
+            prev = stringValues.slice();
+
+            // Remove tags no longer in binded model
+            for (i = 0; i < removed.length; i++) {
+              $(element).tagsinput('remove', removed[i]);
+            }
+
+            // Refresh remaining tags
+            $(element).tagsinput('refresh');
+
+            // Add new items in model as tags
+            for (i = 0; i < added.length; i++) {
+              $(element).tagsinput('add', {
+                id: added[i],
+                name: added[i]
+              });
+            }
+          }, true);
+
+          /** Manage the cross to clear the input */
           var triggerElt = $('<span class="close tagsinput-trigger fa fa-ellipsis-v"></span>');
           field.parent().after(triggerElt);
           var resetElt = $('<span class="close tagsinput-clear">&times;</span>')
-            .on('click', function() {
-              $(element).tagsinput('removeAll').val('').trigger('change');
-            });
+              .on('click', function() {
+                scope.gnValues = '';
+                scope.$apply();
+              });
           field.parent().after(resetElt);
           resetElt.hide();
 
           $(element).on('change', function() {
-            $(element).tagsinput('refresh');
             resetElt.toggle($(element).val()!='');
           });
-
         };
 
         if (scope.options.mode == 'prefetch') {

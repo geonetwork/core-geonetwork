@@ -53,20 +53,20 @@
                   <label for="categoriesF" class="col-md-4 col-sm-12 control-label">Categories</label>
                   <div class="col-sm-8">
                     <input type="text" id="categoriesF" value="" class="form-control"
-                      data-ng-model="searchObj.params.categories" gn-typeahead="categoriesOptions"/> </div>
+                      gn-typeahead="categoriesOptions" gn-values="searchObj.params.categories"/> </div>
                 </div>
                 <div class="form-group">
                   <label for="keywordsF" class="col-md-4 col-sm-12 control-label">Keywords</label>
                   <div class="col-sm-8">
                     <input type="text" id="keywordsF" value="" class="form-control"
-                      data-ng-model="searchObj.params.keyword" gn-typeahead="keywordsOptions"/>
+                           gn-values="searchObj.params.keyword" gn-typeahead="keywordsOptions"/>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="orgNameF" class="col-md-4 col-sm-12 control-label">Organisation</label>
                   <div class="col-sm-8">
                     <input type="text" id="orgNameF" value="" class="form-control"
-                      data-ng-model="searchObj.params.orgName" gn-typeahead="orgNameOptions"/>
+                           gn-values="searchObj.params.orgName" gn-typeahead="orgNameOptions"/>
                   </div>
                 </div>
               </fieldset>

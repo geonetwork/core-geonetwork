@@ -70,7 +70,7 @@
             var res = [];
             for(var i=0; i<data.metadatacategory.length;i++) {
               res.push({
-                id: data.metadatacategory[i]['@id'],
+                id: data.metadatacategory[i].name,
                 name : data.metadatacategory[i].label.eng
               })
             }
