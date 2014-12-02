@@ -1,38 +1,37 @@
-<div>
-<script type="application/javascript" fmt-if="pageTitle">document.title="{{pageTitle}}"</script>
-<h1>
-    <button type="button" class="btn btn-default toggler">
-        <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
-        <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
-    </button>
-    <span style="padding: 20px">{{title}}</span>
-</h1>
-<div class="target">
-    <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
-    <div style="padding: 20px">
-        <div fmt-if="abstract">
-            <h3>
-                <button type="button" class="btn btn-default toggler">
-                    <i class="fa fa-arrow-circle-down"></i>
-                </button>
-                <span fmt-translate="">abstract</span>
-            </h3>
+<div class="container gn-metadata-view">
+    <script type="application/javascript" fmt-if="pageTitle">document.title="{{pageTitle}}"</script>
+    <h1>
+        <button type="button" class="btn btn-default toggler">
+            <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
+            <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
+        </button>
+        <span style="padding: 20px">{{title}}</span>
+    </h1>
+    <div class="target">
+        <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
+        <div style="padding: 20px">
+            <div fmt-if="abstract">
+                <h3>
+                    <button type="button" class="btn btn-default toggler">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </button>
+                    <span fmt-translate="">abstract</span>
+                </h3>
 
-            <div class="target">
-                {{abstract}}
+                <div class="target">
+                    {{abstract}}
+                </div>
             </div>
         </div>
-        <ul class="nav nav-pills">
-            <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.nameItem}}</a></li>
-            <li fmt-if="navBarOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.nameItem}}</a></li>
-                </ul>
-            </li>
-        </ul>
     </div>
-</div>
-{{navBar}}
+    <ul class="nav nav-pills">
+        <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+        <li fmt-if="navBarOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li fmt-repeat="item in navBarOverflow"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+            </ul>
+        </li>
+    </ul>
 
-{{content}}
+    {{content}}
 </div>

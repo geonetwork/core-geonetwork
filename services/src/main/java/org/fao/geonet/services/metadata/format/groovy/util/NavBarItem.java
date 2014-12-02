@@ -6,14 +6,22 @@ package org.fao.geonet.services.metadata.format.groovy.util;
  * @author Jesse on 12/1/2014.
  */
 public class NavBarItem {
-    private String nameKey, rel;
+    private String name, rel;
 
-    public String getNameKey() {
-        return nameKey;
+    public NavBarItem() {
+        // no op
+    }
+    public NavBarItem(String name, String rel) {
+        this.name = name;
+        this.rel = rel;
     }
 
-    public void setNameKey(String nameKey) {
-        this.nameKey = nameKey;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRel() {

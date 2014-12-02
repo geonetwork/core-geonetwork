@@ -16,7 +16,7 @@ public class TRenderContextTest {
         final TestObj item = new TestObj();
         final Map<String, Object> model = Collections.<String, Object>singletonMap("item", item);
         final TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), model);
-        assertEquals("KEY", context.getModelValue("item.inner.nameKey"));
+        assertEquals("KEY", context.getModelValue("item.inner.name"));
         assertEquals("REL", context.getModelValue("item.inner.rel"));
         assertEquals(item.toString(), context.getModelValue("item").toString());
         assertEquals(item.getInner().toString(), context.getModelValue("item.inner").toString());
@@ -25,7 +25,7 @@ public class TRenderContextTest {
     private static class TestObj {
         final NavBarItem inner = new NavBarItem();
         private TestObj() {
-            inner.setNameKey("KEY");
+            inner.setName("KEY");
             inner.setRel("REL");
         }
 

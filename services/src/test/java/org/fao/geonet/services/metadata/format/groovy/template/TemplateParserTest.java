@@ -137,10 +137,10 @@ public class TemplateParserTest {
         Map<String, Object> model = Maps.newHashMap();
         final NavBarItem item1 = new NavBarItem();
         item1.setRel("rel1");
-        item1.setNameKey("name1");
+        item1.setName("name1");
         final NavBarItem item2 = new NavBarItem();
         item2.setRel("rel2");
-        item2.setNameKey("name2");
+        item2.setName("name2");
         model.put("items", Lists.newArrayList(item1, item2));
 
         String expected = "<ul>\n"

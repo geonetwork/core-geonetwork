@@ -150,20 +150,16 @@ public class Handlers {
     <link rel="stylesheet" href="http://tc-geocat.dev.bgdi.ch/geonetwork/static/metadata_formatter.css"/>
     <script src="http://tc-geocat.dev.bgdi.ch/geonetwork/static/lib.js"></script>
 </head>
-<body>
-<div class="container gn-metadata-view">
+<body>>
 """
         } else {
-            return '''
-<div class="gn-metadata-view">
-'''
+            return ''
         }
     }
 
     def htmlOrXmlEnd = {
         if (func.isHtmlOutput()) {
             return '''
-</div>
 <script>
     $('.toggler').on('click', function() {
         $(this).toggleClass('closed');
@@ -181,7 +177,7 @@ public class Handlers {
 </body>
 </html>'''
         } else {
-            return '''</div>'''
+            return ''
         }
     }
 

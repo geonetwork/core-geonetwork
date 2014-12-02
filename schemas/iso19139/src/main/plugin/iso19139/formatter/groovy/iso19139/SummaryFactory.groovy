@@ -31,25 +31,14 @@ class SummaryFactory {
         configureLinks(metadata, isoHandler, summary)
         configureHierarchy(isoHandler, summary)
 
-        summary.navBar = '''
-            <ul class="nav nav-pills">
-              <li><a href="" rel=".gmd_identificationInfo">Identification</a></li>
-              <li><a href="" rel=".gmd_distributionInfo" >Distribution</a></li>
-              <li><a href="" rel=".gmd_dataQualityInfo" >Quality</a></li>
-              <li><a href="" rel=".gmd_spatialRepresentationInfo" >Spatial rep.</a></li>
-              <li><a href="" rel=".gmd_referenceSystemInfo" >Ref. system</a></li>
-              <li><a href="" rel=".gmd_metadataExtensionInfo" >Extension</a></li>
-              <li><a href="" rel=".gmd_MD_Metadata">Metadata</a></li>
-              <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a><ul class="dropdown-menu">
-                    <li><a href="" rel=".gmd_contentInfo">Content</a></li>
-                    <li><a href="" rel=".gmd_portrayalCatalogueInfo">Portrayal</a></li>
-                    <li><a href="" rel=".gmd_metadataConstraints">Md. constraints</a></li>
-                    <li><a href="" rel=".gmd_metadataMaintenance">Md. maintenance</a></li>
-                    <li><a href="" rel=".gmd_applicationSchemaInfo">Schema info</a></li>
-                 </ul>
-              </li>
-           </ul>
-        '''
+        def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
+                           'gmd:metadataExtensionInfo', 'gmd:MD_Metadata']
+        def toNavBarItem = {s ->
+            def name = f.nodeLabel(s, null)
+            new NavBarItem(name, s.replace(':', "_"))
+        }
+        summary.navBar = isoHandler.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
+        summary.navBarOverflow = isoHandler.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
 
         summary.content = isoHandler.rootPackageEl(metadata)
 

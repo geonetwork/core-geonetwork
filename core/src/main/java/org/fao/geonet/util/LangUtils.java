@@ -27,7 +27,7 @@ public class LangUtils {
      * @return
      */
     public static Map<String, String> translate(ApplicationContext context, String type, String key) throws JDOMException, IOException {
-        Path appPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        Path appPath = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
         XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
         Path loc = appPath.resolve("loc");
         if (!Files.exists(loc)) {
