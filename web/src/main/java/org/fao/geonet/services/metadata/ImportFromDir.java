@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import static org.fao.geonet.services.metadata.Insert.applyImportStylesheet;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Element;
 
@@ -402,8 +403,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 				{
 					Element xml = Xml.loadFile(files[k]);
 
-					if (!style.equals("_none_"))
-						xml = Xml.transform(xml, stylePath +"/"+ style);
+					xml = applyImportStylesheet(xml, style, gc, stylePath);
 
 					String category = config.mapCategory(catDir);
 					String schema   = config.mapSchema(catDir);

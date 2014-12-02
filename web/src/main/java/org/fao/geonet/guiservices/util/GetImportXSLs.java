@@ -31,11 +31,24 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import org.apache.commons.io.FileUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.kernel.SchemaManager;
 
 //=============================================================================
 
-/** This service returns all stylesheets that can be used during batch import
-  * selected tab
+  /**
+  * This service returns all stylesheets that can be used during batch import
+  * selected tab.
+  *
+  * Stylesheets are searched in the default <code>xsl/conversion/import</code> dir and in
+  * every <code>convert/import</code> directory in schema plugins.
   */
 
 public class GetImportXSLs implements Service
@@ -85,8 +98,59 @@ public class GetImportXSLs implements Service
             }
         }
 
+        for (SortedMap.Entry<String, SortedSet<String>> schemaFiles : getImportXslForSchemas(context).entrySet()) {
+            String schemaName = schemaFiles.getKey();
+            Set<String> files = schemaFiles.getValue();
+
+            for (String filename : files) {
+
+                int pos = filename.lastIndexOf(".xsl");
+
+                String name = schemaName + " / " + filename.substring(0, pos);
+                String id = schemaName + "/" + filename;
+
+                Element el = new Element(Jeeves.Elem.RECORD);
+
+                el.addContent(new Element(Geonet.Elem.ID).setText(id));
+                el.addContent(new Element(Geonet.Elem.NAME).setText(name));
+
+                elRoot.addContent(el);
+            }
+        }
+
 		return elRoot;
 	}
+
+    /**
+     * @return a Map with the schema name as key and the import XSL filenames as values.
+     */
+    private SortedMap<String, SortedSet<String>> getImportXslForSchemas(ServiceContext context) {
+
+        SortedMap<String, SortedSet<String>> ret = new TreeMap<String, SortedSet<String>>();
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SchemaManager schemaMan = gc.getSchemamanager();
+
+        for (String schemaName : schemaMan.getSchemas()) {
+            String schemaDir = schemaMan.getSchemaDir(schemaName);
+            File convertDir = new File(schemaDir, Geonet.Path.CONVERT_STYLESHEETS);
+            File importDir = new File(convertDir, "import");
+
+            if(importDir.isDirectory()) {
+                Collection<File> files = FileUtils.listFiles(importDir, new String[]{"xsl"}, false);
+                SortedSet<String> fileNames = new TreeSet<String>();
+                for (File file : files) {
+                    fileNames.add(file.getName());
+                }
+
+                if( ! fileNames.isEmpty()) {
+                    ret.put(schemaName, fileNames);
+                }
+            }
+        }
+
+        return ret;
+    }
 }
 
 //=============================================================================

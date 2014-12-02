@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
@@ -45,6 +46,7 @@ import org.jdom.Namespace;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.fao.geonet.kernel.SchemaManager;
 
 /**
  * Inserts a new metadata to the system (data is validated).
@@ -92,9 +94,7 @@ public class Insert extends NotInReadOnlyModeService {
 
 		Element xml = Xml.loadString(data, false);
 
-        // Apply a stylesheet transformation if requested
-        if (!style.equals("_none_"))
-            xml = Xml.transform(xml, stylePath +"/"+ style);
+        xml = applyImportStylesheet(xml, style, gc, stylePath);
 
         String schema = dataMan.autodetectSchema(xml);
         if (schema == null)
@@ -160,6 +160,47 @@ public class Insert extends NotInReadOnlyModeService {
 
 		return response;
 	};
+
+    /**
+     *  Apply an import stylesheet transformation if requested.
+     *
+     * If the stylename is "_none", no transformation will be performed. <br/>
+     * If the stylename contains a slash, then format is SCHEMANAME/XSLFILENAME.<br/>
+     * Otherwise the stylename will be searched inside the fixed import style path.
+     *
+     * @param xml The metadata to be transformed
+     * @param styleName The xsl file to be applied; if it contains a slash, then format is SCHEMANAME/XSLFILENAME
+     * @param gc The context
+     * @param stylePath The fixed import style path
+     * @return The transformed metadata, or the original one if no transformation was needed
+     * @throws Exception
+     */
+       public static Element applyImportStylesheet(Element xml, String styleName, GeonetContext gc, String stylePath) throws Exception {
+
+        if (!styleName.equals("_none_")) {
+
+            if(! styleName.contains("/")) {
+                // this is one of the default transformations
+                xml = Xml.transform(xml, stylePath + File.separator + styleName);
+            } else
+            {
+                // it's a transformation defined in a schema plugin
+                int pos = styleName.indexOf("/");
+                String schemaName = styleName.substring(0, pos);
+                String xslName = styleName.substring(pos+1);
+
+                SchemaManager schemaMan = gc.getSchemamanager();
+
+                String schemaDir = schemaMan.getSchemaDir(schemaName);
+                File convertDir = new File(schemaDir, Geonet.Path.CONVERT_STYLESHEETS);
+                File importDir = new File(convertDir, "import");
+                File xsl = new File(importDir, xslName);
+
+                xml = Xml.transform(xml, xsl.getAbsolutePath());
+            }
+        }
+        return xml;
+    }
 
 	//---------------------------------------------------------------------------
 

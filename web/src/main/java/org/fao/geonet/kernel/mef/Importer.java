@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.fao.geonet.services.metadata.Insert;
 
 public class Importer {
 	public static List<String> doImport(final Element params,
@@ -140,7 +141,7 @@ public class Importer {
                             // Important folder name to identify metadata should be ../../
                             lastUnknownMetadataFolderName=file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator;
                             Log.debug(Geonet.MEF, "No schema match for "
-                                + lastUnknownMetadataFolderName + file.getName() 
+                                + lastUnknownMetadataFolderName + file.getName()
                                 + ".");
                             continue;
                         }
@@ -173,7 +174,7 @@ public class Importer {
 									metadataValidForImport = mdInform.two();
 									handleMetadata(metadataValidForImport, index);
 									return;
-								} 
+								}
 
 								// Lastly: Select the first metadata in the map
 								String metadataSchema = (String)mdFiles.keySet().toArray()[0];
@@ -206,13 +207,11 @@ public class Importer {
 			 * record by default. No stylesheet used by default. If no site
 			 * identifier provided, use current node id by default. No
 			 * validation by default.
-			 * 
+			 *
 			 * If record is a template and not a MEF file always generate a new
 			 * UUID.
 			 */
 			public void handleInfo(Element info, int index) throws Exception {
-
-				String FS = File.separator;
 
 				String uuid = null;
 				String createDate = null;
@@ -220,7 +219,7 @@ public class Importer {
 				String source;
 				String sourceName = null;
 				// Schema in info.xml is not used here anymore.
-				// It is used in handleMetadataFiles as the first option to pick a 
+				// It is used in handleMetadataFiles as the first option to pick a
 				// metadata file from those in a metadata dir in a MEF2
 				// String schema = null;
 				String isTemplate;
@@ -232,17 +231,16 @@ public class Importer {
 				Element privileges;
 				boolean validate = false;
 
-				
-				// Apply a stylesheet transformation if requested
-				String style = Util.getParam(params, Params.STYLESHEET,
-				"_none_");
+                Element metadata = md.get(index);
 
-				if (!style.equals("_none_"))
-					md.add(index, Xml.transform(md.get(index), stylePath
-							+ FS + style));
-				
-				
-				Element metadata = md.get(index);
+				// Apply a stylesheet transformation if requested
+                String style = Util.getParam(params, Params.STYLESHEET, "_none_");
+
+                if (!style.equals("_none_")) {
+                    metadata = Insert.applyImportStylesheet(metadata, style, gc, stylePath);
+                    md.add(index, metadata); // replace metadata
+                }
+
 				String schema = dm.autodetectSchema(metadata);
 
 				if (schema == null)
@@ -290,7 +288,7 @@ public class Importer {
 				} else {
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Collecting info file:\n" + Xml.getString(info));
-					
+
 					categs = info.getChild("categories");
 					privileges = info.getChild("privileges");
 
@@ -306,7 +304,7 @@ public class Importer {
                         if(Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to local catalog");
 						source = gc.getSiteId();
-					} else {	
+					} else {
 						// --- If siteId is not set, set to current node
 						source = Util.getParam(general, Params.SITE_ID, gc
 								.getSiteId());
@@ -424,7 +422,7 @@ public class Importer {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
-		
+
 
 		if (uuid == null || uuid.equals("")
 				|| uuidAction.equals(Params.GENERATE_UUID)) {
@@ -446,9 +444,9 @@ public class Importer {
 				throw new Exception(
 						"Missing siteId parameter from info.xml file");
 
-			// --- only update sources table if source is not current site 
-			if (!source.equals(gc.getSiteId())) { 
-				Lib.sources.update(dbms, source, sourceName, true); 
+			// --- only update sources table if source is not current site
+			if (!source.equals(gc.getSiteId())) {
+				Lib.sources.update(dbms, source, sourceName, true);
 			}
 		}
 
@@ -474,18 +472,18 @@ public class Importer {
 
         if(Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
-		
+
 		// Try to insert record with localId provided, if not use a new id.
 		boolean insertedWithLocalId = false;
 		if (localId != null && !localId.equals("")) {
 			try {
 				int iLocalId = Integer.parseInt(localId);
-		
+
 				// Use the same id to insert the metadata record.
 				// This is an optional element. If present, indicates the
 				// id used locally by the sourceId actor to store the metadata. Its
 				// purpose is just to allow the reuse of the same local id when
-				// reimporting a metadata. 
+				// reimporting a metadata.
 				if (!dm.existsMetadata(dbms, iLocalId)) {
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Using given localId: " + localId);
@@ -506,8 +504,8 @@ public class Importer {
                 if(Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
 			}
-		} 
-		
+		}
+
 		if (!insertedWithLocalId) {
             //
             // insert metadata
@@ -538,7 +536,7 @@ public class Importer {
 
 	/**
 	 * Add categories registered in information file.
-	 * 
+	 *
 	 * @param context
 	 * @param dm
 	 * @param dbms
@@ -570,7 +568,7 @@ public class Importer {
 
 	/**
 	 * Add privileges according to information file.
-	 * 
+	 *
 	 * @param context
 	 * @param dm
 	 * @param dbms
@@ -609,7 +607,7 @@ public class Importer {
 
 	/**
 	 * Add operations according to information file.
-	 * 
+	 *
 	 * @param context
 	 * @param dm
 	 * @param dbms
