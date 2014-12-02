@@ -216,44 +216,45 @@ GeoNetwork.app = function() {
 
     /**
      * Create a language switcher menu.
+     *   PRI - turned off
      * 
      */
     var createLanguagesMenu = function(lang) {
-        var items = [],
-            lang = /srv\/([a-z]{3})\/search/.exec(window.location.href);
+//        var items = [],
+//            lang = /srv\/([a-z]{3})\/search/.exec(window.location.href);
+//
+//        if (Ext.isArray(lang)) {
+//          lang = lang[1];
+//        }
+//
+//        var href; 
+//        if (lang === null) currentLang = 'eng';
+//        else currentLang = lang;
+//
+//        Ext.each(GeoNetwork.Util.locales, function(locale) {
+//          if (lang === null) {
+//            href = window.location.pathname.replace('/srv/search', '/srv/'+ locale[2] + '/search');
+//          } else {
+//            href = window.location.pathname.replace(lang, locale[2]);
+//          }
+//
+//          if (currentLang === locale[2] || currentLang === locale[0]) currentLang = locale[1];
+//          items.push({
+//            text: locale[1],
+//            href: href,
+//            height: '100%'
+//          });
+//        });
 
-        if (Ext.isArray(lang)) {
-          lang = lang[1];
-        }
-
-        var href; 
-        if (lang === null) currentLang = 'eng';
-        else currentLang = lang;
-
-        Ext.each(GeoNetwork.Util.locales, function(locale) {
-          if (lang === null) {
-            href = window.location.pathname.replace('/srv/search', '/srv/'+ locale[2] + '/search');
-          } else {
-            href = window.location.pathname.replace(lang, locale[2]);
-          }
-
-          if (currentLang === locale[2] || currentLang === locale[0]) currentLang = locale[1];
-          items.push({
-            text: locale[1],
-            href: href,
-            height: '100%'
-          });
-        });
-
-        return new Ext.menu.Menu({
-              id:       'lang-menu',
-              renderTo: 'lang-form',
-              floating: false,
-              border: false,
-              plain: true,
-              showSeparator: false,
-              items: items
-        });
+//        return new Ext.menu.Menu({
+//              id:       'lang-menu',
+//              renderTo: 'lang-form',
+//              floating: false,
+//              border: false,
+//              plain: true,
+//              showSeparator: false,
+//              items: items
+//        });
     };
 
     function edit(metadataId, create, group, child) {
