@@ -4,6 +4,7 @@ public class Functions {
     def handlers;
     def f
     def env
+    def commonHandlers
 
     def isoText = { el ->
         def uiCode = '#'+env.lang2.toUpperCase()
@@ -18,5 +19,13 @@ public class Functions {
 
     def isoURL = {urlEl ->
         def charString = urlEl.'gco:CharacterString'
+    }
+
+    /**
+     * A shortcut for: commonHandlers.func.textEl(node), text))
+     * @return
+     */
+    def isoTextEl(node, text) {
+        return commonHandlers.func.textEl(f.nodeLabel(node), text)
     }
 }

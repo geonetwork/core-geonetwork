@@ -14,9 +14,9 @@ public class Handlers {
         this.handlers = handlers
         this.f = f
         this.env = env
-        isofunc = new Functions(handlers: handlers, f:f, env:env)
-        matchers =  new Matchers(handlers: handlers, f:f, env:env)
         commonHandlers = new common.Handlers(handlers, f, env)
+        isofunc = new Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
+        matchers =  new Matchers(handlers: handlers, f:f, env:env)
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
@@ -71,10 +71,10 @@ public class Handlers {
         handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
     }
 
-    def isoTextEl = { commonHandlers.func.textEl(f.nodeLabel(it), isofunc.isoText(it))}
-    def isoUrlEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.'gmd:Url'.text())}
-    def isoCodeListEl = {commonHandlers.func.textEl(f.nodeLabel(it), f.codelistValueLabel(it))}
-    def isoSimpleEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.'*'.text())}
+    def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
+    def isoUrlEl = { isofunc.isoTextEl(it, it.'gmd:Url'.text())}
+    def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
+    def isoSimpleEl = {isofunc.isoTextEl(it, it.'*'.text())}
     def parseBool(text) {
         switch (text.trim().toLowerCase()){
             case "1":
@@ -85,10 +85,10 @@ public class Handlers {
                 return false;
         }
     }
-    def isoBooleanEl = {commonHandlers.func.textEl(f.nodeLabel(it), parseBool(it.'*'.text()).toString())}
-    def dateEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.text());}
+    def isoBooleanEl = {isofunc.isoTextEl(it, parseBool(it.'*'.text()).toString())}
+    def dateEl = {isofunc.isoTextEl(it, it.text());}
     def extentTypeCodeEl = {
-        commonHandlers.func.textEl(f.nodeLabel(it), parseBool(it.text()) ? 'include' : 'excluded')
+        isofunc.isoTextEl(it, parseBool(it.text()) ? 'include' : 'excluded')
     }
     def ciDateEl = {
         if(!it.'gmd:date'.'gco:Date'.text().isEmpty()) {
@@ -114,37 +114,23 @@ public class Handlers {
     }
 
     def citationEl = { el ->
-        def output = '<div class="row">'
-        output += commonHandlers.func.textColEl(handlers.processElements([el.'gmd:title', el.'gmd:alternateTitle']), 8)
-        def dateContent = handlers.processElements(el.'gmd:date'.'gmd:CI_Date')
-        if (el.'gmd:edition' && el.'gmd:editionDate') {
-            dateContent += commonHandlers.func.textEl(el.'gmd:edition'.'gco:CharacterString'.text(),
-                    el.'gmd:editionDate'.'gco:Date'.text())
-        }
-        output += commonHandlers.func.textColEl(dateContent, 4)
-        output += '</div>'
-
-        output += '<div class="row">'
-        def infoContent = ''
-        if(!el.'gmd:identifier'.text().isEmpty()) {
-            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:identifier'),
-                    el.'gmd:identifier'.'gmd:MD_Identifier'.'gmd:code'.'gco:CharacterString'.text())
-        }
-        if(!el.'gmd:presentationForm'.text().isEmpty()) {
-            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:presentationForm'),
-                    f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode'))
-        }
-        infoContent += handlers.processElements([el.'gmd:ISBN', el.'gmd:ISSN'])
-        output += commonHandlers.func.textColEl(infoContent, 4)
-        output += '</div>'
-
-        def processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
+        Set processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
                                  'gmd:date', 'gmd:edition', 'gmd:editionDate', 'gmd:presentationForm']
 
-        def otherChildrens = el.children().findAll { ch -> !processedChildren.contains(ch.name()) }
-        output += handlers.processElements(otherChildrens)
+        def otherChildren = el.children().findAll { ch -> !processedChildren.contains(ch.name()) }
 
-        return output
+        def model = [
+                title :  handlers.processElements([el.'gmd:title']),
+                altTitle : handlers.processElements([el.'gmd:alternateTitle']),
+                date : handlers.processElements(el.'gmd:date'.'gmd:CI_Date'),
+                editionInfo: commonHandlers.func.textEl(el.'gmd:edition'.text(), el.'gmd:editionDate'.'gco:Date'.text()),
+                identifier : isofunc.isoTextEl(el.'gmd:identifier', el.'gmd:identifier'.'*'.'gmd:code'.text()),
+                presentationForm : isofunc.isoTextEl(el.'gmd:presentationForm', f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode')),
+                ISBN : handlers.processElements(el.'gmd:ISBN'),
+                ISSN : handlers.processElements(el.'gmd:ISSN'),
+                otherData : handlers.processElements(otherChildren)
+        ]
+        return handlers.fileResult("html/citation.html", model)
     }
 
     /**

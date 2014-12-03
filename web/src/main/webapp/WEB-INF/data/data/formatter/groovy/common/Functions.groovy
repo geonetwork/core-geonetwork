@@ -3,7 +3,7 @@ package common
 import org.fao.geonet.services.metadata.format.FormatType
 
 public class Functions {
-    def handlers;
+    org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
     def f
     def env
 
@@ -18,12 +18,7 @@ public class Functions {
      * directly get the html
      */
     def textEl(label, text) {
-        f.html {
-            it.span('class': 'md-text') {
-                dt(label)
-                dd(text)
-            }
-        }
+        return handlers.fileResult("html/text-el.html", ["label": label, "text" : text])
     }
 
     def textColEl(content, cols) {
