@@ -7,18 +7,25 @@ package org.fao.geonet.services.metadata.format.groovy;
  */
 public class TransformationContext {
     private static ThreadLocal<TransformationContext> context = new InheritableThreadLocal<TransformationContext>();
-
     public static TransformationContext getContext() {
         return context.get();
+    }
+
+    private String rootPath;
+    private String currentMode = Mode.DEFAULT;
+    public final Handlers handlers;
+    public final Functions functions;
+    public final Environment env;
+
+    public TransformationContext(Handlers handlers, Functions functions, Environment env) {
+        this.handlers = handlers;
+        this.functions = functions;
+        this.env = env;
     }
 
     public void setThreadLocal() {
         context.set(this);
     }
-
-    private String rootPath;
-    private String currentMode = Mode.DEFAULT;
-
 
     /**
      * The path from the root of the metadata document to the "root" element as selected by the roots selectors in
@@ -41,5 +48,17 @@ public class TransformationContext {
 
     public void setCurrentMode(String currentMode) {
         this.currentMode = currentMode;
+    }
+
+    public Handlers getHandlers() {
+        return handlers;
+    }
+
+    public Functions getFunctions() {
+        return functions;
+    }
+
+    public Environment getEnv() {
+        return env;
     }
 }

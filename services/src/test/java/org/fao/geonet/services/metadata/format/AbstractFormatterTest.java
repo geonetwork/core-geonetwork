@@ -159,7 +159,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         final Pair<FormatterImpl, FormatterParams> formatterFormatterParamsPair = getFormatterFormatterParamsPair(request, formatterId);
         try {
             EnvironmentProxy.setCurrentEnvironment(formatterFormatterParamsPair.two(), this.mapper);
-            TransformationContext context = new TransformationContext();
+            TransformationContext context = new TransformationContext(null, null, new EnvironmentProxy());
             context.setThreadLocal();
             StringBuilder result = new StringBuilder();
             handler.handle(context, Collections.singletonList(elem), result);

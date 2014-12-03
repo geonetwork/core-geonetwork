@@ -116,7 +116,7 @@ public class GroovyFormatter implements FormatterImpl {
             final String scriptName = fparams.viewFile.toAbsolutePath().toUri().toString();
             groovyScriptEngine.run(scriptName, binding);
 
-            transformer = new Transformer(handlers, fparams.formatDir.toAbsolutePath());
+            transformer = new Transformer(handlers, functions, env, fparams.formatDir.toAbsolutePath());
             this.transformers.put(fparams.formatDir, transformer);
         }
 

@@ -22,7 +22,7 @@ public class TemplateCacheTest {
     public void testCreateFileResult() throws Exception {
         final TemplateCache templateCache = new TemplateCache();
         templateCache.systemInfo = SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION);
-        templateCache.xmlTemplateParser = TemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
+        templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
         templateCache.init();
         final Path functionFile = IO.toPath(FormatIntegrationTest.class.getResource("functions.xsl").toURI());
         final FileResult fileResult = templateCache.createFileResult(functionFile.getParent(), functionFile.getParent(),
@@ -45,7 +45,7 @@ public class TemplateCacheTest {
             final TemplateCache templateCache = new TemplateCache();
             templateCache.systemInfo = SystemInfo.createForTesting(profile);
             templateCache.schemaManager = Mockito.mock(SchemaManager.class);
-            templateCache.xmlTemplateParser = TemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
+            templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
             Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParent().getParent());
             Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParent().getParent());
             templateCache.init();

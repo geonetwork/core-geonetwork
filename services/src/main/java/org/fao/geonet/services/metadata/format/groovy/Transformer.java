@@ -27,15 +27,19 @@ public class Transformer {
 
     private final Handlers handlers;
     private final Path formatterPath;
+    private final Functions functions;
+    private final Environment env;
 
-    public Transformer(Handlers handlers, Path formatterPath) {
+    public Transformer(Handlers handlers, Functions functions, Environment env, Path formatterPath) {
         this.handlers = handlers;
+        this.functions = functions;
+        this.env = env;
         handlers.prepareForTransformer();
         this.formatterPath = formatterPath;
     }
 
     public String apply(Element metadata, List<Namespace> namespaces) throws Exception {
-        TransformationContext context = new TransformationContext();
+        TransformationContext context = new TransformationContext(handlers, functions, env);
         context.setThreadLocal();
         Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
         for (Namespace namespace : namespaces) {

@@ -1,6 +1,5 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,9 +21,9 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
     public static final String REPEAT = "repeat";
 
-    @VisibleForTesting
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    SystemInfo info;
+    private SystemInfo info;
     protected TNodeFactoryRepeat() {
         super(REPEAT);
     }

@@ -22,9 +22,9 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
 
     public static final String IF = "if";
 
-    @VisibleForTesting
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    SystemInfo info;
+    private SystemInfo info;
 
     public TNodeFactoryIf(SystemInfo info) {
         super(IF);

@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author Jesse on 12/3/2014.
  */
 @Component
-public class TNodeFactoryInclude extends TNodeFactoryByAttName {
+public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
     private static final String INCLUDE = "include";
     private static final String REPLACE = "include-replace";
 
@@ -24,11 +24,11 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
     @Autowired
     private SystemInfo info;
 
-    protected TNodeFactoryInclude() {
+    protected TNodeFactoryTransclude() {
         super(INCLUDE);
     }
 
-    public TNodeFactoryInclude(SystemInfo info) {
+    public TNodeFactoryTransclude(SystemInfo info) {
         super(INCLUDE);
         this.info = info;
     }

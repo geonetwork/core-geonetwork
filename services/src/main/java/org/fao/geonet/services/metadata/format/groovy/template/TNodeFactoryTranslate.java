@@ -34,9 +34,8 @@ import java.io.IOException;
 public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
     public static final String TRANSLATE = "translate";
 
-    @VisibleForTesting
     @Autowired
-    SystemInfo info;
+    private SystemInfo info;
 
     public TNodeFactoryTranslate() {
         super(TRANSLATE);

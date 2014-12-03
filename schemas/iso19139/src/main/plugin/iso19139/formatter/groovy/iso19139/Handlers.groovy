@@ -20,7 +20,7 @@ public class Handlers {
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
-                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo']
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo', 'gmd:MD_Metadata']
     }
 
     def addDefaultHandlers() {

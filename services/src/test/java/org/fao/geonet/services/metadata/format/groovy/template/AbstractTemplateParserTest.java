@@ -23,7 +23,9 @@ public abstract class AbstractTemplateParserTest {
     public static TemplateParser createTestParser(String systemInfoStage) {
         SystemInfo info = SystemInfo.createForTesting(systemInfoStage);
         final TemplateParser parser = new TemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryIf(info), new TNodeFactoryRepeat(info), new TNodeFactoryTranslate(info));
+        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(
+                new TNodeFactoryIf(info), new TNodeFactoryRepeat(info), new TNodeFactoryTranslate(info),
+                new TNodeFactoryInclude(info));
         return parser;
     }
 }

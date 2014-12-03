@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import com.google.common.base.Optional;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
+import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
 import org.xml.sax.Attributes;
 
 import java.io.ByteArrayOutputStream;
@@ -92,7 +93,8 @@ class TNodeTranslate extends TNode {
         }
 
         public TextBlock translate(String text) throws Exception {
-            final String translation = Functions.getThreadLocal().codelistTranslation(text, context, type);
+            final Functions functions = TransformationContext.getContext().getFunctions();
+            final String translation = functions.codelistTranslation(text, context, type);
             return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
@@ -107,7 +109,8 @@ class TNodeTranslate extends TNode {
         }
 
         public TextBlock translate(String text) throws Exception {
-            final String translation = Functions.getThreadLocal().nodeTranslation(text, context, type);
+            final Functions functions = TransformationContext.getContext().getFunctions();
+            final String translation = functions.nodeTranslation(text, context, type);
             return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
@@ -119,7 +122,8 @@ class TNodeTranslate extends TNode {
         }
 
         public TextBlock translate(String text) throws Exception {
-            final String translation = Functions.getThreadLocal().translate(text, file);
+            final Functions functions = TransformationContext.getContext().getFunctions();
+            final String translation = functions.translate(text, file);
             return TEXT_CONTENT_PARSER.parse(translation);
         }
     }
