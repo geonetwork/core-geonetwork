@@ -48,6 +48,7 @@ public class FunctionsTest {
         Mockito.when(appContext.getBean(SchemaManager.class)).thenReturn(schemaManager);
         Mockito.when(appContext.getBean(IsoLanguageRepository.class)).thenReturn(repository);
         GeonetworkDataDirectory dataDir = Mockito.mock(GeonetworkDataDirectory.class);
+        Mockito.when(dataDir.getWebappDir()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
         Mockito.when(dataDir.getSystemDataDir()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
         Mockito.when(appContext.getBean(GeonetworkDataDirectory.class)).thenReturn(dataDir);
         Mockito.when(appContext.getBean(XmlCacheManager.class)).thenReturn(new XmlCacheManager());
