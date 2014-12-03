@@ -27,6 +27,10 @@ public class TextContentParserTest {
 
         model.remove("name");
         assertCorrectRender(contents, model, "Hi name\n\n\tThis is a great test\n\nFrom from");
+
+        model.put("name", "Name");
+        model.put("from", "From");
+        assertCorrectRender(parser.parse("{{name}}{{from}}"), model, "NameFrom");
     }
 
     public void assertCorrectRender(TextBlock contents, Map<String, Object> model, String expected) throws IOException {

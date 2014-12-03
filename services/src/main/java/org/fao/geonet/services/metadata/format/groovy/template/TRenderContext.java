@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
@@ -172,8 +173,16 @@ public class TRenderContext implements Appendable, Closeable {
         return new TRenderContext(this, newModel, outputStream, writer);
     }
 
-    public Map<String, Object> getModel() {
-        return this.model;
+    public Map<String, Object> getModel(boolean mergeParentModels) {
+        Map<String, Object> fullModel;
+        if(mergeParentModels && this.parent != null) {
+            fullModel = this.parent.getModel(true);
+            fullModel.putAll(this.model);
+        } else {
+            fullModel = Maps.newHashMap(this.model);
+        }
+
+        return fullModel;
     }
 
     private static class EmptyPropertyException extends RuntimeException {

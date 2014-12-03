@@ -1,6 +1,5 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +35,11 @@ public class TemplateParser {
     @Autowired
     List<TNodeFactory> tnodeFactories;
 
-    @VisibleForTesting
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    SystemInfo info;
+    private SystemInfo info;
 
     public TNode parse(Path path) {
-
         try {
             final TNode root = parse(Files.readAllBytes(path), TemplateType.fromPath(path));
             root.setUnparsedSize(Files.size(path));
@@ -51,7 +49,6 @@ public class TemplateParser {
         } catch (TemplateException e) {
             throw new TemplateException("Error when parsing " + path + ":" , e.getCause());
         }
-
     }
 
     public TNode parse(byte[] in, TemplateType type) {
@@ -60,6 +57,7 @@ public class TemplateParser {
                 try {
                     SAXParserFactory factory = SAXParserFactory.newInstance();
                     SAXParser saxParser = factory.newSAXParser();
+
                     Handler handler = new Handler();
 
                     InputSource source = new InputSource(new ByteArrayInputStream(in));

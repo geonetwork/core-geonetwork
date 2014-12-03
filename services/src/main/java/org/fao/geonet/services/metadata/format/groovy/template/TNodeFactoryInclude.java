@@ -70,7 +70,7 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
         public void render(TRenderContext context) throws IOException {
             if (replace) {
                 final Handlers handlers = TransformationContext.getContext().getHandlers();
-                final FileResult fileResult = handlers.fileResult(this.templatePath, context.getModel());
+                final FileResult fileResult = handlers.fileResult(this.templatePath, context.getModel(true));
                 context.append(fileResult.toString());
             } else {
                 super.render(context);

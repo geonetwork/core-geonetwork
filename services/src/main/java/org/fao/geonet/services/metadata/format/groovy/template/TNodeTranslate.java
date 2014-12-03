@@ -69,7 +69,7 @@ class TNodeTranslate extends TNode {
             final TextBlock block = TEXT_CONTENT_PARSER.parse(text);
 
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            block.render(new TRenderContext(stream, context.getModel()));
+            block.render(new TRenderContext(stream, context.getModel(true)));
 
             try {
                 translator.translate(stream.toString()).render(context);

@@ -25,7 +25,7 @@ public abstract class AbstractTemplateParserTest {
         final TemplateParser parser = new TemplateParser();
         parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(
                 new TNodeFactoryIf(info), new TNodeFactoryRepeat(info), new TNodeFactoryTranslate(info),
-                new TNodeFactoryInclude(info));
+                new TNodeFactoryInclude(info), new TNodeFactoryTransclude(info));
         return parser;
     }
 }

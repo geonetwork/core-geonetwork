@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
-import org.fao.geonet.domain.Pair;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -45,15 +44,4 @@ public abstract class TNodeFactory {
         }
         return false;
     }
-
-    protected Pair<String, String> getAttributeAndValue(Attributes attributes, String... attNames) {
-        for (String att : attNames) {
-            final String value = getValue(attributes, att);
-            if (value != null) {
-                return Pair.read(att, value);
-            }
-        }
-        return null;
-    }
-
 }
