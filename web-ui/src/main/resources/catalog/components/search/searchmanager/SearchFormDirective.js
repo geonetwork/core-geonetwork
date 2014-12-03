@@ -39,7 +39,6 @@
     };
 
     $scope.searching = 0;
-
     $scope.paginationInfo = $scope.paginationInfo || {};
 
     /**
@@ -65,6 +64,14 @@
       if ($scope.hasPagination) {
         $scope.paginationInfo.currentPage = 1;
         this.updateSearchParams(this.getPaginationParams());
+      }
+    };
+
+    var cleanSearchParams = function(params) {
+      for(v in params) {
+        if(params[v] == '') {
+          delete params[v];
+        }
       }
     };
 
@@ -130,6 +137,11 @@
           });
     };
 
+    /**
+     * If we use permalink, the triggerSerach call will in fact just update
+     * the url with the params, then the event $locationChangeSuccess will call
+     * the geonetwork search from url params.
+     */
     if($scope.searchObj.permalink) {
       var triggerSearchFn = self.triggerSearchFn;
       var facetsParams;
@@ -143,6 +155,7 @@
         facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
         $scope.$broadcast('beforesearch');
         var params = angular.copy($scope.searchObj.params);
+        cleanSearchParams(params);
         angular.extend(params, facetsParams);
 
         if(angular.equals(params, $location.search())) {
