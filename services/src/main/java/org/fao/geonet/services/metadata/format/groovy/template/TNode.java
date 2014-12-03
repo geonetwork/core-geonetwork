@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.apache.xalan.xsltc.runtime.AttributeList;
+import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -19,12 +20,14 @@ public abstract class TNode {
     private static final TextContentParser PARSER = new TextContentParser();
     protected final TextBlock attributes, end;
     protected final String qName;
+    protected final SystemInfo info;
 
     private List<TNode> children = Lists.newArrayList();
     protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
     private long unparsedSize;
 
-    public TNode(String qName, Attributes attributes) throws IOException {
+    public TNode(SystemInfo info, String qName, Attributes attributes) throws IOException {
+        this.info = info;
         this.qName = qName;
         StringBuilder start = new StringBuilder();
         StringBuilder end = new StringBuilder();
@@ -52,7 +55,9 @@ public abstract class TNode {
     public void render(TRenderContext context) throws IOException {
         final Optional<String> reasonToNotRender = canRender(context);
         if (reasonToNotRender.isPresent()) {
-            context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
+            if (this.info.isDevMode()) {
+                context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
+            }
         } else {
             context.append("<").append(qName);
 
@@ -122,7 +127,7 @@ public abstract class TNode {
         if (text.isEmpty()) {
             return;
         }
-        addChild(new TNodeTextContent(PARSER.parse(text)));
+        addChild(new TNodeTextContent(info, PARSER.parse(text)));
     }
 
     public long getUnparsedSize() {

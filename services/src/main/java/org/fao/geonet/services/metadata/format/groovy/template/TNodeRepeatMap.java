@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -13,8 +14,9 @@ import java.util.Map;
 public class TNodeRepeatMap extends TNode {
     private final String key, rowKeyName, rowValueName;
 
-    public TNodeRepeatMap(String qName, Attributes attributes, String key, String rowKeyName, String rowValueName) throws IOException {
-        super(qName, attributes);
+    public TNodeRepeatMap(SystemInfo info, String qName, Attributes attributes, String key, String rowKeyName, String rowValueName)
+            throws IOException {
+        super(info, qName, attributes);
         this.key = key;
         this.rowKeyName = rowKeyName;
         this.rowValueName = rowValueName;
@@ -32,7 +34,7 @@ public class TNodeRepeatMap extends TNode {
         @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map) modelValue;
 
-        if (map.isEmpty()) {
+        if (map.isEmpty() && this.info.isDevMode()) {
             context.append("<!-- fmt-repeat: (").append(rowKeyName).append(", ").append(rowValueName).append(") in ").append(this.key)
                     .append(" is empty -->");
         }

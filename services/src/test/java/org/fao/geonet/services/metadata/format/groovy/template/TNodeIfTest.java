@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
+import org.fao.geonet.SystemInfo;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,9 +14,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TNodeIfTest {
+    SystemInfo info = SystemInfo.createForTesting(SystemInfo.STAGE_TESTING);
     @Test
     public void testCommentWhenFalse() throws Exception {
-        TNodeFactoryIf.TNodeIf ifNode = new TNodeFactoryIf.TNodeIf("div", TNode.EMPTY_ATTRIBUTES, "item");
+        TNodeFactoryIf.TNodeIf ifNode = new TNodeFactoryIf.TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "item");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>emptyMap()));
         assertEquals("<!-- fmt-if=item is null -->", out.toString());
@@ -45,7 +47,7 @@ public class TNodeIfTest {
         assertEquals("<!-- fmt-if=item is empty -->", out.toString());
 
 
-        ifNode = new TNodeFactoryIf.TNodeIf("div", TNode.EMPTY_ATTRIBUTES, "!item");
+        ifNode = new TNodeFactoryIf.TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "!item");
 
         out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>singletonMap("item", "blarg")));
@@ -82,7 +84,7 @@ public class TNodeIfTest {
 
     @Test
     public void testNot() throws Exception {
-        TNodeFactoryIf.TNodeIf not = new TNodeFactoryIf.TNodeIf("Node", TNode.EMPTY_ATTRIBUTES, "!expr");
+        TNodeFactoryIf.TNodeIf not = new TNodeFactoryIf.TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "!expr");
 
         TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", true));
         assertTrue(not.canRender(context).isPresent());
@@ -90,7 +92,7 @@ public class TNodeIfTest {
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertFalse(not.canRender(context).isPresent());
 
-        TNodeFactoryIf.TNodeIf normal = new TNodeFactoryIf.TNodeIf("Node", TNode.EMPTY_ATTRIBUTES, "expr");
+        TNodeFactoryIf.TNodeIf normal = new TNodeFactoryIf.TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "expr");
 
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertTrue(normal.canRender(context).isPresent());

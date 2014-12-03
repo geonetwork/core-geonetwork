@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem;
 import org.fao.geonet.utils.IO;
@@ -23,7 +24,7 @@ public class TemplateParserTest {
 
     @Test
     public void testParseIfDirective() throws Exception {
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_PRODUCTION);
         final URL url = TemplateParserTest.class.getResource("non-empty-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
@@ -80,7 +81,7 @@ public class TemplateParserTest {
         Mockito.when(mock.nodeTranslation("testString", null, "desc")).thenReturn("translation node desc null");
         Functions.setThreadLocal(mock);
 
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);
         final URL url = TemplateParserTest.class.getResource("translate.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
@@ -102,7 +103,7 @@ public class TemplateParserTest {
 
     @Test
     public void testRepeatDirective() throws Exception {
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);
         final URL url = TemplateParserTest.class.getResource("repeat-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
@@ -130,7 +131,7 @@ public class TemplateParserTest {
         Mockito.when(mock.translate("name2", null)).thenReturn("Name 2");
         Functions.setThreadLocal(mock);
 
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);
         final URL url = TemplateParserTest.class.getResource("repeat-object-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
@@ -153,7 +154,7 @@ public class TemplateParserTest {
 
     @Test(expected = TemplateException.class)
     public void testRepeatNotMapWhenMapRequired() throws Exception {
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);
         final URL url = TemplateParserTest.class.getResource("repeat-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
 
@@ -166,7 +167,7 @@ public class TemplateParserTest {
 
     @Test(expected = TemplateException.class)
     public void testMultipleDirectivesPerElem() throws Exception {
-        final TemplateParser parser = createTestParser();
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_TESTING);
         final URL url = TemplateParserTest.class.getResource("multiple-directives-per-el-template.html");
         parser.parse(IO.toPath(url.toURI()));
     }
@@ -180,9 +181,10 @@ public class TemplateParserTest {
         assertEquals(expected + "\n" + result, expected.replaceAll("\\n|\\r|\\s+", ""), result.toString().replaceAll("\\n|\\r|\\s+", ""));
     }
 
-    public static TemplateParser createTestParser() {
+    public static TemplateParser createTestParser(String systemInfoStage) {
+        SystemInfo info = SystemInfo.createForTesting(systemInfoStage);
         final TemplateParser parser = new TemplateParser();
-        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryIf(), new TNodeFactoryRepeat(), new TNodeFactoryTranslate());
+        parser.tnodeFactories = Lists.<TNodeFactory>newArrayList(new TNodeFactoryIf(info), new TNodeFactoryRepeat(info), new TNodeFactoryTranslate(info));
         return parser;
     }
 }

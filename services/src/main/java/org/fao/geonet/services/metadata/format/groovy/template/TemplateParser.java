@@ -1,6 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
@@ -34,6 +36,10 @@ public class TemplateParser {
     @Autowired
     List<TNodeFactory> tnodeFactories;
 
+    @VisibleForTesting
+    @Autowired
+    SystemInfo info;
+
     public TNode parse(Path path) {
 
         try {
@@ -54,7 +60,7 @@ public class TemplateParser {
                 try {
                     SAXParserFactory factory = SAXParserFactory.newInstance();
                     SAXParser saxParser = factory.newSAXParser();
-                    Handler handler = new Handler(tnodeFactories);
+                    Handler handler = new Handler();
 
                     InputSource source = new InputSource(new ByteArrayInputStream(in));
                     source.setEncoding(Constants.ENCODING);
@@ -67,28 +73,23 @@ public class TemplateParser {
             default:
                 try {
                     final String unparsedText = new String(in, Constants.ENCODING);
-                    return new TNodeTextContent(TEXT_CONTENT_PARSER.parse(unparsedText));
+                    return new TNodeTextContent(info, TEXT_CONTENT_PARSER.parse(unparsedText));
                 } catch (IOException e) {
                     throw new TemplateException(e);
                 }
         }
     }
 
-    private static class Handler extends DefaultHandler {
+    private class Handler extends DefaultHandler {
 
-        private final List<TNodeFactory> factories;
         public TNode root;
         public Stack<TNode> stack = new Stack<>();
-
-        public Handler(List<TNodeFactory> factories) {
-            this.factories = factories;
-        }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             try {
                 TNodeFactory found = null;
-                for (TNodeFactory factory : factories) {
+                for (TNodeFactory factory : tnodeFactories) {
                     if (factory.applicable(localName, qName, attributes)) {
                         if (found != null) {
                             throw new TemplateException(
@@ -100,7 +101,7 @@ public class TemplateParser {
                     }
                 }
                 if (found == null) {
-                    setCurrentNode(new SimpleTNode(qName, attributes));
+                    setCurrentNode(new SimpleTNode(info, qName, attributes));
                 }
             } catch (IOException e) {
                 throw new TemplateException(e);

@@ -2,6 +2,8 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import org.fao.geonet.SystemInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -20,6 +22,14 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
 
     public static final String IF = "if";
 
+    @VisibleForTesting
+    @Autowired
+    SystemInfo info;
+
+    public TNodeFactoryIf(SystemInfo info) {
+        super(IF);
+        this.info = info;
+    }
     public TNodeFactoryIf() {
         super(IF);
     }
@@ -28,7 +38,7 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         final String value = getValue(attributes, IF);
         final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, IF);
-        return new TNodeIf(qName, filteredAttributes, value);
+        return new TNodeIf(info, qName, filteredAttributes, value);
     }
 
     /**
@@ -54,8 +64,8 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
         private final String expr;
         private final boolean not;
 
-        public TNodeIf(String qName, Attributes attributes, String expr) throws IOException {
-            super(qName, attributes);
+        public TNodeIf(SystemInfo info, String qName, Attributes attributes, String expr) throws IOException {
+            super(info, qName, attributes);
             if (expr.startsWith("!")) {
                 this.not = true;
                 this.expr = expr.substring(1);

@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.xml.sax.Attributes;
 
@@ -15,8 +16,8 @@ class TNodeTranslate extends TNode {
 
     private final Translator translator;
 
-    public TNodeTranslate(String qName, Attributes attributes, String key) throws IOException {
-        super(qName, attributes);
+    public TNodeTranslate(SystemInfo info, String qName, Attributes attributes, String key) throws IOException {
+        super(info, qName, attributes);
         String[] parts = key.split(">");
         String type = parts.length > 1 ? parts[1] : null;
         String context = parts.length > 2 ? parts[2] : null;
@@ -43,7 +44,7 @@ class TNodeTranslate extends TNode {
             return;
         }
         try {
-            addChild(new Node(text));
+            addChild(new Node(info, text));
         } catch (Exception e) {
             throw new TemplateException(e);
         }
@@ -52,8 +53,8 @@ class TNodeTranslate extends TNode {
     private class Node extends TNode {
         private final String text;
 
-        public Node(String text) throws IOException {
-            super("", EMPTY_ATTRIBUTES);
+        public Node(SystemInfo info, String text) throws IOException {
+            super(info, "", EMPTY_ATTRIBUTES);
             this.text = text;
         }
 

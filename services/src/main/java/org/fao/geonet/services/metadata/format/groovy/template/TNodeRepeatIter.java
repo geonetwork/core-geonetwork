@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -24,8 +25,8 @@ public class TNodeRepeatIter extends TNode {
     private final String key;
     private final String rowContextKey;
 
-    public TNodeRepeatIter(String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
-        super(qName, attributes);
+    public TNodeRepeatIter(SystemInfo info, String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
+        super(info, qName, attributes);
         this.key = key;
         this.rowContextKey = rowContextKey;
     }
@@ -78,7 +79,7 @@ public class TNodeRepeatIter extends TNode {
             i++;
         }
 
-        if (i == 0) {
+        if (i == 0 && this.info.isDevMode()) {
             context.append("<!-- fmt-repeat: ").append(rowContextKey).append(" in ").append(this.key).append(" is empty -->");
         }
     }

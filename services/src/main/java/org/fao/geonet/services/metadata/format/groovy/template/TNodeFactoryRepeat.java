@@ -1,5 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.fao.geonet.SystemInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -19,8 +22,16 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
     public static final String REPEAT = "repeat";
 
+    @VisibleForTesting
+    @Autowired
+    SystemInfo info;
     protected TNodeFactoryRepeat() {
         super(REPEAT);
+    }
+
+    public TNodeFactoryRepeat(SystemInfo info) {
+        super(REPEAT);
+        this.info = info;
     }
 
     @Override
@@ -36,9 +47,9 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
         Matcher mapMatcher = MAP_PATTERN.matcher(contextName);
         if (mapMatcher.matches()) {
-            return new TNodeRepeatMap(qName, filteredAttributes, key, mapMatcher.group(1), mapMatcher.group(2));
+            return new TNodeRepeatMap(info, qName, filteredAttributes, key, mapMatcher.group(1), mapMatcher.group(2));
         } else {
-            return new TNodeRepeatIter(qName, filteredAttributes, key, contextName);
+            return new TNodeRepeatIter(info, qName, filteredAttributes, key, contextName);
         }
     }
 }

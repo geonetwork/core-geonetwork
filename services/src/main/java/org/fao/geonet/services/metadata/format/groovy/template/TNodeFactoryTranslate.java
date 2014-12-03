@@ -1,5 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.fao.geonet.SystemInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -31,15 +34,24 @@ import java.io.IOException;
 public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
     public static final String TRANSLATE = "translate";
 
+    @VisibleForTesting
+    @Autowired
+    SystemInfo info;
+
     public TNodeFactoryTranslate() {
         super(TRANSLATE);
+    }
+
+    public TNodeFactoryTranslate(SystemInfo info) {
+        super(TRANSLATE);
+        this.info = info;
     }
 
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         final String value = getValue(attributes, TRANSLATE);
         final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, TRANSLATE);
-        return new TNodeTranslate(qName, filteredAttributes, value);
+        return new TNodeTranslate(info, qName, filteredAttributes, value);
     }
 
 }

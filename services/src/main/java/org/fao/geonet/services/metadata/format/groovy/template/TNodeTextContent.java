@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+import org.fao.geonet.SystemInfo;
 
 import java.io.IOException;
 
@@ -10,8 +11,8 @@ import java.io.IOException;
 public class TNodeTextContent extends TNode {
     private final TextBlock textContent;
 
-    public TNodeTextContent(TextBlock textContent) throws IOException {
-        super("", EMPTY_ATTRIBUTES);
+    public TNodeTextContent(SystemInfo info, TextBlock textContent) throws IOException {
+        super(info, "", EMPTY_ATTRIBUTES);
         this.textContent = textContent;
     }
 
