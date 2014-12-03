@@ -49,7 +49,7 @@ class SummaryFactory {
         def env = isoHandler.env
         Collection<String> links = env.indexInfo['link'];
         if (!links.isEmpty()) {
-            StaticLinkBlock linkBlock = new StaticLinkBlock("links");
+            LinkBlock linkBlock = new LinkBlock("links");
             summary.links.add(linkBlock)
             links.each { link ->
                 def linkParts = link.split("\\|")
@@ -78,7 +78,7 @@ class SummaryFactory {
                     href = "javascript:window.open('${href.replace("'", "\\'")}', '${env.metadataUUID.replace('\'', '_')}_link')"
                 }
                 def linkType = new LinkType(type, null)
-                linkBlock.links.put(linkType, new Link(href, title))
+                linkBlock.put(linkType, new Link(href, title))
             }
         }
 
@@ -190,12 +190,13 @@ $typeTranslations
 <script type="text/javascript">$js</script>
 <div id="$placeholderId"> </div>
 """
-        RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock(linkBlockName, html)
+        LinkBlock linkBlock = new LinkBlock(linkBlockName)
+        linkBlock.html = html
         summary.links.add(linkBlock)
     }
 
     static void createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler) {
-        StaticLinkBlock hierarchy = new StaticLinkBlock(linkBlockName)
+        LinkBlock hierarchy = new LinkBlock(linkBlockName)
         summary.links.add(hierarchy);
         def bean = isoHandler.env.getBean(GetRelated.class)
         def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
@@ -211,7 +212,7 @@ $typeTranslations
                 if (title != null) {
                     title = md.getChildText("defaultTitle")
                 }
-                hierarchy.links.put(linkType, new Link(href, title))
+                hierarchy.put(linkType, new Link(href, title))
             }
         }
     }

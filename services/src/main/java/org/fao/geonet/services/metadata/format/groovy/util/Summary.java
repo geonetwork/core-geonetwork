@@ -50,39 +50,12 @@ public class Summary {
         params.put("pageTitle", title != null ? title.replace('"', '\'') : "");
         params.put("abstract", abstr);
         params.put("thumbnail", thumbnailUrl());
-        addLinks(params);
+        params.put("links", links);
         params.put("navBar", navBar);
         params.put("navBarOverflow", navBarOverflow);
         params.put("content", content);
 
         return handlers.fileResult("html/view-header.html", params);
-    }
-
-    /**
-     * Adds Links section to the params.  This implementation adds an empty string because this summary does not have links.
-     */
-    protected void addLinks(HashMap<String, Object> params) throws Exception {
-        StringBuilder linksHtml = new StringBuilder();
-        for (LinkBlock link : links) {
-            if (!link.isEmpty()) {
-
-                linksHtml.append('\n');
-                linksHtml.append("    <div class=\"").append(LinkBlock.CSS_CLASS_PREFIX).append(link.getName()).append("\" >");
-                linksHtml.append("      <h3>\n");
-                linksHtml.append("        <button type=\"button\" class=\"btn btn-default toggler\">\n");
-                linksHtml.append("            <i class=\"fa fa-arrow-circle-down\"></i>\n");
-                linksHtml.append("        </button>\n");
-                linksHtml.append("        ").append(functions.translate(link.getName())).append("\n");
-                linksHtml.append("      </h3>\n");
-                linksHtml.append("      <div class=\"row target\" style=\"border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;\">\n");
-
-
-                link.linksHtml(linksHtml, functions, env);
-                linksHtml.append("    </div></div>");
-            }
-        }
-
-        params.put("links", linksHtml);
     }
 
     String thumbnailUrl() {

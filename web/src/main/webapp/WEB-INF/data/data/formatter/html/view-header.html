@@ -23,6 +23,19 @@
                 </div>
             </div>
         </div>
+        <div fmt-repeat="linkBlock in links" class="summary-links-{{linkBlock.name}}" >
+            <h3>
+                <button type="button" class="btn btn-default toggler">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </button>
+                <span fmt-translate="">{{linkBlock.name}}</span>
+            </h3>
+            <div fmt-repeat="link in linkBlock.links" class="row target" style="border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;">
+                <div fmt-translate="" class="col-xs-12" style="background-color: #F7EEE1;">{{link.type.name}}</div>
+                <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href}}">{{link.text}}</a></div>
+            </div>
+            <span fmt-if="linkBlock.html">{{link.html}}</span>
+        </div>
     </div>
     <ul class="nav nav-pills">
         <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>

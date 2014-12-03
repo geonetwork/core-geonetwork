@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.collect.Sets;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
 import org.springframework.beans.BeanUtils;
@@ -10,10 +11,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * A render context for rendering a Template Tree.
@@ -36,6 +40,7 @@ public class TRenderContext implements Appendable, Closeable {
     public TRenderContext(OutputStream outputStream, Map<String, Object> model) {
         this(outputStream, Constants.CHARSET, model);
     }
+
     public TRenderContext(OutputStream outputStream, Charset charset, Map<String, Object> model) {
         this.parent = null;
         this.outputStream = outputStream;
@@ -64,6 +69,15 @@ public class TRenderContext implements Appendable, Closeable {
         return this;
     }
 
+    public Set<String> getAllModelKeys() {
+        Set<String> keys = Sets.newHashSet();
+        if (this.parent != null) {
+            keys.addAll(this.parent.getAllModelKeys());
+        }
+        keys.addAll(this.model.keySet());
+        return keys;
+    }
+
     @Override
     public void close() throws IOException {
         IOUtils.closeQuietly(this.writer);
@@ -90,10 +104,31 @@ public class TRenderContext implements Appendable, Closeable {
             return value;
         }
 
-        return getProperty(value, property);
+        try {
+            if (value == null) {
+                throw new TemplateException(
+                        "There is no object in the model map with the id '" + expr + "' in the model map.  The model selection " +
+                        "expression is: " + expr.trim() + "." + property.trim() + "'.\nThe current options are: \n" + getAllModelKeys());
+            }
+            return getProperty(value, property);
+        } catch (NullPropertyException e) {
+            throw new TemplateException("The value of the property '" + e + "' is null. The full selection expression is: " +
+                                        "'" + expr.trim() + "." + property.trim() + "'");
+        } catch (EmptyPropertyException e) {
+            throw new TemplateException("Model expression: '" + expr.trim() + "." + property.trim() + "' contains an empty section.");
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new TemplateException(
+                    "Error accessing the properties in the property path of: '" +
+                    expr.trim() + "." + property + "'.  " + e, e);
+        } catch (NoSuchPropertyException e) {
+            throw new TemplateException(
+                    "One of the properties in the property path: '" + expr.trim() + "." + property + "' does not exist on " +
+                    "the object selected at that point. The property missing is: " + e);
+        }
     }
 
-    private Object getProperty(Object value, String property) {
+    private Object getProperty(@Nonnull Object baseValue, String property) throws InvocationTargetException, IllegalAccessException {
+        Object value = baseValue;
         int indexOfDot = property.indexOf('.');
         while (indexOfDot > -1) {
             String prop = property.substring(0, indexOfDot);
@@ -102,23 +137,34 @@ public class TRenderContext implements Appendable, Closeable {
             value = safeGetProperty(value, prop);
 
             indexOfDot = property.indexOf('.');
+
+
+            if (value == null) {
+                throw new NullPropertyException(prop);
+            }
         }
 
         return safeGetProperty(value, property);
     }
 
-    private Object safeGetProperty(Object value, String prop) {
-        try {
-            final PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), prop);
-            if (propertyDescriptor == null) {
-                throw new TemplateException("There is no property: " + prop + " on object: " + value + " (" + value.getClass() + ")");
-            }
-            Method method = propertyDescriptor.getReadMethod();
-            method.setAccessible(true);
-            value = method.invoke(value);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new TemplateException(e);
+    private Object safeGetProperty(@Nonnull Object value, String prop) throws InvocationTargetException, IllegalAccessException {
+        if (prop.trim().isEmpty()) {
+            throw new EmptyPropertyException();
         }
+        final PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), prop.trim());
+        if (propertyDescriptor == null) {
+            try {
+                final Field declaredField = value.getClass().getDeclaredField(prop.trim());
+                declaredField.setAccessible(true);
+                return declaredField.get(value);
+            } catch (NoSuchFieldException e) {
+                // skip
+            }
+            throw new NoSuchPropertyException(prop + " on object: " + value + " (" + value.getClass() + ")");
+        }
+        Method method = propertyDescriptor.getReadMethod();
+        method.setAccessible(true);
+        value = method.invoke(value);
         return value;
     }
 
@@ -128,5 +174,31 @@ public class TRenderContext implements Appendable, Closeable {
 
     public Map<String, Object> getModel() {
         return this.model;
+    }
+
+    private static class EmptyPropertyException extends RuntimeException {
+    }
+
+    private static class NoSuchPropertyException extends RuntimeException {
+        private NoSuchPropertyException(String message) {
+            super(message);
+        }
+    }
+
+    private static class NullPropertyException extends RuntimeException {
+        private final String prop;
+
+        private NullPropertyException() {
+            prop = "";
+        }
+
+        private NullPropertyException(String prop) {
+            this.prop = prop;
+        }
+
+        @Override
+        public String toString() {
+            return prop;
+        }
     }
 }

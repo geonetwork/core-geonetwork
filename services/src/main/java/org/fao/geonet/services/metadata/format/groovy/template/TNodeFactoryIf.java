@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -66,44 +67,52 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
         }
 
         @Override
-        protected boolean canRender(TRenderContext context) {
+        protected Optional<String> canRender(TRenderContext context) {
             final Object val = context.getModelValue(this.expr);
-            final boolean truthy = isTruthy(val);
-            return not ? !truthy : truthy;
+            final String truthy = isTruthy(val);
+            if (not) {
+                return truthy != null ? Optional.<String>absent() :
+                        Optional.of("fmt-if=!" + this.expr + " is false (" + this.expr + " is true)");
+            } else {
+                if (truthy != null) {
+                    return Optional.of("fmt-if=" + this.expr + " is " + truthy);
+                }
+                return Optional.absent();
+            }
         }
 
         @VisibleForTesting
-        static boolean isTruthy(Object val) {
+        static String isTruthy(Object val) {
             if (val == null) {
-                return false;
+                return "null";
             }
             if (val instanceof String) {
                 String sVal = (String) val;
-                return !sVal.isEmpty();
+                return sVal.isEmpty() ? "empty" : null;
             } else if (val instanceof Iterable) {
                 Iterable itVal = (Iterable) val;
-                return itVal.iterator().hasNext();
+                return itVal.iterator().hasNext() ? null : "empty";
             } else if (val instanceof Enumeration) {
                 Enumeration itVal = (Enumeration) val;
-                return itVal.hasMoreElements();
+                return itVal.hasMoreElements() ? null : "empty";
             } else if (val instanceof Iterator) {
                 Iterator itVal = (Iterator) val;
-                return itVal.hasNext();
+                return itVal.hasNext() ? null : "empty";
             } else if (val instanceof Map) {
                 Map mapVal = (Map) val;
-                return !mapVal.isEmpty();
+                return mapVal.isEmpty() ? "empty" : null;
             } else if (val instanceof Boolean) {
-                return (Boolean) val;
+                return (Boolean) val ? null : "false";
             } else if (val instanceof Double) {
-                return Math.abs((Double) val) > PRECISION;
+                return Math.abs((Double) val) > PRECISION ? null : "0";
             } else if (val instanceof Float) {
-                return Math.abs((Float) val) > PRECISION;
+                return Math.abs((Float) val) > PRECISION ? null : "0";
             } else if (val instanceof Number) {
-                return ((Number)val).intValue() != 0;
+                return ((Number)val).intValue() != 0 ? null : "0";
             } else if (val instanceof Character) {
-                return true;
+                return  null;
             } else if (val.getClass().isArray()) {
-                return ((Object[])val).length > 0;
+                return ((Object[])val).length > 0 ? null : "empty";
             } else {
                 throw new AssertionError("Not a recognized type: " + val.getClass() + ": " + val);
             }

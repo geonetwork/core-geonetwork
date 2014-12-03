@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import groovy.util.slurpersupport.GPathResult;
 import org.xml.sax.Attributes;
@@ -76,6 +77,10 @@ public class TNodeRepeatIter extends TNode {
 
             i++;
         }
+
+        if (i == 0) {
+            context.append("<!-- fmt-repeat: ").append(rowContextKey).append(" in ").append(this.key).append(" is empty -->");
+        }
     }
 
     static void addIndexInfo(Map<String, Object> newModelMap, int index, int total) {
@@ -93,8 +98,7 @@ public class TNodeRepeatIter extends TNode {
     }
 
     @Override
-    protected boolean canRender(TRenderContext context) {
-        final Object modelValue = context.getModelValue(this.key);
-        return modelValue != null;
+    protected Optional<String> canRender(TRenderContext context) {
+        return Optional.absent();
     }
 }

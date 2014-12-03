@@ -12,7 +12,6 @@ public class TemplateException extends RuntimeException {
     public TemplateException(Throwable e) {
         super(e);
     }
-
     public TemplateException(String message, Throwable e) {
         super(message, e);
     }

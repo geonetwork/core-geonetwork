@@ -1,7 +1,9 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -145,7 +147,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 //            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
             formatService.exec("eng", formatType.name(), "" + id, null, formatterId, "true", false, request, response);
             view = response.getContentAsString();
-//            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
             return this;
         }

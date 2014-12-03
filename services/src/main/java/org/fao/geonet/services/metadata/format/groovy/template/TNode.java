@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.apache.xalan.xsltc.runtime.AttributeList;
 import org.xml.sax.Attributes;
@@ -49,7 +50,10 @@ public abstract class TNode {
      * Render the currentNode.
      */
     public void render(TRenderContext context) throws IOException {
-        if (canRender(context)) {
+        final Optional<String> reasonToNotRender = canRender(context);
+        if (reasonToNotRender.isPresent()) {
+            context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
+        } else {
             context.append("<").append(qName);
 
             if (writeAttributes(context)) {
@@ -105,7 +109,7 @@ public abstract class TNode {
     /**
      * Check if this node (and subtree) should be rendered.
      */
-    protected abstract boolean canRender(TRenderContext context);
+    protected abstract Optional<String> canRender(TRenderContext context);
 
     /**
      * Add a child to this node.

@@ -1,5 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 
 /**
@@ -19,7 +21,7 @@ public class TNodeTextContent extends TNode {
     }
 
     @Override
-    protected boolean canRender(TRenderContext context) {
-        return true;
+    protected Optional<String> canRender(TRenderContext context) {
+        return Optional.absent();
     }
 }

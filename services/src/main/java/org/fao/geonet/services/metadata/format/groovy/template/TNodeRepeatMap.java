@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.xml.sax.Attributes;
 
@@ -30,6 +31,12 @@ public class TNodeRepeatMap extends TNode {
         }
         @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map) modelValue;
+
+        if (map.isEmpty()) {
+            context.append("<!-- fmt-repeat: (").append(rowKeyName).append(", ").append(rowValueName).append(") in ").append(this.key)
+                    .append(" is empty -->");
+        }
+
         int i = 0;
         int size = map.size();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -59,8 +66,7 @@ public class TNodeRepeatMap extends TNode {
     }
 
     @Override
-    protected boolean canRender(TRenderContext context) {
-        final Object modelValue = context.getModelValue(this.key);
-        return modelValue != null;
+    protected Optional<String> canRender(TRenderContext context) {
+        return Optional.absent();
     }
 }
