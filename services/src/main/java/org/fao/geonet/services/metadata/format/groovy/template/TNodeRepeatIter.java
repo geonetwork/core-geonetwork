@@ -88,8 +88,8 @@ public class TNodeRepeatIter extends TNode {
         newModelMap.put(INDEX_KEY, index);
         newModelMap.put(FIRST_KEY, index == 0);
         newModelMap.put(LAST_KEY, (total - 1) == index);
-        newModelMap.put(ODD_KEY, (index % 2) == 1);
-        newModelMap.put(EVEN_KEY, (total % 2) == 0);
+        newModelMap.put(ODD_KEY, Math.abs(index % 2) == 1);
+        newModelMap.put(EVEN_KEY, Math.abs(total % 2) == 0);
         newModelMap.put(MIDDLE_KEY, (total / 2) == index);
     }
 

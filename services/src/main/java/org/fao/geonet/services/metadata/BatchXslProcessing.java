@@ -97,21 +97,23 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 		final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 		Log.info("org.fao.geonet.services.metadata", "Get selected metadata");
         ServiceContext serviceContext = ServiceContext.get();
-        SelectionManager selectionManager =
-                            SelectionManager.getManager(serviceContext.getUserSession());
+        if (serviceContext != null) {
+            SelectionManager selectionManager =
+                    SelectionManager.getManager(serviceContext.getUserSession());
 
-        final HashSet<String> metadata;
-        synchronized (selectionManager.getSelection("metadata")) {
-            final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
-            xslProcessingReport.setTotalRecords(selection.size());
-            metadata = Sets.newHashSet(selection);
+            final HashSet<String> metadata;
+            synchronized (selectionManager.getSelection("metadata")) {
+                final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+                xslProcessingReport.setTotalRecords(selection.size());
+                metadata = Sets.newHashSet(selection);
+            }
+
+            ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
+            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(context,
+                    dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
+                    xslProcessingReport, request);
+            m.process();
         }
-
-        ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
-        BatchXslMetadataReindexer m = new BatchXslMetadataReindexer( context,
-                dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
-                xslProcessingReport, request);
-        m.process();
 
         return xslProcessingReport;
 	}

@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
@@ -11,7 +12,6 @@ import org.xml.sax.Attributes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -70,7 +70,7 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
         return new TNodeTransclude(info, qName, filteredAtts, templatePath, replace, model, extraModel);
     }
 
-    private class TNodeTransclude extends TNode {
+    private static class TNodeTransclude extends TNode {
 
         private final String templatePath;
         private final boolean replace;
@@ -106,11 +106,11 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
             Map<String, Object> fullModel = Maps.newHashMap();
             fullModel.putAll(context.getModel(true));
             for (Map.Entry<String, Object> entry : this.extraModel.entrySet()) {
-                OutputStream o = new ByteArrayOutputStream();
+                ByteArrayOutputStream o = new ByteArrayOutputStream();
                 TEXT_PARSER.parse(entry.getValue().toString()).render(new TRenderContext(o, context.getModel(true)));
-                fullModel.put(entry.getKey(), o.toString());
+                fullModel.put(entry.getKey(), new String(o.toByteArray(), Constants.ENCODING));
             }
-            fullModel.put(this.model, outputStream.toString());
+            fullModel.put(this.model, new String(outputStream.toByteArray(), Constants.ENCODING));
             final Handlers handlers = TransformationContext.getContext().getHandlers();
             final FileResult fileResult = handlers.fileResult(this.templatePath, fullModel);
             context.append(fileResult.toString());

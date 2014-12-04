@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.base.Optional;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
@@ -72,7 +73,7 @@ class TNodeTranslate extends TNode {
             block.render(new TRenderContext(stream, context.getModel(true)));
 
             try {
-                translator.translate(stream.toString()).render(context);
+                translator.translate(new String(stream.toByteArray(), Constants.CHARSET)).render(context);
             } catch (Exception e) {
                 throw new TemplateException(e);
             }

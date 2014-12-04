@@ -29,8 +29,6 @@ public class XsltFormatter implements FormatterImpl {
 
     public String format(FormatterParams fparams) throws Exception {
 
-        final String viewFilePath = fparams.viewFile.toString();
-
         String lang = fparams.config.getLang(fparams.context.getLanguage());
 
         Element root = new Element("root");

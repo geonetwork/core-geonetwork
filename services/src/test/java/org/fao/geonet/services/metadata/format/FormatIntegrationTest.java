@@ -127,6 +127,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             logger.setLevel(level);
         }
     }
+
     @Test
     public void testExec() throws Exception {
         final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false);

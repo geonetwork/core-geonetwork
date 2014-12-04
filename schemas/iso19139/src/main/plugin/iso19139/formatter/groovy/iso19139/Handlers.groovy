@@ -208,13 +208,15 @@ public class Handlers {
                     w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
                     e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
                     s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text()
+                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
+                    formatType: env.formatType.toString()
             ]
 
             def bboxData = handlers.fileResult("html/bbox.html", replacements)
-            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
+            return handlers.fileResult('html/2-level-entry.html', [
+                    label: f.nodeLabel(el),
+                    childData: bboxData])
     }
-
 
     def rootPackageEl = {
         el ->
