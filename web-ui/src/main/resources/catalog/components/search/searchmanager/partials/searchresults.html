@@ -29,10 +29,11 @@
         id="gn-record-{{md['geonet:info'].uuid}}" href=""
         data-ng-class="isSelected(md) ? 'active' : ''" data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
-          <span>{{md.title || md.defaultTitle}}</span>
+          {{md.title || md.defaultTitle}}
+          <!--<span>{{md.title || md.defaultTitle}}</span>
           <a class="pull-right" data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
             <i class="fa fa-eye"/>
-          </a>
+          </a>-->
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-3">
