@@ -56,7 +56,14 @@
              return {
                pre: function preLink(scope) {
                  scope.searchObj = {
-                   params: {}
+                   params: {
+                     _isTemplate: 's',
+                     any: '',
+                     _root: 'gmd:CI_ResponsibleParty',
+                     sortBy: 'title',
+                     sortOrder: 'reverse',
+                     resultType: 'subtemplates'
+                   }
                  };
                },
                post: function postLink(scope, iElement, iAttrs) {
@@ -71,20 +78,11 @@
                  scope.isContact = scope.templateType === 'contact';
                  scope.hasDynamicVariable = scope.variables &&
                      scope.variables.match('{.*}') !== null;
-                 scope.subtemplateFilter = '';
 
                  // Search only for contact subtemplate
                  // by default.
-                 scope.subtemplateFilter = {
-                   _isTemplate: 's',
-                   any: '',
-                   _root: 'gmd:CI_ResponsibleParty',
-                   sortBy: 'title',
-                   sortOrder: 'reverse',
-                   resultType: 'subtemplates'
-                 };
                  if (scope.filter) {
-                   angular.extend(scope.subtemplateFilter,
+                   angular.extend(scope.searchObj.params,
                        angular.fromJson(scope.filter));
                  }
 
@@ -92,9 +90,6 @@
                  scope.snippetRef = gnEditor.
                      buildXMLFieldName(scope.elementRef, scope.elementName);
 
-                 scope.getEntries = function() {
-                   scope.$broadcast('resetSearch', scope.subtemplateFilter);
-                 };
 
                  scope.add = function() {
                    gnEditor.add(gnCurrentEdit.id,

@@ -12,8 +12,8 @@
     <!-- TODO: could be nice to filter by organisation -->
     <input type="text" class="form-control"
            placeholder="{{('searchA' + templateType) | translate}}"
-           data-ng-model="subtemplateFilter.any"
-           data-ng-change="getEntries()"/>
+           data-ng-model="searchObj.params.any"
+           data-ng-change="triggerSearch()"/>
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
