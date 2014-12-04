@@ -19,23 +19,29 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-8" data-ng-show="mdWithIndexingError">
-      <div class="panel panel-default panel-danger">
-        <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
-        <div class="panel-body">
-          <table class="table table-striped">
-            <tr data-ng-repeat="md in mdWithIndexingError.metadata">
-              <td>{{md.title || md['geonet:info'].uuid}}</td>
-              <td>{{md.idxMsg}}</td>
-              <td>
-                <a href="../../?uuid={{md['geonet:info'].uuid}}">
-                  <i class="fa fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </table>
+    <div class="col-lg-8">
+      <form class="form-horizontal"
+            role="form"
+            data-ng-search-form=""
+            data-runSearch="true"
+            data-ng-show="searchResults.records.length > 0">
+        <div class="panel panel-default panel-danger">
+          <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
+          <div class="panel-body">
+              <table class="table table-striped">
+                <tr data-ng-repeat="md in searchResults.records">
+                  <td>{{md.title || md.defaultTitle}}</td>
+                  <td>
+                    <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <div data-gn-pagination="paginationInfo"/>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
   <div class="row">
