@@ -45,7 +45,8 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
                 "package/9_app_schema",
                 "package/10_portrayal_catalog",
                 "package/11_content_info",
-                "package/12_extension_info");
+                "package/12_extension_info",
+                "xsl-view");
         assertFormattersForSchema("dublin-core", listService, "full_view");
     }
 

@@ -91,6 +91,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final Path formatterDir = this.dataDirectory.getFormatterDir();
         IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         final String functionsXslName = "functions.xsl";
+        Files.deleteIfExists(formatterDir.resolve(functionsXslName));
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -116,6 +117,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             final Path formatterDir = this.dataDirectory.getFormatterDir();
             IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
             final String functionsXslName = "functions.xsl";
+            Files.deleteIfExists(formatterDir.resolve(functionsXslName));
             IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
 
@@ -174,6 +176,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.xsl");
         final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
         final Path formatterDir = this.dataDirectory.getFormatterDir();
+        Files.deleteIfExists(formatterDir.resolve("functions.xsl"));
         IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve("functions.xsl"), formatterDir, true);
         JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(applicationContextAttributeKey);
