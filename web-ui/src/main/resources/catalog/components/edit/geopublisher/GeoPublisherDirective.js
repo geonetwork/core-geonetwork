@@ -32,7 +32,7 @@
 
               var map, gsNode;
               gnGeoPublisher.getList().success(function(data) {
-                if (data != 'null') {
+                if (data != null) {
                   scope.nodes = data;
                   scope.nodeId = data[0].id;
                 }
