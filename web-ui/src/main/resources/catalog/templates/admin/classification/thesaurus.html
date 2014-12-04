@@ -178,7 +178,7 @@
 
           <!-- File import form -->
           <form id="gn-upload-thesaurus" name="gn-upload-thesaurus"
-            data-ng-show="importAs == 'file' || importAs == 'url'" action="thesaurus.upload@json"
+            data-ng-show="importAs == 'file' || importAs == 'url'" action="thesaurus.upload?_content_type=json"
             method="POST" enctype="multipart/form-data" data-file-upload="thesaurusUploadOptions">
             <span data-ng-show="importAs == 'file'"
               class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
