@@ -103,6 +103,7 @@
 			<list>
 				<!-- Check if the preAuthenticationFilter has already authenticated user -->
 				<ref bean="preFilterAuthenticationProvider" />
+				<ref bean="casAuthenticationProvider" />
 				<ref bean="geonetworkAuthenticationProvider" />
 			</list>
 		</property>

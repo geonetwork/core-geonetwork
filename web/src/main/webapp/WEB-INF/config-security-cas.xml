@@ -79,7 +79,7 @@
 		<property name="authenticationUserDetailsService">
 			<bean
 				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
-				<constructor-arg ref="casUserService" />
+				<constructor-arg ref="geonetworkAuthenticationProvider" />
 			</bean>
 		</property>
 		<property name="serviceProperties" ref="serviceProperties" />
