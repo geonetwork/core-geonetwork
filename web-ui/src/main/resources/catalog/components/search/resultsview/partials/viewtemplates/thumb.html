@@ -11,6 +11,12 @@
         <h4>
           {{::(md.title || md.defaultTitle)}}
         </h4>
+
+        <a data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
+           class="btn btn-link pull-right">
+          <i class="fa fa-pencil"></i>
+        </a>
+
         <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail pull-right" ng-if="md.getThumbnails().small"/>
         <p class="text-justify">{{::md.abstract}}</p>
         <blockquote ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</blockquote>
