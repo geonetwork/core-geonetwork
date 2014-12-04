@@ -14,15 +14,10 @@
         <property name="testClass" value="org.fao.geonet.DatabaseMigrationTest" />
     </bean>
 
-    <bean id="systemInfo" class="org.fao.geonet.SystemInfo">
-        <constructor-arg value="testing" />
-        <constructor-arg value="testing" />
-        <constructor-arg value="3.0" />
-        <constructor-arg value="SNAPSHOT" />
-        <constructor-arg value="testing" />
-        <constructor-arg value="testing" />
-        <constructor-arg value="testing" />
+    <bean id="systemInfo" class="org.fao.geonet.SystemInfo" factory-method="createForTesting">
+        <constructor-arg value="development" />
     </bean>
+
     <bean id="databaseMigrationPostProcessor" class="org.fao.geonet.DatabaseMigration">
         <property name="migrationLoader">
             <bean class="org.fao.geonet.DatabaseMigrationTest$MigrationConfigLoader" />

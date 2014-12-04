@@ -27,16 +27,16 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -83,7 +83,7 @@ public class Update extends NotInReadOnlyModeService {
 
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
-
+        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
 
 		if (!forget) {
 			int iLocalId = Integer.parseInt(id);
@@ -132,6 +132,9 @@ public class Update extends NotInReadOnlyModeService {
 			dataMan.endEditingSession(id, session);
 		}
 
+        if (!finished && !forget && commit) {
+            dataMan.startEditingSession(context, id);
+        }
 		return elResp;
 	}
 }

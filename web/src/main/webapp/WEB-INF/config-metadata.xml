@@ -253,32 +253,6 @@
 
         </service>
 
-
-        <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->
-        <service name="metadata.formatter.html" deprecated="true">
-            <class name=".services.metadata.format.Format">
-                <param name="user_xsl_dir" value="user_xsl" />
-            </class>
-            <output sheet="metadata-formatter/identity.xsl" />
-            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
-        </service>
-
-        <service name="metadata.formatter.xml" deprecated="true">
-            <class name=".services.metadata.format.Format">
-                <param name="user_xsl_dir" value="user_xsl" />
-            </class>
-            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
-        </service>
-
-        <service name="metadata.formatter.pdf" deprecated="true">
-            <class name=".services.metadata.format.Format">
-                <param name="user_xsl_dir" value="user_xsl" />
-            </class>
-            <class name=".services.metadata.format.PDF" />
-            <output file="true" />
-            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
-        </service>
-
         <!-- Massive metadata update services -->
 
         <service name="metadata.batch.replace.form">

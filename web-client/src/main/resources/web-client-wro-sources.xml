@@ -369,24 +369,6 @@
             <jsSource webappPath="apps/tabsearch/js/App.js"/>
     </declarative>
 
-    <!-- html5ui/js/App-mini.js + geonetwork-client-mini-nomap_js + geonetwork-client-mini_js -->
-    <declarative name="geonetwork-client-html5ui-app" pathOnDisk="${project.basedir}/src/main/resources">
-            <jsSource webappPath="apps/js/OpenLayers/lib/OpenLayers/Control/Panel.js"/>
-            <!--                <jsSource webappPath="apps/html5ui/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js" />
-            -->
-            <jsSource webappPath="apps/html5ui/js/GlobalFunctions.js"/>
-            <jsSource webappPath="apps/html5ui/js/Settings.js"/>
-            <jsSource webappPath="apps/html5ui/js/Templates.js"/>
-            <jsSource webappPath="apps/html5ui/js/Shortcuts.js"/>
-            <jsSource webappPath="apps/html5ui/js/map/Settings.js"/>
-            <jsSource webappPath="apps/html5ui/js/map/MapApp.js"/>
-            <jsSource webappPath="apps/html5ui/js/search/SearchApp.js"/>
-            <jsSource webappPath="apps/html5ui/js/user/LoginApp.js"/>
-            <jsSource webappPath="apps/html5ui/js/state/PermalinkProvider.js"/>
-            <jsSource webappPath="apps/html5ui/js/state/History.js"/>
-            <jsSource webappPath="apps/html5ui/js/BreadCrumb.js"/>
-            <jsSource webappPath="apps/html5ui/js/App.js"/>
-    </declarative>
     <!-- search/css/style.css
     <declarative name="geonetwork-client-style_css" pathOnDisk="${project.basedir}/src/main/resources">
          <cssSource webappPath="apps/js/OpenLayers/theme/dark/style.css" />

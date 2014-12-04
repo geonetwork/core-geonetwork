@@ -39,6 +39,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +83,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected void assertDataDirInMemoryFS(ServiceContext context) {
         final Path systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
         assertTrue(systemDataDir.getFileSystem() != FileSystems.getDefault());
+    }
+
+    protected String lineInMethod(Throwable e, Method method) {
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            if (stackTraceElement.getMethodName().equals(method.getName())) {
+                return stackTraceElement.toString();
+            }
+        }
+        throw new Error("No Method " + method.getName() + " found in " + e, e);
     }
 
     protected boolean isDefaultNode() {

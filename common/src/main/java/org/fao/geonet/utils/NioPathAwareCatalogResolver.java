@@ -1,5 +1,6 @@
 package org.fao.geonet.utils;
 
+import com.google.common.collect.Maps;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.xml.sax.InputSource;
@@ -10,7 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
@@ -18,7 +19,8 @@ import javax.xml.transform.stream.StreamSource;
 /**
 * @author Jesse on 11/4/2014.
 */
-class NioPathAwareCatalogResolver extends CatalogResolver {
+public class NioPathAwareCatalogResolver extends CatalogResolver {
+    private static final Map<Object, ResolverRewriteDirective> urlRewriteDirectives = Maps.newHashMap();
     public NioPathAwareCatalogResolver(CatalogManager catMan) {
         super(catMan);
     }
@@ -43,12 +45,18 @@ class NioPathAwareCatalogResolver extends CatalogResolver {
 
     @Override
     public Source resolve(String href, String base) throws TransformerException {
+        for (ResolverRewriteDirective urlRewrite : urlRewriteDirectives.values()) {
+            if (urlRewrite.appliesTo(href)) {
+                href = urlRewrite.rewrite(href);
+                break;
+            }
+        }
         try {
             Path resolvedResource;
             try {
                 resolvedResource = IO.toPath(new URI(href));
             } catch (URISyntaxException | IllegalArgumentException e) {
-                final Path basePath = Paths.get(new URI(base));
+                final Path basePath = IO.toPath(new URI(base));
                 resolvedResource = basePath.getParent().resolve(href);
             }
 
@@ -58,6 +66,11 @@ class NioPathAwareCatalogResolver extends CatalogResolver {
         } catch (Exception e) {
             // ignore
         }
+
         return super.resolve(href, base);
+    }
+
+    public static void addRewriteDirective(ResolverRewriteDirective urlRewrite) {
+        urlRewriteDirectives.put(urlRewrite.getKey(), urlRewrite);
     }
 }

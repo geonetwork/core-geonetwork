@@ -1,0 +1,8 @@
+<strings>
+    <testString>This String is here for testing don't delete</testString>
+    <abstract>Abstract</abstract>
+    <hierarchy>Hierarchy</hierarchy>
+    <links>Links</links>
+    <parent>Parent</parent>
+    <noUuidInLink>No uuid in link</noUuidInLink>
+</strings>

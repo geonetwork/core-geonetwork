@@ -21,22 +21,27 @@
 //===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
+import com.google.common.collect.Sets;
+
+import com.google.common.collect.Lists;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Params;
 import org.jdom.Attribute;
 import org.jdom.Element;
+
+import java.util.Iterator;
 import org.jdom.Namespace;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Set;
 import java.util.List;
 
 /**
@@ -93,20 +98,30 @@ public class Get implements Service {
             if (replace instanceof Element) {
                 String parameters = ((Element) replace).getText();
                 int endIndex = parameters.indexOf(SEPARATOR);
-                
+
                 if (endIndex == -1) {
                     continue;
                 }
                 String xpath = parameters.substring(0, endIndex);
                 String value = parameters.substring(endIndex + 1);
-                
-                List<Namespace> nss = new ArrayList<Namespace>();
 
-                @SuppressWarnings("unchecked")
-                List<Namespace> additionalNamespaces = tpl.getAdditionalNamespaces();
-                nss.addAll(additionalNamespaces);
-                nss.add(tpl.getNamespace());
-                Object o = Xml.selectSingle(tpl, xpath, nss);
+                Set<Namespace> allNamespaces = Sets.newHashSet();
+                final Iterator descendants = tpl.getDescendants();
+                while (descendants.hasNext()) {
+                    Object next = descendants.next();
+                    if (next instanceof Element) {
+                        Element element = (Element) next;
+                        allNamespaces.add(element.getNamespace());
+                        for (Object o : tpl.getAdditionalNamespaces()) {
+                            if (o instanceof Namespace) {
+                                Namespace namespace = (Namespace) o;
+                                allNamespaces.add(namespace);
+                            }
+                        }
+                    }
+                }
+
+                Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
                 if (o instanceof Element) {
                     ((Element)o).setText(value);        // Remove all content before adding the value.
                 } else if (o instanceof Attribute) {

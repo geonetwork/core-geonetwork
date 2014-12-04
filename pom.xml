@@ -340,6 +340,24 @@
             <artifactId>jrebel-maven-plugin</artifactId>
             <version>1.1.5</version>
             <configuration>
+                <addResourcesDirToRebelXml>true</addResourcesDirToRebelXml>
+                <alwaysGenerate>true</alwaysGenerate>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>generate-rebel-xml</id>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>jrebel-maven-plugin</artifactId>
+            <version>1.1.5</version>
+            <configuration>
                 <addResourcesDirToRebelXml>false</addResourcesDirToRebelXml>
                 <alwaysGenerate>true</alwaysGenerate>
             </configuration>
@@ -402,6 +420,13 @@
             <artifactId>sardine</artifactId>
             <version>5.1-GEONETWORK</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.3.7</version>
+        </dependency>
+
       <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
@@ -993,6 +1018,17 @@
           <artifactId>xom</artifactId>
           <version>1.1</version>
       </dependency>
+        <dependency>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>flying-saucer-pdf-itext5</artifactId>
+            <version>${flying-saucer}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.itextpdf</groupId>
+                    <artifactId>itextpdf</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1097,12 +1133,13 @@
     <module>web-ui-docs</module>
     <module>domain</module>
     <module>oaipmh</module>
-    <module>core</module>
     <module>schemas</module>
+    <module>core</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
+    <module>schemas-test</module>
     <module>web-client</module>
     <module>wro4j</module>
     <module>web</module>
@@ -1163,6 +1200,7 @@
     <wro.version>1.7.7</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
-    <print-lib.version>2.0.0</print-lib.version>
+    <print-lib.version>2.1.0</print-lib.version>
+    <flying-saucer>9.0.8-SNAPSHOT</flying-saucer>
   </properties>
 </project>

@@ -40,6 +40,8 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.NodeInfo;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -1391,8 +1393,7 @@ public class DataManager {
      */
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
         // READONLYMODE
-        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-        if (!gc.isReadOnly()) {
+        if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
             Integer iId = Integer.valueOf(id);
             _metadataRepository.update(iId, new Updater<Metadata>() {

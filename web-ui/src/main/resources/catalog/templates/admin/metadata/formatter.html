@@ -13,7 +13,7 @@
           <a href="" class="list-group-item"
             data-ng-repeat="f in formatters | filter:formatterSearch"
             data-ng-class="f === userSelected ? 'active' : ''" data-ng-click="selectFormatter(f)">
-            {{f}} </a>
+              {{f.schema}}/{{f.id}} </a>
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span data-ng-hide="formatterSelected == ''" data-translate="">configureFormatter</span>
-        <strong>{{formatterSelected}}</strong>
+        <strong>{{formatterSelected.schema}}/{{formatterSelected.id}}</strong>
 
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right fa fa-download"
@@ -86,7 +86,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span data-ng-hide="formatterSelected == ''" data-translate="">testFormatter</span>
-        <strong>{{formatterSelected}}</strong>
+        <strong>{{formatterSelected.schema}}/{{formatterSelected.id}}</strong>
       </div>
       <div class="panel-body">
         <form class="form-horizontal">

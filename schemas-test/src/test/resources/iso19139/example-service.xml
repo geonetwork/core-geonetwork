@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gml="http://www.opengis.net/gml"
+                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                 xmlns:gts="http://www.isotc211.org/2005/gts"
+                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:gsr="http://www.isotc211.org/2005/gsr"
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xmlns:gss="http://www.isotc211.org/2005/gss"
+                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                 xmlns:geonet="http://www.fao.org/geonetwork"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://www.isotc211.org/2005/srv/srv.xsd http://www.opengis.net/gml http://www.isotc211.org/2005/gml/gml.xsd http://www.w3.org/1999/xlink http://www.isotc211.org/2005/xlink/xlinks.xsd">
+  <gmd:fileIdentifier>
+      <gco:CharacterString>1166209a-7042-4b3e-8b48-a8a343d81a58</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language>
+      <gco:CharacterString>eng</gco:CharacterString>
+  </gmd:language>
+  <gmd:parentIdentifier>
+      <gco:CharacterString>89823-32890234-dsdf-vxvj:":;323&amp;&amp;</gco:CharacterString>
+  </gmd:parentIdentifier>
+  <gmd:parentIdentifier>
+      <gco:CharacterString>3232323--232323</gco:CharacterString>
+  </gmd:parentIdentifier>
+  <gmd:hierarchyLevel>
+      <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                        codeListValue="service"/>
+  </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName>
+      <gco:CharacterString>service - distributed Z23950 zservice</gco:CharacterString>
+  </gmd:hierarchyLevelName>
+  <gmd:contact>
+      <gmd:CI_ResponsibleParty>
+         <gmd:organisationName>
+            <gco:CharacterString>Geoffrey's Tube Australia</gco:CharacterString>
+         </gmd:organisationName>
+         <gmd:role>
+            <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                             codeListValue="resourceProvider"/>
+         </gmd:role>
+      </gmd:CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:contact>
+      <gmd:CI_ResponsibleParty>
+         <gmd:organisationName>
+            <gco:CharacterString>c2c2</gco:CharacterString>
+         </gmd:organisationName>
+         <gmd:contactInfo>
+            <gmd:CI_Contact>
+               <gmd:address>
+                  <gmd:CI_Address>
+                     <gmd:electronicMailAddress>
+                        <gco:CharacterString>dasdf@dddddd.com</gco:CharacterString>
+                     </gmd:electronicMailAddress>
+                  </gmd:CI_Address>
+               </gmd:address>
+            </gmd:CI_Contact>
+         </gmd:contactInfo>
+         <gmd:role>
+            <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                             codeListValue="distributor"/>
+         </gmd:role>
+      </gmd:CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:dateStamp>
+      <gco:DateTime>2014-11-19T08:25:15</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName>
+      <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:metadataStandardVersion>
+      <gco:CharacterString>1.0</gco:CharacterString>
+  </gmd:metadataStandardVersion>
+  <gmd:dataSetURI>
+      <gco:CharacterString>http://123.ccc.com</gco:CharacterString>
+  </gmd:dataSetURI>
+  <gmd:identificationInfo>
+      <srv:SV_ServiceIdentification>
+         <gmd:citation>
+            <gmd:CI_Citation>
+               <gmd:title>
+                  <gco:CharacterString>Test Md title</gco:CharacterString>
+               </gmd:title>
+               <gmd:alternateTitle>
+                  <gco:CharacterString>Alt title</gco:CharacterString>
+               </gmd:alternateTitle>
+               <gmd:date>
+                  <gmd:CI_Date>
+                     <gmd:date>
+                        <gco:Date>2010-03-24</gco:Date>
+                     </gmd:date>
+                     <gmd:dateType>
+                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                             codeListValue="revision"/>
+                     </gmd:dateType>
+                  </gmd:CI_Date>
+               </gmd:date>
+               <gmd:edition>
+                  <gco:CharacterString>edition KJLKJ(*()*dasdfasf</gco:CharacterString>
+               </gmd:edition>
+               <gmd:citedResponsibleParty>
+                  <gmd:CI_ResponsibleParty>
+                     <gmd:individualName>
+                        <gco:CharacterString>name</gco:CharacterString>
+                     </gmd:individualName>
+                     <gmd:organisationName>
+                        <gco:CharacterString>c2c</gco:CharacterString>
+                     </gmd:organisationName>
+                     <gmd:positionName>
+                        <gco:CharacterString>position</gco:CharacterString>
+                     </gmd:positionName>
+                     <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                           <gmd:phone>
+                              <gmd:CI_Telephone>
+                                 <gmd:voice>
+                                    <gco:CharacterString>1283091823049</gco:CharacterString>
+                                 </gmd:voice>
+                                 <gmd:facsimile>
+                                    <gco:CharacterString>121312312908098 jlkasjdfkj ;*)(*</gco:CharacterString>
+                                 </gmd:facsimile>
+                              </gmd:CI_Telephone>
+                           </gmd:phone>
+                           <gmd:address>
+                              <gmd:CI_Address>
+                                 <gmd:deliveryPoint>
+                                    <gco:CharacterString>asdfasfd</gco:CharacterString>
+                                 </gmd:deliveryPoint>
+                                 <gmd:deliveryPoint>
+                                    <gco:CharacterString>asfasfasdfsadf</gco:CharacterString>
+                                 </gmd:deliveryPoint>
+                                 <gmd:city>
+                                    <gco:CharacterString>asfasfdsa324123h,khujkl</gco:CharacterString>
+                                 </gmd:city>
+                                 <gmd:administrativeArea>
+                                    <gco:CharacterString>jkljlkdjf9()*)(23jk4j;klsajdfas admin area</gco:CharacterString>
+                                 </gmd:administrativeArea>
+                                 <gmd:postalCode>
+                                    <gco:CharacterString>postal code jlkjalkjsdlkfjaslkfj*)(*)(jklj32lk4":";;'</gco:CharacterString>
+                                 </gmd:postalCode>
+                                 <gmd:country>
+                                    <gco:CharacterString>country jkljalösdf sjfasdlö{{{df</gco:CharacterString>
+                                 </gmd:country>
+                                 <gmd:electronicMailAddress>
+                                    <gco:CharacterString>asfasf@djkd.com</gco:CharacterString>
+                                 </gmd:electronicMailAddress>
+                              </gmd:CI_Address>
+                           </gmd:address>
+                           <gmd:onlineResource>
+                              <gmd:CI_OnlineResource>
+                                 <gmd:linkage>
+                                    <gmd:URL>http://www.google.com</gmd:URL>
+                                 </gmd:linkage>
+                                 <gmd:protocol>
+                                    <gco:CharacterString>ESRI:AIMS--http-get-feature</gco:CharacterString>
+                                 </gmd:protocol>
+                                 <gmd:applicationProfile>
+                                    <gco:CharacterString>sdfakljasölkfdjasdf{{@#@#°äö$äöü</gco:CharacterString>
+                                 </gmd:applicationProfile>
+                                 <gmd:name>
+                                    <gco:CharacterString>¨name of resource é=====kjk9080998098324890(=)(=)(ç=)*4@#°@#°</gco:CharacterString>
+                                 </gmd:name>
+                                 <gmd:description>
+                                    <gco:CharacterString>Home URL</gco:CharacterString>
+                                 </gmd:description>
+                              </gmd:CI_OnlineResource>
+                           </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                     </gmd:contactInfo>
+                     <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                                         codeListValue="owner"/>
+                     </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+               </gmd:citedResponsibleParty>
+               <gmd:presentationForm>
+                  <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
+                                               codeListValue="profileDigital"/>
+               </gmd:presentationForm>
+               <gmd:series>
+                  <gmd:CI_Series>
+                     <gmd:name>
+                        <gco:CharacterString>asdfasfsadf series ääääööläölöäöääöäöäö</gco:CharacterString>
+                     </gmd:name>
+                     <gmd:issueIdentification>
+                        <gco:CharacterString>issue identification skjaöslkjfd)(=)(09832094830298340923840923</gco:CharacterString>
+                     </gmd:issueIdentification>
+                     <gmd:page>
+                        <gco:CharacterString>page page page jkljaslkfjasä$saasäölasdf</gco:CharacterString>
+                     </gmd:page>
+                  </gmd:CI_Series>
+               </gmd:series>
+               <gmd:otherCitationDetails>
+                  <gco:CharacterString>text other citation details aääöäöäàéäöäöàö@¦@#¦@}</gco:CharacterString>
+               </gmd:otherCitationDetails>
+               <gmd:ISBN>
+                  <gco:CharacterString>isbn kjaksjdfklajsflkjaskfljsdf8932409238402934iöä$ü¨öü¨öüö894</gco:CharacterString>
+               </gmd:ISBN>
+               <gmd:ISSN>
+                  <gco:CharacterString>ISSN jkjaskjfda87987398423jkhalsdföäöäöàéäö</gco:CharacterString>
+               </gmd:ISSN>
+            </gmd:CI_Citation>
+         </gmd:citation>
+         <gmd:abstract>
+            <gco:CharacterString>This catalog is for registering all metadata records held by the Geofffrey's Tube Palace Hotel Ballroom.</gco:CharacterString>
+         </gmd:abstract>
+         <gmd:purpose>
+            <gco:CharacterString>purpose jkjkjdfjalskjfaskl kj kj k klj lkjöäöäü¨ü</gco:CharacterString>
+         </gmd:purpose>
+         <gmd:credit>
+            <gco:CharacterString>¨credit id jklajsdlkfjas{{}[23ä$äöäääöä$öäö32498uijsdfjjklsaf</gco:CharacterString>
+         </gmd:credit>
+         <gmd:status>
+            <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"
+                                 codeListValue="obsolete"/>
+         </gmd:status>
+         <gmd:pointOfContact>
+            <gmd:CI_ResponsibleParty>
+               <gmd:individualName>
+                  <gco:CharacterString>name c2ccc</gco:CharacterString>
+               </gmd:individualName>
+               <gmd:organisationName>
+                  <gco:CharacterString>asdf</gco:CharacterString>
+               </gmd:organisationName>
+               <gmd:contactInfo>
+                  <gmd:CI_Contact>
+                     <gmd:address>
+                        <gmd:CI_Address>
+                           <gmd:electronicMailAddress gco:nilReason="missing">
+                              <gco:CharacterString/>
+                           </gmd:electronicMailAddress>
+                        </gmd:CI_Address>
+                     </gmd:address>
+                  </gmd:CI_Contact>
+               </gmd:contactInfo>
+               <gmd:role>
+                  <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                                   codeListValue="distributor"/>
+               </gmd:role>
+            </gmd:CI_ResponsibleParty>
+         </gmd:pointOfContact>
+         <gmd:resourceMaintenance>
+            <gmd:MD_MaintenanceInformation>
+               <gmd:maintenanceAndUpdateFrequency>
+                  <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+                                                   codeListValue="continual"/>
+               </gmd:maintenanceAndUpdateFrequency>
+               <gmd:dateOfNextUpdate>
+                  <gco:Date>2014-11-11</gco:Date>
+               </gmd:dateOfNextUpdate>
+               <gmd:userDefinedMaintenanceFrequency>
+                  <gts:TM_PeriodDuration>-P-1Y0M0DT0H0M0S</gts:TM_PeriodDuration>
+               </gmd:userDefinedMaintenanceFrequency>
+            </gmd:MD_MaintenanceInformation>
+         </gmd:resourceMaintenance>
+         <gmd:graphicOverview/>
+         <gmd:graphicOverview>
+            <gmd:MD_BrowseGraphic>
+               <gmd:fileName>
+                  <gco:CharacterString>http://localhost:8080/geonetwork/srv/eng//resources.get?uuid=1166209a-7042-4b3e-8b48-a8a343d81a58&amp;fname=fname_s.png</gco:CharacterString>
+               </gmd:fileName>
+               <gmd:fileDescription>
+                  <gco:CharacterString>thumbnail</gco:CharacterString>
+               </gmd:fileDescription>
+               <gmd:fileType>
+                  <gco:CharacterString>png</gco:CharacterString>
+               </gmd:fileType>
+            </gmd:MD_BrowseGraphic>
+         </gmd:graphicOverview>
+         <gmd:graphicOverview>
+            <gmd:MD_BrowseGraphic>
+               <gmd:fileName>
+                  <gco:CharacterString>http://localhost:8080/geonetwork/srv/eng//resources.get?uuid=1166209a-7042-4b3e-8b48-a8a343d81a58&amp;fname=fname</gco:CharacterString>
+               </gmd:fileName>
+               <gmd:fileDescription>
+                  <gco:CharacterString>large_thumbnail</gco:CharacterString>
+               </gmd:fileDescription>
+               <gmd:fileType>
+                  <gco:CharacterString>???</gco:CharacterString>
+               </gmd:fileType>
+            </gmd:MD_BrowseGraphic>
+         </gmd:graphicOverview>
+         <gmd:descriptiveKeywords>
+            <gmd:MD_Keywords>
+               <gmd:keyword>
+                  <gco:CharacterString>Australia</gco:CharacterString>
+               </gmd:keyword>
+               <gmd:type>
+                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="place"/>
+               </gmd:type>
+               <gmd:thesaurusName>
+                  <gmd:CI_Citation>
+                     <gmd:title>
+                        <gco:CharacterString>Region</gco:CharacterString>
+                     </gmd:title>
+                     <gmd:date>
+                        <gmd:CI_Date>
+                           <gmd:date>
+                              <gco:Date>2006-09-22</gco:Date>
+                           </gmd:date>
+                           <gmd:dateType>
+                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </gmd:dateType>
+                        </gmd:CI_Date>
+                     </gmd:date>
+                     <gmd:identifier>
+                        <gmd:MD_Identifier>
+                           <gmd:code>
+                              <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng//thesaurus.download?ref=external.place.regions">geonetwork.thesaurus.external.place.regions</gmx:Anchor>
+                           </gmd:code>
+                        </gmd:MD_Identifier>
+                     </gmd:identifier>
+                  </gmd:CI_Citation>
+               </gmd:thesaurusName>
+            </gmd:MD_Keywords>
+         </gmd:descriptiveKeywords>
+         <gmd:resourceSpecificUsage>
+            <gmd:MD_Usage>
+               <gmd:specificUsage>
+                  <gco:CharacterString>resource usage zaz élkjalskf908908098öääö</gco:CharacterString>
+               </gmd:specificUsage>
+               <gmd:userDeterminedLimitations>
+                  <gco:CharacterString>user determinied limitations jalksjflkasdf9890802934234{öäöäöü¨è!è</gco:CharacterString>
+               </gmd:userDeterminedLimitations>
+               <gmd:userContactInfo>
+                  <gmd:CI_ResponsibleParty>
+                     <gmd:organisationName>
+                        <gco:CharacterString>cc2c2c2c2c2casdf</gco:CharacterString>
+                     </gmd:organisationName>
+                     <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                           <gmd:address>
+                              <gmd:CI_Address>
+                                 <gmd:electronicMailAddress gco:nilReason="missing">
+                                    <gco:CharacterString/>
+                                 </gmd:electronicMailAddress>
+                              </gmd:CI_Address>
+                           </gmd:address>
+                        </gmd:CI_Contact>
+                     </gmd:contactInfo>
+                     <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                                         codeListValue=""/>
+                     </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+               </gmd:userContactInfo>
+            </gmd:MD_Usage>
+         </gmd:resourceSpecificUsage>
+         <gmd:resourceConstraints>
+            <gmd:MD_LegalConstraints>
+               <gmd:useLimitation>
+                  <gco:CharacterString>use limitation kjalskjflaöksj293084029342934öäöäöüöüöölölkälkioj213489uaklsjmxcnvkjn2349082748923</gco:CharacterString>
+               </gmd:useLimitation>
+               <gmd:accessConstraints>
+                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                                          codeListValue="license"/>
+               </gmd:accessConstraints>
+               <gmd:useConstraints>
+                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                                          codeListValue="intellectualPropertyRights"/>
+               </gmd:useConstraints>
+            </gmd:MD_LegalConstraints>
+         </gmd:resourceConstraints>
+         <gmd:aggregationInfo>
+            <gmd:MD_AggregateInformation>
+               <gmd:aggregateDataSetName>
+                  <gmd:CI_Citation>
+                     <gmd:title>
+                        <gco:CharacterString>aggregation dataset name</gco:CharacterString>
+                     </gmd:title>
+                     <gmd:alternateTitle>
+                        <gco:CharacterString>aggregation dataset name alt</gco:CharacterString>
+                     </gmd:alternateTitle>
+                     <gmd:date>
+                        <gmd:CI_Date>
+                           <gmd:date>
+                              <gco:Date>2014-11-04</gco:Date>
+                           </gmd:date>
+                           <gmd:dateType>
+                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </gmd:dateType>
+                        </gmd:CI_Date>
+                     </gmd:date>
+                  </gmd:CI_Citation>
+               </gmd:aggregateDataSetName>
+               <gmd:aggregateDataSetIdentifier>
+                  <gmd:RS_Identifier>
+                     <gmd:code>
+                        <gmx:FileName src="http://localhost:8080/geonetwork/images/harvesting/esri.gif">aggregate id resource id 234890234'assdfg'323323323'nnjnjäöä23ö423löä32ä4</gmx:FileName>
+                     </gmd:code>
+                  </gmd:RS_Identifier>
+               </gmd:aggregateDataSetIdentifier>
+               <gmd:associationType>
+                  <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+                                              codeListValue="largerWorkCitation"/>
+               </gmd:associationType>
+            </gmd:MD_AggregateInformation>
+         </gmd:aggregationInfo>
+         <srv:serviceType>
+            <gco:LocalName>OGC:WMS</gco:LocalName>
+         </srv:serviceType>
+         <srv:serviceTypeVersion>
+            <gco:CharacterString>2.1.1.1</gco:CharacterString>
+         </srv:serviceTypeVersion>
+         <srv:accessProperties>
+            <gmd:MD_StandardOrderProcess>
+               <gmd:fees>
+                  <gco:CharacterString>fees jaöslkfjalskjf0239482093usdkljfaksjäöäüöüöü[[öäöäöàéàéaJHKJHFJKHDF</gco:CharacterString>
+               </gmd:fees>
+               <gmd:plannedAvailableDateTime>
+                  <gco:Date>2014-07-17</gco:Date>
+               </gmd:plannedAvailableDateTime>
+               <gmd:orderingInstructions>
+                  <gco:CharacterString>ordering instructions kjlkajsflkjasdf7898JKSDFJàLJàKJéKLSJDF)(=/)(JHSKFD</gco:CharacterString>
+               </gmd:orderingInstructions>
+               <gmd:turnaround>
+                  <gco:CharacterString>turn around ...jkla skjf aslkfj()=(=)=)öäö$äöàéàéäöäéàöäaJKLKJSDLKJFLKEJOIJFKLJSLDSD</gco:CharacterString>
+               </gmd:turnaround>
+               <gmd:turnaround>
+                  <gco:CharacterString>turn aa kajslkfjaslkjLKJLKJLKSDJF)(/()/)(éàéàéàéà</gco:CharacterString>
+               </gmd:turnaround>
+            </gmd:MD_StandardOrderProcess>
+         </srv:accessProperties>
+         <srv:accessProperties>
+            <gmd:MD_StandardOrderProcess/>
+         </srv:accessProperties>
+         <srv:extent>
+            <gmd:EX_Extent>
+               <gmd:description>
+                  <gco:CharacterString>ext desc australia akljlösjdflkjLKéJLKJSDLFJKSLDJF£PK£LKSLKDJFSI())=()("*U+"*)=(09820934</gco:CharacterString>
+               </gmd:description>
+               <gmd:geographicElement>
+                  <gmd:EX_GeographicBoundingBox>
+                     <gmd:westBoundLongitude>
+                        <gco:Decimal>112</gco:Decimal>
+                     </gmd:westBoundLongitude>
+                     <gmd:eastBoundLongitude>
+                        <gco:Decimal>154</gco:Decimal>
+                     </gmd:eastBoundLongitude>
+                     <gmd:southBoundLatitude>
+                        <gco:Decimal>-44</gco:Decimal>
+                     </gmd:southBoundLatitude>
+                     <gmd:northBoundLatitude>
+                        <gco:Decimal>-9</gco:Decimal>
+                     </gmd:northBoundLatitude>
+                  </gmd:EX_GeographicBoundingBox>
+               </gmd:geographicElement>
+            </gmd:EX_Extent>
+         </srv:extent>
+         <srv:coupledResource>
+            <srv:SV_CoupledResource>
+               <srv:operationName>
+                  <gco:CharacterString>couped resource op name asdfasfds809809asdfjkljslkdfsadf</gco:CharacterString>
+               </srv:operationName>
+               <srv:identifier>
+                  <gco:CharacterString>couped resource identifier -- 12312'12312asdföljasf'asdjfsalöfsaf-asdfasf-asf--asf-sJKLJLKJSDLKJFSLK$öölaskldflkjlk</gco:CharacterString>
+               </srv:identifier>
+               <gco:ScopedName/>
+               <gco:ScopedName/>
+            </srv:SV_CoupledResource>
+         </srv:coupledResource>
+         <srv:coupledResource>
+            <srv:SV_CoupledResource>
+               <srv:operationName>
+                  <gco:CharacterString>couped resource op name2 asdfasdfjLKJéLKJSDF=)S(=)(=)(=)(?)=()=àéàéàéà</gco:CharacterString>
+               </srv:operationName>
+               <srv:identifier>
+                  <gco:CharacterString>couped resource identifier2 JLKSJDéLKJSéDF)=()=(=)(=)()=*(=)(ç=)"*çLàlöälaäölsdpfükasöjfasufwijrksnfdkjsaf</gco:CharacterString>
+               </srv:identifier>
+            </srv:SV_CoupledResource>
+         </srv:coupledResource>
+         <srv:couplingType gco:nilReason="unknown">
+            <srv:SV_CouplingType codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#SV_CouplingType"
+                                 codeListValue=""/>
+         </srv:couplingType>
+         <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+               <srv:operationName>
+                  <gco:CharacterString>ASDD nodes zserver</gco:CharacterString>
+               </srv:operationName>
+               <srv:DCP gco:nilReason="unknown">
+                  <srv:DCPList codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
+                               codeListValue=""/>
+               </srv:DCP>
+               <srv:operationDescription>
+                  <gco:CharacterString>op desc op desc op desc op desc kjaslkjflksajfölkasjfd98f02380342lksjfaslf$sölä$lösäflakälöas</gco:CharacterString>
+               </srv:operationDescription>
+               <srv:invocationName>
+                  <gco:CharacterString>invocation name contains operationö kJéLKjöalksjf aslk)=(=)(23j4kl2jkasjdf$laskfklasjflköasf</gco:CharacterString>
+               </srv:invocationName>
+               <srv:parameters>
+                  <srv:SV_Parameter>
+                     <srv:name>
+                        <gco:aName>
+                           <gco:CharacterString>param ajsölkfjasölkf9889234jk2hjkashdfjksf</gco:CharacterString>
+                        </gco:aName>
+                        <gco:attributeType>
+                           <gco:TypeName>
+                              <gco:aName>
+                                 <gco:CharacterString>BOOLEAN</gco:CharacterString>
+                              </gco:aName>
+                           </gco:TypeName>
+                        </gco:attributeType>
+                     </srv:name>
+                     <srv:direction>
+                        <srv:SV_ParameterDirection>in</srv:SV_ParameterDirection>
+                     </srv:direction>
+                     <srv:description>
+                        <gco:CharacterString>param desc ljalksjdflökajsdf89273498273498kmjfasjfjkhjHKJHFDS)(FZSF7zuihjaskdf</gco:CharacterString>
+                     </srv:description>
+                     <srv:optionality>
+                        <gco:CharacterString>optionalitz jaslkjfalskyx7f9879898/)(/(SDHFSKJFHSKJhakjhfasädölsölksdf</gco:CharacterString>
+                     </srv:optionality>
+                     <srv:repeatability>
+                        <gco:Boolean>true</gco:Boolean>
+                     </srv:repeatability>
+                     <srv:valueType>
+                        <gco:TypeName>
+                           <gco:aName>
+                              <gco:CharacterString>FLOAT</gco:CharacterString>
+                           </gco:aName>
+                        </gco:TypeName>
+                     </srv:valueType>
+                  </srv:SV_Parameter>
+               </srv:parameters>
+               <srv:connectPoint>
+                  <gmd:CI_OnlineResource>
+                     <gmd:linkage>
+                        <gmd:URL>z3950://www.google.com:6668/geonetwork</gmd:URL>
+                     </gmd:linkage>
+                     <gmd:protocol>
+                        <gco:CharacterString>ESRI:AIMS--http-get-image</gco:CharacterString>
+                     </gmd:protocol>
+                     <gmd:description>
+                        <gco:CharacterString>ASDD Z3950 zserver</gco:CharacterString>
+                     </gmd:description>
+                     <gmd:function>
+                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                                                   codeListValue="search"/>
+                     </gmd:function>
+                  </gmd:CI_OnlineResource>
+               </srv:connectPoint>
+               <srv:dependsOn/>
+               <srv:dependsOn/>
+            </srv:SV_OperationMetadata>
+         </srv:containsOperations>
+         <srv:operatesOn uuidref=""
+                         xlink:href="http://localhost:8080/geonetwork/srv/eng//csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id="/>
+      </srv:SV_ServiceIdentification>
+  </gmd:identificationInfo>
+</gmd:MD_Metadata>

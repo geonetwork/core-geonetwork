@@ -92,6 +92,7 @@ public class GeonetTestFixture {
                                    !entry.getFileName().toString().startsWith(".") &&
                                    !entry.getFileName().toString().endsWith(".iml") &&
                                    !entry.toString().contains("metadata_data") &&
+                                   !entry.toString().contains("removed") &&
                                    !entry.toString().contains("metadata_subversion") &&
                                    !entry.toString().contains("upload") &&
                                    !entry.toString().contains("resources" + File.separator + "xml");

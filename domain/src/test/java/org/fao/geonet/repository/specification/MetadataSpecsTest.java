@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
 import static org.fao.geonet.repository.specification.MetadataSpecs.*;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasExtra;
 
 /**
  * Test for MetadataSpecs.
@@ -196,6 +197,18 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         Metadata md1 = _repository.save(newMetadata(_inc));
         Specification<Metadata> spec = hasSource(md1.getSourceInfo().getSourceId());
         assertFindsCorrectMd(md1, spec, true);
+    }
+
+    @Test
+    public void testHasExtra() throws Exception {
+        final Metadata entity = newMetadata(_inc);
+        final String extra = "extra data";
+        entity.getDataInfo().setExtra(extra);
+        Metadata md1 = _repository.save(entity);
+
+        assertFindsCorrectMd(md1, hasExtra(extra), true);
+
+        assertEquals(0, _repository.count(hasExtra("wrong extra")));
     }
 
     private void assertFindsCorrectMd(Metadata md1, Specification<Metadata> spec, boolean addNewMetadata) {

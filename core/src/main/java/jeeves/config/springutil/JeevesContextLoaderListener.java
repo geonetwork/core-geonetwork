@@ -1,24 +1,18 @@
 package jeeves.config.springutil;
 
 import com.google.common.io.Files;
+import jeeves.server.JeevesEngine;
 import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import jeeves.server.JeevesEngine;
-import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.context.Lifecycle;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  * Initializes the ApplicationContexts for each node.
@@ -55,9 +49,8 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             }
 
-
             JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(overrides, parentAppContext,
-                    commonConfigFile, node.toURI().toString());
+                    "classpath:mapfish-spring-application-context.xml", commonConfigFile, node.toURI().toString());
 
             jeevesAppContext.setServletContext(servletContext);
             jeevesAppContext.refresh();

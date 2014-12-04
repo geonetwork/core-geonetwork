@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
@@ -898,7 +897,7 @@ public class Thesaurus {
             return this.defaultNamespace;
         }
 
-    public Map<String, String> getTitles(ServiceContext context) throws JDOMException, IOException {
+    public Map<String, String> getTitles(ApplicationContext context) throws JDOMException, IOException {
         return LangUtils.translate(context, getKey());
     }
 }

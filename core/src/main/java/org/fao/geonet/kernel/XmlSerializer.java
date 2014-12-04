@@ -76,7 +76,7 @@ public abstract class XmlSerializer {
 	        config = new ThreadLocalConfiguration();
 	        configThreadLocal.set(config);
 	    }
-	    
+
 	    return config;
 	}
 	public static void clearThreadLocal() {
@@ -120,10 +120,13 @@ public abstract class XmlSerializer {
 		if (metadata == null)
 			return null;
 
-		String xmlData = metadata.getData();
-		Element metadataXml = Xml.loadString(xmlData, false);
+        return removeHiddenElements(isIndexingTask, metadata);
+	}
 
-		if (!isIndexingTask) {
+    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+        String id = String.valueOf(metadata.getId());
+        Element metadataXml = metadata.getXmlData(false);
+        if (!isIndexingTask) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -133,36 +136,36 @@ public abstract class XmlSerializer {
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
             boolean filterEditOperationElements = editXpathFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
-            if(context != null) {
+            if (context != null) {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 AccessManager am = gc.getBean(AccessManager.class);
                 if (editXpathFilter != null) {
                     boolean canEdit = am.canEdit(context, id);
-                    if(canEdit) {
+                    if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
                     boolean canDownload = am.canDownload(context, id);
-                    if(!canDownload) {
+                    if (!canDownload) {
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
                 Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
                     boolean canDynamic = am.canDynamic(context, id);
-                    if(!canDynamic) {
-                      removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                    if (!canDynamic) {
+                        removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
                     }
                 }
-    		}
-    		if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+            }
+            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
                 removeFilteredElement(metadataXml, editXpathFilter, namespaces);
             }
-		}
-		return (Element) metadataXml.detach();
-	}
+        }
+        return metadataXml;
+    }
 
     private void xpath(StringBuilder buffer, Element next) {
 		if(next.getParentElement() != null) {

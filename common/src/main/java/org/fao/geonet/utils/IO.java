@@ -194,23 +194,44 @@ public final class IO {
     }
 
     public static void deleteFileOrDirectory(Path path) throws IOException {
+        deleteFileOrDirectory(path, false);
+    }
+    public static void deleteFileOrDirectory(Path path, final boolean ignoreErrors) throws IOException {
         if (Files.isDirectory(path)) {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
+                    try {
+                        Files.delete(file);
+                    } catch (final Throwable t) {
+                        if (!ignoreErrors) {
+                            throw t;
+                        }
+                    }
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
+                    try {
+                        Files.delete(dir);
+                    } catch (final Throwable t) {
+                        if (!ignoreErrors) {
+                            throw t;
+                        }
+                    }
                     return FileVisitResult.CONTINUE;
                 }
 
             });
         } else if (Files.isRegularFile(path)) {
-            Files.delete(path);
+            try {
+                Files.delete(path);
+            } catch (final Throwable t) {
+                if (!ignoreErrors) {
+                    throw t;
+                }
+            }
         }
     }
     public static void touch(Path file) throws IOException{

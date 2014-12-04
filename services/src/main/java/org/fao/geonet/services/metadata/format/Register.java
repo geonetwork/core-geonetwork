@@ -23,7 +23,10 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
+
 import com.vividsolutions.jts.util.Assert;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
@@ -41,6 +44,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 
+import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XSL_FILENAME;
+
 /**
  * Upload a formatter bundle.  Uploaded file can be a single xsl or a zip file containing
  * resources as well as the xsl file.  If a zip the zip must contain view.xsl which is the 
@@ -50,10 +55,9 @@ import java.util.Iterator;
  *  
  * @author jeichar
  */
-public class Register extends AbstractFormatService {
+public class Register extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String fileName = Util.getParam(params, Params.FNAME);
         String xslid = Util.getParam(params, Params.ID, null);
         if (xslid == null) {
@@ -65,9 +69,9 @@ public class Register extends AbstractFormatService {
         }
 
         checkLegalId(Params.ID, xslid);
+        Path userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
         Path newBundle = userXslDir.resolve(xslid);
-        IO.deleteFileOrDirectory(newBundle);
-
+        
         Path uploadedFile = context.getUploadDir().resolve(fileName);
 
         Files.createDirectories(newBundle);
@@ -79,7 +83,7 @@ public class Register extends AbstractFormatService {
                 if (viewFile == null) {
                     throw new IllegalArgumentException(
                             "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
-                }
+        }
                 ZipUtil.extract(zipFs, newBundle);
 
             } catch (IOException e) {

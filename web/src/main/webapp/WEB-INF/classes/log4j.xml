@@ -26,174 +26,182 @@
     </appender>
 
     <!-- Geonetwork module (and submodule) logging -->
-    <logger name="geonetwork" additivity="false">
+    <logger name="geonetwork">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="geonetwork.search" additivity="false">
+    <logger name="geonetwork.search">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.editor" additivity="false">
+    <logger name="geonetwork.editor">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.schemamanager" additivity="false">
+    <logger name="geonetwork.schemamanager">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.thesaurus-man" additivity="false">
+    <logger name="geonetwork.thesaurus-man">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.accessmanager" additivity="false">
+    <logger name="geonetwork.accessmanager">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.thesaurus" additivity="false">
+    <logger name="geonetwork.thesaurus">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.editorexpandelement" additivity="false">
+    <logger name="geonetwork.editorexpandelement">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.editorfillelement" additivity="false">
+    <logger name="geonetwork.editorfillelement">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.LanguageDetector" additivity="false">
+    <logger name="geonetwork.LanguageDetector">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.index" additivity="false">
+    <logger name="geonetwork.index">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.csw" additivity="false">
+    <logger name="geonetwork.csw">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.csw.search" additivity="false">
+    <logger name="geonetwork.csw.search">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.harvester" additivity="false">
+    <logger name="geonetwork.formatter">
+        <level value="WARN" />
+    </logger>
+    <logger name="geonetwork.harvester">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="geonetwork.lucene" additivity="false">
+    <logger name="geonetwork.lucene">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.ldap" additivity="false">
+    <logger name="geonetwork.ldap">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.lucene.tracking" additivity="false">
+    <logger name="geonetwork.lucene.tracking">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.mef" additivity="false">
+    <logger name="geonetwork.mef">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.z3950server" additivity="false">
+    <logger name="geonetwork.z3950server">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.z3950" additivity="false">
+    <logger name="geonetwork.z3950">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.sru" additivity="false">
+    <logger name="geonetwork.sru">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.sru.search" additivity="false">
+    <logger name="geonetwork.sru.search">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.GeoServerPublisher" additivity="false">
+    <logger name="geonetwork.GeoServerPublisher">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.GeoServerRest" additivity="false">
+    <logger name="geonetwork.GeoServerRest">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.data.directory" additivity="false">
+    <logger name="geonetwork.data.directory">
         <level value="WARN" />
     </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
-    <logger name="jeeves" additivity="false">
+    <logger name="jeeves">
         <level value="DEBUG" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="jeeves.dbms" additivity="false">
+    <logger name="jeeves.dbms">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.dbms.resourcetracking" additivity="false">
+    <logger name="jeeves.dbms.resourcetracking">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.monitor" additivity="false">
+    <logger name="jeeves.monitor">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.engine" additivity="false">
+    <logger name="jeeves.engine">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.dbmspool" additivity="false">
+    <logger name="jeeves.dbmspool">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.resources" additivity="false">
+    <logger name="jeeves.resources">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.xlinkprocessor" additivity="false">
+    <logger name="jeeves.xlinkprocessor">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.transformerFactory" additivity="false">
+    <logger name="jeeves.transformerFactory">
         <level value="WARN" />
     </logger>
-    <logger name="jeeves.xmlresolver" additivity="false">
+    <logger name="jeeves.xmlresolver">
         <level value="WARN" />
     </logger>
 
 
 
     <!--  Spring logging configuration -->
-    <logger name="org.springframework" additivity="false">
+    <logger name="org.springframework">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.springframework.beans" additivity="false">
+    <logger name="org.springframework.beans">
         <level value="WARN" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.springframework.security" additivity="false">
+    <logger name="org.springframework.security">
         <level value="WARN" />
     </logger>
-    <logger name="org.springframework.security.ldap" additivity="false">
+    <logger name="org.springframework.security.ldap">
         <level value="WARN" />
     </logger>
-    <logger name="org.springframework.aop.framework.CglibAopProxy" additivity="false">
+    <logger name="org.springframework.aop.framework.CglibAopProxy">
         <level value="ERROR" />
     </logger>
 
     <!--  JZKIT logging configuration -->
-    <logger name="com.k_int" additivity="false">
+    <logger name="com.k_int">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.jzkit" additivity="false">
+    <logger name="org.jzkit">
         <level value="WARN" />
     </logger>
-    <logger name="org.jzkit.a2j" additivity="false">
+    <logger name="org.jzkit.a2j">
         <level value="WARN" />
     </logger>
-    <logger name="org.jzkit.search.impl.LRUCache" additivity="false">
+    <logger name="org.jzkit.search.impl.LRUCache">
         <level value="WARN" />
     </logger>
-    <logger name="ro.isdc.wro.http" additivity="false">
+    <logger name="ro.isdc.wro.http">
         <level value="DEBUG" />
         <appender-ref ref="allConsoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.SQL" additivity="false">
+    <logger name="org.hibernate.SQL">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.type" additivity="false">
+    <logger name="org.hibernate.type">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.tool.hbm2ddl" additivity="false">
+    <logger name="org.hibernate.tool.hbm2ddl">
         <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="org.xhtmlrenderer">
+        <level value="TRACE" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>

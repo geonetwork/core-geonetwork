@@ -8,10 +8,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 " >
 
+	<import resource="config-spring-env.xml" />
 	<import resource="config-security/config-security.xml" />
 	<import resource="classpath:JZkitApplicationContext.xml" />
 
-	<import resource="config-spring-env.xml" />
 	<import resource="config-db/initial_data.xml" />
 	<import resource="config-print/config-spring-print.xml" />
 
@@ -80,5 +80,4 @@
     (https://hibernate.atlassian.net/browse/HHH-5538).
     -->
 	</util:map>
-
 </beans>

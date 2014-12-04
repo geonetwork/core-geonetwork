@@ -23,7 +23,11 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
@@ -43,17 +47,20 @@ import java.nio.file.Path;
  * 
  * @author jeichar
  */
-public class Download extends AbstractFormatService {
+public class Download extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String xslid = Util.getParam(params, Params.ID, null);
-        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
-
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        Path schemaDir = null;
+        if (schema != null) {
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
+        }
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
+        
         try {
-
-            File tmpDir = (File) context.getServlet().getServletContext()
-                    .getAttribute("javax.servlet.context.tempdir");
+            
+            File tmpDir = (File) context.getServlet().getServletContext().getAttribute("javax.servlet.context.tempdir");
             Path zippedFile = Files.createTempFile(tmpDir.toPath(), xslid, ".zip");
 
             try (FileSystem zipFs = ZipUtil.createZipFs(zippedFile);
@@ -63,7 +70,7 @@ public class Download extends AbstractFormatService {
                     IO.copyDirectoryOrFile(path, root, true);
                 }
             }
-
+            
             return BinaryFile.encode(200, zippedFile, xslid + ".zip", true).getElement();
         } catch (IOException e) {
             throw new RuntimeException("Error occured while trying to download file");

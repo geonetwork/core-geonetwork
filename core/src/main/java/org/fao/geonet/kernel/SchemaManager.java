@@ -48,6 +48,8 @@ import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.NioPathAwareCatalogResolver;
+import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -143,6 +145,8 @@ public class SchemaManager {
         this.defaultSchema = schemaManager.defaultSchema;
         this.createOrUpdateSchemaCatalog = schemaManager.createOrUpdateSchemaCatalog;
 
+        addResolverRewriteDirectives(dataDir);
+
         this.hmSchemas.clear();
         this.hmSchemas.putAll(schemaManager.hmSchemas);
 
@@ -152,7 +156,13 @@ public class SchemaManager {
         numberOfCoreSchemasAdded = schemaManager.numberOfCoreSchemasAdded;
 
     }
-	/**
+
+    private void addResolverRewriteDirectives(GeonetworkDataDirectory dataDir) {
+        NioPathAwareCatalogResolver.addRewriteDirective(new PrefixUrlRewrite("sharedFormatterDir/",
+                dataDir.getFormatterDir().toAbsolutePath().toUri() + "/"));
+    }
+
+    /**
      * initialize and configure schema manager. should only be on startup.
 		*
 		* @param basePath the web app base path
@@ -941,7 +951,7 @@ public class SchemaManager {
             if (Files.exists(filePath)) {
                 Element config = new Element("xml");
                 config.setAttribute("name", schemaName);
-                config.setAttribute("base", locBase.toString());
+                config.setAttribute("base", locBase.toUri().toString());
                 config.setAttribute("file", fname);
                 if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile " + Xml.getString(config));
@@ -1776,8 +1786,10 @@ public class SchemaManager {
         Files.createDirectories(schemasDir);
 
 		Path webAppDirSchemaXSD = schemasDir.resolve(name);
-		IO.deleteFileOrDirectory(webAppDirSchemaXSD);
-        Files.createDirectories(webAppDirSchemaXSD);
+		IO.deleteFileOrDirectory(webAppDirSchemaXSD, true);
+        if (!Files.exists(webAppDirSchemaXSD)) {
+            Files.createDirectories(webAppDirSchemaXSD);
+        }
 
 		// copy all XSDs from schema plugin dir to webapp schema dir
 
