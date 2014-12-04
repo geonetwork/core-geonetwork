@@ -72,7 +72,11 @@
                   }
                   return scope.hasErrors ? 'panel-danger' : 'panel-success';
                 }
-                return '';
+                if (type === 'icon') {
+                  return 'fa-fw';
+                } else {
+                  return '';
+                }
               };
 
               // When saving is done, refresh validation report
