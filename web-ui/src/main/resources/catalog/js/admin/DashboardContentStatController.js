@@ -170,14 +170,14 @@
     function($scope) {
       $scope.searchObj = {
         params: $scope.statistics.md.popularity
-      }
+      };
     }]);
   module.controller('GnDashboardContentStatControllerRating', [
     '$scope',
     function($scope) {
       $scope.searchObj = {
         params: $scope.statistics.md.rating
-      }
+      };
     }]);
 
 })();

@@ -35,7 +35,8 @@
           scope.initialMaxItems = initialMaxItems;
           scope.maxItems = initialMaxItems;
           scope.toggle = function() {
-            scope.maxItems = (scope.maxItems == Infinity) ? initialMaxItems : Infinity;
+            scope.maxItems = (scope.maxItems == Infinity) ?
+                initialMaxItems : Infinity;
           };
         }
       };

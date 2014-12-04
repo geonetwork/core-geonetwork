@@ -69,7 +69,8 @@
             var isDateTime = scope.value.indexOf('T') !== -1;
             var tokens = scope.value.split('T');
             scope.date = new Date(isDateTime ? tokens[0] : scope.value);
-            scope.time = isDateTime ? moment(tokens[1], 'HH:mm:ss').toDate() : undefined;
+            scope.time = isDateTime ? moment(tokens[1], 'HH:mm:ss').toDate() :
+                undefined;
           }
           if (scope.dateTypeSupported !== true) {
             scope.dateInput = scope.value;
@@ -118,16 +119,16 @@
             } else if (scope.mode === 'year') {
               scope.dateTime = scope.year;
             } else if (scope.mode === 'month') {
-              scope.dateTime = $filter('date')(scope.month, "yyyy-MM");
+              scope.dateTime = $filter('date')(scope.month, 'yyyy-MM');
             } else if (scope.time) {
               tag = scope.tagName !== undefined ?
                   scope.tagName : 'gco:DateTime';
-              var time = $filter('date')(scope.time, "HH:mm:ss");
+              var time = $filter('date')(scope.time, 'HH:mm:ss');
               // TODO: Set seconds, Timezone ?
-              scope.dateTime = $filter('date')(scope.date, "yyyy-MM-dd");
+              scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
               scope.dateTime += 'T' + time;
             } else {
-              scope.dateTime = $filter('date')(scope.date, "yyyy-MM-dd");
+              scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
             }
             if (tag === '') {
               scope.xmlSnippet = scope.dateTime;

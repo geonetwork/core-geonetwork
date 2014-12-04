@@ -95,10 +95,10 @@
                    gnEditor.add(gnCurrentEdit.id,
                        scope.elementRef, scope.elementName,
                        scope.domId, 'before').then(function() {
-                         if (scope.templateAddAction) {
-                           gnEditor.save(gnCurrentEdit.id, true);
-                         }
-                       });
+                     if (scope.templateAddAction) {
+                       gnEditor.save(gnCurrentEdit.id, true);
+                     }
+                   });
                    return false;
                  };
 
@@ -117,7 +117,8 @@
                        scope.snippet = snippets.join(separator);
 
                        // Clean results
-                       // TODO: should call clean result from searchFormController
+                       // TODO: should call clean result from
+                       // searchFormController
                        //                   scope.searchResults.records = null;
                        //                   scope.searchResults.count = null;
 
@@ -151,18 +152,18 @@
                      }
                      gnHttp.callService(
                          'subtemplate', params).success(function(xml) {
-                           if (usingXlink) {
-                             snippets.push(gnEditorXMLService.
+                       if (usingXlink) {
+                         snippets.push(gnEditorXMLService.
                                  buildXMLForXlink(scope.elementName,
                                      url +
                                      '?uuid=' + uuid +
                                      '&process=' + params.process));
-                           } else {
-                             snippets.push(gnEditorXMLService.
+                       } else {
+                         snippets.push(gnEditorXMLService.
                                  buildXML(scope.elementName, xml));
-                           }
-                           checkState();
-                         });
+                       }
+                       checkState();
+                     });
                    });
 
                    return false;
@@ -178,7 +179,7 @@
 
 
                }
-             }
+             };
            }
          };
        }]);

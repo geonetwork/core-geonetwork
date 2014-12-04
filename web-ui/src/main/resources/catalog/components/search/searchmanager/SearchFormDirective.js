@@ -6,10 +6,14 @@
 
 
 
+
+
+
+
   goog.require('gn_catalog_service');
   goog.require('gn_facets_directive');
-  goog.require('gn_selection_directive');
   goog.require('gn_search_form_results_directive');
+  goog.require('gn_selection_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
@@ -21,8 +25,9 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope, $location,
-                                      gnSearchManagerService, gnFacetService, Metadata) {
+  var searchFormController =
+      function($scope, $location, gnSearchManagerService,
+               gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
       fast: 'index'
@@ -48,7 +53,7 @@
     $scope.hasPagination = false;
     this.activatePagination = function() {
       $scope.hasPagination = true;
-      if(!$scope.searchObj.permalink || (
+      if (!$scope.searchObj.permalink || (
           angular.isUndefined($scope.searchObj.params.from) &&
           angular.isUndefined($scope.searchObj.params.to)
           )) {
@@ -68,8 +73,8 @@
     };
 
     var cleanSearchParams = function(params) {
-      for(v in params) {
-        if(params[v] == '') {
+      for (v in params) {
+        if (params[v] == '') {
           delete params[v];
         }
       }
@@ -91,7 +96,7 @@
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
 
-      if(!keepPagination && !$scope.searchObj.permalink) {
+      if (!keepPagination && !$scope.searchObj.permalink) {
         self.resetPagination();
       }
 
@@ -107,32 +112,34 @@
           function(data) {
             $scope.searching--;
             $scope.searchResults.records = [];
-            for(var i=0;i<data.metadata.length;i++) {
+            for (var i = 0; i < data.metadata.length; i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
             }
             $scope.searchResults.count = data.count;
             $scope.searchResults.facet = data.facet;
 
             // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 && $scope.hasPagination) {
+            if ($scope.searchResults.records.length > 0 &&
+                $scope.hasPagination) {
 
               var paging = $scope.paginationInfo;
 
               // Means the `from` and `to` params come from permalink
-              if((paging.currentPage-1)*paging.hitsPerPage+1 != params.from) {
-                paging.currentPage = (params.from-1) / paging.hitsPerPage +1;
+              if ((paging.currentPage - 1) *
+                  paging.hitsPerPage + 1 != params.from) {
+                paging.currentPage = (params.from - 1) / paging.hitsPerPage + 1;
               }
 
               paging.resultsCount = $scope.searchResults.count;
               paging.to = Math.min(
                   data.count,
                   paging.currentPage * paging.hitsPerPage
-              );
+                  );
               paging.pages = Math.ceil(
                   $scope.searchResults.count /
                   paging.hitsPerPage, 0
-              );
-              paging.from = (paging.currentPage-1)*paging.hitsPerPage+1;
+                  );
+              paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
             }
           });
     };
@@ -142,13 +149,13 @@
      * the url with the params, then the event $locationChangeSuccess will call
      * the geonetwork search from url params.
      */
-    if($scope.searchObj.permalink) {
+    if ($scope.searchObj.permalink) {
       var triggerSearchFn = self.triggerSearchFn;
       var facetsParams;
 
       self.triggerSearch = function(keepPagination, initial) {
         $scope.initial = !!initial;
-        if(!keepPagination) {
+        if (!keepPagination) {
           self.resetPagination();
         }
 
@@ -158,7 +165,7 @@
         cleanSearchParams(params);
         angular.extend(params, facetsParams);
 
-        if(angular.equals(params, $location.search())) {
+        if (angular.equals(params, $location.search())) {
           triggerSearchFn(false);
         }
         else {
@@ -166,13 +173,13 @@
         }
       };
 
-      $scope.$on('$locationChangeSuccess', function () {
-          var params = angular.copy($location.search());
-          for(var o in facetsParams) {
-            delete params[o];
-          }
-          $scope.searchObj.params = params;
-          triggerSearchFn();
+      $scope.$on('$locationChangeSuccess', function() {
+        var params = angular.copy($location.search());
+        for (var o in facetsParams) {
+          delete params[o];
+        }
+        $scope.searchObj.params = params;
+        triggerSearchFn();
       });
     }
     else {
@@ -193,7 +200,7 @@
       } else {
         $scope.searchObj.params = {};
       }
-      if(angular.isArray($scope.searchObj.sortbyValues)) {
+      if (angular.isArray($scope.searchObj.sortbyValues)) {
         $scope.searchObj.params.sortBy = $scope.searchObj.sortbyValues[0];
       }
 
@@ -238,7 +245,7 @@
             scope.controller.resetSearch();
             //TODO: remove geocat ref
             $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
-            if(htmlQuery) {
+            if (htmlQuery) {
               $(htmlQuery).focus();
             }
           };
@@ -246,7 +253,7 @@
           if (attrs.runsearch) {
 
             // get permalink params on page load
-            if(scope.searchObj.permalink) {
+            if (scope.searchObj.permalink) {
               angular.extend(scope.searchObj.params, $location.search());
             }
 

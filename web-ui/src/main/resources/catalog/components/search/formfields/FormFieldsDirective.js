@@ -14,200 +14,206 @@
    * empty.
    */
 
-  .directive('gnTypeahead', [ function() {
-    return {
-      restrict: 'A',
-      scope: {
-        options: '=gnTypeahead',
-        gnValues: '='
-      },
-      link: function(scope, element, attrs) {
-        var config = scope.options.config || {};
-        var doLink = function(data, remote) {
+  .directive('gnTypeahead', [function() {
+        return {
+          restrict: 'A',
+          scope: {
+            options: '=gnTypeahead',
+            gnValues: '='
+          },
+          link: function(scope, element, attrs) {
+            var config = scope.options.config || {};
+            var doLink = function(data, remote) {
 
-          var bloodhoundConf = {
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            limit: 10000000,
-            sorter: function(a,b) {
-              if(a.name< b.name) return -1;
-              else if(a.name>b.name) return 1;
-              else return 0;
-            }
-          };
+              var bloodhoundConf = {
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                limit: 10000000,
+                sorter: function(a, b) {
+                  if (a.name < b.name) return -1;
+                  else if (a.name > b.name) return 1;
+                  else return 0;
+                }
+              };
 
-          if (data) {
-            bloodhoundConf.local = data;
-          } else if (remote) {
-            bloodhoundConf.remote = remote;
-            // Remove from suggestion values already selected for remote mode
-            if(angular.isFunction(remote.filter)) {
-              var filterFn = remote.filter;
-              bloodhoundConf.remote.filter = function(data) {
-                var filtered = filterFn(data);
-                var datums = [];
-                for(var i=0;i<filtered.length;i++) {
-                  if(stringValues.indexOf(filtered[i].id) <0) {
-                    datums.push(filtered[i]);
+              if (data) {
+                bloodhoundConf.local = data;
+              } else if (remote) {
+                bloodhoundConf.remote = remote;
+                // Remove from suggestion values already selected in remote mode
+                if (angular.isFunction(remote.filter)) {
+                  var filterFn = remote.filter;
+                  bloodhoundConf.remote.filter = function(data) {
+                    var filtered = filterFn(data);
+                    var datums = [];
+                    for (var i = 0; i < filtered.length; i++) {
+                      if (stringValues.indexOf(filtered[i].id) < 0) {
+                        datums.push(filtered[i]);
+                      }
+                    }
+                    return datums;
+                  };
+                }
+              }
+              var engine = new Bloodhound(bloodhoundConf);
+              engine.initialize();
+
+              // Remove from suggestion values already selected for local mode
+              var refreshDatum = function() {
+                if (bloodhoundConf.local) {
+                  engine.clear();
+                  for (var i = 0; i < data.length; i++) {
+                    if (stringValues.indexOf(data[i].id) < 0) {
+                      engine.add(data[i]);
+                    }
                   }
                 }
-                return datums;
-              }
-            }
-          }
-          var engine = new Bloodhound(bloodhoundConf);
-          engine.initialize();
+              };
 
-          // Remove from suggestion values already selected for local mode
-          var refreshDatum = function() {
-            if(bloodhoundConf.local) {
-              engine.clear();
-              for(var i=0;i<data.length;i++) {
-                if(stringValues.indexOf(data[i].id) <0) {
-                  engine.add(data[i])
+              // Initialize tagsinput in the element
+              $(element).tagsinput({
+                itemValue: 'id',
+                itemText: 'name'
+              });
+
+              // Initialize typeahead
+              var field = $(element).tagsinput('input');
+              field.typeahead({
+                minLength: 0,
+                hint: true,
+                highlight: true
+              }, angular.extend({
+                name: 'datasource',
+                displayKey: 'name',
+                source: engine.ttAdapter()
+              }, config)).on('typeahead:selected', function(event, datum) {
+                field.typeahead('val', '');
+                $(element).tagsinput('add', datum);
+              });
+
+              /** Binds input content to model values */
+              var stringValues = [];
+              var prev = stringValues.slice();
+
+              // ui -> model
+              $(element).on('itemAdded', function(event) {
+                if (stringValues.indexOf(event.item.id) === -1) {
+                  stringValues.push(event.item.id);
+                  prev = stringValues.slice();
+                  scope.gnValues = stringValues.join(' OR ');
+                  scope.$apply();
                 }
-              }
-            }
-          };
+                refreshDatum();
 
-          // Initialize tagsinput in the element
-          $(element).tagsinput({
-            itemValue:'id',
-            itemText: 'name'
-          });
-
-          // Initialize typeahead
-          var field = $(element).tagsinput('input');
-          field.typeahead({
-            minLength: 0,
-            hint: true,
-            highlight: true
-          }, angular.extend({
-            name: 'datasource',
-            displayKey: 'name',
-            source: engine.ttAdapter()
-          }, config)).on('typeahead:selected', function(event, datum) {
-            field.typeahead('val', '');
-            $(element).tagsinput('add', datum);
-          });
-
-          /** Binds input content to model values */
-          var stringValues = [];
-          var prev = stringValues.slice();
-
-          // ui -> model
-          $(element).on('itemAdded', function(event) {
-            if (stringValues.indexOf(event.item.id) === -1) {
-              stringValues.push(event.item.id);
-              prev = stringValues.slice();
-              scope.gnValues = stringValues.join(' OR ');
-              scope.$apply();
-            }
-            refreshDatum();
-
-          });
-          $(element).on('itemRemoved', function(event) {
-            var idx = stringValues.indexOf(event.item.id);
-            if (idx !== -1) {
-              stringValues.splice(idx, 1);
-              prev = stringValues.slice();
-              scope.gnValues = stringValues.join(' OR ');
-              scope.$apply();
-            }
-            refreshDatum();
-          });
-
-          // model -> ui
-          scope.$watch("gnValues", function() {
-            if(angular.isDefined(scope.gnValues) && scope.gnValues != '') {
-              stringValues = scope.gnValues.split(' OR ');
-            }
-            else {
-              stringValues = [];
-            }
-
-            var added = stringValues.filter(function(i) {return prev.indexOf(i) === -1;}),
-                removed = prev.filter(function(i) {return stringValues.indexOf(i) === -1;}),
-                i;
-            prev = stringValues.slice();
-
-            // Remove tags no longer in binded model
-            for (i = 0; i < removed.length; i++) {
-              $(element).tagsinput('remove', removed[i]);
-            }
-
-            // Refresh remaining tags
-            $(element).tagsinput('refresh');
-
-            // Add new items in model as tags
-            for (i = 0; i < added.length; i++) {
-              $(element).tagsinput('add', {
-                id: added[i],
-                name: added[i]
               });
-            }
-          }, true);
+              $(element).on('itemRemoved', function(event) {
+                var idx = stringValues.indexOf(event.item.id);
+                if (idx !== -1) {
+                  stringValues.splice(idx, 1);
+                  prev = stringValues.slice();
+                  scope.gnValues = stringValues.join(' OR ');
+                  scope.$apply();
+                }
+                refreshDatum();
+              });
 
-          /** Manage the cross to clear the input */
-          var triggerElt = $('<span class="close tagsinput-trigger fa fa-ellipsis-v"></span>');
-          field.parent().after(triggerElt);
-          var resetElt = $('<span class="close tagsinput-clear">&times;</span>')
+              // model -> ui
+              scope.$watch('gnValues', function() {
+                if (angular.isDefined(scope.gnValues) && scope.gnValues != '') {
+                  stringValues = scope.gnValues.split(' OR ');
+                }
+                else {
+                  stringValues = [];
+                }
+
+                var added = stringValues.filter(function(i) {
+                  return prev.indexOf(i) === -1;
+                }),
+                    removed = prev.filter(function(i) {
+                      return stringValues.indexOf(i) === -1;
+                    }),
+                    i;
+                prev = stringValues.slice();
+
+                // Remove tags no longer in binded model
+                for (i = 0; i < removed.length; i++) {
+                  $(element).tagsinput('remove', removed[i]);
+                }
+
+                // Refresh remaining tags
+                $(element).tagsinput('refresh');
+
+                // Add new items in model as tags
+                for (i = 0; i < added.length; i++) {
+                  $(element).tagsinput('add', {
+                    id: added[i],
+                    name: added[i]
+                  });
+                }
+              }, true);
+
+              /** Manage the cross to clear the input */
+              var triggerElt = $('<span class="close tagsinput-trigger' +
+                  ' fa fa-ellipsis-v"></span>');
+              field.parent().after(triggerElt);
+              var resetElt = $('<span class="close ' +
+                  'tagsinput-clear">&times;</span>')
               .on('click', function() {
-                scope.gnValues = '';
-                scope.$apply();
+                    scope.gnValues = '';
+                    scope.$apply();
+                  });
+              field.parent().after(resetElt);
+              resetElt.hide();
+
+              $(element).on('change', function() {
+                resetElt.toggle($(element).val() != '');
               });
-          field.parent().after(resetElt);
-          resetElt.hide();
+            };
 
-          $(element).on('change', function() {
-            resetElt.toggle($(element).val()!='');
-          });
+            if (scope.options.mode == 'prefetch') {
+              scope.options.promise.then(doLink);
+            } else if (scope.options.mode == 'remote') {
+              doLink(null, scope.options.remote);
+            } else if (scope.options.mode == 'local') {
+              doLink(scope.options.data);
+            }
+
+          }
         };
-
-        if (scope.options.mode == 'prefetch') {
-          scope.options.promise.then(doLink);
-        } else if (scope.options.mode == 'remote') {
-          doLink(null, scope.options.remote);
-        } else if (scope.options.mode == 'local') {
-          doLink(scope.options.data);
-        }
-
-      }
-    }
-  }])
+      }])
 
 
     .directive('groupsCombo', ['$http', function($http) {
-      return {
+        return {
 
-        restrict: 'A',
-        templateUrl: '../../catalog/components/search/formfields/' +
-        'partials/groupsCombo.html',
-        scope: {
-          ownerGroup: '=',
-          lang: '=',
-          groups: '='
-        },
+          restrict: 'A',
+          templateUrl: '../../catalog/components/search/formfields/' +
+              'partials/groupsCombo.html',
+          scope: {
+            ownerGroup: '=',
+            lang: '=',
+            groups: '='
+          },
 
-        link: function(scope, element, attrs) {
-          var url = 'info@json?type=groupsIncludingSystemGroups';
-          if (attrs.profile) {
-            url = 'info@json?type=groups&profile=' + attrs.profile;
-          }
-          $http.get(url, {cache: true}).
-          success(function(data) {
-            scope.groups = data !== 'null' ? data.group : null;
-
-            // Select by default the first group.
-            if ((angular.isUndefined(scope.ownerGroup) ||
-            scope.ownerGroup === '') && data.group) {
-              scope.ownerGroup = data.group[0]['@id'];
+          link: function(scope, element, attrs) {
+            var url = 'info@json?type=groupsIncludingSystemGroups';
+            if (attrs.profile) {
+              url = 'info@json?type=groups&profile=' + attrs.profile;
             }
-          });
-        }
+            $http.get(url, {cache: true}).
+                success(function(data) {
+                  scope.groups = data !== 'null' ? data.group : null;
 
-      };
-    }])
+                  // Select by default the first group.
+                  if ((angular.isUndefined(scope.ownerGroup) ||
+                      scope.ownerGroup === '') && data.group) {
+                    scope.ownerGroup = data.group[0]['@id'];
+                  }
+                });
+          }
+
+        };
+      }])
 
   .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
         function($http, gnSchemaManagerService) {
@@ -245,7 +251,7 @@
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
               scope.search = function() {
                 searchFormCtrl.triggerSearch(true);
-              }
+              };
 
             }
           };
@@ -266,12 +272,12 @@
               scope.updatePagination = function() {
                 searchFormCtrl.resetPagination();
                 searchFormCtrl.triggerSearch();
-              }
+              };
             }
           };
         }])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:gnSearchSuggest
    * @restrict A
@@ -298,12 +304,12 @@
             },
             link: function(scope, element, attrs) {
               var remote = {
-                url : suggestService.getUrl('QUERY', scope.field,
-                    (scope.startswith ?'STARTSWITHFIRST' : 'ALPHA')),
+                url: suggestService.getUrl('QUERY', scope.field,
+                    (scope.startswith ? 'STARTSWITHFIRST' : 'ALPHA')),
                 filter: suggestService.filterResponse,
                 wildcard: 'QUERY'
               };
-              if(angular.isUndefined(scope.multi)) {
+              if (angular.isUndefined(scope.multi)) {
                 element.typeahead({
                   remote: remote
                 });
@@ -313,16 +319,16 @@
                 });
                 element.tagsinput('input').typeahead({
                   remote: remote
-                }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                }).bind('typeahead:selected', $.proxy(function(obj, datum) {
                   this.tagsinput('add', datum.value);
                   this.tagsinput('input').typeahead('setQuery', '');
                 }, element));
               }
             }
-          }
+          };
         }])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:gnRegionMultiselect
    * @restrict A
@@ -349,13 +355,13 @@
             },
             link: function(scope, element, attrs) {
               var type = {
-                id: 'http://geonetwork-opensource.org/regions#'+scope.field
+                id: 'http://geonetwork-opensource.org/regions#' + scope.field
               };
               gnRegionService.loadRegion(type, 'fre').then(
                   function(data) {
 
                     $(element).tagsinput({
-                      itemValue:'id',
+                      itemValue: 'id',
                       itemText: 'name'
                     });
                     var field = $(element).tagsinput('input');
@@ -397,9 +403,10 @@
                               var fullSuggestionList = [];
                               // renderSuggestions expects a
                               // suggestions array not an object
-                              $.each(ttView.datasets[0].itemHash, function(i, item) {
-                                fullSuggestionList.push(item);
-                              });
+                              $.each(ttView.datasets[0].itemHash,
+                                  function(i, item) {
+                       fullSuggestionList.push(item);
+                     });
 
                               ttView.dropdownView.renderSuggestions(
                                   ttView.datasets[0], fullSuggestionList);
@@ -415,10 +422,10 @@
 
                   });
             }
-          }
+          };
         }])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:schemaInfoCombo
    * @restrict A

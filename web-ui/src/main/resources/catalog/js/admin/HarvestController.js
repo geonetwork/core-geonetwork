@@ -28,7 +28,7 @@
         tabs: []
       };
       $scope.searchObj = {
-        params : {
+        params: {
           template: 'y or s or n',
           sortBy: 'title'
         }};

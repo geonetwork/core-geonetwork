@@ -24,7 +24,7 @@
           map: '=',
           vector: '='
         },
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
           var map = scope.map;
           var source = new ol.source.Vector();
 
@@ -151,7 +151,7 @@
           scope.vector = vector;
 
           var onDrawend = function(evt) {
-            if(evt) {
+            if (evt) {
               var style = scope.featureStyleCfg;
               evt.feature.setStyle(new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -173,25 +173,25 @@
           };
 
           var drawPolygon = new ol.interaction.Draw(({
-                type: 'Polygon',
-                source: source
-              }));
+            type: 'Polygon',
+            source: source
+          }));
           drawPolygon.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawPolygon, map);
           scope.drawPolygon = drawPolygon;
 
           var drawPoint = new ol.interaction.Draw(({
-                type: 'Point',
-                source: source
-              }));
+            type: 'Point',
+            source: source
+          }));
           drawPoint.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawPoint, map);
           scope.drawPoint = drawPoint;
 
           var drawLine = new ol.interaction.Draw(({
-                type: 'LineString',
-                source: source
-              }));
+            type: 'LineString',
+            source: source
+          }));
           drawLine.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawLine, map);
           scope.drawLine = drawLine;
@@ -202,7 +202,7 @@
             style: drawTextStyleFn
           }));
           drawText.on('drawend', function(evt) {
-            evt.feature.set('name',scope.text);
+            evt.feature.set('name', scope.text);
             evt.feature.setStyle(textFeatStyleFn);
             onDrawend();
           });
@@ -225,11 +225,11 @@
           scope.deleteF = deleteF;
 
           Object.defineProperty(scope, 'modifying', {
-            get: function () {
+            get: function() {
               return (map.getInteractions().getArray().indexOf(select) >= 0 &&
                   map.getInteractions().getArray().indexOf(modify) >= 0);
             },
-            set: function (val) {
+            set: function(val) {
               if (val) {
                 map.addInteraction(select);
                 map.addInteraction(modify);
@@ -260,13 +260,13 @@
           });
 
           scope.getActiveDrawType = function() {
-            if(scope.drawPoint.active) return 'point';
-            else if(scope.drawLine.active) return 'line';
-            else if(scope.drawPolygon.active) return 'polygon';
-            else if(scope.drawText.active) return 'text';
-          }
+            if (scope.drawPoint.active) return 'point';
+            else if (scope.drawLine.active) return 'line';
+            else if (scope.drawPolygon.active) return 'polygon';
+            else if (scope.drawText.active) return 'text';
+          };
         }
-      }
+      };
     }]);
 
   module.directive('gnStyleForm', [
@@ -281,10 +281,11 @@
           style: '=gnStyleForm',
           getType: '&gnStyleType'
         },
-        link: function (scope, element, attrs) {
-          scope.colors = ['red', 'orange', 'blue', 'white', 'black','yellow','green','pink', 'brown'];
+        link: function(scope, element, attrs) {
+          scope.colors = ['red', 'orange', 'blue', 'white', 'black',
+            'yellow', 'green', 'pink', 'brown'];
         }
-      }
+      };
     }]);
 
 })();

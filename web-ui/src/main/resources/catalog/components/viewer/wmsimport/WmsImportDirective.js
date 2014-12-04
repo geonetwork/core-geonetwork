@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('gn_wmsimport_directive');
 
   var module = angular.module('gn_wmsimport_directive', [
@@ -17,53 +17,51 @@
     'gnMap',
     '$translate',
     'gnViewerSettings',
-    'gnNcWms',
-    'ngeoDecorateLayer',
-    function (gnOwsCapabilities, gnMap, $translate, gnViewerSettings, gnNcWms, ngeoDecorateLayer) {
-    return {
-      restrict: 'A',
-      replace: true,
-      templateUrl: '../../catalog/components/viewer/wmsimport/' +
-        'partials/wmsimport.html',
-      scope: {
-        map: '=gnWmsImportMap'
-      },
-      controller: ['$scope', function($scope){
+    function(gnOwsCapabilities, gnMap, $translate, gnViewerSettings) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+            'partials/wmsimport.html',
+        scope: {
+          map: '=gnWmsImportMap'
+        },
+        controller: ['$scope', function($scope) {
 
-        /**
+          /**
          * Transform a capabilities layer into an ol.Layer
          * and add it to the map.
          *
-         * @param getCapLayer
-         * @returns {*}
+         * @param {Object} getCapLayer
+         * @return {*}
          */
-        this.addLayer = function(getCapLayer) {
-          return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
-        };
-      }],
-      link: function (scope, element, attrs) {
+          this.addLayer = function(getCapLayer) {
+            return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+          };
+        }],
+        link: function(scope, element, attrs) {
 
-        scope.format =  attrs['gnWmsImport'];
-        scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
+          scope.format = attrs['gnWmsImport'];
+          scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
 
-        scope.loading = false;
+          scope.loading = false;
 
-        scope.load = function (url) {
-          scope.loading = true;
-          gnOwsCapabilities.getCapabilities(url)
-            .then(function (capability) {
-              scope.loading = false;
-              scope.capability = capability;
-            });
-        };
-      }
-    };
-  }]);
+          scope.load = function(url) {
+            scope.loading = true;
+            gnOwsCapabilities.getCapabilities(url)
+            .then(function(capability) {
+                  scope.loading = false;
+                  scope.capability = capability;
+                });
+          };
+        }
+      };
+    }]);
 
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
-      'gnAlertService',
-    function (ngeoDecorateLayer, gnAlertService) {
+    'gnAlertService',
+    function(ngeoDecorateLayer, gnAlertService) {
       return {
         restrict: 'A',
         replace: true,
@@ -73,18 +71,18 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: [ '$scope', function($scope) {
+        controller: ['$scope', function($scope) {
 
           /**
            * Create new vector Kml file from url and add it to
            * the Map.
            *
-           * @param url remote url of the kml file
-           * @param map
+           * @param {string} url remote url of the kml file
+           * @param {ol.map} map
            */
           this.addKml = function(url, map) {
 
-            if(url == '') {
+            if (url == '') {
               $scope.validUrl = true;
               return;
             }
@@ -122,12 +120,13 @@
                 map.getSize());
 
             gnAlertService.addAlert({
-              msg: 'Une couche ajoutée : <strong>'+layer.get('label')+'</strong>',
+              msg: 'Une couche ajoutée : <strong>' +
+                  layer.get('label') + '</strong>',
               type: 'success'
             });
           };
         }],
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
 
           /** Used for ngClass of the input */
           scope.validUrl = true;
@@ -171,20 +170,21 @@
           });
 
 
-          var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
-          var unzipProgress = document.createElement("progress");
-          var fileInput = document.getElementById("file-input");
+          var requestFileSystem = window.webkitRequestFileSystem ||
+              window.mozRequestFileSystem || window.requestFileSystem;
+          var unzipProgress = document.createElement('progress');
+          var fileInput = document.getElementById('file-input');
 
           var model = (function() {
             var URL = window.webkitURL || window.mozURL || window.URL;
 
             return {
-              getEntries : function(file, onend) {
+              getEntries: function(file, onend) {
                 zip.createReader(new zip.BlobReader(file), function(zipReader) {
                   zipReader.getEntries(onend);
                 }, onerror);
               },
-              getEntryFile : function(entry, creationMethod, onend, onprogress) {
+              getEntryFile: function(entry, creationMethod, onend, onprogress) {
                 var writer, zipFileEntry;
 
                 function getData() {
@@ -210,7 +210,7 @@
                   url: blobURL
                 })
               });
-              var listenerKey = vector.getSource().on('change', function(evt){
+              var listenerKey = vector.getSource().on('change', function(evt) {
                 if (vector.getSource().getState() == 'ready') {
                   vector.getSource().unByKey(listenerKey);
                   scope.addToMap(vector, scope.map);
@@ -228,7 +228,7 @@
           };
 
           scope.uploadKMZ = function() {
-            if(fileInput.files.length > 0) {
+            if (fileInput.files.length > 0) {
               model.getEntries(fileInput.files[0], function(entries) {
                 scope.kmzEntries = entries;
                 scope.$apply();
@@ -249,15 +249,17 @@
    * gnCapTreeElt directive.
    */
   module.directive('gnCapTreeCol', [
-    function () {
+    function() {
       return {
         restrict: 'E',
         replace: true,
         scope: {
           collection: '='
         },
-        template: "<ul class='list-group'><gn-cap-tree-elt ng-repeat='member in collection' member='member'></gn-cap-tree-elt></ul>"
-      }
+        template: "<ul class='list-group'><gn-cap-tree-elt " +
+            "ng-repeat='member in collection' member='member'>" +
+            '</gn-cap-tree-elt></ul>'
+      };
     }]);
 
   /**
@@ -272,46 +274,51 @@
   module.directive('gnCapTreeElt', [
     '$compile',
     'gnAlertService',
-    function ($compile, gnAlertService) {
-    return {
-      restrict: "E",
-      require: '^gnWmsImport',
-      replace: true,
-      scope: {
-        member: '='
-      },
-      template: "<li class='list-group-item' ng-click='handle($event)' ng-class='(!isParentNode()) ? \"leaf\" : \"\"'><label>" +
-            "<span class='fa'  ng-class='isParentNode() ? \"fa-folder-o\" : \"fa-plus-square-o\"'></span>" +
-          " {{member.Title}}</label></li>",
-      link: function (scope, element, attrs, controller) {
-        var el = element;
-        var select = function() {
-          controller.addLayer(scope.member);
-          gnAlertService.addAlert({
-            msg: 'Une couche ajoutée : <strong>'+scope.member.Title +'</strong>',
-            type: 'success'
-          });
-        };
-        var toggleNode = function() {
-          el.find('.fa').first().toggleClass('fa-folder-o').toggleClass('fa-folder-open-o');
-          el.children('ul').toggle();
-        };
-        if (angular.isArray(scope.member.Layer)) {
-          element.append("<gn-cap-tree-col class='list-group' collection='member.Layer'></gn-cap-tree-col>");
-          $compile(element.contents())(scope);
-        }
-        scope.handle = function(evt) {
-          if (scope.isParentNode()) {
-            toggleNode();
-          } else {
-            select();
+    function($compile, gnAlertService) {
+      return {
+        restrict: 'E',
+        require: '^gnWmsImport',
+        replace: true,
+        scope: {
+          member: '='
+        },
+        template: "<li class='list-group-item' ng-click='handle($event)' " +
+            "ng-class='(!isParentNode()) ? \"leaf\" : \"\"'><label>" +
+            "<span class='fa'  ng-class='isParentNode() ? \"fa-folder-o\" :" +
+            " \"fa-plus-square-o\"'></span>" +
+            ' {{member.Title}}</label></li>',
+        link: function(scope, element, attrs, controller) {
+          var el = element;
+          var select = function() {
+            controller.addLayer(scope.member);
+            gnAlertService.addAlert({
+              msg: 'Une couche ajoutée : <strong>' +
+                  scope.member.Title + '</strong>',
+              type: 'success'
+            });
+          };
+          var toggleNode = function() {
+            el.find('.fa').first().toggleClass('fa-folder-o')
+                .toggleClass('fa-folder-open-o');
+            el.children('ul').toggle();
+          };
+          if (angular.isArray(scope.member.Layer)) {
+            element.append("<gn-cap-tree-col class='list-group' " +
+                "collection='member.Layer'></gn-cap-tree-col>");
+            $compile(element.contents())(scope);
           }
-          evt.stopPropagation();
-        };
-        scope.isParentNode = function() {
-          return angular.isDefined(scope.member.Layer);
+          scope.handle = function(evt) {
+            if (scope.isParentNode()) {
+              toggleNode();
+            } else {
+              select();
+            }
+            evt.stopPropagation();
+          };
+          scope.isParentNode = function() {
+            return angular.isDefined(scope.member.Layer);
+          };
         }
-      }
-    }
-  }]);
+      };
+    }]);
 })();

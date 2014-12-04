@@ -2,8 +2,8 @@
   goog.provide('gn_measure_directive');
 
   var module = angular.module('gn_measure_directive', [
-      'ngeo',
-      'ui.bootstrap.buttons'
+    'ngeo',
+    'ui.bootstrap.buttons'
   ]);
 
   module.filter('measure', function() {
@@ -58,7 +58,7 @@
       var mInteraction, updateMeasuresFn, distFeature, areaFeature;
       var options = {
         waitClass: '',
-        styleFunction: (function () {
+        styleFunction: (function() {
           var styles = {};
 
           var stroke = new ol.style.Stroke({
@@ -104,7 +104,7 @@
             })
           ];
 
-          return function (feature, resolution) {
+          return function(feature, resolution) {
             return styles[feature.getGeometry().getType()];
           };
         })()
@@ -166,7 +166,8 @@
 
               areaFeature = evt.feature;
               var firstPoint = areaFeature.getGeometry().getCoordinates()[0][0];
-              distFeature = new ol.Feature(new ol.geom.LineString([firstPoint]));
+              distFeature = new ol.Feature(
+                  new ol.geom.LineString([firstPoint]));
 
               deregisterFeature = areaFeature.on('change',
                   function(evt) {
@@ -176,7 +177,7 @@
                     distFeature.getGeometry().setCoordinates(lineCoords);
                     updateMeasuresFn();
                   }
-              );
+                  );
             }, this);
 
         mInteraction.on('drawend',
@@ -189,12 +190,12 @@
               featureOverlay.addFeature(distFeature);
               areaFeature.unByKey(deregisterFeature);
             }, this);
-      }
+      };
 
       this.create = function(map, measureObj, scope) {
 
         // Update values of measures from features
-        updateMeasuresFn = function () {
+        updateMeasuresFn = function() {
           scope.$apply(function() {
             measureObj.distance = distFeature.getGeometry().getLength();
             measureObj.surface = areaFeature.getGeometry().getArea();
@@ -203,6 +204,6 @@
         initInteraction(map);
 
         return mInteraction;
-      }
+      };
     }]);
 })();

@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('gn_print');
 
   goog.require('gn_printmap_directive');

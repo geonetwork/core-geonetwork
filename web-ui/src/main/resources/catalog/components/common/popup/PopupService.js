@@ -39,7 +39,7 @@
         this.scope.options = options;
         this.scope.toggle = true;
 
-        if(options.url) {
+        if (options.url) {
           this.scope.options.url = $sce.trustAsResourceUrl(options.url);
         }
         this.element = $compile(element)(this.scope);

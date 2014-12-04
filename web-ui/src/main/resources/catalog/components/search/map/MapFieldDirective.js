@@ -9,7 +9,7 @@
         function(gnMap) {
           return {
             restrict: 'A',
-            scope:true,
+            scope: true,
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
             compile: function compile(tElement, tAttrs, transclude) {
@@ -21,12 +21,12 @@
                   scope.gnDrawBboxExtent = iAttrs['gnMapFieldExtent'];
                   scope.gnMap = gnMap;
 
-                  scope.maxExtent = function () {
-                    scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
-                        scope.map.getSize());
-                  }
+                  scope.maxExtent = function() {
+                    scope.map.getView().fitExtent(scope.map.getView().
+                            getProjection().getExtent(), scope.map.getSize());
+                  };
                 }
-              }
+              };
             }
           };
         }
@@ -66,7 +66,7 @@
 
               /**
                * Update extent scope value with the WKT polygon
-               * @param geom
+               * @param {ol.geometry} geom
                */
               var updateField = function(geom) {
                 feature.setGeometry(geom);
@@ -83,7 +83,7 @@
               // If given extent coords are given through attributes,
               // display the bbox on the map
               var coords = scope.$eval(attrs['gnDrawBboxExtent']);
-              if(coords) {
+              if (coords) {
                 updateField(new ol.geom.Polygon(coords));
               }
 
@@ -94,15 +94,15 @@
               });
 
               // Remove the bbox when the interaction is not active
-              scope.$watch('interaction.active', function(v,o){
-                if(!v && o) {
+              scope.$watch('interaction.active', function(v, o) {
+                if (!v && o) {
                   feature.setGeometry(null);
                   bboxSet(parent, '');
                   scope.map.render();
                 }
-              })
+              });
             }
           };
         }
-      ])
+      ]);
 })();

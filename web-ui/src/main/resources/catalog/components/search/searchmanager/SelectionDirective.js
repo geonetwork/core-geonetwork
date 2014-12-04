@@ -4,13 +4,13 @@
 
   var module = angular.module('gn_selection_directive', []);
 
-  module.directive('gnSelectionWidget', [ 'gnHttp', function(gnHttp) {
+  module.directive('gnSelectionWidget', ['gnHttp', function(gnHttp) {
 
     return {
       restrict: 'A',
       scope: true,
       templateUrl: '../../catalog/components/search/searchmanager/partials/' +
-      'selection-widget.html',
+          'selection-widget.html',
       link: function(scope, element, attrs) {
 
         var ckb = $(element).find('.md-checkbox');
@@ -23,27 +23,27 @@
 
         var updateCkb = function(records) {
           var checked = true;
-          records.forEach(function(md){
+          records.forEach(function(md) {
             checked = checked && md['geonet:info'].selected;
           });
           ckb[0].checked = checked;
         };
 
         // set checkbox state on page change
-        scope.$watchCollection('searchResults.records', function(records){
+        scope.$watchCollection('searchResults.records', function(records) {
           var w;
-          while(w = watchers.pop()) { w(); }
+          while (w = watchers.pop()) { w(); }
           updateCkb(records);
           records.forEach(function(record, i) {
             watchers.push(scope.$watch(
-              'searchResults.records['+i+']["geonet:info"].selected',
-              function() { updateCkb(scope.searchResults.records); }
-            ));
+                'searchResults.records[' + i + ']["geonet:info"].selected',
+                function() { updateCkb(scope.searchResults.records); }
+                ));
           });
         });
 
         ckb.on('click', function() {
-          scope.$apply(function(){
+          scope.$apply(function() {
             scope.selectAllInPage(ckb[0].checked);
           });
         });
@@ -57,8 +57,8 @@
             }).success(function(res) {
               var fn = (selected) ? Math.max : Math.min;
               scope.searchResults.selectedCount = fn(
-                scope.searchResults.selectedCount,
-                parseInt(res[0], 10));
+                  scope.searchResults.selectedCount,
+                  parseInt(res[0], 10));
             });
           });
         };
@@ -90,7 +90,7 @@
 
   }]);
 
-  module.directive('gnSelectionMd', [ 'gnHttp', function(gnHttp) {
+  module.directive('gnSelectionMd', ['gnHttp', function(gnHttp) {
 
     return {
       restrict: 'A',
