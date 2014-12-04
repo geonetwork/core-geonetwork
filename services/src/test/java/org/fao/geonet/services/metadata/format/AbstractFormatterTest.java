@@ -108,7 +108,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
                     "" + id, null, formatterId, "true", false, request);
     }
 
-    protected void measureFormatterPerformance(MockHttpServletRequest request, String formatterId) throws Exception {
+    protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {
         long start = System.nanoTime();
         final long fiveSec = TimeUnit.SECONDS.toNanos(5);
         systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
@@ -117,7 +117,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
                     MockHttpServletResponse());
         }
         System.out.println("Starting big run");
-        final int secondsRan = 60;
+        final int secondsRan = 30;
         final long thirtySec = TimeUnit.SECONDS.toNanos(secondsRan);
         start = System.nanoTime();
         double executions = 0;

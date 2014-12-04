@@ -1,12 +1,12 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.Weigher;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.metadata.format.ConfigFile;
+import org.fao.geonet.utils.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+import java.util.Set;
 
 import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
@@ -26,13 +26,9 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  */
 @Component
 public class TemplateCache {
-    private static final Weigher<Path, TNode> STRING_LENGTH_WEIGHER = new Weigher<Path, TNode>()  {
-        @Override
-        public int weigh(Path key, TNode value) {
-            return key.toString().length() + (int) value.getUnparsedSize();
-        }
-    };
 
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @VisibleForTesting
     @Autowired
     SystemInfo systemInfo;
@@ -43,42 +39,16 @@ public class TemplateCache {
     @Autowired
     TemplateParser xmlTemplateParser;
 
+    @VisibleForTesting
+    final Map<Path, TNode> canonicalFileNameToText = Maps.newHashMap();
+    private final Set<Path> filesKnownToNotExist = Sets.newHashSet();
 
-
-    private int maxSizeKB = 100000;
-    Cache<Path, TNode> canonicalFileNameToText;
-    private int concurrencyLevel = 4;
-
-    @PostConstruct
-    void init() {
-        long maxSize = ((long) maxSizeKB * 1024) / 8;
-        if (maxSize > Integer.MAX_VALUE) {
-            final long maxAllowed = ((long) Integer.MAX_VALUE * 8) / 1024;
-            throw new AssertionError("maxSizeKB is too large: " + maxSizeKB + " max allowed value is: " + maxAllowed);
-        }
-        if (maxSize < 1) {
-            throw new AssertionError("maxSizeKB is too small: " + maxSizeKB);
-        }
-        canonicalFileNameToText = CacheBuilder.newBuilder().
-                concurrencyLevel(this.concurrencyLevel).
-                initialCapacity(100).
-                maximumWeight((int) maxSize). // allow caching roughly 100MB maximum
-                weigher(STRING_LENGTH_WEIGHER).
-                build();
-    }
-
-    public void setMaxSizeKB(int maxSizeKB) {
-        this.maxSizeKB = maxSizeKB;
-    }
-
-    public void setConcurrencyLevel(int concurrencyLevel) {
-        this.concurrencyLevel = concurrencyLevel;
-    }
 
     public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
                                              Map<String, Object> substitutions) throws IOException {
+        final Path originalPath = IO.toPath(path);
         Path file = formatterDir.resolve(path);
-        TNode template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
+        TNode template = fetchFromCache(originalPath, file);
         Path fromParentSchema = null;
 
         if (!this.systemInfo.isDevMode()) {
@@ -87,31 +57,31 @@ public class TemplateCache {
             }
 
             file = schemaDir.resolve(path);
-            template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
+            template = fetchFromCache(originalPath, file);
             if (template != null) {
                 return new FileResult(template, substitutions);
             }
             fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             if (fromParentSchema != null) {
-                template = this.canonicalFileNameToText.getIfPresent(toRealPath(fromParentSchema));
+                template = fetchFromCache(originalPath, fromParentSchema);
                 if (template != null) {
                     return new FileResult(template, substitutions);
                 }
             }
 
             file = rootFormatterDir.resolve(path);
-            template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
+            template = fetchFromCache(originalPath, file);
             if (template != null) {
                 return new FileResult(template, substitutions);
             }
         }
 
         file = formatterDir.resolve(path);
-        if (!Files.exists(file) && schemaDir != null) {
+        if (!exists(file) && schemaDir != null) {
             file = schemaDir.resolve(path);
         }
 
-        if (!Files.exists(file)) {
+        if (!exists(file)) {
             if (fromParentSchema == null) {
                 fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             }
@@ -119,10 +89,10 @@ public class TemplateCache {
                 file = fromParentSchema;
             }
         }
-        if (!Files.exists(file)) {
+        if (!exists(file)) {
             file = rootFormatterDir.resolve(path);
         }
-        if (!Files.exists(file)) {
+        if (!exists(file)) {
             throw new IllegalArgumentException("There is no file: " + path + " in any of: \n" +
                                                "\t * " + formatterDir + "\n" +
                                                "\t * " + schemaDir + "\n" +
@@ -131,13 +101,64 @@ public class TemplateCache {
         }
 
         template = xmlTemplateParser.parse(file);
-        this.canonicalFileNameToText.put(toRealPath(file), template);
+        cacheTemplate(originalPath, file, template);
 
         return new FileResult(template, substitutions);
     }
 
+    public boolean exists(Path file) throws IOException {
+        if (this.filesKnownToNotExist.contains(file) ||
+                this.filesKnownToNotExist.contains(file.toAbsolutePath())) {
+            return false;
+        }
+        final boolean exists = Files.exists(file);
+        if (!exists) {
+            this.filesKnownToNotExist.add(file);
+            this.filesKnownToNotExist.add(file.toAbsolutePath());
+        }
+        return exists;
+    }
+
+    public void cacheTemplate(Path originalPath, Path file, TNode template) throws IOException {
+        doCache(originalPath, template);
+        doCache(toRealPath(file), template);
+        doCache(file, template);
+        doCache(file.toAbsolutePath(), template);
+        doCache(file.toAbsolutePath().normalize(), template);
+    }
+
+    public void doCache(Path originalPath, TNode template) {
+        filesKnownToNotExist.remove(originalPath);
+        this.canonicalFileNameToText.put(originalPath, template);
+    }
+
+    public TNode fetchFromCache(Path originalPath, Path file) throws IOException {
+        TNode template = this.canonicalFileNameToText.get(originalPath);
+        boolean recache = false;
+        if (template == null) {
+            template = this.canonicalFileNameToText.get(file);
+            recache = true;
+        }
+        if (template == null) {
+            template = this.canonicalFileNameToText.get(file.toAbsolutePath());
+            recache = true;
+        }
+        if (template == null) {
+            template = this.canonicalFileNameToText.get(file.toAbsolutePath().normalize());
+            recache = true;
+        }
+        if (template == null) {
+            template = this.canonicalFileNameToText.get(toRealPath(file));
+            recache = true;
+        }
+        if (recache && template != null) {
+            cacheTemplate(originalPath, file, template);
+        }
+        return template;
+    }
+
     private Path toRealPath(Path file) throws IOException {
-        if (Files.exists(file)) {
+        if (exists(file)) {
             return file.toRealPath();
         } else {
             return file.toAbsolutePath().normalize();
@@ -157,7 +178,7 @@ public class TemplateCache {
             Path parentSchema = this.schemaManager.getSchemaDir(schemaName).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
 
             Path file = parentSchema.resolve(path);
-            if (Files.exists(file)) {
+            if (exists(file)) {
                 return file;
             }
 

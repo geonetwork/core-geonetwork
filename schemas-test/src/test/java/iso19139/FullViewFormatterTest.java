@@ -15,7 +15,6 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     @Autowired
     private IsoLanguagesMapper mapper;
 
-    @Test @Ignore
+    @Test //@Ignore
     @SuppressWarnings("unchecked")
     public void testPrintFormat() throws Exception {
         final FormatType formatType = FormatType.testpdf;
@@ -135,7 +134,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
             Environment env = new EnvironmentImpl(fparams, mapper);
             functions = new Functions(fparams, env);
 
-//        measureFormatterPerformance(request, formatterId);
+            measureFormatterPerformance(request, formatterId);
 
 //            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
             formatService.exec("eng", formatType.name(), "" + id, null, formatterId, "true", false, request, response);

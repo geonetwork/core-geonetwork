@@ -211,7 +211,7 @@ public class Handlers {
                     e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
                     s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
                     n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-                    formatType: env.formatType == FormatType.pdf
+                    pdfOutput: env.formatType == FormatType.pdf
             ]
 
             def bboxData = handlers.fileResult("html/bbox.html", replacements)

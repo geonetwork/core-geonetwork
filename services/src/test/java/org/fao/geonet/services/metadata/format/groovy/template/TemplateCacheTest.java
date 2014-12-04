@@ -23,13 +23,12 @@ public class TemplateCacheTest {
         final TemplateCache templateCache = new TemplateCache();
         templateCache.systemInfo = SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION);
         templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
-        templateCache.init();
         final Path functionFile = IO.toPath(FormatIntegrationTest.class.getResource("functions.xsl").toURI());
         final FileResult fileResult = templateCache.createFileResult(functionFile.getParent(), functionFile.getParent(),
                 functionFile.getParent(), functionFile.getFileName().toString(), Collections.<String, Object>emptyMap());
 
         assertNotNull(fileResult);
-        assertNotNull(templateCache.canonicalFileNameToText.getIfPresent(functionFile.toRealPath()));
+        assertNotNull(templateCache.canonicalFileNameToText.get(functionFile.toRealPath()));
     }
 
     @Test
@@ -48,7 +47,6 @@ public class TemplateCacheTest {
             templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
             Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParent().getParent());
             Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParent().getParent());
-            templateCache.init();
 
             final Path schemaAndRootDir = file0.getParent().getParent();
 
@@ -73,18 +71,5 @@ public class TemplateCacheTest {
 
         }
 
-    }
-
-    @Test (expected = AssertionError.class)
-    public void testTooLarge() throws Exception {
-        final TemplateCache templateCache = new TemplateCache();
-        templateCache.setMaxSizeKB(Integer.MAX_VALUE);
-        templateCache.init();
-    }
-    @Test (expected = AssertionError.class)
-    public void testTooSMall() throws Exception {
-        final TemplateCache templateCache = new TemplateCache();
-        templateCache.setMaxSizeKB(0);
-        templateCache.init();
     }
 }
