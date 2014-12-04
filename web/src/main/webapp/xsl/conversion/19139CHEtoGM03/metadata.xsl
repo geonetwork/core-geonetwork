@@ -92,8 +92,8 @@
 
     <xsl:template mode="metadata" match="gmd:MD_PortrayalCatalogueReference|che:CHE_MD_PortrayalCatalogueReference">
         <GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID="x{util:randomId()}">
-            <!-- portrayalCatalogueURL? -->
             <xsl:apply-templates mode="metadata" select="gmd:portrayalCatalogueCitation"/>
+            <xsl:apply-templates mode="text" select="che:portrayalCatalogueURL"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference>
     </xsl:template>
 

@@ -262,7 +262,7 @@
         </xsl:element>
     </xsl:template>
 
-    <xsl:template mode="text" match="*[@xsi:type='che:PT_FreeURL_PropertyType' or gmd:URL or che:LocalisedURL]" priority="2">
+    <xsl:template mode="text" match="*[@xsi:type='che:PT_FreeURL_PropertyType' or che:PT_FreeURL or gmd:URL or che:LocalisedURL]" priority="2">
         <xsl:element name="{local-name(.)}">
             <GM03_2_1Core.Core.PT_FreeURL>
                 <URLGroup>
