@@ -9,7 +9,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0">
 
-  <!--<xsl:include href="sharedFormatterDir/functions.xsl"/>-->
+  <xsl:include href="sharedFormatterDir/functions.xsl"/>
 
   <xsl:variable name="configuration" as="element()">
     <configuration>
@@ -29,7 +29,7 @@
 
     <div>
       <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/>
-      <!--<xsl:call-template name="fieldset"/>-->
+      <xsl:call-template name="header"/>
       <div class="row">
         <div class="col-xs-4">
           <img src=""/>
