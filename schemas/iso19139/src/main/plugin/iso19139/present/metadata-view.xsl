@@ -66,7 +66,7 @@
                   select="
                   gmd:identificationInfo/*/gmd:language
                   |gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:edition
-                  |gmd:topicCategory
+                  |gmd:identificationInfo/*/gmd:topicCategory
                   |gmd:identificationInfo/*/gmd:descriptiveKeywords
                   |gmd:identificationInfo/*/gmd:graphicOverview[1]
                   |gmd:identificationInfo/*/gmd:extent/gmd:EX_Extent/gmd:geographicElement
@@ -381,7 +381,24 @@
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="content">
-        <xsl:value-of select="gmd:MD_TopicCategoryCode"/>
+        <xsl:variable name="choiceValue" select="gmd:MD_TopicCategoryCode"/>
+        <xsl:variable name="name" select="'gmd:MD_TopicCategoryCode'"/>
+        <xsl:variable name="schemaLabel"
+                      select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+
+        <xsl:variable name="label">
+          <xsl:choose>
+            <xsl:when test="normalize-space($schemaLabel) = '' and starts-with($schema, 'iso19139.')">
+              <!-- Check iso19139 label -->
+              <xsl:value-of
+                      select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+            </xsl:when>
+            <xsl:when test="$schemaLabel"><xsl:value-of select="$schemaLabel"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:value-of select="$label"/>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
