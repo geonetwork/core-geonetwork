@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -22,6 +23,39 @@ public class TRenderContextTest {
         assertEquals("REL", context.getModelValue("item.inner.rel"));
         assertEquals(item.toString(), context.getModelValue("item").toString());
         assertEquals(item.getInner().toString(), context.getModelValue("item.inner").toString());
+    }
+
+    @Test
+    public void testEmbeddedMap() throws Exception {
+        String itemKey = "item";
+        final String expr = itemKey + ".inner.name";
+        final Map<String, Object> inner = Collections.<String, Object>singletonMap("name", "KEY");
+        Map<String, Object> item = Collections.<String, Object>singletonMap("inner", inner);
+
+        final Map<String, Object> model = Collections.<String, Object>singletonMap(itemKey, item);
+        final TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), model);
+
+        assertEquals(item.toString(), context.getModelValue("item").toString());
+        assertEquals(item.get("inner").toString(), context.getModelValue("item.inner").toString());
+
+        context.getModelValue(expr);
+        assertEquals("KEY", context.getModelValue("item.inner.name"));
+    }
+
+    @Test
+    public void testEmbeddedList() throws Exception {
+        String itemKey = "item";
+        final String expr = itemKey + ".0.0";
+        final List<Object> inner = Collections.<Object>singletonList("KEY");
+        List<Object> item = Collections.<Object>singletonList(inner);
+
+        final Map<String, Object> model = Collections.<String, Object>singletonMap(itemKey, item);
+        final TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), model);
+        assertEquals(item.toString(), context.getModelValue("item").toString());
+        assertEquals(item.get(0).toString(), context.getModelValue("item.0").toString());
+
+        context.getModelValue(expr);
+        assertEquals("KEY", context.getModelValue("item.0.0"));
     }
 
     @Test
@@ -71,6 +105,7 @@ public class TRenderContextTest {
             assertTrue(e.getMessage(), e.getMessage().contains("There is no object in the model"));
         }
     }
+
     @Test
     public void testNullItem() throws Exception {
         String itemKey = "item";

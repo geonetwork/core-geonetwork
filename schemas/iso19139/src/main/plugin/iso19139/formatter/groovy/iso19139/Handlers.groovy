@@ -30,6 +30,7 @@ public class Handlers {
         handlers.add name: 'Boolean Elements', select: matchers.isBooleanEl, isoBooleanEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
+        handlers.add name: 'Format Elements',  select: matchers.isFormatEl, group: true, formatEls
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, {keywords ->
             def output = new StringBuilder()
             keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each{
@@ -108,9 +109,49 @@ public class Handlers {
         '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
     }
 
-    def skipContainer = {
-        el ->
-            handlers.processElements(el.children())
+    def formatEls = { els ->
+        def formats = []
+
+        def resolveFormat = { el ->
+            def format = el.'gmd:MD_Format'
+            if (format.isEmpty()) {
+                format = el
+            }
+            format
+        }
+
+        els.each {el ->
+            def format = resolveFormat(el)
+            def valueMap = [:]
+            format.children().list().each {child ->
+                if (child.name().equals("gmd:formatDistributor")) {
+                    return;
+                }
+                String[] parts = child.name().split(":");
+                String name;
+                if (parts.length == 2) {
+                    name = parts[1]
+                } else {
+                    name = parts[0]
+                }
+
+                valueMap.put(name, child.text())
+            }
+            def distributor = resolveFormat(el).'gmd:formatDistributor'.'gmd:MD_Distributor'.'gmd:distributorContact'.'*'
+            if (!distributor.text().isEmpty()) {
+                valueMap.put('formatDistributor', handlers.processElements(distributor))
+            }
+
+            formats.add(valueMap)
+        }
+
+        def label = "format"
+        if (!els.isEmpty()) {
+            label = f.nodeLabel(els[0])
+        }
+
+        def model = [label: label, formats: formats]
+        handlers.fileResult("html/format.html", model)
     }
 
     def citationEl = { el ->

@@ -1074,6 +1074,26 @@
                         <gco:CharacterString>ggfsdfgsdfgdsg</gco:CharacterString>
                     </gmd:specification>
                     <gmd:fileDecompressionTechnique>
+                        <gco:CharacterString>File decompression technique1111</gco:CharacterString>
+                    </gmd:fileDecompressionTechnique>
+                    <gmd:formatDistributor/>
+                </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:distributionFormat>
+                <gmd:MD_Format>
+                    <gmd:name>
+                        <gco:CharacterString>Format2</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                        <gco:CharacterString>2</gco:CharacterString>
+                    </gmd:version>
+                    <gmd:amendmentNumber>
+                        <gco:CharacterString>sdfg22</gco:CharacterString>
+                    </gmd:amendmentNumber>
+                    <gmd:specification>
+                        <gco:CharacterString>ggfsdfgsdfgdsg2222222</gco:CharacterString>
+                    </gmd:specification>
+                    <gmd:fileDecompressionTechnique>
                         <gco:CharacterString>File decompression technique1222</gco:CharacterString>
                     </gmd:fileDecompressionTechnique>
                     <gmd:formatDistributor/>

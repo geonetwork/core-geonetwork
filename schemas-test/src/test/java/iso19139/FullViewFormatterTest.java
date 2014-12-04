@@ -5,9 +5,7 @@ import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.guiservices.metadata.GetRelated;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
@@ -35,10 +33,6 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
     @Autowired
     private IsoLanguagesMapper mapper;
-    @Autowired
-    private IsoLanguageRepository langRepo;
-    @Autowired
-    private SchemaManager schemaManager;
 
     @Test //@Ignore
     @SuppressWarnings("unchecked")
