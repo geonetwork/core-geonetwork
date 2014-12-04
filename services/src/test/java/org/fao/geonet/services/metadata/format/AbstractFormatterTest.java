@@ -117,7 +117,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
                     MockHttpServletResponse());
         }
         System.out.println("Starting big run");
-        final int secondsRan = 30;
+        final int secondsRan = 60;
         final long thirtySec = TimeUnit.SECONDS.toNanos(secondsRan);
         start = System.nanoTime();
         double executions = 0;

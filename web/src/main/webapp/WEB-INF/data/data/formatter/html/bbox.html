@@ -1,5 +1,5 @@
 <div class="thumbnail extent">
-  <span fmt-if="{{formatType}} != 'pdf'">
+  <span fmt-if="!pdfOut">
     <div class="input-group coord coord-north">
       <input type="text" class="form-control" value="{{n}}" readonly=""/>
       <span class="input-group-addon">N</span>
@@ -17,7 +17,7 @@
       <span class="input-group-addon">W</span>
     </div>
   </span>
-  <span fmt-if="{{formatType}} == 'pdf'">
+  <span fmt-if="pdfOut">
     <div class="input-group coord coord-north">{{n}} N</div>
     <div class="input-group coord coord-south">{{s}} S</div>
     <div class="input-group coord coord-east">{{e}} E</div>

@@ -373,6 +373,10 @@ public class GeonetworkDataDirectory {
             }
         }
 
+        final Path locDir = webappDir.resolve("loc");
+        if (!Files.exists(locDir)) {
+            Files.createDirectories(locDir);
+        }
 	}
 
     private Path getDefaultDataDir(Path webappDir) {
