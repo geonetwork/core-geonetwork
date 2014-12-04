@@ -80,8 +80,8 @@
           // No date defined, get min and max of search range
           // and init dateFrom and dateTo to query full time range
           if ($scope.dateFrom === null) {
-            $scope.dateFrom = $scope.dateMin;
-            $scope.dateTo = $scope.dateMax;
+            $scope.dateFrom = new Date($scope.dateMin);
+            $scope.dateTo = new Date($scope.dateMax);
             return;
           }
 

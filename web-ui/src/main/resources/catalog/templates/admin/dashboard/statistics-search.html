@@ -11,7 +11,7 @@
           <!-- See https://github.com/angular/angular.js/pull/2505#issuecomment-17012537-->
           <tr
             data-ng-repeat="(key, value) in statistics.search.mainSearchStatistics.q track by $index">
-            <td>{{key | translate}}</td>
+            <td>{{::key | translate}}</td>
             <td class="text-right">{{value}}</td>
           </tr>
         </table>
