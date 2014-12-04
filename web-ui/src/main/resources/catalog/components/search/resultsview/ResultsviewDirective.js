@@ -48,10 +48,10 @@
    * view (defined by a html file path) into its root element.
    */
   module.directive('gnResultsContainer', [
-      '$compile',
-      'gnMap',
-      'gnOwsCapabilities',
-      'gnSearchSettings',
+    '$compile',
+    'gnMap',
+    'gnOwsCapabilities',
+    'gnSearchSettings',
     function($compile, gnMap, gnOwsCapabilities, gnSearchSettings) {
 
       return {
@@ -87,15 +87,17 @@
           scope.$watchCollection('searchResults.records', function(rec) {
 
             fo.getFeatures().clear();
-            if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
+            if (!angular.isArray(rec) ||
+                angular.isUndefined(scope.map.getTarget())) {
               return;
             }
-            for(var i=0;i<rec.length;i++) {
+            for (var i = 0; i < rec.length; i++) {
               var feat = new ol.Feature();
               var extent = gnMap.getBboxFromMd(rec[i]);
-              if(extent) {
+              if (extent) {
                 var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                    extent) ?
                     ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                     proj.getExtent();
                 var coords = gnMap.getPolygonFromExtent(extent);
@@ -107,7 +109,7 @@
             fo.getFeatures().forEach(function(f) {
               ol.extent.extend(extent, f.getGeometry().getExtent());
             });
-            if(!ol.extent.isEmpty(extent)) {
+            if (!ol.extent.isEmpty(extent)) {
               scope.map.getView().fitExtent(extent, scope.map.getSize());
             }
           });
@@ -117,7 +119,7 @@
             if (angular.isUndefined(templateUrl)) {
               return;
             }
-            var template = angular.element(document.createElement('div'))
+            var template = angular.element(document.createElement('div'));
             template.attr({
               'ng-include': 'resultTemplate'
             });
@@ -129,7 +131,8 @@
           //TODO: remove this is defined in custom controllers
           scope.addToMap = function(link) {
             gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
-              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                  link.name, capObj);
               scope.$emit('addLayerFromMd', layerInfo);
             });
 
@@ -150,16 +153,16 @@
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope) {
+        link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
 
         }
-      }
+      };
     }]);
 
-          module.directive('gnDisplayextentOnhover', [
+  module.directive('gnDisplayextentOnhover', [
     'gnMap',
     function(gnMap) {
 
@@ -167,13 +170,14 @@
         restrict: 'A',
         link: function(scope, element, attrs, controller) {
 
-          //TODO : change, just apply a style to the feature when featureoverlay is fixed
+          //TODO : change, just apply a style to the feature when
+          // featureoverlay is fixed
           var feat = new ol.Feature();
 
           element.bind('mouseenter', function() {
 
             var extent = gnMap.getBboxFromMd(scope.md);
-            if(extent) {
+            if (extent) {
               var proj = scope.map.getView().getProjection();
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
@@ -202,7 +206,7 @@
           element.bind('dblclick', function() {
 
             var extent = gnMap.getBboxFromMd(scope.md);
-            if(extent) {
+            if (extent) {
               var proj = scope.map.getView().getProjection();
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
@@ -215,78 +219,81 @@
     }]);
 
   module.directive('gnMetadataOpen',
-    [ '$http', '$sanitize',  '$compile', function($http, $sanitize, $compile) {
-      return {
-        restrict: 'A',
-        scope: {
-          md: '=gnMetadataOpen',
-          selector: '@gnMetadataOpenSelector'
-        },
+      ['$http', '$sanitize', '$compile', function($http, $sanitize, $compile) {
+        return {
+          restrict: 'A',
+          scope: {
+            md: '=gnMetadataOpen',
+            selector: '@gnMetadataOpenSelector'
+          },
 
-        link: function(scope, element, attrs, controller) {
-          element.on('click', function() {
-            //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
-            var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&schema=iso19139.che&id=';
-            // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
-            $http.get(URI + scope.md.getUuid()).then(function(response) {
-              scope.fragment = response.data.replace('<?xml version="1.0" encoding="UTF-8"?>', '');
-              var el = document.createElement('div');
-              el.setAttribute('gn-metadata-display', '');
-              $(scope.selector).append(el);
-              $compile(el)(scope);
+          link: function(scope, element, attrs, controller) {
+            element.on('click', function() {
+              //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
+              var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&' +
+                  'schema=iso19139.che&id=';
+              // var URI = 'http://localhost:8080/geonetwork/srv/fre/
+              // view?currTab=simple&uuid='
+              $http.get(URI + scope.md.getUuid()).then(function(response) {
+                scope.fragment = response.data.replace(
+                    '<?xml version="1.0" encoding="UTF-8"?>', '');
+                var el = document.createElement('div');
+                el.setAttribute('gn-metadata-display', '');
+                $(scope.selector).append(el);
+                $compile(el)(scope);
+              });
             });
-          });
-        }
-      };
-    }]
+          }
+        };
+      }]
   );
 
   module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {
-      return {
-        templateUrl: '../../catalog/components/search/resultsview/partials/' +
-            'metadata.html',
-        link: function(scope, element, attrs, controller) {
+    return {
+      templateUrl: '../../catalog/components/search/resultsview/partials/' +
+          'metadata.html',
+      link: function(scope, element, attrs, controller) {
 
-          var domRendered = false;
+        var domRendered = false;
 
-          var addEvents = function() {
-            element.find('.toggler').on('click', function() {
-              $(this).toggleClass('closed');
-              $(this).parent().nextAll('.target').first().toggle();
-            });
+        var addEvents = function() {
+          element.find('.toggler').on('click', function() {
+            $(this).toggleClass('closed');
+            $(this).parent().nextAll('.target').first().toggle();
+          });
 
-            element.find('.nav-pills a[rel]').on('click', function(e) {
-              element.find('.gn-metadata-view > .entry').hide();
-              $($(this).attr('rel')).show();
-              e.preventDefault();
-            });
+          element.find('.nav-pills a[rel]').on('click', function(e) {
+            element.find('.gn-metadata-view > .entry').hide();
+            $($(this).attr('rel')).show();
+            e.preventDefault();
+          });
 
-          };
+        };
 
-          // We need to wait that the HTML is rendered into ng-bind-html directive.
-          // Angular can't tell us so we must do a timeout
-          var callTimeout = function() {
-            return $timeout(function() {
-              console.log('loop');
-              if(element.find('.toggler').length > 0){
-                domRendered = true;
-                addEvents();
-              }
-            }, 100).then(function() {
-              if(!domRendered) {
-                callTimeout();
-              }
-            });
-          };
-          callTimeout();
+        // We need to wait that the HTML is rendered into ng-bind-html directive
+        // Angular can't tell us so we must do a timeout
+        var callTimeout = function() {
+          return $timeout(function() {
+            console.log('loop');
+            if (element.find('.toggler').length > 0) {
+              domRendered = true;
+              addEvents();
+            }
+          }, 100).then(function() {
+            if (!domRendered) {
+              callTimeout();
+            }
+          });
+        };
+        callTimeout();
 
-          scope.dismiss = function() {
-            element.remove();
-          };
-        }
+        scope.dismiss = function() {
+          element.remove();
+        };
+      }
 
-      };
-    }]
+    };
+  }]
   );
 
 })();

@@ -2,12 +2,13 @@
 
   goog.provide('gn_login_controller');
 
-  goog.require('gn_utility');
+
   goog.require('gn_catalog_service');
+  goog.require('gn_utility');
 
   var module = angular.module('gn_login_controller', [
-      'gn_utility',
-      'gn_catalog_service'
+    'gn_utility',
+    'gn_catalog_service'
   ]);
 
   /**

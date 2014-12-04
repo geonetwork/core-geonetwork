@@ -32,13 +32,13 @@
           titleInfo: 0,
           active: false
         },
-        map:{
+        map: {
           title: 'Map',
           active: false,
           titleInfo: 0
 
         },
-        panier:{
+        panier: {
           title: 'Panier',
           active: false,
           titleInfo: 0
@@ -49,8 +49,8 @@
       });
 
       $scope.displayMapTab = function() {
-        if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
-          setTimeout(function(){
+        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
+          setTimeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
               viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
@@ -67,26 +67,26 @@
       };
 
 
-///////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
             ('STARTSWITHFIRST'));
 
         return $http.get(url, {
-        }).then(function(res){
+        }).then(function(res) {
           return res.data[1];
         });
       };
 
       $scope.$watch('searchObj.advancedMode', function(val) {
-        if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
-          setTimeout(function(){
+        if (val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)) {
+          setTimeout(function() {
             searchMap.updateSize();
           }, 0);
         }
       });
 
-///////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -97,9 +97,9 @@
     }]);
 
   module.controller('gnsSextantSearch', [
-      '$scope',
-      'gnOwsCapabilities',
-      'gnMap',
+    '$scope',
+    'gnOwsCapabilities',
+    'gnMap',
     function($scope, gnOwsCapabilities, gnMap) {
 
       $scope.resultviewFns = {
@@ -111,10 +111,10 @@
           $scope.mainTabs.map.titleInfo += 1;
 
         },
-        addMdLayerToPanier: function(link,md) {
+        addMdLayerToPanier: function(link, md) {
           $scope.searchObj.panier.push({
             link: link,
-              md: md
+            md: md
           });
           $scope.mainTabs.panier.titleInfo += 1;
         }
@@ -127,13 +127,13 @@
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope) {
+        link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
 
         }
-      }
+      };
     }]);
 
 })();

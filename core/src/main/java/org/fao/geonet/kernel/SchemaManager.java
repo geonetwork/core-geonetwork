@@ -186,6 +186,8 @@ public class SchemaManager {
 		
 		Element schemaPluginCatRoot = getSchemaPluginCatalogTemplate();
 
+        addResolverRewriteDirectives(applicationContext.getBean(GeonetworkDataDirectory.class));
+
 		// -- check the plugin directory and add any schemas already in there
         try (DirectoryStream<Path> saSchemas = Files.newDirectoryStream(this.schemaPluginsDir)) {
             for (Path schemaDir : saSchemas) {

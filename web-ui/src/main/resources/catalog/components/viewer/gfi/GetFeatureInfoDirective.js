@@ -5,7 +5,7 @@
     'angular.filter'
   ]);
 
-  module.directive('gnGfi', [ '$http', function($http) {
+  module.directive('gnGfi', ['$http', function($http) {
 
     return {
       restrict: 'A',
@@ -32,7 +32,7 @@
           scope.pending = 0;
         };
 
-        map.on('singleclick', function(e){
+        map.on('singleclick', function(e) {
 
           fo.getFeatures().clear();
           var layers = map.getLayers().getArray().filter(function(layer) {
@@ -45,9 +45,10 @@
               return;
             }
             var uri = layer.getSource().getGetFeatureInfoUrl(e.coordinate,
-              map.getView().getResolution(), map.getView().getProjection(), {
-                INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-              });
+                map.getView().getResolution(), map.getView().getProjection(), {
+                  INFO_FORMAT: layer.ncInfo ? 'text/xml' :
+                      'application/vnd.ogc.gml'
+                });
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(uri);
             scope.pending += 1;
             return $http.get(proxyUrl).success(function(response) {
@@ -55,7 +56,7 @@
               if (layer.ncInfo) {
                 var doc = ol.xml.load(response);
                 var props = {};
-                ['longitude', 'latitude', 'time', 'value'].forEach(function(v){
+                ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
                   var node = doc.getElementsByTagName(v);
                   if (node) {
                     props[v] = ol.xml.getAllTextContent(node[0], true);
@@ -68,7 +69,7 @@
                 features = format.readFeatures(response);
               }
               if (features) {
-                features.forEach(function(f){ f.layer = layer.get('label'); });
+                features.forEach(function(f) { f.layer = layer.get('label'); });
                 fo.getFeatures().extend(features);
               }
               scope.pending = Math.max(0, scope.pending - 1);
@@ -91,15 +92,15 @@
   angular.module('gfiFilters', ['ngSanitize'])
 
   .filter('attributes', function() {
-    return function(properties) {
-      var props = {};
-      var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
-      Object.keys(properties).forEach(function(k) {
-        if (exclude.indexOf(k) !== -1) return;
-        props[k] = properties[k].toString();
+        return function(properties) {
+          var props = {};
+          var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
+          Object.keys(properties).forEach(function(k) {
+            if (exclude.indexOf(k) !== -1) return;
+            props[k] = properties[k].toString();
+          });
+          return props;
+        };
       });
-      return props;
-    };
-  });
 
 })();

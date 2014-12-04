@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('sxt_panier_directive');
 
   var module = angular.module('sxt_panier_directive', [
@@ -11,7 +11,7 @@
    * @description
    */
   module.directive('sxtPanier', [
-    function () {
+    function() {
       return {
         restrict: 'A',
         replace: true,
@@ -23,23 +23,23 @@
         controller: ['$scope', function($scope) {
           this.del = function(md) {
             $scope.panier.splice($scope.panier.indexOf(md), 1);
-          }
+          };
         }],
-        link: function (scope, element, attrs, controller) {
+        link: function(scope, element, attrs, controller) {
 
           scope.formObj = [];
           scope.extract = function() {
             console.log(scope.formObj);
-          }
+          };
         }
-      }
+      };
     }]);
 
   module.directive('sxtPanierElt', [
     'gnMap',
     'gnSearchSettings',
     'gnPanierSettings',
-    function (gnMap, gnSearchSettings, gnPanierSettings) {
+    function(gnMap, gnSearchSettings, gnPanierSettings) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
@@ -82,7 +82,7 @@
 
               // Set initial extent to draw the BBOX
               var extent = gnMap.getBboxFromMd(scope.md);
-              if(extent) {
+              if (extent) {
 
                 // Fixed feature overlay to show extent of the md
                 var feature = new ol.Feature();
@@ -93,7 +93,8 @@
                 featureOverlay.addFeature(feature);
 
                 var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                    extent) ?
                     ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                     proj.getExtent();
 
@@ -103,10 +104,11 @@
               }
 
               // To update size on first maps render
-              scope.$on('renderPanierMap', function () {
+              scope.$on('renderPanierMap', function() {
                 scope.map.updateSize();
-                if(feature && !rendered) {
-                  scope.map.getView().fitExtent(feature.getGeometry().getExtent(), scope.map.getSize());
+                if (feature && !rendered) {
+                  scope.map.getView().fitExtent(
+                      feature.getGeometry().getExtent(), scope.map.getSize());
                 }
                 rendered = true;
               });
@@ -118,11 +120,11 @@
               scope.del = function(md, form) {
                 controller.del(md);
                 scope.formObj.splice(scope.formObj.indexOf(form), 1);
-              }
+              };
             }
-          }
+          };
         }
-      }
+      };
     }]);
 
 })();

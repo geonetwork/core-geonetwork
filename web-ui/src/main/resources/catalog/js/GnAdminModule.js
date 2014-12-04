@@ -9,8 +9,9 @@
 
 
 
-  goog.require('gn_module');
+
   goog.require('gn_admin_controller');
+  goog.require('gn_module');
 
   var module = angular.module('gn_admin', [
     'gn_module',

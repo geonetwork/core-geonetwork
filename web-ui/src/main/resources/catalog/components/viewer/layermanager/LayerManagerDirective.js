@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('gn_layermanager_directive');
 
   var module = angular.module('gn_layermanager_directive', [
@@ -29,56 +29,56 @@
    */
   module.directive('gnLayermanager', [
     'gnLayerFilters',
-    function (gnLayerFilters) {
-    return {
-      restrict: 'A',
-      templateUrl: '../../catalog/components/viewer/layermanager/' +
-        'partials/layermanager.html',
-      scope: {
-        map: '=gnLayermanagerMap'
-      },
-      controllerAs: 'gnLayermanagerCtrl',
-      controller: [ '$scope', function($scope) {
+    function(gnLayerFilters) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/viewer/layermanager/' +
+            'partials/layermanager.html',
+        scope: {
+          map: '=gnLayermanagerMap'
+        },
+        controllerAs: 'gnLayermanagerCtrl',
+        controller: ['$scope', function($scope) {
 
-        /**
+          /**
          * Change layer index in the map.
          *
-         * @param layer
-         * @param delta
+         * @param {ol.layer} layer
+         * @param {float} delta
          */
-        this.moveLayer = function(layer, delta) {
-          var index = $scope.layers.indexOf(layer);
-          var layersCollection = $scope.map.getLayers();
-          layersCollection.removeAt(index);
-          layersCollection.insertAt(index + delta, layer);
-        };
+          this.moveLayer = function(layer, delta) {
+            var index = $scope.layers.indexOf(layer);
+            var layersCollection = $scope.map.getLayers();
+            layersCollection.removeAt(index);
+            layersCollection.insertAt(index + delta, layer);
+          };
 
-        /**
+          /**
          * Set a property to the layer 'showInfo' to true and
          * false to all other layers. Used to display layer information
          * in the layer manager.
          *
-         * @param layer
+         * @param {ol.layer} layer
          */
-        this.showInfo = function(layer) {
-          angular.forEach($scope.layers, function(l) {
-            if(l != layer){
-              l.showInfo = false;
-            }
-          });
-          layer.showInfo = !layer.showInfo;
+          this.showInfo = function(layer) {
+            angular.forEach($scope.layers, function(l) {
+              if (l != layer) {
+                l.showInfo = false;
+              }
+            });
+            layer.showInfo = !layer.showInfo;
+          };
+        }],
+        link: function(scope, element, attrs) {
+
+          scope.layers = scope.map.getLayers().getArray();
+          scope.layerFilterFn = gnLayerFilters.selected;
         }
-      }],
-      link: function (scope, element, attrs) {
+      };
+    }]);
 
-        scope.layers = scope.map.getLayers().getArray();
-        scope.layerFilterFn = gnLayerFilters.selected;
-      }
-    };
-  }]);
-
-  module.directive('gnLayermanagerItem', [ 'gnPopup',
-    function (gnPopup) {
+  module.directive('gnLayermanagerItem', ['gnPopup',
+    function(gnPopup) {
       return {
         require: '^gnLayermanager',
         restrict: 'A',
@@ -86,25 +86,28 @@
         templateUrl: '../../catalog/components/viewer/layermanager/' +
             'partials/layermanageritem.html',
         scope: true,
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
           scope.layer = scope.$eval(attrs['gnLayermanagerItem']);
           scope.showInfo = ctrl.showInfo;
           scope.moveLayer = ctrl.moveLayer;
 
           scope.showMetadata = function(url, title) {
-            if(url) {
+            if (url) {
               gnPopup.create({
                 title: title,
-                url : 'http://sextant.ifremer.fr/geonetwork/srv/fre/metadata.formatter.html?xsl=mdviewer&style=sextant&url=' + encodeURIComponent(url),
+                url: 'http://sextant.ifremer.fr/geonetwork/srv/fre/' +
+                    'metadata.formatter.html?xsl=mdviewer&style=sextant&url=' +
+                    encodeURIComponent(url),
                 content: '<div class="gn-popup-iframe">' +
-                    '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                    '<iframe frameBorder="0" border="0" ' +
+                    'style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
                     '</div>'
               });
             }
           };
 
           scope.zoomToExtent = function(layer, map) {
-            if(layer.get('cextent')) {
+            if (layer.get('cextent')) {
               map.getView().fitExtent(layer.get('cextent'), map.getSize());
             }
           };

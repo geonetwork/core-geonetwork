@@ -29,6 +29,11 @@
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>
                 <td class="text-right">{{md.popularity}}</td>
+                <td>
+                  <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                    <i class="fa fa-eye"/>
+                  </a>
+                </td>
               </tr>
             </table>
             <div data-gn-pagination="paginationInfo"/>
@@ -42,6 +47,11 @@
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>
                 <td class="text-right">{{md.rating}}</td>
+                <td>
+                  <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                    <i class="fa fa-eye"/>
+                  </a>
+                </td>
               </tr>
             </table>
             <div data-gn-pagination="paginationInfo"/>

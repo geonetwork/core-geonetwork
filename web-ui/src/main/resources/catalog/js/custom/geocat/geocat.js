@@ -22,8 +22,8 @@
    *
    */
   module.controller('gnsGeocat', [
-      '$scope',
-      'gnSearchSettings',
+    '$scope',
+    'gnSearchSettings',
     function($scope, gnSearchSettings) {
 
       angular.extend($scope.searchObj, {
@@ -57,7 +57,7 @@
         $scope.mostPopular = data.metadata;
       });
 
-  }]);
+    }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -72,7 +72,7 @@
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, gnSearchSettings,
+        $timeout, suggestService, $http, gnSearchSettings,
              ngeoDecorateInteraction, gnMap) {
 
       // data store for types field
@@ -103,8 +103,8 @@
 
       var setSearchGeometry = function(geometry) {
         $scope.searchObj.params.geometry = format.writeGeometry(
-          geometry.clone().transform('EPSG:3857', 'EPSG:4326')
-        );
+            geometry.clone().transform('EPSG:3857', 'EPSG:4326')
+            );
       };
 
       /** Manage draw area on search map */
@@ -117,7 +117,7 @@
 
       var cleanDraw = function() {
         featureOverlay.getFeatures().clear();
-        drawInteraction.active = false
+        drawInteraction.active = false;
       };
 
       var drawInteraction = new ol.interaction.Draw({
@@ -125,20 +125,20 @@
         type: 'Polygon',
         style: gnSearchSettings.olStyles.drawBbox
       });
-      drawInteraction.on('drawend', function(){
+      drawInteraction.on('drawend', function() {
         setSearchGeometry(featureOverlay.getFeatures().item(0).getGeometry());
         setTimeout(function() {
           drawInteraction.active = false;
         }, 0);
       });
-      drawInteraction.on('drawstart', function(){
+      drawInteraction.on('drawstart', function() {
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(drawInteraction, map);
 
-      $scope.$watch('restrictArea', function(v){
-        if(angular.isDefined(v)) {
-          if($scope.restrictArea == 'draw') {
+      $scope.$watch('restrictArea', function(v) {
+        if (angular.isDefined(v)) {
+          if ($scope.restrictArea == 'draw') {
             drawInteraction.active = true;
           }
           else {
@@ -148,8 +148,8 @@
       });
 
       /** When we switch between simple and advanced form*/
-      $scope.$watch('advanced', function(v){
-        if(v == false) {
+      $scope.$watch('advanced', function(v) {
+        if (v == false) {
           $scope.restrictArea = '';
         }
       });
@@ -157,7 +157,7 @@
       /** Manage cantons selection (add feature to the map) */
       var nbCantons = 0;
       var addCantonFeature = function(id) {
-        var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
+        var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:' + id + '&srs=EPSG:3857';
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
         nbCantons++;
 
@@ -170,14 +170,14 @@
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
-      $scope.$watch('searchObj.params.cantons', function(v){
+      $scope.$watch('searchObj.params.cantons', function(v) {
         featureOverlay.getFeatures().clear();
-        if(angular.isDefined(v) && v != '') {
+        if (angular.isDefined(v) && v != '') {
           var cs = v.split(',');
-          for(var i=0; i<cs.length;i++) {
+          for (var i = 0; i < cs.length; i++) {
             var id = cs[i].split('#')[1];
-            addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
-              if(--nbCantons == 0) {
+            addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function() {
+              if (--nbCantons == 0) {
                 var features = featureOverlay.getFeatures();
                 var extent = features.item(0).getGeometry().getExtent();
                 features.forEach(function(f) {
@@ -216,7 +216,7 @@
         }, 0);
       };
 
-/*
+      /*
       $('#categoriesF').tagsinput({
         itemValue: 'id',
         itemText: 'label'
@@ -240,7 +240,7 @@
         this.tagsinput('add', datum);
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
-*/
+      */
 
 
       // Keywords input list

@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('gn_ncwms_directive');
 
   var module = angular.module('gn_ncwms_directive', [
@@ -12,19 +12,19 @@
    * @description
    */
   module.directive('gnNcwmsTransect', [
-      'gnHttp',
-      'gnNcWms',
-      'gnPopup',
-    function (gnHttp, gnNcWms, gnPopup) {
+    'gnHttp',
+    'gnNcWms',
+    'gnPopup',
+    function(gnHttp, gnNcWms, gnPopup) {
       return {
         restrict: 'A',
         scope: {
           layer: '=',
-          map:'='
+          map: '='
         },
         templateUrl: '../../catalog/components/viewer/ncwms/' +
-          'partials/ncwmstools.html',
-        link: function (scope, element, attrs) {
+            'partials/ncwmstools.html',
+        link: function(scope, element, attrs) {
 
           var drawInteraction, featureOverlay;
           var map = scope.map;
@@ -32,10 +32,10 @@
           /**
            * Just manage active button in ui.
            * Values of activeTool can be 'time', 'profile', 'transect'
-           * @param activeTool
+           * @param {string} activeTool
            */
           scope.setActiveTool = function(activeTool) {
-            if(scope.activeTool == activeTool) {
+            if (scope.activeTool == activeTool) {
               scope.activeTool = undefined;
             } else {
               scope.activeTool = activeTool;
@@ -44,31 +44,31 @@
           };
 
           var resetInteraction = function() {
-            if(featureOverlay) {
+            if (featureOverlay) {
               featureOverlay.setMap(null);
               delete featureOverlay;
             }
-            if(drawInteraction) {
+            if (drawInteraction) {
               scope.map.removeInteraction(drawInteraction);
               delete drawInteraction;
-            };
+            }
           };
 
           var activateInteraction = function(activeTool) {
-            if(!activeTool) {
+            if (!activeTool) {
               resetInteraction();
             }
             else {
               var type = 'Point';
-              if(activeTool == 'transect') {
+              if (activeTool == 'transect') {
                 type = 'LineString';
               }
 
-              if(!featureOverlay) {
+              if (!featureOverlay) {
                 featureOverlay = new ol.FeatureOverlay();
                 featureOverlay.setMap(scope.map);
               }
-              if(drawInteraction) {
+              if (drawInteraction) {
                 scope.map.removeInteraction(drawInteraction);
               }
 
@@ -81,13 +81,15 @@
                   function(evt) {
 
                     var url;
-                    if(activeTool == 'time') {
+                    if (activeTool == 'time') {
                       url = scope.layer.getSource().getGetFeatureInfoUrl(
                           evt.feature.getGeometry().getCoordinates(),
                           map.getView().getResolution(),
                           map.getView().getProjection(), {
-                            TIME: gnNcWms.formatTimeSeries(scope.timeSeries.tsfromD, scope.timeSeries.tstoD),
-                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z',
+                            TIME: gnNcWms.formatTimeSeries(
+                                scope.timeSeries.tsfromD,
+                                scope.timeSeries.tstoD),
+                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
                             //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
                             INFO_FORMAT: 'image/png'
                           });
@@ -96,13 +98,14 @@
                           scope.layer,
                           scope.map.getView().getProjection(),
                           evt.feature.getGeometry().getCoordinates(),
-                          activeTool)
+                          activeTool);
                     }
 
                     gnPopup.create({
                       title: activeTool,
-                      url : url,
-                      content: '<div class="gn-popup-iframe ' + activeTool + '">' +
+                      url: url,
+                      content: '<div class="gn-popup-iframe ' +
+                          activeTool + '">' +
                           '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
                           '</div>'
                     });
@@ -115,7 +118,7 @@
             }
           };
           var disableInteractionWatchFn = function(nv, ov) {
-            if(!nv) {
+            if (!nv) {
               resetInteraction();
               scope.activeTool = undefined;
             }
@@ -133,12 +136,12 @@
             var ncInfo = layer.ncInfo;
 
             layer.set('cextent', ol.proj.transform([
-                  parseFloat(ncInfo.bbox[0]),
-                  parseFloat(ncInfo.bbox[1]),
-                  parseFloat(ncInfo.bbox[2]),
-                  parseFloat(ncInfo.bbox[3])],
-                'EPSG:4326',
-                map.getView().getProjection().getCode())
+              parseFloat(ncInfo.bbox[0]),
+              parseFloat(ncInfo.bbox[1]),
+              parseFloat(ncInfo.bbox[2]),
+              parseFloat(ncInfo.bbox[3])],
+            'EPSG:4326',
+            map.getView().getProjection().getCode())
             );
 
             scope.params = layer.getSource().getParams() || {};
@@ -151,7 +154,7 @@
             scope.elevations = ncInfo.zaxis.values;
             scope.styles = gnNcWms.parseStyles(ncInfo);
 
-            if(angular.isUndefined(scope.params.LOGSCALE)) {
+            if (angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
             }
           };
@@ -165,7 +168,8 @@
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
                 ol.proj.transform(map.getView().calculateExtent(map.getSize()),
-                    map.getView().getProjection(), 'EPSG:4326').join(',')).success(function(data) {
+                    map.getView().getProjection(), 'EPSG:4326').join(',')).
+                success(function(data) {
                   scope.colorscalerange = [data.min, data.max];
                   scope.onColorscaleChange(scope.colorscalerange);
                   $(evt.target).removeClass('fa-spinner');
@@ -176,10 +180,10 @@
            * Call when the input of the double slider get change.
            * The input is an array of 2 values. It updates the layer
            * with `COLORSCALERANGE` params and refreshes it.
-           * @param v the colorange array
+           * @param {?array} v the colorange array
            */
           scope.onColorscaleChange = function(v) {
-            if(angular.isArray(v) && v.length == 2) {
+            if (angular.isArray(v) && v.length == 2) {
               colorange = v[0] + ',' + v[1];
               scope.params.COLORSCALERANGE = colorange;
               scope.updateLayerParams();

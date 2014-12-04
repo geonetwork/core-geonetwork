@@ -289,7 +289,8 @@
                         });
                       });
                 } else {
-                  gnOnlinesrc.addThumbnailByURL(scope.searchObj.params, scope.popupid);
+                  gnOnlinesrc.addThumbnailByURL(scope.searchObj.params,
+                      scope.popupid);
                 }
               };
 
@@ -411,7 +412,7 @@
                   .then(function(capabilities) {
                         scope.layers = [];
                         angular.forEach(capabilities.layers, function(l) {
-                          if(angular.isDefined(l.Name)) {
+                          if (angular.isDefined(l.Name)) {
                             scope.layers.push(l);
                           }
                         });
@@ -489,7 +490,7 @@
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
 
-                  gnOnlinesrc.register(scope.mode, function () {
+                  gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
 
                     // parameters of the online resource form
@@ -503,8 +504,8 @@
                   });
 
                   // This object is used to share value between this
-                  // directive and the SearchFormController scope that is contained
-                  // by the directive
+                  // directive and the SearchFormController scope that
+                  // is contained by the directive
                   scope.stateObj = {};
 
                   /**
@@ -514,9 +515,9 @@
                    * Update params.layers scope value, that will be also
                    * passed to the layers grid directive.
                    */
-                  scope.loadWMSCapabilities = function (url) {
+                  scope.loadWMSCapabilities = function(url) {
                     gnOwsCapabilities.getCapabilities(url)
-                        .then(function (layers) {
+                        .then(function(layers) {
                           scope.layers = layers;
                         });
                   };
@@ -525,9 +526,10 @@
                    * Watch the result metadata selection change.
                    * selectRecords is a value of the SearchFormController scope.
                    * On service metadata selection, check if the service has
-                   * a WMS URL and send request if yes (then display layers grid).
+                   * a WMS URL and send request if yes (then display
+                   * layers grid).
                    */
-                  scope.$watchCollection('stateObj.selectRecords', function () {
+                  scope.$watchCollection('stateObj.selectRecords', function() {
                     if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
@@ -555,7 +557,7 @@
                    *  - link a service to a dataset
                    * Hide modal on success.
                    */
-                  scope.linkTo = function () {
+                  scope.linkTo = function() {
                     if (scope.mode == 'service') {
                       gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
                     }
@@ -564,7 +566,7 @@
                     }
                   };
                 }
-              }
+              };
             }
           };
         }])
@@ -642,7 +644,7 @@
 
                   scope.gnOnlinesrc = gnOnlinesrc;
                 }
-              }
+              };
             }
           };
         }])
@@ -760,7 +762,7 @@
                     gnOnlinesrc.linkToSibling(params, scope.popupid);
                   };
                 }
-              }
+              };
             }
           };
         }]);

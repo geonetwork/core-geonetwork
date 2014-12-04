@@ -3,7 +3,8 @@
 
   var module = angular.module('gn_printmap_directive', []);
 
-  var mapPrintController = function($scope, gnPrint, $http, $translate, $window) {
+  var mapPrintController = function($scope, gnPrint, $http,
+                                    $translate, $window) {
 
     var printRectangle;
     var deregister;
@@ -16,7 +17,7 @@
 
     /**
      * Return print configuration from Mapfishprint service
-     * @returns {*} promise
+     * @return {*} promise
      */
     var updatePrintConfig = function() {
       var http = $http.get(options.printConfigUrl);
@@ -38,7 +39,7 @@
           dpi: data.dpis[1],
           scales: data.scales,
           scale: data.scales[5]
-        }
+        };
       });
       return http;
     };
@@ -49,7 +50,7 @@
           $scope.map.on('precompose', handlePreCompose),
           $scope.map.on('postcompose', handlePostCompose),
           $scope.map.getView().on('change:resolution', function(event) {
-            if($scope.auto) {
+            if ($scope.auto) {
               fitRectangleToView();
               $scope.$apply();
             } else {
@@ -57,24 +58,24 @@
             }
           }),
           $scope.$watch('auto', function(v) {
-            if(v) {
+            if (v) {
               fitRectangleToView();
             }
           })
         ];
         fitRectangleToView();
       };
-      if(angular.isUndefined($scope.config)) {
+      if (angular.isUndefined($scope.config)) {
         updatePrintConfig().then(initMapEvents);
       } else {
         initMapEvents();
       }
-    }
+    };
 
     this.deactivate = function() {
       if (deregister) {
         for (var i = 0; i < deregister.length; i++) {
-          if(angular.isFunction(deregister[i])) {
+          if (angular.isFunction(deregister[i])) {
             deregister[i]();
           } else {
             deregister[i].src.unByKey(deregister[i]);
@@ -87,7 +88,7 @@
 
     /**
      * Compose the events
-     * @param evt map.precompose event
+     * @param {Object} evt map.precompose event
      */
     var handlePreCompose = function(evt) {
       var ctx = evt.context;
@@ -96,7 +97,7 @@
 
     /**
      * Compose the grey rectangle for print extent
-     * @param evt map.postcompose event
+     * @param {Object} evt map.postcompose event
      */
     var handlePostCompose = function(evt) {
       var ctx = evt.context;
@@ -106,7 +107,7 @@
 
       var minx, miny, maxx, maxy;
       minx = printRectangle[0], miny = printRectangle[1],
-          maxx = printRectangle[2], maxy = printRectangle[3];
+      maxx = printRectangle[2], maxy = printRectangle[3];
 
       ctx.beginPath();
       // Outside polygon, must be clockwise
@@ -132,7 +133,8 @@
     };
 
     var updatePrintRectanglePixels = function(scale) {
-      printRectangle = gnPrint.calculatePageBoundsPixels($scope.map, $scope.config.layout, scale);
+      printRectangle = gnPrint.calculatePageBoundsPixels($scope.map,
+          $scope.config.layout, scale);
       $scope.map.render();
     };
 
@@ -167,7 +169,7 @@
       var proj = view.getProjection();
       var lang = $translate.uses();
       var defaultPage = {
-        comment:''
+        comment: ''
       };
       defaultPage['lang' + lang] = true;
       var encLayers = [];
@@ -215,7 +217,8 @@
         enableLegends: (encLegends && encLegends.length > 0),
         pages: [
           angular.extend({
-            center: gnPrint.getPrintRectangleCenterCoord($scope.map, printRectangle),
+            center: gnPrint.getPrintRectangleCenterCoord(
+                $scope.map, printRectangle),
             // scale has to be one of the advertise by the print server
             scale: $scope.config.scale.value,
             dataOwner: '© ' + attributions.join(),
@@ -296,7 +299,7 @@
             encLegend.classes[0].icon) {
           var legStr = encLegend.classes[0].icon;
           if (legStr.indexOf(pdfLegendString,
-                  legStr.length - pdfLegendString.length) !== -1) {
+              legStr.length - pdfLegendString.length) !== -1) {
             pdfLegendsToDownload.push(legStr);
             encLegend = undefined;
           }
@@ -329,12 +332,13 @@
           link: function(scope, elt, attrs, ctrl) {
 
             scope.defaultLayout = attrs.layout;
-            scope.auto =true;
+            scope.auto = true;
 
             // Deactivate only if it has been activated once first
             scope.$watch('printActive', function(isActive, old) {
-              if(angular.isDefined(isActive) && (angular.isDefined(old) || isActive)){
-                if(isActive){
+              if (angular.isDefined(isActive) &&
+                  (angular.isDefined(old) || isActive)) {
+                if (isActive) {
                   ctrl.activate();
                 } else {
                   ctrl.deactivate();

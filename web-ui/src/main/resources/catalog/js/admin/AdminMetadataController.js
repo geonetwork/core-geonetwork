@@ -192,13 +192,14 @@
        */
       loadFormatter = function() {
         $scope.formatters = [];
-        $http.get('md.formatter.list?_content_type=json').success(function(data) {
-          if (data !== 'null') {
-            $scope.formatters = data.formatters; // TODO: check multiple
-          }
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('md.formatter.list?_content_type=json').
+            success(function(data) {
+              if (data !== 'null') {
+                $scope.formatters = data.formatters; // TODO: check multiple
+              }
+            }).error(function(data) {
+              // TODO
+            });
       };
 
       /**
@@ -226,7 +227,7 @@
 
         var url = 'md.formatter.files?_content_type=json&id=' + f.id;
         if (f.schema) {
-          url += '&schema='+ f.schema;
+          url += '&schema=' + f.schema;
         }
         $http.get(url).success(function(data) {
           if (data !== 'null') {
@@ -265,7 +266,7 @@
       $scope.downloadFormatter = function(f) {
         var url = 'md.formatter.download?id=' + f.id;
         if (f.schema) {
-          url += '&schema='+ f.schema;
+          url += '&schema=' + f.schema;
         }
         location.replace(url, '_blank');
       };
@@ -273,7 +274,7 @@
       $scope.formatterDelete = function(f) {
         var url = 'md.formatter.remove?id=' + f.id;
         if (f.schema) {
-          url += '&schema='+ f.schema;
+          url += '&schema=' + f.schema;
         }
         $http.get(url)
         .success(function(data) {
@@ -296,7 +297,7 @@
             fname: $scope.selectedFile['@path']
           };
           if ($scope.formatterSelected.schema) {
-            params.schema =  $scope.formatterSelected.schema;
+            params.schema = $scope.formatterSelected.schema;
           }
           $http({
             url: 'md.formatter.edit@json',

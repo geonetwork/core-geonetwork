@@ -104,7 +104,8 @@
 
       };
       $scope.deleteMapServer = function() {
-        $http.get('geoserver.publisher?_content_type=json&action=REMOVE_NODE&id=' +
+        $http.get('geoserver.publisher?_content_type=json&action=' +
+            'REMOVE_NODE&id=' +
                   $scope.mapserverSelected.id)
           .success(function(data) {
               loadMapservers();

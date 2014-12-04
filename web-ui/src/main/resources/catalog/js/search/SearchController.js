@@ -1,11 +1,11 @@
 (function() {
 
 
- goog.provide('gn_search_controller');
+  goog.provide('gn_search_controller');
 
- goog.require('gn_searchsuggestion_service');
+  goog.require('gn_searchsuggestion_service');
 
-  var module = angular.module('gn_search_controller',[
+  var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service'
   ]);
@@ -20,8 +20,7 @@
     '$http',
     'suggestService',
     'gnSearchSettings',
-    'gnRegionService',
-    function($scope, $q, $http, suggestService, gnSearchSettings, gnRegionService) {
+    function($scope, $q, $http, suggestService, gnSearchSettings) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -47,7 +46,7 @@
       $scope.keywordsOptions = {
         mode: 'remote',
         remote: {
-          url : suggestService.getUrl('QUERY', 'keyword', 'STARTSWITHFIRST'),
+          url: suggestService.getUrl('QUERY', 'keyword', 'STARTSWITHFIRST'),
           filter: suggestService.bhFilter,
           wildcard: 'QUERY'
         }
@@ -56,7 +55,7 @@
       $scope.orgNameOptions = {
         mode: 'remote',
         remote: {
-          url : suggestService.getUrl('QUERY', 'orgName', 'STARTSWITHFIRST'),
+          url: suggestService.getUrl('QUERY', 'orgName', 'STARTSWITHFIRST'),
           filter: suggestService.bhFilter,
           wildcard: 'QUERY'
         }
@@ -64,37 +63,39 @@
 
       $scope.categoriesOptions = {
         mode: 'prefetch',
-        promise: (function(){
+        promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('categories')).success(function(data) {
-            var res = [];
-            for(var i=0; i<data.metadatacategory.length;i++) {
-              res.push({
-                id: data.metadatacategory[i].name,
-                name : data.metadatacategory[i].label.eng
-              })
-            }
-            defer.resolve(res);
-          });
+          $http.get(suggestService.getInfoUrl('categories')).
+              success(function(data) {
+                var res = [];
+                for (var i = 0; i < data.metadatacategory.length; i++) {
+                  res.push({
+                    id: data.metadatacategory[i].name,
+                    name: data.metadatacategory[i].label.eng
+                  });
+                }
+                defer.resolve(res);
+              });
           return defer.promise;
         })()
       };
 
       $scope.sourcesOptions = {
         mode: 'prefetch',
-        promise: (function(){
+        promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('sources')).success(function(data) {
-            var res = [];
-            var a = data['sources']
-            for(var i=0; i<a.length;i++) {
-              res.push({
-                id: a[i]['@id'],
-                name : a[i].name
+          $http.get(suggestService.getInfoUrl('sources')).
+              success(function(data) {
+                var res = [];
+                var a = data['sources'];
+                for (var i = 0; i < a.length; i++) {
+                  res.push({
+                    id: a[i]['@id'],
+                    name: a[i].name
+                  });
+                }
+                defer.resolve(res);
               });
-            }
-            defer.resolve(res);
-          });
           return defer.promise;
         })()
       };
