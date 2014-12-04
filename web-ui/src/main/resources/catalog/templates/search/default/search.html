@@ -39,6 +39,9 @@
               <label type="button" class="btn btn-default" ng-model="searchObj.advancedMode" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                 <i class="fa fa-cog"></i>
               </label>
+
+
+              <button type="button" data-ng-click="resetSearch();" class="btn btn-link" data-translate="">Reset</button>
             </div>
           </div>
 
@@ -122,8 +125,8 @@
                 <div gn-results-container data-ng-class="{'bg-success' : searching}"
                   search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
                 <div class="panel-footer">
-                  <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"
-                       gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
+                  <div class="pull-right" data-hitsperpage-combo pagination-cfg="paginationInfo"
+                       data-gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
                   <div data-gn-pagination="paginationInfo"></div>
                 </div>
               </div>
