@@ -25,7 +25,7 @@
         var config = scope.options.config || {};
         var doLink = function(data, remote) {
 
-          var conf = {
+          var bloodhoundConf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             limit: 10000000,
@@ -37,18 +37,46 @@
           };
 
           if (data) {
-            conf.local = data;
+            bloodhoundConf.local = data;
           } else if (remote) {
-            conf.remote = remote;
+            bloodhoundConf.remote = remote;
+            // Remove from suggestion values already selected for remote mode
+            if(angular.isFunction(remote.filter)) {
+              var filterFn = remote.filter;
+              bloodhoundConf.remote.filter = function(data) {
+                var filtered = filterFn(data);
+                var datums = [];
+                for(var i=0;i<filtered.length;i++) {
+                  if(stringValues.indexOf(filtered[i].id) <0) {
+                    datums.push(filtered[i]);
+                  }
+                }
+                return datums;
+              }
+            }
           }
-          var engine = new Bloodhound(conf);
+          var engine = new Bloodhound(bloodhoundConf);
           engine.initialize();
 
+          // Remove from suggestion values already selected for local mode
+          var refreshDatum = function() {
+            if(bloodhoundConf.local) {
+              engine.clear();
+              for(var i=0;i<data.length;i++) {
+                if(stringValues.indexOf(data[i].id) <0) {
+                  engine.add(data[i])
+                }
+              }
+            }
+          };
+
+          // Initialize tagsinput in the element
           $(element).tagsinput({
             itemValue:'id',
             itemText: 'name'
           });
 
+          // Initialize typeahead
           var field = $(element).tagsinput('input');
           field.typeahead({
             minLength: 0,
@@ -75,6 +103,7 @@
               scope.gnValues = stringValues.join(' OR ');
               scope.$apply();
             }
+            refreshDatum();
 
           });
           $(element).on('itemRemoved', function(event) {
@@ -85,6 +114,7 @@
               scope.gnValues = stringValues.join(' OR ');
               scope.$apply();
             }
+            refreshDatum();
           });
 
           // model -> ui
