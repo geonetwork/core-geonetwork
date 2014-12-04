@@ -104,20 +104,17 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
             }
 
             Map<String, Object> fullModel = Maps.newHashMap();
+            fullModel.putAll(context.getModel(true));
             for (Map.Entry<String, Object> entry : this.extraModel.entrySet()) {
                 OutputStream o = new ByteArrayOutputStream();
                 TEXT_PARSER.parse(entry.getValue().toString()).render(new TRenderContext(o, context.getModel(true)));
                 fullModel.put(entry.getKey(), o.toString());
             }
-
             fullModel.put(this.model, outputStream.toString());
-            fullModel.putAll(context.getModel(true));
             final Handlers handlers = TransformationContext.getContext().getHandlers();
             final FileResult fileResult = handlers.fileResult(this.templatePath, fullModel);
             context.append(fileResult.toString());
 
         }
-
-
     }
 }

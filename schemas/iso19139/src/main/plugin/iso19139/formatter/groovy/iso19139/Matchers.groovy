@@ -9,14 +9,18 @@ public class Matchers {
     def simpleElements = ['gco:Decimal', 'gco:Integer', 'gco:Scale', 'gco:Angle', 'gco:Measure', 'gco:Distance',
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
 
-    def skipContainers = ['gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:graphicOverview', 'gmd:identificationInfo',
-                          'gmd:descriptiveKeywords', 'gmd:contactInfo', 'gmd:address', 'gmd:phone', 'gmd:onlineResource',
-                          'gmd:referenceSystemIdentifier']
+    def skipContainers = [
+            'gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:graphicOverview', 'gmd:identificationInfo', 'gmd:descriptiveKeywords',
+            'gmd:contactInfo', 'gmd:address', 'gmd:phone', 'gmd:onlineResource', 'gmd:referenceSystemIdentifier', 'gmd:onLine',
+            'gmd:distributorTransferOptions', 'gmd:resourceMaintenance', 'gmd:resourceConstraints', 'gmd:aggregationInfo', 'gmd:scope',
+            'gmd:DQ_DataQuality', 'gmd:lineage', 'gmd:processStep', 'gmd:MD_Distribution'
+    ]
 
     def isSimpleEl = {el ->
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
     }
     def isDateEl = {!it.'gco:DateTime'.text().isEmpty() || !it.'gco:Date'.text().isEmpty()}
+    def isFormatEl = {!it.'gmd:MD_Format'.text().isEmpty() || (it.name() == 'isFormatEl' && !it.text().isEmpty())}
     def isBooleanEl = {!it.'gco:Boolean'.text().isEmpty()}
     def hasDateChild = {it.children().size() == 1 && it.children().any(isDateEl)}
     def isCodeListEl = {!it['@codeListValue'].text().isEmpty()}

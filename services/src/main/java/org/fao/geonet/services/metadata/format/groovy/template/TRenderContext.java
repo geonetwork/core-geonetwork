@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -152,21 +153,34 @@ public class TRenderContext implements Appendable, Closeable {
         if (prop.trim().isEmpty()) {
             throw new EmptyPropertyException();
         }
-        final PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), prop.trim());
-        if (propertyDescriptor == null) {
+        if (value instanceof Map) {
+            Map map = (Map) value;
+            return map.get(prop);
+        } else if (value instanceof List) {
+            List list = (List) value;
             try {
-                final Field declaredField = value.getClass().getDeclaredField(prop.trim());
-                declaredField.setAccessible(true);
-                return declaredField.get(value);
-            } catch (NoSuchFieldException e) {
-                // skip
+                return list.get(Integer.parseInt(prop));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                        "When accessing a list the property must be a number.  Property:" + prop + ".  List: " + list);
             }
-            throw new NoSuchPropertyException(prop + " on object: " + value + " (" + value.getClass() + ")");
+        } else {
+            final PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(value.getClass(), prop.trim());
+            if (propertyDescriptor == null) {
+                try {
+                    final Field declaredField = value.getClass().getDeclaredField(prop.trim());
+                    declaredField.setAccessible(true);
+                    return declaredField.get(value);
+                } catch (NoSuchFieldException e) {
+                    // skip
+                }
+                throw new NoSuchPropertyException(prop + " on object: " + value + " (" + value.getClass() + ")");
+            }
+            Method method = propertyDescriptor.getReadMethod();
+            method.setAccessible(true);
+            value = method.invoke(value);
+            return value;
         }
-        Method method = propertyDescriptor.getReadMethod();
-        method.setAccessible(true);
-        value = method.invoke(value);
-        return value;
     }
 
     public TRenderContext childContext(Map<String, Object> newModel) {

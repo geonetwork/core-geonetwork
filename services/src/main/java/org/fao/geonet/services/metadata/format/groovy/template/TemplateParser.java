@@ -47,7 +47,11 @@ public class TemplateParser {
         } catch (IOException e) {
             throw new TemplateException(e);
         } catch (TemplateException e) {
-            throw new TemplateException("Error when parsing " + path + ":" , e.getCause());
+            if (e.getCause()!=null) {
+                throw new TemplateException("Error when parsing " + path + ":" + e.getCause().getMessage(), e.getCause());
+            } else {
+                throw new TemplateException("Error when parsing " + path + ":" + e.getMessage(), e);
+            }
         }
     }
 
