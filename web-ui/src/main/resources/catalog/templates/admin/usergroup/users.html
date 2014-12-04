@@ -43,21 +43,21 @@
         ({{userSelected.profile | translate}})
           <span data-ng-show="userSelected.security.authtype"> - {{userSelected.security.authtype}}</span>
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-default pull-right fa fa-lock"
+          <button type="button" class="btn btn-default pull-right"
             data-ng-hide="user.profile != 'Administrator' || userSelected.security.authtype == 'LDAP'"
             data-ng-click="resetPassword(userSelected.id)">
-            <span data-translate=""
+            <i class="fa fa-lock"></i> <span data-translate=""
             >resetPassword</span></button>
-          <button type="button" class="btn btn-primary pull-right fa fa-save"
+          <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
-            <span data-translate=""
+            <i class="fa fa-save"></i> <span data-translate=""
             >saveUser</span></button>
-          <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
+          <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0"
             data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
-            <span data-translate=""
+            <i class="fa fa-trash-o"></i> <span data-translate=""
             >deleteUser</span></button>
         </div>
       </div>

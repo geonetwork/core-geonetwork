@@ -448,7 +448,7 @@
               // Function that returns the reduced items list,
               // to use in ng-repeat
               scope.$parent.pageItems = function() {
-                if (scope.items()) {
+                if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;

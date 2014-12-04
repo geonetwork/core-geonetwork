@@ -40,15 +40,15 @@
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <strong>{{groupSelected.name}}</strong>
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right fa fa-save"
+          <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
             data-ng-click="saveGroup('#gn-group-edit')" id="gn-btn-group-save">
-            <span data-translate="">saveGroup</span>
+            <i class="fa fa-save"></i> <span data-translate="">saveGroup</span>
           </button>
-          <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
+          <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
-            <span data-translate="">deleteGroup</span>
+            <i class="fa fa-trash-o"></i> <span data-translate="">deleteGroup</span>
           </button>
         </div>
       </div>
