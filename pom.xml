@@ -1201,6 +1201,6 @@
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
     <print-lib.version>2.1.0</print-lib.version>
-    <flying-saucer>9.0.8-SNAPSHOT</flying-saucer>
+    <flying-saucer>9.0.7</flying-saucer>
   </properties>
 </project>
