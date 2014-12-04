@@ -68,7 +68,7 @@
         <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
 
-        <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
+        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
         <script src="{$uiResourcesPath}lib/ngeo/ngeo-whitespace.js"></script>
