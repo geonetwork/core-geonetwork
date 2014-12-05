@@ -36,16 +36,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.NodeInfo;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -120,6 +119,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -141,6 +141,7 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -533,7 +534,7 @@ public class DataManager {
             final String  extra       = fullMd.getDataInfo().getExtra();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
-            final String  groupOwner = String.valueOf(fullMd.getSourceInfo().getGroupOwner());
+            final Integer groupOwner = fullMd.getSourceInfo().getGroupOwner();
             final String  popularity = String.valueOf(fullMd.getDataInfo().getPopularity());
             final String  rating     = String.valueOf(fullMd.getDataInfo().getRating());
             final String  displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
@@ -566,7 +567,7 @@ public class DataManager {
                 }
             }
             if (groupOwner != null) {
-                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
+                moreFields.add(SearchManager.makeField("_groupOwner", String.valueOf(groupOwner), true, true));
             }
 
             // get privileges
@@ -584,6 +585,33 @@ public class DataManager {
                     Group g = groupRepository.findOne(groupId);
                     if (g != null) {
                         moreFields.add(SearchManager.makeField("_groupPublished", g.getName(), true, true));
+                    }
+                }
+            }
+
+            String logoUUID = null;
+            if (groupOwner != null) {
+                final Group group = groupRepository.findOne(groupOwner);
+                if (group != null) {
+                    if (group.getLogo() != null) {
+                        logoUUID = group.getLogo();
+                    }
+                }
+            }
+            if (logoUUID == null) {
+                logoUUID = source;
+            }
+
+            if (logoUUID != null) {
+                final Path logosDir = Resources.locateLogosDir(servContext);
+                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
+                        "tif", "TIF", "tiff", "TIFF"};
+
+                for (String ext : logosExt) {
+                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
+                    if (Files.exists(logoPath)) {
+                        moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoPath.getFileName(), true, false));
+                        break;
                     }
                 }
             }

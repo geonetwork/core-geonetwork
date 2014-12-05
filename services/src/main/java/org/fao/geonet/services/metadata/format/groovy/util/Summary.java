@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
@@ -54,6 +55,7 @@ public class Summary {
         params.put("navBar", navBar);
         params.put("navBarOverflow", navBarOverflow);
         params.put("content", content);
+        params.put("isHTML", env.getFormatType() == FormatType.html);
 
         return handlers.fileResult("html/view-header.html", params);
     }

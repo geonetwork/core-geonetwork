@@ -1,7 +1,18 @@
 <div class="container gn-metadata-view">
-    <script type="application/javascript" fmt-if="pageTitle">document.title="{{pageTitle}}"</script>
+    <script type="application/javascript" fmt-if="isHTML">document.title="{{pageTitle}}"</script>
     <h1>
         <button type="button" class="btn btn-default toggler">
+            <script type="application/javascript" fmt-if="isHTML">
+                //<![CDATA[
+                var headEl = $("head");
+                var iconLink = headEl.children("link[rel='shortcut icon']");
+                if (iconLink.length > 0) {
+                    iconLink.attr("href", "{{logo}}");
+                } else {
+                    headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+                }
+                //]]>
+            </script>
             <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
             <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
         </button>

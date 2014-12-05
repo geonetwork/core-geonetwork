@@ -1,6 +1,5 @@
 package iso19139
 
-import groovy.util.slurpersupport.GPathResult
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
@@ -24,11 +23,15 @@ class SummaryFactory {
 
         Summary summary = new Summary(handlers, env, f)
 
+        Collection<String> logo = env.indexInfo['_logo'];
+        if (logo != null && !logo.isEmpty()) {
+            summary.logo = env.localizedUrl + "../.." + logo.iterator().next()
+        }
         summary.title = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
         summary.abstr = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
 
-        configureLogos(metadata, summary)
-        configureLinks(metadata, isoHandler, summary)
+        configureThumbnails(metadata, summary)
+        configureLinks(isoHandler, summary)
         configureHierarchy(isoHandler, summary)
 
         def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
@@ -45,10 +48,10 @@ class SummaryFactory {
         return summary
     }
 
-    static def configureLinks(GPathResult metadata, isoHandler, Summary summary) {
+    static def configureLinks(isoHandler, Summary summary) {
         def env = isoHandler.env
         Collection<String> links = env.indexInfo['link'];
-        if (!links.isEmpty()) {
+        if (links != null && !links.isEmpty()) {
             LinkBlock linkBlock = new LinkBlock("links");
             summary.links.add(linkBlock)
             links.each { link ->
@@ -112,82 +115,21 @@ class SummaryFactory {
                 typeTranslations.append(",\n");
             }
         }
-        def js = """
-\$(function() {
-  \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').hide();
-  var typeTranslations = {
-$typeTranslations
-  };
-  \$.ajax('xml.relation?id=${env.metadataId}&amp;type=${relatedTypes.join("|")}', {
-    dataType: "json",
-    success: function (data) {
-      var types = {};
-      if (!data.relation) {
-        return;
-      }
-      var relations = data.relation instanceof Array ? data.relation : [data.relation];
-
-      \$.each(relations, function (idx, rel) {
-        var type = rel['@type'];
-        var md;
-        if (!rel.metadata) {
-          return;
-        }
-        if (rel.metadata instanceof Array) {
-          md = rel.metadata;
-        } else {
-          md = [rel.metadata];
-        }
-        \$.each(md, function (mdIdx, md) {
-          var uuid = md['geonet:info'].uuid;
-          var title = md.title ? md.title : md.defaultTitle;
-          if (!title) {
-            title = uuid;
-          }
-
-          var url;
-          if (uuid) {
-            url = "javascript:window.open('md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + encodeURIComponent(uuid) + "', '"+uuid+"');"
-          } else {
-            url = "javascript:alert('${isoHandler.f.translate("noUuidInLink")}');"
-          }
-
-          var obj = { url: url, title: title};
-
-          if (title &amp;&amp; uuid) {
-            if (types[type]) {
-              types[type].push (obj);
-            } else {
-              types[type] = [obj];
-            }
-          }
-        });
-      });
-
-      var placeholder = \$('#$placeholderId');
-
-      \$.each(types, function (key, value) {
-        var typeTitle = typeTranslations[key] ? typeTranslations[key] : key;
-        var html = '<div class="col-xs-12" style="background-color: #F7EEE1;">' +
-                   '  <img src="${isoHandler.env.localizedUrl + "../../images/"}' + key + '.png"/>' +
-                   '  ' + typeTitle + '</div>';
-        \$.each(value, function (idx, rel) {
-          html += '  <div class="col-xs-6 col-md-4"><a href="' + rel.url + '">' + rel.title + '</a></div>';
-        });
-        placeholder.append(html);
-      });
-
-      \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
-    },
-    error: function (req, status, error) {
-      \$('#$placeholderId').append('<h3>Error loading related metadata</h3><p>' + error + '</p>');
-      \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
-    }
-  })
-});
-"""
+        def jsVars = [
+                typeTranslations: typeTranslations,
+                metadataId: env.metadataId,
+                relatedTypes: relatedTypes.join("|"),
+                noUuidInLink: isoHandler.f.translate("noUuidInLink"),
+                placeholderId: placeholderId,
+                imagesDir: isoHandler.env.localizedUrl + "../../images/",
+                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + linkBlockName
+        ]
+        def js = isoHandler.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
         def html = """
-<script type="text/javascript">$js</script>
+<script type="text/javascript">
+//<![CDATA[
+$js
+//]]></script>
 <div id="$placeholderId"> </div>
 """
         LinkBlock linkBlock = new LinkBlock(linkBlockName)
@@ -225,7 +167,7 @@ $typeTranslations
         }
     }
 
-    private static void configureLogos(metadata, header) {
+    private static void configureThumbnails(metadata, header) {
         def logos = metadata.'gmd:identificationInfo'.'*'.'gmd:graphicOverview'.'gmd:MD_BrowseGraphic'.'gmd:fileName'.'gco:CharacterString'
 
         logos.each { logo ->

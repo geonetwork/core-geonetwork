@@ -141,8 +141,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
             final String view = response.getContentAsString();
             try {
-                Element html = Xml.loadString(view, false);
-                assertFalse(formatter.getSchema() + "/" + formatter.getId(), html.getChildren().isEmpty());
+                assertFalse(formatter.getSchema() + "/" + formatter.getId(), view.isEmpty());
             } catch (Throwable e) {
                 e.printStackTrace();
                 fail(formatter.getSchema() + " > " + formatter.getId());
