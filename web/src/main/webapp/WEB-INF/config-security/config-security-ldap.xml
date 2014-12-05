@@ -73,6 +73,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         </property>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         <property name="contextSource" ref="contextSource" />
     </bean>
     
@@ -89,6 +91,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         </property>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+        
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         
         <property name="privilegePattern" value="${ldap.privilege.pattern}" />
         <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
@@ -108,7 +113,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             <map/>
         </property>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+        
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         
         <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
         <property name="groupObject" value="${ldap.privilege.search.group.object}"/>
@@ -158,5 +166,26 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             </list>
         </property>
     </bean>
+    
+    <bean id="ldapUserDetailsService"
+		class="org.fao.geonet.kernel.security.ldap.LdapUserDetailsManager">
+		<constructor-arg ref="contextSource" />
+		<constructor-arg name="groupMemberAttributeName" 
+			value="${ldap.privilege.search.group.queryprop}" />
+		<constructor-arg name="query" 
+			value="${ldap.privilege.search.group.query}" />
+		<property name="groupSearchBase" 
+			value="${ldap.privilege.search.group.object}" />
+		<property name="usernameMapper" ref="usernameMapper" />
+		<property name="userDetailsMapper" ref="ldapUserContextMapper"/>
+	</bean>
+
+	<bean id="usernameMapper"
+		class="org.springframework.security.ldap.DefaultLdapUsernameToDnMapper">
+		<constructor-arg index="0" type="java.lang.String"
+			name="userDnBase" value="${ldap.base.search.base}" />
+		<constructor-arg index="1" type="java.lang.String"
+			name="usernameAttribute" value="${ldap.sync.user.search.attribute}" />
+	</bean>
 
 </beans>
