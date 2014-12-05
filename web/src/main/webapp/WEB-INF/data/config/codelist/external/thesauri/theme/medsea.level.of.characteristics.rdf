@@ -39,4 +39,11 @@
     <skos:prefLabel xml:lang="fr">Publication</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/level-of-characteristics#other">
+    <skos:prefLabel xml:lang="en">Other</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Other</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
 </rdf:RDF>

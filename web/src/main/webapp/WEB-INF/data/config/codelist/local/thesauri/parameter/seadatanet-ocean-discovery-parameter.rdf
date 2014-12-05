@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P02/current/">
-<skos:prefLabel>SeaDataNet Parameter Discovery Vocabulary (P02)</skos:prefLabel>
-<dc:title>SeaDataNet Parameter Discovery Vocabulary (P02)</dc:title>
+<skos:prefLabel>Parameter Discovery Vocabulary (P02)</skos:prefLabel>
+<dc:title>Parameter Discovery Vocabulary (P02)</dc:title>
 <skos:altLabel>SeaDataNet PDV</skos:altLabel>
 <dc:alternative>SeaDataNet PDV</dc:alternative>
 <dc:description>Terms describing fine-grained related groups of measurement phenomena designed to be used in dataset discovery interfaces.</dc:description>
