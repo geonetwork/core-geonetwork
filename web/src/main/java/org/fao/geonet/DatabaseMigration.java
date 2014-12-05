@@ -153,7 +153,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             e.printStackTrace();
         }
 
-        switch (to.compareTo(from)) {
+        switch (from.compareTo(to)) {
             case -1:
                 _logger.info("      Running on a newer database version.");
                 break;
@@ -393,13 +393,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         @Override
         public int compareTo(Version o) {
             if (major != o.major) {
-                return major - o.major;
+                return Integer.compare(major, o.major);
             }
             if (minor != o.minor) {
-                return minor - o.minor;
+                return Integer.compare(minor, o.minor);
             }
             if (micro != o.micro) {
-                return micro - o.micro;
+                return Integer.compare(micro, o.micro);
             }
             return 0;
         }

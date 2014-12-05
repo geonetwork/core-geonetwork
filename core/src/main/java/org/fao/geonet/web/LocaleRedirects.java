@@ -86,7 +86,7 @@ public class LocaleRedirects {
     public ModelAndView accessDenied(final HttpServletRequest request,
                                      @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
                                      @RequestParam(value = NODE_PARAMETER, required = false) String node,
-                                         @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
+                                     @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                                      @RequestParam(value = REFERER_PARAMETER, required = false) String referer,
                                      @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
@@ -107,7 +107,7 @@ public class LocaleRedirects {
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
         ConfigurableApplicationContext context = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(_appContext.getBean(ServletContext.class));
         String currentNode = context.getBean(NodeInfo.class).getId();
-        
+
         node = node == null ? currentNode : node;
 
         final Enumeration parameterNames = request.getParameterNames();
@@ -130,7 +130,11 @@ public class LocaleRedirects {
         if (headers.length() == 0) {
             queryString = "";
         } else {
-            queryString = "?" + headers;
+            if (service.contains("?")) {
+                queryString = "&" + headers;
+            } else {
+                queryString = "?" + headers;
+            }
         }
         return request.getContextPath() + "/" + node + "/" + lang + "/" + service + queryString;
     }

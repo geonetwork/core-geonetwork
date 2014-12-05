@@ -45,7 +45,7 @@ public class XmlCacheManager {
 
         Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
         
-        Path appPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        Path appPath = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
         Path xmlFilePath;
 
         boolean isBaseAbsolutePath = base.isAbsolute();

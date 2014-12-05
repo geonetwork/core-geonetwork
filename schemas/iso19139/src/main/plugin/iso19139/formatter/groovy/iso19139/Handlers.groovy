@@ -10,7 +10,7 @@ public class Handlers {
     Matchers matchers
     Functions isofunc
     common.Handlers commonHandlers
-    String[] packageViews
+    List<String> packageViews
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers

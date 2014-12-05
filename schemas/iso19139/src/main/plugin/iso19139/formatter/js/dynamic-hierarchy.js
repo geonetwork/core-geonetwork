@@ -1,4 +1,8 @@
-$('.{{linkBlockClass}}').hide();
+var linkBlockClass = $('.{{linkBlockClass}}');
+linkBlockClass.hide();
+
+var placeholder = $('#{{placeholderId}}');
+
 var typeTranslations = {
 {{typeTranslations}}
 };
@@ -31,7 +35,7 @@ $.ajax('xml.relation?id={{metadataId}}&type={{relatedTypes}}', {
 
         var url;
         if (uuid) {
-          url = "javascript:window.open('md.format.html?xsl=full_view&schema=iso19139&uuid=" + encodeURIComponent(uuid) + "', '"+uuid+"');"
+          url = "javascript:window.open('md.format.html?xsl=full_view&schema=iso19139&uuid=" + encodeURIComponent(uuid) + "', '" + uuid + "');"
         } else {
           url = "javascript:alert('{{noUuidInLink}}');"
         }
@@ -40,15 +44,13 @@ $.ajax('xml.relation?id={{metadataId}}&type={{relatedTypes}}', {
 
         if (title && uuid) {
           if (types[type]) {
-            types[type].push (obj);
+            types[type].push(obj);
           } else {
             types[type] = [obj];
           }
         }
       });
     });
-
-    var placeholder = $('#{{placeholderId}}');
 
     $.each(types, function (key, value) {
       var typeTitle = typeTranslations[key] ? typeTranslations[key] : key;
@@ -61,10 +63,12 @@ $.ajax('xml.relation?id={{metadataId}}&type={{relatedTypes}}', {
       placeholder.append(html);
     });
 
-    $('.{{linkBlockClass}}').show();
+    if (placeholder.children().length > 0) {
+      linkBlockClass.show();
+    }
   },
   error: function (req, status, error) {
     $('#{{placeholderId}}').append('<h3>Error loading related metadata</h3><p>' + error + '</p>');
-    $('.{{linkBlockClass}}').show();
+    linkBlockClass.show();
   }
 });
