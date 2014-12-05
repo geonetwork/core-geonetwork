@@ -566,33 +566,16 @@ public class DataManager {
                             .getName() + "|" + user.getProfile(), true, false));
                 }
             }
-            if (groupOwner != null) {
-                moreFields.add(SearchManager.makeField("_groupOwner", String.valueOf(groupOwner), true, true));
-            }
 
-            // get privileges
             OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
             GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
-
-            for (OperationAllowed operationAllowed : operationsAllowed) {
-                OperationAllowedId operationAllowedId = operationAllowed.getId();
-                int groupId = operationAllowedId.getGroupId();
-                int operationId = operationAllowedId.getOperationId();
-
-                moreFields.add(SearchManager.makeField("_op" + operationId, String.valueOf(groupId), true, true));
-                if(operationId == ReservedOperation.view.getId()) {
-                    Group g = groupRepository.findOne(groupId);
-                    if (g != null) {
-                        moreFields.add(SearchManager.makeField("_groupPublished", g.getName(), true, true));
-                    }
-                }
-            }
 
             String logoUUID = null;
             if (groupOwner != null) {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
+                    moreFields.add(SearchManager.makeField("_groupOwner", String.valueOf(groupOwner), true, true));
+                    moreFields.add(SearchManager.makeField("_groupWebsite", group.getWebsite(), true, false));
                     if (group.getLogo() != null) {
                         logoUUID = group.getLogo();
                     }
@@ -612,6 +595,23 @@ public class DataManager {
                     if (Files.exists(logoPath)) {
                         moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoPath.getFileName(), true, false));
                         break;
+                    }
+                }
+            }
+
+            // get privileges
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+
+            for (OperationAllowed operationAllowed : operationsAllowed) {
+                OperationAllowedId operationAllowedId = operationAllowed.getId();
+                int groupId = operationAllowedId.getGroupId();
+                int operationId = operationAllowedId.getOperationId();
+
+                moreFields.add(SearchManager.makeField("_op" + operationId, String.valueOf(groupId), true, true));
+                if(operationId == ReservedOperation.view.getId()) {
+                    Group g = groupRepository.findOne(groupId);
+                    if (g != null) {
+                        moreFields.add(SearchManager.makeField("_groupPublished", g.getName(), true, true));
                     }
                 }
             }
