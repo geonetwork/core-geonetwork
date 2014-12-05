@@ -1754,17 +1754,18 @@
                 gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/
                 gmd:authority//gmd:CI_Citation/gmd:title"/>
 
-          <field
-              name="intendedUse"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:environmentDescription"/>
-
 
           <field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Challenges')]"/>
+
+          <field
+              name="intendedUse"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:environmentDescription"/>
+
         </section>
       </tab>
       <tab id="spatialCoverage" mode="flat">

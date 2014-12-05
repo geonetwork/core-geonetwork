@@ -89,7 +89,7 @@
 
   <!-- Medsea-->
   <medsea>MedSea</medsea>
-  <medsea-metadata>Metadata</medsea-metadata>
+  <medsea-metadata>Other information</medsea-metadata>
   <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
   <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
@@ -106,12 +106,12 @@
   <environmental-matrix>Environmental matrix*</environmental-matrix>
   <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
   <level-of-characteristics>Level of characteristics</level-of-characteristics>
-  <providerSpecification>Purpose of characteristics production (provider specification)*</providerSpecification>
-  <processStepReference>Production and quality assessment specifications reference</processStepReference>
+  <providerSpecification>Purpose of production*</providerSpecification>
+  <processStepReference>Production specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
   <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
-  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
+  <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
   <minDepth>Min depth</minDepth>
   <maxDepth>Max depth</maxDepth>
