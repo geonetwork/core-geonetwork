@@ -316,23 +316,6 @@
                             select="/root/gui/strings/mainpageTitle" /></h2>
                     <img src="{/root/gui/url}/images/geocatII-web.jpg" alt="Geocat cat" width="100px"/>
 
-                    <fieldset id="mostPopular">
-                       <legend><xsl:value-of select="/root/gui/strings/mostPopular"/></legend>
-                        <div id="mostpopular-metadata">
-
-                        <xsl:for-each select="/root/gui/mostPopular/*">
-                            <xsl:variable name="md">
-                                <xsl:apply-templates mode="brief" select="."/>
-                            </xsl:variable>
-                            <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-
-                            <div><a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
-                                <xsl:value-of select="$metadata/title"/>
-                            </a></div>
-                        </xsl:for-each>
-                        </div>
-                    </fieldset>
-                
                     <fieldset id="latestChanges">
                        <legend><xsl:value-of select="/root/gui/strings/recentAdditions"/>&#160;<a href="../../srv/en/rss.latest?georss=simplepoint" alt="Latest news" title="Latest news"><img src="../../apps/images/default/feed.png"/></a></legend>
                         <div id="latest-metadata">

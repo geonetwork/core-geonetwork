@@ -7,16 +7,12 @@
         <service name="geocat">
             <output sheet="geocat_widgetui.xsl">
                 <call name="groups" class=".guiservices.groups.GetAll" />
-                                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-                    <param name="maxItems" value="10" />
+                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+                    <param name="maxItems" value="15" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
                 <call name="featured" class=".guiservices.metadata.GetRandom">
                     <param name="maxItems" value="1" />
-                    <param name="timeBetweenUpdates" value="10" />
-                </call>
-                <call name="mostPopular" class=".guiservices.metadata.GetMostPopular">
-                    <param name="maxItems" value="5" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
                 <call name="formats" class="jeeves.services.db.Select">

@@ -1092,8 +1092,6 @@
 	</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)
 	</protocolChoice>
-	<protocolChoice value="WWW:LINK-1.0-http--download">Web address for download
-	</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download
 	</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through

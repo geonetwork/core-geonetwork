@@ -1076,7 +1076,6 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
     <protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
     <protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
     <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--download">Adresse Internet pour téléchargement</protocolChoice>
     <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
     <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
     <protocolChoice value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</protocolChoice>

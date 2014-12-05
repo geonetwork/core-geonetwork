@@ -1055,7 +1055,6 @@
     <protocolChoice value="WWW:LINK-1.0-http--partners">Partner Webaddresse (URL)</protocolChoice>
     <protocolChoice value="WWW:LINK-1.0-http--rss">RSS Newsfeed (URL)</protocolChoice>
     <protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--download">Webadresse zum Download</protocolChoice>
     <protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Datei zum download</protocolChoice>
     <protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</protocolChoice>
     <protocolChoice value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</protocolChoice>
