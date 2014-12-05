@@ -146,7 +146,7 @@
     <!-- TODO: Support gmd:LocalisedCharacterString -->
     <xsl:variable name="theElement" select="gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
+      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText"/>
     
     <!--
       This may not work if node context is lost eg. when an element is rendered
