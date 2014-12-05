@@ -43,6 +43,9 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
         name: 'title'
     }, {
+        name: 'sibling',
+        type: 'bool'
+    }, {
         name: 'abstract'
     }, {
         name: 'keyword'
@@ -52,7 +55,7 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
         name: 'subType',
         mapping: '@subType'
-		}];
+    }];
     
     if (grouping) {
         var reader = new Ext.data.XmlReader({
