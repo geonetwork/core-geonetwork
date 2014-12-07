@@ -130,6 +130,8 @@
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
+  <acronym>Acronym</acronym>
+  <edmerpId>EDMERP id</edmerpId>
 
 
 </strings>

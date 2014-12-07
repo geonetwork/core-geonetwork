@@ -127,7 +127,8 @@
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
-
+  <acronym>Acronym</acronym>
+  <edmerpId>EDMERP id</edmerpId>
   <edmerp-help>
     <div class="row">
       <div class="col-xs-offset-2 col-xs-8">

@@ -1581,11 +1581,17 @@
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="acronym"
+                     xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
+                <key label="edmerpId"
+                                                                                                    xpath="gmd:CI_ResponsibleParty/@id"/>
               </values>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gn:copy select="gmd:individualName"/>
+                  <gmd:CI_ResponsibleParty id="{{edmerpId}}">
+                    <gmd:individualName>
+                      <gco:CharacterString>{{acronym}}</gco:CharacterString>
+                    </gmd:individualName>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
