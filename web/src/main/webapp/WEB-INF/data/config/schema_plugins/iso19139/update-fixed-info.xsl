@@ -458,6 +458,37 @@
     </xsl:copy>
   </xsl:template>
 
+
+
+  <!-- Compute title P02 - Dataprovider - Datasetname -->
+  <xsl:template
+          match="gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
+          priority="200">
+
+    <!-- String join in case of multiple but this should not happen -->
+    <xsl:variable name="p02" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords/gmd:MD_Keywords
+                [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'seadatanet-ocean-discovery-parameter')]/gmd:keyword/*, ' - ')"/>
+
+
+    <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+
+    <xsl:variable name="currentIdentifier" select="ancestor::gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
+                  gmd:code/gco:CharacterString"/>
+
+    <xsl:copy>
+      <xsl:value-of select="concat($p02, ' - ', $dataProvider, ' - ', $currentIdentifier)"/>
+    </xsl:copy>
+  </xsl:template>
+
   <!-- Force resolution nilReason attribute to be
   set to inapplicable in case of null value.
   -->
