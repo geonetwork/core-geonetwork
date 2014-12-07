@@ -96,8 +96,8 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMERP name</edmerpName>
-  <edmoName>EDMO name</edmoName>
+  <edmerpName>EDMERP name*</edmerpName>
+  <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
   <environmental-matrix>Environmental matrix*</environmental-matrix>
@@ -110,8 +110,8 @@
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth</minDepth>
-  <maxDepth>Max depth</maxDepth>
+  <minDepth>Min depth*</minDepth>
+  <maxDepth>Max depth*</maxDepth>
   <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
@@ -122,8 +122,8 @@
   <temporalExtent>Temporal extent*</temporalExtent>
   <responsiveness>Responsiveness*</responsiveness>
   <reliability>Reliability</reliability>
-  <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
-  <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>
+  <medseaDataSourceCatalogueName>Catalog name*</medseaDataSourceCatalogueName>
+  <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
