@@ -95,6 +95,7 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="directive" select="'gn-field-duration'"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="../gn:element"/>
     </xsl:call-template>
 
   </xsl:template>
