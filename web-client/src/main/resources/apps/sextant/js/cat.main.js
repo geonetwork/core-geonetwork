@@ -231,7 +231,7 @@ cat.app = function() {
             var url = 'catalog.edit#/';
             if (create) {
               url += 'create/from/' + metadataId +
-                '/in/' + group;
+                '/in/' + group + '/tab/characteristics';
             } else {
               url += 'metadata/' + metadataId + '/tab/characteristics';
             }
