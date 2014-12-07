@@ -1851,6 +1851,8 @@
               name="timeResolution"
               xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
                 gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"/>
 
         </section>
       </tab>
