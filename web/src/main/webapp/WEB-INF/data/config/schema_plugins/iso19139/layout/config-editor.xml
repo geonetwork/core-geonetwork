@@ -1708,7 +1708,7 @@
 
           <field
               name="medseaTitle"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle"/>
           <field
               name="medseaDataSourceCatalogueName"
               xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/

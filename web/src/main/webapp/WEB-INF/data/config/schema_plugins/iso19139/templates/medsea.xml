@@ -108,6 +108,9 @@
           <gmd:title>
             <gco:CharacterString>Medsea template</gco:CharacterString>
           </gmd:title>
+          <gmd:alternateTitle>
+            <gco:CharacterString></gco:CharacterString>
+          </gmd:alternateTitle>
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date/>
