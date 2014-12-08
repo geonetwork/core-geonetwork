@@ -68,6 +68,9 @@
           when('/create/from/:id/in/:group', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/tab/:tab', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group/template/:template', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).

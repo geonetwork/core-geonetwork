@@ -909,14 +909,14 @@
 		<label>Distance</label>
 		<description>Ground sample distance</description>
 		<condition>Provide a distance if no equivalent Scale is documented</condition>
-		<helper relAtt="uom">
+		<!--<helper relAtt="uom">
 			<option value="0.10" title="cm">10 cm</option>
 			<option value="0.25" title="cm">25 cm</option>
 			<option value="0.50" title="cm">50 cm</option>
 			<option value="1" title="m">1 m</option>
 			<option value="30" title="m">30 m</option>
 			<option value="100" title="m">100 m</option>
-		</helper>
+		</helper>-->
 	</element>
 	<element name="gmd:distributionFormat" id="271.0">
 		<label>Distribution format</label>
@@ -1293,7 +1293,7 @@
 		<description>Location (address) for on-line access using a Uniform Resource Locator address
             or similar addressing scheme such as http://www.statkart.no/isotc211</description>
 		<condition>mandatory</condition>
-    <helper displayIf="ancestor::node()[
+    <!--<helper displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
       <option value="http://www.seadatanet.org/Metadata/EDMED-Datasets">http://www.seadatanet.org/Metadata/EDMED-Datasets</option>
@@ -1301,7 +1301,7 @@
       <option value="http://inspire-geoportal.ec.europa.eu/">http://inspire-geoportal.ec.europa.eu/</option>
       <option value="http://www.myocean.eu/">http://www.myocean.eu/</option>
       <option value="http ://www.mongoos.eu/">http ://www.mongoos.eu/</option>
-    </helper>
+    </helper>-->
 	</element>
 	<element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
 		<label>Maintenance and update frequency</label>
@@ -1401,6 +1401,8 @@
 			<option value="Mapinfo TAB">Mapinfo TAB</option>
 			<option value="KML">KML</option>
 			<option value="GML" title="3.2.1">GML</option>
+      <option value="Ascii">Ascii</option>
+      <option value="NetCDF">NetCDF</option>
 			<option value="GeoTIFF" title="1.0">GeoTIFF</option>
 			<option value="TIFF">TIFF</option>
 			<option value="ECW">ECW</option>
@@ -1432,7 +1434,7 @@
   <element name="gmd:name" context="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:name" id="400.0">
     <label>Name of the resource</label>
     <description>Name of the online resource</description>
-    <helper displayIf="ancestor::node()[
+    <!--<helper displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
       <option value="SDN EDMED">SDN EDMED</option>
@@ -1440,7 +1442,7 @@
       <option value="INSPIRE Geoportal/">INSPIRE Geoportal</option>
       <option value="MyOcean">MyOcean</option>
       <option value="Mongoos">Mongoos</option>
-    </helper>
+    </helper>-->
   </element>
 
 	<element name="gmd:name" context="gmd:CI_Series" id="404.0">
@@ -2039,13 +2041,13 @@
 		<label>Resolution</label>
 		<description>Degree of detail in the grid dataset</description>
     <helper relAtt="uom">
-      <option value="" title="second">seconds</option>
-      <option value="" title="minute">minutes</option>
-      <option value="" title="hour">hours</option>
-      <option value="" title="hour">hours</option>
-      <option value="" title="day">days</option>
-      <option value="" title="month">months</option>
-      <option value="" title="year">years</option>
+      <option value="1" title="second">seconds</option>
+      <option value="1" title="minute">minutes</option>
+      <option value="1" title="hour">hours</option>
+      <option value="1" title="hour">hours</option>
+      <option value="1" title="day">days</option>
+      <option value="1" title="month">months</option>
+      <option value="1" title="year">years</option>
     </helper>
 	</element>
 	<element name="gmd:resourceConstraints" id="35.0">
@@ -2355,7 +2357,7 @@
       <option value="Collection cost charge">Collection cost charge</option>
       <option value="Commercial cost charge">Commercial cost charge</option>
       <option value="Cost charge depends on intented use and category of users">Cost charge depends on intented use and category of users</option>
-      <option value="Unknown">unknown</option>
+      <option value="Unknown">Unknown</option>
     </helper>
     <helper>
       <option value="No condition applies">No condition applies</option>

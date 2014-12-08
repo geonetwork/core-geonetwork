@@ -89,7 +89,7 @@
 
   <!-- Medsea-->
   <medsea>MedSea</medsea>
-  <medsea-metadata>Metadata</medsea-metadata>
+  <medsea-metadata>Other information</medsea-metadata>
   <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
   <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
@@ -99,36 +99,39 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMREP name</edmerpName>
-  <edmoName>EDMO name</edmoName>
+  <edmerpName>EDMERP name*</edmerpName>
+  <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
   <environmental-matrix>Environmental matrix*</environmental-matrix>
   <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
   <level-of-characteristics>Level of characteristics</level-of-characteristics>
-  <providerSpecification>Purpose of characteristics production (provider specification)*</providerSpecification>
-  <processStepReference>Production and quality assessment specifications reference</processStepReference>
+  <providerSpecification>Purpose of production*</providerSpecification>
+  <processStepReference>Production specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
   <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
-  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
+  <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth</minDepth>
-  <maxDepth>Max depth</maxDepth>
+  <minDepth>Min depth*</minDepth>
+  <maxDepth>Max depth*</maxDepth>
   <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
+  <otherP01>Other parameter Usage Vocabulary</otherP01>
   <costBasis>Cost basis*</costBasis>
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>
   <responsiveness>Responsiveness*</responsiveness>
   <reliability>Reliability</reliability>
-  <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
-  <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>
+  <medseaDataSourceCatalogueName>Catalog name*</medseaDataSourceCatalogueName>
+  <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
+  <acronym>Acronym</acronym>
+  <edmerpId>EDMERP id</edmerpId>
 
 
 </strings>

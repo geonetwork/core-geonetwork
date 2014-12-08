@@ -18,82 +18,97 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Lists;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata
  * changed in any of the Batch operation services
  */
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
-	
-	public static final class BatchOpsCallable implements Callable<Void> {
-		private final int ids[];
-		private final int beginIndex, count;
-		private final DataManager dm;
 
-		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
-			this.ids = ids;
-			this.beginIndex = beginIndex;
-			this.count = count;
-			this.dm = dm;
-		}
-		
-		public Void call() throws Exception {
-			for(int i=beginIndex; i<beginIndex+count; i++) {
-				dm.indexMetadata(ids[i]+"", false);
-			}
-			return null;
-		}
-	}
-	
-  Set<Integer> metadata;
+    public static final class BatchOpsCallable implements Callable<Void> {
+        private final int ids[];
+        private final int beginIndex, count;
+        private final DataManager dm;
 
-  public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
-      super(dm);
-      this.metadata = metadata;
-  }
+        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
+            this.ids = ids;
+            this.beginIndex = beginIndex;
+            this.count = count;
+            this.dm = dm;
+        }
 
-	public void process() throws Exception {
-		int threadCount = ThreadUtils.getNumberOfThreads();
+        public Void call() throws Exception {
+            for (int i = beginIndex; i < beginIndex + count; i++) {
+                dm.indexMetadata(ids[i] + "", true);
+            }
+            return null;
+        }
+    }
 
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+    Set<Integer> metadata;
 
-		int[] ids = new int[metadata.size()];
-		int i = 0; for (Integer id : metadata) ids[i++] = id;
+    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
+        super(dm);
+        this.metadata = metadata;
+    }
 
-		int perThread;
-		if (ids.length < threadCount) perThread = ids.length;
-		else perThread = ids.length / threadCount;
-		int index = 0;
+    public void process() throws Exception {
+        int threadCount = ThreadUtils.getNumberOfThreads();
+        ExecutorService executor = null;
+        try {
+            executor = Executors.newFixedThreadPool(threadCount);
 
-		List<Future<Void>> submitList = new ArrayList<Future<Void>>();
-		while(index < ids.length) {
-			int start = index;
-			int count = Math.min(perThread,ids.length-start);
-			// create threads to process this chunk of ids
-			Callable<Void> worker = new BatchOpsCallable(ids, start, count, getDataManager());
-			Future<Void> submit = executor.submit(worker);
-			submitList.add(submit);
-			index += count;
-		}
+            int[] ids = new int[metadata.size()];
+            int i = 0;
+            for (Integer id : metadata) ids[i++] = id;
 
-		for (Future<Void> future : submitList) {
-			try {
-				future.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-		}
-		executor.shutdown();
-	}
+            int perThread;
+            if (ids.length < threadCount) perThread = ids.length;
+            else perThread = ids.length / threadCount;
+            int index = 0;
+
+            List<BatchOpsCallable> jobs = Lists.newArrayList();
+            while (index < ids.length) {
+                int start = index;
+                int count = Math.min(perThread, ids.length - start);
+                // create threads to process this chunk of ids
+                jobs.add(new BatchOpsCallable(ids, start, count, getDataManager()));
+
+                index += count;
+            }
+            List<Future<Void>> submitList = Lists.newArrayList();
+            for (i = 1; i < jobs.size(); i++) {
+                Future<Void> submit = executor.submit(jobs.get(i));
+                submitList.add(submit);
+            }
+
+            if (jobs.size() > 0) {
+                jobs.get(0).call();
+                for (Future<Void> future : submitList) {
+                    try {
+                        future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } finally {
+            if (executor != null) {
+                executor.shutdown();
+            }
+        }
+    }
 }
 
