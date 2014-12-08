@@ -21,7 +21,7 @@ public class HarvesterJob implements Job {
     
     public static final String ID_FIELD = "harvesterId";
     String harvesterId;
-    AbstractHarvester harvester;
+    AbstractHarvester<?> harvester;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -41,7 +41,7 @@ public class HarvesterJob implements Job {
         this.harvesterId = harvesterId;
     }
 
-    public void setHarvester(AbstractHarvester harvester) {
+    public void setHarvester(AbstractHarvester<?> harvester) {
         this.harvester = harvester;
     }
 

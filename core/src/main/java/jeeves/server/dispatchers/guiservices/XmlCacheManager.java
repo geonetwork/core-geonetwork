@@ -1,10 +1,11 @@
 package jeeves.server.dispatchers.guiservices;
 
 import jeeves.XmlFileCacher;
-import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,11 +27,25 @@ public class XmlCacheManager {
         
         return cacheMap;
     }
-    public synchronized Element get(ServiceContext context, boolean localized, Path base, String file, String preferedLanguage, String defaultLang) throws JDOMException, IOException {
+
+    /**
+     * Obtain the stings for the provided xml file.
+     *
+     * @param context
+     * @param localized        if this xml is a localized file or is a normal xml file
+     * @param base             the directory to the localization directory (often is loc).
+     *                         If file is not localized then this is the directory that contains the xml file.
+     * @param file             the name of the file to load
+     * @param preferedLanguage the language to attempt to load if it exists
+     * @param defaultLang      a fall back language
+     * @param makeCopy         if false then xml is not cloned and MUST NOT BE MODIFIED!
+     */
+    public synchronized Element get(ApplicationContext context, boolean localized, Path base, String file, String preferedLanguage,
+                                    String defaultLang, boolean makeCopy) throws JDOMException, IOException {
 
         Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
         
-        Path appPath = context.getAppPath();
+        Path appPath = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
         Path xmlFilePath;
 
         boolean isBaseAbsolutePath = base.isAbsolute();
@@ -45,11 +60,8 @@ public class XmlCacheManager {
             }
         }
 
-        ServletContext servletContext = null;
-        if(context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
-        
+        ServletContext servletContext = context.getBean(ServletContext.class);
+
         XmlFileCacher xmlCache = cacheMap.get(preferedLanguage);
         Path xmlFile = xmlFilePath;
         if (xmlCache == null){
@@ -59,7 +71,11 @@ public class XmlCacheManager {
 
         Element result;
         try {
-            result = (Element)xmlCache.get().clone();
+            if (makeCopy) {
+                result = (Element) xmlCache.get().clone();
+            } else {
+                return xmlCache.get();
+            }
         } catch (Exception e) {
             Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language");
             Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);

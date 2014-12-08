@@ -107,8 +107,8 @@ public class Info implements Service {
                 response.addContent(handleElement(scm, elem, context));
             } else if (name.equals("codelist")) {
                 response.addContent(handleCodelist(scm, elem, context));
-            } else {
-                throw new BadParameterEx("element", name);
+//            } else {
+//                throw new BadParameterEx("element", name);
             }
         }
 

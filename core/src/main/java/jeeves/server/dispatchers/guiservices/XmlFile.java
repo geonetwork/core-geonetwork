@@ -30,8 +30,12 @@ import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 
 import java.net.URI;
+
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
@@ -87,18 +91,20 @@ public class XmlFile implements GuiService
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element response, ServiceContext context) throws Exception
-	{
-
+	public Element exec(Element response, ServiceContext context) throws Exception {
         String lang = context.getLanguage();
 
+        return getXml(context.getApplicationContext(), lang, true);
+	}
+
+    public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
         String preferedLanguage = language;
         if(localized || preferedLanguage  == null) preferedLanguage = lang;
         if(preferedLanguage == null) preferedLanguage = defaultLang;
 
-        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang);
+        Element element = context.getBean(XmlCacheManager.class).get(context, localized, base, file, preferedLanguage, defaultLang, makeCopy);
         element.setName(name);
         return element;
-	}
+    }
 }
 

@@ -7020,8 +7020,11 @@ button.close {
   height: 100%;
   min-height: 100%;
 }
-[gn-main-viewer] [go-map] {
+[gn-main-viewer] [ngeo-map] {
   width: 100%;
+}
+[gn-main-viewer] [ngeo-map].loading:hover {
+  cursor: wait;
 }
 [gn-main-viewer] .search-container {
   position: absolute;
@@ -7602,6 +7605,54 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+[gn-main-viewer] [gn-gfi] .results {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+  width: 35em;
+  background: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0;
+  max-height: 40em;
+  overflow: auto;
+}
+[gn-main-viewer] [gn-gfi] .results .panel-heading,
+[gn-main-viewer] [gn-gfi] .results .panel-footer {
+  background: transparent;
+  padding: .25em 1em;
+}
+[gn-main-viewer] [gn-gfi] .results .panel-heading {
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+[gn-main-viewer] [gn-gfi] .results .list-group ul {
+  padding-left: 0;
+  list-style: none;
+}
+[gn-main-viewer] [gn-gfi] .results .list-group h5 {
+  padding-left: 1em;
+}
+[gn-main-viewer] [gn-gfi] .results span {
+  display: inline-block;
+  max-width: 20em;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[gn-main-viewer] [gn-gfi] .results b {
+  text-transform: capitalize;
+  display: inline-block;
+  width: 12em;
+  text-align: right;
+}
+[gn-main-viewer] [gn-gfi] .results .close {
+  padding-top: .3em;
+}
+[gn-main-viewer] [gn-gfi] .results .close:hover {
+  background: transparent;
+}
 /* An update to 3.2 could provide responsive class
   for block or inline layout.
   http://getbootstrap.com/css/#responsive-utilities
@@ -7790,7 +7841,11 @@ select[multiple][hitsperpage-combo] select {
 .gn-searchform label {
   font-weight: normal;
 }
+<<<<<<< HEAD
 .gn-searchform input[type='text'],
+=======
+.gn-searchform input,
+>>>>>>> upstream/refactor_search
 .gn-searchform select {
   height: 30px;
   padding: 5px 10px;
@@ -7798,14 +7853,24 @@ select[multiple][hitsperpage-combo] select {
   line-height: 1.5;
   border-radius: 3px;
 }
+<<<<<<< HEAD
 select.gn-searchform input[type='text'],
+=======
+select.gn-searchform input,
+>>>>>>> upstream/refactor_search
 select.gn-searchform select {
   height: 30px;
   line-height: 30px;
 }
+<<<<<<< HEAD
 textarea.gn-searchform input[type='text'],
 textarea.gn-searchform select,
 select[multiple].gn-searchform input[type='text'],
+=======
+textarea.gn-searchform input,
+textarea.gn-searchform select,
+select[multiple].gn-searchform input,
+>>>>>>> upstream/refactor_search
 select[multiple].gn-searchform select {
   height: auto;
 }
@@ -7852,7 +7917,11 @@ select[multiple].gn-searchform select {
   visibility: hidden;
   pointer-events: none;
 }
+<<<<<<< HEAD
 [go-map] {
+=======
+[ngeo-map] {
+>>>>>>> upstream/refactor_search
   width: 100%;
   height: 200px;
 }
@@ -8033,8 +8102,14 @@ select[multiple].gn-searchform select {
 .gn-search-page .nav-pills .badge {
   background: #428bca;
 }
+<<<<<<< HEAD
 .datepicker {
   height: auto;
+=======
+.gn-resultview .img-thumbnail {
+  margin-left: 1em;
+  max-height: 140px;
+>>>>>>> upstream/refactor_search
 }
 [data-ng-search-form] .gn-top-search {
   text-align: center;
@@ -8062,6 +8137,7 @@ select[multiple].gn-searchform select {
   left: 50%;
   margin-left: 64px;
 }
+<<<<<<< HEAD
 [data-ng-search-form] input[type="checkbox"] {
   margin-left: 0;
   margin-right: 10px;
@@ -8177,6 +8253,8 @@ ul.gn-resultview li.list-group-item .gn-md-links button {
 ul.gn-resultview li.list-group-item .caret {
   color: #f28033;
 }
+=======
+>>>>>>> upstream/refactor_search
 [gn-main-viewer] {
   position: absolute;
   left: 0;
@@ -8185,9 +8263,10 @@ ul.gn-resultview li.list-group-item .caret {
   top: calc(98px + 1.6em);
   border: 1px solid #dddddd;
 }
-[gn-main-viewer] [go-map] {
+[gn-main-viewer] [ngeo-map] {
   height: 100%;
 }
+<<<<<<< HEAD
 [gn-main-viewer] .panel-tools .nav-justified {
   padding: 0 1em;
 }
@@ -8201,3 +8280,5 @@ ul.gn-resultview li.list-group-item .caret {
   width: 200%;
 }
 /*# sourceMappingURL=sextant.css.map */
+=======
+>>>>>>> upstream/refactor_search

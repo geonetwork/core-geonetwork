@@ -8,15 +8,19 @@
     '$scope',
     '$location',
     function($scope, $location) {
-      $scope.params = {};
+      $scope.searchObj = {
+        params: {},
+        permalink: false
+      };
+
       $scope.onMdClick = function(md) {
         $location.path('/metadata/' + md['geonet:info'].id);
       };
 
       $scope.$watch('user.id', function(val) {
         if (val) {
-          $scope.params['_owner'] = val;
-          $scope.$broadcast('resetSearch', $scope.params);
+          $scope.searchObj.params['_owner'] = val;
+          $scope.$broadcast('resetSearch', $scope.searchObj.params);
         }
       });
     }

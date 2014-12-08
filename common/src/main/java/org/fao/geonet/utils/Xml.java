@@ -518,12 +518,7 @@ public final class Xml
                 }
 
                 Path f;
-                final String systemId = s.getSystemId().replaceAll("%5C", "/");
-                try {
-                    f = IO.toPath(new URI(systemId));
-                } catch (FileSystemNotFoundException e) {
-                    f = IO.toPath(systemId);
-                }
+                f = resolvePath(s);
                 if(Log.isDebugEnabled(Log.XML_RESOLVER))
                     Log.debug(Log.XML_RESOLVER, "Check on "+f+" exists returned: "+Files.exists(f));
                 // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
@@ -550,7 +545,18 @@ public final class Xml
          }
      }
 
-	//--------------------------------------------------------------------------
+    protected static Path resolvePath(Source s) throws URISyntaxException {
+        Path f;
+        final String systemId = s.getSystemId().replaceAll("%5C", "/");
+        try {
+            f = IO.toPath(new URI(systemId));
+        } catch (FileSystemNotFoundException e) {
+            f = IO.toPath(systemId);
+        }
+        return f;
+    }
+
+    //--------------------------------------------------------------------------
 
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
@@ -586,8 +592,8 @@ public final class Xml
                 Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
                 //e.printStackTrace();
             } finally {
-                Transformer t = transFact.newTransformer(srcSheet);
                 transFact.setURIResolver(new JeevesURIResolver());
+                Transformer t = transFact.newTransformer(srcSheet);
                 if (params != null) {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         t.setParameter(param.getKey(), param.getValue());

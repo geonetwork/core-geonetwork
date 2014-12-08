@@ -52,7 +52,7 @@ import javax.servlet.http.HttpSession;
  * In each xml/schemas/schemaId directory, a process could be added in a
  * directory called process. Then the process could be called using the
  * following URL :
- * http://localhost:8080/geonetwork/srv/en/metadata.batch.processing
+ * http://localhost:8080/geonetwork/srv/eng/md.processing.batch
  * ?process=keywords-comma-exploder&url=http://xyz
  * 
  * In that example the process has to be named keywords-comma-exploder.xsl.
@@ -68,8 +68,6 @@ import javax.servlet.http.HttpSession;
 public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 	@Autowired
 	private DataManager dataMan;
-	@Autowired
-	private SelectionManager selectionManager;
     @Autowired
     private XslProcessing xslProcessing;
     @Autowired
@@ -98,19 +96,24 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 
 		final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 		Log.info("org.fao.geonet.services.metadata", "Get selected metadata");
+        ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            SelectionManager selectionManager =
+                    SelectionManager.getManager(serviceContext.getUserSession());
 
-        final HashSet<String> metadata;
-        synchronized (selectionManager.getSelection("metadata")) {
-            final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
-            xslProcessingReport.setTotalRecords(selection.size());
-            metadata = Sets.newHashSet(selection);
+            final HashSet<String> metadata;
+            synchronized (selectionManager.getSelection("metadata")) {
+                final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+                xslProcessingReport.setTotalRecords(selection.size());
+                metadata = Sets.newHashSet(selection);
+            }
+
+            ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
+            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(context,
+                    dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
+                    xslProcessingReport, request);
+            m.process();
         }
-
-        ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
-        BatchXslMetadataReindexer m = new BatchXslMetadataReindexer( context,
-                dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
-                xslProcessingReport, request);
-        m.process();
 
         return xslProcessingReport;
 	}

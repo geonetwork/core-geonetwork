@@ -233,7 +233,7 @@
       $scope.onFormLoad = function() {
         gnEditor.onFormLoad();
         $scope.$watch('tocIndex', function(newValue, oldValue) {
-          $timeout(function () {
+          $timeout(function() {
             if (angular.isDefined($scope.tocIndex) && $scope.tocIndex != '') {
               $scope.switchToTab(gnCurrentEdit.tab);
             }

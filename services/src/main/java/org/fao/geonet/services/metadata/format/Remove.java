@@ -23,10 +23,14 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
+
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -37,13 +41,17 @@ import java.nio.file.Path;
  * 
  * @author pmauduit
  */
-public class Remove extends AbstractFormatService {
+public class Remove extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String xslid = Util.getParam(params, Params.ID, null);
         
-        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        Path schemaDir = null;
+        if (schema != null) {
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
+        }
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
         try {
             IO.deleteFileOrDirectory(formatDir);

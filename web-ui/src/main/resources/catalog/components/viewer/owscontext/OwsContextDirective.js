@@ -1,4 +1,4 @@
-(function () {
+(function() {
   goog.provide('gn_owscontext_directive');
 
   var module = angular.module('gn_owscontext_directive', []);
@@ -11,14 +11,14 @@
         if (e.target && e.target.result) {
           callback(e.target.result);
         } else {
-          console.error("File could not be loaded");
+          console.error('File could not be loaded');
         }
       };
       reader.onerror = function(e) {
-        console.error("File could not be read");
+        console.error('File could not be read');
       };
     } catch (e) {
-      console.error("File could not be read");
+      console.error('File could not be read');
     }
   }
 
@@ -32,11 +32,11 @@
   module.directive('gnOwsContext', [
     'gnViewerSettings',
     'gnOwsContextService',
-    function (gnViewerSettings, gnOwsContextService) {
+    function(gnViewerSettings, gnOwsContextService) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
-          'partials/owscontext.html',
+            'partials/owscontext.html',
         scope: {
           map: '='
         },
@@ -65,20 +65,20 @@
           // load context from url or from storage
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-              scope.map, true);
+                scope.map, true);
           } else if (window.localStorage.getItem('owsContext')) {
             var c = window.localStorage.getItem('owsContext');
             gnOwsContextService.loadContext(c, scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
-              gnViewerSettings.defaultContext,
-              scope.map);
+                gnViewerSettings.defaultContext,
+                scope.map);
           }
 
 
           // store the current context in local storage to reload it
           // automatically on next connexion
-          $(window).on('unload', function () {
+          $(window).on('unload', function() {
             gnOwsContextService.saveToLocalStorage(scope.map);
           });
         }

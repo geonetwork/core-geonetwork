@@ -5,15 +5,15 @@
 
   // OWC Client
   // Jsonix wrapper to read or write OWS Context
-  var context =  new Jsonix.Context(
-    [XLink_1_0, OWS_1_0_0, Filter_1_0_0, GML_2_1_2, SLD_1_0_0, OWC_0_3_1],
-    {
-      namespacePrefixes : {
-        "http://www.w3.org/1999/xlink": "xlink",
-        "http://www.opengis.net/ows": "ows"
+  var context = new Jsonix.Context(
+      [XLink_1_0, OWS_1_0_0, Filter_1_0_0, GML_2_1_2, SLD_1_0_0, OWC_0_3_1],
+      {
+        namespacePrefixes: {
+          'http://www.w3.org/1999/xlink': 'xlink',
+          'http://www.opengis.net/ows': 'ows'
+        }
       }
-    }
-  );
+      );
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
@@ -26,7 +26,7 @@
 
       /**
        * Loads a context, ie. creates layers and centers the map
-       * @param context object
+       * @param {Object} context object
        */
       this.loadContext = function(text, map) {
         var context = unmarshaller.unmarshalString(text).value;
@@ -49,7 +49,7 @@
         var projection = bbox.crs;
         // reproject in case bbox's projection doesn't match map's projection
         extent = ol.proj.transformExtent(extent, map.getView().getProjection(),
-          projection);
+            projection);
 
         // store the extent into view settings so that it can be used later in
         // case the map is not visible yet
@@ -103,8 +103,8 @@
 
       /**
        * Loads a context from an URL.
-       * @param url URL to context
-       * @param map map
+       * @param {string} url URL to context
+       * @param {ol.map} map map
        */
       this.loadContextFromUrl = function(url, map, useProxy) {
         var self = this;
@@ -119,7 +119,7 @@
       /**
        * Creates a javascript object based on map context then marshals it
        *    into XML
-       * @param context object
+       * @param {Object} context object
        */
       this.writeContext = function(map) {
 
@@ -128,8 +128,8 @@
         var general = {
           boundingBox: {
             name: {
-              "namespaceURI": "http://www.opengis.net/ows",
-              "localPart": "BoundingBox"
+              'namespaceURI': 'http://www.opengis.net/ows',
+              'localPart': 'BoundingBox'
             },
             value: {
               crs: map.getView().getProjection().getCode(),
@@ -148,13 +148,13 @@
           var source = layer.getSource();
           var name;
           if (source instanceof ol.source.OSM) {
-            name = "{type=osm}";
+            name = '{type=osm}';
           } else if (source instanceof ol.source.MapQuest) {
-            name = "{type=mapquest}";
+            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
-            name = "{type=bing_aerial}";
+            name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.WMTS) {
-            name = "{type=wmts}";
+            name = '{type=wmts}';
           } else {
             return;
           }
@@ -169,7 +169,7 @@
 
         map.getLayers().forEach(function(layer) {
           var source = layer.getSource();
-          var url = "";
+          var url = '';
           var name;
 
           // background layers already taken into account
@@ -194,14 +194,14 @@
               onlineResource: [{
                 href: url
               }],
-              service: "urn:ogc:serviceType:WMS"
+              service: 'urn:ogc:serviceType:WMS'
             }]
           });
         });
 
         var context = {
-          version: "0.3.1",
-          id: "ows-context-ex-1-v3",
+          version: '0.3.1',
+          id: 'ows-context-ex-1-v3',
           general: general,
           resourceList: resourceList
         };
@@ -209,9 +209,9 @@
         var xml = marshaller.marshalDocument({
           name: {
             localPart: 'OWSContext',
-            namespaceURI: "http://www.opengis.net/ows-context",
-            prefix: "ows-context",
-            string: "{http://www.opengis.net/ows-context}ows-context:OWSContext"
+            namespaceURI: 'http://www.opengis.net/ows-context',
+            prefix: 'ows-context',
+            string: '{http://www.opengis.net/ows-context}ows-context:OWSContext'
           },
           value: context
         });
@@ -222,19 +222,19 @@
        * Saves the map context to local storage
        */
       this.saveToLocalStorage = function(map) {
-        if (map.getSize()[0] == 0 || map.getSize()[1] == 0){
+        if (map.getSize()[0] == 0 || map.getSize()[1] == 0) {
           // don't save a map which has not been rendered yet
           return;
         }
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
-        window.localStorage.setItem("owsContext", xmlString);
+        window.localStorage.setItem('owsContext', xmlString);
       };
 
       /**
        * Adds a WMS layer to map
-       * @param layer layer
-       * @param map map
+       * @param {ol.layer} layer layer
+       * @param {ol.map} map map
        */
       this.addWmsLayer = function(obj, map) {
         var server = obj.server[0];

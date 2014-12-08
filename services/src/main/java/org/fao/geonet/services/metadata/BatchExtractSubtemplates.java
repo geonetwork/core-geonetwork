@@ -34,11 +34,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.Sha1Encoder;
@@ -285,14 +289,30 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						//if (context.isDebug()) context.info("Test: Add subtemplate uuid "+uuid);
 
 						// add node as a subtemplate
-						String docType = null, createDate = null, changeDate = null;
-						String group = "1"; 
-						int user = context.getUserSession().getUserIdAsInt(); 
-						boolean ufo = false, indexImmediate = false;
+						int user = context.getUserSession().getUserIdAsInt();
+                        final String siteId = gc.getBean(SettingManager.class).getSiteId();
 
-                        String sId = dataMan.insertMetadata(context, mdInfo.getSchemaId(), (Element) elem.clone(), uuid, user, group,
-                                gc.getBean(SettingManager.class).getSiteId(), "s", docType, category, createDate, changeDate, ufo, indexImmediate);
-						subtemplates.add(Integer.valueOf(sId));
+                        Metadata metadataObj = new Metadata().setUuid(uuid);
+                        metadataObj.getDataInfo().
+                                setSchemaId(mdInfo.getSchemaId()).
+                                setRoot(elem.getQualifiedName()).
+                                setType(MetadataType.SUB_TEMPLATE);
+                        metadataObj.getSourceInfo().
+                                setSourceId(siteId).
+                                setOwner(user).
+                                setGroupOwner(1);
+
+                        if (category != null && category.isEmpty()) {
+                            final MetadataCategoryRepository repository = context.getBean(MetadataCategoryRepository.class);
+                            final MetadataCategory mdCat = repository.findOneByNameIgnoreCase(category);
+                            if (mdCat != null) {
+                                metadataObj.getCategories().add(mdCat);
+                            }
+                        }
+
+                        metadataObj = dataMan.insertMetadata(context, metadataObj, (Element) elem.clone(), true, false, false, UpdateDatestamp.NO, false, false);
+
+						subtemplates.add(metadataObj.getId());
 					}
 				}
 

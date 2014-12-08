@@ -23,7 +23,7 @@
 
       function loadMapservers() {
         $scope.mapserverSelected = null;
-        $http.get('geoserver.publisher@json?action=LIST')
+        $http.get('geoserver.publisher?_content_type=json&action=LIST')
           .success(function(data) {
               $scope.mapservers = data != 'null' ? data : [];
             }).error(function(data) {
@@ -60,7 +60,7 @@
       };
       $scope.saveMapServer = function(formId) {
 
-        $http.get('geoserver.publisher@json?action=' +
+        $http.get('geoserver.publisher?_content_type=json&action=' +
             $scope.operation +
             '&' + $(formId).serialize())
           .success(function(data) {
@@ -104,7 +104,8 @@
 
       };
       $scope.deleteMapServer = function() {
-        $http.get('geoserver.publisher@json?action=REMOVE_NODE&id=' +
+        $http.get('geoserver.publisher?_content_type=json&action=' +
+            'REMOVE_NODE&id=' +
                   $scope.mapserverSelected.id)
           .success(function(data) {
               loadMapservers();

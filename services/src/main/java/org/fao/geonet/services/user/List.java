@@ -72,16 +72,16 @@ public class List {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-    @RequestMapping(value = "/{lang}/admin.user.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    UserList exec() throws Exception {
+	@RequestMapping(value = "/{lang}/admin.user.list", produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody
+	UserList exec() throws Exception {
         final SecurityContext context = SecurityContextHolder.getContext();
         if (context == null || context.getAuthentication() == null) {
             throw new AuthenticationCredentialsNotFoundException("User needs to log in");
@@ -93,65 +93,65 @@ public class List {
                                             context.getAuthentication());
         }
 
-        Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
+		Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
 
-        Collection<? extends GrantedAuthority> roles = me.getAuthorities();
+		Collection<? extends GrantedAuthority> roles = me.getAuthorities();
 
-        Set<String> profileSet = Sets.newHashSet();
+		Set<String> profileSet = Sets.newHashSet();
 
-        for (GrantedAuthority rol : roles) {
-            profileSet.add(rol.getAuthority());
-        }
+		for (GrantedAuthority rol : roles) {
+			profileSet.add(rol.getAuthority());
+		}
 
-        // --- retrieve all users
-        final java.util.List<User> all = userRepository.findAll(SortUtils
-                .createSort(User_.username));
+		// --- retrieve all users
+		final java.util.List<User> all = userRepository.findAll(SortUtils
+				.createSort(User_.username));
 
-        // --- now filter them
+		// --- now filter them
 
-        java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
+		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-        if (!profileSet.contains(Profile.Administrator.name())) {
+		if (!profileSet.contains(Profile.Administrator.name())) {
 
-            for (User user : all) {
-                int userId = user.getId();
-                Profile profile = user.getProfile();
+			for (User user : all) {
+				int userId = user.getId();
+				Profile profile = user.getProfile();
 
-                // TODO is this already equivalent to ID?
-                if (user.getUsername().equals(context.getAuthentication().getName())) {
-                    // user is permitted to access his/her own user information
-                    continue;
-                }
-                Set<Integer> userGroups = getGroups(userId, profile);
-                // Is user belong to one of the current user admin group?
-                boolean isInCurrentUserAdminGroups = false;
-                for (Integer userGroup : userGroups) {
-                    if (hsMyGroups.contains(userGroup)) {
-                        isInCurrentUserAdminGroups = true;
-                        break;
-                    }
-                }
-                // if (!hsMyGroups.containsAll(userGroups))
-                if (!isInCurrentUserAdminGroups) {
-                    usersToRemove.add(user.getId());
-                }
+				// TODO is this already equivalent to ID?
+				if (user.getUsername().equals(context.getAuthentication().getName())) {
+					// user is permitted to access his/her own user information
+					continue;
+				}
+				Set<Integer> userGroups = getGroups(userId, profile);
+				// Is user belong to one of the current user admin group?
+				boolean isInCurrentUserAdminGroups = false;
+				for (Integer userGroup : userGroups) {
+					if (hsMyGroups.contains(userGroup)) {
+						isInCurrentUserAdminGroups = true;
+						break;
+					}
+				}
+				// if (!hsMyGroups.containsAll(userGroups))
+				if (!isInCurrentUserAdminGroups) {
+					usersToRemove.add(user.getId());
+				}
 
-                if (!profileSet.contains(profile.name())) {
-                    usersToRemove.add(user.getId());
-                }
-            }
-        }
-        UserList res = new UserList();
+				if (!profileSet.contains(profile.name())) {
+					usersToRemove.add(user.getId());
+				}
+			}
+		}
+		UserList res = new UserList();
 
-        for (User u : Collections.unmodifiableList(all)) {
-            if (!usersToRemove.contains(u.getId())) {
-                res.addUser(u);
-            }
-        }
+		for (User u : Collections.unmodifiableList(all)) {
+			if (!usersToRemove.contains(u.getId())) {
+				res.addUser(u);
+			}
+		}
 
-
-        return res;
-    }
+		
+		return res;
+	}
 
     // --------------------------------------------------------------------------
     // ---

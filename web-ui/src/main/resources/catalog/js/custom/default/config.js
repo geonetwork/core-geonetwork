@@ -54,7 +54,7 @@
             width: 2
           })
         }),
-        mdExtentHighlight:new ol.style.Style({
+        mdExtentHighlight: new ol.style.Style({
           stroke: new ol.style.Stroke({
             color: 'orange',
             width: 3
@@ -64,7 +64,7 @@
           })
         })
 
-      }
+      };
 
       /** *************************************
        * Define maps
@@ -115,18 +115,20 @@
       };
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [3,10,20,50,100];
+      searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
 
       /* Sort by combo values configuration */
       searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/thumb.html',
         tooltip: 'Thumbnails',
         icon: 'fa-th-list'
       }];

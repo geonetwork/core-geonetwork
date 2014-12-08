@@ -1,5 +1,6 @@
 package jeeves.config.springutil;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -140,6 +141,11 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     public static ConfigurableApplicationContext getApplicationContextFromServletContext(ServletContext servletContext) {
         final Object applicationContext = servletContext.getAttribute(applicationContextAttributeKey.get());
         return (ConfigurableApplicationContext) applicationContext;
+    }
+
+    @VisibleForTesting
+    public static void setApplicationContextAttributeKey(String key) {
+        applicationContextAttributeKey.set(key);
     }
 
 }

@@ -14,6 +14,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -150,7 +153,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             e.printStackTrace();
         }
 
-        switch (to.compareTo(from)) {
+        switch (from.compareTo(to)) {
             case -1:
                 _logger.info("      Running on a newer database version.");
                 break;
@@ -218,7 +221,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 // TODO : Maybe some migration stuff has to be done in Java ?
                 break;
             default:
-                throw new Error("Unrecognized value: " + to.compareTo(from));
+                throw new Error("Unrecognized value: " + to.compareTo(from) + " when comparing " + to + " -> " + from);
         }
 
         return anyMigrationError;
@@ -232,11 +235,37 @@ public class DatabaseMigration implements BeanPostProcessor {
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
             task.update(conn);
             return false;
+        } catch (SQLException e) {
+            StringBuilder error = new StringBuilder();
+            formatSqlException(e, error);
+
+            SQLException next = e.getNextException();
+            while (next != null) {
+                formatSqlException(next, error);
+                next = e.getNextException();
+            }
+
+            try {
+                ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+                PrintStream writer = new PrintStream(byteArrayStream, true, Constants.ENCODING);
+                e.printStackTrace(writer);
+
+                error.append("\n    Stack Trace: \n").append(byteArrayStream.toString(Constants.ENCODING));
+            } catch (UnsupportedEncodingException e1) {
+                // skip
+            }
+            _logger.error("          Errors occurs during Java migration file: " + error);
+            return true;
         } catch (Throwable e) {
-            _logger.info("          Errors occurs during Java migration file: " + e.getMessage());
             e.printStackTrace();
             return true;
         }
+    }
+
+    private void formatSqlException(SQLException e, StringBuilder error) {
+        error.append("\n    SQLState: ").append(e.getSQLState());
+        error.append("\n    Error Code: ").append(e.getErrorCode());
+        error.append("\n    Message: ").append(e.getMessage());
     }
 
     /**
@@ -364,13 +393,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         @Override
         public int compareTo(Version o) {
             if (major != o.major) {
-                return major - o.major;
+                return Integer.compare(major, o.major);
             }
             if (minor != o.minor) {
-                return minor - o.minor;
+                return Integer.compare(minor, o.minor);
             }
             if (micro != o.micro) {
-                return micro - o.micro;
+                return Integer.compare(micro, o.micro);
             }
             return 0;
         }

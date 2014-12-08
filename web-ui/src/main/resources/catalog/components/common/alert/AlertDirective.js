@@ -15,9 +15,9 @@
         gnAlertValue.push(alert);
 
         $timeout(function() {
-           gnAlertValue.splice(0, 1);
-        }, delay)
-      }
+          gnAlertValue.splice(0, 1);
+        }, delay);
+      };
     }]);
 
   module.directive('gnAlertManager', [
@@ -28,9 +28,9 @@
         restrict: 'A',
         templateUrl: '../../catalog/components/common/alert/' +
             'partials/alert.html',
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
           scope.alerts = gnAlertValue;
         }
-      }
+      };
     }]);
 })();

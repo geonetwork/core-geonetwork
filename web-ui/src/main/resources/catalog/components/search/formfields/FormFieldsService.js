@@ -6,5 +6,5 @@
 
   module.value('gnFormFieldsSettings', {
 
-  } );
+  });
 })();

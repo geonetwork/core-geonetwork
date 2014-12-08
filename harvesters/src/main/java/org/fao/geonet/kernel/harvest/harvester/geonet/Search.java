@@ -23,18 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import com.google.common.base.Splitter;
-import org.fao.geonet.Logger;
+import java.util.Iterator;
+
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.util.Iterator;
+import com.google.common.base.Splitter;
 
 //=============================================================================
 
@@ -67,7 +64,7 @@ class Search
 		sourceName = Util.getParam(source, "name", "");
 	}
 
-	//---------------------------------------------------------------------------
+	//----------------------------------------------------	-----------------------
 	//---
 	//--- API methods
 	//---

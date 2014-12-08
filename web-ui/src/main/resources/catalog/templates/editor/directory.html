@@ -25,9 +25,9 @@
           <form data-ng-search-form="">
             <div class="input-group">
               <input class="form-control" type="text"
-                     data-ng-change="getEntries()"
+                     data-ng-change="triggerSearch()"
                      placeholder="{{'search' | translate}}" autofocus=""
-                     data-ng-model="subtemplateFilter.any"/>
+                     data-ng-model="searchObj.params.any"/>
               <div class="input-group-btn">
                 <button type="button"
                         class="btn btn-default dropdown-toggle"

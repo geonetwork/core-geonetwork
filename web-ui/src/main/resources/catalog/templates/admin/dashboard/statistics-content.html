@@ -21,28 +21,42 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">mostPopularRecords</div>
       <div class="panel-body">
-        <h2 data-translate="">mostPopular</h2>
-        <form class="form-horizontal" role="form"
-              data-ng-search-form="" runSearch="true" gn-params="statistics.md.popularity">
-          <table class="table table-striped">
-            <tr data-ng-repeat="md in searchResults.records">
-              <td>{{md.title || md.defaultTitle}}</td>
-              <td class="text-right">{{md.popularity}}</td>
-            </tr>
-          </table>
-          <div data-gn-pagination="paginationInfo"/>
-        </form>
-        <h2 data-translate="">bestRated</h2>
-        <form class="form-horizontal" role="form"
-              data-ng-search-form="" runSearch="true" gn-params="statistics.md.rating">
-          <table class="table table-striped">
-            <tr data-ng-repeat="md in searchResults.records | mdRated">
-              <td>{{md.title || md.defaultTitle}}</td>
-              <td class="text-right">{{md.rating}}</td>
-            </tr>
-          </table>
-          <div data-gn-pagination="paginationInfo"/>
-        </form>
+        <div data-ng-controller="GnDashboardContentStatControllerPopularity">
+          <h2 data-translate="">mostPopular</h2>
+          <form class="form-horizontal" role="form"
+                data-ng-search-form="" runSearch="true">
+            <table class="table table-striped">
+              <tr data-ng-repeat="md in searchResults.records">
+                <td>{{md.title || md.defaultTitle}}</td>
+                <td class="text-right">{{md.popularity}}</td>
+                <td>
+                  <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                    <i class="fa fa-eye"/>
+                  </a>
+                </td>
+              </tr>
+            </table>
+            <div data-gn-pagination="paginationInfo"/>
+          </form>
+        </div>
+        <div data-ng-controller="GnDashboardContentStatControllerRating">
+          <h2 data-translate="">bestRated</h2>
+          <form class="form-horizontal" role="form"
+                data-ng-search-form="" runSearch="true">
+            <table class="table table-striped">
+              <tr data-ng-repeat="md in searchResults.records">
+                <td>{{md.title || md.defaultTitle}}</td>
+                <td class="text-right">{{md.rating}}</td>
+                <td>
+                  <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                    <i class="fa fa-eye"/>
+                  </a>
+                </td>
+              </tr>
+            </table>
+            <div data-gn-pagination="paginationInfo"/>
+          </form>
+        </div>
         <h2>
           <span data-translate="">recordsBy</span>
           <select class="form-control" data-ng-model="currentIndicator"

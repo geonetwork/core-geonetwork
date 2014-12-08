@@ -11,7 +11,15 @@
   <artifactId>schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
-  <modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+    </dependencies>
+
+    <modules>
     <module>schema-core</module>
     <module>csw-record</module>
     <module>dublin-core</module>

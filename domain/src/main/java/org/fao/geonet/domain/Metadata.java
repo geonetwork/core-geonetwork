@@ -10,12 +10,30 @@ import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will
@@ -80,7 +98,7 @@ public class Metadata extends GeonetEntity {
      *
      * @return the uuid of the metadata.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Nonnull
     public String getUuid() {
         return _uuid;

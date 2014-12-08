@@ -52,7 +52,9 @@
                      scope.include.indexOf(',') !== -1 ?
                       scope.include.split(',') : [scope.include]) : [];
 
-             scope.allowFreeTextKeywords = (attrs.allowFreeTextKeywords === undefined) || (attrs.allowFreeTextKeywords == 'true');
+             scope.allowFreeTextKeywords =
+             (attrs.allowFreeTextKeywords === undefined) ||
+             (attrs.allowFreeTextKeywords == 'true');
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
@@ -83,7 +85,7 @@
                          thesaurusIdentifier;
                } else {
                  gnThesaurusService
-                         .getXML(thesaurusIdentifier, null,
+                         .getXML(thesaurusIdentifier,  null,
                                  attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form

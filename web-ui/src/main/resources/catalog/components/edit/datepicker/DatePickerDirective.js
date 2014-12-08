@@ -12,8 +12,8 @@
    *  It's also useful as html datetime input are not
    *  yet widely supported.
    */
-  module.directive('gnDatePicker', ['$http', '$rootScope',
-    function($http, $rootScope) {
+  module.directive('gnDatePicker', ['$http', '$rootScope', '$filter',
+    function($http, $rootScope, $filter) {
 
       return {
         restrict: 'A',
@@ -63,13 +63,14 @@
             scope.year = parseInt(scope.value);
             scope.mode = 'year';
           } else if (scope.value.length === 7) {
-            scope.month = scope.value;
+            scope.month = moment(scope.value, 'yyyy-MM').toDate();
             scope.mode = 'month';
           } else {
             var isDateTime = scope.value.indexOf('T') !== -1;
             var tokens = scope.value.split('T');
-            scope.date = isDateTime ? tokens[0] : scope.value;
-            scope.time = isDateTime ? tokens[1] : '';
+            scope.date = new Date(isDateTime ? tokens[0] : scope.value);
+            scope.time = isDateTime ? moment(tokens[1], 'HH:mm:ss').toDate() :
+                undefined;
           }
           if (scope.dateTypeSupported !== true) {
             scope.dateInput = scope.value;
@@ -118,21 +119,16 @@
             } else if (scope.mode === 'year') {
               scope.dateTime = scope.year;
             } else if (scope.mode === 'month') {
-              scope.dateTime = scope.month;
+              scope.dateTime = $filter('date')(scope.month, 'yyyy-MM');
             } else if (scope.time) {
               tag = scope.tagName !== undefined ?
                   scope.tagName : 'gco:DateTime';
-              var time = scope.time;
+              var time = $filter('date')(scope.time, 'HH:mm:ss');
               // TODO: Set seconds, Timezone ?
-              scope.dateTime = scope.date;
-
-              // Add seconds if not set
-              if (time.length === 5) {
-                time += ':00';
-              }
+              scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
               scope.dateTime += 'T' + time;
             } else {
-              scope.dateTime = scope.date;
+              scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
             }
             if (tag === '') {
               scope.xmlSnippet = scope.dateTime;

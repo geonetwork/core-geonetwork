@@ -9,9 +9,9 @@
    */
   module.directive('gnCrsSelector',
       ['$rootScope', '$timeout', '$http',
-        'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
-        function($rootScope, $timeout, $http,
-            gnEditor, gnEditorXMLService, gnCurrentEdit) {
+       'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
+       function($rootScope, $timeout, $http,
+               gnEditor, gnEditorXMLService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -33,7 +33,7 @@
 
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,
-                   scope.elementRef, scope.elementName, scope.domId, 'before');
+               scope.elementRef, scope.elementName, scope.domId, 'before');
                return false;
              };
 
@@ -41,10 +41,10 @@
              scope.search = function() {
                if (scope.filter) {
                  $http.get('crs.search@json?type=&maxResults=50&name=' +
-                      scope.filter).success(
-                     function(data) {
-                       scope.crsResults = data;
-                     });
+                 scope.filter).success(
+                 function(data) {
+                   scope.crsResults = data;
+                 });
                }
              };
 
@@ -52,7 +52,9 @@
              scope.$watch('filter', scope.search);
 
              scope.addCRS = function(crs) {
-               scope.snippet = gnEditorXMLService.buildCRSXML(crs);
+               scope.snippet = gnEditorXMLService.buildCRSXML(
+               crs,
+               gnCurrentEdit.schema);
                scope.crsResults = [];
 
                $timeout(function() {

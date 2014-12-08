@@ -515,6 +515,7 @@ public final class Geonet {
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
 		public static final String CONFIG_DIR = "configDir";
 		public static final String UPLOAD_DIR = "uploadDir";
+		public static final String FORMATTER_PATH = "formatterPath";
 		public static final String RESOURCES_DIR = "resources";
 		public static final String SYSTEM_DATA_DIR = "geonetworkDataDir";
 		public static final String HIDE_WITHHELD_ELEMENTS = "hidewithheldelements";
@@ -617,6 +618,7 @@ public final class Geonet {
 		public static final Namespace OASIS_CATALOG = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
 		public static final Namespace SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 		public static final Namespace XLINK = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+		public static final Namespace XSL = Namespace.getNamespace("xsl", "http://www.w3.org/1999/XSL/Transform");
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");

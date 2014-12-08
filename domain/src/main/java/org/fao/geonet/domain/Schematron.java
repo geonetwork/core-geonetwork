@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "schematron",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"schemaName","file"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"schemaName","filename"}))
 @Cacheable
 @Access(AccessType.PROPERTY)
 @SequenceGenerator(name= Schematron.ID_SEQ_NAME, initialValue=100, allocationSize=1)
@@ -39,7 +39,7 @@ public class Schematron extends Localized {
 
 	@Override
 	public String toString() {
-		return "Schematron [_id=" + id + ", isoschema=" + schemaName + ", file="
+		return "Schematron [_id=" + id + ", isoschema=" + schemaName + ", filename="
 				+ file + ", description"
 				+ getLabelTranslations() + "]";
 	}
@@ -63,7 +63,7 @@ public class Schematron extends Localized {
 	/**
 	 * @return the file
 	 */
-	@Column(nullable = false, name = "file")
+	@Column(nullable = false, name = "filename")
 	public String getFile() {
 		return file;
 	}

@@ -10,6 +10,7 @@
     <jsSource webappPath="catalog/lib/jquery-2.0.3.min.js"/>
     <jsSource webappPath="catalog/lib/moment+langs.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular.min.js"/>
+    <jsSource webappPath="catalog/lib/angular-filter.min.js" minimize="false"/>
     <jsSource webappPath="catalog/lib/angular/angular-resource.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-sanitize.min.js"/>
@@ -22,7 +23,7 @@
     <jsSource webappPath="catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/tabs.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/typeahead.js"/>
-    <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
+    <jsSource webappPath="catalog/lib/style/bootstrap/dist/js/bootstrap.min.js"/>
     <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="catalog/lib/ngeo/ngeo.js"/>
     <jsSource webappPath="catalog/lib/d3.v3.min.js"/>

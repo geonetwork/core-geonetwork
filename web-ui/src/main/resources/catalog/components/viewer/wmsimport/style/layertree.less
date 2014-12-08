@@ -1,0 +1,59 @@
+.layerTree {
+  min-height: 10em;
+  li {
+    padding: 0;
+  }
+  ul ul {
+    margin: 0;
+    padding-left: 10px;
+    .list-group-item {
+      border-width: 1px 0 0 0;
+    }
+    display: none;
+  }
+  label {
+    color: #444;
+    font-weight: normal;
+    display: block;
+    padding: 10px 0 10px 15px;
+    margin-bottom: 0;
+    &:hover {
+      color: #000;
+      text-shadow: 0 0 2px #FFF;
+    }
+    .fa {
+      margin-right: .1em;
+      font-size: 1.15em;
+      vertical-align: middle;
+    }
+  }
+  .leaf label {
+    .fa {
+      opacity: 0;
+      transition: opacity @transition-params;
+    }
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      .fa {
+        opacity: 1;
+      }
+    }
+  }
+  .list-group-item {
+    padding-right: 0;
+  }
+  .dropdown-menu {
+    width: 100%;
+    font-size: 12px;
+    a {
+      padding: 3px 0 3px .5em;
+      margin-right: .5em;
+      overflow-x: hidden;
+    }
+  }
+}
+.layers, .layerTree {
+  max-height: 50em;
+  transition: max-height .25s ease;
+}

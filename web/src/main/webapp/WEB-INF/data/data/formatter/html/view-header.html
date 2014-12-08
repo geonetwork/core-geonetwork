@@ -1,0 +1,61 @@
+<div class="container gn-metadata-view">
+    <script type="application/javascript" fmt-if="isHTML">document.title="{{pageTitle}}"</script>
+    <h1>
+        <button type="button" class="btn btn-default toggler">
+            <script type="application/javascript" fmt-if="isHTML">
+                //<![CDATA[
+                var headEl = $("head");
+                var iconLink = headEl.children("link[rel='shortcut icon']");
+                if (iconLink.length > 0) {
+                    iconLink.attr("href", "{{logo}}");
+                } else {
+                    headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+                }
+                //]]>
+            </script>
+            <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
+            <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
+        </button>
+        <span style="padding: 20px">{{title}}</span>
+    </h1>
+    <div class="target">
+        <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
+        <div style="padding: 20px">
+            <div fmt-if="abstract">
+                <h3>
+                    <button type="button" class="btn btn-default toggler">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </button>
+                    <span fmt-translate="">abstract</span>
+                </h3>
+
+                <div class="target">
+                    {{abstract}}
+                </div>
+            </div>
+        </div>
+        <div fmt-repeat="linkBlock in links" class="summary-links-{{linkBlock.name}}" >
+            <h3>
+                <button type="button" class="btn btn-default toggler">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </button>
+                <span fmt-translate="">{{linkBlock.name}}</span>
+            </h3>
+            <div fmt-repeat="link in linkBlock.links" class="row target" style="border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;">
+                <div fmt-translate="" class="col-xs-12" style="background-color: #F7EEE1;">{{link.type.name}}</div>
+                <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href}}">{{link.text}}</a></div>
+            </div>
+            <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
+        </div>
+    </div>
+    <ul class="nav nav-pills">
+        <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+        <li fmt-if="navBarOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li fmt-repeat="item in navBarOverflow"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    {{content}}
+</div>

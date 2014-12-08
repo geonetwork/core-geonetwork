@@ -2,11 +2,16 @@
 
   goog.provide('gn_search_sextant');
 
+
+
+
+
+
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
-  goog.require('sxt_panier_directive');
   goog.require('gn_thesaurus');
   goog.require('sxt_categorytree');
+  goog.require('sxt_panier_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -27,8 +32,8 @@
     'gnViewerSettings',
     'gnMap',
     'gnThesaurusService',
-     'sxtGlobals',
-      'gnNcWms',
+    'sxtGlobals',
+    'gnNcWms',
     function($scope, $location, suggestService, $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
 
@@ -41,13 +46,13 @@
           titleInfo: 0,
           active: false
         },
-        map:{
+        map: {
           title: 'Map',
           active: false,
           titleInfo: 0
 
         },
-        panier:{
+        panier: {
           title: 'Panier',
           active: false,
           titleInfo: 0
@@ -58,8 +63,8 @@
       });
 
       $scope.displayMapTab = function() {
-        if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
-          setTimeout(function(){
+        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
+          setTimeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
               viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
@@ -79,18 +84,40 @@
       //Check if a added layer is NcWMS
       viewerMap.getLayers().on('add', function(e) {
         var layer = e.element;
-        if(layer.get('isNcwms') == true) {
+        if (layer.get('isNcwms') == true) {
           gnNcWms.feedOlLayer(layer);
         }
       });
 
       // Manage sextantTheme thesaurus translation
-      gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme', 200, 1).then(function(data) {
+      gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
+          200, 1).then(function(data) {
         sxtGlobals.sextantTheme = data;
         $scope.$broadcast('sextantThemeLoaded');
       });
 
-///////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////
+      $scope.getAnySuggestions = function(val) {
+        var url = suggestService.getUrl(val, 'anylight',
+            ('STARTSWITHFIRST'));
+
+        return $http.get(url, {
+        }).then(function(res) {
+          return res.data[1];
+        });
+      };
+
+      $scope.$watch('searchObj.advancedMode', function(val) {
+        if (val && (searchMap.getSize()[0] == 0 ||
+            searchMap.getSize()[1] == 0)) {
+          setTimeout(function() {
+            searchMap.updateSize();
+          }, 0);
+        }
+      });
+
+      ///////////////////////////////////////////////////////////////////
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -101,35 +128,37 @@
     }]);
 
   module.controller('gnsSextantSearch', [
-      '$scope',
-      'gnOwsCapabilities',
-      'gnMap',
-      'sxtGlobals',
+    '$scope',
+    'gnOwsCapabilities',
+    'gnMap',
+    'sxtGlobals',
     function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
 
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
           var label, theme = md.sextantTheme;
-          for(var i=0;i<sxtGlobals.sextantTheme.length;i++) {
+          for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
             var t = sxtGlobals.sextantTheme[i];
-            if(t.props.uri == theme) {
+            if (t.props.uri == theme) {
               label = t.label;
               break;
             }
           }
           gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
-            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                link.name, capObj);
             layerInfo.group = label;
-            var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
+            var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
+                layerInfo);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
         },
-        addMdLayerToPanier: function(link,md) {
+        addMdLayerToPanier: function(link, md) {
           $scope.searchObj.panier.push({
             link: link,
-              md: md
+            md: md
           });
           $scope.mainTabs.panier.titleInfo += 1;
         }
@@ -143,7 +172,8 @@
       $scope.groupPublishedOptions = {
         mode: 'remote',
         remote: {
-          url : suggestService.getUrl('QUERY', '_groupPublished', 'STARTSWITHFIRST'),
+          url: suggestService.getUrl('QUERY', '_groupPublished',
+              'STARTSWITHFIRST'),
           filter: suggestService.bhFilter,
           wildcard: 'QUERY'
         }
@@ -159,13 +189,14 @@
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope) {
+        link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD', '#FILE', '#DB', '#COPYFILE', 'WFS');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', '#FILE',
+              '#DB', '#COPYFILE', 'WFS');
           scope.layers = scope.md.getLinksByType('OGC');
 
         }
-      }
+      };
     }]);
 
 })();

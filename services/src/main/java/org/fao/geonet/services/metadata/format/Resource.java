@@ -23,15 +23,19 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.utils.BinaryFile;
-import org.jdom.Element;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.servlet.http.HttpServletResponse;
+
+import static com.google.common.io.Files.getFileExtension;
 
 /**
  * Allows a user load a file from the identified formatter bundle. Typically used for reading images
@@ -39,23 +43,87 @@ import java.nio.file.Path;
  * 
  * @author jeichar
  */
+@Controller("md.formatter.resource")
 public class Resource extends AbstractFormatService {
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
-        String xslid = Util.getParam(params, Params.ID);
-        String fileName = Util.getParam(params, Params.FNAME);
+    @Autowired
+    private SchemaManager schemaManager;
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
-        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+    @RequestMapping(value = "/{lang}/md.formatter.resource")
+    public void exec(
+            @RequestParam(Params.ID) String xslid,
+            @RequestParam(Params.FNAME) String fileName,
+            @RequestParam(value = Params.SCHEMA, required = false) String schema,
+            HttpServletResponse response
+            ) throws Exception {
+        Path schemaDir = null;
+        if (schema != null) {
+            schemaDir = schemaManager.getSchemaDir(schema);
+        }
+
+        Path formatDir = getAndVerifyFormatDir(dataDirectory, Params.ID, xslid, schemaDir);
         Path desiredFile = formatDir.resolve(fileName);
-        
-        if(!containsFile(formatDir, desiredFile)) {
-            throw new BadParameterEx(Params.FNAME, fileName+" does not identify a file in the "+xslid+" format bundle");
-        }
+
         if(!Files.isRegularFile(desiredFile)) {
-            throw new BadParameterEx(Params.FNAME, fileName+" does not identify a file");
+            response.sendError(404, fileName+" does not identify a file in formatter bundle: " + xslid);
+            return;
+        }
+
+        if(!containsFile(formatDir, desiredFile)) {
+            response.sendError(403, fileName+" does not identify a file in the "+xslid+" format bundle");
+            return;
         }
         
-        return BinaryFile.encode(200, desiredFile, fileName, false).getElement();
+        response.setStatus(200);
+        setContentType(response, getFileExtension(desiredFile.getFileName().toString()));
+
+        Files.copy(desiredFile, response.getOutputStream());
+    }
+
+    private void setContentType(HttpServletResponse response, String fileExtension) {
+        switch (fileExtension) {
+            case "css":
+                response.setContentType("text/css");
+                return;
+            case "bmp":
+                response.setContentType("image/bmp");
+                return;
+            case "gif":
+                response.setContentType("image/gif");
+                return;
+            case "html":
+                response.setContentType("text/html");
+                return;
+            case "jpeg":
+            case "jpg":
+                response.setContentType("image/jpeg");
+                return;
+            case "js":
+                response.setContentType("application/javascript");
+                return;
+            case "json":
+                response.setContentType("application/json");
+                return;
+            case "png":
+                response.setContentType("image/png");
+                return;
+            case "tif":
+                response.setContentType("image/tiff");
+                return;
+            case "xml":
+                response.setContentType("application/xml");
+                return;
+            case "xsl":
+            case "xslt":
+                response.setContentType("application/xslt+xml");
+                return;
+            case "groovy":
+                response.setContentType("text/x-groovy-source,groovy");
+                return;
+           default:
+                response.setContentType("application/octet-stream");
+        }
     }
 }

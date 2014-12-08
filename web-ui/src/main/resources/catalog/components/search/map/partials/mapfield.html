@@ -1,4 +1,4 @@
-<div go-map>
+<div ngeo-map="map">
   <div class="btn-group-vertical">
     <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
       <i class="fa fa-plus"></i>
@@ -11,7 +11,7 @@
     </button>
   </div>
   <button class="btn btn-default" gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
-          gn-draw-bbox-extent="{{gnDrawBboxExtent}}" go-btn data-ng-model="interaction.active">
+          gn-draw-bbox-extent="{{gnDrawBboxExtent}}" gi-btn data-ng-model="interaction.active">
     <i class="fa fa-pencil"></i>
   </button>
 </div>

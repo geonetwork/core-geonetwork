@@ -4,17 +4,21 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationAction;
+import org.fao.geonet.domain.MetadataNotificationId;
+import org.fao.geonet.domain.MetadataNotifier;
 import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.fao.geonet.repository.MetadataNotifierRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertEquals;
@@ -58,6 +62,7 @@ public class MetadataNotifierTaskIntegrationTest extends AbstractCoreIntegration
                 public void run() throws Exception {
 
                     final Metadata metadata = _metadataRepository.save(MetadataRepositoryTest.newMetadata(_inc));
+                    metadata.setUuid(UUID.randomUUID().toString());
 
                     MetadataNotifier notifier = new MetadataNotifier();
                     notifier.setUrl("http://localhost:" + port + path);

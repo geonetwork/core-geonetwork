@@ -66,6 +66,8 @@ public class GeonetParams extends AbstractParams
 
 		host    = Util.getParam(site, "host",    "");
 
+		this.setNode(Util.getParam(site, "node",    "srv"));
+
 		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
 		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
 		xslfilter = Util.getParam(site, "xslfilter", "");
@@ -90,6 +92,7 @@ public class GeonetParams extends AbstractParams
 		Element policy   = node.getChild("groupsCopyPolicy");
 
 		host    = Util.getParam(site, "host",    host);
+		this.setNode(Util.getParam(site, "node",    this.getNode()));
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
@@ -139,6 +142,7 @@ public class GeonetParams extends AbstractParams
 		copyTo(copy);
 
 		copy.host    = host;
+		copy.node    = node;
 		copy.createRemoteCategory = createRemoteCategory;
 		copy.mefFormatFull = mefFormatFull;
 		copy.xslfilter = xslfilter;
@@ -196,7 +200,20 @@ public class GeonetParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
+	public String getNode() {
+		if(this.node == null) {
+			//default node
+			this.setNode("srv");
+		}
+		return node;
+	}
+
+	public void setNode(String node) {
+		this.node = node;
+	}
+
 	public String  host;
+	private String node;
 	public boolean createRemoteCategory;
 	public boolean mefFormatFull;
 	

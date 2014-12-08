@@ -1,0 +1,6 @@
+// This file will be put in the dublin-core/formatter/groovy directory for the test and will
+// used by the test to test the dependsOn functionality
+
+public class DCFunctions {
+    static def isFileId = {it.name() == 'gmd:fileIdentifier'}
+}

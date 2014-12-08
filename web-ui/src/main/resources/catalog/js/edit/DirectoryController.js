@@ -32,14 +32,14 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      $scope.subtemplateFilter = {
+      $scope.searchObj = {params: {
         _isTemplate: 's',
         any: '*',
         _root: '',
         sortBy: 'title',
         sortOrder: 'reverse',
         resultType: 'subtemplates'
-      };
+      }};
 
       $scope.paginationInfo = {
         pages: -1,
@@ -116,9 +116,9 @@
        */
       $scope.getEntries = function(type) {
         if (type) {
-          $scope.subtemplateFilter._root = type;
+          $scope.searchObj.params._root = type;
         }
-        $scope.$broadcast('resetSearch', $scope.subtemplateFilter);
+        $scope.$broadcast('resetSearch', $scope.searchObj.params);
         return false;
       };
 

@@ -33,8 +33,9 @@
       </div>
 
       <div class="btn-group">
-        <button type="button" class="btn btn-primary fa fa-plus dropdown-toggle"
+        <button type="button" class="btn btn-primary dropdown-toggle"
                 data-toggle="dropdown">
+          <i class="fa fa-plus"> </i>
           <span data-translate="">newHarvester</span>
           <span class="caret"/>
         </button>
@@ -84,9 +85,9 @@
                 data-ng-disabled="harvesterSelected.info.running === true">
           <span data-translate="">runHarvester</span>
         </button>
-        <button type="button" class="btn btn-primary pull-right fa fa-save"
+        <button type="button" class="btn btn-primary pull-right"
                 data-ng-click="saveHarvester('#gn-harvester-edit')">
-          <span data-translate="">saveHarvester</span></button>
+          <i class="fa fa-save"></i> <span data-translate="">saveHarvester</span></button>
         <button type="button" class="btn btn-warning pull-right fa fa-trash-o"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"

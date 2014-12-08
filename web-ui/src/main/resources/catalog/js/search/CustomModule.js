@@ -5,7 +5,8 @@
 
 
   /**
-   * Specific geocat search form controller, attached to the root node of the search form,
+   * Specific geocat search form controller,
+   * attached to the root node of the search form,
    * in the searchForm.html view.
    */
 })();

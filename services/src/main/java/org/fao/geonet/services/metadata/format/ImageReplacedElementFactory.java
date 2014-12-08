@@ -1,9 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-
+import com.itextpdf.text.Image;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -17,7 +14,9 @@ import org.xhtmlrenderer.pdf.ITextImageElement;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
-import com.lowagie.text.Image;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class ImageReplacedElementFactory implements ReplacedElementFactory {
     private final ReplacedElementFactory superFactory;

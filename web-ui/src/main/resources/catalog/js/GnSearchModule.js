@@ -1,11 +1,16 @@
 (function() {
   goog.provide('gn_search');
 
+
+
+
+
+
+  goog.require('gn_map_field_directive');
   goog.require('gn_module');
   goog.require('gn_resultsview');
-  goog.require('gn_map_field_directive');
-  goog.require('gn_viewer');
   goog.require('gn_search_controller');
+  goog.require('gn_viewer');
 
   var module = angular.module('gn_search', [
     'gn_module',
@@ -15,13 +20,11 @@
     'gn_viewer',
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',
-    'go'
+    'ngeo'
   ]);
 
   module.constant('gnSearchSettings', {});
-  module.constant('gnViewerSettings', {
-     proxyUrl: '../../proxy?url='
-  });
+  module.constant('gnViewerSettings', {});
 
   //Define the translation files to load
   module.constant('$LOCALES', ['core', 'search']);

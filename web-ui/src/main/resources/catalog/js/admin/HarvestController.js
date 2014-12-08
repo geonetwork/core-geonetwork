@@ -27,6 +27,12 @@
         defaultTab: 'harvest',
         tabs: []
       };
+      $scope.searchObj = {
+        params: {
+          template: 'y or s or n',
+          sortBy: 'title'
+        }};
+
       $scope.harvesterTypes = {};
       $scope.harvesters = null;
       $scope.harvesterSelected = null;
@@ -161,8 +167,7 @@
           .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update') +
-            '@json', body, {
+            ($scope.harvesterNew ? 'add' : 'update'), body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
           loadHarvesters();
@@ -199,12 +204,10 @@
         loadHistory();
 
         // Retrieve records in that harvester
-        $scope.harvesterRecordsFilter = {
-          template: 'y or s or n',
-          siteId: $scope.harvesterSelected.site.uuid,
-          sortBy: 'title'
-        };
-        $scope.$broadcast('resetSearch', $scope.harvesterRecordsFilter);
+        angular.extend($scope.searchObj.params, {
+          siteId: $scope.harvesterSelected.site.uuid
+        });
+        $scope.$broadcast('resetSearch', $scope.searchObj.params);
       };
 
       $scope.refreshHarvester = function() {

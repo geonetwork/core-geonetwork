@@ -48,8 +48,7 @@ public class ISO19139SchemaPlugin
         Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
         List<?> sibs = null;
         try {
-            sibs = Xml
-                    .selectNodes(
+            sibs = Xml.selectNodes(
                             metadata,
                             XPATH_FOR_AGGRGATIONINFO,
                             allNamespaces.asList());
@@ -90,13 +89,9 @@ public class ISO19139SchemaPlugin
         return getAttributeUuidrefValues(metadata, "operatesOn", ISO19139Namespaces.SRV);
     }
 
-    ;
-
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
         return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", ISO19139Namespaces.GMD);
     }
-
-    ;
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
         return getAttributeUuidrefValues(metadata, "source", ISO19139Namespaces.GMD);
@@ -168,5 +163,4 @@ public class ISO19139SchemaPlugin
         freeTextElement.addContent(textGroupElement);
     }
 
-    ;
 }

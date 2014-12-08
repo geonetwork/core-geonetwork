@@ -139,10 +139,10 @@
             isTemplate, isChild, tab) {
           this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-              var path = '/metadata/' + data.id;
-              if (tab) {
-                path += '/tab/' + tab;
-              }
+            var path = '/metadata/' + data.id;
+            if (tab) {
+              path += '/tab/' + tab;
+            }
             $location.path(path);
           });
           // TODO : handle creation error
@@ -319,7 +319,7 @@
           callService: function(serviceKey, params, httpConfig) {
 
             var url = gnHttpServices[serviceKey];
-            if(remote) {
+            if (remote) {
               url = remote.proxy + encodeURIComponent(remote.gnUrl + url);
             }
             var config = {
@@ -452,8 +452,8 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      if(angular.isDefined(this.category) &&
-          !angular.isArray(this.category)){
+      if (angular.isDefined(this.category) &&
+          !angular.isArray(this.category)) {
         this.category = [this.category];
       }
     };
@@ -485,8 +485,8 @@
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           types.forEach(function(type) {
-            if(type.substr(0,1) == '#') {
-              if (linkInfo.protocol == type.substr(1,type.length-1)) {
+            if (type.substr(0, 1) == '#') {
+              if (linkInfo.protocol == type.substr(1, type.length - 1)) {
                 ret.push(linkInfo);
               }
             }
@@ -500,13 +500,13 @@
         return ret;
       },
       getThumbnails: function() {
-        if(angular.isArray(this.image)) {
+        if (angular.isArray(this.image)) {
           var ret = {};
-          for(var i=0;i<this.image.length;i++) {
+          for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
-            if(s[0] === 'thumbnail') {
+            if (s[0] === 'thumbnail') {
               ret.small = s[1];
-            } else if(s[0] === 'overview') {
+            } else if (s[0] === 'overview') {
               ret.big = s[1];
             }
           }
@@ -514,13 +514,13 @@
         return ret;
       },
       getContacts: function() {
-        if(angular.isArray(this.responsibleParty)) {
+        if (angular.isArray(this.responsibleParty)) {
           var ret = {};
-          for(var i=0;i<this.responsibleParty.length;i++) {
+          for (var i = 0; i < this.responsibleParty.length; i++) {
             var s = this.responsibleParty[i].split('|');
-            if(s[1] === 'resource') {
+            if (s[1] === 'resource') {
               ret.resource = s[2];
-            } else if(s[1] === 'metadata') {
+            } else if (s[1] === 'metadata') {
               ret.metadata = s[2];
             }
           }

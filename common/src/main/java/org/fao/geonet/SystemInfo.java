@@ -18,7 +18,7 @@ public class SystemInfo {
     private String buildJavaVendor;
 
     public static SystemInfo createForTesting(String stagingProfile) {
-        return new SystemInfo(stagingProfile, "testing", "testing", "testing", "testing", "testing", "testing");
+        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing");
     }
 
     public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion,

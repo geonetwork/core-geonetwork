@@ -5,6 +5,11 @@
 
   var module = angular.module('gn_cat_controller', ['gn_search_manager']);
 
+
+  module.constant('gnGlobalSettings', {
+    proxyUrl: '../../proxy?url='
+  });
+
   /**
    * The catalogue controller takes care of
    * loading site information, check user login state

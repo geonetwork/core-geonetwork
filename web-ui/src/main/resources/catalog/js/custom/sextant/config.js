@@ -7,7 +7,7 @@
   module.constant('gnPanierSettings', {});
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-      'gnMap',
+    'gnMap',
 
     function(searchSettings, viewerSettings, gnPanierSettings, gnMap) {
 
@@ -41,6 +41,13 @@
           'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
         ]
       };
+      proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
+          '+lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,' +
+          '0,0' +
+          ' +units=m +no_defs');
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#2154', '+' +
+          'proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 ' +
+          '+y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 
       var bboxStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
@@ -59,7 +66,7 @@
             width: 2
           })
         }),
-        mdExtentHighlight:new ol.style.Style({
+        mdExtentHighlight: new ol.style.Style({
           stroke: new ol.style.Stroke({
             color: 'orange',
             width: 3
@@ -69,7 +76,7 @@
           })
         })
 
-      }
+      };
 
       /** *************************************
        * Define maps
@@ -119,30 +126,32 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/' +
+            'viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/sextant.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/' +
+            'viewtemplates/sextant.html',
         tooltip: 'Thumbnails',
         icon: 'fa-th-list'
       }];
 
       searchSettings.defaultListOfThesaurus = [{
-          id: 'local.theme.sextant-theme',
-          labelFromThesaurus: true,
-          field: 'sextantTheme',
-          tree: true,
-          label: {eng: 'Sextant', fre:'Sextant'}
-        },{
-          id: 'external.theme.inspire-theme',
-          field: 'inspireTheme_en',
-          tree: false,
-          label: {eng: 'INSPIRE', fre:'INSPIRE'}
+        id: 'local.theme.sextant-theme',
+        labelFromThesaurus: true,
+        field: 'sextantTheme',
+        tree: true,
+        label: {eng: 'Sextant', fre: 'Sextant'}
+      },{
+        id: 'external.theme.inspire-theme',
+        field: 'inspireTheme_en',
+        tree: false,
+        label: {eng: 'INSPIRE', fre: 'INSPIRE'}
       }];
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [3,10,20,50,100];
+      searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
 
       /* Sort by combo values configuration */
       searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
@@ -211,7 +220,7 @@
       gnPanierSettings.defaults = {
         format: 'ESRI Shapefile',
         proj: '4326'
-      }
+      };
 
     }]);
 })();

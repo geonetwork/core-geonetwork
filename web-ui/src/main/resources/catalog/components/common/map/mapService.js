@@ -6,16 +6,16 @@
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
-    'go'
+    'ngeo'
   ]);
 
   module.provider('gnMap', function() {
     this.$get = [
-      'goDecorateLayer',
+      'ngeoDecorateLayer',
       'gnOwsCapabilities',
       'gnConfig',
       '$log',
-      function(goDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -32,10 +32,12 @@
         return {
 
           importProj4js: function() {
-            proj4.defs("EPSG:2154","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0' +
+                '=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +' +
+                'towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
             if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item) {
-                proj4.defs(item.code,item.value);
+                proj4.defs(item.code, item.value);
               });
             }
           },
@@ -79,7 +81,7 @@
            * '150|-12|160|12'.
            * Returns it as an array of floats.
            *
-           * @param md
+           * @param {Object} md
            */
           getBboxFromMd: function(md) {
             if (angular.isUndefined(md.geoBox)) return;
@@ -98,15 +100,16 @@
           /**
            * Convert coordinates object into text
            *
-           * @param coord must be an array of points (array with
+           * @param {Array} coord must be an array of points (array with
            * dimension 2) or a point
-           * @returns coordinates as text with format : 'x1 y1,x2 y2,x3 y3'
+           * @return {String} coordinates as text with format :
+           * 'x1 y1,x2 y2,x3 y3'
            */
           getTextFromCoordinates: function(coord) {
             var text;
 
             var addPointToText = function(point) {
-              if(text) {
+              if (text) {
                 text += ',';
               }
               else {
@@ -115,15 +118,15 @@
               text += point[0] + ' ' + point[1];
             };
 
-            if(angular.isArray(coord) && coord.length > 0) {
-              if(angular.isArray(coord[0])) {
-                for(var i=0;i<coord.length;++i) {
+            if (angular.isArray(coord) && coord.length > 0) {
+              if (angular.isArray(coord[0])) {
+                for (var i = 0; i < coord.length; ++i) {
                   var point = coord[i];
-                  if(angular.isArray(point) && point.length == 2) {
+                  if (angular.isArray(point) && point.length == 2) {
                     addPointToText(point);
                   }
                 }
-              } else if(coord.length == 2) {
+              } else if (coord.length == 2) {
                 addPointToText(coord);
               }
             }
@@ -199,7 +202,7 @@
             }
           },
 
-          addWmsToMap : function(map, layerParams, layerOptions, index) {
+          addWmsToMap: function(map, layerParams, layerOptions, index) {
 
             var options = layerOptions || {};
 
@@ -222,7 +225,7 @@
               isNcwms: options.isNcwms,
               cextent: options.extent
             });
-            goDecorateLayer(olLayer);
+            ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
             if (index) {
@@ -239,34 +242,35 @@
            * from this object and add it to the map with all known
            * properties.
            *
-           * @param map
-           * @param getCapLayer
-           * @returns {*}
+           * @param {ol.map} map
+           * @param {Object} getCapLayer
+           * @return {*}
            */
-          addWmsToMapFromCap : function(map, getCapLayer) {
+          addWmsToMapFromCap: function(map, getCapLayer) {
 
             var legend, attribution, metadata;
             if (getCapLayer) {
               var layer = getCapLayer;
 
               // TODO: parse better legend & attribution
-              if(angular.isArray(layer.Style) && layer.Style.length > 0) {
-                legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
+              if (angular.isArray(layer.Style) && layer.Style.length > 0) {
+                legend = layer.Style[layer.Style.length - 1]
+                    .LegendURL[0].OnlineResource;
               }
-              if(angular.isDefined(layer.Attribution) ) {
-                if(angular.isArray(layer.Attribution)){
+              if (angular.isDefined(layer.Attribution)) {
+                if (angular.isArray(layer.Attribution)) {
 
                 } else {
                   attribution = layer.Attribution.Title;
                 }
               }
-              if(angular.isArray(layer.MetadataURL)) {
+              if (angular.isArray(layer.MetadataURL)) {
                 metadata = layer.MetadataURL[0].OnlineResource;
               }
               var isNcwms = false;
-              if(angular.isArray(layer.Dimension)) {
-                for (var i=0;i<layer.Dimension.length;i++) {
-                  if(layer.Dimension[i].name == 'elevation') {
+              if (angular.isArray(layer.Dimension)) {
+                for (var i = 0; i < layer.Dimension.length; i++) {
+                  if (layer.Dimension[i].name == 'elevation') {
                     isNcwms = true;
                     break;
                   }
@@ -274,17 +278,17 @@
               }
 
               return this.addWmsToMap(map, {
-                    LAYERS: layer.Name
-                  }, {
-                    url: layer.url,
-                    label: layer.Title,
-                    attribution: attribution,
-                    legend: legend,
-                    group: layer.group,
-                    metadata: metadata,
-                    isNcwms: isNcwms,
-                    extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
-                  }
+                LAYERS: layer.Name
+              }, {
+                url: layer.url,
+                label: layer.Title,
+                attribution: attribution,
+                legend: legend,
+                group: layer.group,
+                metadata: metadata,
+                isNcwms: isNcwms,
+                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
+              }
               );
             }
           },
@@ -292,8 +296,8 @@
 
           /**
            * Zoom by delta with animation
-           * @param map
-           * @param delta
+           * @param {ol.map} map
+           * @param {float} delta
            */
           zoom: function(map, delta) {
             var view = map.getView();
@@ -304,15 +308,16 @@
                 duration: 250,
                 easing: ol.easing.easeOut
               }));
-              var newResolution = view.constrainResolution(currentResolution, delta);
+              var newResolution = view.constrainResolution(
+                  currentResolution, delta);
               view.setResolution(newResolution);
             }
           },
 
           /**
            * Creates an ol.layer for a given type. Useful for contexts
-           * @param type
-           * @returns {ol.layer}
+           * @param {string} type
+           * @return {ol.layer}
            */
           createLayerForType: function(type) {
             switch (type) {
@@ -331,7 +336,8 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4I' +
+                        'Q4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
                     imagerySet: 'Aerial'
                   }),
                   title: 'Bing Aerial'
@@ -345,7 +351,7 @@
                 for (var z = 0; z < 16; ++z) {
                   // generate resolutions and matrixIds arrays for this WMTS
                   resolutions[z] = size / Math.pow(2, z);
-                  matrixIds[z] = 'EPSG:3857:'+z;
+                  matrixIds[z] = 'EPSG:3857:' + z;
                 }
 
                 return new ol.layer.Tile({
@@ -353,7 +359,8 @@
                   extent: projectionExtent,
                   title: 'Sextant',
                   source: new ol.source.WMTS({
-                    url: 'http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?',
+                    url: 'http://visi-sextant.ifremer.fr:8080/' +
+                        'geowebcache/service/wmts?',
                     layer: 'Sextant',
                     matrixSet: 'EPSG:3857',
                     format: 'image/png',

@@ -36,14 +36,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -118,6 +119,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -139,6 +141,7 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -531,7 +534,7 @@ public class DataManager {
             final String  extra       = fullMd.getDataInfo().getExtra();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
-            final String  groupOwner = String.valueOf(fullMd.getSourceInfo().getGroupOwner());
+            final Integer groupOwner = fullMd.getSourceInfo().getGroupOwner();
             final String  popularity = String.valueOf(fullMd.getDataInfo().getPopularity());
             final String  rating     = String.valueOf(fullMd.getDataInfo().getRating());
             final String  displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
@@ -563,13 +566,45 @@ public class DataManager {
                             .getName() + "|" + user.getProfile(), true, false));
                 }
             }
+
+            OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
+            GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
+
+            String logoUUID = null;
             if (groupOwner != null) {
-                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
+                final Group group = groupRepository.findOne(groupOwner);
+                if (group != null) {
+                    moreFields.add(SearchManager.makeField("_groupOwner", String.valueOf(groupOwner), true, true));
+                    moreFields.add(SearchManager.makeField("_groupWebsite", group.getWebsite(), true, false));
+                    if (group.getLogo() != null) {
+                        logoUUID = group.getLogo();
+                    }
+                }
+            }
+            if (logoUUID == null) {
+                logoUUID = source;
+            }
+
+            if (logoUUID != null) {
+                final Path logosDir = Resources.locateLogosDir(servContext);
+                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
+                        "tif", "TIF", "tiff", "TIFF"};
+                boolean added = false;
+                for (String ext : logosExt) {
+                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
+                    if (Files.exists(logoPath)) {
+                        added = true;
+                        moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoPath.getFileName(), true, false));
+                        break;
+                    }
+                }
+
+                if (!added) {
+                    moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoUUID + ".gif", true, false));
+                }
             }
 
             // get privileges
-            OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
-            GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
@@ -1391,8 +1426,7 @@ public class DataManager {
      */
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
         // READONLYMODE
-        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-        if (!gc.isReadOnly()) {
+        if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
             Integer iId = Integer.valueOf(id);
             _metadataRepository.update(iId, new Updater<Metadata>() {
@@ -1580,7 +1614,7 @@ public class DataManager {
         return String.valueOf(finalId);
     }
 
-    private Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
+    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
                                     boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
                                     boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();

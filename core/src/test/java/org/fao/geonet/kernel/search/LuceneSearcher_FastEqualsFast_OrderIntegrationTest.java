@@ -4,12 +4,10 @@ import jeeves.server.ServiceConfig;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
 import java.util.List;

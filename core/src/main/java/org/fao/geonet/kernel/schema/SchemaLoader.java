@@ -40,6 +40,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -716,7 +717,7 @@ public class SchemaLoader
                         int lastSlash = schemaLoc.lastIndexOf('/');
                         scFile = path.resolve(schemaLoc.substring(lastSlash + 1));
                     } else {
-                        scFile = IO.toPath(scPath);
+                        scFile = IO.toPath(new URI(scPath));
                     }
                 } else {
                     scFile = path.resolve(schemaLoc);

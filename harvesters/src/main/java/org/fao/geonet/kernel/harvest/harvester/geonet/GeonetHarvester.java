@@ -122,6 +122,7 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult>
         super.setParams(params);
 
         settingMan.add("id:"+siteId, "host",    params.host);
+		settingMan.add("id:" + siteId, "node", params.getNode());
 		settingMan.add("id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
 		settingMan.add("id:"+siteId, "mefFormatFull", params.mefFormatFull);
 		settingMan.add("id:"+siteId, "xslfilter", params.xslfilter);
@@ -165,11 +166,11 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult>
 	{
 		super.addHarvestInfo(info, id, uuid);
 
-		String small = context.getBaseUrl() +
-							"/srv/en/resources.get?access=public&id="+id+"&fname=";
+		String small = context.getBaseUrl() + "/" + params.getNode()
+				+ "/en/resources.get?access=public&id=" + id + "&fname=";
 
-		String large = context.getBaseUrl() +
-							"/srv/en/graphover.show?access=public&id="+id+"&fname=";
+		String large = context.getBaseUrl() + "/" + params.getNode()
+				+ "/en/graphover.show?access=public&id=" + id + "&fname=";
 
 		info.addContent(new Element("smallThumbnail").setText(small));
 		info.addContent(new Element("largeThumbnail").setText(large));
