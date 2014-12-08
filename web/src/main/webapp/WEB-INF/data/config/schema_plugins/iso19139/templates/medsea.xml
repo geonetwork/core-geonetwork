@@ -613,9 +613,6 @@
       </gmd:environmentDescription>
       <gmd:extent>
         <gmd:EX_Extent>
-          <gmd:description gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:description>
           <gmd:geographicElement>
             <gmd:EX_GeographicBoundingBox>
               <gmd:westBoundLongitude>

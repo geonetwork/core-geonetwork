@@ -1776,10 +1776,10 @@
       </tab>
       <tab id="spatialCoverage" mode="flat">
         <section>
-          <field
+          <!--<field
               name="geographicalAreaCode"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-              gmd:extent/gmd:EX_Extent/gmd:description"/>
+              gmd:extent/gmd:EX_Extent/gmd:description"/>-->
           <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
               gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
