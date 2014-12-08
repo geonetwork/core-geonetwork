@@ -478,14 +478,13 @@
     <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
                  gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
 
-    <xsl:variable name="currentIdentifier" select="ancestor::gmd:MD_Metadata[
+    <xsl:variable name="dataSetName" select="ancestor::gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
-                  gmd:code/gco:CharacterString"/>
+                  gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
 
     <xsl:copy>
-      <xsl:value-of select="concat($p02, ' - ', $dataProvider, ' - ', $currentIdentifier)"/>
+      <xsl:value-of select="concat($p02, ' - ', $dataProvider, ' - ', $dataSetName)"/>
     </xsl:copy>
   </xsl:template>
 
