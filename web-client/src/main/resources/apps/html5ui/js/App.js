@@ -457,8 +457,8 @@ GeoNetwork.app = function() {
         });
 
         Ext.getCmp("metadata-panel").doLayout();
-        // Add to recent viewed
-        addToRecentViewed(record);
+        // Add to recent viewed removed for EEA IPG layout
+  //      addToRecentViewed(record);
 
     }
 
