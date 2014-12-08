@@ -111,6 +111,5 @@ Ext.BLANK_IMAGE_URL = 'images/s.gif';
 GeoNetwork.AnnuaireGroupMapping = {
   "iso19139.sextant": undefined,
   "iso19139.myocean": "CONTACTS_MYOCEAN",
-  "iso19139.sdn-product" : "CONTACTS_EDMO " +
-      "or CONTACTS_EDMERP"
+  "iso19139.sdn-product" : "CONTACTS_EDMO"
 };
