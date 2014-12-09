@@ -147,7 +147,7 @@ public class Handlers {
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
+    <link rel="stylesheet" href="../../static/gn_formatter.css"/>
     <script src="$libJs"></script>
 </head>
 <body>>

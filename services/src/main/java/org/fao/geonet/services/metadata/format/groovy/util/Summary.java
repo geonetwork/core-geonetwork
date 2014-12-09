@@ -75,7 +75,6 @@ public class Summary {
             thumbnailUrl = img;
         } else {
             thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
-
         }
         return thumbnailUrl;
     }

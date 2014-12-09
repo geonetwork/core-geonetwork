@@ -1,0 +1,7 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <div class="row">
+        <div fmt-repeat="g in graphics" class="col-md-3">
+            <a href="{{g.src}}" target="_graphic"><img class="graphic-overview" src="{{g.src}}" alt="{{g.src}}"></img></a>
+        </div>
+    </div>
+</div>

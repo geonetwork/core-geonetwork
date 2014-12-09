@@ -34,21 +34,12 @@ public class Handlers {
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Format Elements',  select: matchers.isFormatEl, group: true, formatEls
-        handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, {keywords ->
-            def keywordProps = com.google.common.collect.ArrayListMultimap.create()
-            keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
-                def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
-                keywordProps.put(type, isofunc.isoText(k))
-            }
-
-            return handlers.fileResult('html/keyword.html', [
-                    label : f.nodeLabel("gmd:descriptiveKeywords", null),
-                    keywords: keywordProps.asMap()])
-        }
+        handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
-        handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
+        handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
+        handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
 
         handlers.skip matchers.isSkippedContainer, {it.children()}
 
@@ -80,7 +71,7 @@ public class Handlers {
     }
 
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
-    def isoUrlEl = { isofunc.isoTextEl(it, it.'gmd:Url'.text())}
+    def isoUrlEl = { isofunc.isoTextEl(it, isofunc.isoUrlText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
     def isoSimpleEl = {isofunc.isoTextEl(it, it.'*'.text())}
     def parseBool(text) {
@@ -114,6 +105,24 @@ public class Handlers {
 
         def nonEmptyEls = data.findAll{it != null}
         '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
+    }
+
+    def onlineResourceEls = { els ->
+        def links = []
+
+        els.each {it.'gmd:CI_OnlineResource'.each { link ->
+                links << [
+                        href : isofunc.isoUrlText(link.'gmd:linkage'),
+                        name : isofunc.isoText(link.'gmd:name'),
+                        desc : isofunc.isoText(link.'gmd:description')
+                ]
+            }
+        }
+
+        handlers.fileResult('html/online-resource.html', [
+                label: f.nodeLabel(els[0]),
+                links: links
+        ])
     }
 
     def formatEls = { els ->
@@ -160,7 +169,38 @@ public class Handlers {
         def model = [label: label, formats: formats]
         handlers.fileResult("html/format.html", model)
     }
+    def keywordsEl = {keywords ->
+        def keywordProps = com.google.common.collect.ArrayListMultimap.create()
+        keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
+            def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
+            keywordProps.put(type, isofunc.isoText(k))
+        }
 
+        return handlers.fileResult('html/keyword.html', [
+                label : f.nodeLabel("gmd:descriptiveKeywords", null),
+                keywords: keywordProps.asMap()])
+    }
+    def graphicOverviewEl = {graphics ->
+        def links = []
+        graphics.each {it.'gmd:MD_BrowseGraphic'.each { graphic ->
+            def img = graphic.'gmd:fileName'.text()
+            String thumbnailUrl;
+            if (img.startsWith("http://") || img.startsWith("https://")) {
+                thumbnailUrl = img;
+            } else {
+                thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
+            }
+
+            links << [
+                    src: thumbnailUrl,
+                    desc: isofunc.isoText(graphic.'gmd:fileDescription')
+            ]
+        }}
+        handlers.fileResult("html/graphic-overview.html", [
+                label: f.nodeLabel(graphics[0]),
+                graphics: links
+        ])
+    }
     def citationEl = { el ->
         Set processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
                                  'gmd:date', 'gmd:edition', 'gmd:editionDate', 'gmd:presentationForm']
