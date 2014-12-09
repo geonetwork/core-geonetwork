@@ -1,9 +1,11 @@
 (function() {
   goog.provide('gn_locale');
+  goog.require('gn_cat_controller');
 
   var module = angular.module('gn_locale', [
     'pascalprecht.translate',
-    'angular-md5'
+    'angular-md5',
+    'gn_cat_controller'
   ]);
 
   module.constant('$LOCALES', ['core']);
@@ -37,17 +39,18 @@
 
 
   // TODO: could be improved instead of putting this in all main modules ?
-  module.config(['$translateProvider', '$LOCALES',
-    function($translateProvider, $LOCALES) {
+  module.config(['$translateProvider', '$LOCALES', 'gnGlobalSettings',
+    function($translateProvider, $LOCALES, gnGlobalSettings) {
       $translateProvider.useLoader('localeLoader', {
         locales: $LOCALES,
-        prefix: '../../catalog/locales/',
+        prefix: (gnGlobalSettings.locale.path || '../../') + 'catalog/locales/',
         suffix: '.json'
       });
 
-      var lang = location.href.split('/')[5].substring(0, 2) || 'en';
-      $translateProvider.preferredLanguage(lang);
-      moment.lang(lang);
+      gnGlobalSettings.lang = gnGlobalSettings.locale.lang ||
+          location.href.split('/')[5].substring(0, 2) || 'en';
+      $translateProvider.preferredLanguage(gnGlobalSettings.lang);
+      moment.lang(gnGlobalSettings.lang);
     }]);
 
 })();
