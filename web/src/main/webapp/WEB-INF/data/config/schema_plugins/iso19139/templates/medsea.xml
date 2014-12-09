@@ -130,7 +130,7 @@
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
-        <gco:CharacterString>Use this template to describe information in the context of the Medsea project</gco:CharacterString>
+        <gco:CharacterString></gco:CharacterString>
       </gmd:abstract>
       <gmd:purpose gco:nilReason="missing">
         <gco:CharacterString/>
