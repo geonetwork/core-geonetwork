@@ -79,7 +79,7 @@
       select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
 
     <xsl:variable name="isTheaurusAvailable"
-      select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
+      select="count($listOfThesaurus/thesaurus[contains(title, $thesaurusTitle)]) > 0"/>
     <xsl:choose>
       <xsl:when test="$isTheaurusAvailable">
 
@@ -94,7 +94,6 @@
                       select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
-
         <xsl:variable name="thesaurusConfig"
                       as="element()?"
                       select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
