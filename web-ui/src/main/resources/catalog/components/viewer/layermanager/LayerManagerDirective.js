@@ -49,56 +49,7 @@
   module.directive('gnLayermanagerTree', [
     'gnLayerFilters',
     '$filter',
-    function(gnLayerFilters, $filter) {
-      return {
-        restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/layermanager/' +
-            'partials/layermanager.html',
-        scope: {
-          map: '=gnLayermanagerMap'
-        },
-        controllerAs: 'gnLayermanagerCtrl',
-        controller: ['$scope', function($scope) {
-
-          /**
-         * Change layer index in the map.
-         *
-         * @param {ol.layer} layer
-         * @param {float} delta
-         */
-          this.moveLayer = function(layer, delta) {
-            var index = $scope.layers.indexOf(layer);
-            var layersCollection = $scope.map.getLayers();
-            layersCollection.removeAt(index);
-            layersCollection.insertAt(index + delta, layer);
-          };
-
-          /**
-         * Set a property to the layer 'showInfo' to true and
-         * false to all other layers. Used to display layer information
-         * in the layer manager.
-         *
-         * @param {ol.layer} layer
-         */
-          this.showInfo = function(layer) {
-            angular.forEach($scope.layers, function(l) {
-              if (l != layer) {
-                l.showInfo = false;
-              }
-            });
-            layer.showInfo = !layer.showInfo;
-          };
-        }],
-        link: function(scope, element, attrs) {
-
-          scope.layers = scope.map.getLayers().getArray();
-          scope.layerFilterFn = gnLayerFilters.selected;
-        }
-      };
-    }]);
-
-  module.directive('gnLayermanagerItem', ['gnPopup',
-    function(gnPopup) {
+    function (gnLayerFilters, $filter) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/layermanager/' +

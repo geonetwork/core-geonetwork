@@ -189,7 +189,7 @@
               if (angular.isArray(sxtGlobals.sextantTheme)) {
                 processThemes(data[1]);
               } else {
-                $scope.$on('sextantThemeLoaded', function(evt) {
+                scope.$on('sextantThemeLoaded', function(evt) {
                   processThemes(data[1]);
                 });
               }
