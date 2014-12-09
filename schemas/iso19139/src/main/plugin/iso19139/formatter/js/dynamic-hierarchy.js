@@ -1,7 +1,6 @@
 var linkBlockClass = $('.{{linkBlockClass}}');
 linkBlockClass.hide();
 
-var placeholder = $('#{{placeholderId}}');
 
 var typeTranslations = {
 {{typeTranslations}}
@@ -10,6 +9,8 @@ $.ajax('xml.relation?id={{metadataId}}&type={{relatedTypes}}', {
   dataType: "json",
   success: function (data) {
     var types = {};
+    var placeholder = $('#{{placeholderId}}');
+
     if (!data || !data.relation) {
       return;
     }

@@ -11,6 +11,7 @@ public class Handlers {
     Functions isofunc
     common.Handlers commonHandlers
     List<String> packageViews
+    String rootEl = 'gmd:MD_Metadata'
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -22,7 +23,7 @@ public class Handlers {
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
-                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo', 'gmd:MD_Metadata']
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo', rootEl]
     }
 
     def addDefaultHandlers() {
@@ -34,11 +35,15 @@ public class Handlers {
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Format Elements',  select: matchers.isFormatEl, group: true, formatEls
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, {keywords ->
-            def output = new StringBuilder()
-            keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each{
-                output.append("<dd>").append(it).append("</dd>")
+            def keywordProps = com.google.common.collect.ArrayListMultimap.create()
+            keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
+                def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
+                keywordProps.put(type, isofunc.isoText(k))
             }
-            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(keywords[0]), childData: output])
+
+            return handlers.fileResult('html/keyword.html', [
+                    label : f.nodeLabel("gmd:descriptiveKeywords", null),
+                    keywords: keywordProps.asMap()])
         }
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
@@ -58,7 +63,7 @@ public class Handlers {
         commonHandlers.addDefaultStartAndEndHandlers();
         addExtentHandlers()
 
-        handlers.sort name: 'Text Elements', select: 'gmd:MD_Metadata'/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
+        handlers.sort name: 'Text Elements', select: rootEl/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
             def v1 = matchers.isContainerEl(el1) ? 1 : -1;
             def v2 = matchers.isContainerEl(el2) ? 1 : -1;
             return v1 - v2

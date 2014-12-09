@@ -100,6 +100,7 @@ class TransformEngine {
                 Collections.sort(sortedChildren, sorter);
             }
         }
+
         final Set<GPathResult> visitedByGroup = Sets.newIdentityHashSet();
         int size = sortedChildren.size();
         for (int i = 0; i < size; i++) {

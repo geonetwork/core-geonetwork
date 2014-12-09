@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import groovy.util.slurpersupport.GPathResult;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
 import org.springframework.beans.BeanUtils;
@@ -152,6 +153,13 @@ public class TRenderContext implements Appendable, Closeable {
     private Object safeGetProperty(@Nonnull Object value, String prop) throws InvocationTargetException, IllegalAccessException {
         if (prop.trim().isEmpty()) {
             throw new EmptyPropertyException();
+        }
+        if (value instanceof GPathResult) {
+            GPathResult result = (GPathResult) value;
+            if (prop.replace("\\s+", "").equals("name()")) {
+                return result.name();
+            }
+            return result.getProperty(prop);
         }
         if (value instanceof Map) {
             Map map = (Map) value;

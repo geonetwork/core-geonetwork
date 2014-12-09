@@ -35,7 +35,7 @@ class SummaryFactory {
         configureHierarchy(isoHandler, summary)
 
         def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
-                           'gmd:metadataExtensionInfo', 'gmd:MD_Metadata']
+                           'gmd:metadataExtensionInfo', isoHandler.rootEl]
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             new NavBarItem(name, s.replace(':', "_"))
