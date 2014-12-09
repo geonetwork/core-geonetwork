@@ -1,7 +1,7 @@
-<!DOCTYPE html
-        SYSTEM "html">
-<html ng-app="gn_viewer" lang="eng" id="ng-app">
+<!DOCTYPE html SYSTEM "html">
+<html ng-app="gn_search_sextant" lang="eng" id="ng-app">
 <head>
+  <base href="/geonetwork/srv/eng/">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Sextant - Ifremer</title>
   <meta charset="utf-8">
@@ -11,35 +11,30 @@
   <meta name="keywords" content="">
 
   <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif">
-  <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml" title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}">
-  <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml" title="concat($env/system/site/name, ' - ', $env/system/site/organization)">
+  <!--
+    <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml" title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}">
+    <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml" title="concat($env/system/site/name, ' - ', $env/system/site/organization)">
+  -->
   <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico">
-  <link href="http://localhost:8080/geonetwork/catalog/tmp/app.css" rel="stylesheet" media="screen">
-  <link href="http://localhost:8080/geonetwork/static/srv_custom_style.css" rel="stylesheet" media="screen">
+  <link href="../../static/gn_search_sextant.css" rel="stylesheet" media="screen">
+  <link href="../../static/srv_custom_style.css" rel="stylesheet" media="screen">
 </head>
-<body>
-<div data-gn-main-viewer=""></div>
+
+<body data-ng-controller="GnCatController">
+  <div data-ng-include="'../../catalog/templates/search/sextant/search.html'"></div>
 </body>
 
 
 <script>var geonet={provide:function(s){},require:function(s){}}</script>
-<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+<script src="../../static/lib.js"></script>
+<script src="../../static/gn_search_sextant.js"></script>
 
-
-<script src="http://localhost:8080/geonetwork/static/gn_viewer.js"></script>
 <script type="text/javascript">
-
-  var module = angular.module('gn_viewer');
-  module.config(['gnViewerSettings', 'gnHttpProvider', function(gnViewerSettings, gnHttpProvider){
-
-    gnViewerSettings.proxyUrl = 'http://localhost:9999/mapfishapp/ws/ogcproxy/?url=';
-    gnViewerSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/eng/';
-
-    gnHttpProvider.setRemote({
-              proxy: gnViewerSettings.proxyUrl,
-              gnUrl: gnViewerSettings.gnUrl
-            }
-    );
+  var module = angular.module('gn_cat_controller');
+  module.config(['gnGlobalSettings', function(gnGlobalSettings) {
+    gnGlobalSettings.locale = {
+      lang: 'en'
+    };
   }]);
 </script>
 </html>
