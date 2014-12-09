@@ -3327,6 +3327,16 @@ public class DataManager {
             md.setNamespace(ns);
         }
 
+        Attribute xsiType = md.getAttribute("type", Namespaces.XSI);
+        if (xsiType != null) {
+            String xsiTypeValue = xsiType.getValue();
+
+            if (StringUtils.isNotEmpty(xsiTypeValue) && !xsiTypeValue.contains(":")) {
+                xsiType.setValue(ns.getPrefix() + ":" + xsiType.getValue());
+            }
+        }
+
+
         for (Object o : md.getChildren()) {
             setNamespacePrefix((Element) o, ns);
         }
