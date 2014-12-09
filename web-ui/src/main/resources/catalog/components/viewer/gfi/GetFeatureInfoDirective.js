@@ -81,7 +81,7 @@
         });
 
         scope.$watch('pending', function(v) {
-          mapElement.toggleClass('loading', (v !== 0));
+          mapElement.toggleClass('gn-gfi-loading', (v !== 0));
         });
 
       }
