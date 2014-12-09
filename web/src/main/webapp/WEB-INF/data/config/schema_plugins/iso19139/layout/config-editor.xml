@@ -29,6 +29,7 @@
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
     <for name="gmd:environmentDescription" use="textarea"/>
+    <for name="gmd:value" use="textarea"/>
 
 
     <for name="gco:Distance" use="number"/>
@@ -1579,7 +1580,7 @@
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
-                <key label="organisationName"
+                <key label="projectTitle"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="acronym"
                      xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
@@ -1949,8 +1950,7 @@
       <tab id="medsea-metadata" mode="flat">
         <section>
 
-          <field name="medseaTitle"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
 
