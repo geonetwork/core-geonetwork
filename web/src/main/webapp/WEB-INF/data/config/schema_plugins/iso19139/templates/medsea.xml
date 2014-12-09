@@ -181,7 +181,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>Challenges</gco:CharacterString>
+                <gco:CharacterString>Used by challenges</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -280,7 +280,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary (P02)</gco:CharacterString>
+                <gco:CharacterString>Parameter Discovery Vocabulary (P02)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -483,7 +483,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>BODC Parameter Usage Vocabulary (P01)</gco:CharacterString>
+                <gco:CharacterString>Parameter Usage Vocabulary (P01)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -545,7 +545,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet Agreed Parameter Groups (P03)</gco:CharacterString>
+                <gco:CharacterString>Agreed Parameter Groups (P03)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>

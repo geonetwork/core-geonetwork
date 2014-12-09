@@ -1765,7 +1765,7 @@
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'Challenges')]"/>
+                'Used by challenges')]"/>
 
           <field
               name="intendedUse"
