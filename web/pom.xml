@@ -828,6 +828,23 @@
       </properties>
     </profile>
     
+    <!-- CLS myocean ro configuration profile -->
+    <profile>
+      <id>cls-myocean-ro</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>cls-myocean-ro</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
+      </properties>
+    </profile>
+    
     <!-- Sextant configuration profile -->
     <profile>
       <id>ifr-visi1-sextant5</id>
