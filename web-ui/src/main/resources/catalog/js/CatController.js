@@ -7,7 +7,8 @@
 
 
   module.constant('gnGlobalSettings', {
-    proxyUrl: '../../proxy?url='
+    proxyUrl: '../../proxy?url=',
+    locale: {}
   });
 
   /**
