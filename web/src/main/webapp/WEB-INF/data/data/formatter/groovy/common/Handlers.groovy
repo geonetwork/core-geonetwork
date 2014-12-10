@@ -74,64 +74,11 @@ public class Handlers {
             return null
         }
     }
-    /**
-     * Return a function that will find the children of the element and apply the handlerFunc to the first child.  If there is not
-     * exactly one child then an error will be thrown.
-     */
-    static def applyToChild(handlerFunc, name) {
-        return {el ->
-            def children = el[name]
-            if (children.size() == 1) {
-                return handlerFunc(children[0])
-            } else {
-                throw new IllegalStateException("There is supposed to be only a single child when this method is called")
-            }
-        }
-    }
 
     def selectIsotype(name) {
         return {
             it.children().find { ch ->
                 ch.name() == name || ch['@gco:isoType'].text() == name
-            }
-        }
-    }
-
-    /**
-     * Returns a function that checks if the text is empty, if not then it executes the handlerFunction to process the
-     * data from the element and returns that data.
-     *
-     * @param handlerFunc the function for processing the element.
-     * @return
-     */
-    static def nonEmpty(handlerFunc) {
-        def nonEmptyText = {!it.text().isEmpty()}
-        when (nonEmptyText, handlerFunc)
-    }
-    /**
-     * Returns a function (usable as a handler) that checks if the text is empty, if not then it executes the
-     * handlerFunction to process the data from the element and returns that data.
-     *
-     * @param test the test to check if the handler should be ran
-     * @param handlerFunc  the function for processing the element.
-     * @return
-     */
-    static def when(test, handlerFunc) {
-        return {el ->
-            if (test(el)) {
-                return handlerFunc(el)
-            }
-        }
-    }
-
-    /**
-     * Creates function that creates a span containing the information obtained from the element (el) by calling the valueFunc with
-     * el as the parameter
-     */
-    def span(valueFunc) {
-        return { el ->
-            f.html {
-                it.span(valueFunc(el))
             }
         }
     }
@@ -150,7 +97,7 @@ public class Handlers {
     <link rel="stylesheet" href="../../static/gn_formatter.css"/>
     <script src="$libJs"></script>
 </head>
-<body>>
+<body>
 """
         } else {
             return ''

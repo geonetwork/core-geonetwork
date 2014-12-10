@@ -1,0 +1,7 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <ul class="md-value-list">
+        <li fmt-repeat="loc in locales">
+            {{loc.language}}<span data-fmt-if="loc.charset"> ({{loc.charset}})</span>
+        </li>
+    </ul>
+</div>

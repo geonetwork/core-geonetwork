@@ -2,7 +2,7 @@
     <ul>
         <li fmt-repeat="f in formats">
             <h4>{{f.name}} ({{f.version}})</h4>
-            <ul>
+            <ul class="md-value-list">
                 <li fmt-if="f.amendmentNumber">
                     <dt fmt-translate="node">gmd:amendmentNumber</dt><dd>{{f.amendmentNumber}}</dd>
                 </li>

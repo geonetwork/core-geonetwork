@@ -71,7 +71,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testCommentWhenFalse() throws Exception {
-        TNodeIf ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "item");
+        TNodeIf ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "item", false);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>emptyMap()));
         assertEquals("<!-- fmt-if=item is null -->", out.toString());
@@ -101,7 +101,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
         assertEquals("<!-- fmt-if=item is empty -->", out.toString());
 
 
-        ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "!item");
+        ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "!item", false);
 
         out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>singletonMap("item", "blarg")));
@@ -110,14 +110,14 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testEquals() throws Exception {
-        TNodeIf div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "{{label}} == 'one'");
+        TNodeIf div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "{{label}} == 'one'", false);
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         assertFalse(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "one"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "two"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>emptyMap())).isPresent());
 
-       div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "'one' == {{label}}");
+       div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "'one' == {{label}}", false);
 
         assertFalse(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "one"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "two"))).isPresent());
@@ -156,7 +156,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testNot() throws Exception {
-        TNodeIf not = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "!expr");
+        TNodeIf not = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "!expr", false);
 
         TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", true));
         assertTrue(not.canRender(context).isPresent());
@@ -164,7 +164,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertFalse(not.canRender(context).isPresent());
 
-        TNodeIf normal = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "expr");
+        TNodeIf normal = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "expr", false);
 
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertTrue(normal.canRender(context).isPresent());
@@ -172,5 +172,21 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", true));
         assertFalse(normal.canRender(context).isPresent());
 
+    }
+
+
+    @Test
+    public void testOnlyChildren() throws Exception {
+        final TemplateParser parser = createTestParser(SystemInfo.STAGE_PRODUCTION);
+        final URL url = AbstractTemplateParserTest.class.getResource("if-children-only.html");
+        final TNode parseTree = parser.parse(IO.toPath(url.toURI()));
+
+        Map<String, Object> model = Maps.newHashMap();
+        model.put("title", "Title");
+
+        String expected = "<head>\n"
+                          + "    <title >Title</title>\n"
+                          + "</head>";
+        assertCorrectRender(parseTree, model, expected);
     }
 }

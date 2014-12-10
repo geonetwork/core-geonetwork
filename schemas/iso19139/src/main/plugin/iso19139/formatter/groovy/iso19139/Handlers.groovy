@@ -39,15 +39,15 @@ public class Handlers {
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Format Elements',  select: matchers.isFormatEl, group: true, formatEls
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
-        handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
-        handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
         handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
 
+        handlers.skip matchers.hasDateChild, {it.children()}
+        handlers.skip matchers.hasCodeListChild, {it.children()}
         handlers.skip matchers.isSkippedContainer, {it.children()}
 
-        handlers.add 'gmd:locale', localeEl
+        handlers.add select: 'gmd:locale', group: true, localeEls
         handlers.add 'gmd:CI_Date', ciDateEl
         handlers.add 'gmd:CI_Citation', citationEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
@@ -101,15 +101,20 @@ public class Handlers {
         }
     }
 
-    def localeEl = { el ->
-        def ptLocale = el.'gmd:PT_Locale'
-        def toHtml = commonHandlers.when(matchers.isCodeListEl, commonHandlers.span(f.&codelistValueLabel))
-
-        def data = [toHtml(ptLocale.'gmd:languageCode'.'gmd:LanguageCode'),
-                    toHtml(ptLocale.'gmd:country'.'gmd:Country')]
-
-        def nonEmptyEls = data.findAll{it != null}
-        '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
+    def localeEls = { els ->
+        def locales = []
+        els.each {
+            it.'gmd:PT_Locale'.each { loc ->
+                locales << [
+                        language: f.codelistValueLabel(loc.'gmd:languageCode'.'gmd:LanguageCode'),
+                        charset: f.codelistValueLabel(loc.'gmd:characterEncoding'.'gmd:MD_CharacterSetCode')
+                ]
+            }
+        }
+        handlers.fileResult("html/locale.html", [
+                label: f.nodeLabel(els[0]),
+                locales: locales
+        ])
     }
 
     def onlineResourceEls = { els ->
@@ -281,7 +286,6 @@ public class Handlers {
                 el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
             def replacements = bbox(el)
             replacements['label'] = f.nodeLabel(el)
-            replacements['pdfOutput'] = env.formatType == FormatType.pdf
             replacements['pdfOutput'] = env.formatType == FormatType.pdf
 
             handlers.fileResult("html/bbox.html", replacements)

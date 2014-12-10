@@ -44,4 +44,16 @@ public abstract class TNodeFactory {
         }
         return false;
     }
+
+    protected boolean getBooleanAttribute(Attributes attributes, String attName, boolean defaultVal) {
+        String replaceAtt = getValue(attributes, attName);
+        boolean value = defaultVal;
+
+        if (replaceAtt != null) {
+            value = replaceAtt.isEmpty() || replaceAtt.equalsIgnoreCase("y") || replaceAtt.equalsIgnoreCase("true")
+                      || replaceAtt.equalsIgnoreCase("yes");
+        }
+
+        return value;
+    }
 }

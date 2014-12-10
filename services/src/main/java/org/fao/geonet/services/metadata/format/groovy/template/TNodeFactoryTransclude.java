@@ -60,12 +60,7 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
             }
         }
 
-        String replaceAtt = getValue(attributes, REPLACE);
-        boolean replace = false;
-        if (replaceAtt != null) {
-            replace = replaceAtt.isEmpty() || replaceAtt.equalsIgnoreCase("y") || replaceAtt.equalsIgnoreCase("true")
-                      || replaceAtt.equalsIgnoreCase("yes");
-        }
+        boolean replace = getBooleanAttribute(attributes, REPLACE, false);
 
         return new TNodeTransclude(info, qName, filteredAtts, templatePath, replace, model, extraModel);
     }

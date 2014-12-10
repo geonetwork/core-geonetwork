@@ -1,6 +1,6 @@
 <div class="container gn-metadata-view">
     <script type="application/javascript" fmt-if="isHTML">document.title="{{pageTitle}}"</script>
-    <h1>
+    <h1 class="view-header">
         <button type="button" class="btn btn-default toggler">
             <script type="application/javascript" fmt-if="isHTML">
                 //<![CDATA[
@@ -13,28 +13,26 @@
                 }
                 //]]>
             </script>
-            <img fmt-if="logo" style="max-width: 128px" src="{{logo}}"></img>
+            <img fmt-if="logo" class="logo" src="{{logo}}"></img>
             <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
         </button>
-        <span style="padding: 20px">{{title}}</span>
+        <span class="title">{{title}}</span>
     </h1>
-    <div class="target">
+    <div class="target view-header">
         <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
-        <div style="padding: 20px">
-            <div fmt-if="abstract">
-                <h3>
-                    <button type="button" class="btn btn-default toggler">
-                        <i class="fa fa-arrow-circle-down"></i>
-                    </button>
-                    <span fmt-translate="">abstract</span>
-                </h3>
+        <div fmt-if="abstract" class="abstract">
+            <h3>
+                <button type="button" class="btn btn-default toggler">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </button>
+                <span fmt-translate="">abstract</span>
+            </h3>
 
-                <div class="target">
-                    {{abstract}}
-                </div>
+            <div class="target">
+                {{abstract}}
             </div>
         </div>
-        <div fmt-repeat="linkBlock in links" class="summary-links-{{linkBlock.name}}" >
+        <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name}}" >
             <h3>
                 <button type="button" class="btn btn-default toggler">
                     <i class="fa fa-arrow-circle-down"></i>
@@ -42,8 +40,8 @@
                 <span fmt-translate="">{{linkBlock.name}}</span>
             </h3>
             <div class="row target" >
-                <div fmt-repeat="link in linkBlock.links" class="row" style="border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;">
-                    <div fmt-translate="" class="col-xs-12" style="background-color: #F7EEE1;">{{link.type.name}}</div>
+                <div fmt-repeat="link in linkBlock.links" class="row">
+                    <div fmt-translate="" class="link-block-title col-xs-12">{{link.type.name}}-link</div>
                     <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href}}">{{link.text}}</a></div>
                 </div>
                 <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>

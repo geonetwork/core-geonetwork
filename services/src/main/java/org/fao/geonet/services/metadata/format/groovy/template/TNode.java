@@ -55,9 +55,7 @@ public abstract class TNode {
     public void render(TRenderContext context) throws IOException {
         final Optional<String> reasonToNotRender = canRender(context);
         if (reasonToNotRender.isPresent()) {
-            if (this.info.isDevMode()) {
-                context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
-            }
+            addCannontRenderComment(context, reasonToNotRender);
         } else {
             context.append("<").append(qName);
 
@@ -78,6 +76,12 @@ public abstract class TNode {
             }
 
             end.render(context);
+        }
+    }
+
+    public void addCannontRenderComment(TRenderContext context, Optional<String> reasonToNotRender) throws IOException {
+        if (this.info.isDevMode()) {
+            context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
         }
     }
 
