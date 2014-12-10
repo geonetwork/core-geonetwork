@@ -1,5 +1,6 @@
 package iso19139
 
+import groovy.util.slurpersupport.GPathResult
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 
@@ -12,6 +13,9 @@ public class Handlers {
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
+    private String extentMapProjection = 'EPSG:3857'
+    private String extentMapBackground = 'osm'
+    private int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -250,8 +254,26 @@ public class Handlers {
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
-    def polygonEl = {
-        'polygon'
+    def polygonEl = { el ->
+        def mapproj = extentMapProjection
+        def background = extentMapBackground
+        def width = extentMapWidth
+        def mdId = env.getMetadataId();
+        def gmlId = null;
+        def depthFirstIter = el.depthFirst();
+        while (gmlId == null && depthFirstIter.hasNext()) {
+            GPathResult next = depthFirstIter.next();
+            def nextGmlId = next['@gml:id'].text()
+            if (!nextGmlId.isEmpty()) {
+                gmlId = nextGmlId;
+            }
+        }
+
+        if (gmlId != null) {
+            def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
+                    '         width="{{width}}" />'
+            handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+        }
     }
 
     def bboxEl = { el ->
@@ -271,10 +293,10 @@ public class Handlers {
           e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
           s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
           n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-          width: 500,
-          background: 'osm',
+          width: extentMapWidth,
+          background: extentMapBackground,
           geomproj: "EPSG:4326",
-          mapproj: "EPSG:3857"]
+          mapproj: extentMapProjection]
     }
     def rootPackageEl = {
         el ->

@@ -1,10 +1,10 @@
 package org.fao.geonet.services.region;
 
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
@@ -13,16 +13,22 @@ import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class MetadataRegionSearchRequest extends Request {
 
+    public static final String GML_ID_PREFIX = "@gml";
     private String id;
     private String label;
     private ServiceContext context;
@@ -77,41 +83,67 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private void loadOnly(List<Region> regions, Id mdId, String id) throws Exception {
-        Element metadata = findMetadata(mdId);
+        final boolean isGmlId = id.startsWith(GML_ID_PREFIX);
+        Element metadata = findMetadata(mdId, !isGmlId);
+        if (metadata != null) {
+            if (isGmlId) {
+                findByGmlId(regions, mdId, id, metadata);
+            } else {
+                findByGeonetElemRef(regions, mdId, id, metadata);
+            }
+        }
+    }
+
+    private void findByGmlId(List<Region> regions, Id mdId, String id, Element metadata) throws Exception {
+        String gmlId = id.substring(GML_ID_PREFIX.length());
+        final Element geomEl = Xml.selectElement(metadata, "*//*[@gml:id = '" + gmlId + "']", Lists.newArrayList(Geonet.Namespaces.GML));
+        if (geomEl != null) {
+            findContainingGmdEl(regions, mdId, geomEl);
+        }
+    }
+
+    private void findByGeonetElemRef(List<Region> regions, Id mdId, String id, Element metadata) throws Exception {
         Iterator<?> iter = metadata.getDescendants();
         while (iter.hasNext()) {
             Object obj = iter.next();
             if (obj instanceof Element) {
                 Element el = (Element) obj;
                 Element geonet = el.getChild("element", Geonet.Namespaces.GEONET);
-                if(geonet!= null && id.equals(geonet.getAttributeValue("ref"))) {
+                if (geonet != null && id.equals(geonet.getAttributeValue("ref"))) {
                     Iterator<?> extent = descentOrSelf(el);
                     if (extent.hasNext()) {
                         regions.add(parseRegion(mdId, (Element) extent.next()));
                         return;
                     } else {
-                        Element parent = el.getParentElement();
-                        while (parent != null) {
-                            if (EXTENT_FINDER.matches(parent)) {
-                                regions.add(parseRegion(mdId, parent));
-                                return;
-                            }
-                            parent = parent.getParentElement();
-                        }
+                        if (findContainingGmdEl(regions, mdId, el)) return;
                     }
                 }
             }
         }
     }
 
+    private boolean findContainingGmdEl(List<Region> regions, Id mdId, Element el) throws Exception {
+        Element parent = el;
+        while (parent != null) {
+            if (EXTENT_FINDER.matches(parent)) {
+                regions.add(parseRegion(mdId, parent));
+                return true;
+            }
+            parent = parent.getParentElement();
+        }
+        return false;
+    }
+
     private void loadAll(List<Region> regions, Id id) throws Exception {
-        Element metadata = findMetadata(id);
-        Iterator<?> extents = null;
-        extents = descentOrSelf(metadata);
-        while(extents.hasNext()) {
-            Object object = extents.next();
-            if(object instanceof Element) {
-                regions.add(parseRegion(id, (Element) object));
+        Element metadata = findMetadata(id, false);
+        if (metadata != null) {
+            Iterator<?> extents = null;
+            extents = descentOrSelf(metadata);
+            while (extents.hasNext()) {
+                Object object = extents.next();
+                if (object instanceof Element) {
+                    regions.add(parseRegion(id, (Element) object));
+                }
             }
         }
     }
@@ -157,16 +189,20 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
-    private Element findMetadata(Id id) throws Exception {
+    private Element findMetadata(Id id, boolean includeEditData) throws Exception {
         String mdId = id.getMdId(context);
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        
-        Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
+        try {
+            if (context.getBean(MetadataRepository.class).exists(Integer.parseInt(mdId))) {
+                Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
-        boolean withEditorValidationErrors = false;
-        boolean keepXlinkAttributes = true;
+                return context.getBean(DataManager.class).getMetadata(context, mdId, includeEditData, false, true);
+            } else {
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            return null;
+        }
 
-        return gc.getBean(DataManager.class).getMetadata(context, mdId, true, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Override
@@ -194,9 +230,9 @@ public class MetadataRegionSearchRequest extends Request {
         abstract String getId();
         
         static Id create(String id) {
-            if(id.toLowerCase().startsWith("@id")) {
+            if(id.toLowerCase().startsWith(MdId.PREFIX)) {
                 return new MdId(id);
-            } else if(id.toLowerCase().startsWith("@uuid")) {
+            } else if(id.toLowerCase().startsWith(Uuid.PREFIX)) {
                 return new Uuid(id);
             } else {
                 return new FileId(id);
