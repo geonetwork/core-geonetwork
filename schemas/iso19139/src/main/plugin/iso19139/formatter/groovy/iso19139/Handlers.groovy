@@ -13,9 +13,9 @@ public class Handlers {
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
-    private String extentMapProjection = 'EPSG:3857'
-    private String extentMapBackground = 'osm'
-    private int extentMapWidth = 500
+    String extentMapProjection = 'EPSG:3857'
+    String extentMapBackground = 'osm'
+    int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
