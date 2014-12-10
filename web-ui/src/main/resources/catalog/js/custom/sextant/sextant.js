@@ -104,7 +104,7 @@
 
       $scope.resultviewFns = {
         addMdLayerToMap: function(link) {
-          gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+          gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
             gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
           });

@@ -38,6 +38,7 @@
           'http://www.ifremer.fr/services/wms/oceanographie_physique'
         ],
         wmts: [
+          'http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?REQUEST=GetCapabilities',
           'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
         ]
       };
