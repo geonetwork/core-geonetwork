@@ -36,7 +36,13 @@
          * @return {*}
          */
           this.addLayer = function(getCapLayer) {
-            return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+            if ($scope.format == 'wms') {
+              return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+            }
+            else if ($scope.format == 'wmts') {
+              return gnMap.addWmtsToMapFromCap($scope.map, getCapLayer,
+                  $scope.capability);
+            }
           };
         }],
         link: function(scope, element, attrs) {
@@ -48,11 +54,11 @@
 
           scope.load = function(url) {
             scope.loading = true;
-            gnOwsCapabilities.getCapabilities(url)
-            .then(function(capability) {
-                  scope.loading = false;
-                  scope.capability = capability;
-                });
+            gnOwsCapabilities['get' + scope.format.toUpperCase() +
+                'Capabilities'](url).then(function(capability) {
+              scope.loading = false;
+              scope.capability = capability;
+            });
           };
         }
       };
@@ -286,14 +292,14 @@
             "ng-class='(!isParentNode()) ? \"leaf\" : \"\"'><label>" +
             "<span class='fa'  ng-class='isParentNode() ? \"fa-folder-o\" :" +
             " \"fa-plus-square-o\"'></span>" +
-            ' {{member.Title}}</label></li>',
+            ' {{member.Title || member.title}}</label></li>',
         link: function(scope, element, attrs, controller) {
           var el = element;
           var select = function() {
             controller.addLayer(scope.member);
             gnAlertService.addAlert({
               msg: 'Une couche ajoutée : <strong>' +
-                  scope.member.Title + '</strong>',
+                  (scope.member.Title || scope.member.title) + '</strong>',
               type: 'success'
             });
           };

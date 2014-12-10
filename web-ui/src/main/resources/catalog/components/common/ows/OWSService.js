@@ -54,30 +54,44 @@
           result.Capability.layers = layers;
           return result.Capability;
         };
+
+        var parseWMTSCapabilities = function(data) {
+          var parser = new ol.format.WMTSCapabilities();
+          var result = parser.read(data);
+
+          result.contents.Layer = result.contents.layers;
+          result.contents.operationsMetadata = result.operationsMetadata;
+          return result.contents;
+        };
+
+        var mergeDefaultParams = function(url, defaultParams) {
+          //merge URL parameters with default ones
+          var parts = url.split('?');
+          var urlParams = angular.isDefined(parts[1]) ?
+              gnUrlUtils.parseKeyValue(parts[1]) : {};
+
+          for (var p in urlParams) {
+            defaultParams[p] = urlParams[p];
+            if (defaultParams.hasOwnProperty(p.toLowerCase()) &&
+                p != p.toLowerCase()) {
+              delete defaultParams[p.toLowerCase()];
+            }
+          }
+
+          return gnUrlUtils.append(parts[0],
+              gnUrlUtils.toKeyValue(defaultParams));
+
+
+        };
         return {
-          getCapabilities: function(url) {
+
+          getWMSCapabilities: function(url) {
             var defer = $q.defer();
             if (url) {
-              //merge URL parameters with default ones
-              var parts = url.split('?');
-              var urlParams = angular.isDefined(parts[1]) ?
-                  gnUrlUtils.parseKeyValue(parts[1]) : {};
-
-              var defaultParams = {
+              url = mergeDefaultParams(url, {
                 service: 'WMS',
                 request: 'GetCapabilities'
-              };
-
-              for (var p in urlParams) {
-                defaultParams[p] = urlParams[p];
-                if (defaultParams.hasOwnProperty(p.toLowerCase()) &&
-                    p != p.toLowerCase()) {
-                  delete defaultParams[p.toLowerCase()];
-                }
-              }
-
-              url = gnUrlUtils.append(parts[0],
-                  gnUrlUtils.toKeyValue(defaultParams));
+              });
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
@@ -96,6 +110,32 @@
             }
             return defer.promise;
           },
+
+          getWMTSCapabilities: function(url) {
+            var defer = $q.defer();
+            if (url) {
+              url = mergeDefaultParams(url, {
+                REQUEST: 'GetCapabilities'
+              });
+
+              if (gnUrlUtils.isValid(url)) {
+
+                var proxyUrl = gnGlobalSettings.proxyUrl +
+                    encodeURIComponent(url);
+                $http.get(proxyUrl, {
+                  cache: true
+                })
+                    .success(function(data, status, headers, config) {
+                      defer.resolve(parseWMTSCapabilities(data));
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject(status);
+                    });
+              }
+            }
+            return defer.promise;
+          },
+
 
           getLayerExtentFromGetCap: function(map, getCapLayer) {
             var extent = null;
@@ -116,9 +156,10 @@
           },
 
           getLayerInfoFromCap: function(name, capObj) {
-            for (var i = 0, len = capObj.layers.length - 1;
+            for (var i = 0, len = capObj.layers.length;
                  i < len; i++) {
-              if (name == capObj.layers[i].Name) {
+              if (name == capObj.layers[i].Name ||
+                  name == capObj.layers[i].identifier) {
                 return capObj.layers[i];
               }
             }

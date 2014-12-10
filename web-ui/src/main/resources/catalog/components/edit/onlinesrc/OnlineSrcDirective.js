@@ -408,7 +408,7 @@
                */
               scope.loadWMSCapabilities = function() {
                 if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getCapabilities(scope.params.url)
+                  gnOwsCapabilities.getWMSCapabilities(scope.params.url)
                   .then(function(capabilities) {
                         scope.layers = [];
                         angular.forEach(capabilities.layers, function(l) {
@@ -516,7 +516,7 @@
                    * passed to the layers grid directive.
                    */
                   scope.loadWMSCapabilities = function(url) {
-                    gnOwsCapabilities.getCapabilities(url)
+                    gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(layers) {
                           scope.layers = layers;
                         });
