@@ -66,6 +66,7 @@ public class Handlers {
     def addExtentHandlers() {
         handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
+        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl
         handlers.add 'gmd:geographicElement', commonHandlers.processChildren{it.children()}
         handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
     }
@@ -249,22 +250,32 @@ public class Handlers {
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
-    def bboxEl = {
-        el ->
-            def replacements = [
-                    w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
-                    e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
-                    s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-                    pdfOutput: env.formatType == FormatType.pdf
-            ]
-
-            def bboxData = handlers.fileResult("html/bbox.html", replacements)
-            return handlers.fileResult('html/2-level-entry.html', [
-                    label: f.nodeLabel(el),
-                    childData: bboxData])
+    def polygonEl = {
+        'polygon'
     }
 
+    def bboxEl = { el ->
+        if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
+                el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
+            def replacements = bbox(el)
+            replacements['label'] = f.nodeLabel(el)
+            replacements['pdfOutput'] = env.formatType == FormatType.pdf
+            replacements['pdfOutput'] = env.formatType == FormatType.pdf
+
+            handlers.fileResult("html/bbox.html", replacements)
+        }
+    }
+
+    def bbox(el) {
+        return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
+          e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+          s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+          n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
+          width: 500,
+          background: 'osm',
+          geomproj: "EPSG:4326",
+          mapproj: "EPSG:3857"]
+    }
     def rootPackageEl = {
         el ->
             def rootPackage = el.children().findAll { ch -> !this.packageViews.contains(ch.name()) }

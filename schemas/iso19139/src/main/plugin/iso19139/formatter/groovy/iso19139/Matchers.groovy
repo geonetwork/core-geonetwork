@@ -10,7 +10,7 @@ public class Matchers {
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
 
     def skipContainers = [
-            'gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:identificationInfo',
+            'gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:identificationInfo', 'gmd:transferOptions',
             'gmd:contactInfo', 'gmd:address', 'gmd:phone', 'gmd:onlineResource', 'gmd:referenceSystemIdentifier',
             'gmd:distributorTransferOptions', 'gmd:resourceMaintenance', 'gmd:resourceConstraints', 'gmd:aggregationInfo', 'gmd:scope',
             'gmd:DQ_DataQuality', 'gmd:lineage', 'gmd:processStep', 'gmd:MD_Distribution'
@@ -45,6 +45,9 @@ public class Matchers {
 
     def isBBox = { el ->
         el.name() == 'gmd:EX_GeographicBoundingBox'
+    }
+    def isPolygon = { el ->
+        el.name() == 'gmd:EX_BoundingPolygon'
     }
     def isRoot = { el ->
         el.parent() is el
