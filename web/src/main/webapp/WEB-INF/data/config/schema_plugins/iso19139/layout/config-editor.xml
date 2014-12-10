@@ -1594,7 +1594,7 @@
                       <gco:CharacterString>{{acronym}}</gco:CharacterString>
                     </gmd:individualName>
                     <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      <gco:CharacterString>{{projectTitle}}</gco:CharacterString>
                     </gmd:organisationName>
                     <gn:copy select="gmd:positionName"/>
                     <gn:copy select="gmd:contactInfo"/>
