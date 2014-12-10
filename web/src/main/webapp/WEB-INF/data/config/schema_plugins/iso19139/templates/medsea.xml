@@ -309,7 +309,7 @@
                          xlink:href="local://eng/xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;amp;multiple=false"
                          xlink:show="replace">
           <gmd:keyword>
-            <gco:CharacterString>Addresses</gco:CharacterString>
+            <gco:CharacterString></gco:CharacterString>
           </gmd:keyword>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
