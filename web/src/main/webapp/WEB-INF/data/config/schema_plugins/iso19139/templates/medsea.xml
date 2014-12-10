@@ -305,9 +305,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords
-                         xlink:href="local://eng/xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;amp;multiple=false"
-                         xlink:show="replace">
+        <gmd:MD_Keywords>
           <gmd:keyword>
             <gco:CharacterString></gco:CharacterString>
           </gmd:keyword>
