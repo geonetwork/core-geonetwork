@@ -1,6 +1,9 @@
 // GN Styles
+// Need to import lib.js or these two specifically to make it work
 @import "../lib/style/font-awesome/less/font-awesome.less";
-@import "gn_bootstrap.less";
+// @import "gn_bootstrap.less";
+@import "../lib/style/bootstrap/less/variables.less";
+@import "../lib/style/bootstrap/less/mixins.less";
 
 @fa-version: '4.1.0';
 @fa-font-path: '../lib/style/font-awesome/fonts';
@@ -203,9 +206,19 @@
       border-bottom: 1px solid #D9AF71;
       background-color: #F7EEE1;
     }
-    ul.nav {
+    ul.view-outline {
       padding-top: 2em;
     }
+
+    ul.view-outline a[disabled] {
+      pointer-events: none;
+      cursor: default;
+      color: #808080;
+    }
+    ul.view-outline li {
+      max-width: 10em;
+    }
+
     a {
       word-wrap: break-word;
     }

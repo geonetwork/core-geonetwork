@@ -311,7 +311,7 @@ public class Handlers {
             def otherPackageData = handlers.processElements(otherPackage, el);
 
             def rootPackageOutput = handlers.fileResult('html/2-level-entry.html',
-                    [label: f.nodeLabel(el), childData: rootPackageData, name: 'gmd_MD_Metadata'])
+                    [label: f.nodeLabel(el), childData: rootPackageData, name: rootEl.replace(":", "_")])
 
             return  rootPackageOutput.toString() + otherPackageData
     }

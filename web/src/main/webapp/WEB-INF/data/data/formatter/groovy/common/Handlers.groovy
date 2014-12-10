@@ -85,17 +85,18 @@ public class Handlers {
 
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
-            def libJs = '../../static/lib.js'
+            def minimize = ''
             if (env.param("debug").toBool()) {
-                libJs += '?minimize=false'
+                minimize = '?minimize=false'
             }
             return """
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="../../static/gn_formatter.css"/>
-    <script src="$libJs"></script>
+    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
+    <link rel="stylesheet" href="../../static/gn_formatter.css$minimize"/>
+    <script src="../../static/lib.js$minimize"></script>
 </head>
 <body>
 """
@@ -105,26 +106,16 @@ public class Handlers {
     }
 
     def htmlOrXmlEnd = {
+        def required = """
+<script type="text/javascript">
+//<![CDATA[
+        ${handlers.fileResult("js/std-footer.js", [:])}
+//]]>
+</script>"""
         if (func.isHtmlOutput()) {
-            return '''
-<script>
-    $('.toggler').on('click', function() {
-        $(this).toggleClass('closed');
-        $(this).parent().nextAll('.target').first().toggle();
-    });
-
-    $('.nav-pills a[rel]').on('click', function(e) {
-        $('.container > .entry').hide();
-        $($(this).attr('rel')).show();
-        e.preventDefault();
-    });
-
-    $
-</script>
-</body>
-</html>'''
+            return required + '</body></html>'
         } else {
-            return ''
+            return required
         }
     }
 
