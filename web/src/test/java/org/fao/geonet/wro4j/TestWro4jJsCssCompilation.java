@@ -2,6 +2,7 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.FilterConfig;
 
 /**
@@ -68,6 +70,9 @@ public class TestWro4jJsCssCompilation {
 
     @Test
     public void testCssCompilation() throws Exception {
+//        testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
+//                Predicates.equalTo("gn_viewer") // currently broken
+//                )));
         testResourcesOfType(ResourceType.CSS, Predicates.<String>alwaysTrue());
     }
     @Test
@@ -83,6 +88,8 @@ public class TestWro4jJsCssCompilation {
             }
             List<Resource> resources = group.collectResourcesOfType(resourceType).getResources();
 
+            Map<String, Throwable> errors = Maps.newHashMap();
+
             if (!resources.isEmpty()) {
                 final String requestURI = "http://server.com/" + group.getName() + "." + resourceType.name().toLowerCase();
                 MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
@@ -94,6 +101,7 @@ public class TestWro4jJsCssCompilation {
 
                 Context.set(Context.webContext(request, response, config));
 //                System.out.println("Processing: " + requestURI);
+
                 wro4jManager.process();
 
             }
