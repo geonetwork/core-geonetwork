@@ -276,10 +276,23 @@
       <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    
+	            
+    <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
     </dependency>
 
+	  <!-- Print service: MapFish -->
+	  <dependency>
+      <groupId>org.mapfish.print</groupId>
+      <artifactId>print-lib</artifactId>
+      <version>${print-lib.version}</version>
+    </dependency>
+  
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>

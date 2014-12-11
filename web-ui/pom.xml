@@ -24,6 +24,14 @@
     </license>
   </licenses>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jslint-maven-plugin</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
+
   <build>
     <resources>
         <!-- The resource that are filtered should only be the fewest possible because
@@ -61,13 +69,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>jslint-maven-plugin</artifactId>
-                                <version>1.0.1</version>
-                            </dependency>
-                        </dependencies>
                         <executions>
                             <!-- Fix JS style based on fixjsstyle.
                         See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
