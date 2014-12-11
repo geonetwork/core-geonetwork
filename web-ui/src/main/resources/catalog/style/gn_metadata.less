@@ -173,16 +173,19 @@
     max-height: 200px;
   }
 
-  h1.view-header img.logo {
+  .view-header img.logo {
     max-width: 128px;
   }
 
   .view-header img {
     max-width: 500px;
-    max-height: 500px
+    max-height: 500px;
+    padding-left: 1em;
   }
-
-  h1.view-header span.title, div.view-header > div.abstract {
+  .view-header span.title {
+    font-size: large;
+  }
+  .view-header span.title, div.view-header > div {
     padding: 1em;
   }
 
@@ -203,7 +206,7 @@
   ul.view-outline a[disabled] {
     pointer-events: none;
     cursor: default;
-    color: #808080;
+    color: #C0C0C0;
   }
   ul.view-outline li {
     max-width: 10em;
@@ -217,5 +220,6 @@
     list-style-type: none;
     border-left: 1px solid #999999;
     padding-left: 1em;
+    background: #eeeeee;
   }
 }

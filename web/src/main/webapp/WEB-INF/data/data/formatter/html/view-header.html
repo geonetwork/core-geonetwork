@@ -1,50 +1,54 @@
 <div class="container gn-metadata-view">
     <script type="application/javascript" fmt-if="isHTML">document.title="{{pageTitle}}"</script>
-    <h1 class="view-header">
-        <button type="button" class="btn btn-default toggler">
-            <script type="application/javascript" fmt-if="isHTML">
-                //<![CDATA[
-                var headEl = $("head");
-                var iconLink = headEl.children("link[rel='shortcut icon']");
-                if (iconLink.length > 0) {
-                    iconLink.attr("href", "{{logo}}");
-                } else {
-                    headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
-                }
-                //]]>
-            </script>
-            <img fmt-if="logo" class="logo" src="{{logo}}"></img>
-            <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
-        </button>
-        <span class="title">{{title}}</span>
-    </h1>
-    <div class="target view-header">
-        <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
-        <div fmt-if="abstract" class="abstract">
-            <h3>
-                <button type="button" class="btn btn-default toggler">
-                    <i class="fa fa-arrow-circle-down"></i>
-                </button>
-                <span fmt-translate="">abstract</span>
-            </h3>
+    <div class="entry">
+        <h3 class="view-header">
+            <button type="button" class="btn btn-default toggler">
+                <i class="fa fa-arrow-circle-down"></i>
+            </button>
+                <script type="application/javascript" fmt-if="isHTML">
+                    //<![CDATA[
+                    var headEl = $("head");
+                    var iconLink = headEl.children("link[rel='shortcut icon']");
+                    if (iconLink.length > 0) {
+                        iconLink.attr("href", "{{logo}}");
+                    } else {
+                        headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+                    }
+                    //]]>
+                </script>
+                <img fmt-if="logo" class="logo" src="{{logo}}"></img>
+                <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
+                <span class="title">{{title}}</span>
+        </h3>
 
-            <div class="target">
-                {{abstract}}
+        <div class="target view-header">
+            <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
+            <div fmt-if="abstract" class="abstract">
+                <h3>
+                    <button type="button" class="btn btn-default toggler">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </button>
+                    <span fmt-translate="">abstract</span>
+                </h3>
+
+                <dd class="target">
+                    {{abstract}}
+                </dd>
             </div>
-        </div>
-        <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name}}" >
-            <h3>
-                <button type="button" class="btn btn-default toggler">
-                    <i class="fa fa-arrow-circle-down"></i>
-                </button>
-                <span fmt-translate="">{{linkBlock.name}}</span>
-            </h3>
-            <div class="row target" >
-                <div fmt-repeat="link in linkBlock.links" class="row">
-                    <div fmt-translate="" class="link-block-title col-xs-12">{{link.type.name}}-link</div>
-                    <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href}}">{{link.text}}</a></div>
+            <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name}}" >
+                <h3>
+                    <button type="button" class="btn btn-default toggler">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </button>
+                    <span fmt-translate="">{{linkBlock.name}}</span>
+                </h3>
+                <div class="row target" >
+                    <div fmt-repeat="link in linkBlock.links" class="row">
+                        <div fmt-translate="" class="link-block-title col-xs-12">{{link.type.name}}-link</div>
+                        <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href}}">{{link.text}}</a></div>
+                    </div>
+                    <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
                 </div>
-                <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
             </div>
         </div>
     </div>
@@ -56,6 +60,7 @@
             </ul>
         </li>
     </ul>
-
+    <div class="gn-metadata-main">
     {{content}}
+    </div>
 </div>

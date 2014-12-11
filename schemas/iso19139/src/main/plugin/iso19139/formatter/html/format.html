@@ -1,7 +1,7 @@
 <div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData">
-    <ul>
+    <ul class="md-value-list">
         <li fmt-repeat="f in formats">
-            <h4>{{f.name}} ({{f.version}})</h4>
+            <strong>{{f.name}} ({{f.version}})</strong>
             <ul class="md-value-list">
                 <li fmt-if="f.amendmentNumber">
                     <dt fmt-translate="node">gmd:amendmentNumber</dt><dd>{{f.amendmentNumber}}</dd>
