@@ -4,8 +4,11 @@
   goog.require('gn_category');
   goog.require('gn_importxsl');
 
-  var module = angular.module('gn_import_controller',
-      ['gn_importxsl', 'gn_category']);
+  var module = angular.module('gn_import_controller',[
+    'gn_importxsl',
+    'gn_category',
+    'blueimp.fileupload'
+  ]);
 
   /**
    * Metadata import controller.
@@ -27,8 +30,23 @@
         {key: 'SUB_TEMPLATE', value: 's'}
       ];
 
-
       $scope.template = $scope.recordTypes[0].value;
+
+      /** Upload management */
+      $scope.action = 'xml.mef.import.ui';
+      var uploadImportMdDone = function(evt, data) {
+      };
+      var uploadImportMdError = function(data) {
+      };
+
+      // upload directive options
+      $scope.mdImportUploadOptions = {
+        autoUpload: false,
+        done: uploadImportMdDone,
+        fail: uploadImportMdError
+      };
+      /** --- */
+
 
       var formatExceptionArray = function() {
         if (!angular.isArray($scope.report.exceptions.exception)) {
@@ -59,8 +77,12 @@
         $scope.report = null;
         $scope.error = null;
 
-        gnMetadataManager.importFromDir($(formId).serialize()).then(
-            onSuccessFn, onErrorFn);
+        if($scope.importMode == 'uploadFile') {
+          $scope.submit();
+        } else  {
+          gnMetadataManager.importFromXml($(formId).serialize()).then(
+              onSuccessFn, onErrorFn);
+        }
       };
     }
   ]);

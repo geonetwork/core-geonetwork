@@ -31,7 +31,9 @@
       </div>
 
 
-      <form id="gn-import" class="form-horizontal" role="form">
+      <form id="gn-import" class="form-horizontal" role="form"
+            method="POST" enctype="{{enctype}}" action="{{action}}"
+            data-file-upload="mdImportUploadOptions">
 
         <!-- Folder Path and subfolder options -->
         <div class="form-group" data-ng-if="importMode === 'importFromDir'">
@@ -49,6 +51,33 @@
                 <input type="checkbox" name="recurse"/>
                 <span data-translate="">recursive</span>
               </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload panel -->
+        <div class="form-group" data-ng-show="importMode === 'uploadFile'">
+          <label for="md-import-upload" class="col-sm-5 control-label">upload</label>
+          <div class="col-sm-7" id="md-import-upload">
+
+            <div class="panel panel-default">
+              <div class="panel-body">
+
+                <span class="btn btn-success btn-block fileinput-button">
+                  <i class="fa fa-plus fa fa-white"/>
+                  <span data-translate="">chooseOnlinesrc</span>
+                  <input type="file" id="md-import-file" name="mefFile" multiple="false"
+                         />
+                </span>
+
+                <ul>
+                  <li data-ng-repeat="file in queue">
+                    <div class="preview" data-file-upload-preview="file"></div>
+                    {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                    <i class="fa fa-trash-o" data-ng-click="clear(file)"/>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -170,7 +199,7 @@
         </div>
 
         <div class="form-group">
-          <label class="col-sm-5 control-label"
+          <label class="col-sm-5 control-label" for="md-import-group"
                  data-translate="">assignToGroup</label>
           <div class="col-sm-7">
             <div data-groups-combo=""
@@ -178,18 +207,18 @@
                  lang="lang"
                  data-groups="groups"/>
             <input type="text" data-ng-model="ownerGroup"
-                   name="group"
+                   name="group" id="md-import-group"
                    class="form-control hidden"/>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-5 control-label"
+          <label class="col-sm-5 control-label" for="md-import-cat"
                  data-translate="">assignToCategory</label>
           <div class="col-sm-7">
             <div data-gn-category="category"
                  data-lang="{{lang}}"/>
-            <input type="text" data-ng-model="category"
+            <input type="text" data-ng-model="category" id="md-import-cat"
                    name="category"
                    class="form-control hidden"/>
           </div>
