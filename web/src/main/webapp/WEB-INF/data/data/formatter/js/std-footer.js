@@ -13,7 +13,7 @@ $.each(navAnchors, function (idx) {
 
 navAnchors.on('click', function(e) {
   var el = $(this);
-  $('.gn-metadata-main > .entry').hide();
+  $('.container > .entry').hide();
   $(el.attr('rel')).show();
   $('li.active').removeClass('active');
   el.parent().addClass('active');

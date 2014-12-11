@@ -1,27 +1,40 @@
 <div class="container gn-metadata-view">
-    <script type="application/javascript" fmt-if="isHTML">document.title="{{pageTitle}}"</script>
-    <div class="entry">
+    <script type="application/javascript" fmt-if="isHTML">
+        //<![CDATA[
+        document.title="{{pageTitle}}";
+        var headEl = $("head");
+        var iconLink = headEl.children("link[rel='shortcut icon']");
+        if (iconLink.length > 0) {
+            iconLink.attr("href", "{{logo}}");
+        } else {
+            headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+        }
+        //]]>
+    </script>
+    <h1>
+        <img fmt-if="logo" class="logo" src="{{logo}}"></img>
+        <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
+        <span class="title">{{title}}</span>
+    </h1>
+    <ul class="view-outline nav nav-pills">
+        <li><a href="" rel=".overview" fmt-translate="">{{overview}}</a></li>
+        <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+        <li fmt-if="navBarOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li fmt-repeat="item in navBarOverflow"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
+                <li><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div class="entry overview">
         <h3 class="view-header">
             <button type="button" class="btn btn-default toggler">
                 <i class="fa fa-arrow-circle-down"></i>
             </button>
-                <script type="application/javascript" fmt-if="isHTML">
-                    //<![CDATA[
-                    var headEl = $("head");
-                    var iconLink = headEl.children("link[rel='shortcut icon']");
-                    if (iconLink.length > 0) {
-                        iconLink.attr("href", "{{logo}}");
-                    } else {
-                        headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
-                    }
-                    //]]>
-                </script>
-                <img fmt-if="logo" class="logo" src="{{logo}}"></img>
-                <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
-                <span class="title">{{title}}</span>
+            <span fmt-translate="">overview</span>
         </h3>
 
-        <div class="target view-header">
+        <div class="entry target">
             <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
             <div fmt-if="abstract" class="abstract">
                 <h3>
@@ -35,6 +48,7 @@
                     {{abstract}}
                 </dd>
             </div>
+
             <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name}}" >
                 <h3>
                     <button type="button" class="btn btn-default toggler">
@@ -52,15 +66,6 @@
             </div>
         </div>
     </div>
-    <ul class="view-outline nav nav-pills">
-        <li fmt-repeat="item in navBar"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
-        <li fmt-if="navBarOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li fmt-repeat="item in navBarOverflow"><a href="" rel=".{{item.rel}}">{{item.name}}</a></li>
-            </ul>
-        </li>
-    </ul>
-    <div class="gn-metadata-main">
-    {{content}}
-    </div>
+
+        {{content}}
 </div>

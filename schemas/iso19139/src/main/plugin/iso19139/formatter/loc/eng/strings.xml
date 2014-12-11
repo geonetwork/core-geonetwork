@@ -4,4 +4,6 @@
     <link-link>Link</link-link>
     <kml-link>KML File for download</kml-link>
     <wms-link>Web Map Server urls</wms-link>
+    <overview>Overview</overview>
+    <complete>Complete</complete>
 </strings>
