@@ -95,7 +95,7 @@ public class Handlers {
 <head lang="en">
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
-    <link rel="stylesheet" href="../../static/gn_formatter.css$minimize"/>
+    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>
     <script src="../../static/lib.js$minimize"></script>
 </head>
 <body>
