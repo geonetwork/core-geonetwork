@@ -2,7 +2,6 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Maps;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
@@ -26,8 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.FilterConfig;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Jesse on 11/20/2014.
@@ -82,13 +82,13 @@ public class TestWro4jJsCssCompilation {
 
     private void testResourcesOfType(ResourceType resourceType, Predicate<String> testFilter) throws IOException {
         final Collection<Group> groups = wro4jModel.getGroups();
+        StringBuilder errors = new StringBuilder();
         for (Group group : groups) {
             if (!testFilter.apply(group.getName())) {
                 continue;
             }
             List<Resource> resources = group.collectResourcesOfType(resourceType).getResources();
 
-            Map<String, Throwable> errors = Maps.newHashMap();
 
             if (!resources.isEmpty()) {
                 final String requestURI = "http://server.com/" + group.getName() + "." + resourceType.name().toLowerCase();
@@ -100,11 +100,25 @@ public class TestWro4jJsCssCompilation {
 
 
                 Context.set(Context.webContext(request, response, config));
-//                System.out.println("Processing: " + requestURI);
+                try {
+                    wro4jManager.process();
+                } catch (Throwable t) {
+                    if (errors.length() == 0) {
+                        errors.append("\n\nThe following errors were encountered while compiling the ").
+                                append(resourceType).append(" resources");
+                    }
 
-                wro4jManager.process();
-
+                    errors.append("\n* Group Name: ").append(group.getName());
+                    errors.append("\n    * Resources: ").append(group.getName());
+                    for (Resource resource : resources) {
+                        errors.append("\n        - ").append(resource.getUri()).append("\n");
+                    }
+                    errors.append("    * Error Message:\n        > ");
+                    errors.append(t.getMessage().replaceAll("(\n|\r)+", "\n        > ")).append("\n");
+                }
             }
         }
+
+        assertTrue(errors.toString(), errors.length() == 0);
     }
 }
