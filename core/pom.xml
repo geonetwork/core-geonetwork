@@ -115,6 +115,12 @@
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>fop</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.xmlgraphics</groupId>
+                    <artifactId>batik-script</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.jcs</groupId>
@@ -370,6 +376,10 @@
                 <exclusion>
                     <groupId>com.vividsolutions</groupId>
                     <artifactId>jts</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.xmlgraphics</groupId>
+                    <artifactId>batik-script</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
