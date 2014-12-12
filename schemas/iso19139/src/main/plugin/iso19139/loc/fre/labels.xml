@@ -637,6 +637,7 @@ responsable du service.</li>
   </element>
   <element name="gmd:MD_Metadata" id="1.0">
     <label>Métadonnées</label>
+    <abbrLabel>Métadonnées</abbrLabel>
     <description>Classe qui définit les métadonnées concernant des ressources</description>
     <help>Classe définissant les métadonnées d'une ou de plusieurs ressources. Les métadonnées peuvent se rapporter à des jeux de données entiers mais également à des objets géométriques, des attributs, des types d'objets géométriques et d'attributs ou à des agrégations de données, de séries de données ou de niveaux hiérarchiques ("hierarchyLevel"). Les relations de dépendance hiérarchique entre jeux de métadonnées peuvent être indiquées par la filiation ("parentIdentifier"). La norme ISO prévoit une relation monovalente entre jeux de métadonnées dans ce cadre, une seule filiation pouvant être indiquée et non plusieurs. La classe MD_Metadata présente également un attribut de contact avec le service compétent pour d'autres informations relatives aux métadonnées.</help>
     <condition/>
@@ -1006,6 +1007,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:applicationSchemaInfo" id="21.0">
     <label>Informations sur le schéma conceptuel</label>
+    <abbrLabel>Schéma d'app.</abbrLabel>
     <description>Informations sur le schéma conceptuel du jeu de données</description>
     <help>Informations relatives au schéma conceptuel du jeu de données</help>
     <condition/>
@@ -1309,6 +1311,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:contentInfo" id="16.0">
     <label>Information sur le contenu</label>
+    <abbrLabel>Info. contenu</abbrLabel>
     <description>Informations sur le catalogue d'objet et sur les descriptions de la couverture et des charactéristiques raster</description>
     <help>Description du contenu du jeu de données. Renvoi au catalogue d'objets, au modèle de données ou à la description des données. Le contenu de ces catalogues et de ces descriptions ne fait toutefois pas partie des métadonnées. Ces informations sont gérées dans la classe MD_ContentInformation.</help>
     <condition/>
@@ -1364,6 +1367,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:dataQualityInfo" id="18.0">
     <label>Informations sur la qualité des données</label>
+    <abbrLabel>Qualité</abbrLabel>
     <description>Estimation de la qualité des ressources</description>
     <help>Estimation de la qualité du jeu de données. Ces informations sont gérées dans la classe DQ_DataQuality.</help>
     <condition/>
@@ -1808,6 +1812,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
   </element>
   <element name="gmd:distributionInfo" id="17.0">
     <label>Informations sur la distribution</label>
+    <abbrLabel>Distribution</abbrLabel>
     <description>Informations sur le distributeur et sur la façon d'acquérir les ressources</description>
     <help>Informations relatives au distributeur et au mode d'acquisition de la ou des ressources. Indications concernant le lieu et la forme d'obtention des données. Ces informations sont gérées dans la classe MD_Distribution.</help>
     <condition/>
@@ -2220,6 +2225,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:identificationInfo" id="15.0">
     <label>Information de l'identification</label>
+    <abbrLabel>Identification</abbrLabel>
     <description>Informations de base sur les ressources concernées par les métadonnées</description>
     <help>Informations de base concernant la ressource (voire les ressources) ou le jeu de données auquel se rapportent les métadonnées. Ces informations sont gérées dans la classe MD_IdentificationInformation.</help>
     <condition/>
@@ -2542,6 +2548,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
     <label>Contraites sur les métadonnées</label>
+    <abbrLabel>Contraites</abbrLabel>
     <description>Contraintes sur l'accès et l'utilisation des métadonnées</description>
     <help>Restrictions d'accès et d'utilisation des métadonnées (exemple : copyright, conditions d'octroi de licence, etc.). Ces informations sont gérées dans la classe MD_Constraints.</help>
     <condition/>
@@ -2549,6 +2556,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:metadataConstraints">
     <label>Contraintes sur les métadonnées</label>
+    <abbrLabel>Contraites</abbrLabel>
     <description>Contraintes sur l’accès et l’utilisation des métadonnées</description>
     <help/>
     <condition/>
@@ -2556,6 +2564,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:metadataExtensionInfo" id="14.0">
     <label>Information sur l'extension des métadonnées</label>
+    <abbrLabel>Extension</abbrLabel>
     <description>Informations décrivant l'extension des métadonnées</description>
     <help>Informations décrivant des extensions de métadonnées</help>
     <condition/>
@@ -2563,6 +2572,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:metadataMaintenance" id="22.0">
     <label>Mise à jour des métadonnées</label>
+    <abbrLabel>Mise à jour</abbrLabel>
     <description>Informations sur la fréquence de mise à jour des métadonnées, ainsi que de leur étendue</description>
     <help>Informations concernant la fréquence, l'étendue, la date et la validité des mises à jour. Ces informations sont gérées dans la classe MD_MaintenanceInformation.</help>
     <condition/>
@@ -3024,6 +3034,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
   </element>
   <element name="gmd:portrayalCatalogueInfo" id="19.0">
     <label>Informations sur la réprésentation</label>
+    <abbrLabel>Réprésentation</abbrLabel>
     <description>Informations sur le catalogue de règles concernant la représentation des ressources</description>
     <help>Informations concernant le catalogue de règles établi pour la représentation de ressources.</help>
     <condition/>
@@ -3146,6 +3157,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
   </element>
   <element name="gmd:referenceSystemInfo" id="13.0">
     <label>Information sur le système de référence</label>
+    <abbrLabel>Système de Réf.</abbrLabel>
     <description>Description des références spatiale et temporelle utilisées dans le jeu de données</description>
     <help>Description des systèmes de référence spatiale et temporelle utilisés dans le jeu de données. Ces informations sont gérées dans la classe MD_ReferenceSystem.</help>
     <condition/>
@@ -3406,6 +3418,7 @@ diffusion restreinte.
   </element>
   <element name="gmd:spatialRepresentationInfo" id="12.0">
     <label>Information sur la représentation spatiale</label>
+    <abbrLabel>Information Spat.</abbrLabel>
     <description>Représentation digitale de l'information spatiale dans le jeu de données</description>
     <help>Informations sur la manière dont les représentations spatiales sont définies. Une distinction est étable entre les données vectorielles et les données tramées. Dans le cas de données vectorielles, les indications concernent le type géométrique, la topologie, etc., tandis qu''elles se rapportent au nombre de pixels, à l'ordre de succession des axes, aux paramètres de géoréférencement, etc. dans le cas de données tramées. Ces informations sont gérées dans la classe MD_SpatialRepresentation.</help>
     <condition/>

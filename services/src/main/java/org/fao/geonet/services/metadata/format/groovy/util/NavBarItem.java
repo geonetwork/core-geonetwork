@@ -12,11 +12,11 @@ public class NavBarItem {
     public NavBarItem() {
         // no op
     }
-    public NavBarItem(String name, String rel) {
+    public NavBarItem(String name, String abbrName, String rel) {
         this.name = name;
-        this.abbrName = name;
-        if (name.length() > 13) {
-            this.abbrName = name.substring(0, 10) + "...";
+        this.abbrName = abbrName;
+        if (abbrName == null || abbrName.isEmpty()) {
+            this.abbrName = name;
         }
         this.rel = rel;
     }

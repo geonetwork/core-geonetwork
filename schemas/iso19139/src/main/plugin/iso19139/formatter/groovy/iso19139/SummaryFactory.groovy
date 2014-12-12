@@ -35,10 +35,11 @@ class SummaryFactory {
         configureHierarchy(isoHandler, summary)
 
         def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
-                           'gmd:metadataExtensionInfo', isoHandler.rootEl]
+                           isoHandler.rootEl]
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
-            new NavBarItem(name, s.replace(':', "_"))
+            def abbrName = f.nodeTranslation(s, null, "abbrLabel")
+            new NavBarItem(name, abbrName, s.replace(':', "_"))
         }
         summary.navBar = isoHandler.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow = isoHandler.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
