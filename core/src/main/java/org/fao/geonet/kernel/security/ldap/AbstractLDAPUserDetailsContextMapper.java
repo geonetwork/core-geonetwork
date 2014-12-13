@@ -22,11 +22,19 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import org.fao.geonet.NodeInfo;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -40,15 +48,9 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
+import org.springframework.security.ldap.userdetails.InetOrgPerson;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -59,206 +61,271 @@ import java.util.Set;
  * @author francois
  */
 public abstract class AbstractLDAPUserDetailsContextMapper implements
-        UserDetailsContextMapper, ApplicationContextAware {
+		WritableUserDetailsContextMapper, ApplicationContextAware {
 
-    Map<String, String[]> mapping;
+	Map<String, String[]> mapping;
 
-    Map<String, Profile> profileMapping;
+	Map<String, Profile> profileMapping;
 
-    protected boolean importPrivilegesFromLdap;
+	protected boolean importPrivilegesFromLdap;
 
-    private boolean createNonExistingLdapGroup = true;
+	private boolean createNonExistingLdapGroup = true;
+	private boolean createNonExistingLdapUser = false;
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    protected DefaultSpringSecurityContextSource contextSource;
+	protected DefaultSpringSecurityContextSource contextSource;
 
-    public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
-    }
+	private UserDetailsManager ldapManager;
 
-    @Override
-    public UserDetails mapUserFromContext(DirContextOperations userCtx,
-            String username, Collection<? extends GrantedAuthority> authorities) {
+	private String ldapBaseDnPattern = "uid={0},ou=users";
 
-        Profile defaultProfile;
-        if (mapping.get("profile")[1] != null) {
-            defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
-        } else {
-            defaultProfile = Profile.RegisteredUser;
-        }
-        String defaultGroup = mapping.get("privilege")[1];
+	private String ldapBaseDn;
 
-        Map<String, ArrayList<String>> userInfo = LDAPUtils
-                .convertAttributes(userCtx.getAttributes().getAll());
+	public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
+		ctx.setAttributeValues("objectclass", new String[] { "top", "person",
+				"organizationalPerson", "inetOrgPerson" });
+		ctx.setAttributeValue("sn", user.getUsername());
+		ctx.setAttributeValue("cn", user.getUsername());
+		ctx.setAttributeValue("uid", user.getUsername());
+	}
 
-        LDAPUser userDetails = new LDAPUser(username);
-        User user = userDetails.getUser();
-        user.setName(getUserInfo(userInfo, "name"))
-                .setSurname(getUserInfo(userInfo, "surname"))
-                .setOrganisation(getUserInfo(userInfo, "organisation"));
-        user.getEmailAddresses().clear();
-        user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
-        user.getPrimaryAddress()
-                .setAddress(getUserInfo(userInfo, "address"))
-                .setState(getUserInfo(userInfo, "state"))
-                .setZip(getUserInfo(userInfo, "zip"))
-                .setCity(getUserInfo(userInfo, "city"))
-                .setCountry(getUserInfo(userInfo, "country"));
+	@Override
+	public UserDetails mapUserFromContext(DirContextOperations userCtx,
+			String username, Collection<? extends GrantedAuthority> authorities) {
 
-        // Set privileges for the user. If not, privileges are handled
-        // in local database
-        if (importPrivilegesFromLdap) {
-            setProfilesAndPrivileges(defaultProfile, defaultGroup, userInfo, userDetails);
-        }
+		Profile defaultProfile;
+		if (mapping.get("profile")[1] != null) {
+			defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
+		} else {
+			defaultProfile = Profile.RegisteredUser;
+		}
+		String defaultGroup = mapping.get("privilege")[1];
 
-        // Assign default profile if not set by LDAP info or local database
-        if (user.getProfile() == null) {
-            user.setProfile(defaultProfile);
-        }
+		Map<String, ArrayList<String>> userInfo = LDAPUtils
+				.convertAttributes(userCtx.getAttributes().getAll());
 
-        saveUser(userDetails);
+		LDAPUser userDetails = new LDAPUser(username);
+		User user = userDetails.getUser();
+		user.setName(getUserInfo(userInfo, "name"))
+				.setSurname(getUserInfo(userInfo, "surname"))
+				.setOrganisation(getUserInfo(userInfo, "organisation"));
+		user.getEmailAddresses().clear();
+		user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
+		user.getPrimaryAddress().setAddress(getUserInfo(userInfo, "address"))
+				.setState(getUserInfo(userInfo, "state"))
+				.setZip(getUserInfo(userInfo, "zip"))
+				.setCity(getUserInfo(userInfo, "city"))
+				.setCountry(getUserInfo(userInfo, "country"));
 
-        return userDetails;
-    }
+		// Set privileges for the user. If not, privileges are handled
+		// in local database
+		if (importPrivilegesFromLdap) {
+			setProfilesAndPrivileges(defaultProfile, defaultGroup, userInfo,
+					userDetails);
+		}
 
-    abstract protected void setProfilesAndPrivileges(Profile defaultProfile, String defaultGroup,
-            Map<String, ArrayList<String>> userInfo, LDAPUser userDetails);
+		// Assign default profile if not set by LDAP info or local database
+		if (user.getProfile() == null) {
+			user.setProfile(defaultProfile);
+		}
 
-    protected void addProfile(@Nonnull LDAPUser userDetails, @Nonnull String profileName, @Nullable Set<Profile> profileList) {
-        // Check if profile exist in profile mapping table
-        if (profileMapping != null) {
-            Profile mapped = profileMapping.get(profileName);
-            if (mapped != null) {
-                profileName = mapped.name();
-            }
-        }
+		saveUser(userDetails);
 
-        if (Log.isDebugEnabled(Geonet.LDAP)) {
-            Log.debug(Geonet.LDAP, "  Assigning profile " + profileName);
-        }
-        Profile profile = Profile.valueOf(profileName);
-        if (profile != null) {
-            userDetails.getUser().setProfile(profile);
-            if (profileList != null) {
-                profileList.add(profile);
-            }
-        } else {
-            Log.error(Geonet.LDAP, "  Profile " + profileName + " does not exist.");
-        }
-    }
+		return userDetails;
+	}
 
-    private void saveUser(LDAPUser userDetails) {
-        try {
-            UserRepository userRepo = applicationContext.getBean(UserRepository.class);
-            GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
-            UserGroupRepository userGroupRepo = applicationContext.getBean(UserGroupRepository.class);
-            LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo, importPrivilegesFromLdap, createNonExistingLdapGroup);
+	abstract protected void setProfilesAndPrivileges(Profile defaultProfile,
+			String defaultGroup, Map<String, ArrayList<String>> userInfo,
+			LDAPUser userDetails);
 
-            NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
-            userDetails.getUser().getSecurity().setNodeId(nodeInfo.getId());
-        } catch (Exception e) {
-            throw new AuthenticationServiceException(
-                    "Unexpected error while saving/updating LDAP user in database",
-                    e);
-        }
-    }
+	protected void addProfile(@Nonnull LDAPUser userDetails,
+			@Nonnull String profileName, @Nullable Set<Profile> profileList) {
+		// Check if profile exist in profile mapping table
+		if (profileMapping != null) {
+			Profile mapped = profileMapping.get(profileName);
+			if (mapped != null) {
+				profileName = mapped.name();
+			}
+		}
 
-    private String getUserInfo(Map<String, ArrayList<String>> userInfo,
-            String attributeName) {
-        return getUserInfo(userInfo, attributeName, "");
-    }
+		if (Log.isDebugEnabled(Geonet.LDAP)) {
+			Log.debug(Geonet.LDAP, "  Assigning profile " + profileName);
+		}
+		Profile profile = Profile.valueOf(profileName);
+		if (profile != null) {
+			userDetails.getUser().setProfile(profile);
+			if (profileList != null) {
+				profileList.add(profile);
+			}
+		} else {
+			Log.error(Geonet.LDAP, "  Profile " + profileName
+					+ " does not exist.");
+		}
+	}
 
-    /**
-     * Return the first element of userInfo corresponding to the attribute name.
-     * If attributeName mapping is not defined, return empty string. If no value
-     * found in LDAP user info, return default value.
-     * 
-     * @param userInfo
-     * @param attributeName
-     * @param defaultValue
-     * @return
-     */
-    private String getUserInfo(Map<String, ArrayList<String>> userInfo,
-            String attributeName, String defaultValue) {
-        String[] attributeMapping = mapping.get(attributeName);
-        String value = "";
+	@Override
+	public void saveUser(LDAPUser userDetails) {
+		try {
+			UserRepository userRepo = applicationContext
+					.getBean(UserRepository.class);
+			GroupRepository groupRepo = applicationContext
+					.getBean(GroupRepository.class);
+			UserGroupRepository userGroupRepo = applicationContext
+					.getBean(UserGroupRepository.class);
 
-        if (attributeMapping != null) {
-            String ldapAttributeName = attributeMapping[0];
-            String configDefaultValue = attributeMapping[1];
+			if (createNonExistingLdapUser
+					&& !ldapManager.userExists(userDetails.getUsername())) {
+				InetOrgPerson.Essence p = new InetOrgPerson.Essence(userDetails);
+				p.setDn(ldapBaseDnPattern.replace("{0}",
+						userDetails.getUsername()));
+				p.setSn(userDetails.getUsername());
+				p.setUid(userDetails.getUsername());
+				String[] cn = ldapBaseDn.split(",");
+				for (int i = 0; i < cn.length; i++) {
+					cn[i] = cn[i].substring(cn[i].indexOf("=") + 1);
+				}
+				p.setCn(cn);
+				ldapManager.createUser(p.createUserDetails());
+			}
 
-            if (ldapAttributeName != null
-                    && userInfo.get(ldapAttributeName) != null
-                    && userInfo.get(ldapAttributeName).get(0) != null) {
-                value = userInfo.get(ldapAttributeName).get(0);
-            } else if (configDefaultValue != null) {
-                value = configDefaultValue;
-            } else {
-                value = defaultValue;
-            }
-        } else {
-            value = defaultValue;
-        }
+			LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo,
+					importPrivilegesFromLdap, createNonExistingLdapGroup);
+		} catch (Exception e) {
+			throw new AuthenticationServiceException(
+					"Unexpected error while saving/updating LDAP user in database",
+					e);
+		}
+	}
 
-        if (Log.isDebugEnabled(Geonet.LDAP)) {
-            Log.debug(Geonet.LDAP, "LDAP attribute '" + attributeName + "' = "
-                    + value);
-        }
-        return value;
-    }
+	private String getUserInfo(Map<String, ArrayList<String>> userInfo,
+			String attributeName) {
+		return getUserInfo(userInfo, attributeName, "");
+	}
 
-    public void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	/**
+	 * Return the first element of userInfo corresponding to the attribute name.
+	 * If attributeName mapping is not defined, return empty string. If no value
+	 * found in LDAP user info, return default value.
+	 * 
+	 * @param userInfo
+	 * @param attributeName
+	 * @param defaultValue
+	 * @return
+	 */
+	private String getUserInfo(Map<String, ArrayList<String>> userInfo,
+			String attributeName, String defaultValue) {
+		String[] attributeMapping = mapping.get(attributeName);
+		String value = "";
 
-    public boolean isCreateNonExistingLdapGroup() {
-        return createNonExistingLdapGroup;
-    }
+		if (attributeMapping != null) {
+			String ldapAttributeName = attributeMapping[0];
+			String configDefaultValue = attributeMapping[1];
 
-    public void setCreateNonExistingLdapGroup(boolean createNonExistingLdapGroup) {
-        this.createNonExistingLdapGroup = createNonExistingLdapGroup;
-    }
+			if (ldapAttributeName != null
+					&& userInfo.get(ldapAttributeName) != null
+					&& userInfo.get(ldapAttributeName).get(0) != null) {
+				value = userInfo.get(ldapAttributeName).get(0);
+			} else if (configDefaultValue != null) {
+				value = configDefaultValue;
+			} else {
+				value = defaultValue;
+			}
+		} else {
+			value = defaultValue;
+		}
 
-    public String[] getMappingValue(String key) {
-        return mapping.get(key);
-    }
+		if (Log.isDebugEnabled(Geonet.LDAP)) {
+			Log.debug(Geonet.LDAP, "LDAP attribute '" + attributeName + "' = "
+					+ value);
+		}
+		return value;
+	}
 
-    public void setMapping(Map<String, String[]> mapping) {
-        this.mapping = mapping;
-    }
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
-    public Map<String, String[]> getMapping() {
-        return mapping;
-    }
+	public boolean isCreateNonExistingLdapGroup() {
+		return createNonExistingLdapGroup;
+	}
 
-    public Profile getProfileMappingValue(String key) {
-        return profileMapping.get(key);
-    }
+	public void setCreateNonExistingLdapGroup(boolean createNonExistingLdapGroup) {
+		this.createNonExistingLdapGroup = createNonExistingLdapGroup;
+	}
 
-    public void setProfileMapping(Map<String, Profile> profileMapping) {
-        this.profileMapping = profileMapping;
-    }
+	public String[] getMappingValue(String key) {
+		return mapping.get(key);
+	}
 
-    public Map<String, Profile> getProfileMapping() {
-        return profileMapping;
-    }
+	public void setMapping(Map<String, String[]> mapping) {
+		this.mapping = mapping;
+	}
 
-    public boolean isImportPrivilegesFromLdap() {
-        return importPrivilegesFromLdap;
-    }
+	public Map<String, String[]> getMapping() {
+		return mapping;
+	}
 
-    public void setImportPrivilegesFromLdap(boolean importPrivilegesFromLdap) {
-        this.importPrivilegesFromLdap = importPrivilegesFromLdap;
-    }
+	public Profile getProfileMappingValue(String key) {
+		return profileMapping.get(key);
+	}
 
-    public DefaultSpringSecurityContextSource getContextSource() {
-        return contextSource;
-    }
+	public void setProfileMapping(Map<String, Profile> profileMapping) {
+		this.profileMapping = profileMapping;
+	}
 
-    public void setContextSource(
-            DefaultSpringSecurityContextSource contextSource) {
-        this.contextSource = contextSource;
-    }
+	public Map<String, Profile> getProfileMapping() {
+		return profileMapping;
+	}
+
+	public boolean isImportPrivilegesFromLdap() {
+		return importPrivilegesFromLdap;
+	}
+
+	public void setImportPrivilegesFromLdap(boolean importPrivilegesFromLdap) {
+		this.importPrivilegesFromLdap = importPrivilegesFromLdap;
+	}
+
+	public DefaultSpringSecurityContextSource getContextSource() {
+		return contextSource;
+	}
+
+	public void setContextSource(
+			DefaultSpringSecurityContextSource contextSource) {
+		this.contextSource = contextSource;
+	}
+
+	public UserDetailsManager getLdapManager() {
+		return ldapManager;
+	}
+
+	public void setLdapManager(UserDetailsManager ldapManager) {
+		this.ldapManager = ldapManager;
+	}
+
+	public boolean isCreateNonExistingLdapUser() {
+		return createNonExistingLdapUser;
+	}
+
+	public void setCreateNonExistingLdapUser(boolean createNonExistingLdapUser) {
+		this.createNonExistingLdapUser = createNonExistingLdapUser;
+	}
+
+	public String getLdapBaseDnPattern() {
+		return ldapBaseDnPattern;
+	}
+
+	public void setLdapBaseDnPattern(String ldapBaseDnPattern) {
+		this.ldapBaseDnPattern = ldapBaseDnPattern;
+	}
+
+	public String getLdapBaseDn() {
+		return ldapBaseDn;
+	}
+
+	public void setLdapBaseDn(String ldapBaseDn) {
+		this.ldapBaseDn = ldapBaseDn;
+	}
 
 }

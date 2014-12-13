@@ -78,8 +78,6 @@ public class CswParams extends AbstractParams {
         }
 		icon     = Util.getParam(site, "icon", "default.gif");
 
-		addSearches(searches);
-
 		if (searches!=null){
 			if (searches.getChild("search")!=null){
 			    @SuppressWarnings("unchecked")
@@ -126,8 +124,6 @@ public class CswParams extends AbstractParams {
 		//--- set these new ones
 
 		if (searches != null){
-			addSearches(searches);
-			
 			if (searches.getChild("search")!=null){
 			    @SuppressWarnings("unchecked")
                 List<Element> tmp = searches.getChild("search").getChildren(); 
@@ -143,23 +139,7 @@ public class CswParams extends AbstractParams {
 	//---
 	//---------------------------------------------------------------------------
 
-    /**
-     *
-     * @return
-     */
-	public Iterable<Search> getSearches() {
-        return alSearches;
-    }
-	
 	//public Iterable<Element> getSearchElements() { return eltSearches; }
-
-    /**
-     *
-     * @return
-     */
-	public boolean isSearchEmpty() {
-        return alSearches.isEmpty();
-    }
 
     /**
      *
@@ -177,36 +157,9 @@ public class CswParams extends AbstractParams {
         copy.xslfilter = xslfilter;
 		copy.outputSchema = outputSchema;
 
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
-		
 		copy.eltSearches = eltSearches;
 
 		return copy;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     *
-     * @param searches
-     */
-	private void addSearches(Element searches) {
-		alSearches.clear();
-
-		if (searches == null) {
-			return;
-        }
-
-        for (Object o : searches.getChildren("search")) {
-            Element search = (Element) o;
-
-            alSearches.add(new Search(search));
-        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -231,7 +184,6 @@ public class CswParams extends AbstractParams {
      */
     public String  xslfilter;
 
-	private List<Search> alSearches = new ArrayList<Search>();
 	public List<Element> eltSearches = new ArrayList<Element>();
 	
 }
