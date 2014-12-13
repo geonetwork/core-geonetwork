@@ -12,12 +12,6 @@
       <!--Radio button to chose mode of import-->
       <div class="radio">
         <label>
-          <input type="radio" data-ng-model="importMode" value="importFromDir"/>
-          <span data-translate="">importFromDir</span>
-        </label>
-      </div>
-      <div class="radio">
-        <label>
           <input type="radio" data-ng-model="importMode" value="uploadFile"/>
           <span data-translate="">uploadFile</span>
         </label>
@@ -29,6 +23,12 @@
           <span data-translate="">copyPaste</span>
         </label>
       </div>
+        <div class="radio">
+            <label>
+                <input type="radio" data-ng-model="importMode" value="importFromDir"/>
+                <span data-translate="">importFromDir</span>
+            </label>
+        </div>
 
 
       <form id="gn-import" class="form-horizontal" role="form"

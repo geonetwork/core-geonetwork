@@ -20,7 +20,7 @@
     '$scope',
     'gnMetadataManager',
     function($scope, gnMetadataManager) {
-      $scope.importMode = 'importFromDir';
+      $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.uuidAction = 'nothing';
       $scope.importing = false;
