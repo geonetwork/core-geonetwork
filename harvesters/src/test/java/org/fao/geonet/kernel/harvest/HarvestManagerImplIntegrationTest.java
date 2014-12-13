@@ -48,7 +48,7 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
         loginAsAdmin(serviceContext);
 
         Element cswHarvesterParams = createHarvesterParams("csw");
-        CswHarvesterIntegrationTest.addCswSpecificParams(cswHarvesterParams);
+        CswHarvesterIntegrationTest.addCswSpecificParams(cswHarvesterParams, CswHarvesterIntegrationTest.OUTPUT_SCHEMA);
 
         final String harvesterId = _harvestManager.addHarvesterReturnId(cswHarvesterParams, serviceContext.getUserSession().getUserId());
 

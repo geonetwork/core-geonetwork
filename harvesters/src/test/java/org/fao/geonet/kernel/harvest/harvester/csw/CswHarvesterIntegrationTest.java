@@ -38,8 +38,7 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
         final MockXmlRequest cswServerRequest = new MockXmlRequest(HOST, PORT, PROTOCOL);
         cswServerRequest.when(CAPABILITIES_URL)
                 .thenReturn(fileStream("capabilities.xml"));
-        final String queryString = "?request=GetRecordById&service=CSW&version=2.0.2&outputSchema=http://www.isotc211" +
-                         ".org/2005/gmd&elementSetName=full&id=";
+        final String queryString = "?request=GetRecordById&service=CSW&version=2.0.2&outputSchema=" + getOutputSchema() + "&elementSetName=full&id=";
         cswServerRequest.when(REQUEST+queryString+"7e926fbf-00fb-4ff5-a99e-c8576027c4e7")
                 .thenReturn(fileStream("GetRecordById-7e926fbf-00fb-4ff5-a99e-c8576027c4e7.xml"));
         cswServerRequest.when(REQUEST+queryString+"da165110-88fd-11da-a88f-000d939bc5d8")
@@ -101,13 +100,13 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     }
 
     protected void customizeParams(Element params) {
-        addCswSpecificParams(params);
+        addCswSpecificParams(params, getOutputSchema());
     }
 
-    public static void addCswSpecificParams(Element params) {
+    public static void addCswSpecificParams(Element params, String outputSchema) {
         params.getChild("site")
                 .addContent(new Element("capabilitiesUrl").setText(CAPABILITIES_URL))
-                .addContent(new Element("outputSchema").setText(OUTPUT_SCHEMA));
+                .addContent(new Element("outputSchema").setText(outputSchema));
     }
 
     @Override
@@ -118,5 +117,9 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     @Override
     protected int getExpectedTotalFound() {
         return 2;
+    }
+
+    public String getOutputSchema() {
+        return OUTPUT_SCHEMA;
     }
 }

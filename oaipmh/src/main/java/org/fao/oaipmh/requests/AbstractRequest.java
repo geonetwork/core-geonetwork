@@ -23,106 +23,101 @@
 
 package org.fao.oaipmh.requests;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.util.Lib;
-//import org.fao.oaipmh.util.Xml;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.xml.sax.SAXException;
+
+import java.nio.file.Path;
+import java.util.Map;
+
+//import org.fao.oaipmh.util.Xml;
 
 //=============================================================================
 
-public abstract class AbstractRequest
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+public abstract class AbstractRequest {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	private File      schemaPath;
-	private final XmlRequest transport;
+    private Path schemaPath;
+    private final XmlRequest transport;
 
     public AbstractRequest(GeonetHttpRequestFactory transport) {
         this.transport = transport.createXmlRequest();
     }
+
     public AbstractRequest(XmlRequest transport) {
         this.transport = transport;
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
-	 * @return the schemaPath
-	 */
-	public File getSchemaPath() {
-		return schemaPath;
-	}
-
-
-	/**
-	 * @param schemaPath the schemaPath to set
-	 */
-	public void setSchemaPath(File schemaPath) {
-		this.schemaPath = schemaPath;
-	}
-	
-	/**
-	 * @return the transport
-	 */
-	public XmlRequest getTransport() {
-		return transport;
-	}
+    /**
+     * @return the schemaPath
+     */
+    public Path getSchemaPath() {
+        return schemaPath;
+    }
 
 
-	public abstract String getVerb();
+    /**
+     * @param schemaPath the schemaPath to set
+     */
+    public void setSchemaPath(Path schemaPath) {
+        this.schemaPath = schemaPath;
+    }
 
-	public abstract AbstractResponse execute() throws IOException, OaiPmhException,
-																	  JDOMException, SAXException, Exception;
+    /**
+     * @return the transport
+     */
+    public XmlRequest getTransport() {
+        return transport;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
 
-	protected Element sendRequest(Map<String, String> params) throws IOException, OaiPmhException,
-																						  JDOMException, SAXException, Exception
-	{
-		transport.clearParams();
+    public abstract String getVerb();
 
-		for (Map.Entry<String, String> param: params.entrySet()) {
-			transport.addParam(param.getKey(), param.getValue());
-		}
+    public abstract AbstractResponse execute() throws Exception;
 
-		transport.addParam("verb", getVerb());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-		Element response = transport.execute();
+    protected Element sendRequest(Map<String, String> params) throws Exception {
+        transport.clearParams();
 
-		if (!Lib.isRootValid(response)) {
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            transport.addParam(param.getKey(), param.getValue());
+        }
+
+        transport.addParam("verb", getVerb());
+
+        Element response = transport.execute();
+
+        if (!Lib.isRootValid(response)) {
             throw new Exception("Response is not in OAI-PMH format");
         }
 
-		//--- validate the result
-		Xml.validate(response);
+        //--- validate the result
+        Xml.validate(response);
 
-		//--- raises an exception if the case
-		OaiPmhException.unmarshal(response);
+        //--- raises an exception if the case
+        OaiPmhException.unmarshal(response);
 
-		return response;
-	}
+        return response;
+    }
 }
 
 //=============================================================================

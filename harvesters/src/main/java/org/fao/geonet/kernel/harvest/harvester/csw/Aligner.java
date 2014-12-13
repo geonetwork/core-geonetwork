@@ -109,8 +109,10 @@ public class Aligner extends BaseAligner
 			}
 		}
 
-		if(oper.getPreferredOutputSchema() != null) {
-			request.setOutputSchema(oper.getPreferredOutputSchema());
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            request.setOutputSchema(this.params.outputSchema);
+        } else if(oper.getPreferredOutputSchema() != null) {
+            request.setOutputSchema(oper.getPreferredOutputSchema());
 		}
 
         if(oper.getPreferredServerVersion() != null) {

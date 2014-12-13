@@ -5,10 +5,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Collection;
 import javax.annotation.Nullable;
+import javax.persistence.RollbackException;
 
 /**
  * Declares the cut-points/places where transactions are needed in Geonetwork.  Each module that
@@ -61,6 +63,7 @@ public class TransactionManager {
             result = action.doInTransaction(transaction);
 
         } catch (Throwable e) {
+            Log.error(Log.JEEVES, "Error occurred within a transaction", e);
             if (exception[0] == null) {
                 exception[0] = e;
             }
@@ -72,6 +75,13 @@ public class TransactionManager {
                     doRollback(context, transactionManager, transaction);
                 } else if (!rolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
                     doCommit(context, transactionManager, transaction);
+                }
+            } catch (TransactionSystemException e) {
+                if (!(e.getOriginalException() instanceof RollbackException)) {
+                    Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    doRollback(context, transactionManager, transaction);
+                } else {
+                    Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
                 }
             } catch (Throwable t) {
                 Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);

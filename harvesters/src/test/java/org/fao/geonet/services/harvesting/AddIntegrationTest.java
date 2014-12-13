@@ -3,7 +3,6 @@ package org.fao.geonet.services.harvesting;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterServiceIntegrationTest;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvesterIntegrationTest;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
@@ -39,7 +38,7 @@ public class AddIntegrationTest extends AbstractHarvesterServiceIntegrationTest 
         final Add add = new Add();
 
         Element params = createHarvesterParams("csw");
-        CswHarvesterIntegrationTest.addCswSpecificParams(params);
+        CswHarvesterIntegrationTest.addCswSpecificParams(params, CswHarvesterIntegrationTest.OUTPUT_SCHEMA);
         final ServiceContext serviceContext = createServiceContext();
 
         final Element response = add.exec(params, serviceContext);
