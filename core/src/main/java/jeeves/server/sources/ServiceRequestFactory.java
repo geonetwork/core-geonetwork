@@ -27,22 +27,20 @@ import jeeves.constants.Jeeves;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -159,7 +157,7 @@ public final class ServiceRequestFactory
 		}
 
 		srvReq.setHeaders(extractHeaders(req));
-		
+
 		return srvReq;
 	}
 
@@ -171,7 +169,7 @@ public final class ServiceRequestFactory
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> extractHeaders(HttpServletRequest req)
 	{
-		Map<String, String> headerMap = new HashMap<String, String>(); 
+		Map<String, String> headerMap = new HashMap<String, String>();
 		for (Enumeration<String> e = req.getHeaderNames(); e.hasMoreElements(); )
 		{
 			String key = e.nextElement();
@@ -202,13 +200,13 @@ public final class ServiceRequestFactory
 		return url.indexOf(DEBUG_URL_FLAG) != -1;
 	}
 
-    /** 
+    /**
      * Extracts the JSON output flag from the url
      */
     private static boolean extractJSONFlag(String url) {
        if (url == null)
            return false;
-       
+
        return url.indexOf(JSON_URL_FLAG) != -1;
     }
 	//---------------------------------------------------------------------------
@@ -269,81 +267,75 @@ public final class ServiceRequestFactory
 	private static Element extractParameters(HttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception
 	{
 		//--- set parameters from multipart request
-
-		if (ServletFileUpload.isMultipartContent(req))
-			return getMultipartParams(req, uploadDir, maxUploadSize);
-
+        if (req instanceof MultipartRequest) {
+            AbstractMultipartHttpServletRequest request = (AbstractMultipartHttpServletRequest) req;
+            return getMultipartParams(request, uploadDir, maxUploadSize);
+        }
 		Element params = new Element(Jeeves.Elem.REQUEST);
+        convertParamToElem(req, params);
 
-		//--- add parameters from POST request
 
-		for(Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();)
-		{
-			String name     = e.nextElement();
-			String values[] = req.getParameterValues(name);
-
-			//--- we don't overwrite params given in the url
-
-			if (!name.equals(""))
-				if (params.getChild(name) == null)
-					for(int i=0; i<values.length; i++)
-						params.addContent(new Element(name).setText(values[i]));
-		}
-
-		return params;
+        return params;
 	}
 
-	//---------------------------------------------------------------------------
+    private static void convertParamToElem(HttpServletRequest req, Element params) {
+        //--- add parameters from POST request
 
-	private static Element getMultipartParams(HttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception
+        for(Enumeration<String> e = req.getParameterNames(); e.hasMoreElements(); ) {
+            String name = e.nextElement();
+
+            //--- we don't overwrite params given in the url
+
+            if (!name.equals("")) {
+                if (params.getChild(name) == null) {
+                    for (String value : req.getParameterValues(name)) {
+                        params.addContent(new Element(name).setText(value));
+                    }
+                }
+            }
+        }
+    }
+
+    //---------------------------------------------------------------------------
+
+	private static Element getMultipartParams(AbstractMultipartHttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception
 	{
 		Element params = new Element("params");
 
-		DiskFileItemFactory fif = new DiskFileItemFactory();
-		ServletFileUpload   sfu = new ServletFileUpload(fif);
+        long maxSizeInBytes = maxUploadSize * 1024L * 1024L;
+        convertParamToElem(req, params);
+        final Map<String, MultipartFile> fileMap = req.getFileMap();
+        for (Map.Entry<String, MultipartFile> fileEntry : fileMap.entrySet()) {
+            final MultipartFile multipartFile = fileEntry.getValue();
+            final long size = multipartFile.getSize();
+            if (size > maxSizeInBytes) {
+                throw new FileUploadTooBigEx();
+            }
+            String file = fileEntry.getKey();
+            final String type = multipartFile.getContentType();
+            if(Log.isDebugEnabled(Log.REQUEST)) {
+                Log.debug(Log.REQUEST, "Uploading file " + file + " type: " + type + " size: " + size);
+            }
 
-		sfu.setSizeMax(((long)maxUploadSize) * 1024L * 1024L);
+            //--- remove path information from file (some browsers put it, like IE)
+            file = simplifyName(file);
+            if(Log.isDebugEnabled(Log.REQUEST)) {
+                Log.debug(Log.REQUEST, "File is called " + file + " after simplification");
+            }
+            multipartFile.transferTo(uploadDir.resolve(file).toFile());
 
-		try {
-			for (Object i : sfu.parseRequest(req)) {
-				FileItem item = (FileItem) i;
-				String   name = item.getFieldName();
+            Element elem = new Element(multipartFile.getName())
+                    .setAttribute("type", "file")
+                    .setAttribute("size", Long.toString(size))
+                    .setText(file);
 
-				if (item.isFormField()) {
-				    String encoding = req.getCharacterEncoding();
-					params.addContent(new Element(name).setText(item.getString(encoding)));
-				} else {
-					String file = item.getName();
-					String type = item.getContentType();
-					long   size = item.getSize();
+            if (type != null)
+                elem.setAttribute("content-type", type);
 
-                    if(Log.isDebugEnabled(Log.REQUEST))
-                        Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
-					//--- remove path information from file (some browsers put it, like IE)
-
-					file = simplifyName(file);
-                    if(Log.isDebugEnabled(Log.REQUEST))
-                        Log.debug(Log.REQUEST, "File is called "+file+" after simplification");
-
-					//--- we could get troubles if 2 users upload files with the same name
-                    Files.write(uploadDir.resolve(file), item.get());
-
-					Element elem = new Element(name)
-											.setAttribute("type", "file")
-											.setAttribute("size", Long.toString(size))
-											.setText(file);
-
-					if (type != null)
-						elem.setAttribute("content-type", type);
-
-                    if(Log.isDebugEnabled(Log.REQUEST))
-                        Log.debug(Log.REQUEST,"Adding to parameters: "+Xml.getString(elem));
-					params.addContent(elem);
-				}
-			}
-		} catch(FileUploadBase.SizeLimitExceededException e) {
-			throw new FileUploadTooBigEx();
-		}
+            if(Log.isDebugEnabled(Log.REQUEST))
+                Log.debug(Log.REQUEST,"Adding to parameters: "+Xml.getString(elem));
+            params.addContent(elem);
+        }
 
 		return params;
 	}

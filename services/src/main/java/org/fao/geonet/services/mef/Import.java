@@ -40,7 +40,7 @@ import java.util.List;
 
 /**
  * Import MEF file.
- * 
+ *
  */
 public class Import extends NotInReadOnlyModeService {
 	private Path stylePath;
@@ -59,8 +59,8 @@ public class Import extends NotInReadOnlyModeService {
 
 	/**
 	 * Service to import MEF File.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param params
 	 *            List of parameters:
 	 *            <ul>
@@ -68,9 +68,9 @@ public class Import extends NotInReadOnlyModeService {
 	 *            <li>file_type: "single" for loading a single XML file, "mef" to
 	 *            load MEF file (version 1 or 2). "mef" is the default value.</li>
 	 *            </ul>
-	 * 
+	 *
 	 * @return List of imported ids.
-	 * 
+	 *
 	 */
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context)
@@ -86,14 +86,13 @@ public class Import extends NotInReadOnlyModeService {
 
         Iterator<String> iter = id.iterator();
         while (iter.hasNext()) {
-            String item = (String) iter.next();
+            String item = iter.next();
             ids.append(item).append(";");
-
         }
 
         IO.deleteFile(file, false, Geonet.MEF);
 
-		Element result = null;
+		Element result;
 
         if (context.getService().equals("mef.import")) {
 

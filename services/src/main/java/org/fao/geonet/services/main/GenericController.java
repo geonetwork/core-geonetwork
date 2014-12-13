@@ -22,92 +22,89 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class GenericController {
-	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+    public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
 
-	@Autowired
-	private ConfigurableApplicationContext jeevesApplicationContext;
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
 
-	@RequestMapping(value = "/{lang}/{service}")
-	@ResponseBody
-	public void dispatch(@PathVariable String lang,
-			@PathVariable String service, HttpServletRequest request,
-			HttpServletResponse response, HttpSession httpSession)
-			throws Exception {
+    @RequestMapping(value = "/{lang}/{service}")
+    @ResponseBody
+    public void dispatch(@PathVariable String lang,
+                         @PathVariable String service, HttpServletRequest request,
+                         HttpServletResponse response, HttpSession httpSession)
+            throws Exception {
 
-		String ip = request.getRemoteAddr();
-		// if we do have the optional x-forwarded-for request header then
-		// use whatever is in it to record ip address of client
-		String forwardedFor = request.getHeader("x-forwarded-for");
-		if (forwardedFor != null)
-			ip = forwardedFor;
+        String ip = request.getRemoteAddr();
+        // if we do have the optional x-forwarded-for request header then
+        // use whatever is in it to record ip address of client
+        String forwardedFor = request.getHeader("x-forwarded-for");
+        if (forwardedFor != null)
+            ip = forwardedFor;
 
-		Log.info(Log.REQUEST,
-				"==========================================================");
-		Log.info(Log.REQUEST,
-				"HTML Request (from " + ip + ") : " + request.getRequestURI());
-		if (Log.isDebugEnabled(Log.REQUEST)) {
-			Log.debug(Log.REQUEST, "Method       : " + request.getMethod());
-			Log.debug(Log.REQUEST, "Content type : " + request.getContentType());
-			// Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
-			// Log.debug(Log.REQUEST, "Char encoding: "+
-			// req.getCharacterEncoding());
-			Log.debug(Log.REQUEST,
-					"Accept       : " + request.getHeader("Accept"));
-			// Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
-			// Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
-		}
+        Log.info(Log.REQUEST, "==========================================================");
 
-		if (Log.isDebugEnabled(Log.REQUEST))
-			Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
-		UserSession session = (UserSession) httpSession
-				.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
+        Log.info(Log.REQUEST,  "HTML Request (from " + ip + ") : " + request.getRequestURI());
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.debug(Log.REQUEST, "Method       : " + request.getMethod());
+            Log.debug(Log.REQUEST, "Content type : " + request.getContentType());
+            // Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
+            // Log.debug(Log.REQUEST, "Char encoding: "+
+            // req.getCharacterEncoding());
+            Log.debug(Log.REQUEST, "Accept       : " + request.getHeader("Accept"));
+            // Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
+            // Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
+        }
 
-		if (session == null) {
-			// --- create session
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
+        }
+        UserSession session = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
 
-			session = new UserSession();
+        if (session == null) {
+            // --- create session
 
-			httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
-			session.setsHttpSession(httpSession);
+            session = new UserSession();
 
-			if (Log.isDebugEnabled(Log.REQUEST))
-				Log.debug(Log.REQUEST, "Session created for client : " + ip);
-		}
+            httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
+            session.setsHttpSession(httpSession);
 
-		ServiceRequest srvReq = null;
+            if (Log.isDebugEnabled(Log.REQUEST))
+                Log.debug(Log.REQUEST, "Session created for client : " + ip);
+        }
 
-		JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
-		try {
+        ServiceRequest srvReq = null;
+
+        JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
+        try {
             final Path uploadDir = jeeves.getUploadDir();
             srvReq = ServiceRequestFactory.create(request, response, uploadDir, jeeves.getMaxUploadSize());
-		} catch (FileUploadTooBigEx e) {
-			StringBuffer sb = new StringBuffer();
-			sb.append("File upload too big - exceeds "
-					+ jeeves.getMaxUploadSize() + " Mb\n");
-			sb.append("Error : " + e.getClass().getName() + "\n");
-			response.sendError(400, sb.toString());
+        } catch (FileUploadTooBigEx e) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n");
+            sb.append("Error : ").append(e.getClass().getName()).append("\n");
+            response.sendError(400, sb.toString());
 
-			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n");
-			sb.append(Util.getStackTrace(e));
-			Log.error(Log.REQUEST, sb.toString());
+            // now stick the stack trace on the end and log the whole lot
+            sb.append("Stack :\n");
+            sb.append(Util.getStackTrace(e));
+            Log.error(Log.REQUEST, sb.toString());
 
-		} catch (Exception e) {
-			StringBuffer sb = new StringBuffer();
+        } catch (Exception e) {
+            StringBuffer sb = new StringBuffer();
 
-			sb.append("Cannot build ServiceRequest\n");
-			sb.append("Cause : " + e.getMessage() + "\n");
-			sb.append("Error : " + e.getClass().getName() + "\n");
-			response.sendError(400, sb.toString());
+            sb.append("Cannot build ServiceRequest\n");
+            sb.append("Cause : ").append(e.getMessage()).append("\n");
+            sb.append("Error : ").append(e.getClass().getName()).append("\n");
+            response.sendError(400, sb.toString());
 
-			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n");
-			sb.append(Util.getStackTrace(e));
-			Log.error(Log.REQUEST, sb.toString());
-		}
+            // now stick the stack trace on the end and log the whole lot
+            sb.append("Stack :\n");
+            sb.append(Util.getStackTrace(e));
+            Log.error(Log.REQUEST, sb.toString());
+        }
 
-		// --- execute request
+        // --- execute request
 
-		jeeves.dispatch(srvReq, session);
-	}
+        jeeves.dispatch(srvReq, session);
+    }
 }
