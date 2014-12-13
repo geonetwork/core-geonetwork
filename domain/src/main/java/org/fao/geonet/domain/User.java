@@ -333,7 +333,7 @@ public class User extends GeonetEntity implements UserDetails {
 
     @Transient
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
