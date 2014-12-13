@@ -66,6 +66,7 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", "off");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
@@ -117,6 +118,7 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
         xslfilter = Util.getParam(site, "xslfilter", "");
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
 		icon     = Util.getParam(site, "icon", icon);
 
@@ -173,6 +175,7 @@ public class CswParams extends AbstractParams {
 	 	copy.queryScope = queryScope;
 	 	copy.hopCount = hopCount;
         copy.xslfilter = xslfilter;
+		copy.outputSchema = outputSchema;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -214,6 +217,7 @@ public class CswParams extends AbstractParams {
 
 	public String capabUrl;
 	public String icon;
+	public String outputSchema;
     public boolean rejectDuplicateResource;
     public String queryScope;
     public Integer hopCount;

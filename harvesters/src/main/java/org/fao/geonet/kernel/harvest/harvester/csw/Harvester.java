@@ -333,7 +333,11 @@ class Harvester implements IHarvester<HarvestResult>
 
         request.setUrl(url);
         request.setServerVersion(server.getPreferredServerVersion());
-        request.setOutputSchema(oper.getPreferredOutputSchema());
+        String preferredOutputSchema = oper.getPreferredOutputSchema();
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            preferredOutputSchema = this.params.outputSchema;
+        }
+        request.setOutputSchema(preferredOutputSchema);
         request.setConstraintLanguage(constraintLanguage);
         request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
         request.setConstraint(constraint);
