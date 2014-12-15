@@ -7,7 +7,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
     xmlns:util="java:org.fao.geonet.util.XslUtil"
-    version="2.0" exclude-result-prefixes="exslt">
+    version="2.0" exclude-result-prefixes="#all">
     
     <xsl:import href="../../iso19139/process/process-utility.xsl"/>
     
@@ -38,7 +38,7 @@
       <xsl:variable name="code" select="gn-fn-iso19139:resource-id-generate($root/*/gmd:fileIdentifier/gco:CharacterString)"/>
         <xsl:if test="not($hasResourceId)">
             <suggestion process="add-resource-id" id="{generate-id()}" category="identification" target="identification">
-                <name><xsl:value-of select="geonet:i18n($add-resource-id-loc, 'a', $guiLang)"/> <xsl:value-of select="$code"/>.</name>
+                <name><xsl:value-of select="geonet:i18n($add-resource-id-loc, 'a', $guiLang)"/><xsl:text> </xsl:text><xsl:value-of select="$code"/>.</name>
                 <operational>true</operational>
             </suggestion>
         </xsl:if>
