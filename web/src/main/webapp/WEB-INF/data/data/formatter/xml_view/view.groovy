@@ -3,7 +3,6 @@ import groovy.xml.XmlUtil
 new common.Handlers(handlers, f, env).addDefaultStartAndEndHandlers()
 
 handlers.add {true} { el ->
-
     def out = new StringWriter()
     new XmlNodePrinter(new PrintWriter(out)).print(new XmlParser().parseText(XmlUtil.serialize(el)))
     def xmlString = XmlUtil.escapeXml(out.toString())

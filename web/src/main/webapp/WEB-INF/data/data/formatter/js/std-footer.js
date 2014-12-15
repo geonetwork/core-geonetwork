@@ -21,3 +21,8 @@ navAnchors.on('click', function(e) {
 });
 
 navAnchors[0].click();
+
+if (navAnchors.length < 2) {
+  $('.view-outline').hide();
+}
+

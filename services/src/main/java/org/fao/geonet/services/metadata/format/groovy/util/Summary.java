@@ -8,6 +8,7 @@ import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,13 +35,19 @@ public class Summary {
     private List<NavBarItem> navBar = Lists.newArrayList();
     private List<NavBarItem> navBarOverflow = Lists.newArrayList();
     private String content = "";
+    private boolean addCompleteNavItem = true;
+    private boolean addOverviewNavItem = true;
 
     public List<LinkBlock> links = Lists.newArrayList();
 
-    public Summary(Handlers handlers, Environment env, Functions functions) {
+    public Summary(Handlers handlers, Environment env, Functions functions) throws Exception {
         this.handlers = handlers;
         this.env = env;
         this.functions = functions;
+        Collection<String> logo = env.getIndexInfo().get("_logo");
+        if (logo != null && !logo.isEmpty()) {
+            this.logo = env.getLocalizedUrl() + "../.." + logo.iterator().next();
+        }
     }
 
     public FileResult getResult() throws Exception {
@@ -52,8 +59,11 @@ public class Summary {
         params.put("abstract", abstr);
         params.put("thumbnail", thumbnailUrl());
         params.put("links", links);
+        params.put("addOverviewNavItem", addOverviewNavItem);
         params.put("navBar", navBar);
         params.put("navBarOverflow", navBarOverflow);
+        params.put("showNavOverflow", !navBarOverflow.isEmpty() || addCompleteNavItem);
+        params.put("addCompleteNavItem", addCompleteNavItem);
         params.put("content", content);
         params.put("isHTML", env.getFormatType() == FormatType.html);
 
@@ -99,15 +109,37 @@ public class Summary {
         this.abstr = abstr;
     }
 
+    public void addNavBarItem(NavBarItem item) {
+        this.navBar.add(item);
+    }
     public void setNavBar(List<NavBarItem> navBar) {
         this.navBar = navBar;
     }
 
+    public void addNavBarOverflow(NavBarItem item) {
+        this.navBarOverflow.add(item);
+    }
     public void setNavBarOverflow(List<NavBarItem> navBarOverflow) {
         this.navBarOverflow = navBarOverflow;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isAddCompleteNavItem() {
+        return addCompleteNavItem;
+    }
+
+    public void setAddCompleteNavItem(boolean addCompleteNavItem) {
+        this.addCompleteNavItem = addCompleteNavItem;
+    }
+
+    public boolean isAddOverviewNavItem() {
+        return addOverviewNavItem;
+    }
+
+    public void setAddOverviewNavItem(boolean addOverviewNavItem) {
+        this.addOverviewNavItem = addOverviewNavItem;
     }
 }
