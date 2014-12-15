@@ -1310,12 +1310,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             FacetsCollector facetCollector, TaxonomyReader taxonomyReader,
             String langCode) throws IOException {
         DecimalFormat doubleFormat = new DecimalFormat("0");
-
-        try {
-            for (Map.Entry<String, FacetConfig> fEntry : summaryConfigValues.entrySet()) {
+        Map<String, ArrayIndexOutOfBoundsException> configurationErrors = Maps.newHashMap();
+        for (Map.Entry<String, FacetConfig> fEntry : summaryConfigValues.entrySet()) {
+            try {
                 FacetConfig facetConfig = fEntry.getValue();
                 String facetFieldName = facetConfig.getIndexKey() +
-                        SearchManager.FACET_FIELD_SUFFIX;
+                                        SearchManager.FACET_FIELD_SUFFIX;
                 OrdinalsReader ordsReader = new DocValuesOrdinalsReader(facetFieldName);
                 Facets facets = new TaxonomyFacetCounts(ordsReader, taxonomyReader, facetConfiguration, facetCollector);
 
@@ -1343,8 +1343,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     Map<String, Number> facetValues = new LinkedHashMap<String, Number>();
                     if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
                         Log.debug(Geonet.FACET_ENGINE, facetName
-                                + ":\tSorting facet by " + facetConfig.getSortBy().toString()
-                                + " (" + facetConfig.getSortOrder().toString() + ")");
+                                                       + ":\tSorting facet by " + facetConfig.getSortBy().toString()
+                                                       + " (" + facetConfig.getSortOrder().toString() + ")");
                     }
 
                     for (LabelAndValue result : facetResults.labelValues) {
@@ -1390,7 +1390,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                                         // String comparison
                                         Log.warning(Geonet.FACET_ENGINE,
                                                 "Failed to compare numeric values (" + e1.getKey() + " / " + e2.getKey()
-                                                        + ") for facet. Check sortBy option in summary configuration.");
+                                                + ") for facet. Check sortBy option in summary configuration.");
                                         return e1.getKey().compareTo(e2.getKey());
                                     }
                                 }
@@ -1417,7 +1417,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
                         if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
                             Log.debug(Geonet.FACET_ENGINE, " - " + facetValue
-                                    + " (" + facetCount + ")");
+                                                           + " (" + facetCount + ")");
                         }
 
                         String translatedValue = translator.translate(facetValue);
@@ -1436,15 +1436,22 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                             Geonet.FACET_ENGINE,
                             "Null facet results for field " + facetConfig.getIndexKey());
                 }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                configurationErrors.put(fEntry.getValue().getName(), e);
             }
+        }
 
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Log.error(
-                    Geonet.FACET_ENGINE,
-                    "Check facet configuration. This may happen when a facet is configured"
-                            + " but does not exist in the taxonomy index. Error is: "
-                            + e.getMessage(), e);
-            e.printStackTrace();
+        if (!configurationErrors.isEmpty()) {
+            final StringBuilder message = new StringBuilder();
+            message.append("Check facet configuration. \n").append(ArrayIndexOutOfBoundsException.class.getSimpleName()).
+                    append(" errors are often caused when a facet is configured but does not exist in the taxonomy index. ").
+                    append("The facets that have raised this error are: ");
+
+            for (String facet : configurationErrors.keySet()) {
+                message.append("\n  * ").append(facet);
+            }
+            Log.error(Geonet.FACET_ENGINE, message);
+            configurationErrors.values().iterator().next().printStackTrace();
         }
     }
 
@@ -1460,7 +1467,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * @param dumpFields			dump only the fields define in {@link LuceneConfig#getDumpFields()}.
 	 * @return
 	 */
-    private static Element getMetadataFromIndexForPdf(UserSession us, Set<Integer> userGroups, Document doc, String id, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
+    private static Element getMetadataFromIndexForPdf(UserSession us, Set<Integer> userGroups, Document doc, String id, String
+            searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
         Element md = LuceneSearcher.getMetadataFromIndex(doc, id, true, searchLang, multiLangSearchTerm, dumpFields);
 
         // Add download/dynamic privileges
