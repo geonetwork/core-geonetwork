@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -142,6 +140,17 @@ public class LuceneIndexLanguageTracker {
     private static String normalize(String locale) {
         if (locale == null) {
             locale = "none";
+        }
+        locale = locale.toLowerCase();
+        switch (locale) {
+            case "deu":
+                locale = "ger";
+                break;
+            case "fra":
+                locale = "fre";
+                break;
+            default:
+                // do nothing
         }
         return locale;
     }
