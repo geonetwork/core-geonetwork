@@ -258,18 +258,19 @@ public class LuceneIndexLanguageTracker {
         lock.lock();
         try{
             lazyInit();
+            final String language = normalize(info.language);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + info.language + " index");
+                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + language + " index");
             }
-            open(info.language);
+            open(language);
             // Add taxonomy first
             Document docAfterFacetBuild = info.document;
             docAfterFacetBuild = taxonomyIndexTracker.addDocument(info.document, info.taxonomy);
             // Index the document returned after the facets are built by the taxonomy writer
             if (docAfterFacetBuild == null) {
-                trackingWriters.get(info.language).addDocument(info.document);
+                trackingWriters.get(language).addDocument(info.document);
             } else {
-                trackingWriters.get(info.language).addDocument(docAfterFacetBuild);
+                trackingWriters.get(language).addDocument(docAfterFacetBuild);
             }
         } finally {
             lock.unlock();

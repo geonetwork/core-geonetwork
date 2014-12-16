@@ -23,9 +23,9 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
@@ -179,7 +179,7 @@ public class DbLib {
         if (finalPath == null && servletContext != null) {
             String realPath = servletContext.getRealPath(filePath.resolve(prefix + type + SQL_EXTENSION).toString());
             if (realPath != null) {
-                finalPath = testPath(IO.toPath(realPath));
+                finalPath = testPath(toPath(realPath));
             }
         }
         if (finalPath == null) {
@@ -192,7 +192,7 @@ public class DbLib {
         if (finalPath == null && servletContext != null) {
             final String realPath = servletContext.getRealPath(filePath.resolve(prefix + "default" + SQL_EXTENSION).toString());
             if (realPath != null) {
-                finalPath = testPath(IO.toPath(realPath));
+                finalPath = testPath(toPath(realPath));
             }
         }
 
@@ -201,11 +201,19 @@ public class DbLib {
 		else {
             Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" +  prefix + type + SQL_EXTENSION));
         }
-		return IO.toPath("");
+		return toPath("");
 	}
 
+    private Path toPath(String pathString) {
+        try {
+            return IO.toPath(pathString);
+        } catch (java.nio.file.InvalidPathException e) {
+            return null;
+        }
+    }
+
     private Path testPath(Path dbFilePath) {
-        if (Files.exists(dbFilePath)) {
+        if (dbFilePath != null && Files.exists(dbFilePath)) {
             return dbFilePath;
         }
         return null;
