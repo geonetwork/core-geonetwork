@@ -27,33 +27,37 @@ public class Handlers extends dublincore.Handlers {
 
         def crsAtt = el['@crs']
         if (upperCorner.length > 1 && lowerCorner.length > 1) {
-            String crsCode = crsAtt.text().trim()
-            if (!crsCode.isEmpty()) {
-                if (crsCode.contains(":::")) {
-                    crsCode = crsCode.split(":::", 2)[1]
+            try {
+                String crsCode = crsAtt.text().trim()
+                if (!crsCode.isEmpty()) {
+                    if (crsCode.contains(":::")) {
+                        crsCode = crsCode.split(":::", 2)[1]
+                    }
+                } else {
+                    crsCode = "EPSG:4326"
                 }
-            } else {
-                crsCode = "EPSG:4326"
+
+                def crs = CRS.decode(crsCode.trim())
+                ReferencedEnvelope bbox = new ReferencedEnvelope(parseDouble(lowerCorner[0]), parseDouble(upperCorner[0]),
+                        parseDouble(lowerCorner[1]), parseDouble(upperCorner[1]), crs)
+
+                def model = [
+                        label     : f.nodeLabel(el),
+                        s         : bbox.getMinY(),
+                        n         : bbox.getMaxY(),
+                        w         : bbox.getMinX(),
+                        e         : bbox.getMaxX(),
+                        geomproj  : "EPSG:${CRS.lookupEpsgCode(crs, false)}",
+                        mapproj   : this.mapProjection,
+                        background: this.mapBackground,
+                        width     : this.extentMapWidth,
+                        pdfOutput : env.formatType == FormatType.pdf
+                ]
+
+                return handlers.fileResult("html/bbox.html", model)
+            } catch (Throwable t) {
+                // skip and use default
             }
-
-            def crs = CRS.decode(crsCode.trim())
-            ReferencedEnvelope bbox = new ReferencedEnvelope(parseDouble(lowerCorner[0]), parseDouble(upperCorner[0]),
-                    parseDouble(lowerCorner[1]), parseDouble(upperCorner[1]), crs)
-
-            def model = [
-                    label     : f.nodeLabel(el),
-                    s         : bbox.getMinY(),
-                    n         : bbox.getMaxY(),
-                    w         : bbox.getMinX(),
-                    e         : bbox.getMaxX(),
-                    geomproj  : "EPSG:${CRS.lookupEpsgCode(crs, false)}",
-                    mapproj   : this.mapProjection,
-                    background: this.mapBackground,
-                    width: this.extentMapWidth,
-                    pdfOutput : env.formatType == FormatType.pdf
-            ]
-
-            return handlers.fileResult("html/bbox.html", model)
         }
 
         def data = el.'ows:LowerCorner'.text().trim() + ", " + el.'ows:UpperCorner'.text().trim()
