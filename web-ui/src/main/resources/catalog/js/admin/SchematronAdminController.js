@@ -236,22 +236,27 @@
         if ($routeParams.schemaName) {
           var findSchema, findSchematron, schema, schematron;
           findSchema = function(schemaName) {
-            var i, schemaDef;
-            for (i = 0; i < $scope.schematrons.length; i++) {
-              schemaDef = $scope.schematrons[i];
-              if (schemaDef.name === schemaName) {
-                return schemaDef;
+            var key, schemaDef;
+            for(key in $scope.schematrons) {
+              if ($scope.schematrons.hasOwnProperty(key)) {
+                schemaDef = $scope.schematrons[key];
+                if (schemaDef.name === schemaName) {
+                  return schemaDef;
+                }
               }
             }
             return undefined;
           };
+
           findSchematron = function(schemaDef, schematronId) {
-            var i, schematron;
+            var key, schematron;
             if (schematronId) {
-              for (i = 0; i < schemaDef.schematron.length; i++) {
-                schematron = schemaDef.schematron[i];
-                if (schematronId === schematron.id) {
-                  return schematron;
+              for(key in schemaDef.schematron) {
+                if (schemaDef.schematron.hasOwnProperty(key)) {
+                  schematron = schemaDef.schematron[key];
+                  if (schematronId === schematron.id) {
+                    return schematron;
+                  }
                 }
               }
             }
