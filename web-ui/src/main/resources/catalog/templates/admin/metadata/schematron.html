@@ -67,6 +67,14 @@
                                                data-ng-keyup="handleGroupEditKeyPress($event.keyCode)"
                                                id="{{group.id.name}}_NameInput"type="text" value="{{group.id.name}}" />
                                         <i class="fa gn-action"
+                                           title="{{'schematronCopy' | translate}}"
+                                           data-ng-class="hoverDup"
+                                           data-ng-init="hoverDup = 'fa-copy'"
+                                           data-ng-click="$event.stopPropagation();duplicateSchematronGroup(group)"
+                                           data-ng-mouseleave="hoverDup = 'fa-copy'"
+                                           data-ng-mouseover="hoverDup = 'fa-plus-circle'"></i>&NonBreakingSpace;
+                                        <i class="fa gn-action"
+                                           title="{{'schematronDelete' | translate}}"
                                            data-ng-class="hoverDelete"
                                            data-ng-init="hoverDelete = 'fa-times'"
                                            data-ng-click="$event.stopPropagation();deleteSchematronGroup(group)"

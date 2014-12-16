@@ -610,6 +610,8 @@
     "schematronDescriptionXpath": "This criteria passes when the XPath is true: '{{value}}'",
     "schematronInfo": "The selected Schematron will be used to validate a metadata when all the criteria in one of the following groups evaluate to true for the metadata.",
     "schematrons": "Schematrons",
+    "schematronDelete": "Delete",
+    "schematronCopy" : "Copy",
     "search": "Search",
     "searchFieldsAndTerms": "Main search fields and terms",
     "searchFieldsStatistics": "Criteria used by search services",

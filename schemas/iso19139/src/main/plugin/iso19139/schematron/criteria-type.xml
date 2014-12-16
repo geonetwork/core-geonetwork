@@ -55,7 +55,7 @@
                 }
                 addUniqueTokens(record.name);
                 for (var p in record.label) {
-                    if (record.label.hasOwnProperty(p)) {
+                    if (record.label.hasOwnProperty(p) &amp;&amp; typeof record.label === 'string') {
                         addUniqueTokens(record.label[p]);
                     }
                 }
