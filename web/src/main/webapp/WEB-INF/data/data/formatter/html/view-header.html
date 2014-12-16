@@ -21,7 +21,7 @@
         <li fmt-repeat="item in navBar" title="{{item.name}}"><a href="" rel="{{item.rel}}">{{item.abbrName}}</a></li>
         <li fmt-if="showNavOverflow" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
             <ul class="dropdown-menu">
-                <li fmt-repeat="item in navBarOverflow"><a href="" rel=".{{item.rel}}" title="{{item.name}}">{{item.abbrName}}</a></li>
+                <li fmt-repeat="item in navBarOverflow"><a href="" rel="{{item.rel}}" title="{{item.name}}">{{item.abbrName}}</a></li>
                 <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
             </ul>
         </li>
