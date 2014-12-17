@@ -3,8 +3,9 @@
 
   goog.require('gn_dbtranslation');
 
-  var module = angular.module('gn_usergroup_controller',
-      ['gn_dbtranslation']);
+  var module = angular.module('gn_usergroup_controller', [
+    'gn_dbtranslation',
+    'blueimp.fileupload']);
 
 
   /**
@@ -55,7 +56,6 @@
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
-
 
       // Scope for user
       // List of catalog users
@@ -371,23 +371,42 @@
         }, 100);
       };
 
-      $scope.saveGroup = function(formId) {
-        $http.get('admin.group.update?' + $(formId).serialize())
-        .success(function(data) {
-              $scope.unselectGroup();
-              loadGroups();
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('groupUpdated'),
-                timeout: 2,
-                type: 'success'});
-            })
-        .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('groupUpdateError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
+
+      var uploadImportMdDone = function() {
+        angular.element('#group-logo-upload').scope().queue = [];
+
+        $scope.unselectGroup();
+        loadGroups();
+        $rootScope.$broadcast('StatusUpdated', {
+          msg: $translate('groupUpdated'),
+          timeout: 2,
+          type: 'success'});
+
+      };
+      var uploadImportMdError = function(data) {
+        $rootScope.$broadcast('StatusUpdated', {
+          title: $translate('groupUpdateError'),
+          error: data,
+          timeout: 0,
+          type: 'danger'});
+      };
+
+      // upload directive options
+      $scope.mdImportUploadOptions = {
+        autoUpload: false,
+        done: uploadImportMdDone,
+        fail: uploadImportMdError
+      };
+
+      $scope.saveGroup = function(formId, logoUploadDivId) {
+        var uploadScope = angular.element(logoUploadDivId).scope();
+        if (uploadScope.queue.length > 0) {
+          uploadScope.submit();
+        } else {
+          $http.get('admin.group.update?' + $(formId).serialize())
+          .success(uploadImportMdDone())
+          .error(uploadImportMdError)
+        }
       };
 
       $scope.deleteGroup = function(formId) {

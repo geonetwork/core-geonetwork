@@ -23,17 +23,20 @@
 
 package org.fao.geonet.services.group;
 
-import static org.springframework.data.jpa.domain.Specifications.not;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import static org.springframework.data.jpa.domain.Specifications.not;
 
 //=============================================================================
 
@@ -42,27 +45,41 @@ import java.nio.file.Path;
  */
 
 public class List implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element elRes = context.getBean(GroupRepository.class).findAllAsXml(
-				not(GroupSpecs.isReserved()));
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        Element elRes = context.getBean(GroupRepository.class).findAllAsXml(
+                not(GroupSpecs.isReserved()));
+        final Path resourcesDir = context.getBean(GeonetworkDataDirectory.class).getResourcesDir();
+        final Path logosDir = Resources.locateLogosDir(context);
+        final java.util.List<?> logoElements = Xml.selectNodes(elRes, "*//logo");
+        for (Object logoObj : logoElements) {
+            Element logoEl = (Element) logoObj;
+            final String logoRef = logoEl.getTextTrim();
+            if (logoRef != null && !logoRef.isEmpty() && !logoRef.startsWith("http://")) {
+                final Path imagePath = Resources.findImagePath(logoRef, logosDir);
+                if (imagePath != null) {
+                    String relativePath = resourcesDir.relativize(imagePath).toString().replace('\\', '/');
+                    logoEl.setText(context.getBaseUrl() + '/' + relativePath);
+                }
+            }
+        }
 
-		Element elOper = params.getChild(Jeeves.Elem.OPERATION);
+        Element elOper = params.getChild(Jeeves.Elem.OPERATION);
 
-		if (elOper != null)
-			elRes.addContent(elOper.detach());
+        if (elOper != null)
+            elRes.addContent(elOper.detach());
 
-		return elRes.setName(Jeeves.Elem.RESPONSE);
-	}
+        return elRes.setName(Jeeves.Elem.RESPONSE);
+    }
 }
 
 // =============================================================================

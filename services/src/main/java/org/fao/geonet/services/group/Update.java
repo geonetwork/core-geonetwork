@@ -62,6 +62,7 @@ public class Update extends NotInReadOnlyModeService {
         final String id = params.getChildText(Params.ID);
         final String name = Util.getParam(params, Params.NAME);
         final String description = Util.getParam(params, Params.DESCRIPTION, "");
+        final boolean deleteLogo = Util.getParam(params, "deleteLogo", false);
         final String email = params.getChildText(Params.EMAIL);
         String website = params.getChildText("website");
         if (website != null && website.length() > 0 && !website.startsWith("http://")) {
@@ -102,8 +103,13 @@ public class Update extends NotInReadOnlyModeService {
                     entity.setEmail(email)
                             .setName(name)
                             .setDescription(description)
-                            .setLogo(logoUUID)
                             .setWebsite(finalWebsite);
+                    if (!deleteLogo && logoUUID != null) {
+                        entity.setLogo(logoUUID);
+                    }
+                    if (deleteLogo) {
+                        entity.setLogo(null);
+                    }
                 }
             });
 

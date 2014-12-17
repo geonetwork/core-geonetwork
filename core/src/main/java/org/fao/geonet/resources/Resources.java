@@ -1,5 +1,6 @@
 package org.fao.geonet.resources;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
@@ -62,7 +63,9 @@ public class Resources {
 		IMAGE_WRITE_SUFFIXES = Collections.unmodifiableSet(suffixes);
 	}
 
-	/**
+    private static final Set<String> IMAGE_EXTENSIONS = Sets.newHashSet(ImageIO.getReaderFileSuffixes());
+
+    /**
 	 * Find the configured directory containing logos. The directory the logos
 	 * are located in depends on the configuration of dataImagesDir in the
 	 * config.xml.
@@ -79,6 +82,37 @@ public class Resources {
 		return locateLogosDir(servletContext, context.getApplicationContext(),
 				context.getAppPath());
 	}
+
+    /**
+     * Look in the logos dir for an image with the name provided.  If the imageName does not have an extension then the logos dir will
+     * be searched for all images with the provided name.
+     *
+     * @param imageName the name of the image to look up with or without the file extension
+     * @param logosDir the directory to search
+     *
+     * @return null if the image does not exist in the logosDir or a path to the image.
+     */
+    public static Path findImagePath(String imageName, Path logosDir) throws IOException {
+        if (imageName.indexOf('.') > -1) {
+            final Path imagePath = logosDir.resolve(imageName);
+            if (java.nio.file.Files.exists(imagePath)) {
+                return imagePath;
+            }
+        } else {
+            try (DirectoryStream<Path> possibleLogos = java.nio.file.Files.newDirectoryStream(logosDir, imageName + ".*")) {
+                final Iterator<Path> pathIterator = possibleLogos.iterator();
+                while (pathIterator.hasNext()) {
+                    final Path next = pathIterator.next();
+                    String ext = Files.getFileExtension(next.getFileName().toString());
+                    if (IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
+                        return next;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 
 	/**
 	 * Find the configured directory containing logos. The directory the logos
