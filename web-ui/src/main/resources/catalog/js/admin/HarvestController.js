@@ -210,7 +210,7 @@
         loadHarvesters();
       };
       $scope.deleteHarvester = function() {
-        $http.get('admin.harvester.remove@json?id=' +
+        $http.get('admin.harvester.remove?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -223,7 +223,7 @@
       };
 
       $scope.deleteHarvesterRecord = function() {
-        $http.get('admin.harvester.clear@json?id=' +
+        $http.get('admin.harvester.clear?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -235,11 +235,7 @@
             });
       };
       $scope.deleteHarvesterHistory = function() {
-        var ids = [];
-        angular.forEach($scope.harvesterHistory, function(h) {
-          ids.push(h.id);
-        });
-        $http.get('admin.harvester.history.delete@json?id=' + ids.join('&id='))
+        $http.get('admin.harvester.history.delete?uuid=' + $scope.harvesterSelected.site.uuid)
           .success(function(data) {
               loadHarvesters().then(function() {
                 $scope.selectHarvester($scope.harvesterSelected);
@@ -247,7 +243,7 @@
             });
       };
       $scope.runHarvester = function() {
-        $http.get('admin.harvester.run@json?id=' +
+        $http.get('admin.harvester.run@json?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               loadHarvesters();
