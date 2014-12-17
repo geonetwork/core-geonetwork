@@ -3,8 +3,9 @@
 @import "gn_bootstrap.less";
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
-@import "../lib/bootstrap.ext/datepicker/datepicker.css";
-@import "../lib/style/datetimepicker.css";
+// import the css files as less files so they are included in the final output of wro4j
+@import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
+@import (less) "../lib/style/datetimepicker.css";
 @import "gn_doc.less";
 
 @fa-version: '4.1.0';

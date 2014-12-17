@@ -62,3 +62,4 @@ out/
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/schemaplugin-uri-catalog.xml
 web/geonetwork.trace.db.old
 target/
+web/src/main/webapp/WEB-INF/data/data/upload/
