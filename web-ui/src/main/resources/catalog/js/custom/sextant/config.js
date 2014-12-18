@@ -38,12 +38,16 @@
           'http://www.ifremer.fr/services/wms/oceanographie_physique'
         ],
         wmts: [
-          'http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?REQUEST=GetCapabilities',
           'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
         ]
       };
-      proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
-      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+      proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
+          '+lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,' +
+          '0,0' +
+          ' +units=m +no_defs');
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#2154', '+' +
+          'proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 ' +
+          '+y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 
       var bboxStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
@@ -89,9 +93,7 @@
 
       var searchMap = new ol.Map({
         layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
+          gnMap.createLayerForType('wmts')
         ],
         view: new ol.View({
           center: mapsConfig.center,
@@ -124,13 +126,28 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/' +
+            'viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/sextant.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/' +
+            'viewtemplates/sextant.html',
         tooltip: 'Thumbnails',
         icon: 'fa-th-list'
+      }];
+
+      searchSettings.defaultListOfThesaurus = [{
+        id: 'local.theme.sextant-theme',
+        labelFromThesaurus: true,
+        field: 'sextantTheme',
+        tree: true,
+        label: {eng: 'Sextant', fre: 'Sextant'}
+      },{
+        id: 'external.theme.inspire-theme',
+        field: 'inspireTheme_en',
+        tree: false,
+        label: {eng: 'INSPIRE', fre: 'INSPIRE'}
       }];
 
       /* Hits per page combo values configuration */
