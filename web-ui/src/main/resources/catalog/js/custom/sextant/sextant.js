@@ -2,15 +2,26 @@
 
   goog.provide('gn_search_sextant');
 
+
+
+
+
+
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
+  goog.require('gn_thesaurus');
+  goog.require('sxt_categorytree');
   goog.require('sxt_panier_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'sxt_panier_directive'
+    'sxt_panier_directive',
+    'gn_thesaurus',
+    'sxt_categorytree'
   ]);
+
+  module.value('sxtGlobals', {});
 
   module.controller('gnsSextant', [
     '$scope',
@@ -20,8 +31,11 @@
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
+    'gnThesaurusService',
+    'sxtGlobals',
+    'gnNcWms',
     function($scope, $location, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap) {
+        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -67,6 +81,22 @@
       };
 
 
+      //Check if a added layer is NcWMS
+      viewerMap.getLayers().on('add', function(e) {
+        var layer = e.element;
+        if (layer.get('isNcwms') == true) {
+          gnNcWms.feedOlLayer(layer);
+        }
+      });
+
+      // Manage sextantTheme thesaurus translation
+      gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
+          200, 1).then(function(data) {
+        sxtGlobals.sextantTheme = data;
+        $scope.$broadcast('sextantThemeLoaded');
+      });
+
+      ///////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
@@ -79,7 +109,8 @@
       };
 
       $scope.$watch('searchObj.advancedMode', function(val) {
-        if (val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)) {
+        if (val && (searchMap.getSize()[0] == 0 ||
+            searchMap.getSize()[1] == 0)) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
@@ -100,13 +131,26 @@
     '$scope',
     'gnOwsCapabilities',
     'gnMap',
-    function($scope, gnOwsCapabilities, gnMap) {
+    'sxtGlobals',
+    function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
 
       $scope.resultviewFns = {
-        addMdLayerToMap: function(link) {
-          gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
-            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
-            gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
+        addMdLayerToMap: function(link, md) {
+
+          var label, theme = md.sextantTheme;
+          for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
+            var t = sxtGlobals.sextantTheme[i];
+            if (t.props.uri == theme) {
+              label = t.label;
+              break;
+            }
+          }
+          gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                link.name, capObj);
+            layerInfo.group = label;
+            var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
+                layerInfo);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
@@ -121,6 +165,24 @@
       };
     }]);
 
+  module.controller('gnsSextantSearchForm', [
+    '$scope', 'suggestService', 'gnSearchSettings',
+    function($scope, suggestService, searchSettings) {
+
+      $scope.groupPublishedOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', '_groupPublished',
+              'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
+      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+
+    }]);
+
   module.directive('sxtFixMdlinks', [
     function() {
 
@@ -129,8 +191,9 @@
         scope: false,
         link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
-          scope.layers = scope.md.getLinksByType('OGC', 'kml');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', '#FILE',
+              '#DB', '#COPYFILE', 'WFS');
+          scope.layers = scope.md.getLinksByType('OGC');
 
         }
       };
