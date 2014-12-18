@@ -269,13 +269,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 			Element md = rf.getMetadata(schemaMan);
             if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
 
-			String schema = dataMan.autodetectSchema(md);
-			if (!params.validate || validates(schema, md)) {
-				return (Element) md.detach();
-			}
-
-			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-			result.doesNotValidate++;
+            try {
+                params.validate.validate(dataMan, context, md);
+                return (Element) md.detach();
+            } catch (Exception e) {
+                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+                result.doesNotValidate++;
+            }
 		}
 		catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());

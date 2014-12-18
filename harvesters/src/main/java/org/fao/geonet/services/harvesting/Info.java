@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
@@ -131,6 +132,9 @@ public class Info implements Service
 				else if (type.equals("importStylesheets"))
 					result.addContent(getStylesheets(importXslPath));
 
+				else if (type.equals("validation"))
+					result.addContent(getValidationOptions());
+
 				else
 					throw new BadParameterEx("type", type);
 			} else if (name.equals("schema")||(name.equals("serviceType"))) { // do nothing
@@ -142,7 +146,15 @@ public class Info implements Service
 		return result;
 	}
 
-	//--------------------------------------------------------------------------
+    private Element getValidationOptions() {
+        Element validationOptions = new Element("validationOptions");
+        for (HarvestValidationEnum validationEnum : HarvestValidationEnum.values()) {
+            validationOptions.addContent(new Element("validation").setText(validationEnum.name()));
+        }
+        return validationOptions;
+    }
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---

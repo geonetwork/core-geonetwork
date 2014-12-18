@@ -393,7 +393,7 @@
     "harvesterSchedule": "Schedule",
     "harvesterScheduleinactive": "Failed to activate harvester.",
     "harvesterUpdated": "Harvester updated",
-    "harvesterValidate": "Validate records",
+    "harvesterValidate": "Validate records before import",
     "harvesterValidateHelp": "Invalid records will be rejected. Validation is based on the standard validation (ie. XSD, Schematrons).",
     "harvesters": "Harvesting",
     "index.lucene.config": "Lucene configuration",
@@ -936,5 +936,8 @@
     "z3950-host": "Host",
     "z3950-hostHelp": " ",
     "z3950-port": "Port",
-    "z3950-portPort": " "
+    "z3950-portPort": " ",
+    "NOVALIDATION": "Accept all metadata without validation",
+    "XSDVALIDATION": "Accept metadata that are XSD Valid",
+    "SCHEMATRONVALIDATION": "Accept metadata that are XSD and Schematron Valid"
 }

@@ -22,7 +22,7 @@ var gnHarvestercsw = {
         "outputSchema": ""
       },
       "content" : {
-        "validate" : "false"
+        "validate" : "NOVALIDATION"
       },
       "options" : {
         "every" : "0 0 0 ? * *",
