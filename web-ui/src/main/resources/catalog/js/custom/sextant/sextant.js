@@ -145,7 +145,7 @@
               break;
             }
           }
-          gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+          gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
             layerInfo.group = label;
