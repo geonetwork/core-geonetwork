@@ -301,14 +301,13 @@ public class Aligner extends BaseAligner
                 log.debug("Record got:\n" + Xml.getString(response));
             }
 
-			// validate it here if requested
-			if (params.validate) {
-				if(!dataMan.validate(response))  {
-					log.info("Ignoring invalid metadata with uuid " + uuid);
-					result.doesNotValidate++;
-					return null;
-				}
-			}
+            try {
+                params.validate.validate(dataMan, context, response);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
+            }
 
 			// transform it here if requested
 			if (!params.importXslt.equals("none")) {
