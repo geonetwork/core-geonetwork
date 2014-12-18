@@ -56,7 +56,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
         model.put("other3", "Other Three");
         String expected = "<div><div>"
                           + "    within"
-                          + "    </div>Other OneOther&TwoOther Three</div>";
+                          + "    </div>Other OneOther&amp;TwoOther Three</div>";
 
         assertCorrectRender(parseTree, model, expected);
     }
@@ -71,7 +71,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
         model.put("other2", "Other&Two");
         model.put("other3", "Other Three");
 
-        String expected = "<div>withinOther OneOther&TwoOther Three</div>";
+        String expected = "<div>withinOther OneOther&amp;TwoOther Three</div>";
         assertCorrectRender(parseTree, model, expected);
     }
 }

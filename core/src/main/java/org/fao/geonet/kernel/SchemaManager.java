@@ -691,7 +691,7 @@ public class SchemaManager {
 
 		beforeRead();
 		try {
-			String schema = null;
+			String schema;
 
 			// -- check the autodetect elements for all schemas with the most
 			// -- specific test first, then in order of increasing generality, 
@@ -1529,9 +1529,9 @@ public class SchemaManager {
      * @throws org.fao.geonet.exceptions.SchemaMatchConflictException
  	 */
 	private String compareElementsAndAttributes(Element md, int mode) throws SchemaMatchConflictException {
-		String returnVal = null;	
+		String returnVal = null;
 		Set<String> allSchemas = getSchemas();
-		List<String> matches = new ArrayList<String>();
+		List<String> matches = new ArrayList<>();
 
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Schema autodetection starting on "+md.getName()+" (Namespace: "+md.getNamespace()+") using mode: "+mode+"...");
@@ -1569,7 +1569,7 @@ public class SchemaManager {
 					}
 
 				// --- try and find the namespace in md 
-				} else if (mode==MODE_NAMESPACE && elem.getName() == "namespaces") {
+				} else if (mode==MODE_NAMESPACE && elem.getName().equals("namespaces")) {
 					@SuppressWarnings("unchecked")
                     List<Namespace> nss = elem.getAdditionalNamespaces();
 					for (Namespace ns : nss) {

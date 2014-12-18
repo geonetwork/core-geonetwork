@@ -33,6 +33,17 @@ public class TextContentParserTest {
         assertCorrectRender(parser.parse("{{name}}{{from}}"), model, "NameFrom");
     }
 
+    @Test
+    public void testParseAmp() throws Exception {
+        final TextContentParser parser = new TextContentParser();
+
+        final TextBlock contents = parser.parse("{{name}}");
+
+        Map<String, Object> model = Maps.newHashMap();
+        model.put("name", "&Name");
+        assertCorrectRender(contents, model, "&amp;Name");
+    }
+
     public void assertCorrectRender(TextBlock contents, Map<String, Object> model, String expected) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TRenderContext context = new TRenderContext(out, model);

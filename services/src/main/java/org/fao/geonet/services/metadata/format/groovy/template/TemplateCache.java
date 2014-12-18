@@ -49,13 +49,16 @@ public class TemplateCache {
         final Path originalPath = IO.toPath(path);
         Path file = formatterDir.resolve(path);
         TNode template = fetchFromCache(originalPath, file);
-        Path fromParentSchema = null;
+        Path fromParentSchema;
 
         if (template != null) {
             return new FileResult(template, substitutions);
         }
 
-        file = schemaDir.resolve(path);
+        if (schemaDir != null) {
+            file = schemaDir.resolve(path);
+        }
+
         template = fetchFromCache(originalPath, file);
         if (template != null) {
             return new FileResult(template, substitutions);

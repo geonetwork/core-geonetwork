@@ -16,10 +16,18 @@ public class TextContentReplacement implements TextContent {
     public String text(TRenderContext content) {
         Object value = content.getModelValue(key);
         if (value == null) {
-            return key;
+            return escapeSpecialChars(key);
         }
 
-        return value.toString();
+        if (value instanceof String) {
+            return escapeSpecialChars((String) value);
+        } else {
+            return value.toString();
+        }
+    }
+
+    public String escapeSpecialChars(String value) {
+        return value.replace("&", "&amp;");
     }
 
     @Override

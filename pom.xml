@@ -1136,6 +1136,7 @@
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
+    <module>services</module>
     <module>wro4j</module>
   </modules>
 

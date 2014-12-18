@@ -121,8 +121,9 @@ public class SchemaLocalizationsTest {
         final GPathResult gPathResult = new XmlSlurper().parseText("<cl codeList='http://yaya.com#codelist1' codeListValue='code1'/>");
         assertEquals("Code One", localizations.codelistValueLabel(gPathResult));
         assertEquals("Desc Code One", localizations.codelistValueDesc(gPathResult));
-    }@Test
-     public void testLangCodeTranslations() throws Exception {
+    }
+    @Test
+    public void testLangCodeTranslations() throws Exception {
         assertEquals("English", localizations.codelistValueLabel(LANG_CODELIST_NS, "eng"));
         assertEquals("English", localizations.codelistValueLabel(LANG_CODELIST_NS, "en"));
         assertEquals("German", localizations.codelistValueLabel(LANG_CODELIST_NS, "ger"));

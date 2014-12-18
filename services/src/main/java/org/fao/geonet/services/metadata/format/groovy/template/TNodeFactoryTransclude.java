@@ -12,6 +12,7 @@ import org.xml.sax.Attributes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -103,13 +104,31 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
             for (Map.Entry<String, Object> entry : this.extraModel.entrySet()) {
                 ByteArrayOutputStream o = new ByteArrayOutputStream();
                 TEXT_PARSER.parse(entry.getValue().toString()).render(new TRenderContext(o, context.getModel(true)));
-                fullModel.put(entry.getKey(), new String(o.toByteArray(), Constants.ENCODING));
+                fullModel.put(entry.getKey(), new ByteArrayWrapper(o.toByteArray()));
             }
+
             fullModel.put(this.model, new String(outputStream.toByteArray(), Constants.ENCODING));
             final Handlers handlers = TransformationContext.getContext().getHandlers();
             final FileResult fileResult = handlers.fileResult(this.templatePath, fullModel);
             context.append(fileResult.toString());
+        }
+    }
 
+    /**
+     * This class is needed because strings are automatically escaped by the TextContentReplacement when strings
+     * are retrieved from the model object/map.  Wrapping the bytes/string with an object means that the data will not be
+     * escaped.
+     */
+    private static final class ByteArrayWrapper {
+        private final String string;
+
+        private ByteArrayWrapper(byte[] bytes) throws UnsupportedEncodingException {
+            this.string = new String(bytes, Constants.ENCODING);
+        }
+
+        @Override
+        public String toString() {
+            return string;
         }
     }
 }

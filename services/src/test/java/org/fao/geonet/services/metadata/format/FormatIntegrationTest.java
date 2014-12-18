@@ -199,6 +199,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve(groovySharedClasses), formatterDir.resolve(groovySharedClasses), false);
 
 
+        final Path iso19139ConfigProperties = this.schemaManager.getSchemaDir("iso19139").resolve("formatter/config.properties");
+        Files.write(iso19139ConfigProperties, "dependsOn=dublin-core".getBytes("UTF-8"));
+
         final Path dublinCoreSchemaDir = this.schemaManager.getSchemaDir("dublin-core").resolve("formatter/groovy");
         Files.createDirectories(dublinCoreSchemaDir);
         IO.copyDirectoryOrFile(IO.toPath(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").toURI()),
