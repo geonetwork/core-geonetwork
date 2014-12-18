@@ -1,118 +1,87 @@
-<nav class="navbar navbar-default" role="navigation">
+<div class="geocat-header">
+  <img src="/geonetwork/images/geocat_logo_li.gif" alt="geocat.ch logo">
+  <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float:right;">
+</div>
 
-  <div class="container-fluid">
-
-    <div class="navbar-header">
-
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">
-        <img src="http://www.geocat.ch/internet/geocat/fr/home.parsys.00011.Image.jpeg" alt="{{'Geocat Logo' | translate}}">
-        geocat.ch
-      </a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-      <ul class="nav navbar-nav">
-        <li class=""><a href="#" translate>Overview</a></li>
-        <li class=""><a href="#" translate>About</a></li>
-      </ul>
-
-      <div class="form-group navbar-right navbar-btn" gn-language-switcher="lang" data-langs="langs"></div>
-
-      <form class="navbar-form navbar-right" role="login" action="../../j_spring_security_check" method="post" ng-if="user['@authenticated'] != 'true'">
-        <div class="form-group">
-          <input type="text" name="username" class="form-control" placeholder="{{ 'username' | translate }}">
-          <input type="password" name="password" class="form-control" placeholder="{{ 'password' | translate }}">
-        </div>
-        <button type="submit" class="btn btn-default" translate>Signin</button>
-      </form>
-
-      <div ng-if="user['@authenticated'] == 'true'" class="navbar-text navbar-right">
-        <span translate>Signed in as </span> {{user['username']}}
-        <a ng-show="authenticated" href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
-          <i class="fa fa-sign-out"></i>
-        </a>
-      </div>
-
-    </div>
-
-  </div>
-
+<nav class="navbar navbar-default" role="navigation"
+     data-ng-include="'../../catalog/templates/search/geocat/top-bar.html'">
 </nav>
 
 <div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsGeocat">
 
-    <form ng-search-form="" runsearch="true" class="hfull">
+    <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': !collapsed.map}">
+      <button ng-class="{'collapsed': !collapsed.facet}" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
+        <span>«</span>
+      </button>
       <div class="row hfull">
-        <div class="col-md-3 maincol hfull">
-          <div class="panel panel-primary hfull">
+
+        <div class="maincol hfull" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
+          <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
+            <span ng-show="collapsed.search">»</span>
+            <span ng-show="!collapsed.search">«</span>
+          </button>
+          <div class="panel panel-default hfull">
             <div class="panel-heading search-top">
-              <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
-                     typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-                     typeahead-min-length="1">
-              <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
+              <div class="input-group">
+                <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
+                       typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
+                       typeahead-min-length="1" id="anySearchField">
+                <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
+                <span class="input-group-btn">
+                  <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </span>
+              </div>
             </div>
             <div class="panel-body geocat-search">
               <div data-ng-include="'../../catalog/templates/search/geocat/searchForm.html'"></div>
             </div>
-            <div class="panel-footer">
-              <div class="submit">
-                <button type="button" data-ng-click="resetSearch();" class="btn btn-link" data-translate>Reset</button>
-                <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
-                  <i class="fa fa-search"></i> <span data-translate>Search</span></button>
-              </div>
-            </div>
+            <!--<div class="panel-footer">
+            </div>-->
           </div>
         </div>
 
-        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+        <div ng-class="{ 'col-md-7': collapsed.search && !collapsed.facet , 'col-md-9': collapsed.search && collapsed.facet, 'col-md-6': !collapsed.search && collapsed.facet , 'col-md-4': !collapsed.search && !collapsed.facet}" class="maincol hfull">
+          <button ng-show="!collapsed.facet" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
+            <span>»</span>
+          </button>
           <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
             <div class="panel-heading" translate>
-              <h3 class="panel-title"translate>homeTitle</h3>
+              <h3 class="panel-title" translate>homeTitle</h3>
             </div>
-            <div class="panel-body">
-              <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
-              <h4 translate>mostPopular</h4>
-              <ul>
-                <li ng-repeat="md in mostPopular">
-                  <a href="">{{md.title || md.defaultTitle}}</a>
-                </li>
-              </ul>
-              <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
-              <ul>
-                <li ng-repeat="md in lastUpdated">
-                  <a href="">{{md.title || md.defaultTitle}}</a>
-                </li>
-              </ul>
+            <div class="gc-homepage">
+              <div class="panel-body">
+                <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
+                <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
+                <ul>
+                  <li ng-repeat="md in lastUpdated">
+                    <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gc-homepage">{{md.title || md.defaultTitle}}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
           <div class="panel panel-default hfull" ng-show="!initial">
             <div class="panel-heading">
-              <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
-                ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
               <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
               <div gn-selection-widget results="searchResults"></div>
-              <div sortby-combo params="searchObj.params"></div>
+              <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
             </div>
             <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
             <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
             </div>
             <div class="panel-footer">
-              <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
+              <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"
+                   gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
               <div data-gn-pagination="paginationInfo"></div>
             </div>
           </div>
         </div>
 
-        <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+        <div ng-class="(!collapsed.facet) ? 'col-md-2' : 'whidden'" class="maincol hfull">
           <div class="panel panel-default hfull">
             <div class="panel-heading">
               <span data-translate>Refine search</span>

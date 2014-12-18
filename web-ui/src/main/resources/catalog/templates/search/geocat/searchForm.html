@@ -2,35 +2,31 @@
 
   <div class="form-horizontal" role="form">
 
-    <div class="basic" ng-class="{ 'active': !advanced }">
-
-      <!-- Types Combo (from a local scope array) -->
-      <div class="form-group">
-        <label for="typeF" class="col-md-4 col-sm-12 control-label" translate>Type</label>
-        <div class="col-sm-8" id="typeF">
-          <select class="form-control" data-ng-model="searchObj.params.type">
-            <option data-ng-repeat="t in types">{{t}}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="cantonF" class="col-md-4 col-sm-12 control-label" translate>Cantons</label>
-        <div class="col-sm-8">
-          <input type="text" id="cantonF" value="" class="form-control input-sm" data-ng-model="searchObj.params.cantons" gn-region-multiselect="ocean" gn-callback="onCantonsSelect"/>
-        </div>
-      </div>
-
+  <!--Reset and switch mode button-->
+  <div class="form-group row">
+    <div class="col-md-4">
+      <button type="button" data-ng-click="resetSearch('#anySearchField');" class="btn btn-link" >
+        <span class="fa fa-undo"></span>
+        <span translate>Reset</span></button>
     </div>
+    <div class="col-md-4">
+      <button class="btn btn-link backtonormal" ng-click="advanced = !advanced"  type="button">
+        <span class="fa" ng-class="(advanced) ? 'fa-angle-double-up' : 'fa-angle-double-down'"></span>
+        <span translate ng-if="!advanced">advancedForm</span>
+        <span translate ng-if="advanced">simpleForm</span>
+      </button>
+    </div>
+  </div>
 
+    <!-- Catalog Combo -->
     <div class="form-group">
-      <div class="col-md-offset-4">
-        <button class="btn btn-default more" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
-          <span translate ng-show="!advanced">advancedForm</span>
-          <span translate ng-show="advanced">simpleForm</span>
-        </button>
+      <label for="catalogSF" class="col-md-4 col-sm-12 control-label" translate>source</label>
+      <div class="col-sm-8">
+        <input type="text" id="catalogSF" value="" class="form-control"
+               gn-values="searchObj.params._catalog" gn-typeahead="sourcesOptions"/>
       </div>
     </div>
+
 
     <!-- Advanced search form -->
     <div class="advanced" ng-class="{ 'active': advanced }">
@@ -51,7 +47,7 @@
         <div class="form-group">
           <label for="abstractF" class="col-md-4 col-sm-12 control-label" translate>abstract</label>
           <div class="col-sm-8">
-            <input type="text" id="abstractF" value="" class="form-control" data-ng-model="searchObj.params.title"/>
+            <input type="text" id="abstractF" value="" class="form-control" data-ng-model="searchObj.params.abstract"/>
           </div>
         </div>
 
@@ -59,7 +55,8 @@
         <div class="form-group">
           <label for="keywordsF" class="col-md-4 col-sm-12 control-label" translate>keywords</label>
           <div class="col-sm-8">
-            <input type="text" id="keywordsF" value="" class="form-control" data-ng-model="searchObj.params.keyword" gn-search-suggest="keyword" multi="true"/>
+            <input type="text" id="keywordsF" value="" class="form-control"
+                   gn-values="searchObj.params.keyword" gn-typeahead="keywordsOptions"/>
           </div>
         </div>
 
@@ -67,7 +64,8 @@
         <div class="form-group">
           <label for="topiccatF" class="col-md-4 col-sm-12 control-label" translate>topiccat</label>
           <div class="col-sm-8">
-            <input type="text" id="topiccatF" value="" class="form-control" data-ng-model="searchObj.params.topicCat"/>
+            <input type="text" id="topiccatF" value="" class="form-control"
+                   gn-values="searchObj.params.topicCat" gn-typeahead="topicCatsOptions"/>
           </div>
         </div>
 
@@ -83,7 +81,16 @@
         <div class="form-group">
           <label for="orgNameF" class="col-md-4 col-sm-12 control-label" translate>organisation</label>
           <div class="col-sm-8">
-            <input type="text" id="orgNameF" value="" class="form-control" data-ng-model="searchObj.params.orgName" gn-search-suggest="orgName"/>
+            <input type="text" id="orgNameF" value="" class="form-control"
+                   gn-values="searchObj.params.orgName" gn-typeahead="orgNameOptions"/>
+          </div>
+        </div>
+
+        <!--Template-->
+        <div class="form-group" ng-if="user['@authenticated'] == 'true'">
+          <label for="templateF" class="col-md-4 col-sm-12 control-label" translate>template</label>
+          <div class="col-sm-8">
+            <input id="templateF" type="checkbox" data-ng-model="searchObj.params._isTemplate" ng-true-value="'y'" ng-false-value="'n'">
           </div>
         </div>
 
@@ -92,6 +99,15 @@
           <label for="basicidF" class="col-md-4 col-sm-12 control-label" translate>identifier</label>
           <div class="col-sm-8">
             <input type="text" id="basicidF" value="" class="form-control" data-ng-model="searchObj.params.basicgeodataid"/>
+          </div>
+        </div>
+
+        <!--Formats-->
+        <div class="form-group" ng-if="user['@authenticated'] == 'true'">
+          <label for="formatF" class="col-md-4 col-sm-12 control-label" translate>format</label>
+          <div class="col-sm-8">
+            <input type="text" id="formatF" value="" class="form-control"
+                   gn-values="searchObj.params.format" gn-typeahead="topicCatsOptions"/>
           </div>
         </div>
 
@@ -111,6 +127,32 @@
           </div>
         </div>
 
+        <!-- Valid Combo (from a local scope array) -->
+        <div class="form-group" ng-if="user['@authenticated'] == 'true'">
+          <label class="col-md-4 col-sm-12 control-label" translate>valid</label>
+          <div class="col-sm-8">
+            <select class="form-control input-sm" data-ng-model="searchObj.params._valid" name="">
+              <option data-ng-repeat="v in validStore" value="{{v.value}}" translate>{{v.label}}</option>
+            </select>
+          </div>
+        </div>
+
+        <!--To Edit-->
+        <div class="form-group" ng-if="user['@authenticated'] == 'true'">
+          <label for="toeditF" class="col-md-4 col-sm-12 control-label" translate>toEdit</label>
+          <div class="col-sm-8">
+            <input id="toeditF" type="checkbox" data-ng-model="searchObj.params.editable" ng-true-value="true" ng-false-value="''">
+          </div>
+        </div>
+
+        <!--To publish-->
+        <div class="form-group" ng-if="user['@authenticated'] == 'true'">
+          <label for="topublishF" class="col-md-4 col-sm-12 control-label" translate>toPublish</label>
+          <div class="col-sm-8">
+            <input id="topublishF" type="checkbox" data-ng-model="searchObj.params.toPublish" ng-true-value="'y'" ng-false-value="''">
+          </div>
+        </div>
+
         <!-- Archives Combo (from a local scope array) -->
         <div class="form-group">
           <label class="col-md-4 col-sm-12 control-label" translate>archive</label>
@@ -118,17 +160,6 @@
             <select class="form-control input-sm" data-ng-model="searchObj.params.historicalArchive" name="">
               <option data-ng-repeat="a in archives" value="{{a.value}}" translate>{{a.label}}</option>
             </select>
-          </div>
-        </div>
-      </fieldset>
-
-
-      <fieldset>
-        <legend translate>Source</legend>
-        <div class="form-group">
-          <label class="col-md-4 col-sm-12 control-label" translate>source</label>
-          <div class="col-sm-8">
-            <select class="form-control input-sm" name="" data-ng-model="searchObj.params._catalog"><option value=""></option></select>
           </div>
         </div>
       </fieldset>
@@ -163,16 +194,20 @@
 
         <div class="form-group">
           <div class="col-sm-12">
-            <div class="btn-group btn-group-justified">
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>bbox</button>
-              </div>
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>AU</button>
-              </div>
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>drawOnMap</button>
-              </div>
+            <div class="btn-group-vertical restrictArea">
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>
+                <span class="pull-right fa fa-refresh" ng-click="refreshDrag($event)"></span>
+                <span class="fa" ng-class="(restrictArea=='bbox') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>bbox</span>
+              </button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>
+                <span class="fa" ng-class="(restrictArea=='au') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>AU</span></button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>
+                <span class="pull-right fa fa-refresh" ng-click="refreshDraw($event)"></span>
+                <span class="fa" ng-class="(restrictArea=='draw') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>drawOnMap</span>
+              </button>
             </div>
           </div>
         </div>
@@ -182,19 +217,19 @@
           <div class="form-group">
             <label for="countryAF" class="col-md-4 col-sm-12 control-label" translate>country</label>
             <div class="col-sm-8">
-              <input type="text" id="countryAF" class="form-control input-sm" />
+              <input type="text" id="countryAF" class="form-control input-sm" gn-values="regions.countries" gn-typeahead="regionOptions.country"/>
             </div>
           </div>
           <div class="form-group">
             <label for="cantonAF" class="col-md-4 col-sm-12 control-label" translate>cantons</label>
             <div class="col-sm-8">
-              <input type="text" id="cantonAF" class="form-control input-sm"/>
+              <input type="text" id="cantonAF" class="form-control input-sm" gn-values="regions.cantons" gn-typeahead="regionOptions.kantone"/>
             </div>
           </div>
           <div class="form-group">
             <label for="cityAF" class="col-md-4 col-sm-12 control-label" translate>city</label>
             <div class="col-sm-8">
-              <input type="text" id="cityAF" class="form-control input-sm" />
+              <input type="text" id="cityAF" class="form-control input-sm" gn-values="regions.cities" gn-typeahead="regionOptions.gemeinden"/>
             </div>
           </div>
 
@@ -210,7 +245,30 @@
     </div>
 
 
-    <div gn-map-field="searchObj.searchMap"></div>
+    <button class="btn btn-default btn-sm map-expander" ng-click="toggleSearchMap()" type="button">
+      <span ng-show="collapsed.map"><span class="fa fa-angle-double-up"></span></span>
+      <span ng-show="!collapsed.map"><span class="fa fa-angle-double-down"></span></span>
+    </button>
+
+    <div class="gn-map-field">
+      <div ngeo-map="searchObj.searchMap" >
+        <div class="btn-group-vertical">
+          <button class="btn btn-default" data-ng-click="removeLayers()">
+            <i class="fa fa-trash-o"></i>
+          </button>
+          <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button class="btn btn-default" data-ng-click="maxExtent()">
+            <i class="fa fa-globe"></i>
+          </button>
+          <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
+            <i class="fa fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
 
 <!-- 
     <input type="text" name="region-picker-input" class="form-control bootstrap-tagsinput"
