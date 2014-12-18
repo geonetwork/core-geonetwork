@@ -37,12 +37,8 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         Attributes filteredAtts = new FilteredAttributes(attributes, INCLUDE, REPLACE);
         String templatePath = getValue(attributes, INCLUDE);
-        String replaceAtt = getValue(attributes, REPLACE);
-        boolean replace = false;
-        if (replaceAtt != null) {
-            replace = replaceAtt.isEmpty() || replaceAtt.equalsIgnoreCase("y") || replaceAtt.equalsIgnoreCase("true")
-                      || replaceAtt.equalsIgnoreCase("yes");
-        }
+
+        boolean replace = getBooleanAttribute(attributes, REPLACE, false);
         return new TNodeInclude(info, qName, filteredAtts, templatePath, replace);
     }
 

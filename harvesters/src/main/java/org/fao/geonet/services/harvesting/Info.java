@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
@@ -76,8 +77,8 @@ public class Info implements Service
 
 	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
-		importXslPath = new File(appPath + Geonet.Path.IMPORT_STYLESHEETS);
-		oaiSchema  = new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");
+		importXslPath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
+		oaiSchema  = appPath.resolve("xml/validation/oai/OAI-PMH.xsd");
 	}
 
 	//--------------------------------------------------------------------------
@@ -129,7 +130,10 @@ public class Info implements Service
 					result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEETS));
 
 				else if (type.equals("importStylesheets"))
-					result.addContent(getStylesheets(el, context, importXslPath));
+					result.addContent(getStylesheets(importXslPath));
+
+				else if (type.equals("validation"))
+					result.addContent(getValidationOptions());
 
 				else
 					throw new BadParameterEx("type", type);
@@ -142,7 +146,15 @@ public class Info implements Service
 		return result;
 	}
 
-	//--------------------------------------------------------------------------
+    private Element getValidationOptions() {
+        Element validationOptions = new Element("validationOptions");
+        for (HarvestValidationEnum validationEnum : HarvestValidationEnum.values()) {
+            validationOptions.addContent(new Element("validation").setText(validationEnum.name()));
+        }
+        return validationOptions;
+    }
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
@@ -202,11 +214,11 @@ public class Info implements Service
 
 		for (String schema : schemaMan.getSchemas()) {
 			if (!schemaFilter.equals("") && !schema.equals(schemaFilter)) continue;
-			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslFragmentDir);	
-			if (!xslPath.exists()) continue;
+			Path xslPath = schemaMan.getSchemaDir(schema).resolve(xslFragmentDir);
+			if (!Files.exists(xslPath)) continue;
 
 			@SuppressWarnings("unchecked")
-            List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
+            List<Element> elSheets = getStylesheets(xslPath).getChildren();
 			for (Element elSheet : elSheets) {
 				elSheet = (Element)elSheet.clone();
 				elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));
@@ -245,29 +257,25 @@ public class Info implements Service
 
 	//--------------------------------------------------------------------------
 
-	private Element getStylesheets(Element el, ServiceContext context, File xslPath) throws Exception {
-		String sheets[] = xslPath.list();
+	private Element getStylesheets(Path xslPath) throws Exception {
+        try (DirectoryStream<Path> sheets = Files.newDirectoryStream(xslPath)) {
+            Element elRoot = new Element("stylesheets");
+            for (Path sheet : sheets) {
 
-		if (sheets == null)
-			throw new Exception("Cannot scan directory : "+ xslPath.getAbsolutePath());
-		Element elRoot = new Element("stylesheets");
+                    if (sheet.endsWith(".xsl")) {
+                        String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
+                        String id  = sheet.toString();
 
-		for (int i=0; i<sheets.length; i++) {
-			if (sheets[i].endsWith(".xsl")) {
-				int    pos = sheets[i].lastIndexOf(".xsl");
-				String name= sheets[i].substring(0, pos);
-				String id  = sheets[i];
+                        Element res = new Element(Jeeves.Elem.RECORD);
 
-				Element res = new Element(Jeeves.Elem.RECORD);
+                        res.addContent(new Element(Geonet.Elem.ID)  .setText(id));
+                        res.addContent(new Element(Geonet.Elem.NAME).setText(name));
 
-				res.addContent(new Element(Geonet.Elem.ID)  .setText(id));
-				res.addContent(new Element(Geonet.Elem.NAME).setText(name));
-
-				elRoot.addContent(res);
-			}
-		}
-
-		return elRoot;
+                        elRoot.addContent(res);
+                    }
+            }
+            return elRoot;
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -387,8 +395,8 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private File oaiSchema;
-	private File importXslPath;
+	private Path oaiSchema;
+	private Path importXslPath;
 	
 	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
 }

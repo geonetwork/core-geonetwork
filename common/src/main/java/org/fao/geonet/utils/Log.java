@@ -24,13 +24,13 @@
 package org.fao.geonet.utils;
 
 
-import java.util.Enumeration;
-
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+
+import java.util.Enumeration;
 
 //=============================================================================
 
@@ -106,6 +106,11 @@ public final class Log
 	public static void info(String module, Object message)
 	{
 		Logger.getLogger(module).info(message);
+	}
+
+	public static void info(String module, Object message, Throwable t)
+	{
+		Logger.getLogger(module).info(message, t);
 	}
 
 	//---------------------------------------------------------------------------

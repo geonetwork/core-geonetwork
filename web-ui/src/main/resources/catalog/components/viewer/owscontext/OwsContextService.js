@@ -76,7 +76,7 @@
           } else {
             var server = layer.server[0];
             if (server.service == 'urn:ogc:serviceType:WMS') {
-              self.addWmsLayer(layer, map);
+              self.addLayer(layer, map);
             }
           }
         }
@@ -183,6 +183,9 @@
           } else if (source instanceof ol.source.TileWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrls()[0];
+          } else if (source instanceof ol.source.WMTS) {
+            name = '{type=wmts,name=' + layer.get('title') + '}';
+            url = layer.get('url');
           }
           resourceList.layer.push({
             hidden: !layer.getVisible(),
@@ -191,11 +194,11 @@
             title: layer.get('title'),
             group: layer.get('group'),
             server: [{
-              onlineResource: [{
-                href: url
-              }],
-              service: 'urn:ogc:serviceType:WMS'
-            }]
+                onlineResource: [{
+                    href: url
+                  }],
+                service: 'urn:ogc:serviceType:WMS'
+              }]
           });
         });
 
@@ -236,17 +239,37 @@
        * @param {ol.layer} layer layer
        * @param {ol.map} map map
        */
-      this.addWmsLayer = function(obj, map) {
-        var server = obj.server[0];
+      this.addLayer = function(layer, map) {
+        var server = layer.server[0];
         var res = server.onlineResource[0];
-        gnOwsCapabilities.getCapabilities(res.href).then(function(capObj) {
-          var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
-          info.group = obj.group;
-          var layer = gnMap.addWmsToMapFromCap(map, info);
+        var reT = /type\s*=\s*([^,|^}|^\s]*)/;
+        var reL = /name\s*=\s*([^,|^}|^\s]*)/;
 
-          layer.setOpacity(obj.opacity);
-          layer.setVisible(!obj.hidden);
-        });
+        if (layer.name.match(reT)) {
+          var type = reT.exec(layer.name)[1];
+          var name = reL.exec(layer.name)[1];
+
+          if (type == 'wmts') {
+            gnOwsCapabilities.getWMTSCapabilities(res.href).
+                then(function(capObj) {
+                  var info = gnOwsCapabilities.getLayerInfoFromCap(
+                      name, capObj);
+                  info.group = layer.group;
+                  var l = gnMap.addWmtsToMapFromCap(map, info, capObj);
+                  l.setOpacity(layer.opacity);
+                  l.setVisible(!layer.hidden);
+                });
+          }
+        }
+        else { // we suppose it's WMS
+          gnOwsCapabilities.getWMSCapabilities(res.href).then(function(capObj) {
+            var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
+            info.group = layer.group;
+            var l = gnMap.addWmsToMapFromCap(map, info);
+            l.setOpacity(layer.opacity);
+            l.setVisible(!layer.hidden);
+          });
+        }
       };
     }
   ]);

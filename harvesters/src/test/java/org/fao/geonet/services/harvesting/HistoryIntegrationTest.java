@@ -34,7 +34,7 @@ public class HistoryIntegrationTest extends AbstractHarvesterServiceIntegrationT
         loginAsAdmin(context);
         
         final Element csw = createHarvesterParams("csw");
-        CswHarvesterIntegrationTest.addCswSpecificParams(csw);
+        CswHarvesterIntegrationTest.addCswSpecificParams(csw, CswHarvesterIntegrationTest.OUTPUT_SCHEMA);
         final String id = _harvestManager.addHarvesterReturnId(csw, context.getUserSession().getUserId());
         final Element harvesterConfig = _harvestManager.get(id, context, null);
         final String harvesterName = "Name";
@@ -65,7 +65,7 @@ public class HistoryIntegrationTest extends AbstractHarvesterServiceIntegrationT
         loginAsAdmin(context);
 
         final Element csw = createHarvesterParams("csw");
-        CswHarvesterIntegrationTest.addCswSpecificParams(csw);
+        CswHarvesterIntegrationTest.addCswSpecificParams(csw, CswHarvesterIntegrationTest.OUTPUT_SCHEMA);
         final String id = _harvestManager.addHarvesterReturnId(csw, context.getUserSession().getUserId());
         final Element harvesterConfig = _harvestManager.get(id, context, null);
         final String harvesterUuid = Xml.selectString(harvesterConfig, "*//uuid");

@@ -6,6 +6,9 @@ public class Functions {
     def env
     def commonHandlers
 
+    def isoUrlText = { el ->
+        el.'gmd:URL'.text()
+    }
     def isoText = { el ->
         def uiCode = '#'+env.lang2.toUpperCase()
         def locStrings = el.'**'.findAll{ it.name() == 'gmd:LocalisedCharacterString' && !it.text().isEmpty()}
@@ -16,11 +19,6 @@ public class Functions {
         if (!locStrings.isEmpty()) return locStrings[0].text()
         ""
     }
-
-    def isoURL = {urlEl ->
-        def charString = urlEl.'gco:CharacterString'
-    }
-
     /**
      * A shortcut for: commonHandlers.func.textEl(node), text))
      * @return

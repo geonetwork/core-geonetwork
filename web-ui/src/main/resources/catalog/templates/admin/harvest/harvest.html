@@ -74,8 +74,10 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <span data-ng-hide="harvesterSelected['@id'] == ''" data-translate="">updateHarvester</span>
+      <strong data-ng-hide="harvesterSelected['@id'] == ''">{{harvesterSelected.site.name}}</strong>
+
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
-      <strong>{{harvesterSelected.site.name}}</strong>
+      <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
 
 
       <div class="btn-toolbar">
@@ -140,7 +142,7 @@
       </div>
       <ul class="timeline timeline-1-col" data-ng-show="harvesterHistory.length !== 0">
         <li class="timeline-inverted"
-            data-ng-repeat="h in harvesterHistory | orderBy:'h.harvestdate'">
+            data-ng-repeat="h in harvesterHistory">
           <div class="timeline-badge"
                data-ng-class="h.deleted == 'true' ? 'warning' : (h.info[0]['stack'] ? 'danger' : 'success')">
             <i class="fa"
@@ -198,6 +200,16 @@
             </div>
           </div>
         </li>
+      </ul>
+      <ul class="pager">
+        <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyFirstPage()" class="ng-scope">«</a></li>
+        <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyPreviousPage()" class="ng-scope">‹</a></li>
+        <li class="ng-binding">
+          {{harvesterHistoryPaging.page}} / {{harvesterHistoryPaging.pages}} <em data-translate="" class="ng-scope">of </em>
+          <ng-pluralize count="harvesterHistoryPaging.total" when="{'0 ': ('noRecordFound' | translate), 'one': '1 ' + ('record' | translate), 'other': '{} ' + ('records' | translate)}"></ng-pluralize>
+        </li>
+        <li data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyNextPage()" class="ng-scope">›</a></li>
+        <li data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyLastPage()" class="ng-scope">»</a></li>
       </ul>
     </div>
   </div>

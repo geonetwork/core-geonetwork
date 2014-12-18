@@ -18,7 +18,7 @@ var gnHarvestergeoPREST = {
               "baseUrl": "http://"
             },
             "content":   {
-              "validate": "false",
+              "validate": "NOVALIDATION",
               "importxslt": "none"
             },
             "options":   {

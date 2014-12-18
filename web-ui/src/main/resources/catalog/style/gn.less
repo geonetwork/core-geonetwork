@@ -3,8 +3,9 @@
 @import "gn_bootstrap.less";
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
-@import "../lib/bootstrap.ext/datepicker/datepicker.css";
-@import "../lib/style/datetimepicker.css";
+// import the css files as less files so they are included in the final output of wro4j
+@import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
+@import (less) "../lib/style/datetimepicker.css";
 @import "gn_doc.less";
 
 @fa-version: '4.1.0';
@@ -325,4 +326,25 @@ span.twitter-typeahead {
       }
     }
   }
+}
+.fileupload-buttonbar .btn, .fileupload-buttonbar .toggle {
+  margin-bottom: 5px;
+}
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+input[type=file] {
+  display: block;
 }

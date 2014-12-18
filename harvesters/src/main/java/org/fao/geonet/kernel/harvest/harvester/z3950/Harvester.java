@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -360,7 +361,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
 				// validate it here if requested
-				if (params.validate) {
+				if (params.validate != HarvestValidationEnum.NOVALIDATION) {
 					Document docVal;
 					if (!transformIt && (doc.getDocType() != null)) {
 						docVal = new Document(md, (DocType)doc.getDocType().detach());

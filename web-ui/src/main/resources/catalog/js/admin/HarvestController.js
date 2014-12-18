@@ -39,17 +39,23 @@
       $scope.harvesterUpdated = false;
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
+      $scope.harvesterHistoryPaging = {
+        page:  1,
+        size:  3,
+        pages: 0,
+        total: 0
+      };
       $scope.isLoadingHarvester = false;
       $scope.isLoadingHarvesterHistory = false;
 
 
       var unbindStatusListener = null;
 
-
       function loadHarvesters() {
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
-        return $http.get('admin.harvester.list@json').success(function(data) {
+
+        return $http.get('admin.harvester.list?_content_type=json').success(function(data) {
           if (data != 'null') {
             $scope.harvesters = data;
             gnUtilityService.parseBoolean($scope.harvesters);
@@ -62,19 +68,49 @@
       }
 
 
-      function loadHistory() {
+      function loadHistory(backgroundLoad) {
+        var page, size, uuid;
+        page = $scope.harvesterHistoryPaging.page - 1;
+        size = $scope.harvesterHistoryPaging.size;
+        uuid = $scope.harvesterSelected.site.uuid;
+        var list;
         $scope.isLoadingHarvesterHistory = true;
-        $scope.harvesterHistory = undefined;
-        $http.get('admin.harvester.history@json?uuid=' +
-            $scope.harvesterSelected.site.uuid).success(function(data) {
+        if (!backgroundLoad) {
+          $scope.harvesterHistory = undefined;
+        } else {
+          list = $("ul.timeline, .timeline-panel");
+          list.addClass('loading');
+        }
+        $http.get('admin.harvester.history?uuid=' + uuid + '&page=' + page + '&size=' + size + '&_content_type=json').success(function(data) {
           $scope.harvesterHistory = data.harvesthistory;
+          $scope.harvesterHistoryPaging.pages = parseInt(data.pages);
+          $scope.harvesterHistoryPaging.total = parseInt(data.total);
           $scope.isLoadingHarvesterHistory = false;
+          if (list) {
+            list.removeClass('loading');
+          }
         }).error(function(data) {
           // TODO
           $scope.isLoadingHarvesterHistory = false;
         });
       }
 
+      $scope.historyFirstPage = function() {
+        $scope.harvesterHistoryPaging.page = 1;
+        loadHistory(true);
+      };
+      $scope.historyLastPage = function() {
+        $scope.harvesterHistoryPaging.page = $scope.harvesterHistoryPaging.pages;
+        loadHistory(true);
+      };
+      $scope.historyNextPage = function() {
+        $scope.harvesterHistoryPaging.page = Math.min($scope.harvesterHistoryPaging.pages, $scope.harvesterHistoryPaging.page + 1);
+        loadHistory(true);
+      };
+      $scope.historyPreviousPage = function() {
+        $scope.harvesterHistoryPaging.page = Math.max(1, $scope.harvesterHistoryPaging.page - 1);
+        loadHistory(true);
+      };
       function loadHarvesterTypes() {
         $http.get('admin.harvester.info@json?type=harvesterTypes',
             {cache: true})
@@ -214,7 +250,7 @@
         loadHarvesters();
       };
       $scope.deleteHarvester = function() {
-        $http.get('admin.harvester.remove@json?id=' +
+        $http.get('admin.harvester.remove?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -227,7 +263,7 @@
       };
 
       $scope.deleteHarvesterRecord = function() {
-        $http.get('admin.harvester.clear@json?id=' +
+        $http.get('admin.harvester.clear?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -239,11 +275,7 @@
             });
       };
       $scope.deleteHarvesterHistory = function() {
-        var ids = [];
-        angular.forEach($scope.harvesterHistory, function(h) {
-          ids.push(h.id);
-        });
-        $http.get('admin.harvester.history.delete@json?id=' + ids.join('&id='))
+        $http.get('admin.harvester.history.delete?uuid=' + $scope.harvesterSelected.site.uuid)
           .success(function(data) {
               loadHarvesters().then(function() {
                 $scope.selectHarvester($scope.harvesterSelected);
@@ -251,7 +283,7 @@
             });
       };
       $scope.runHarvester = function() {
-        $http.get('admin.harvester.run@json?id=' +
+        $http.get('admin.harvester.run@json?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               loadHarvesters();

@@ -87,6 +87,11 @@
 		<description>A reference to a related resource.</description>
 		<example>Recommended best practice is to identify the referenced resource by means of a string or number conforming to a formal identification system.</example>
 	</element>
+	<element name="dc:URI">
+		<label>URI</label>
+		<description/>
+        <example/>
+	</element>
 	<!-- ==================================================== -->
 	<element name="dc:coverage">
 		<label>Coverage</label>

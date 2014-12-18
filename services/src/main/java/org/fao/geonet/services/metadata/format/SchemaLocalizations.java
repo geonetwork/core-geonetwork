@@ -244,7 +244,7 @@ public class SchemaLocalizations {
 
     public String codelistTranslation(String codelist, String context, String type) throws Exception {
 
-        if (LANG_CODELIST_NS.equals(codelist)) {
+        if (LANG_CODELIST_NS.equals(codelist) || "#LanguageCode".equals(codelist)) {
             return translateLanguageCode(context);
         }
 

@@ -51,29 +51,27 @@ public class TemplateCache {
         TNode template = fetchFromCache(originalPath, file);
         Path fromParentSchema = null;
 
-        if (!this.systemInfo.isDevMode()) {
-            if (template != null) {
-                return new FileResult(template, substitutions);
-            }
+        if (template != null) {
+            return new FileResult(template, substitutions);
+        }
 
-            file = schemaDir.resolve(path);
-            template = fetchFromCache(originalPath, file);
+        file = schemaDir.resolve(path);
+        template = fetchFromCache(originalPath, file);
+        if (template != null) {
+            return new FileResult(template, substitutions);
+        }
+        fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
+        if (fromParentSchema != null) {
+            template = fetchFromCache(originalPath, fromParentSchema);
             if (template != null) {
                 return new FileResult(template, substitutions);
             }
-            fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
-            if (fromParentSchema != null) {
-                template = fetchFromCache(originalPath, fromParentSchema);
-                if (template != null) {
-                    return new FileResult(template, substitutions);
-                }
-            }
+        }
 
-            file = rootFormatterDir.resolve(path);
-            template = fetchFromCache(originalPath, file);
-            if (template != null) {
-                return new FileResult(template, substitutions);
-            }
+        file = rootFormatterDir.resolve(path);
+        template = fetchFromCache(originalPath, file);
+        if (template != null) {
+            return new FileResult(template, substitutions);
         }
 
         file = formatterDir.resolve(path);
@@ -107,8 +105,8 @@ public class TemplateCache {
     }
 
     public boolean exists(Path file) throws IOException {
-        if (this.filesKnownToNotExist.contains(file) ||
-                this.filesKnownToNotExist.contains(file.toAbsolutePath())) {
+        if (!this.systemInfo.isDevMode() &&
+            (this.filesKnownToNotExist.contains(file) || this.filesKnownToNotExist.contains(file.toAbsolutePath()))) {
             return false;
         }
         final boolean exists = Files.exists(file);
@@ -133,6 +131,9 @@ public class TemplateCache {
     }
 
     public TNode fetchFromCache(Path originalPath, Path file) throws IOException {
+        if (this.systemInfo.isDevMode()) {
+            return null;
+        }
         TNode template = this.canonicalFileNameToText.get(originalPath);
         boolean recache = false;
         if (template == null) {

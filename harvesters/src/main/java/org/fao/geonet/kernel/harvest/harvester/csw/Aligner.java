@@ -109,8 +109,10 @@ public class Aligner extends BaseAligner
 			}
 		}
 
-		if(oper.getPreferredOutputSchema() != null) {
-			request.setOutputSchema(oper.getPreferredOutputSchema());
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            request.setOutputSchema(this.params.outputSchema);
+        } else if(oper.getPreferredOutputSchema() != null) {
+            request.setOutputSchema(oper.getPreferredOutputSchema());
 		}
 
         if(oper.getPreferredServerVersion() != null) {
@@ -380,15 +382,15 @@ public class Aligner extends BaseAligner
 			response = list.get(0);
 			response = (Element) response.detach();
 
-            // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(response))  {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
-                    result.doesNotValidate++;
-                    return null;
-                }
+
+            try {
+                params.validate.validate(dataMan, context, response);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
             }
-            
+
             if(params.rejectDuplicateResource) {
                 if (foundDuplicateForResource(uuid, response)) {
                     return null;

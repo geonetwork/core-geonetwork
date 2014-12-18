@@ -494,9 +494,13 @@ public class AccessManager {
      * @param name
      * @return
      */
-    public int getPrivilegeId(final String name) {
-        return _opRepository.findByName(name).getId();
-    }
+	public int getPrivilegeId(final String name) {
+        final Operation op = _opRepository.findByName(name);
+        if (op == null) {
+            throw new IllegalArgumentException("No Operation/privilege found with name: " + name);
+        }
+        return op.getId();
+	}
 
     /**
      * TODO javadoc.

@@ -193,41 +193,55 @@
             .swapPriority(schema, schematron, schema.schematron[idx + 1]);
         }
       };
-      $scope.createSchematronGroup = function() {
-        var name, groups, i, newGroup;
-        name = $translate('NEW');
+      $scope.createSchematronGroup = function(newGroup) {
+        if (!newGroup) {
+          newGroup = {
+            id: {
+              name: $translate('NEW'),
+              schematronid: $scope.selection.schematron.id
+            },
+            requirement: $scope.requirements[0]
+          };
+        }
+        var name, groups, i = -1;
+        name = newGroup.id.name;
         groups = $scope.schematronGroups;
         if (!groups) {
           groups = [];
           $scope.schematronGroups = groups;
         }
 
-        var isNameTaken = function() {
+        var isNameTaken = function(name) {
           var j, group;
           for (j = 0; j < groups.length; j++) {
             group = groups[j];
-            if (group.id.name === name) {
+            if (group.id.name === (name)) {
               return true;
             }
           }
           return false;
         };
-        i = 1;
-        while (isNameTaken()) {
-          i++;
-          name = $translate('NEW') + i;
+        if (isNameTaken(name)) {
+          i = 1;
+          while (isNameTaken(name + i)) {
+            i++;
+          }
+          newGroup.id.name = name + i
         }
-        newGroup = {
-          id: {
-            name: name,
-            schematronid: $scope.selection.schematron.id
-          },
-          requirement: $scope.requirements[0]
-        };
+
         gnSchematronAdminService.group.add(newGroup, groups, function(group) {
           $scope.selection.group = group;
           updateGroupCount(group, 1);
+          var i, criteria = group.criteria;
+          group.criteria = [];
+          for(i = 0; i < criteria.length; i++) {
+              var template = angular.copy(criteria[i]);
+              gnSchematronAdminService.criteria.add(criteria[i], group.criteria[i], group);
+          }
         });
+      };
+      $scope.duplicateSchematronGroup = function() {
+        $scope.createSchematronGroup(angular.copy($scope.selection.group));
       };
       gnSchematronAdminService.criteriaTypes.list(function(data) {
         $scope.schematrons = data.schemas;
@@ -236,22 +250,27 @@
         if ($routeParams.schemaName) {
           var findSchema, findSchematron, schema, schematron;
           findSchema = function(schemaName) {
-            var i, schemaDef;
-            for (i = 0; i < $scope.schematrons.length; i++) {
-              schemaDef = $scope.schematrons[i];
-              if (schemaDef.name === schemaName) {
-                return schemaDef;
+            var key, schemaDef;
+            for(key in $scope.schematrons) {
+              if ($scope.schematrons.hasOwnProperty(key)) {
+                schemaDef = $scope.schematrons[key];
+                if (schemaDef.name === schemaName) {
+                  return schemaDef;
+                }
               }
             }
             return undefined;
           };
+
           findSchematron = function(schemaDef, schematronId) {
-            var i, schematron;
+            var key, schematron;
             if (schematronId) {
-              for (i = 0; i < schemaDef.schematron.length; i++) {
-                schematron = schemaDef.schematron[i];
-                if (schematronId === schematron.id) {
-                  return schematron;
+              for(key in schemaDef.schematron) {
+                if (schemaDef.schematron.hasOwnProperty(key)) {
+                  schematron = schemaDef.schematron[key];
+                  if (schematronId === schematron.id) {
+                    return schematron;
+                  }
                 }
               }
             }

@@ -1,0 +1,12 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <ul class="md-value-list">
+        <li fmt-repeat="link in links">
+            <a fmt-if="link.href" href="{{link.href}}" target="_link">
+                <span fmt-if="link.name">{{link.name}}</span>
+                <span fmt-if="!link.name">{{link.href}}</span>
+            </a>
+            <a fmt-if="!link.href" >{{link.name}}</a>
+            <span fmt-if="link.desc"> - {{link.desc}}</span>
+        </li>
+    </ul>
+</div>

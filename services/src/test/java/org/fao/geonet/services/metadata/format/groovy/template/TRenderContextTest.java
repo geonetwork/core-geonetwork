@@ -1,5 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.collect.Maps;
+import groovy.util.XmlSlurper;
+import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem;
 import org.junit.Test;
 
@@ -56,6 +59,30 @@ public class TRenderContextTest {
 
         context.getModelValue(expr);
         assertEquals("KEY", context.getModelValue("item.0.0"));
+    }
+
+    @Test
+    public void testGPath() throws Exception {
+        String itemKey = "item";
+        final XmlSlurper xmlSlurper = new XmlSlurper(false, false);
+        final String xml =
+                "<gmd:MD_Metadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"><gmd:fileIdentifier><gco:CharacterString "
+                + "xmlns:gco=\"http://www.isotc211.org/2005/gco\">da165110-88fd-11da-a88f-000d939bc5d8</gco:CharacterString>"
+                + "</gmd:fileIdentifier></gmd:MD_Metadata>";
+
+        Map<String, String> nsMapping = Maps.newHashMap();
+        nsMapping.put("gmd", "http://www.isotc211.org/2005/gmd");
+        nsMapping.put("gco", "http://www.isotc211.org/2005/gco");
+
+        final GPathResult gpath = xmlSlurper.parseText(xml).declareNamespace(nsMapping);
+
+        final Map<String, Object> model = Collections.<String, Object>singletonMap(itemKey, gpath);
+        final TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), model);
+
+        assertEquals("gmd:MD_Metadata", ((GPathResult) context.getModelValue("item")).name());
+        assertEquals("gmd:fileIdentifier", ((GPathResult) context.getModelValue("item.gmd:fileIdentifier")).name());
+        assertEquals("gmd:fileIdentifier", context.getModelValue("item.gmd:fileIdentifier.name()"));
+        assertEquals("gco:CharacterString", ((GPathResult) context.getModelValue("item.gmd:fileIdentifier.gco:CharacterString")).name());
     }
 
     @Test

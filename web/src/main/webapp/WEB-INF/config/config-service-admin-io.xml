@@ -31,5 +31,20 @@
       <class name=".services.metadata.ImportFromDir" />
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
+
+    <service name="md.insert">
+      <documentation><![CDATA[
+        Insert a metadata sending an XML document.
+
+        Parameters are:
+        * insert_mode: 0
+        * template: The type of record (y or n or s)
+        * data: The XML to insert
+        * group:
+
+        ]]></documentation>
+      <class name=".services.metadata.Insert" />
+    </service>
+
   </services>
 </geonet>

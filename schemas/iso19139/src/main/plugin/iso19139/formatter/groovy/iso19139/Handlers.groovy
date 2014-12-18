@@ -1,5 +1,6 @@
 package iso19139
 
+import groovy.util.slurpersupport.GPathResult
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 
@@ -11,6 +12,10 @@ public class Handlers {
     Functions isofunc
     common.Handlers commonHandlers
     List<String> packageViews
+    String rootEl = 'gmd:MD_Metadata'
+    String extentMapProjection = 'EPSG:3857'
+    String extentMapBackground = 'osm'
+    int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -22,7 +27,7 @@ public class Handlers {
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
-                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo', 'gmd:MD_Metadata']
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo', rootEl]
     }
 
     def addDefaultHandlers() {
@@ -33,21 +38,16 @@ public class Handlers {
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Format Elements',  select: matchers.isFormatEl, group: true, formatEls
-        handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, {keywords ->
-            def output = new StringBuilder()
-            keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each{
-                output.append("<dd>").append(it).append("</dd>")
-            }
-            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(keywords[0]), childData: output])
-        }
-        handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
-        handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
+        handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
-        handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
+        handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
+        handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
 
+        handlers.skip matchers.hasDateChild, {it.children()}
+        handlers.skip matchers.hasCodeListChild, {it.children()}
         handlers.skip matchers.isSkippedContainer, {it.children()}
 
-        handlers.add 'gmd:locale', localeEl
+        handlers.add select: 'gmd:locale', group: true, localeEls
         handlers.add 'gmd:CI_Date', ciDateEl
         handlers.add 'gmd:CI_Citation', citationEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
@@ -58,7 +58,7 @@ public class Handlers {
         commonHandlers.addDefaultStartAndEndHandlers();
         addExtentHandlers()
 
-        handlers.sort name: 'Text Elements', select: 'gmd:MD_Metadata'/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
+        handlers.sort name: 'Text Elements', select: rootEl/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
             def v1 = matchers.isContainerEl(el1) ? 1 : -1;
             def v2 = matchers.isContainerEl(el2) ? 1 : -1;
             return v1 - v2
@@ -70,12 +70,13 @@ public class Handlers {
     def addExtentHandlers() {
         handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
+        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl
         handlers.add 'gmd:geographicElement', commonHandlers.processChildren{it.children()}
         handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
     }
 
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
-    def isoUrlEl = { isofunc.isoTextEl(it, it.'gmd:Url'.text())}
+    def isoUrlEl = { isofunc.isoTextEl(it, isofunc.isoUrlText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
     def isoSimpleEl = {isofunc.isoTextEl(it, it.'*'.text())}
     def parseBool(text) {
@@ -100,15 +101,38 @@ public class Handlers {
         }
     }
 
-    def localeEl = { el ->
-        def ptLocale = el.'gmd:PT_Locale'
-        def toHtml = commonHandlers.when(matchers.isCodeListEl, commonHandlers.span(f.&codelistValueLabel))
+    def localeEls = { els ->
+        def locales = []
+        els.each {
+            it.'gmd:PT_Locale'.each { loc ->
+                locales << [
+                        language: f.codelistValueLabel(loc.'gmd:languageCode'.'gmd:LanguageCode'),
+                        charset: f.codelistValueLabel(loc.'gmd:characterEncoding'.'gmd:MD_CharacterSetCode')
+                ]
+            }
+        }
+        handlers.fileResult("html/locale.html", [
+                label: f.nodeLabel(els[0]),
+                locales: locales
+        ])
+    }
 
-        def data = [toHtml(ptLocale.'gmd:languageCode'.'gmd:LanguageCode'),
-                    toHtml(ptLocale.'gmd:country'.'gmd:Country')]
+    def onlineResourceEls = { els ->
+        def links = []
 
-        def nonEmptyEls = data.findAll{it != null}
-        '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
+        els.each {it.'gmd:CI_OnlineResource'.each { link ->
+                links << [
+                        href : isofunc.isoUrlText(link.'gmd:linkage'),
+                        name : isofunc.isoText(link.'gmd:name'),
+                        desc : isofunc.isoText(link.'gmd:description')
+                ]
+            }
+        }
+
+        handlers.fileResult('html/online-resource.html', [
+                label: f.nodeLabel(els[0]),
+                links: links
+        ])
     }
 
     def formatEls = { els ->
@@ -155,7 +179,38 @@ public class Handlers {
         def model = [label: label, formats: formats]
         handlers.fileResult("html/format.html", model)
     }
+    def keywordsEl = {keywords ->
+        def keywordProps = com.google.common.collect.ArrayListMultimap.create()
+        keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
+            def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
+            keywordProps.put(type, isofunc.isoText(k))
+        }
 
+        return handlers.fileResult('html/keyword.html', [
+                label : f.nodeLabel("gmd:descriptiveKeywords", null),
+                keywords: keywordProps.asMap()])
+    }
+    def graphicOverviewEl = {graphics ->
+        def links = []
+        graphics.each {it.'gmd:MD_BrowseGraphic'.each { graphic ->
+            def img = graphic.'gmd:fileName'.text()
+            String thumbnailUrl;
+            if (img.startsWith("http://") || img.startsWith("https://")) {
+                thumbnailUrl = img;
+            } else {
+                thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
+            }
+
+            links << [
+                    src: thumbnailUrl,
+                    desc: isofunc.isoText(graphic.'gmd:fileDescription')
+            ]
+        }}
+        handlers.fileResult("html/graphic-overview.html", [
+                label: f.nodeLabel(graphics[0]),
+                graphics: links
+        ])
+    }
     def citationEl = { el ->
         Set processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
                                  'gmd:date', 'gmd:edition', 'gmd:editionDate', 'gmd:presentationForm']
@@ -204,22 +259,49 @@ public class Handlers {
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
-    def bboxEl = {
-        el ->
-            def replacements = [
-                    w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
-                    e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
-                    s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-                    pdfOutput: env.formatType == FormatType.pdf
-            ]
+    def polygonEl = { el ->
+        def mapproj = extentMapProjection
+        def background = extentMapBackground
+        def width = extentMapWidth
+        def mdId = env.getMetadataId();
+        def gmlId = null;
+        def depthFirstIter = el.depthFirst();
+        while (gmlId == null && depthFirstIter.hasNext()) {
+            GPathResult next = depthFirstIter.next();
+            def nextGmlId = next['@gml:id'].text()
+            if (!nextGmlId.isEmpty()) {
+                gmlId = nextGmlId;
+            }
+        }
 
-            def bboxData = handlers.fileResult("html/bbox.html", replacements)
-            return handlers.fileResult('html/2-level-entry.html', [
-                    label: f.nodeLabel(el),
-                    childData: bboxData])
+        if (gmlId != null) {
+            def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
+                    '         width="{{width}}" />'
+            handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+        }
     }
 
+    def bboxEl = { el ->
+        if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
+                el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
+            def replacements = bbox(el)
+            replacements['label'] = f.nodeLabel(el)
+            replacements['pdfOutput'] = env.formatType == FormatType.pdf
+
+            handlers.fileResult("html/bbox.html", replacements)
+        }
+    }
+
+    def bbox(el) {
+        return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
+          e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+          s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+          n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
+          width: extentMapWidth,
+          background: extentMapBackground,
+          geomproj: "EPSG:4326",
+          mapproj: extentMapProjection]
+    }
     def rootPackageEl = {
         el ->
             def rootPackage = el.children().findAll { ch -> !this.packageViews.contains(ch.name()) }
@@ -229,7 +311,7 @@ public class Handlers {
             def otherPackageData = handlers.processElements(otherPackage, el);
 
             def rootPackageOutput = handlers.fileResult('html/2-level-entry.html',
-                    [label: f.nodeLabel(el), childData: rootPackageData, name: 'gmd_MD_Metadata'])
+                    [label: f.nodeLabel(el), childData: rootPackageData, name: rootEl.replace(":", "_")])
 
             return  rootPackageOutput.toString() + otherPackageData
     }

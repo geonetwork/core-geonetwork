@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+
 /**
  * @author Jesse on 10/23/2014.
  */
@@ -167,5 +169,9 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         } finally {
             EnvironmentProxy.clearContext();
         }
+    }
+
+    protected String escapeXmlText(String text) {
+        return xmlContentEscaper().escape(text.replaceAll("\\s+", " ")).replaceAll("\\&", "&amp;").replaceAll("\"", "&quot;");
     }
 }

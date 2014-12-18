@@ -120,6 +120,24 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnMetadataManager#importFromXml
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Import records from a xml string.
+         *
+         * @param {Object} data Params to send to md.insert service
+         * @return {HttpPromise} Future object
+         */
+        importFromXml: function(data) {
+          return $http.post('md.insert?_content_type=json',data, {
+            headers: {'Content-Type':
+                'application/x-www-form-urlencoded'}
+          });
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#create
            * @methodOf gnMetadataManager

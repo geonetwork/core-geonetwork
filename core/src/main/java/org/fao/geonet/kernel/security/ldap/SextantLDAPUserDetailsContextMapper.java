@@ -77,17 +77,8 @@ public class SextantLDAPUserDetailsContextMapper extends
 				.convertAttributes(userCtx.getAttributes().getAll());
 
 		LDAPUser userDetails = new LDAPUser(username);
+        User user = userDetails.getUser();
 
-		// Checks if the user already exists
-		User user = userRepository.findOneByUsername(username);
-
-		// Uses the newly created user (from LDAPUser)
-		if (user == null) {
-			user = userDetails.getUser();
-		} else {
-			userDetails.setUser(user);
-		}
-		// Updates the user fields
 		user.setName(getUserInfo(userInfo, "name"))
 				.setSurname(getUserInfo(userInfo, "surname"))
 				.setOrganisation(getUserInfo(userInfo, "organisation"));
@@ -113,8 +104,8 @@ public class SextantLDAPUserDetailsContextMapper extends
 		}
 
 		// Saves the user
-		userRepository.saveAndFlush(user);
-		
+        saveUser(userDetails);
+
 		// updates the groups informations
 		updateGroupOwnership(userDetails);
 

@@ -96,7 +96,7 @@ public class GroovyFormatter implements FormatterImpl {
             final Path baseShared = this.dataDirectory.getFormatterDir().resolve(GROOVY_SCRIPT_ROOT);
             final Path schemaFormatterDir = getSchemaPluginFormatterDir(fparams.schema);
             final Path schemaShared = schemaFormatterDir.resolve(GROOVY_SCRIPT_ROOT);
-            GroovyClassLoader cl = getParentClassLoader(fparams, baseShared, schemaShared);
+            GroovyClassLoader cl = getParentClassLoader(fparams, fparams.schema, baseShared, schemaShared);
 
             URL[] roots = new URL[]{
                     IO.toURL(fparams.formatDir)
@@ -127,15 +127,16 @@ public class GroovyFormatter implements FormatterImpl {
         return this.schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
     }
 
-    private GroovyClassLoader getParentClassLoader(FormatterParams fparams, Path baseShared, Path schemaShared) throws IOException,
+    private GroovyClassLoader getParentClassLoader(FormatterParams fparams, String schema, Path baseShared, Path schemaShared) throws IOException,
             ResourceException, ScriptException {
-        GroovyClassLoader cl = this.schemaClassLoaders.get(fparams.schema);
+        GroovyClassLoader cl = this.schemaClassLoaders.get(schema);
         if (fparams.isDevMode() || cl == null) {
             final GroovyClassLoader parent;
-            final String dependOnSchema = fparams.config.dependOn();
+            ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false, null);
+            final String dependOnSchema = newConfig.dependOn();
             if (dependOnSchema != null) {
                 Path dependent = getSchemaPluginFormatterDir(dependOnSchema).resolve(GROOVY_SCRIPT_ROOT);
-                parent = getParentClassLoader(createParamsForSchema(fparams, dependOnSchema), baseShared, dependent);
+                parent = getParentClassLoader(fparams, dependOnSchema, baseShared, dependent);
             } else {
                 if (fparams.isDevMode() || this.baseClassLoader == null) {
                     URL[] roots = new URL[]{IO.toURL(baseShared)};
@@ -151,17 +152,10 @@ public class GroovyFormatter implements FormatterImpl {
 
             loadScripts(schemaShared, groovyScriptEngine);
             cl = groovyScriptEngine.getGroovyClassLoader();
-            this.schemaClassLoaders.put(fparams.schema, cl);
+            this.schemaClassLoaders.put(schema, cl);
         }
 
         return cl;
-    }
-
-    private FormatterParams createParamsForSchema(FormatterParams fparams, String schema) throws IOException {
-        ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false, null);
-        final FormatterParams formatterParams = fparams.copy();
-        formatterParams.config = newConfig;
-        return formatterParams;
     }
 
     private void loadScripts(Path baseShared, final GroovyScriptEngine gse) throws ResourceException, ScriptException, IOException {

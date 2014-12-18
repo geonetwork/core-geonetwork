@@ -41,6 +41,7 @@
           map: '='
         },
         link: function(scope, element, attrs) {
+
           scope.save = function($event) {
             var xml = gnOwsContextService.writeContext(scope.map);
 
@@ -54,13 +55,16 @@
             fileInput.click();
           });
 
-          scope.importOwc = function() {
-            if (fileInput.files.length > 0) {
-              readAsText(fileInput.files[0], function(text) {
-                gnOwsContextService.loadContext(text, scope.map);
-              });
-            }
-          };
+          //TODO: don't trigger if we load same file twice
+          angular.element(fileInput).bind('change', function(changeEvent) {
+            scope.$apply(function() {
+              if (fileInput.files.length > 0) {
+                readAsText(fileInput.files[0], function(text) {
+                  gnOwsContextService.loadContext(text, scope.map);
+                });
+              }
+            });
+          });
 
           // load context from url or from storage
           if (gnViewerSettings.owsContext) {
@@ -74,7 +78,6 @@
                 gnViewerSettings.defaultContext,
                 scope.map);
           }
-
 
           // store the current context in local storage to reload it
           // automatically on next connexion

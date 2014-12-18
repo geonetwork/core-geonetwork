@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -143,6 +141,17 @@ public class LuceneIndexLanguageTracker {
         if (locale == null) {
             locale = "none";
         }
+        locale = locale.toLowerCase();
+        switch (locale) {
+            case "deu":
+                locale = "ger";
+                break;
+            case "fra":
+                locale = "fre";
+                break;
+            default:
+                // do nothing
+        }
         return locale;
     }
 
@@ -249,18 +258,19 @@ public class LuceneIndexLanguageTracker {
         lock.lock();
         try{
             lazyInit();
+            final String language = normalize(info.language);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + info.language + " index");
+                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + language + " index");
             }
-            open(info.language);
+            open(language);
             // Add taxonomy first
             Document docAfterFacetBuild = info.document;
             docAfterFacetBuild = taxonomyIndexTracker.addDocument(info.document, info.taxonomy);
             // Index the document returned after the facets are built by the taxonomy writer
             if (docAfterFacetBuild == null) {
-                trackingWriters.get(info.language).addDocument(info.document);
+                trackingWriters.get(language).addDocument(info.document);
             } else {
-                trackingWriters.get(info.language).addDocument(docAfterFacetBuild);
+                trackingWriters.get(language).addDocument(docAfterFacetBuild);
             }
         } finally {
             lock.unlock();

@@ -59,7 +59,6 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -102,7 +101,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	    this.log = log;
 
 		ListIdentifiersRequest req = new ListIdentifiersRequest(context.getBean(GeonetHttpRequestFactory.class));
-		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+		req.setSchemaPath(context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH));
 
         XmlRequest t = req.getTransport();
 		try {
@@ -346,7 +345,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             if(log.isDebugEnabled()) log.debug("  - Getting remote metadata with id : "+ ri.id);
 
 			GetRecordRequest req = new GetRecordRequest(transport);
-			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+			req.setSchemaPath(context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH));
+
 			req.setIdentifier(ri.id);
 			req.setMetadataPrefix(ri.prefix);
 
@@ -374,11 +374,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			}
 			else
 			{
-				if (!params.validate || validates(schema, md))
-					return (Element) md.detach();
 
-				log.warning("Skipping metadata that does not validate. Remote id : "+ ri.id);
-				result.doesNotValidate++;
+                try {
+                    params.validate.validate(dataMan, context, md);
+                    return (Element) md.detach();
+                } catch (Exception e) {
+                    log.info("Skipping metadata that does not validate. Remote id : "+ ri.id);
+                    result.doesNotValidate++;
+                }
 			}
 		}
 

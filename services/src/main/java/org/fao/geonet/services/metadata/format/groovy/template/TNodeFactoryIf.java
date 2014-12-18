@@ -16,6 +16,7 @@ import java.io.IOException;
 public class TNodeFactoryIf extends TNodeFactoryByAttName {
 
     public static final String IF = "if";
+    public static final String ONLY_CHILDREN = "only-children";
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
@@ -25,6 +26,7 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
         super(IF);
         this.info = info;
     }
+
     public TNodeFactoryIf() {
         super(IF);
     }
@@ -32,8 +34,10 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         final String value = getValue(attributes, IF);
-        final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, IF);
-        return new TNodeIf(info, qName, filteredAttributes, value);
+        final boolean onlyChildren = getBooleanAttribute(attributes, ONLY_CHILDREN, false);
+
+        final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, IF, ONLY_CHILDREN);
+        return new TNodeIf(info, qName, filteredAttributes, value, onlyChildren);
     }
 
 }

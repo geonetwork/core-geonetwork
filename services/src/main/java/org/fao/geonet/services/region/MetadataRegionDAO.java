@@ -13,6 +13,16 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * A Regions DAO that fetches geometries from a metadata.  The geometry ids are structured as follows:
+ *
+ * <ul>
+ *     <li>metadata:@id1234 - get all the geometries in the metadata with the id 1234</li>
+ *     <li>metadata:@uuid1234 - get all the geometries in the metadata with the uuid 1234</li>
+ *     <li>metadata:@uuid1234:1111 - get all the geometry with the geonet:element/@ref = 1111 in the metadata with the uuid 1234</li>
+ *     <li>metadata:@uuid1234:@gml1111 - get all the geometry with the @gml:id = 1111 in the metadata with the uuid 1234</li>
+ * </ul>
+ */
 public class MetadataRegionDAO extends RegionsDAO {
 
     public static final String CATEGORY_NAME = "metadata";

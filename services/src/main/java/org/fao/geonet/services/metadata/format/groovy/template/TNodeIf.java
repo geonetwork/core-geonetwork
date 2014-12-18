@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
  * An "if" node that renders if the model has a truthy value for the given key.
  * <p/>
  * In this case truthy means, non-null, non-empty (if string, collection, array or map), a number != 0 or true value.
- *
+ * <p/>
  * If the expression starts with a ! then check is not-ed.
  * <p/>
  * Example:
@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
  * </code></pre>
  * the div will be rendered if there is a value "key" in the model that is a string or Iterable that is non-empty.
  *
- *
  * @author Jesse on 11/29/2014.
  */
 public class TNodeIf extends TNode {
@@ -38,9 +37,11 @@ public class TNodeIf extends TNode {
     private final String expr;
     private final boolean not;
     private final Set<String> scriptVariables;
+    private final boolean onlyChildren;
 
-    public TNodeIf(SystemInfo info, String qName, Attributes attributes, String expr) throws IOException {
+    public TNodeIf(SystemInfo info, String qName, Attributes attributes, String expr, boolean onlyChildren) throws IOException {
         super(info, qName, attributes);
+        this.onlyChildren = onlyChildren;
         final Matcher matcher = TextContentParser.INTERPOLATION_PATTERN.matcher(expr);
         if (matcher.find()) {
             this.scriptVariables = Sets.newHashSet();
@@ -102,6 +103,22 @@ public class TNodeIf extends TNode {
         }
     }
 
+    @Override
+    public void render(TRenderContext context) throws IOException {
+        final Optional<String> canRenderOptional = canRender(context);
+        if (!canRenderOptional.isPresent()) {
+            if (onlyChildren) {
+                for (TNode child : getChildren()) {
+                    child.render(context);
+                }
+            } else {
+                super.render(context);
+            }
+        } else {
+            addCannontRenderComment(context, canRenderOptional);
+        }
+    }
+
     @VisibleForTesting
     static String isTruthy(Object val) {
         if (val == null) {
@@ -129,11 +146,11 @@ public class TNodeIf extends TNode {
         } else if (val instanceof Float) {
             return Math.abs((Float) val) > PRECISION ? null : "0";
         } else if (val instanceof Number) {
-            return ((Number)val).intValue() != 0 ? null : "0";
+            return ((Number) val).intValue() != 0 ? null : "0";
         } else if (val instanceof Character) {
-            return  null;
+            return null;
         } else if (val.getClass().isArray()) {
-            return ((Object[])val).length > 0 ? null : "empty";
+            return ((Object[]) val).length > 0 ? null : "empty";
         } else {
             throw new AssertionError("Not a recognized type: " + val.getClass() + ": " + val);
         }

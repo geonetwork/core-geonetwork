@@ -436,6 +436,7 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21.0">
 		<label>Informazioni sullo schema dell'applicazione</label>
+		<abbrLabel>Schema dell'app.</abbrLabel>
 		<description>Fornisce informazioni sullo schema concettuale di un dataset</description>
 	</element>
 	<element name="gmd:associationType" id="66.4">
@@ -617,6 +618,7 @@
 	<element name="gmd:contentInfo" id="16.0">
 		<description>Informazioni sulle caratteristiche dei dati di tipo immagine</description>
 		<label>Informazioni sul contenuto</label>
+		<abbrLabel>Info. sul contenuto</abbrLabel>
 	</element>
 	<element name="gmd:contentType" id="241.0">
 		<label>Tipo di contenuto</label>
@@ -650,6 +652,7 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18.0">
 		<label>Informazioni sulla qualità dei dati</label>
+		<abbrLabel>Qualità dei dati</abbrLabel>
 		<description>Valutazione globale della qualità della risorsa</description>
 	</element>
 	<element name="gmd:dataSetURI" id="11.1">
@@ -840,6 +843,7 @@
 	<element name="gmd:distributionInfo" id="17.0">
 		<description>Informazioni sul distributore e su come ottenere la risorsa</description>
 		<label>Informazioni sulla distribuzione</label>
+		<abbrLabel>Distribuzione</abbrLabel>
 	</element>
 	<element name="gmd:distributionOrderProcess" id="281.0">
 		<label>Distribuzione / Ordine di processo</label>
@@ -1079,6 +1083,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:identificationInfo" id="15.0">
 		<label>Informazioni di identificazione</label>
+		<abbrLabel>Identificazione</abbrLabel>
 		<description>Informazioni di base sulla risorsa alla quale vengono applicati i dati</description>
 		<condition>obbligatorio</condition>
 	</element>
@@ -1211,18 +1216,22 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
 		<label>Vincoli sui metadati</label>
+		<abbrLabel>Vincoli</abbrLabel>
 		<description>Fornisce restrizioni all'accesso e all'uso dei metadati</description>
 	</element>
 	<element name="gmd:metadataConstraints">
 		<label>Metadata constraints</label>
+		<abbrLabel>Vincoli</abbrLabel>
 		<description>Fornisce restrizioni all'accesso e all'uso dei dati</description>
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14.0">
 		<description>Le informazioni che descrivono le estensioni dei metadati</description>
 		<label>Informazioni sull'estensione dei metadati  </label>
+		<abbrLabel>Estensione</abbrLabel>
 	</element>
 	<element name="gmd:metadataMaintenance" id="22.0">
 		<label>Metadati di manutenzione</label>
+		<abbrLabel>Manutenzione</abbrLabel>
 		<description>Fornisce informazioni sulla frequenza degli aggiornamenti dei metadati, e il campo di applicazione di tali aggiornamenti</description>
 	</element>
 	<element name="gmd:metadataStandardName" id="10.0">
@@ -1720,6 +1729,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19.0">
 		<label>Info sulla rappresentazione del catalogo</label>
+		<abbrLabel>Rapp. del catalogo</abbrLabel>
 		<description>Fornisce informazioni sul catalogo di regole definite per la rappresentazione di una risorsa(e)</description>
 	</element>
 	<element name="gmd:positionName" id="377.0">
@@ -1840,6 +1850,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13.0">
 		<label>Informazioni sul sistema di riferimento</label>
+		<abbrLabel>Sis. di riferimento</abbrLabel>
 		<description>Descrizione del sistema di riferimento spaziale dei dati</description>
 	</element>
 	<element name="gmd:report" id="80.0">
@@ -1970,6 +1981,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
 		<label>informazioni sulla rappresentazione spaziale</label>
+		<abbrLabel>Rapp. Spaziale</abbrLabel>
 		<description>Rappresentazione digitale delle informazioni spaziali dei dati</description>
 	</element>
 	<element name="gmd:spatialRepresentationType" id="37.0">

@@ -36,7 +36,6 @@
                 <entry key="Connection timeout" value="${jdbc.basic.maxWait}"/>
                 <entry key="Max open prepared statements" value="${jdbc.basic.maxOpenPreparedStatements}"/>
                 <entry key="Expose primary keys" value="true"/>
-                <entry key="Expose primary keys" value="true"/>
             </map>
         </constructor-arg>
     </bean>

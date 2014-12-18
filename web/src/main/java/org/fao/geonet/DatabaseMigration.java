@@ -154,13 +154,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         }
 
         switch (from.compareTo(to)) {
-            case -1:
+            case 1:
                 _logger.info("      Running on a newer database version.");
                 break;
             case 0:
                 _logger.info("      Webapp version = Database version, no migration task to apply.");
                 break;
-            case 1:
+            case -1:
                 boolean anyMigrationAction = false;
 
                 // Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5

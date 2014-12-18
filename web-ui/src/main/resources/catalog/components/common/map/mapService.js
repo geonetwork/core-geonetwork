@@ -293,6 +293,108 @@
             }
           },
 
+          /**
+           * Add a WMTS layer to the map.
+           *
+           * @param {ol.map} map
+           * @param {Object} srcParams
+           * @param {Object} layerParams
+           * @return {ol.layer.Tile}
+           */
+          addWMTSToMap: function(map, srcParams, layerParams) {
+
+            var source = new ol.source.WMTS({
+              url: srcParams.url,
+              layer: srcParams.layerId,
+              matrixSet: srcParams.matrixId,
+              format: srcParams.format || 'image/png',
+              projection: srcParams.projection,
+              tileGrid: new ol.tilegrid.WMTS({
+                origin: ol.extent.getTopLeft(srcParams.projection.getExtent()),
+                resolutions: srcParams.resolutions,
+                matrixIds: srcParams.matrixIds
+              }),
+              style: srcParams.style || 'default'
+            });
+
+            var olLayer = new ol.layer.Tile({
+              extent: srcParams.projection.getExtent(),
+              label: layerParams.title,
+              opacity: layerParams.opacity,
+              visible: layerParams.visible,
+              source: source,
+              title: srcParams.layerId,
+              url: srcParams.url
+            });
+            ngeoDecorateLayer(olLayer);
+            olLayer.displayInLayerManager = true;
+
+            map.addLayer(olLayer);
+            return olLayer;
+          },
+
+          /**
+           * Parse an object describing a layer from
+           * a getCapabilities document parsing. Create a ol.Layer WMS
+           * from this object and add it to the map with all known
+           * properties.
+           *
+           * @param {ol.map} map
+           * @param {Object} getCapLayer
+           * @return {*}
+           */
+          addWmtsToMapFromCap: function(map, getCapLayer, capabilities) {
+
+            var legend, attribution, metadata;
+            if (getCapLayer) {
+              var layer = getCapLayer;
+
+              var url = capabilities.operationsMetadata.GetTile.
+                  dcp.http.get[0].url;
+
+              var projection = map.getView().getProjection();
+
+              // Try to guess which matrixId to use depending projection
+              var matrixSetsId;
+              for (var i = 0; i < layer.tileMatrixSetLinks.length; i++) {
+                if (layer.tileMatrixSetLinks[i].tileMatrixSet ==
+                    projection.getCode()) {
+                  matrixSetsId = layer.tileMatrixSetLinks[i].tileMatrixSet;
+                  break;
+                }
+              }
+              if (!matrixSetsId) {
+                matrixSetsId = layer.tileMatrixSetLinks[0].tileMatrixSet;
+              }
+              var matrixSet = capabilities.tileMatrixSets[matrixSetsId];
+              var nbMatrix = matrixSet.matrixIds.length;
+
+              var projectionExtent = projection.getExtent();
+              var resolutions = new Array(nbMatrix);
+              var matrixIds = new Array(nbMatrix);
+              for (var z = 0; z < nbMatrix; ++z) {
+                var matrixId = matrixSet.matrixIds[z];
+                var size = ol.extent.getWidth(projectionExtent)
+                    / matrixId.tileWidth;
+                resolutions[z] = matrixId.scaleDenominator * 0.00028
+                    / projection.getMetersPerUnit();
+                matrixIds[z] = matrixId.identifier;
+              }
+
+              return this.addWMTSToMap(map, {
+                url: url,
+                layerId: layer.identifier,
+                matrixId: matrixSet.identifier,
+                projection: projection,
+                matrixIds: matrixIds,
+                resolutions: resolutions,
+                style: 'default',
+                format: layer.formats[0]
+              }, {
+                title: layer.title
+              });
+            }
+          },
 
           /**
            * Zoom by delta with animation

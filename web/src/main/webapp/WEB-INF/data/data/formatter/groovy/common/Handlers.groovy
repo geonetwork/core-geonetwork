@@ -74,20 +74,6 @@ public class Handlers {
             return null
         }
     }
-    /**
-     * Return a function that will find the children of the element and apply the handlerFunc to the first child.  If there is not
-     * exactly one child then an error will be thrown.
-     */
-    static def applyToChild(handlerFunc, name) {
-        return {el ->
-            def children = el[name]
-            if (children.size() == 1) {
-                return handlerFunc(children[0])
-            } else {
-                throw new IllegalStateException("There is supposed to be only a single child when this method is called")
-            }
-        }
-    }
 
     def selectIsotype(name) {
         return {
@@ -97,60 +83,22 @@ public class Handlers {
         }
     }
 
-    /**
-     * Returns a function that checks if the text is empty, if not then it executes the handlerFunction to process the
-     * data from the element and returns that data.
-     *
-     * @param handlerFunc the function for processing the element.
-     * @return
-     */
-    static def nonEmpty(handlerFunc) {
-        def nonEmptyText = {!it.text().isEmpty()}
-        when (nonEmptyText, handlerFunc)
-    }
-    /**
-     * Returns a function (usable as a handler) that checks if the text is empty, if not then it executes the
-     * handlerFunction to process the data from the element and returns that data.
-     *
-     * @param test the test to check if the handler should be ran
-     * @param handlerFunc  the function for processing the element.
-     * @return
-     */
-    static def when(test, handlerFunc) {
-        return {el ->
-            if (test(el)) {
-                return handlerFunc(el)
-            }
-        }
-    }
-
-    /**
-     * Creates function that creates a span containing the information obtained from the element (el) by calling the valueFunc with
-     * el as the parameter
-     */
-    def span(valueFunc) {
-        return { el ->
-            f.html {
-                it.span(valueFunc(el))
-            }
-        }
-    }
-
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
-            def libJs = '../../static/lib.js'
+            def minimize = ''
             if (env.param("debug").toBool()) {
-                libJs += '?minimize=false'
+                minimize = '?minimize=false'
             }
             return """
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
-    <script src="$libJs"></script>
+    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
+    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>
+    <script src="../../static/lib.js$minimize"></script>
 </head>
-<body>>
+<body>
 """
         } else {
             return ''
@@ -158,26 +106,16 @@ public class Handlers {
     }
 
     def htmlOrXmlEnd = {
+        def required = """
+<script type="text/javascript">
+//<![CDATA[
+        ${handlers.fileResult("js/std-footer.js", [:])}
+//]]>
+</script>"""
         if (func.isHtmlOutput()) {
-            return '''
-<script>
-    $('.toggler').on('click', function() {
-        $(this).toggleClass('closed');
-        $(this).parent().nextAll('.target').first().toggle();
-    });
-
-    $('.nav-pills a[rel]').on('click', function(e) {
-        $('.container > .entry').hide();
-        $($(this).attr('rel')).show();
-        e.preventDefault();
-    });
-
-    $
-</script>
-</body>
-</html>'''
+            return required + '</body></html>'
         } else {
-            return ''
+            return required
         }
     }
 

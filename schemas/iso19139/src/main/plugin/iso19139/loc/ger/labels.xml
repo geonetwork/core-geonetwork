@@ -6,6 +6,7 @@
 
 	<element name="gmd:MD_Metadata" id="1">
 		<label>Metadaten</label>
+		<abbrLabel>Metadaten</abbrLabel>
 		<help>Dieses Element bildet im ISO Standard 19115 die Basisklasse
 			eines Metadatensatzes. Hier
 			werden alle Informationen zu den Metadaten selbst erfasst.</help>
@@ -195,6 +196,7 @@
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12">
 		<label>Struktur der räumlichen Daten</label>
+		<abbrLabel>Räumlichen</abbrLabel>
 		<help>Angaben, wie räumliche Ausprägungen definiert werden.
 			Unterschieden werden Vektordaten und
 			Rasterdaten.</help>
@@ -277,6 +279,7 @@
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13">
 		<label>Referenzsystem</label>
+		<abbrLabel>Ref. Sys.</abbrLabel>
 		<help />
 		<condition />
 		<description>Beschreibung der räumlichen und zeitlichen
@@ -362,6 +365,7 @@
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14">
 		<label>Metadatenerweiterung</label>
+		<abbrLabel>Erweiterung</abbrLabel>
 		<help />
 		<condition />
 		<description>Beschreibung von Metadatenelementen, die nicht in ISO
@@ -455,6 +459,7 @@
 	</element>
 	<element name="gmd:identificationInfo" id="15">
 		<label>Basisinformation</label>
+		<abbrLabel>Basisinf.</abbrLabel>
 		<help>Mit diesem Element werden grundlegende Informationen zur
 			dokumentierten Ressource erfasst.
 			Eigenschaften wie Titel, Schlüsselwörter, Kurzbeschreibung usw. werden hier
@@ -541,6 +546,7 @@
 	</element>
 	<element name="gmd:contentInfo" id="16">
 		<label>Dateninhalt</label>
+		<abbrLabel>Dateninhalt</abbrLabel>
 		<help />
 		<condition />
 		<description>Information zum Objektartenkatalog und Beschreibung von
@@ -654,6 +660,7 @@
 	</element>
 	<element name="gmd:distributionInfo" id="17">
 		<label>Vertriebsinformation</label>
+		<abbrLabel>Vertrieb</abbrLabel>
 		<help />
 		<condition />
 		<description>Information zum Vertrieb und Bezug der Ressource</description>
@@ -736,6 +743,7 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18">
 		<label>Datenqualität</label>
+		<abbrLabel>Qualität</abbrLabel>
 		<help />
 		<condition />
 		<description>Umfassende Qualitätsbewertung der Ressource</description>
@@ -802,6 +810,7 @@
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19">
 		<label>Darstellungskatalog</label>
+		<abbrLabel>Darstellungs</abbrLabel>
 		<help>z.B. Signaturenkatalog</help>
 		<condition />
 		<description>Information über das Regelwerk für die Darstellung einer
@@ -834,9 +843,9 @@
 		<condition />
 		<description>Eindeutiger Identifikator für diesen Metadatensatz</description>
 	</element>
-	<element name="gmd:metadataConstraints" context="gmd:MD_Metadata"
-		id="20">
+	<element name="gmd:metadataConstraints" context="gmd:MD_Metadata" id="20">
 		<label>Metadateneinschränkungen</label>
+		<abbrLabel>Einschränkungen</abbrLabel>
 		<help />
 		<condition />
 		<description>Einschränkungen in Zugriff und Benutzung der Metadaten</description>
@@ -886,6 +895,7 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21">
 		<label>Anwendungsschema</label>
+		<abbrLabel>Anwendung</abbrLabel>
 		<help>Mit diesem Element werden Informationen zu einem
 			Anwendungsschema erfasst. Ein
 			Anwendungsschema bietet eine formale Beschreibung der Datenstruktur und des Inhaltes
@@ -899,6 +909,7 @@
 	</element>
 	<element name="gmd:metadataMaintenance" id="22">
 		<label>Metadatenpflege</label>
+		<abbrLabel>Pflege</abbrLabel>
 		<help>z.B. Informationen zur Metadatennachführung</help>
 		<condition />
 		<description>Information über die Häufigkeit und den Umfang der

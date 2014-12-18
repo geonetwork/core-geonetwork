@@ -23,10 +23,6 @@ class SummaryFactory {
 
         Summary summary = new Summary(handlers, env, f)
 
-        Collection<String> logo = env.indexInfo['_logo'];
-        if (logo != null && !logo.isEmpty()) {
-            summary.logo = env.localizedUrl + "../.." + logo.iterator().next()
-        }
         summary.title = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
         summary.abstr = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
 
@@ -35,10 +31,11 @@ class SummaryFactory {
         configureHierarchy(isoHandler, summary)
 
         def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
-                           'gmd:metadataExtensionInfo', 'gmd:MD_Metadata']
+                           isoHandler.rootEl]
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
-            new NavBarItem(name, s.replace(':', "_"))
+            def abbrName = f.nodeTranslation(s, null, "abbrLabel")
+            new NavBarItem(name, abbrName, '.' + s.replace(':', "_"))
         }
         summary.navBar = isoHandler.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow = isoHandler.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
