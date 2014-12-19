@@ -57,7 +57,9 @@
               $routeParams.id,
               $routeParams.group,
               fullPrivileges,
-              $routeParams.template);
+              $routeParams.template,
+              false,
+              $routeParams.tab);
         } else {
 
           // Metadata creation could be on a template
