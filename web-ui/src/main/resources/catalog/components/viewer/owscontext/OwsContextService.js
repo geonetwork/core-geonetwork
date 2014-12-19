@@ -63,20 +63,22 @@
         var re = /type\s*=\s*([^,|^}|^\s]*)/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (layer.group == 'Background layers' && layer.name.match(re)) {
-            var type = re.exec(layer.name)[1];
-            var olLayer = gnMap.createLayerForType(type);
-            if (olLayer) {
-              bgLayers.push(olLayer);
-              olLayer.displayInLayerManager = false;
-              olLayer.background = true;
-              olLayer.set('group', 'Background layers');
-              olLayer.setVisible(!layer.hidden);
-            }
-          } else {
-            var server = layer.server[0];
-            if (server.service == 'urn:ogc:serviceType:WMS') {
-              self.addLayer(layer, map);
+          if(layer.name) {
+            if (layer.group == 'Background layers' && layer.name.match(re)) {
+              var type = re.exec(layer.name)[1];
+              var olLayer = gnMap.createLayerForType(type);
+              if (olLayer) {
+                bgLayers.push(olLayer);
+                olLayer.displayInLayerManager = false;
+                olLayer.background = true;
+                olLayer.set('group', 'Background layers');
+                olLayer.setVisible(!layer.hidden);
+              }
+            } else {
+              var server = layer.server[0];
+              if (server.service == 'urn:ogc:serviceType:WMS') {
+                self.addLayer(layer, map);
+              }
             }
           }
         }
