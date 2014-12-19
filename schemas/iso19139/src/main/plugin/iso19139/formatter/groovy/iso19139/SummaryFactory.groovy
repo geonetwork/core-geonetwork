@@ -26,6 +26,9 @@ class SummaryFactory {
         summary.title = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
         summary.abstr = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
 
+        configureKeywords(isoHandler, metadata, summary)
+        configureFormats(isoHandler, metadata, summary)
+        configureExtent(isoHandler, metadata, summary)
         configureThumbnails(metadata, summary)
         configureLinks(isoHandler, summary)
         configureHierarchy(isoHandler, summary)
@@ -43,6 +46,30 @@ class SummaryFactory {
         summary.content = isoHandler.rootPackageEl(metadata)
 
         return summary
+    }
+
+    static def configureKeywords(isoHandler, metadata, summary) {
+        def keywords = metadata."**".findAll{it.name() == 'gmd:descriptiveKeywords'}
+        summary.keywords = isoHandler.keywordsEl(keywords).toString()
+    }
+    static def configureFormats(isoHandler, metadata, summary) {
+        def formats = metadata."**".findAll isoHandler.matchers.isFormatEl
+        summary.formats = isoHandler.formatEls(formats).toString()
+    }
+    static def configureExtent(isoHandler, metadata, summary) {
+        def extents = metadata."**".findAll { isoHandler.matchers.isPolygon(it) || isoHandler.matchers.isBBox(it) }
+        def split = extents.split isoHandler.matchers.isPolygon
+
+        def polygons = split[0]
+        def bboxes = split[1]
+
+        def extent = ""
+        if (!polygons.isEmpty()) {
+            extent = isoHandler.polygonEl(true)(polygons[0]).toString()
+        } else if (!bboxes.isEmpty()) {
+            extent = isoHandler.bboxEl(true)(bboxes[0]).toString()
+        }
+        summary.extent = extent
     }
 
     static def configureLinks(isoHandler, Summary summary) {

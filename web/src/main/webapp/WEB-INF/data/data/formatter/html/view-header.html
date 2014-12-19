@@ -36,7 +36,7 @@
 
         <div class="entry target">
             <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
-            <div fmt-if="abstract" class="abstract">
+            <div fmt-if="abstract" class="entry abstract">
                 <h3>
                     <button type="button" class="btn btn-default toggler">
                         <i class="fa fa-arrow-circle-down"></i>
@@ -48,6 +48,9 @@
                     {{abstract}}
                 </dd>
             </div>
+            {{keywords}}
+            {{formats}}
+            {{extents}}
 
             <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name | escapeXmlAttrs}}" >
                 <h3>

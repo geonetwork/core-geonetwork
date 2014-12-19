@@ -9,12 +9,13 @@ package org.fao.geonet.services.metadata.format.groovy;
  */
 public class MapConfig {
     private String background, mapproj;
-    private int width;
+    private int width, thumbnailWidth;
 
-    public MapConfig(String background, String mapproj, int width) {
+    public MapConfig(String background, String mapproj, int width, int thumbnailWidth) {
         this.background = background;
         this.mapproj = mapproj;
         this.width = width;
+        this.thumbnailWidth = thumbnailWidth;
     }
 
     /**
@@ -49,5 +50,16 @@ public class MapConfig {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    /**
+     * The width in pixels of the map if the map is to be a small thumbnail.
+     */
+    public int getThumbnailWidth() {
+        return thumbnailWidth;
+    }
+
+    public void setThumbnailWidth(int thumbnailWidth) {
+        this.thumbnailWidth = thumbnailWidth;
     }
 }

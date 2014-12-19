@@ -45,7 +45,7 @@ public class TemplateCache {
 
 
     public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
-                                             Map<String, Object> substitutions) throws IOException {
+                                                    Map<String, Object> substitutions) throws IOException {
         final Path originalPath = IO.toPath(path);
         Path file = formatterDir.resolve(path);
         TNode template = fetchFromCache(originalPath, file);

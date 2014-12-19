@@ -67,8 +67,8 @@ public class Handlers {
 
     def addExtentHandlers() {
         handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
-        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
-        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl
+        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl(false)
+        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl(false)
         handlers.add 'gmd:geographicElement', commonHandlers.processChildren{it.children()}
         handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
     }
@@ -180,14 +180,26 @@ public class Handlers {
     def keywordsEl = {keywords ->
         def keywordProps = com.google.common.collect.ArrayListMultimap.create()
         keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
-            def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
-            keywordProps.put(type, isofunc.isoText(k))
+            def thesaurusName = isofunc.isoText(k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:title')
+
+            if (thesaurusName.isEmpty()) {
+                def keywordTypeCode = k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode'
+                if (!keywordTypeCode.isEmpty()) {
+                    thesaurusName = f.codelistValueLabel(keywordTypeCode)
+                }
+            }
+
+            if (thesaurusName.isEmpty()) {
+                thesaurusName = f.translate("noThesaurusName")
+            }
+            keywordProps.put(thesaurusName, isofunc.isoText(k))
         }
 
         return handlers.fileResult('html/keyword.html', [
                 label : f.nodeLabel("gmd:descriptiveKeywords", null),
                 keywords: keywordProps.asMap()])
     }
+
     def graphicOverviewEl = {graphics ->
         def links = []
         graphics.each {it.'gmd:MD_BrowseGraphic'.each { graphic ->
@@ -257,41 +269,50 @@ public class Handlers {
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
-    def polygonEl = { el ->
-        MapConfig mapConfig = env.mapConfiguration
-        def mapproj = mapConfig.mapproj
-        def background = mapConfig.background
-        def width = mapConfig.width
-        def mdId = env.getMetadataId();
-        def gmlId = null;
-        def depthFirstIter = el.depthFirst();
-        while (gmlId == null && depthFirstIter.hasNext()) {
-            GPathResult next = depthFirstIter.next();
-            def nextGmlId = next['@gml:id'].text()
-            if (!nextGmlId.isEmpty()) {
-                gmlId = nextGmlId;
+    def polygonEl(thumbnail) {
+        return { el ->
+            MapConfig mapConfig = env.mapConfiguration
+            def mapproj = mapConfig.mapproj
+            def background = mapConfig.background
+            def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
+            def mdId = env.getMetadataId();
+            def gmlId = null;
+            def depthFirstIter = el.depthFirst();
+            while (gmlId == null && depthFirstIter.hasNext()) {
+                GPathResult next = depthFirstIter.next();
+                def nextGmlId = next['@gml:id'].text()
+                if (!nextGmlId.isEmpty()) {
+                    gmlId = nextGmlId;
+                }
+            }
+
+            if (gmlId != null) {
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
+                        '         width="{{width}}" />'
+                handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
+    }
 
-        if (gmlId != null) {
-            def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
-                    '         width="{{width}}" />'
-            handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+    def bboxEl(thumbnail) {
+        return { el ->
+            if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
+                    el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
+                def replacements = bbox(thumbnail, el)
+                replacements['label'] = f.nodeLabel(el)
+                replacements['pdfOutput'] = env.formatType == FormatType.pdf
+
+                handlers.fileResult("html/bbox.html", replacements)
+            }
         }
     }
 
-    def bboxEl = { el ->
-        if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
-                el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
-            def replacements = bbox(el)
-            replacements['label'] = f.nodeLabel(el)
-            replacements['pdfOutput'] = env.formatType == FormatType.pdf
-
-            handlers.fileResult("html/bbox.html", replacements)
+    def bbox(thumbnail, el) {
+        def mapConfig = env.mapConfiguration
+        if (thumbnail != null) {
+            mapConfig.setWidth(mapConfig.thumbnailWidth)
         }
-    }
 
-    def bbox(el) {
         return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
           e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
           s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),

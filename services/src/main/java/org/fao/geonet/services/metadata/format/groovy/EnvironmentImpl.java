@@ -193,6 +193,7 @@ public class EnvironmentImpl implements Environment {
         final String background = settingManager.getValue("region/getmap/background");
         final String mapproj = settingManager.getValue("region/getmap/mapproj");
         final Integer width = settingManager.getValueAsInt("region/getmap/width");
-        return new MapConfig(background, mapproj, width);
+        final Integer thumbnailWidth = settingManager.getValueAsInt("region/getmap/thumbnailWidth");
+        return new MapConfig(background, mapproj, width, thumbnailWidth);
     }
 }
