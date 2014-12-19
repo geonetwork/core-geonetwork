@@ -4,7 +4,7 @@
   </button>
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="layer in layers">
-      <a href="#" ng-click="setBgLayer(layer)">
+      <a href="" ng-click="setBgLayer(layer)">
         <span class="fa" ng-class="(layer==map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
         {{layer.get('title')}}
       </a>
