@@ -386,7 +386,7 @@
     "harvesterSchedule": "Planification",
     "harvesterScheduleinactive": "Échec de l'activation du noeud.",
     "harvesterUpdated": "Noeud mis à jour",
-    "harvesterValidate": "Valider les fiches",
+    "harvesterValidate": "Valider les fiches avant l'import",
     "harvesterValidateHelp": "Les fiches invalides sont alors rejetées. La validation repose sur le standards (ie. XSD, Schematrons).",
     "harvesters": "Moissonnage",
     "index.lucene.config": "Configuration de l'index Lucene",
@@ -937,5 +937,8 @@
     "z3950-host": "Hôte",
     "z3950-hostHelp": " ",
     "z3950-port": "Port",
-    "z3950-portPort": " "
+    "z3950-portPort": " ",
+    "NOVALIDATION": "Accepter toutes les fiches sans validation",
+    "XSDVALIDATION": "Accepter toutes les fiches valides pour le modèle (XSD)",
+    "SCHEMATRONVALIDATION": "Accepter toutes les fiches valides pour le standard (XSD + Schematron)"
 }
