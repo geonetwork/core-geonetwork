@@ -4,11 +4,14 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.utils.IO;
@@ -26,7 +29,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
-import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +58,10 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private ListFormatters listService;
     @Autowired
     private IsoLanguagesMapper mapper;
+    @Autowired
+    private SourceRepository sourceRepository;
+    @Autowired
+    private DataManager dataManager;
     private ServiceContext serviceContext;
     private int id;
     private String schema;
@@ -69,10 +75,16 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final Element sampleMetadataXml = getSampleMetadataXml();
         this.uuid = UUID.randomUUID().toString();
         Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        this.id =  importMetadataXML(serviceContext, uuid, stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), uuid);
+
+        String source = sourceRepository.findAll().get(0).getUuid();
         this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
+        final Metadata metadata = new Metadata().setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
+        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(this.schema).setType(MetadataType.METADATA);
+        metadata.getSourceInfo().setOwner(1).setSourceId(source);
+        metadata.getHarvestInfo().setHarvested(false);
+
+        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+                false, false).getId();
 
     }
 

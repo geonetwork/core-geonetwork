@@ -37,20 +37,22 @@ public class TNodeFactoryTranslate extends TNodeFactoryByAttName {
     @Autowired
     private SystemInfo info;
 
+
     public TNodeFactoryTranslate() {
         super(TRANSLATE);
     }
 
-    public TNodeFactoryTranslate(SystemInfo info) {
+    public TNodeFactoryTranslate(SystemInfo info, TextContentParser textContentParser) {
         super(TRANSLATE);
         this.info = info;
+        this.textContentParser = textContentParser;
     }
 
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         final String value = getValue(attributes, TRANSLATE);
-        final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, TRANSLATE);
-        return new TNodeTranslate(info, qName, filteredAttributes, value);
+        final AttributesFiltered attributesFiltered = new AttributesFiltered(attributes, TRANSLATE);
+        return new TNodeTranslate(info, textContentParser, qName, attributesFiltered, value);
     }
 
 }

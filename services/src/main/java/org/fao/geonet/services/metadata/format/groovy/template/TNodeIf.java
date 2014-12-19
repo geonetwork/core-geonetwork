@@ -39,8 +39,8 @@ public class TNodeIf extends TNode {
     private final Set<String> scriptVariables;
     private final boolean onlyChildren;
 
-    public TNodeIf(SystemInfo info, String qName, Attributes attributes, String expr, boolean onlyChildren) throws IOException {
-        super(info, qName, attributes);
+    public TNodeIf(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String expr, boolean onlyChildren) throws IOException {
+        super(info, parser, qName, attributes);
         this.onlyChildren = onlyChildren;
         final Matcher matcher = TextContentParser.INTERPOLATION_PATTERN.matcher(expr);
         if (matcher.find()) {

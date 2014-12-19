@@ -16,6 +16,7 @@ import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
@@ -184,5 +185,14 @@ public class EnvironmentImpl implements Environment {
     @Override
     public <T> T getBean(Class<T> clazz) {
         return this.serviceContext.getBean(clazz);
+    }
+
+    @Override
+    public MapConfig getMapConfiguration() {
+        final SettingManager settingManager = this.serviceContext.getBean(SettingManager.class);
+        final String background = settingManager.getValue("region/getmap/background");
+        final String mapproj = settingManager.getValue("region/getmap/mapproj");
+        final Integer width = settingManager.getValueAsInt("region/getmap/width");
+        return new MapConfig(background, mapproj, width);
     }
 }

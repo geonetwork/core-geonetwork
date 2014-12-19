@@ -34,7 +34,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 final SystemInfo info = SystemInfo.createForTesting(SystemInfo.STAGE_TESTING);
-                SimpleTNode node = new SimpleTNode(info, "div", TNode.EMPTY_ATTRIBUTES);
+                SimpleTNode node = new SimpleTNode(info, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES);
                 node.setTextContent("{{include}}{{other1}}{{other2}}{{other3}}");
                 final Map<String, Object> substitutions = (Map<String, Object>) invocation.getArguments()[1];
                 return new FileResult(node, substitutions);
@@ -56,7 +56,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
         model.put("other3", "Other Three");
         String expected = "<div><div>"
                           + "    within"
-                          + "    </div>Other OneOther&amp;TwoOther Three</div>";
+                          + "    </div>Other OneOther&TwoOther Three</div>";
 
         assertCorrectRender(parseTree, model, expected);
     }
@@ -71,7 +71,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
         model.put("other2", "Other&Two");
         model.put("other3", "Other Three");
 
-        String expected = "<div>withinOther OneOther&amp;TwoOther Three</div>";
+        String expected = "<div>withinOther OneOther&TwoOther Three</div>";
         assertCorrectRender(parseTree, model, expected);
     }
 }

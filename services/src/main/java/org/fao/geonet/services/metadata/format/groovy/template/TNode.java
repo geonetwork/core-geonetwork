@@ -17,16 +17,16 @@ import java.util.List;
  * @author Jesse on 11/29/2014.
  */
 public abstract class TNode {
-    private static final TextContentParser PARSER = new TextContentParser();
     protected final TextBlock attributes, end;
     protected final String qName;
     protected final SystemInfo info;
+    protected final TextContentParser textContentParser;
 
     private List<TNode> children = Lists.newArrayList();
     protected static final Attributes EMPTY_ATTRIBUTES = new AttributeList();
     private long unparsedSize;
 
-    public TNode(SystemInfo info, String qName, Attributes attributes) throws IOException {
+    public TNode(SystemInfo info, TextContentParser textContentParser, String qName, Attributes attributes) throws IOException {
         this.info = info;
         this.qName = qName;
         StringBuilder start = new StringBuilder();
@@ -35,8 +35,9 @@ public abstract class TNode {
 
         end.append("\n</").append(qName).append(">");
 
-        this.attributes = PARSER.parse(start.toString());
-        this.end = PARSER.parse(end.toString());
+        this.textContentParser = textContentParser;
+        this.attributes = textContentParser.parse(start.toString());
+        this.end = textContentParser.parse(end.toString());
     }
 
     public List<TNode> getChildren() {
@@ -131,7 +132,7 @@ public abstract class TNode {
         if (text.isEmpty()) {
             return;
         }
-        addChild(new TNodeTextContent(info, PARSER.parse(text)));
+        addChild(new TNodeTextContent(info, textContentParser, textContentParser.parse(text)));
     }
 
     public long getUnparsedSize() {

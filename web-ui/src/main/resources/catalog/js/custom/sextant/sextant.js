@@ -10,8 +10,6 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
-  goog.require('sxt_categorytree');
-  goog.require('sxt_panier_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',

@@ -22,9 +22,10 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
     @Autowired
     private SystemInfo info;
 
-    public TNodeFactoryIf(SystemInfo info) {
+    public TNodeFactoryIf(SystemInfo info, TextContentParser contentParser) {
         super(IF);
         this.info = info;
+        this.textContentParser = contentParser;
     }
 
     public TNodeFactoryIf() {
@@ -36,8 +37,8 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
         final String value = getValue(attributes, IF);
         final boolean onlyChildren = getBooleanAttribute(attributes, ONLY_CHILDREN, false);
 
-        final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, IF, ONLY_CHILDREN);
-        return new TNodeIf(info, qName, filteredAttributes, value, onlyChildren);
+        final AttributesFiltered attributesFiltered = new AttributesFiltered(attributes, IF, ONLY_CHILDREN);
+        return new TNodeIf(info, textContentParser, qName, attributesFiltered, value, onlyChildren);
     }
 
 }

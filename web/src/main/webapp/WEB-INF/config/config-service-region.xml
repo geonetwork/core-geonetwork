@@ -199,8 +199,7 @@
          
         Proportion is the proportion of the world that the geometry
         covers (bounds of WGS84)/(bounds of geometry in WGS84)
-        
-        
+
         Named backgrounds allow the background parameter to be a simple key 
         and the complete URL will be looked up from this list of named backgrounds 
         The name of the child elements is the key and the text is the url

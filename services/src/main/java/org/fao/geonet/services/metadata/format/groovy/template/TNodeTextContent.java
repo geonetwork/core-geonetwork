@@ -11,8 +11,8 @@ import java.io.IOException;
 public class TNodeTextContent extends TNode {
     private final TextBlock textContent;
 
-    public TNodeTextContent(SystemInfo info, TextBlock textContent) throws IOException {
-        super(info, "", EMPTY_ATTRIBUTES);
+    public TNodeTextContent(SystemInfo info, TextContentParser parser, TextBlock textContent) throws IOException {
+        super(info, parser, "", EMPTY_ATTRIBUTES);
         this.textContent = textContent;
     }
 
