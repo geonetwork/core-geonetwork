@@ -102,8 +102,8 @@
     var handlePostCompose = function(evt) {
       var ctx = evt.context;
       var size = $scope.map.getSize();
-      var height = size[1] * ol.BrowserFeature.DEVICE_PIXEL_RATIO;
-      var width = size[0] * ol.BrowserFeature.DEVICE_PIXEL_RATIO;
+      var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
+      var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
 
       var minx, miny, maxx, maxy;
       minx = printRectangle[0], miny = printRectangle[1],
