@@ -118,6 +118,7 @@
                 <div class="panel-heading">
                   <button class="btn btn-default filter" ng-class="{ active: collapsed }"
                     ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
+                  <div gn-selection-widget results="searchResults"></div>
                   <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
                   <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
                 </div>

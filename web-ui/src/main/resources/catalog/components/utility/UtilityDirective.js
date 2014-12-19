@@ -379,16 +379,19 @@
             }
           };
 
-          var limits = getMaxInProp(scope.dates);
+          var limits;
+          if(scope.dates) {
+            limits = getMaxInProp(scope.dates);
 
-          $(element).datepicker({
-            beforeShowDay: angular.isUndefined(scope.dates) ? function() {}
-                : function(dt, a, b) {
-                  return available(dt);
-                },
+          }
+
+          $(element).datepicker(angular.isDefined(scope.dates) ? {
+            beforeShowDay:  function(dt, a, b) {
+              return available(dt);
+            },
             startDate: limits.min,
             endDate: limits.max
-          }).on('changeDate', function(ev) {
+          } : {}).on('changeDate', function(ev) {
             // view -> model
             scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;
