@@ -263,7 +263,7 @@
         }
         else { // we suppose it's WMS
           gnOwsCapabilities.getWMSCapabilities(res.href).then(function(capObj) {
-            var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
+            var info = gnOwsCapabilities.getLayerInfoFromCap(layer.name, capObj);
             info.group = layer.group;
             var l = gnMap.addWmsToMapFromCap(map, info);
             l.setOpacity(layer.opacity);
