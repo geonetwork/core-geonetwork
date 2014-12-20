@@ -195,11 +195,7 @@ $js
         def logos = metadata.'gmd:identificationInfo'.'*'.'gmd:graphicOverview'.'gmd:MD_BrowseGraphic'.'gmd:fileName'.'gco:CharacterString'
 
         logos.each { logo ->
-            if (header.smallThumbnail == null && logo.text().contains("_s\\.")) {
-                header.smallThumbnail = logo.text();
-            } else if (header.largeThumbnail == null) {
-                header.largeThumbnail = logo.text();
-            }
+            header.addThumbnail(logo.text())
         }
     }
 }

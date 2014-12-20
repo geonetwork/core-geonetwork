@@ -2,12 +2,17 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +33,7 @@ public class Summary {
     protected final Functions functions;
 
     private String logo;
-    private String smallThumbnail;
-    private String largeThumbnail;
+    private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
     private String abstr = "";
     private List<NavBarItem> navBar = Lists.newArrayList();
@@ -77,35 +81,57 @@ public class Summary {
     }
 
     String thumbnailUrl() {
-        String img;
-        if (this.smallThumbnail != null) {
-            img = this.smallThumbnail;
-        } else if (this.largeThumbnail != null) {
-            img = this.largeThumbnail;
-        } else {
-            return "";
+        String thumbnail = null;
+        for (String t : thumbnails) {
+            boolean isUrl = thumbnailIsUrl(t);
+            if (!isUrl && resourceUrlExists(t)) {
+                if (isSmallThumbnail(t)) {
+                    thumbnail = resourceThumbnailUrl(t);
+                    break;
+                } else {
+                    thumbnail = resourceThumbnailUrl(t);
+                }
+            } else if (thumbnail == null) {
+                thumbnail = t;
+            }
         }
 
-        String thumbnailUrl;
-        if (img.startsWith("http://") || img.startsWith("https://")) {
-            thumbnailUrl = img;
-        } else {
-            thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
+        if (thumbnail == null) {
+            thumbnail = "";
         }
-        return thumbnailUrl;
+
+        return thumbnail;
+    }
+
+    private String resourceThumbnailUrl(String t) {
+        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&amp;access=public&amp;id=" + env.getMetadataId();
+    }
+
+    private boolean isSmallThumbnail(String img) {
+        return img.matches(".*_s\\.[^.]+");
+    }
+
+    private boolean resourceUrlExists(String imgFile) {
+        final Path mdDataDir = Lib.resource.getDir(env.getBean(GeonetworkDataDirectory.class), Params.Access.PUBLIC, env.getMetadataId());
+        return Files.exists(mdDataDir.resolve(imgFile));
+    }
+
+    private boolean thumbnailIsUrl(String img) {
+        return img.startsWith("http://") || img.startsWith("https://");
     }
 
     public void setLogo(String logo) {
         this.logo = logo;
     }
 
-    public void setSmallThumbnail(String smallThumbnail) {
-        this.smallThumbnail = smallThumbnail;
+    public void setThumbnails(List<String> thumbnails) {
+        this.thumbnails = thumbnails;
     }
 
-    public void setLargeThumbnail(String largeThumbnail) {
-        this.largeThumbnail = largeThumbnail;
+    public void addThumbnail(String thumbnail) {
+        this.thumbnails.add(thumbnail);
     }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -149,24 +175,12 @@ public class Summary {
         this.addOverviewNavItem = addOverviewNavItem;
     }
 
-    public String getExtent() {
-        return extent;
-    }
-
     public void setExtent(String extent) {
         this.extent = extent;
     }
 
-    public String getKeywords() {
-        return keywords;
-    }
-
     public void setKeywords(String keywords) {
         this.keywords = keywords;
-    }
-
-    public String getFormats() {
-        return formats;
     }
 
     public void setFormats(String formats) {

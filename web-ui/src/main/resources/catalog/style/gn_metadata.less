@@ -169,15 +169,38 @@
     }
   }
 
-  .graphic-overview {
+  .graphic-overview, .overview span.thumbnail .small {
     max-height: 200px;
+  }
+
+  .overview span.thumbnail {
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.428571429;
+    background-color: #fff;
+    border: 0 transparent;
+    border-radius: 0;
+    text-align: left;
+  }
+  .overview span.thumbnail:not(:hover) {
+   width: 200px;
+  }
+
+  .overview span.thumbnail:hover .small {
+    display: none;
+  }
+  .overview span.thumbnail:hover .large {
+    display: block;
+  }
+  .overview span.thumbnail:not(hover) .large {
+    display: none;
   }
 
   .container img.logo {
     max-width: 128px;
   }
 
-  .overview img {
+  .overview img:not(.large) {
     max-width: 500px;
     max-height: 500px;
     padding-left: 1em;

@@ -35,7 +35,10 @@
         </h3>
 
         <div class="entry target">
-            <img fmt-if="thumbnail" src="{{thumbnail}}"></img>
+            <span fmt-if="thumbnail" class="thumbnail">
+                <img class="small" src="{{thumbnail}}"></img>
+                <img class="large" src="{{thumbnail}}"></img>
+            </span>
             <div fmt-if="abstract" class="entry abstract">
                 <h3>
                     <button type="button" class="btn btn-default toggler">
