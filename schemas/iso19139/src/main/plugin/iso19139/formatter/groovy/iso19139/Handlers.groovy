@@ -199,22 +199,31 @@ public class Handlers {
                 label : f.nodeLabel("gmd:descriptiveKeywords", null),
                 keywords: keywordProps.asMap()])
     }
-
+    def isSmallImage(img) {
+        return img.matches(".+_s\\.\\w+");
+    }
     def graphicOverviewEl = {graphics ->
         def links = []
+        def hasLargeGraphic = graphics.find {graphic ->
+            def url = graphic.'gmd:fileName'.text()
+            !(url.startsWith("http://") || url.startsWith("https://")) && !isSmallImage(url)
+        }
         graphics.each {it.'gmd:MD_BrowseGraphic'.each { graphic ->
             def img = graphic.'gmd:fileName'.text()
             String thumbnailUrl;
             if (img.startsWith("http://") || img.startsWith("https://")) {
                 thumbnailUrl = img;
-            } else {
+            } else if (!isSmallImage(img) || !hasLargeGraphic) {
                 thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
             }
 
-            links << [
-                    src: thumbnailUrl,
-                    desc: isofunc.isoText(graphic.'gmd:fileDescription')
-            ]
+            if (thumbnailUrl != null) {
+                links << [
+                        src : thumbnailUrl,
+                        desc: isofunc.isoText(graphic.'gmd:fileDescription')
+                ]
+            }
+
         }}
         handlers.fileResult("html/graphic-overview.html", [
                 label: f.nodeLabel(graphics[0]),
