@@ -158,6 +158,7 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.CheckForNull;
@@ -427,6 +428,7 @@ public class DataManager {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
             Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
         }
+        AtomicInteger numIndexedTracker = new AtomicInteger();
         while(index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
@@ -443,9 +445,8 @@ public class DataManager {
             }
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context,
-                    subList,
-                    batchIndex, transactionStatus);
+            Runnable worker = new IndexMetadataTask(context, subList,
+                    batchIndex, transactionStatus, numIndexedTracker);
             executor.execute(worker);
             index += count;
         }
