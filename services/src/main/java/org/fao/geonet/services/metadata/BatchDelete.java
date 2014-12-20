@@ -36,6 +36,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
@@ -105,7 +106,7 @@ public class BatchDelete extends BackupFileService {
                 }
 
                 //--- remove the metadata directory
-                Path pb = Lib.resource.getMetadataDir(context, idString);
+                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
                 IO.deleteFileOrDirectory(pb);
 
                 //--- delete metadata and return status

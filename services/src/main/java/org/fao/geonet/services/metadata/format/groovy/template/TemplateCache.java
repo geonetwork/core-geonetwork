@@ -45,14 +45,14 @@ public class TemplateCache {
 
 
     public synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
-                                                    Map<String, Object> substitutions) throws IOException {
+                                                    Map<String, Object> model) throws IOException {
         final Path originalPath = IO.toPath(path);
         Path file = formatterDir.resolve(path);
         TNode template = fetchFromCache(originalPath, file);
         Path fromParentSchema;
 
         if (template != null) {
-            return new FileResult(template, substitutions);
+            return new FileResult(template, model);
         }
 
         if (schemaDir != null) {
@@ -61,20 +61,20 @@ public class TemplateCache {
 
         template = fetchFromCache(originalPath, file);
         if (template != null) {
-            return new FileResult(template, substitutions);
+            return new FileResult(template, model);
         }
         fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
         if (fromParentSchema != null) {
             template = fetchFromCache(originalPath, fromParentSchema);
             if (template != null) {
-                return new FileResult(template, substitutions);
+                return new FileResult(template, model);
             }
         }
 
         file = rootFormatterDir.resolve(path);
         template = fetchFromCache(originalPath, file);
         if (template != null) {
-            return new FileResult(template, substitutions);
+            return new FileResult(template, model);
         }
 
         file = formatterDir.resolve(path);
@@ -104,7 +104,7 @@ public class TemplateCache {
         template = xmlTemplateParser.parse(file);
         cacheTemplate(originalPath, file, template);
 
-        return new FileResult(template, substitutions);
+        return new FileResult(template, model);
     }
 
     public boolean exists(Path file) throws IOException {
