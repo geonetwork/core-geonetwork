@@ -111,27 +111,30 @@
 
       /* Pagination configuration */
       searchSettings.paginationInfo = {
-        hitsPerPage: 3
+        hitsPerPage: 20
       };
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
+      searchSettings.hitsperpageValues = [20, 50, 100];
 
       /* Sort by combo values configuration */
-      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+      searchSettings.sortbyValues = ['relevance', 'changeDate', 'title', 'rating'];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/title.html',
-        tooltip: 'Simple',
-        icon: 'fa-list'
-      }, {
-        tplUrl: '../../catalog/components/search/resultsview/' +
             'partials/viewtemplates/thumb.html',
         tooltip: 'Thumbnails',
         icon: 'fa-th-list'
+      }, {
+        tplUrl: '../../catalog/components/search/resultsview/' +
+        'partials/viewtemplates/title.html',
+        tooltip: 'Simple',
+        icon: 'fa-list'
       }];
+
+      // Set the default template to use
+      searchSettings.resultTemplate = searchSettings.resultViewTpls[0].tplUrl;
 
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
