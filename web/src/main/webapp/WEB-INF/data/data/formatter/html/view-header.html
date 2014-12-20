@@ -35,10 +35,12 @@
         </h3>
 
         <div class="entry target">
-            <span fmt-if="thumbnail" class="thumbnail">
-                <img class="small" src="{{thumbnail}}"></img>
-                <img class="large" src="{{thumbnail}}"></img>
-            </span>
+            <div class="dropdown">
+                <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                    <img class="graphic-overview" src="{{thumbnail}}"></img>
+                </a>
+                <img class="graphic-overview dropdown-menu large" role="menu" src="{{thumbnail}}"></img>
+            </div>
             <div fmt-if="abstract" class="entry abstract">
                 <h3>
                     <button type="button" class="btn btn-default toggler">

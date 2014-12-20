@@ -169,38 +169,23 @@
     }
   }
 
-  .graphic-overview, .overview span.thumbnail .small {
+  img.graphic-overview:not(.large) {
     max-height: 200px;
   }
-
-  .overview span.thumbnail {
-    padding: 4px;
-    margin-bottom: 20px;
-    line-height: 1.428571429;
-    background-color: #fff;
-    border: 0 transparent;
-    border-radius: 0;
-    text-align: left;
-  }
-  .overview span.thumbnail:not(:hover) {
-   width: 200px;
+  img.graphic-overview:not(.large):hover {
+    cursor: pointer; cursor: hand;
   }
 
-  .overview span.thumbnail:hover .small {
-    display: none;
-  }
-  .overview span.thumbnail:hover .large {
-    display: block;
-  }
-  .overview span.thumbnail:not(hover) .large {
-    display: none;
+
+  img.graphic-overview.large.dropdown-menu {
+    margin-top: -200px;
   }
 
   .container img.logo {
     max-width: 128px;
   }
 
-  .overview img:not(.large) {
+  .overview img:not(.graphic-overview) {
     max-width: 500px;
     max-height: 500px;
     padding-left: 1em;
