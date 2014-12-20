@@ -251,9 +251,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertElement(view, "body//p[@class = 'code']/span[@class='value']", "WGS 1984", 1);
 
         // Check that the handlers.add 'gmd:CI_OnlineResource', { el -> handler is applied
-        assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource\n", 1);
-        assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM\n", 1);
-        assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "\n", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='label']", "URL:", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='value']", "http://services.sandre.eaufrance.fr/geo/ouvrage", 1);
 

@@ -33,7 +33,7 @@ public abstract class TNode {
         StringBuilder end = new StringBuilder();
         renderAttributes(attributes, start);
 
-        end.append("\n</").append(qName).append(">");
+        end.append("</").append(qName).append(">");
 
         this.textContentParser = textContentParser;
         this.attributes = textContentParser.parse(start.toString());
