@@ -1,6 +1,6 @@
 <ul class="pager">
   <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''"
-    data-ng-show="config.pages > 0">
+      data-ng-show="config.pages > 0">
     <a href="" data-ng-click="first()"
        data-translate>&laquo;</a></li>
   <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''"
@@ -8,13 +8,9 @@
     <a href="" data-ng-click="previous()"
        data-translate>&lsaquo;</a></li>
   <li>
-    {{config.from}} / {{config.to}}
-    <em data-translate>on</em>
-    <ng-pluralize count="config.resultsCount"
-      when="{'0 ': ('noRecordFound' | translate),
-      'one': '1 ' +  ('record' | translate),
-      'other': '{} ' +  ('records' | translate)}">
-    </ng-pluralize>
+    {{config.from}} - {{config.to}}
+    <em data-translate="">on</em>
+    {{config.resultsCount}}
   </li>
   <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''"
       data-ng-show="config.pages > 0">
