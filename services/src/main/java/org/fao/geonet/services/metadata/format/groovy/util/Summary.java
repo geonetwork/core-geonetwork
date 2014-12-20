@@ -85,7 +85,7 @@ public class Summary {
         for (String t : thumbnails) {
             boolean isUrl = thumbnailIsUrl(t);
             if (!isUrl && resourceUrlExists(t)) {
-                if (isSmallThumbnail(t)) {
+                if (!isSmallThumbnail(t)) {
                     thumbnail = resourceThumbnailUrl(t);
                     break;
                 } else {
