@@ -169,13 +169,13 @@
     }
   }
 
-  img.graphic-overview:not(.large) {
+  img.graphic-overview:not(.large):not(.thumbnail) {
     max-height: 200px;
   }
+
   img.graphic-overview:not(.large):hover {
     cursor: pointer; cursor: hand;
   }
-
 
   img.graphic-overview.large.dropdown-menu {
     margin-top: -200px;
@@ -189,6 +189,9 @@
     max-width: 500px;
     max-height: 500px;
     padding-left: 1em;
+    border: 0;
+    margin-left: auto;
+    margin-right: auto
   }
   .container span.title {
     margin-left: 1em;
