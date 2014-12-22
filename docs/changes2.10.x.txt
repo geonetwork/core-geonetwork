@@ -4,10 +4,14 @@
 ===
 ================================================================================
 
-- #655 Add search criteria in harvesters fails in Internet Explorer
-- Don't let map and about be repeatedly added to breadcrumbs
+- #699 Use also import stylesheets defined in schema plugins.
+- #671 Restore update-srv-*Dataset processes.
+- #677 Classic UI: Metadata view links in metadata show cause a javascript error in debug mode.
+- #655 Add search criteria in harvesters fails in Internet Explorer.
+- Don't let map and about be repeatedly added to breadcrumbs.
+- Fixed translations for time period in metadata editor and other spanish translations.
 - Restore pluginrepository but use mvnrepository.com
-- #548 CSW Harvester: Search filters returning queriables with apiso prefix causes harvester save to fail
+- #548 CSW Harvester: Search filters returning queriables with apiso prefix causes harvester save to fail.
 - #538 Harvesters doesn't update the change date of the local metadata.
 - #425 Transfer ownership doesn't add the permissions for the new user/group properly.
 - Html5ui: Remove wildcard on any search string - if the user wants that they can add it themselves.
@@ -25,7 +29,7 @@
 - Add workflow status to fast search results so that it can be displayed in search summary.
 - Allow admin to set any status.
 - Remove logic that prevented a reviewer from modifying privileges on a record they are allowed to review.
-- hasEditPermission check not necessary
+- hasEditPermission check not necessary.
 - Status actions should use html5ui.
 - Include search on status for metadata workflow.
 - Fix bug in pdf output.
