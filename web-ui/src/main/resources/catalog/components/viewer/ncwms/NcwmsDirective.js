@@ -37,10 +37,11 @@
           scope.setActiveTool = function(activeTool) {
             if (scope.activeTool == activeTool) {
               scope.activeTool = undefined;
+              resetInteraction();
             } else {
               scope.activeTool = activeTool;
+              activateInteraction(scope.activeTool);
             }
-            activateInteraction(scope.activeTool);
           };
 
           var resetInteraction = function() {
@@ -55,67 +56,69 @@
           };
 
           var activateInteraction = function(activeTool) {
-            if (!activeTool) {
-              resetInteraction();
+            var type = 'Point';
+            if (activeTool == 'transect') {
+              type = 'LineString';
             }
-            else {
-              var type = 'Point';
-              if (activeTool == 'transect') {
-                type = 'LineString';
-              }
 
-              if (!featureOverlay) {
-                featureOverlay = new ol.FeatureOverlay();
-                featureOverlay.setMap(scope.map);
-              }
-              if (drawInteraction) {
-                scope.map.removeInteraction(drawInteraction);
-              }
-
-              drawInteraction = new ol.interaction.Draw({
-                features: featureOverlay.getFeatures(),
-                type: type
-              });
-
-              drawInteraction.on('drawend',
-                  function(evt) {
-
-                    var url;
-                    if (activeTool == 'time') {
-                      url = scope.layer.getSource().getGetFeatureInfoUrl(
-                          evt.feature.getGeometry().getCoordinates(),
-                          map.getView().getResolution(),
-                          map.getView().getProjection(), {
-                            TIME: gnNcWms.formatTimeSeries(
-                                scope.timeSeries.tsfromD,
-                                scope.timeSeries.tstoD),
-                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                            INFO_FORMAT: 'image/png'
-                          });
-                    } else {
-                      url = gnNcWms.getNcwmsServiceUrl(
-                          scope.layer,
-                          scope.map.getView().getProjection(),
-                          evt.feature.getGeometry().getCoordinates(),
-                          activeTool);
-                    }
-
-                    gnPopup.create({
-                      title: activeTool,
-                      url: url,
-                      content: '<div class="gn-popup-iframe ' +
-                          activeTool + '">' +
-                          '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
-                          '</div>'
-                    });
-                    scope.$apply(function() {
-                      scope.activeTool = undefined;
-                    });
-                  }, this);
-
-              map.addInteraction(drawInteraction);
+            if (!featureOverlay) {
+              featureOverlay = new ol.FeatureOverlay();
+              featureOverlay.setMap(scope.map);
             }
+            if (drawInteraction) {
+              scope.map.removeInteraction(drawInteraction);
+            }
+
+            drawInteraction = new ol.interaction.Draw({
+              features: featureOverlay.getFeatures(),
+              type: type
+            });
+            drawInteraction.on('drawstart', function(evt) {
+              featureOverlay.getFeatures().clear();
+            });
+
+            drawInteraction.on('drawend',
+                function(evt) {
+
+                  var url;
+                  if (activeTool == 'time') {
+                    url = scope.layer.getSource().getGetFeatureInfoUrl(
+                        evt.feature.getGeometry().getCoordinates(),
+                        map.getView().getResolution(),
+                        map.getView().getProjection(), {
+                          TIME: gnNcWms.formatTimeSeries(
+                              scope.timeSeries.tsfromD,
+                              scope.timeSeries.tstoD),
+                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                          INFO_FORMAT: 'image/png'
+                        });
+                  } else {
+                    url = gnNcWms.getNcwmsServiceUrl(
+                        scope.layer,
+                        scope.map.getView().getProjection(),
+                        evt.feature.getGeometry().getCoordinates(),
+                        activeTool);
+                  }
+
+                  gnPopup.create({
+                    title: activeTool,
+                    url: url,
+                    content: '<div class="gn-popup-iframe ' +
+                        activeTool + '">' +
+                        '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
+                        '</div>'
+                  });
+                  scope.$apply(function() {
+                    scope.activeTool = undefined;
+                  });
+                  setTimeout(function() {
+                    resetInteraction();
+                  }, 100)
+                }, this);
+
+            map.addInteraction(drawInteraction);
+
           };
           var disableInteractionWatchFn = function(nv, ov) {
             if (!nv) {
@@ -136,12 +139,12 @@
             var ncInfo = layer.ncInfo;
 
             layer.set('cextent', ol.proj.transform([
-              parseFloat(ncInfo.bbox[0]),
-              parseFloat(ncInfo.bbox[1]),
-              parseFloat(ncInfo.bbox[2]),
-              parseFloat(ncInfo.bbox[3])],
-            'EPSG:4326',
-            map.getView().getProjection().getCode())
+                      parseFloat(ncInfo.bbox[0]),
+                      parseFloat(ncInfo.bbox[1]),
+                      parseFloat(ncInfo.bbox[2]),
+                      parseFloat(ncInfo.bbox[3])],
+                    'EPSG:4326',
+                    map.getView().getProjection().getCode())
             );
 
             scope.params = layer.getSource().getParams() || {};

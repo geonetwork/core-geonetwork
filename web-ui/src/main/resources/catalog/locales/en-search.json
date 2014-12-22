@@ -29,21 +29,6 @@
   "homeTitle": "Search for geodata and geoservices",
   "download": "Download",
   "visualize": "View",
-  "links": "Links",
-  "welcomeTitle": "My Data Portal",
-  "welcomeText": "Here you will find data, services and maps and more.",
-  "getstarted": "Get started",
-  "searchOver": "Search over <strong>{{records}}</strong> data sets, services and maps, ...",
-  "browseTopics": "Browse topics",
-  "versionDetails": "Welcome to GeoNetwork 3.0 <span class='badge'>beta</span>",
-  "lastRecords": "Latest news",
-  "preferredRecords": "Most popular",
-  "about": "About",
-  "twitter": "Twitter",
-  "github": "Github",
-  "viewMore": "More",
-  "zarooResult": " Zaroo result found!",
-  "Clear": "Clear",
-  "ClearTitle": "Clear current search query, filters and sorts."
+  "links": "Links"
 
 }

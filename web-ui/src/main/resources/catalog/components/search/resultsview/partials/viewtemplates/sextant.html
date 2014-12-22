@@ -16,7 +16,7 @@
 
       <div class="media-body">
         <h4>
-          {{::(md.title || md.defaultTitle)}}
+          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | striptags}}"></p>
         <p ng-if="md.credit" class="text-justify gn-md-credit">Sources:  {{md.credit}}</p>

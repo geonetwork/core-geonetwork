@@ -125,12 +125,21 @@
         </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="$owsContext">
-        <script type="text/javascript">
-            var module = angular.module('gn_search');
-            module.config(['gnViewerSettings', function(gnViewerSettings) {
-                gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-            }]);
-        </script>
+      <script type="text/javascript">
+        var module = angular.module('gn_search');
+        module.config(['gnViewerSettings', function(gnViewerSettings) {
+          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+        }]);
+      </script>
+    </xsl:if>
+    <xsl:if test="$wmsUrl and $layerName">
+      <script type="text/javascript">
+        var module = angular.module('gn_search');
+        module.config(['gnViewerSettings', function(gnViewerSettings) {
+          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+        }]);
+      </script>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

@@ -29,8 +29,8 @@
       var height = printRectangle[3] - printRectangle[1];
       var center = [bottomLeft[0] + width / 2, bottomLeft[1] + height / 2];
       // convert back to map display size
-      var mapPixelCenter = [center[0] / ol.BrowserFeature.DEVICE_PIXEL_RATIO,
-        center[1] / ol.BrowserFeature.DEVICE_PIXEL_RATIO];
+      var mapPixelCenter = [center[0] / ol.has.DEVICE_PIXEL_RATIO,
+        center[1] / ol.has.DEVICE_PIXEL_RATIO];
       return map.getCoordinateFromPixel(mapPixelCenter);
     };
 
@@ -51,8 +51,8 @@
       var w = size.width / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
       var h = size.height / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
       var mapSize = map.getSize();
-      var center = [mapSize[0] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2 ,
-        mapSize[1] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2];
+      var center = [mapSize[0] * ol.has.DEVICE_PIXEL_RATIO / 2 ,
+        mapSize[1] * ol.has.DEVICE_PIXEL_RATIO / 2];
 
       var minx, miny, maxx, maxy;
 

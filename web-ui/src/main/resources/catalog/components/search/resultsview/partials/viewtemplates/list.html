@@ -3,27 +3,40 @@
           gn-fix-mdlinks="">
     <div class="media">
 
+      <!--Edit button-->
+      <a class="pull-right  gn-md-edit-btn" ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
+         class="btn btn-link pull-right">
+        <i class="fa fa-pencil"></i>
+      </a>
+
+      <!-- Thumbnail -->
+      <div class="pull-right gn-md-thumbnail">
+        <span ng-if="!md.getThumbnails().small" translate>noThumbnail</span>
+        <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail" ng-if="md.getThumbnails().small"/>
+      </div>
+
+      <!--Catalog Logo-->
       <a class="pull-left">
         <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
       </a>
 
       <div class="media-body">
         <h4>
-          {{::(md.title || md.defaultTitle)}}
+          <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected" ng-change="change()"/>
+
+          <!-- Icon for types -->
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('service')>=0" class="fa fa-globe" title="service"></span>
+          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
-
-        <a data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
-           class="btn btn-link pull-right">
-          <i class="fa fa-pencil"></i>
-        </a>
-
-        <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail pull-right" ng-if="md.getThumbnails().small"/>
-        <p class="text-justify">{{::md.abstract}}</p>
+        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
         <blockquote ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</blockquote>
       </div>
     </div>
 
-    <div class="categories clearfix">
+    <div class="gn-md-links clearfix">
 
       <div class="btn-group" ng-if="::links.length > 0">
         <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">

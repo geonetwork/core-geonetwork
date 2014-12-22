@@ -10,6 +10,8 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
+  goog.require('sxt_panier_directive');
+  goog.require('sxt_categorytree');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -143,7 +145,7 @@
               break;
             }
           }
-          gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+          gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
             layerInfo.group = label;

@@ -1,0 +1,269 @@
+@import "gn_search.less";
+
+@sxt-orange: #F28033;
+
+@media (min-width: @screen-lg-min) {
+  html, body,
+  body > div,
+  .container-fluid,
+  .hfull, .tab-pane
+  {
+    height: 100%;
+    overflow: hidden;
+  }
+  .tab-content {
+    height: ~"calc(100% - 3.9em)";
+  }
+  .container-fluid {
+    height: ~"calc(100% - 5.4em)";
+    padding: 0 5px;
+  }
+  [search-results]
+  {
+    height: 100%;
+    overflow: auto;
+  }
+  .gn-searchform
+  {
+    height: ~"calc(100% - 55px)";
+    overflow: auto;
+  }
+}
+
+.navbar {
+  margin-bottom: 14px;
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    font-size: 16px;
+  }
+}
+
+.jumbotron {
+  padding: 150px 100px;
+}
+
+.gn-search-page {
+  .nav-pills {
+    margin-bottom: 1em;
+    text-align: center;
+    li {
+      display: inline-block;
+      float: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .badge {
+      background: @brand-primary;
+    }
+  }
+}
+
+.datepicker {
+  height: auto;
+}
+
+[data-ng-search-form] {
+  .gn-top-search {
+    text-align: center;
+    background: @panel-default-heading-bg;
+    border: 1px solid @panel-default-border;
+    padding: 8px;
+    margin: 0 15px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    border-radius: 3px;
+    position: relative;
+    [typeahead] {
+      width: 300px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    [typeahead-popup] {
+      text-align: left;
+      width: 300px;
+    }
+    .inner-spinner {
+      position: absolute;
+      top: 1.75em;
+      left: 50%;
+      margin-left: 64px;
+    }
+  }
+  input[type="checkbox"] {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  [gn-map-field] {
+    width: ~"calc(100% + 30px)";
+    margin-left: -15px;
+    border-radius: 0;
+    background: #fff;
+    border: none;
+    .btn {
+      .btn-sm;
+      opacity: .80;
+    }
+  }
+  .inner-spinner {
+    position: absolute;
+    top: 1.3em;
+    right: 1.6em;
+  }
+  .sxt-categorytree {
+    font-family: arial, tahoma, helvetica, sans-serif;
+    font-size: 11px;
+    input[type='checkbox'] {
+      margin-right: 3px;
+    }
+    ul ul {
+      display: none;
+    }
+    ul {
+      padding-left:30px;
+      li {
+        display: block;
+        padding: 10px -10px;
+        margin-bottom: -1px;
+        label {
+          margin-bottom: 2px;
+          .fa {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+    > ul {
+      padding-left:0;
+      padding-top:12px;
+    }
+  }
+  .panel-heading {
+    padding: 5px 10px;
+    height: auto;
+    line-height: inherit;
+    [data-gn-pagination] > li > a {
+      background-color: transparent;
+      border: none;
+    }
+  }
+  .sxt-center-panel {
+    padding: 0;
+  }
+  .sxt-left-panel {
+  }
+  .sxt-right-panel {
+  }
+  .loading {
+    position: absolute;
+    top: 1.8em;
+    font-size: 40px;
+    left: 50%;
+    margin-left: 20px;
+    text-shadow: 0 0 1px white;
+    z-index: 200;
+    background: rgba(255,255,255,.7);
+    border-radius: 1em;
+    padding: .2em;
+  }
+}
+
+
+ul.gn-resultview {
+  .metadata {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2050;
+  }
+  li.list-group-item {
+    background-color: #EFEFEF;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+    &:hover {
+      background-color: rgba(10, 10, 10, 0.15);
+      cursor: default;
+    }
+    .media {
+      .gn-md-thumbnail {
+        width: 180px;
+        .img-thumbnail {
+          max-width: 180px;
+          max-height: 140px;
+          min-height: 40px;
+          height: auto;
+        }
+      }
+      h4 {
+        margin-top: 0;
+        font-weight: 700;
+        a {
+          color: rgb(51, 51, 51);
+        }
+      }
+      .gn-md-type {
+        font-size: 20px;
+      }
+      .gn-md-credit {
+        font-size: 11.4px;
+        color: #808080
+      }
+      p {
+        font-size: .8em;
+      }
+    }
+    .gn-md-links {
+      .dropdown-menu {
+        max-width: 300px;
+        font-size: 12px;
+        li a {
+          padding-top: 1px;
+          padding-bottom: 1px;
+          line-height: normal;
+          .text-overflow();
+        }
+      }
+      button {
+        width: 120px;
+        margin: 0 3px;
+      }
+    }
+    .caret {
+      color: @sxt-orange;
+    }
+  }
+}
+
+[gn-main-viewer] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: ~"calc(98px + 1.6em)";
+  border: 1px solid @panel-default-border;
+  [ngeo-map] {
+    height: 100%;
+  }
+
+  .panel-tools {
+    .nav-justified {
+      padding: 0 1em;
+      li a {
+        border-bottom-width: 0;
+      }
+      .active a {
+        background: transparent;
+      }
+    }
+  }
+
+  .layermanager-carousel {
+    .panel-carousel-container {
+      width: 200%;
+    }
+  }
+}

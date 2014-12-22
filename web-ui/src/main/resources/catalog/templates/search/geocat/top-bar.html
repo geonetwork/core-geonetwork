@@ -1,0 +1,46 @@
+<div>
+
+  <div class="navbar-header">
+
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#geocat-toolbar">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+
+  <div class="collapse navbar-collapse geocat-toolbar" id="geocat-toolbar">
+
+    <ul class="nav navbar-nav">
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/news.html" translate>News</a></li>
+      <li class="active"><a href="#" translate>Discovery service</a></li>
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/documentation.html" translate>Documentation</a></li>
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/about.html" translate>About geocat.ch</a></li>
+    </ul>
+
+    <div class="form-group navbar-right navbar-btn" gn-language-switcher="lang" data-langs="langs"></div>
+
+    <form class="navbar-form navbar-right" role="login" action="../../j_spring_security_check" method="post" ng-if="user['@authenticated'] != 'true'">
+      <div class="form-group">
+        <input type="text" name="username" class="form-control" placeholder="{{ 'username' | translate }}">
+        <input type="password" name="password" class="form-control" placeholder="{{ 'password' | translate }}">
+      </div>
+      <button type="submit" class="btn btn-default" translate>Signin</button>
+    </form>
+
+    <div ng-if="user['@authenticated'] == 'true'" class="navbar-text navbar-right">
+      <span translate>Signed in as </span> {{user['username']}}
+      <a ng-show="authenticated" href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
+        <i class="fa fa-sign-out"></i>
+      </a>
+      <a class="navbar-link" href="{{pages.admin}}"
+         data-ng-show="authenticated"
+         title="{{'adminConsole' | translate}}">
+          | <span translate="">adminConsole</span>
+      </a>
+    </div>
+
+  </div>
+
+</div>
