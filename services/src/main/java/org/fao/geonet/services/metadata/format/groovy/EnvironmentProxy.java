@@ -106,4 +106,9 @@ public class EnvironmentProxy implements Environment {
     public <T> T getBean(Class<T> clazz) {
         return get().getBean(clazz);
     }
+
+    @Override
+    public MapConfig getMapConfiguration() {
+        return get().getMapConfiguration();
+    }
 }

@@ -92,5 +92,11 @@
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/6-copy-from-tmp-</value>
             </list>
         </entry>
+        <entry key="3.0.0">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v300/migrate-</value>
+
+            </list>
+        </entry>
     </util:map>
 </beans>

@@ -4,12 +4,15 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -21,7 +24,9 @@ final class IndexMetadataTask implements Runnable {
     private final List<String> _metadataIds;
     private final TransactionStatus _transactionStatus;
     private final Set<IndexMetadataTask> _batchIndex;
+    private final SearchManager searchManager;
     private User _user;
+    private final AtomicInteger indexed;
 
     /**
      * Constructor.
@@ -31,12 +36,14 @@ final class IndexMetadataTask implements Runnable {
      * @param batchIndex
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
      */
-    IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<String> metadataIds, Set<IndexMetadataTask> batchIndex, @Nullable TransactionStatus
-            transactionStatus) {
+    IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<String> metadataIds, Set<IndexMetadataTask> batchIndex,
+                      @Nullable TransactionStatus transactionStatus, @Nonnull AtomicInteger indexed) {
+        this.indexed = indexed;
         this._transactionStatus = transactionStatus;
         this._context = context;
         this._metadataIds = metadataIds;
         this._batchIndex = batchIndex;
+        this.searchManager = context.getBean(SearchManager.class);
 
         batchIndex.add(this);
 
@@ -70,6 +77,15 @@ final class IndexMetadataTask implements Runnable {
             DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
             for (String metadataId : _metadataIds) {
+                this.indexed.incrementAndGet();
+                if (this.indexed.compareAndSet(500, 0)) {
+                    try {
+                        searchManager.forceIndexChanges();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
                 try {
                     dataManager.indexMetadata(metadataId, false);
                 } catch (Exception e) {

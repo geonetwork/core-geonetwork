@@ -14,21 +14,20 @@ import java.io.IOException;
 * @author Jesse on 12/2/2014.
 */
 class TNodeTranslate extends TNode {
-    private static final TextContentParser TEXT_CONTENT_PARSER = new TextContentParser();
 
     private final Translator translator;
 
-    public TNodeTranslate(SystemInfo info, String qName, Attributes attributes, String key) throws IOException {
-        super(info, qName, attributes);
+    public TNodeTranslate(SystemInfo info, TextContentParser textContentParser, String qName, Attributes attributes, String key) throws IOException {
+        super(info, textContentParser, qName, attributes);
         String[] parts = key.split(">");
         String type = parts.length > 1 ? parts[1] : null;
         String context = parts.length > 2 ? parts[2] : null;
         if (parts[0].equalsIgnoreCase("codelist")) {
-            translator = new CodeListTranslator(type, context);
+            translator = new CodeListTranslator(type, textContentParser, context);
         } else if (parts[0].equalsIgnoreCase("node")) {
-            translator = new NodeTranslator(type, context);
+            translator = new NodeTranslator(type, textContentParser, context);
         } else if (parts[0].equalsIgnoreCase("default") || parts[0].trim().isEmpty()) {
-            translator = new DefaultTranslator(type);
+            translator = new DefaultTranslator(type, textContentParser);
         } else {
             throw new TemplateException(
                     "Translate type: '" + parts[0] + "' is not one of the recognized type: ['', 'default', 'node', 'codelist']");
@@ -46,7 +45,7 @@ class TNodeTranslate extends TNode {
             return;
         }
         try {
-            addChild(new Node(info, text));
+            addChild(new Node(info, textContentParser, text));
         } catch (Exception e) {
             throw new TemplateException(e);
         }
@@ -55,8 +54,8 @@ class TNodeTranslate extends TNode {
     private class Node extends TNode {
         private final String text;
 
-        public Node(SystemInfo info, String text) throws IOException {
-            super(info, "", EMPTY_ATTRIBUTES);
+        public Node(SystemInfo info, TextContentParser parser, String text) throws IOException {
+            super(info, parser, "", EMPTY_ATTRIBUTES);
             this.text = text;
         }
 
@@ -67,7 +66,7 @@ class TNodeTranslate extends TNode {
 
         @Override
         public void render(TRenderContext context) throws IOException {
-            final TextBlock block = TEXT_CONTENT_PARSER.parse(text);
+            final TextBlock block = textContentParser.parse(text);
 
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             block.render(new TRenderContext(stream, context.getModel(true)));
@@ -87,45 +86,51 @@ class TNodeTranslate extends TNode {
     private static class CodeListTranslator implements Translator {
         private final String type;
         private final String context;
+        private final TextContentParser textContentParser;
 
-        private CodeListTranslator(String type, String context) {
+        private CodeListTranslator(String type, TextContentParser parser, String context) {
             this.type = type;
             this.context = context;
+            this.textContentParser = parser;
         }
 
         public TextBlock translate(String text) throws Exception {
             final Functions functions = TransformationContext.getContext().getFunctions();
             final String translation = functions.codelistTranslation(text, context, type);
-            return TEXT_CONTENT_PARSER.parse(translation);
+            return textContentParser.parse(translation);
         }
     }
 
     private static class NodeTranslator implements Translator {
         private final String type;
         private final String context;
+        private final TextContentParser textContentParser;
 
-        private NodeTranslator(String type, String context) {
+        private NodeTranslator(String type, TextContentParser parser, String context) {
             this.type = type;
             this.context = context;
+            this.textContentParser = parser;
         }
 
         public TextBlock translate(String text) throws Exception {
             final Functions functions = TransformationContext.getContext().getFunctions();
             final String translation = functions.nodeTranslation(text, context, type);
-            return TEXT_CONTENT_PARSER.parse(translation);
+            return textContentParser.parse(translation);
         }
     }
     private static class DefaultTranslator implements Translator {
         private final String file;
+        private final TextContentParser textContentParser;
 
-        private DefaultTranslator(String file) {
+        private DefaultTranslator(String file, TextContentParser parser) {
             this.file = file;
+            this.textContentParser = parser;
         }
 
         public TextBlock translate(String text) throws Exception {
             final Functions functions = TransformationContext.getContext().getFunctions();
             final String translation = functions.translate(text, file);
-            return TEXT_CONTENT_PARSER.parse(translation);
+            return textContentParser.parse(translation);
         }
     }
 }

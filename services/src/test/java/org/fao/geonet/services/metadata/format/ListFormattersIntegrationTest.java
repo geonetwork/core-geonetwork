@@ -33,20 +33,7 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
-        assertFormattersForSchema("iso19139", listService, "full_view",
-                "package/1_metadata",
-                "package/2_identification",
-                "package/3_maintenance",
-                "package/4_constraints",
-                "package/5_spatial_info",
-                "package/6_reference_system",
-                "package/7_distribution",
-                "package/8_data_quality",
-                "package/9_app_schema",
-                "package/10_portrayal_catalog",
-                "package/11_content_info",
-                "package/12_extension_info",
-                "xsl-view");
+        assertFormattersForSchema("iso19139", listService, "full_view", "xsl-view");
         assertFormattersForSchema("dublin-core", listService, "full_view");
     }
 

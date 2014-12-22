@@ -71,7 +71,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testCommentWhenFalse() throws Exception {
-        TNodeIf ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "item", false);
+        TNodeIf ifNode = new TNodeIf(info, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES, "item", false);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>emptyMap()));
         assertEquals("<!-- fmt-if=item is null -->", out.toString());
@@ -101,7 +101,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
         assertEquals("<!-- fmt-if=item is empty -->", out.toString());
 
 
-        ifNode = new TNodeIf(info, "div", TNode.EMPTY_ATTRIBUTES, "!item", false);
+        ifNode = new TNodeIf(info, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES, "!item", false);
 
         out = new ByteArrayOutputStream();
         ifNode.render(new TRenderContext(out, Collections.<String, Object>singletonMap("item", "blarg")));
@@ -110,14 +110,14 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testEquals() throws Exception {
-        TNodeIf div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "{{label}} == 'one'", false);
+        TNodeIf div = new TNodeIf(null, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES, "{{label}} == 'one'", false);
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         assertFalse(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "one"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "two"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>emptyMap())).isPresent());
 
-       div = new TNodeIf(null, "div", TNode.EMPTY_ATTRIBUTES, "'one' == {{label}}", false);
+       div = new TNodeIf(null, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES, "'one' == {{label}}", false);
 
         assertFalse(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "one"))).isPresent());
         assertTrue(div.canRender(new TRenderContext(out, Collections.<String, Object>singletonMap("label", "two"))).isPresent());
@@ -156,7 +156,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testNot() throws Exception {
-        TNodeIf not = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "!expr", false);
+        TNodeIf not = new TNodeIf(info, TextContentParserTest.createTestTextContentParser(), "Node", TNode.EMPTY_ATTRIBUTES, "!expr", false);
 
         TRenderContext context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", true));
         assertTrue(not.canRender(context).isPresent());
@@ -164,7 +164,7 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertFalse(not.canRender(context).isPresent());
 
-        TNodeIf normal = new TNodeIf(info, "Node", TNode.EMPTY_ATTRIBUTES, "expr", false);
+        TNodeIf normal = new TNodeIf(info, TextContentParserTest.createTestTextContentParser(), "Node", TNode.EMPTY_ATTRIBUTES, "expr", false);
 
         context = new TRenderContext(new ByteArrayOutputStream(), Collections.<String, Object>singletonMap("expr", false));
         assertTrue(normal.canRender(context).isPresent());

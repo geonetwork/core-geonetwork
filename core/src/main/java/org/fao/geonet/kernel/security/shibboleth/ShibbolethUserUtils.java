@@ -20,11 +20,7 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import jeeves.component.ProfileManager;
-
 import org.apache.batik.util.resources.ResourceManager;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
@@ -37,6 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -142,7 +141,6 @@ public class ShibbolethUserUtils {
 		String firstname = getHeader(req, config.getFirstnameKey(), "");
 		Profile profile = Profile.findProfileIgnoreCase(getHeader(req,
 				config.getProfileKey(), ""));
-		String group = getHeader(req, config.getGroupKey(), "");
 
 		if (username != null && username.trim().length() > 0) { 
 			// TODO ....add other constraints to be sure it's
@@ -154,9 +152,7 @@ public class ShibbolethUserUtils {
 				profile = Profile.Guest;
 			}
 
-			if (group.equals("")) {
-				group = config.getDefaultGroup();
-			}
+
 
 			// FIXME: needed? only accept the first 256 chars
 			if (username.length() > 256) {
@@ -168,10 +164,10 @@ public class ShibbolethUserUtils {
 			try {
 				user = (User) authProvider.loadUserByUsername(username);
 			} catch (UsernameNotFoundException e) {
-				((User) user).setUsername(username);
-				((User) user).setSurname(surname);
-				((User) user).setName(firstname);
-				((User) user).setProfile(profile);
+				user.setUsername(username);
+				user.setSurname(surname);
+				user.setName(firstname);
+				user.setProfile(profile);
 
 				// TODO add group to user
 				// Group g = _groupRepository.findByName(group);

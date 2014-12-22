@@ -13,7 +13,7 @@ public class Matchers {
             'gmd:CI_Series', 'gmd:MD_ReferenceSystem', 'gmd:identificationInfo', 'gmd:transferOptions',
             'gmd:contactInfo', 'gmd:address', 'gmd:phone', 'gmd:onlineResource', 'gmd:referenceSystemIdentifier',
             'gmd:distributorTransferOptions', 'gmd:resourceMaintenance', 'gmd:resourceConstraints', 'gmd:aggregationInfo', 'gmd:scope',
-            'gmd:DQ_DataQuality', 'gmd:lineage', 'gmd:processStep', 'gmd:MD_Distribution'
+            'gmd:DQ_DataQuality', 'gmd:lineage', 'gmd:processStep', 'gmd:MD_Distribution', 'gmd:MD_Distributor'
     ]
 
     def isSimpleEl = {el ->

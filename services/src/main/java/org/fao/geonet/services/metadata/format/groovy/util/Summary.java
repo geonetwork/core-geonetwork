@@ -2,12 +2,17 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
+import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +33,7 @@ public class Summary {
     protected final Functions functions;
 
     private String logo;
-    private String smallThumbnail;
-    private String largeThumbnail;
+    private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
     private String abstr = "";
     private List<NavBarItem> navBar = Lists.newArrayList();
@@ -37,6 +41,9 @@ public class Summary {
     private String content = "";
     private boolean addCompleteNavItem = true;
     private boolean addOverviewNavItem = true;
+    private String keywords = "";
+    private String extent = "";
+    private String formats = "";
 
     public List<LinkBlock> links = Lists.newArrayList();
 
@@ -65,41 +72,70 @@ public class Summary {
         params.put("showNavOverflow", !navBarOverflow.isEmpty() || addCompleteNavItem);
         params.put("addCompleteNavItem", addCompleteNavItem);
         params.put("content", content);
+        params.put("extents", extent != null ? extent : "");
+        params.put("formats", formats != null ? formats : "");
+        params.put("keywords", keywords != null ? keywords : "");
         params.put("isHTML", env.getFormatType() == FormatType.html);
 
         return handlers.fileResult("html/view-header.html", params);
     }
 
     String thumbnailUrl() {
-        String img;
-        if (this.smallThumbnail != null) {
-            img = this.smallThumbnail;
-        } else if (this.largeThumbnail != null) {
-            img = this.largeThumbnail;
-        } else {
-            return "";
+        String thumbnail = null;
+        for (String t : thumbnails) {
+            boolean isUrl = thumbnailIsUrl(t);
+            boolean isSmall = isSmallThumbnail(t);
+            // Preferred is large thumbnail that is a resource url:
+            if (!isUrl && resourceUrlExists(t) && !isSmall) {
+                thumbnail = resourceThumbnailUrl(t);
+                break;
+            }
+            // Next preference is a full sized thumbnail
+            if (isUrl) {
+                thumbnail = t;
+            }
+            // Last choice is the small thumbnail
+            if (thumbnail == null && resourceUrlExists(t)) {
+                thumbnail = resourceThumbnailUrl(t);
+            }
         }
 
-        String thumbnailUrl;
-        if (img.startsWith("http://") || img.startsWith("https://")) {
-            thumbnailUrl = img;
-        } else {
-            thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
+        if (thumbnail == null) {
+            thumbnail = "";
         }
-        return thumbnailUrl;
+
+        return thumbnail;
+    }
+
+    private String resourceThumbnailUrl(String t) {
+        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&amp;access=public&amp;id=" + env.getMetadataId();
+    }
+
+    private boolean isSmallThumbnail(String img) {
+        return img.matches(".*_s\\.[^.]+");
+    }
+
+    private boolean resourceUrlExists(String imgFile) {
+        final Path mdDataDir = Lib.resource.getDir(env.getBean(GeonetworkDataDirectory.class), Params.Access.PUBLIC, env.getMetadataId());
+        return Files.exists(mdDataDir.resolve(imgFile));
+    }
+
+    private boolean thumbnailIsUrl(String img) {
+        return img.startsWith("http://") || img.startsWith("https://");
     }
 
     public void setLogo(String logo) {
         this.logo = logo;
     }
 
-    public void setSmallThumbnail(String smallThumbnail) {
-        this.smallThumbnail = smallThumbnail;
+    public void setThumbnails(List<String> thumbnails) {
+        this.thumbnails = thumbnails;
     }
 
-    public void setLargeThumbnail(String largeThumbnail) {
-        this.largeThumbnail = largeThumbnail;
+    public void addThumbnail(String thumbnail) {
+        this.thumbnails.add(thumbnail);
     }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -141,5 +177,17 @@ public class Summary {
 
     public void setAddOverviewNavItem(boolean addOverviewNavItem) {
         this.addOverviewNavItem = addOverviewNavItem;
+    }
+
+    public void setExtent(String extent) {
+        this.extent = extent;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setFormats(String formats) {
+        this.formats = formats;
     }
 }

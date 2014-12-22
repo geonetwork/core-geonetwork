@@ -35,6 +35,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -88,7 +89,7 @@ public class Delete extends BackupFileService {
 
 		//-----------------------------------------------------------------------
 		//--- remove the metadata directory including the public and private directories.
-        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context, id));
+        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
 		
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status

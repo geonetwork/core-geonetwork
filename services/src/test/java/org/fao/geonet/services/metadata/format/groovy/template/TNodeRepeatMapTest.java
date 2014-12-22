@@ -14,7 +14,7 @@ public class TNodeRepeatMapTest {
 
     @Test
     public void testEmptyRender() throws Exception {
-        final TNodeRepeatMap repeat = new TNodeRepeatMap(info, null, TNode.EMPTY_ATTRIBUTES, "map", "key", "value");
+        final TNodeRepeatMap repeat = new TNodeRepeatMap(info, TextContentParserTest.createTestTextContentParser(), null, TNode.EMPTY_ATTRIBUTES, "map", "key", "value");
         Map<String, Object> model = Collections.<String, Object>singletonMap("map", Collections.emptyMap());
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         repeat.render(new TRenderContext(outputStream, model));

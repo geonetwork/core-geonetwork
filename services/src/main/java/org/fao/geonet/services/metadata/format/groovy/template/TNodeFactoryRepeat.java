@@ -24,20 +24,22 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private SystemInfo info;
+
     protected TNodeFactoryRepeat() {
         super(REPEAT);
     }
 
-    public TNodeFactoryRepeat(SystemInfo info) {
+    public TNodeFactoryRepeat(SystemInfo info, TextContentParser contentParser) {
         super(REPEAT);
         this.info = info;
+        this.textContentParser = contentParser;
     }
 
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
         String value = getValue(attributes, REPEAT);
         final String[] parts = value.split("\\s+in\\s+");
-        final FilteredAttributes filteredAttributes = new FilteredAttributes(attributes, REPEAT);
+        final AttributesFiltered attributesFiltered = new AttributesFiltered(attributes, REPEAT);
 
         String key = parts[1];
         Objects.requireNonNull(key);
@@ -46,9 +48,9 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
         Matcher mapMatcher = MAP_PATTERN.matcher(contextName);
         if (mapMatcher.matches()) {
-            return new TNodeRepeatMap(info, qName, filteredAttributes, key, mapMatcher.group(1), mapMatcher.group(2));
+            return new TNodeRepeatMap(info, textContentParser, qName, attributesFiltered, key, mapMatcher.group(1), mapMatcher.group(2));
         } else {
-            return new TNodeRepeatIter(info, qName, filteredAttributes, key, contextName);
+            return new TNodeRepeatIter(info, textContentParser, qName, attributesFiltered, key, contextName);
         }
     }
 }

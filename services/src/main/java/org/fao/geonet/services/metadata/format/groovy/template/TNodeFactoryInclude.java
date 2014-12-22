@@ -24,22 +24,24 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
     @Autowired
     private SystemInfo info;
 
+
     protected TNodeFactoryInclude() {
         super(INCLUDE);
     }
 
-    public TNodeFactoryInclude(SystemInfo info) {
+    public TNodeFactoryInclude(SystemInfo info, TextContentParser contentParser) {
         super(INCLUDE);
         this.info = info;
+        super.textContentParser = contentParser;
     }
 
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
-        Attributes filteredAtts = new FilteredAttributes(attributes, INCLUDE, REPLACE);
+        Attributes filteredAtts = new AttributesFiltered(attributes, INCLUDE, REPLACE);
         String templatePath = getValue(attributes, INCLUDE);
 
         boolean replace = getBooleanAttribute(attributes, REPLACE, false);
-        return new TNodeInclude(info, qName, filteredAtts, templatePath, replace);
+        return new TNodeInclude(info, textContentParser, qName, filteredAtts, templatePath, replace);
     }
 
     private class TNodeInclude extends TNode {
@@ -47,13 +49,13 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
         private final String templatePath;
         private final boolean replace;
 
-        public TNodeInclude(SystemInfo info, String qName, Attributes attributes, String templatePath, boolean replace)
+        public TNodeInclude(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String templatePath, boolean replace)
                 throws IOException {
-            super(info, qName, attributes);
+            super(info, parser, qName, attributes);
             this.replace = replace;
             this.templatePath = templatePath;
             if (!replace) {
-                this.addChild(new TNodeInclude(info, qName, attributes, templatePath, true));
+                this.addChild(new TNodeInclude(info, parser, qName, attributes, templatePath, true));
             }
         }
 

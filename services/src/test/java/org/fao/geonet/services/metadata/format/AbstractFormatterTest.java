@@ -84,11 +84,15 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
                 setRoot(md.getQualifiedName());
         metadata.setDataInfo(dataInfo);
         metadata.setUuid(UUID);
-        MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(false);
+        MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(isHarvested());
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
         this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), false, true, false,
                 UpdateDatestamp.NO, false, false).getId();
+    }
+
+    public boolean isHarvested() {
+        return false;
     }
 
     protected abstract File getTestMetadataFile();
