@@ -259,8 +259,7 @@ public class Handlers {
             ch.name() == 'gmd:CI_ResponsibleParty' || ch['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
         }
 
-        def generalChildren = pointOfContactGeneralData(party);
-        def general = handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: handlers.processElements(generalChildren)])
+        def general = pointOfContactGeneralData(party);
         def groups = party.'gmd:contactInfo'.'*'.'*'
 
         def half = (int) Math.round((groups.size()) / 2)
@@ -274,12 +273,13 @@ public class Handlers {
     }
 
     def pointOfContactGeneralData(party) {
-        return [
+        def generalChildren = [
                 party.'gmd:individualName',
                 party.'gmd:organisationName',
                 party.'gmd:positionName',
                 party.'gmd:role'
         ]
+        handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: handlers.processElements(generalChildren)])
     }
 
     def polygonEl(thumbnail) {
