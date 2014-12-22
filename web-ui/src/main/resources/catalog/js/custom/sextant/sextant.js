@@ -2,14 +2,12 @@
 
   goog.provide('gn_search_sextant');
 
-
-
-
-
-
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
+  goog.require('sxt_panier_directive');
+  goog.require('sxt_categorytree');
+
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -33,11 +31,14 @@
     'gnThesaurusService',
     'sxtGlobals',
     'gnNcWms',
+    '$timeout',
     function($scope, $location, $window, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
+        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
+        $timeout) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+      $scope.mainTabs = gnSearchSettings.mainTabs;
 
       var localStorage = $window.localStorage || {};
 
@@ -62,34 +63,14 @@
       $scope.$watch('collapsed.search', storeCollapsed);
       $scope.$watch('collapsed.facet', storeCollapsed);
 
-
-
-
-      $scope.mainTabs = {
-        search: {
-          title: 'Search',
-          titleInfo: 0,
-          active: false
-        },
-        map: {
-          title: 'Map',
-          active: false,
-          titleInfo: 0
-
-        },
-        panier: {
-          title: 'Panier',
-          active: false,
-          titleInfo: 0
-        }};
-
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
       $scope.displayMapTab = function() {
-        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
-          setTimeout(function() {
+        if (angular.isUndefined(viewerMap.getSize()) || viewerMap.getSize()[0] == 0 ||
+            viewerMap.getSize()[1] == 0) {
+          $timeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
               viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,

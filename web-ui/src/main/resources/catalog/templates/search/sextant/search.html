@@ -6,7 +6,7 @@
   <div class="hfull" data-ng-controller="gnsSextant">
 
     <tabset class="hfull" id="main-tabset" type="pills">
-      <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
+      <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
 
         <div class="hfull" data-ng-controller="gnsSextantSearch">
 
@@ -68,7 +68,7 @@
           </form>
         </div>
       </tab>
-      <tab select="displayMapTab()" active="mainTabs.map.active">
+      <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
         <tab-heading>
           {{mainTabs.map.title}}
           <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
@@ -76,7 +76,7 @@
         <div gn-main-viewer="" map="searchObj.viewerMap">
         </div>
       </tab>
-      <tab select="displayPanierTab()" active="mainTabs.panier.active">
+      <tab ng-if="mainTabs.panier" select="displayPanierTab()" active="mainTabs.panier.active">
         <tab-heading>
           {{mainTabs.panier.title}}
           <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>

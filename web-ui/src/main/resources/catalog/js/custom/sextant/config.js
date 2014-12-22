@@ -101,6 +101,25 @@
         })
       });
 
+      /** Main tabs configuration */
+      searchSettings.mainTabs = {
+        search: {
+          title: 'Search',
+          titleInfo: 0,
+          active: false
+        },
+        map: {
+          title: 'Map',
+          active: true,
+          titleInfo: 0
+
+        },
+        panier: {
+          title: 'Panier',
+          active: false,
+          titleInfo: 0
+        }};
+
       /** Facets configuration */
       searchSettings.facetsConfig = [{
         key: 'keyword',
@@ -137,6 +156,7 @@
         icon: 'fa-th-list'
       }];
 
+      /* thesaurus definition */
       searchSettings.defaultListOfThesaurus = [{
         id: 'local.theme.sextant-theme',
         labelFromThesaurus: true,
