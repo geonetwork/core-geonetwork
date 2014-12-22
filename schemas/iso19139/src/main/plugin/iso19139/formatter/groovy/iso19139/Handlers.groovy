@@ -159,7 +159,7 @@ public class Handlers {
                     name = parts[0]
                 }
 
-                valueMap.put(name, child.text())
+                valueMap.put(name, isofunc.isoText(child))
             }
             def distributor = resolveFormat(el).'gmd:formatDistributor'.'gmd:MD_Distributor'.'gmd:distributorContact'.'*'
             if (!distributor.text().isEmpty()) {
@@ -301,7 +301,7 @@ public class Handlers {
 
             if (gmlId != null) {
                 def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
-                        '         width="{{width}}" />'
+                        "         width=\"$width\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
