@@ -3016,4 +3016,16 @@
     <element name="gml:realizationEpoch">
         <label>Realization epoch</label>
     </element>
+    <element name="gmd:MD_ProgressCode">
+        <label>Progress</label>
+    </element>
+    <element name="gmd:MD_MaintenanceFrequencyCode">
+        <label>Maintenance Frequency</label>
+    </element>
+    <element name="gmd:MD_SpatialRepresentationTypeCode">
+        <label>Spatial Representation Type</label>
+    </element>
+    <element name="gmd:MD_CharacterSetCode">
+        <label>Character Set</label>
+    </element>
 </labels>

@@ -84,15 +84,19 @@ public class Summary {
         String thumbnail = null;
         for (String t : thumbnails) {
             boolean isUrl = thumbnailIsUrl(t);
-            if (!isUrl && resourceUrlExists(t)) {
-                if (!isSmallThumbnail(t)) {
-                    thumbnail = resourceThumbnailUrl(t);
-                    break;
-                } else {
-                    thumbnail = resourceThumbnailUrl(t);
-                }
-            } else if (thumbnail == null) {
+            boolean isSmall = isSmallThumbnail(t);
+            // Preferred is large thumbnail that is a resource url:
+            if (!isUrl && resourceUrlExists(t) && !isSmall) {
+                thumbnail = resourceThumbnailUrl(t);
+                break;
+            }
+            // Next preference is a full sized thumbnail
+            if (isUrl) {
                 thumbnail = t;
+            }
+            // Last choice is the small thumbnail
+            if (thumbnail == null && resourceUrlExists(t)) {
+                thumbnail = resourceThumbnailUrl(t);
             }
         }
 

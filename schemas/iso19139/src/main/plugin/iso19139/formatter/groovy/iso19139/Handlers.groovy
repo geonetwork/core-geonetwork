@@ -318,7 +318,7 @@ public class Handlers {
 
     def bbox(thumbnail, el) {
         def mapConfig = env.mapConfiguration
-        if (thumbnail != null) {
+        if (thumbnail) {
             mapConfig.setWidth(mapConfig.thumbnailWidth)
         }
 
@@ -327,7 +327,7 @@ public class Handlers {
           s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
           n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
           geomproj: "EPSG:4326",
-          mapconfig: env.mapConfiguration
+          mapconfig: mapConfig
         ]
     }
     def rootPackageEl = {
