@@ -40,6 +40,34 @@
   }
 }
 
+.container-fluid {
+  padding: 0;
+}
+.hfull {
+  form& {
+    position: relative;
+  }
+  .row& {
+    margin: 0;
+  }
+}
+
+
+.expander {
+  position: absolute;
+  right: 0px;
+  z-index: 4;
+  top: .5em;
+  border-width: 1px 1px 1px 0;
+  border-radius: 0 3px 3px 0;
+  padding-left: 3px;
+  padding-right: 4px;
+  transition: right ease .25s;
+  &.collapsed {
+    right: 16.6667%;
+  }
+}
+
 .jumbotron {
   padding: 150px 100px;
 }
@@ -141,21 +169,25 @@
     }
   }
   .panel-heading {
-    padding: 5px 10px;
-    height: auto;
-    line-height: inherit;
+    height: 2.8em;
+    line-height: 2.8em;
     [data-gn-pagination] > li > a {
       background-color: transparent;
       border: none;
+      padding: 0 5px;
+    }
+    .pull-right {
+      margin-top: .3em;
     }
   }
-  .sxt-center-panel {
-    padding: 0;
-  }
-  .sxt-left-panel {
-  }
+
   .sxt-right-panel {
+    .panel-body {
+      font-size: .9em;
+      padding: 15px .5em;
+    }
   }
+
   .loading {
     position: absolute;
     top: 1.8em;

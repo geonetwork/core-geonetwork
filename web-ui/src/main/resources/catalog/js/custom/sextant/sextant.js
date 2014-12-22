@@ -24,6 +24,7 @@
   module.controller('gnsSextant', [
     '$scope',
     '$location',
+    '$window',
     'suggestService',
     '$http',
     'gnSearchSettings',
@@ -32,11 +33,37 @@
     'gnThesaurusService',
     'sxtGlobals',
     'gnNcWms',
-    function($scope, $location, suggestService, $http, gnSearchSettings,
+    function($scope, $location, $window, suggestService, $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+
+      var localStorage = $window.localStorage || {};
+
+      $scope.collapsed = localStorage.searchWidgetCollapsed ?
+        JSON.parse(localStorage.searchWidgetCollapsed) :
+        { search: true,
+          facet: false };
+
+      $scope.toggleSearch = function() {
+        $scope.collapsed.search = !$scope.collapsed.search;
+        if(!$scope.collapsed.search) {
+          $scope.collapsed.facet = true;
+        }
+        $timeout(function(){
+          gnSearchSettings.searchMap.updateSize();
+        }, 300);
+      };
+
+      var storeCollapsed = function() {
+        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
+      };
+      $scope.$watch('collapsed.search', storeCollapsed);
+      $scope.$watch('collapsed.facet', storeCollapsed);
+
+
+
 
       $scope.mainTabs = {
         search: {

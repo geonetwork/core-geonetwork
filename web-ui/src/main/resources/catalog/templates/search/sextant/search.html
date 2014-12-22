@@ -11,10 +11,18 @@
         <div class="hfull" data-ng-controller="gnsSextantSearch">
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
+            <button ng-class="{'collapsed': !collapsed.facet}" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
+              <span ng-show="!collapsed.facet">»</span>
+              <span ng-show="collapsed.facet">«</span>
+            </button>
 
             <div class="row hfull">
 
-              <div class="col-md-3 maincol hfull sxt-left-panel">
+              <div class="maincol hfull sxt-left-panel" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
+                <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
+                  <span ng-show="collapsed.search">»</span>
+                  <span ng-show="!collapsed.search">«</span>
+                </button>
                 <div class="panel panel-default hfull">
                   <div class="panel-body gn-searchform">
                     <div data-ng-include="'../../catalog/templates/search/sextant/searchForm.html'"></div>
@@ -29,10 +37,10 @@
                 </div>
               </div>
 
-              <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull sxt-center-panel">
+              <div ng-class="{ 'col-md-7': collapsed.search && !collapsed.facet , 'col-md-9': collapsed.search && collapsed.facet, 'col-md-6': !collapsed.search && collapsed.facet , 'col-md-4': !collapsed.search && !collapsed.facet}" class="maincol hfull sxt-center-panel">
                 <div class="panel panel-default hfull" ng-show="!initial">
                   <div class="panel-heading">
-                    <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
+                    <div class="pull-right" sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
                     <div data-gn-pagination="paginationInfo"></div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
@@ -41,7 +49,7 @@
                 </div>
               </div>
 
-              <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull sxt-right-panel">
+              <div ng-class="(!collapsed.facet) ? 'col-md-2' : 'whidden'" class="maincol hfull sxt-right-panel">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <span data-translate>Refine search</span>
@@ -56,6 +64,7 @@
                 </div>
               </div>
             </div>
+
           </form>
         </div>
       </tab>
