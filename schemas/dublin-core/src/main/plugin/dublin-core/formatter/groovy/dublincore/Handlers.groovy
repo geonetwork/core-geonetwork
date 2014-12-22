@@ -12,9 +12,6 @@ public class Handlers {
     common.Handlers commonHandlers
     public String rootEl
     def excludedEls = []
-    def mapProjection = "EPSG:3857"
-    def mapBackground = "osm"
-    int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this(handlers, f, env, "simpledc")

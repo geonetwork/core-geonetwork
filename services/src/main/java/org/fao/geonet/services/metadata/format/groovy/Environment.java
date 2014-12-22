@@ -75,4 +75,8 @@ public interface Environment extends CurrentLanguageHolder {
      */
     public <T> T getBean(Class<T> clazz);
 
+    /**
+     * Retrieves the background, width and mapproj parameters from settings and puts them into the map config.
+     */
+    public MapConfig getMapConfiguration();
 }

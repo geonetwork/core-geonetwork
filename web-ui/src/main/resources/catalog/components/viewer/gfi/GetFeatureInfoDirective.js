@@ -34,6 +34,14 @@
 
         map.on('singleclick', function(e) {
 
+          for(var i=0;i<map.getInteractions().getArray().length;i++) {
+            var interaction = map.getInteractions().getArray()[i];
+            if(interaction instanceof ol.interaction.Draw &&
+                interaction.getActive()) {
+              return;
+            }
+          }
+
           fo.getFeatures().clear();
           var layers = map.getLayers().getArray().filter(function(layer) {
             return layer.getSource() instanceof ol.source.ImageWMS ||
@@ -66,7 +74,9 @@
                   features = [new ol.Feature(props)];
                 }
               } else {
-                features = format.readFeatures(response);
+                features = format.readFeatures(response, {
+                  featureProjection: map.getView().getProjection()
+                });
               }
               if (features) {
                 features.forEach(function(f) { f.layer = layer.get('label'); });

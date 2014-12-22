@@ -3,6 +3,7 @@ package iso19139
 import groovy.util.slurpersupport.GPathResult
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
+import org.fao.geonet.services.metadata.format.groovy.MapConfig
 
 public class Handlers {
     protected org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -13,9 +14,6 @@ public class Handlers {
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
-    String extentMapProjection = 'EPSG:3857'
-    String extentMapBackground = 'osm'
-    int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -69,8 +67,8 @@ public class Handlers {
 
     def addExtentHandlers() {
         handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
-        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
-        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl
+        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl(false)
+        handlers.add name: 'Polygon Element', select: matchers.isPolygon, polygonEl(false)
         handlers.add 'gmd:geographicElement', commonHandlers.processChildren{it.children()}
         handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
     }
@@ -161,7 +159,7 @@ public class Handlers {
                     name = parts[0]
                 }
 
-                valueMap.put(name, child.text())
+                valueMap.put(name, isofunc.isoText(child))
             }
             def distributor = resolveFormat(el).'gmd:formatDistributor'.'gmd:MD_Distributor'.'gmd:distributorContact'.'*'
             if (!distributor.text().isEmpty()) {
@@ -182,29 +180,50 @@ public class Handlers {
     def keywordsEl = {keywords ->
         def keywordProps = com.google.common.collect.ArrayListMultimap.create()
         keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
-            def type = f.codelistValueLabel(k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode')
-            keywordProps.put(type, isofunc.isoText(k))
+            def thesaurusName = isofunc.isoText(k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:title')
+
+            if (thesaurusName.isEmpty()) {
+                def keywordTypeCode = k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode'
+                if (!keywordTypeCode.isEmpty()) {
+                    thesaurusName = f.codelistValueLabel(keywordTypeCode)
+                }
+            }
+
+            if (thesaurusName.isEmpty()) {
+                thesaurusName = f.translate("noThesaurusName")
+            }
+            keywordProps.put(thesaurusName, isofunc.isoText(k))
         }
 
         return handlers.fileResult('html/keyword.html', [
                 label : f.nodeLabel("gmd:descriptiveKeywords", null),
                 keywords: keywordProps.asMap()])
     }
+    def isSmallImage(img) {
+        return img.matches(".+_s\\.\\w+");
+    }
     def graphicOverviewEl = {graphics ->
         def links = []
+        def hasLargeGraphic = graphics.find {graphic ->
+            def url = graphic.'gmd:fileName'.text()
+            !(url.startsWith("http://") || url.startsWith("https://")) && !isSmallImage(url)
+        }
         graphics.each {it.'gmd:MD_BrowseGraphic'.each { graphic ->
             def img = graphic.'gmd:fileName'.text()
             String thumbnailUrl;
             if (img.startsWith("http://") || img.startsWith("https://")) {
                 thumbnailUrl = img;
-            } else {
+            } else if (!isSmallImage(img) || !hasLargeGraphic) {
                 thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
             }
 
-            links << [
-                    src: thumbnailUrl,
-                    desc: isofunc.isoText(graphic.'gmd:fileDescription')
-            ]
+            if (thumbnailUrl != null) {
+                links << [
+                        src : thumbnailUrl,
+                        desc: isofunc.isoText(graphic.'gmd:fileDescription')
+                ]
+            }
+
         }}
         handlers.fileResult("html/graphic-overview.html", [
                 label: f.nodeLabel(graphics[0]),
@@ -240,13 +259,7 @@ public class Handlers {
             ch.name() == 'gmd:CI_ResponsibleParty' || ch['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
         }
 
-        def generalChildren = [
-                party.'gmd:individualName',
-                party.'gmd:organisationName',
-                party.'gmd:positionName',
-                party.'gmd:role'
-        ]
-        def general = handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: handlers.processElements(generalChildren)])
+        def general = pointOfContactGeneralData(party);
         def groups = party.'gmd:contactInfo'.'*'.'*'
 
         def half = (int) Math.round((groups.size()) / 2)
@@ -259,48 +272,67 @@ public class Handlers {
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
-    def polygonEl = { el ->
-        def mapproj = extentMapProjection
-        def background = extentMapBackground
-        def width = extentMapWidth
-        def mdId = env.getMetadataId();
-        def gmlId = null;
-        def depthFirstIter = el.depthFirst();
-        while (gmlId == null && depthFirstIter.hasNext()) {
-            GPathResult next = depthFirstIter.next();
-            def nextGmlId = next['@gml:id'].text()
-            if (!nextGmlId.isEmpty()) {
-                gmlId = nextGmlId;
+    def pointOfContactGeneralData(party) {
+        def generalChildren = [
+                party.'gmd:individualName',
+                party.'gmd:organisationName',
+                party.'gmd:positionName',
+                party.'gmd:role'
+        ]
+        handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: handlers.processElements(generalChildren)])
+    }
+
+    def polygonEl(thumbnail) {
+        return { el ->
+            MapConfig mapConfig = env.mapConfiguration
+            def mapproj = mapConfig.mapproj
+            def background = mapConfig.background
+            def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
+            def mdId = env.getMetadataId();
+            def gmlId = null;
+            def depthFirstIter = el.depthFirst();
+            while (gmlId == null && depthFirstIter.hasNext()) {
+                GPathResult next = depthFirstIter.next();
+                def nextGmlId = next['@gml:id'].text()
+                if (!nextGmlId.isEmpty()) {
+                    gmlId = nextGmlId;
+                }
+            }
+
+            if (gmlId != null) {
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
+                        "         width=\"$width\" />"
+                handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
+    }
 
-        if (gmlId != null) {
-            def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
-                    '         width="{{width}}" />'
-            handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+    def bboxEl(thumbnail) {
+        return { el ->
+            if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
+                    el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
+                def replacements = bbox(thumbnail, el)
+                replacements['label'] = f.nodeLabel(el)
+                replacements['pdfOutput'] = env.formatType == FormatType.pdf
+
+                handlers.fileResult("html/bbox.html", replacements)
+            }
         }
     }
 
-    def bboxEl = { el ->
-        if (el.parent().'gmd:EX_BoundingPolygon'.text().isEmpty() &&
-                el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
-            def replacements = bbox(el)
-            replacements['label'] = f.nodeLabel(el)
-            replacements['pdfOutput'] = env.formatType == FormatType.pdf
-
-            handlers.fileResult("html/bbox.html", replacements)
+    def bbox(thumbnail, el) {
+        def mapConfig = env.mapConfiguration
+        if (thumbnail) {
+            mapConfig.setWidth(mapConfig.thumbnailWidth)
         }
-    }
 
-    def bbox(el) {
         return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
           e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
           s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
           n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-          width: extentMapWidth,
-          background: extentMapBackground,
           geomproj: "EPSG:4326",
-          mapproj: extentMapProjection]
+          mapconfig: mapConfig
+        ]
     }
     def rootPackageEl = {
         el ->

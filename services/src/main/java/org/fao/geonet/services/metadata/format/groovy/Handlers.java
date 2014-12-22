@@ -135,22 +135,25 @@ public class Handlers {
      * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
      * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
      *
-     * @param select a string which is the element name of the element to skip or a closure that takes an element and returns boolean
+     * @param select        a string which is the element name of the element to skip or a closure that takes an element and returns
+     *                      boolean
      * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
      *                      closure
      */
     public void skip(Object select, Closure childSelector) {
         skip(select, childSelector, 0);
     }
+
     /**
      * Add an "skip element".  A skip element is an element that shouldn't be processed but some of its children should be.  For
      * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
      * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
      *
-     * @param select a string which is the element name of the element to skip or a closure that takes an element and returns boolean
+     * @param select        a string which is the element name of the element to skip or a closure that takes an element and returns
+     *                      boolean
      * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
      *                      closure
-     * @param priority priority of the skipElement
+     * @param priority      priority of the skipElement
      */
     public void skip(Object select, Closure childSelector, int priority) {
         if (select instanceof String) {
@@ -163,6 +166,7 @@ public class Handlers {
             throw new IllegalArgumentException("select must either be a string or a closure but was a: " + select.getClass());
         }
     }
+
     /**
      * Add a handler with the priority 1 which will exactly match element name and prefix.
      *
@@ -305,11 +309,11 @@ public class Handlers {
      * <li>rootFormatterDir/path</li>
      * </ul>
      *
-     * @param path          The relative path to the file to load.
-     * @param substitutions the key -> substitution String/GString map of substitutions.
+     * @param path  The relative path to the file to load.
+     * @param model A map representing the data model to use when rendering the fileResult file.
      */
-    public FileResult fileResult(String path, Map<String, Object> substitutions) throws IOException {
-        return this.templateCache.createFileResult(this.formatterDir, this.schemaDir, this.rootFormatterDir, path, substitutions);
+    public FileResult fileResult(String path, Map<String, Object> model) throws IOException {
+        return this.templateCache.createFileResult(this.formatterDir, this.schemaDir, this.rootFormatterDir, path, model);
     }
 
     /**
@@ -426,7 +430,7 @@ public class Handlers {
         for (Sorter sorter : this.sorters.get(context.getCurrentMode())) {
             if (sorter.select(context, md)) {
                 Logging.debug("Sorter %2$s found for element %1$s.", md, sorter);
-               return sorter;
+                return sorter;
             }
         }
         Logging.debug("No handler found for element %s", md);

@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,13 @@ import javax.xml.parsers.SAXParserFactory;
  */
 @Component
 public class TemplateParser {
-    public static final TextContentParser TEXT_CONTENT_PARSER = new TextContentParser();
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
+    @VisibleForTesting
     List<TNodeFactory> tnodeFactories;
+    @VisibleForTesting
+    @Autowired
+    TextContentParser textContentParser;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
@@ -75,7 +79,7 @@ public class TemplateParser {
             default:
                 try {
                     final String unparsedText = new String(in, Constants.ENCODING);
-                    return new TNodeTextContent(info, TEXT_CONTENT_PARSER.parse(unparsedText));
+                    return new TNodeTextContent(info, textContentParser, textContentParser.parse(unparsedText));
                 } catch (IOException e) {
                     throw new TemplateException(e);
                 }
@@ -103,7 +107,7 @@ public class TemplateParser {
                     }
                 }
                 if (found == null) {
-                    setCurrentNode(new SimpleTNode(info, qName, attributes));
+                    setCurrentNode(new SimpleTNode(info, textContentParser, qName, attributes));
                 }
             } catch (IOException e) {
                 throw new TemplateException(e);

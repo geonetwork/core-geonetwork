@@ -321,6 +321,45 @@
   module.directive('gnBootstrapDatepicker', [
     function() {
 
+      var getMaxInProp = function(obj) {
+        var year = {
+          min: 3000,
+          max: -1
+        };
+        var month = {
+          min: 12,
+          max: -1
+        };
+        var day = {
+          min: 32,
+          max: -1
+        };
+
+        for(var k in obj) {
+          if(k < year.min) year.min = k;
+          if(k > year.max) year.max = k;
+        }
+        for(k in obj[year.min]) {
+          if(k < month.min) month.min = k;
+        }
+        for(k in obj[year.max]) {
+          if(k > month.max) month.max = k;
+        }
+        for(k in obj[year.min][month.min]) {
+          if(obj[year.min][month.min][k] < day.min) day.min =
+              obj[year.min][month.min][k];
+        }
+        for(k in obj[year.max][month.max]) {
+          if(obj[year.min][month.min][k] > day.max) day.max =
+              obj[year.min][month.min][k];
+        }
+
+        return {
+          min: month.min + 1 + '/' + day.min + '/' + year.min,
+          max: month.max + 1 + '/' + day.max + '/' + year.max
+        }
+      };
+
       return {
         restrict: 'A',
         scope: {
@@ -334,18 +373,25 @@
                 scope.dates[date.getFullYear()][date.getMonth()] &&
                 $.inArray(date.getDate(),
                     scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
-              return '';
+              return true;
             } else {
-              return 'disabled';
+              return false;
             }
           };
 
-          $(element).datepicker({
-            onRender: angular.isUndefined(scope.dates) ? function() {}
-                : function(dt, a, b) {
-                  return available(dt);
-                }
-          }).on('changeDate', function(ev) {
+          var limits;
+          if(scope.dates) {
+            limits = getMaxInProp(scope.dates);
+
+          }
+
+          $(element).datepicker(angular.isDefined(scope.dates) ? {
+            beforeShowDay:  function(dt, a, b) {
+              return available(dt);
+            },
+            startDate: limits.min,
+            endDate: limits.max
+          } : {}).on('changeDate', function(ev) {
             // view -> model
             scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;

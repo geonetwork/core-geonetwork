@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -15,6 +16,8 @@ public abstract class TNodeFactory {
     public static final String FMT_PREFIX = "fmt-";
     public static final List<String> ATTRIBUTE_NAME_PREFIXES = Lists.newArrayList(FMT_PREFIX, "x-" + FMT_PREFIX, "data-" + FMT_PREFIX);
 
+    @Autowired
+    protected TextContentParser textContentParser;
     /**
      * Test if this node factory can process the current node.
      */

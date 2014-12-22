@@ -25,8 +25,8 @@ public class TNodeRepeatIter extends TNode {
     private final String key;
     private final String rowContextKey;
 
-    public TNodeRepeatIter(SystemInfo info, String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
-        super(info, qName, attributes);
+    public TNodeRepeatIter(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
+        super(info, parser, qName, attributes);
         this.key = key;
         this.rowContextKey = rowContextKey;
     }

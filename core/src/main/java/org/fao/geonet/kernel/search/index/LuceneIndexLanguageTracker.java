@@ -226,7 +226,7 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    void commit() throws IOException {
+    public void commit() throws IOException {
         lock.lock();
         try{
             lazyInit();

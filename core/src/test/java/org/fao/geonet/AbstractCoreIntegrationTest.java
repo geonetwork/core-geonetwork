@@ -34,15 +34,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -248,7 +245,4 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return Integer.parseInt(id.get(0));
     }
 
-    private class SyncReport {
-        public boolean updateSchemaManager = false;
-    }
 }

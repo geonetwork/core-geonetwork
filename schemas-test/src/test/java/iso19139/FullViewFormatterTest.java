@@ -1,9 +1,7 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Constants;
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
@@ -17,6 +15,7 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     @Autowired
     private IsoLanguagesMapper mapper;
 
-    @Test //@Ignore
+    @Test @Ignore
     @SuppressWarnings("unchecked")
     public void testPrintFormat() throws Exception {
         final FormatType formatType = FormatType.testpdf;
@@ -141,7 +140,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 //            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
             formatService.exec("eng", formatType.name(), "" + id, null, formatterId, "true", false, request, response);
             view = response.getContentAsString();
-            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+//            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
             return this;
         }

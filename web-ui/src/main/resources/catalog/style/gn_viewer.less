@@ -3,6 +3,9 @@
 @viewport-padding: 1em;
 @transition-params: .3s ease;
 
+@gn-popup-max-height: 1000px;
+@gn-popup-max-width: 1200px;
+
 [gn-main-viewer] {
   position: relative;
 
@@ -236,7 +239,6 @@
 
   .panel-ncwms {
     .btn-sm {
-      margin: 0 0 1em 1em;
     }
     input[type=date] {
       width: 7.2em;
@@ -413,79 +415,6 @@
     z-index: 1000;
   }
 
-  @gn-popup-max-height: 1000px;
-  @gn-popup-max-width: 1200px;
-
-  [gn-popup] {
-    display: none;
-    min-width: 200px;
-    max-width: @gn-popup-max-width;
-    min-height: 100px;
-    max-height: @gn-popup-max-height;
-    z-index: 2000;
-
-    @media (max-width: @screen-tablet) {
-      z-index: 1500;
-      left: 2%;
-      right: 2%;
-      top: 2%;
-      bottom: 2%;
-      max-height: none;
-      max-width: none;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    @media (max-width: @screen-phone) {
-      position: fixed !important;
-      overflow: hidden;
-    }
-  }
-
-  .gn-popup-content {
-    overflow: auto;
-    max-width: inherit;
-    max-height: (@gn-popup-max-height - 60);
-    font-size: 12px;
-    @media (max-width: @screen-phone) {
-      width: 100%;
-      height: auto;
-      max-height: none;
-      position: absolute;
-      top: 36px;
-      bottom: 10px;
-      overflow-x: hidden;
-      overflow-y: auto;
-      table {
-        width: 100% !important;
-        td {
-          vertical-align: top;
-        }
-      }
-    }
-    .gn-popup-iframe {
-      width: 1000px;
-      height: 600px;
-
-      &.profile {
-        width: 500px;
-        height: 400px;
-      }
-      &.transect {
-        width: 400px;
-        height: 600px;
-      }
-      &.time {
-        width: 400px;
-        height: 300px;
-      }
-    }
-  }
-
-  [gn-bootstrap-datepicker].input-group[class*="col-"] {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
   [gn-gfi] {
 
     .results {
@@ -539,4 +468,74 @@
 
   }
 
+}
+
+[gn-popup] {
+  display: none;
+  min-width: 200px;
+  max-width: @gn-popup-max-width;
+  min-height: 100px;
+  max-height: @gn-popup-max-height;
+  z-index: 2000;
+
+  @media (max-width: @screen-tablet) {
+    z-index: 1500;
+    left: 2%;
+    right: 2%;
+    top: 2%;
+    bottom: 2%;
+    max-height: none;
+    max-width: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: @screen-phone) {
+    position: fixed !important;
+    overflow: hidden;
+  }
+}
+
+[gn-bootstrap-datepicker].input-group[class*="col-"] {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.gn-popup-content {
+  overflow: auto;
+  max-width: inherit;
+  max-height: (@gn-popup-max-height - 60);
+  font-size: 12px;
+  @media (max-width: @screen-phone) {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    position: absolute;
+    top: 36px;
+    bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    table {
+      width: 100% !important;
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+  .gn-popup-iframe {
+    width: 1000px;
+    height: 600px;
+
+    &.profile {
+      width: 500px;
+      height: 400px;
+    }
+    &.transect {
+      width: 400px;
+      height: 600px;
+    }
+    &.time {
+      width: 400px;
+      height: 300px;
+    }
+  }
 }

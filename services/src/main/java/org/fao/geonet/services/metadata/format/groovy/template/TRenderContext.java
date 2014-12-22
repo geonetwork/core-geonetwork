@@ -151,6 +151,7 @@ public class TRenderContext implements Appendable, Closeable {
     }
 
     private Object safeGetProperty(@Nonnull Object value, String prop) throws InvocationTargetException, IllegalAccessException {
+        prop = prop.trim();
         if (prop.trim().isEmpty()) {
             throw new EmptyPropertyException();
         }

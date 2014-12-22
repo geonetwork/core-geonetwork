@@ -42,6 +42,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -132,15 +133,20 @@ public class Format extends AbstractFormatService {
     }
 
     private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
-        XslUtil.setNoScript();
-        ITextRenderer renderer = new ITextRenderer();
-        String siteUrl = this.settingManager.getSiteURL(lang);
-        renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
-                .getReplacedElementFactory()));
-        renderer.getSharedContext().setDotsPerPixel(13);
-        renderer.setDocumentFromString(htmlContent, siteUrl);
-        renderer.layout();
-        renderer.createPDF(response.getOutputStream());
+        try {
+            XslUtil.setNoScript();
+            ITextRenderer renderer = new ITextRenderer();
+            String siteUrl = this.settingManager.getSiteURL(lang);
+            renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
+                    .getReplacedElementFactory()));
+            renderer.getSharedContext().setDotsPerPixel(13);
+            renderer.setDocumentFromString(htmlContent, siteUrl);
+            renderer.layout();
+            renderer.createPDF(response.getOutputStream());
+        } catch (final Exception e) {
+            Log.error(Geonet.FORMATTER, "Error converting formatter output to a file: " + htmlContent, e);
+            throw e;
+        }
     }
 
     @VisibleForTesting

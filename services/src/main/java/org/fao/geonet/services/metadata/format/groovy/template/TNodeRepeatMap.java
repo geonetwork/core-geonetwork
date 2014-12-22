@@ -14,9 +14,9 @@ import java.util.Map;
 public class TNodeRepeatMap extends TNode {
     private final String key, rowKeyName, rowValueName;
 
-    public TNodeRepeatMap(SystemInfo info, String qName, Attributes attributes, String key, String rowKeyName, String rowValueName)
+    public TNodeRepeatMap(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String key, String rowKeyName, String rowValueName)
             throws IOException {
-        super(info, qName, attributes);
+        super(info, parser, qName, attributes);
         this.key = key;
         this.rowKeyName = rowKeyName;
         this.rowValueName = rowValueName;

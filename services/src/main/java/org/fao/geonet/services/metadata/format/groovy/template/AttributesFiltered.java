@@ -10,10 +10,10 @@ import java.util.Set;
  * Represents a subset of an element's attributes
  * @author Jesse on 11/29/2014.
  */
-public class FilteredAttributes implements Attributes {
+public class AttributesFiltered implements Attributes {
     private final AttributeList filtered = new AttributeList();
 
-    public FilteredAttributes(Attributes unfiltered, String... excludeNames) {
+    public AttributesFiltered(Attributes unfiltered, String... excludeNames) {
         Set<String> allExcludes = Sets.newHashSet();
         for (String excludeName : excludeNames) {
             for (String prefix : TNodeFactory.ATTRIBUTE_NAME_PREFIXES) {

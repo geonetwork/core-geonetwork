@@ -34,7 +34,7 @@ public class TNodeTranscludeTest extends AbstractTemplateParserTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 final SystemInfo info = SystemInfo.createForTesting(SystemInfo.STAGE_TESTING);
-                SimpleTNode node = new SimpleTNode(info, "div", TNode.EMPTY_ATTRIBUTES);
+                SimpleTNode node = new SimpleTNode(info, TextContentParserTest.createTestTextContentParser(), "div", TNode.EMPTY_ATTRIBUTES);
                 node.setTextContent("{{include}}{{other1}}{{other2}}{{other3}}");
                 final Map<String, Object> substitutions = (Map<String, Object>) invocation.getArguments()[1];
                 return new FileResult(node, substitutions);

@@ -128,8 +128,8 @@
         icon: 'fa-list'
       }, {
         tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/thumb.html',
-        tooltip: 'Thumbnails',
+            'partials/viewtemplates/list.html',
+        tooltip: 'List',
         icon: 'fa-th-list'
       }];
 

@@ -291,7 +291,7 @@ public class SchemaLocalizations {
 
     private String extractCodeListName(String codelist) {
         final int indexOfPound = codelist.lastIndexOf('#');
-        if (indexOfPound > 0) {
+        if (indexOfPound > -1) {
             codelist = codelist.substring(indexOfPound + 1);
         }
         return codelist;

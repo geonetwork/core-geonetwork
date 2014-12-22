@@ -48,10 +48,7 @@ public class Handlers extends dublincore.Handlers {
                         w         : bbox.getMinX(),
                         e         : bbox.getMaxX(),
                         geomproj  : "EPSG:${CRS.lookupEpsgCode(crs, false)}",
-                        mapproj   : this.mapProjection,
-                        background: this.mapBackground,
-                        width     : this.extentMapWidth,
-                        pdfOutput : env.formatType == FormatType.pdf
+                        mapconfig   : this.env.mapConfiguration
                 ]
 
                 return handlers.fileResult("html/bbox.html", model)
