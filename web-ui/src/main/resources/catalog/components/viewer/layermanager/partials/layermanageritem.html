@@ -4,7 +4,7 @@
    <button class="btn btn-cog" data-ng-click="service.zoomToExtent(layer, map)">
      <span class="fa fa-arrows-alt"></span>
    </button>
-   <span class="gn-layer-ordering">
+   <span class="gn-layer-ordering" ng-if="mode == 'flat'">
      <a href="" class="fa fa-arrow-up" ng-if="!$first" ng-click="service.moveLayer(map, layer, 1)"></a>
      <a href="" class="fa fa-arrow-down" ng-if="!$last" ng-click="service.moveLayer(map, layer, -1)"></a>
    </span>

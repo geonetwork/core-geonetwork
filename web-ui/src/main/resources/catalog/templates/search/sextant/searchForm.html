@@ -46,8 +46,13 @@
 
         <!--Category Tree-->
         <div ng-repeat="t in thesaurus">
-          {{t.label.eng}}
-          <div sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
+          <div class="radio">
+            <label>
+              <input type="radio" ng-model="activeThesaurus.value" ng-value="t.field">
+              {{t.label.eng}}
+            </label>
+          </div>
+          <div ng-show="activeThesaurus.value == t.field" sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
         </div>
 
         <!--downloadable / visualisable checkboxes-->

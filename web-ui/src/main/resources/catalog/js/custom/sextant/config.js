@@ -110,7 +110,7 @@
         },
         map: {
           title: 'Map',
-          active: true,
+          active: false,
           titleInfo: 0
 
         },

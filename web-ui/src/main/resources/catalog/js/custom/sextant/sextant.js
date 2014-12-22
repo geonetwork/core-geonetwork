@@ -185,8 +185,11 @@
         }
       };
 
+      // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-
+      if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
+        $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
+      }
     }]);
 
   module.directive('sxtFixMdlinks', [
