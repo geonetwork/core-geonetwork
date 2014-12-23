@@ -58,10 +58,6 @@
 
   </file>
 
-  <spring>
-    <import file="/WEB-INF/config-db/postgres.xml"/>
-  </spring>
-
   <!-- Full path to user_xsl to avoid to try to get it from the data directory.
   -->
   <file name=".*/WEB-INF/config-metadata.xml">
