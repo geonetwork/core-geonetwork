@@ -29,7 +29,6 @@
   "homeTitle": "Search for geodata and geoservices",
   "download": "Download",
   "visualize": "View",
-  "links": "Links",
   "welcomeTitle": "My Data Portal",
   "welcomeText": "Here you will find data, services and maps and more.",
   "getstarted": "Get started",
@@ -53,6 +52,23 @@
   "changeDate": "latest",
   "popularity": "popularity",
   "denominatorDesc": "low scale first",
-  "denominatorAsc": "high scale first"
-
+  "denominatorAsc": "high scale first",
+  "template": "Template",
+  "valid": "Valid",
+  "toEdit": "To Edit",
+  "toPublish": "To Publish",
+  "format": "Format",
+  "anyValue": "- Any -",
+  "unchecked": "Unchecked",
+  "createDate": "Created",
+  "changedDate": "Modified",
+  "publish": "Publish",
+  "unpublish": "Unpublish",
+  "View": "View",
+  "exportXML": "Export (XML)",
+  "exportcheXML": "Export (iso19139 XML)",
+  "exportGM03": "Export (GM03)",
+  "exportRDF": "Export (RDF)",
+  "exportPDF": "Export (PDF)",
+  "exportMEF": "Export (ZIP)"
 }
