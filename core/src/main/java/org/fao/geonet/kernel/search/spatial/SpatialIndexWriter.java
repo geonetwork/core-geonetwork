@@ -85,7 +85,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class SpatialIndexWriter implements FeatureListener
 {
 
-    public static final String _IDS_ATTRIBUTE_NAME = "metadataId";
+    public static final String _IDS_ATTRIBUTE_NAME = "metadataid";
     public static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
     static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
     public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;

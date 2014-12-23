@@ -339,10 +339,11 @@
             <gmd:citation>
                 <gmd:CI_Citation>
                     <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
-                        <gco:CharacterString>Title</gco:CharacterString>
+                        <gco:CharacterString>Identification EN Title</gco:CharacterString>
                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                             <gco:textGroup>
-                                <gmd:LocalisedCharacterString locale="#DE">GER Title</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#DE">Identification DE Title</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#FR">Identification FR Title</gmd:LocalisedCharacterString>
                             </gco:textGroup>
                         </gco:PT_FreeText>
                     </gmd:title>
