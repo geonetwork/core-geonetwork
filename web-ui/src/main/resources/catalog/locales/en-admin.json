@@ -203,6 +203,7 @@
     "catalogInformation": "Catalog information",
     "categories": "Categories",
     "categoryName": "Identifier",
+    "categoryUpdated": "Category updated",
     "chooseAFile": "Choose a file",
     "chooseAServiceType": "Choose a service type",
     "chooseFormatter": "Choose a formatter package to upload",
