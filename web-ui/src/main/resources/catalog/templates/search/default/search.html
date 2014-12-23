@@ -138,7 +138,9 @@
               <!-- TODO: Add action on selection -->
             </div>
             <div class="col-md-7">
-              <div data-gn-pagination="paginationInfo"></div>
+              <div class="pull-right"
+                   data-gn-pagination="paginationInfo"
+                   data-hits-values="searchObj.hitsperpageValues"></div>
 
               <div class="gn-results-switch pull-right"
                    data-gn-results-tpl-switcher
@@ -148,12 +150,6 @@
                    data-sortby-combo=""
                    data-params="searchObj.params"
                    data-gn-sortby-values="searchObj.sortbyValues"></div>
-
-              <div class="pull-right"
-                   data-hitsperpage-combo=""
-                   data-pagination-cfg="paginationInfo"
-                   data-gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
-
             </div>
           </div>
 
