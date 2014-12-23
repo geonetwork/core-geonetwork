@@ -21,14 +21,20 @@
                  data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
 
               <div class="input-group gn-form-any">
-                <span class="input-group-addon"><i class="fa fa-search"></i></span>
                 <input type="text"
                        class="form-control input-lg"
-                       data-ng-model="searchObj.params.any"
+                       data-ng-model="homeAnyField"
                        placeholder="{{'anyPlaceHolder' | translate}}"
                        data-typeahead="address for address in getAnySuggestions($viewValue)"
                        data-typeahead-loading="anyLoading" class="form-control"
-                       data-typeahead-min-length="1">
+                       data-typeahead-min-length="1"/>
+                <span class="input-group-btn">
+                  <a class="btn btn-primary btn-lg"
+                          type="button"
+                          data-ng-href="#?tab=search&any={{homeAnyField}}">
+                    <i class="fa fa-search"></i>
+                  </a>
+                </span>
               </div>
             </div>
             <div class="col-xs-6">
