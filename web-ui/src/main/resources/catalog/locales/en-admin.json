@@ -444,6 +444,7 @@
     "logFile": "Log file",
     "logoUpdated": "Catalog logo updated",
     "logoUploadHelp": "Drag & drop here one or more images to add to the catalog list of logos",
+    "luceneConfigReloaded": "Configuration reloaded properly",
     "main.home": "Old search",
     "main.search.suggest": "Suggestion",
     "mainContentStatistics": "Catalog content statistics",

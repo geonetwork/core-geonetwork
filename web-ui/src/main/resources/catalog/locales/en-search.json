@@ -53,6 +53,8 @@
   "changeDate": "latest",
   "popularity": "popularity",
   "denominatorDesc": "low scale first",
-  "denominatorAsc": "high scale first"
-
+  "denominatorAsc": "high scale first",
+  "all": "all",
+  "allInPage": "all in page",
+  "none": "none"
 }

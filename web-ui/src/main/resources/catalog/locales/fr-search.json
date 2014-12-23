@@ -30,6 +30,8 @@
   "homeTitle": "Recherche de géodonnées et géoservices",
   "download": "Télécharger",
   "visualize": "Visualiser",
-  "links": "Liens"
-
+  "links": "Liens",
+  "all": "Tous",
+  "allInPage": "Toute la page",
+  "none": "Aucun"
 }
