@@ -14,6 +14,7 @@
     '$scope',
     function($scope) {
       $scope.searchObj = {
+        permalink: false,
         params: {
           sortBy: 'popularity',
           from: 1,
@@ -27,6 +28,7 @@
     '$scope',
     function($scope) {
       $scope.searchObj = {
+        permalink: false,
         params: {
           sortBy: 'changeDate',
           from: 1,

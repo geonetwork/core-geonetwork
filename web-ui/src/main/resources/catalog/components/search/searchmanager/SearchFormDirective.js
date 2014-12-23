@@ -29,7 +29,8 @@
       function($scope, $location, gnSearchManagerService,
                gnFacetService, Metadata) {
     var defaultParams = {
-      fast: 'index'
+      fast: 'index',
+      _content_type: 'json'
     };
     var self = this;
 
@@ -105,6 +106,9 @@
       if ($scope.currentFacets.length > 0) {
         angular.extend(params,
             gnFacetService.getParamsFromFacets($scope.currentFacets));
+      }
+      if (angular.isUndefined(params.sortBy)) {
+        angular.extend(params, $scope.searchObj.sortbyDefault);
       }
 
       gnSearchManagerService.gnSearch(params).then(
@@ -216,8 +220,8 @@
       } else {
         $scope.searchObj.params = {};
       }
-      if (angular.isArray($scope.searchObj.sortbyValues)) {
-        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyValues[0]);
+      if ($scope.searchObj.sortbyDefault) {
+        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
 
       self.resetPagination();
