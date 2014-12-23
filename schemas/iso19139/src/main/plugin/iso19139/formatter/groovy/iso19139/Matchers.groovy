@@ -20,7 +20,7 @@ public class Matchers {
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
     }
     def isDateEl = {!it.'gco:DateTime'.text().isEmpty() || !it.'gco:Date'.text().isEmpty()}
-    def isFormatEl = {!it.'gmd:MD_Format'.text().isEmpty() || (it.name() == 'isFormatEl' && !it.text().isEmpty())}
+    def isFormatEl = {!it.'gmd:MD_Format'.text().isEmpty() || (it.name() == 'gmd:MD_Format' && !it.text().isEmpty())}
     def isBooleanEl = {!it.'gco:Boolean'.text().isEmpty()}
     def hasDateChild = {it.children().size() == 1 && it.children().any(isDateEl)}
     def isCodeListEl = {!it['@codeListValue'].text().isEmpty()}

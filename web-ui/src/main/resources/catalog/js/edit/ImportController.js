@@ -78,7 +78,8 @@
         $scope.error = null;
 
         if($scope.importMode == 'uploadFile') {
-          $scope.submit();
+          var uploadScope = angular.element('#md-import-file').scope();
+          uploadScope.submit();
         } else if($scope.importMode == 'importFromDir') {
           gnMetadataManager.importFromDir($(formId).serialize()).then(
             onSuccessFn, onErrorFn);

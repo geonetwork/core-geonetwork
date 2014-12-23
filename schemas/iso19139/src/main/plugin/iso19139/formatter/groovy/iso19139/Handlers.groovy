@@ -301,7 +301,7 @@ public class Handlers {
 
             if (gmlId != null) {
                 def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
-                        "         width=\"$width\" />"
+                        "         style=\"width:${width/4}; min-height:${width/4};\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
