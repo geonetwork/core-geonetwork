@@ -96,19 +96,26 @@
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
 
-      if (!keepPagination && !$scope.searchObj.permalink) {
+      // Set default pagination if not set
+      if ((!keepPagination &&
+          !$scope.searchObj.permalink) ||
+          (angular.isUndefined($scope.searchObj.params.from) ||
+          angular.isUndefined($scope.searchObj.params.to))) {
         self.resetPagination();
+      }
+
+      // Set default sortBy
+      if (angular.isUndefined($scope.searchObj.params.sortBy)) {
+        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
 
       // Don't add facet extra params to $scope.params but
       // compute them each time on a search.
       var params = angular.copy($scope.searchObj.params);
+
       if ($scope.currentFacets.length > 0) {
         angular.extend(params,
             gnFacetService.getParamsFromFacets($scope.currentFacets));
-      }
-      if (angular.isUndefined(params.sortBy)) {
-        angular.extend(params, $scope.searchObj.sortbyDefault);
       }
 
       gnSearchManagerService.gnSearch(params).then(
@@ -170,8 +177,7 @@
 
         if (angular.equals(params, $location.search())) {
           triggerSearchFn(false);
-        }
-        else {
+        } else {
           $location.search(params);
         }
       };
