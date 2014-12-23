@@ -9,7 +9,7 @@
     return {
       restrict: 'A',
       scope: true,
-      templateUrl: '../../catalog/components/search/searchmanager/partials/' +
+      templateUrl: '../../catalog/components/search/resultsview/partials/' +
           'selection-widget.html',
       link: function(scope, element, attrs) {
 
