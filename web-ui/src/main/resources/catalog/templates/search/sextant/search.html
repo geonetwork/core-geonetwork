@@ -33,7 +33,8 @@
                 <div class="panel panel-default hfull" ng-show="!initial">
                   <div class="panel-heading">
                     <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
-                    <div data-gn-pagination="paginationInfo"></div>
+                    <div data-gn-pagination="paginationInfo"
+                         data-hits-values="searchObj.hitsperpageValues"></div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
                   <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">

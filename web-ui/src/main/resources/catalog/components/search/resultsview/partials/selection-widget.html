@@ -1,0 +1,56 @@
+<div class="btn-group gn-select">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown">
+    <i class="fa"
+       data-ng-click="select()"
+       data-ng-class="getIcon()"></i>&nbsp;
+    <span data-ng-show="searchResults.selectedCount > 0"
+          class="badge">{{searchResults.selectedCount}}</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href=""
+           data-ng-click="selectAllInPage(true)"
+           data-translate="">allInPage</a></li>
+    <li><a href=""
+           data-ng-click="selectAll()"
+           data-translate="">all</a></li>
+    <li><a href=""
+           data-ng-click="unSelectAll()"
+           data-translate="">none</a></li>
+  </ul>
+</div>
+<div class="btn-group gn-selection-actions" ng-if="searchResults.selectedCount > 0">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span translate>selected</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="" ng-click="">
+      <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>Export (ZIP)</span></a></li>
+    <li><a href="" ng-click="">
+      <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>Export (PDF)</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-send-o"></i>&nbsp;<span translate>Send email</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-times"></i>&nbsp;<span translate>Unpublish</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-user"></i>&nbsp;<span translate>New owner</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-folder-o"></i>&nbsp;<span translate>Update categories</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-key"></i>&nbsp;<span translate>Update privileges</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-trash-o"></i>&nbsp;<span translate>Delete</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-table"></i>&nbsp;<span translate>Index</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-share-square-o"></i>&nbsp;<span translate>Export summary</span></a></li>
+    <li class="divider" ng-if="authenticated"></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-file-o"></i>&nbsp;<span translate>New metadata</span></a></li>
+    <li ng-if="authenticated"><a href="" ng-click="" >
+      <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>Import metadata</span></a></li>
+  </ul>
+</div>

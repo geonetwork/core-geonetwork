@@ -14,12 +14,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 
@@ -116,13 +111,18 @@ public class SelectionManager {
 	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
 
 		// Get ID of the selected/deselected metadata
-		String paramid = params.getChildText(Params.ID);
+		List<Element> listOfIdentifiersElement = params.getChildren(Params.ID);
+		List<String> listOfIdentifiers = new ArrayList<>(listOfIdentifiersElement.size());
+		for (Element e : listOfIdentifiersElement) {
+			listOfIdentifiers.add(e.getText());
+		}
+
 		String selected = params.getChildText(Params.SELECTED);
 
 		// Get the selection manager or create it
 		SelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, paramid, session);
+		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
 	}
 
 	/**
@@ -135,12 +135,16 @@ public class SelectionManager {
 	 * @param context
      * @param selected
 	 *            true, false, single, all, none
-	 * @param paramid
-	 *            id of the selected element
+	 * @param listOfIdentifiers
+	 *            Array of UUIDs
 	 * 
 	 * @return number of selected element
 	 */
-	public int updateSelection(String type, ServiceContext context, String selected, String paramid, UserSession session) {
+	public int updateSelection(String type,
+							   ServiceContext context,
+							   String selected,
+							   List<String> listOfIdentifiers,
+							   UserSession session) {
 
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
@@ -154,13 +158,19 @@ public class SelectionManager {
                 this.selectAll(type, context, session);
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
-            else if (selected.equals(ADD_SELECTED) && (paramid != null))
-                selection.add(paramid);
-            else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-                selection.remove(paramid);
-            else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
+            else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+				for (String paramid : listOfIdentifiers) {
+					selection.add(paramid);
+				}
+			} else if (selected.equals(REMOVE_SELECTED) && listOfIdentifiers.size() > 0) {
+				for (String paramid : listOfIdentifiers) {
+					selection.remove(paramid);
+				}
+			} else if (selected.equals(CLEAR_ADD_SELECTED) && listOfIdentifiers.size() > 0) {
                 this.close(type);
-                selection.add(paramid);
+				for (String paramid : listOfIdentifiers) {
+					selection.add(paramid);
+				}
             }
         }
 

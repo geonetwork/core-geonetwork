@@ -153,8 +153,16 @@
       /* Hits per page combo values configuration */
       searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
 
+      searchSettings.paginationInfo = {
+        hitsPerPage: searchSettings.hitsperpageValues[0]
+      };
       /* Sort by combo values configuration */
-      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+      searchSettings.sortbyValues = [
+        {sortBy: 'popularity', sortOrder: ''},
+        {sortBy: 'changeDate', sortOrder: ''},
+        {sortBy: 'title', sortOrder: 'reverse'},
+        {sortBy: 'relevance', sortOrder: ''}];
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
