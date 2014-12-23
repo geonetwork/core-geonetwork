@@ -244,6 +244,7 @@
     mdGetPDF: 'pdf',
     mdGetRDF: 'rdf.metadata.get',
     mdGetXML19139: 'xml_iso19139',
+    csv : 'csv.search',
 
     mdPrivileges: 'md.privileges.update',
 
