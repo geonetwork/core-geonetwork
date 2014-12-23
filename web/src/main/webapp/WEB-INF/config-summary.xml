@@ -37,6 +37,8 @@
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortBy="value" sortOrder="desc" max="40"/>
       <item name="format"  plural="formats" indexKey="format" max="15" sortBy="value"/>
+			<item name="category" plural="categories" indexKey="_cat" max="45"
+						translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
 		</hits>
     <subtemplates>
       <item name="subTemplateType" plural="subTemplateTypes"
