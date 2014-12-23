@@ -48,6 +48,8 @@ public class Handlers extends dublincore.Handlers {
                         w         : bbox.getMinX(),
                         e         : bbox.getMaxX(),
                         geomproj  : "EPSG:${CRS.lookupEpsgCode(crs, false)}",
+                        minwidth: mapConfig.getWidth() / 4,
+                        minheight: mapConfig.getWidth() / 4,
                         mapconfig   : this.env.mapConfiguration
                 ]
 

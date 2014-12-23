@@ -947,8 +947,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
-            List<Geometry> geoms = new ArrayList<Geometry>();
+            List<Geometry> geoms = new ArrayList<>();
             for (String regionId : regionIds) {
+                if (regionId.startsWith(prefix)) {
+                    regionId = regionId.substring(0, prefix.length());
+                }
                 for (RegionsDAO dao : regionDAOs) {
                     Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
                     if(geom!=null) {

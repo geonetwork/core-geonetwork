@@ -331,6 +331,8 @@ public class Handlers {
           s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
           n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
           geomproj: "EPSG:4326",
+          minwidth: mapConfig.getWidth() / 4,
+          minheight: mapConfig.getWidth() / 4,
           mapconfig: mapConfig
         ]
     }
