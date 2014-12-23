@@ -11,7 +11,8 @@
         replace: true,
         require: '^ngSearchForm',
         scope: {
-          config: '=gnPagination'
+          config: '=gnPagination',
+          values: '=hitsValues'
         },
         templateUrl: '../../catalog/components/search/pagination/partials/' +
             'pagination.html',
@@ -41,7 +42,10 @@
           };
           controller.getPaginationParams = getPaginationParams;
 
-          var updateSearch = function() {
+          scope.updateSearch = function(hitsPerPage) {
+            if (hitsPerPage) {
+              scope.config.hitsPerPage = hitsPerPage;
+            }
             controller.updateSearchParams(getPaginationParams());
             controller.triggerSearch(true);
           };
@@ -49,22 +53,22 @@
           scope.previous = function() {
             if (scope.config.currentPage > 1) {
               scope.config.currentPage -= 1;
-              updateSearch();
+              scope.updateSearch();
             }
           };
           scope.next = function() {
             if (scope.config.currentPage < scope.config.pages) {
               scope.config.currentPage += 1;
-              updateSearch();
+              scope.updateSearch();
             }
           };
           scope.first = function() {
             scope.config.currentPage = 1;
-            updateSearch();
+            scope.updateSearch();
           };
           scope.last = function() {
             scope.config.currentPage = scope.config.pages;
-            updateSearch();
+            scope.updateSearch();
           };
           controller.activatePagination();
         }

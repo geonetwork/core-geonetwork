@@ -119,7 +119,7 @@
               function(key, value) {
                 filter += '&' + key + '=' + value;
               });
-          search('q@json?fast=index' +
+          search('q?_content_type=json&fast=index' +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
@@ -168,7 +168,7 @@
 
       var _select = function(uuid, andClearSelection, action) {
         var defer = $q.defer();
-        $http.get('metadata.select@json?' +
+        $http.get('metadata.select?_content_type=json&' +
             (uuid ? 'id=' + uuid : '') +
                   (andClearSelection ? '' : '&selected=' + action)).
             success(function(data, status) {

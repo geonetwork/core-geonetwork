@@ -27,6 +27,7 @@
         params: {},
         permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
+        sortbyDefault: gnSearchSettings.sortbyDefault,
         hitsperpageValues: gnSearchSettings.hitsperpageValues
       };
 

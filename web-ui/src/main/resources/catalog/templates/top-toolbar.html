@@ -1,21 +1,27 @@
-<a class="navbar-link" href="{{pages.home}}">
+<a class="navbar-link" href="catalog.search#?tab=home">
   <img class="gn-logo"
        ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
   <span class="visible-lg">{{info.site.name}}</span>
 </a>
-
-<a href="{{pages.home}}"
+{{mainTabs}}
+<a href="catalog.search#?tab=search"
    class="btn btn-default navbar-btn"
    title="{{'search' | translate}}">
     <i class="fa fa-search"/>
     <span class="visible-lg" data-translate="">search</span>
 </a>
+<a href="catalog.search#?tab=map"
+   class="btn btn-default navbar-btn"
+   title="{{'map' | translate}}">
+  <i class="fa fa-globe"/>
+  <span class="visible-lg" data-translate="">map</span>
+</a>
 <a href="catalog.edit"
    class="btn btn-default navbar-btn"
    data-ng-show="authenticated"
    title="{{'editorBoard' | translate}}">
-    <i class="fa fa-pencil"/>
-    <span class="visible-lg" data-translate="">editorBoard</span>
+    <i class="fa fa-plus"/>
+    <span class="visible-lg" data-translate="">contribute</span>
 </a>
 <a class="btn btn-default navbar-btn" href="{{pages.admin}}"
    data-ng-show="authenticated"
@@ -25,22 +31,23 @@
 </a>
 
 
-<div class="navbar-collapse navbar-ex1-collapse pull-right">
+<div class="navbar-collapse navbar-ex1-collapse pull-right gn-account">
     <ul class="nav navbar-nav">
         <li data-ng-show="authenticated">
-            <p><img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
-                <a href="admin.console#/organization/users/{{user.username}}"
-                    title="{{'userDetails' | translate}}"
-                    class="hidden-xs navbar-link">
-                    {{user.name}} {{user.surname}} ({{user.profile | translate}})
-                </a>
-
-                <a href="../../j_spring_security_logout"
-                   class="btn btn-link"
-                   title="{{'signout' | translate}}">
-                  <i class="fa fa-sign-out"></i>
-                </a>
-            </p>
+          <a href="admin.console#/organization/users/{{user.username}}"
+              title="{{'userDetails' | translate}}"
+              class="hidden-xs btn btn-link">
+            <img class="img-circle"
+                 data-ng-src="http://gravatar.com/avatar/{{user.email | md5}}?s=18"/>
+            {{user.name}} {{user.surname}} ({{user.profile | translate}})
+          </a>
+        </li>
+        <li data-ng-show="authenticated">
+          <a href="../../j_spring_security_logout"
+             class="btn btn-link"
+             title="{{'signout' | translate}}">
+            <i class="fa fa-sign-out"></i>
+          </a>
         </li>
         <li data-ng-show="!authenticated">
             <a href="{{pages.signin}}"
@@ -52,7 +59,9 @@
         </li>
         <li>
             <form class="navbar-form navbar-left" role="search">
-                <div class="form-group pull-right" data-gn-language-switcher="lang" data-langs="langs"/>
+                <div class="form-group pull-right"
+                     data-gn-language-switcher="lang"
+                     data-langs="langs"/>
             </form>
         </li>
     </ul>

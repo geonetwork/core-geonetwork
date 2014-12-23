@@ -256,7 +256,8 @@
     suggest: 'suggest',
 
     edit: 'md.edit',
-    search: 'qi@json',
+    search: 'q',
+    internalSearch: 'qi',
     subtemplate: 'subtemplate',
     lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',

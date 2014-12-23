@@ -8,6 +8,35 @@
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config']);
 
+
+
+  module.controller('gnsSearchPopularController', [
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
+      $scope.searchObj = {
+        permalink: false,
+        params: {
+          sortBy: 'popularity',
+          from: 1,
+          to: 9
+        }
+      };
+    }]);
+
+
+  module.controller('gnsSearchLatestController', [
+    '$scope',
+    function($scope) {
+      $scope.searchObj = {
+        permalink: false,
+        params: {
+          sortBy: 'changeDate',
+          from: 1,
+          to: 9
+        }
+      };
+    }]);
+
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -21,6 +50,7 @@
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+      $scope.resultTemplate = gnSearchSettings.resultTemplate;
 
       $scope.mainTabs = {
         home: {
@@ -37,7 +67,17 @@
           title: 'Map',
           active: false
         }};
-
+      $scope.infoTabs = {
+        lastRecords: {
+          title: 'lastRecords',
+          titleInfo: '',
+          active: true
+        },
+        preferredRecords: {
+          title: 'preferredRecords',
+          titleInfo: '',
+          active: false
+        }};
       $scope.addLayerToMap = function(number) {
         $scope.mainTabs.map.titleInfo = '+' + number;
       };
@@ -45,7 +85,6 @@
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
-
 
 
       $scope.displayMapTab = function() {
@@ -61,7 +100,17 @@
         $scope.mainTabs.map.titleInfo = '';
       };
 
-      ///////////////////////////////////////////////////////////////////
+      // Switch to the location requested tab.
+      $scope.$on('$locationChangeStart', function(next, current) {
+        var params = $location.search();
+        if (params.tab) {
+          var tab = $scope.mainTabs[params.tab];
+          if (tab && tab.active === false) {
+            tab.active = true;
+          }
+        }
+      });
+
       $scope.$watch('searchObj.advancedMode', function(val) {
         if (val && (searchMap.getSize()[0] == 0 ||
             searchMap.getSize()[1] == 0)) {
@@ -71,12 +120,12 @@
         }
       });
 
-      ///////////////////////////////////////////////////////////////////
-
       angular.extend($scope.searchObj, {
         advancedMode: false,
+        from: 1,
+        to: 30,
         viewerMap: viewerMap,
         searchMap: searchMap
-      });
+      }, gnSearchSettings.sortbyDefault);
     }]);
 })();
