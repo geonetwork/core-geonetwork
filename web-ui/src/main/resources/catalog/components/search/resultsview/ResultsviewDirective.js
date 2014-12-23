@@ -52,13 +52,16 @@
     'gnMap',
     'gnOwsCapabilities',
     'gnSearchSettings',
-    function($compile, gnMap, gnOwsCapabilities, gnSearchSettings) {
+    'gnMetadataActions',
+    function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
+             gnMetadataActions) {
 
       return {
         restrict: 'A',
         scope: true,
         link: function(scope, element, attrs, controller) {
 
+          scope.mdService = gnMetadataActions;
           scope.map = scope.$eval(attrs.map);
           //scope.searchResults = scope.$eval(attrs.searchResults);
 

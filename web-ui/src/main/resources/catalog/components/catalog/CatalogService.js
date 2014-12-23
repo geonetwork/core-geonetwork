@@ -241,6 +241,12 @@
     getValidation: 'md.validate@json',
     mdSelect: 'metadata.select@json', // TODO: CHANGE
 
+    mdGetPDF: 'pdf',
+    mdGetRDF: 'rdf.metadata.get',
+    mdGetXML19139: 'xml_iso19139',
+
+    mdPrivileges: 'md.privileges.update',
+
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
@@ -334,6 +340,15 @@
             };
             angular.extend(config, httpConfig);
             return $http(config);
+          },
+
+          /**
+           * Return service url for a given key
+           * @param {string} serviceKey
+           * @returns {*}
+           */
+          getService: function(serviceKey) {
+            return gnHttpServices[serviceKey];
           }
         };
       }];
@@ -480,6 +495,12 @@
     Metadata.prototype = {
       getUuid: function() {
         return this['geonet:info'].uuid;
+      },
+      getId: function() {
+        return this['geonet:info'].id;
+      },
+      isPublished: function() {
+        return this['geonet:info'].isPublishedToAll === 'true';
       },
       getLinks: function() {
         return this.link;
