@@ -98,6 +98,17 @@
         $scope.mainTabs.map.titleInfo = '';
       };
 
+      // Switch to the location requested tab.
+      $scope.$on('$locationChangeStart', function(next, current) {
+        var params = $location.search();
+        if (params.tab) {
+          var tab = $scope.mainTabs[params.tab];
+          if (tab && tab.active === false) {
+            tab.active = true;
+          }
+        }
+      });
+
       $scope.$watch('searchObj.advancedMode', function(val) {
         if (val && (searchMap.getSize()[0] == 0 ||
             searchMap.getSize()[1] == 0)) {

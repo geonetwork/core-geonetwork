@@ -58,7 +58,7 @@
               -->
               <ul class="gn-flfilter gn-flfilter-icon">
                 <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
-                  <a data-ng-href="#?categories={{facet['@name']}}">
+                  <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
                     <i class="gn-icon">
                       <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
                     </i>
@@ -72,10 +72,10 @@
             <div class="col-xs-12">
               <tabset id="info-tabset"
                       type="pills">
-                <!--<tab heading="{{'lastRecords' | translate}}"
+                <tab heading="{{'lastRecords' | translate}}"
                      active="infoTabs.lastRecords.active">
                   <form class="form-horizontal"
-                        role="form"
+                        role="nav"
                         data-ng-controller="gnsSearchLatestController"
                         data-ng-search-form=""
                         data-runSearch="true"
@@ -88,7 +88,7 @@
                           </a>
                         </div>
                       </li>
-                      <li class="gn-more"><a data-ng-href="#?sortBy=changeDate">
+                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=changeDate">
                         <span data-translate="">viewMore</span>
                         <i class="fa fa-ellipsis-h"></i>
                       </a></li>
@@ -98,7 +98,7 @@
                 <tab heading="{{'preferredRecords' | translate}}"
                      active="infoTabs.preferredRecords.active">
                   <form class="form-horizontal"
-                        role="form"
+                        role="nav"
                         data-ng-controller="gnsSearchPopularController"
                         data-ng-search-form=""
                         data-runSearch="true"
@@ -111,12 +111,12 @@
                           </a>
                         </div>
                       </li>
-                      <li class="gn-more"><a data-ng-href="#?sortBy=popularity">
+                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
                         <span data-translate="">viewMore</span>
                         <i class="fa fa-ellipsis-h"></i>
                       </a></li>
                     </ul>
-                </tab>-->
+                </tab>
               </tabset>
             </div>
           </div>
