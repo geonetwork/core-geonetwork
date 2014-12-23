@@ -46,5 +46,11 @@
   "Clear": "Clear",
   "ClearTitle": "Clear current search query, filters and sorts.",
   "hitsPerPage": "Records per page",
-  "chooseRecordsPerPage": "Click to choose the number of records per page"
+  "chooseRecordsPerPage": "Click to choose the number of records per page",
+  "sortedBy": "Sorted by {{field}}",
+  "relevance": "relevancy",
+  "rating": "rating",
+  "changeDate": "latest",
+  "popularity": "popularity"
+
 }

@@ -249,7 +249,8 @@
             },
             link: function(scope, element, attrs, searchFormCtrl) {
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
-              scope.search = function() {
+              scope.sortBy = function(v) {
+                scope.params.sortBy = v;
                 searchFormCtrl.triggerSearch(true);
               };
 

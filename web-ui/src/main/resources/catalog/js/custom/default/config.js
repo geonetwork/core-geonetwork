@@ -118,7 +118,10 @@
       searchSettings.hitsperpageValues = [20, 50, 100];
 
       /* Sort by combo values configuration */
-      searchSettings.sortbyValues = ['relevance', 'changeDate', 'title', 'rating'];
+      searchSettings.sortbyValues = [
+        'relevance', 'changeDate',
+        'title', 'rating',
+        'popularity'];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
