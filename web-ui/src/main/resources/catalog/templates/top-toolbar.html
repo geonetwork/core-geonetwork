@@ -1,21 +1,27 @@
-<a class="navbar-link" href="{{pages.home}}">
+<a class="navbar-link" href="catalog.search#?tab=home">
   <img class="gn-logo"
        ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
   <span class="visible-lg">{{info.site.name}}</span>
 </a>
-
-<a href="{{pages.home}}"
+{{mainTabs}}
+<a href="catalog.search#?tab=search"
    class="btn btn-default navbar-btn"
    title="{{'search' | translate}}">
     <i class="fa fa-search"/>
     <span class="visible-lg" data-translate="">search</span>
 </a>
+<a href="catalog.search#?tab=map"
+   class="btn btn-default navbar-btn"
+   title="{{'map' | translate}}">
+  <i class="fa fa-globe"/>
+  <span class="visible-lg" data-translate="">map</span>
+</a>
 <a href="catalog.edit"
    class="btn btn-default navbar-btn"
    data-ng-show="authenticated"
    title="{{'editorBoard' | translate}}">
-    <i class="fa fa-pencil"/>
-    <span class="visible-lg" data-translate="">editorBoard</span>
+    <i class="fa fa-plus"/>
+    <span class="visible-lg" data-translate="">contribute</span>
 </a>
 <a class="btn btn-default navbar-btn" href="{{pages.admin}}"
    data-ng-show="authenticated"

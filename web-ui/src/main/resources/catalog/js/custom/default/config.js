@@ -130,6 +130,9 @@
         {sortBy: 'denominatorDesc', sortOrder: ''},
         {sortBy: 'denominatorAsc', sortOrder: 'reverse'}];
 
+      /* Default search by option */
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
+
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +

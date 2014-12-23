@@ -124,6 +124,6 @@
         to: 30,
         viewerMap: viewerMap,
         searchMap: searchMap
-      });
+      }, gnSearchSettings.sortbyDefault);
     }]);
 })();

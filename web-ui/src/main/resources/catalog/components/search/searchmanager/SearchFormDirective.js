@@ -28,7 +28,6 @@
   var searchFormController =
       function($scope, $location, gnSearchManagerService,
                gnFacetService, Metadata) {
-    var defaultServiceUrl = 'qi@json';
     var defaultParams = {
       fast: 'index'
     };

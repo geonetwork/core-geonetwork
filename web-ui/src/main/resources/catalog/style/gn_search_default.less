@@ -1,5 +1,12 @@
 @import "gn_search.less";
 
+/* Hide the tabset selector because tab
+   switch is available in the top tool bar */
+#main-tabset > ul:nth-child(1) {
+  display: none;
+}
+
+
 .navbar {
   margin-bottom: 14px;
   .navbar-brand {
@@ -155,7 +162,7 @@ ul.gn-resultview {
 //  top: ~"calc(120px + 1.6em)";
   border: 1px solid @panel-default-border;
   [ngeo-map] {
-    height: 79vh;
+    height: 86vh;
   }
 }
 
