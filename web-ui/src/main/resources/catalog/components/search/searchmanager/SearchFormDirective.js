@@ -218,7 +218,7 @@
         $scope.searchObj.params = {};
       }
       if (angular.isArray($scope.searchObj.sortbyValues)) {
-        $scope.searchObj.params.sortBy = $scope.searchObj.sortbyValues[0];
+        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyValues[0]);
       }
 
       self.resetPagination();

@@ -109,19 +109,26 @@
         value: 'createDateYears'
       }];
 
-      /* Pagination configuration */
-      searchSettings.paginationInfo = {
-        hitsPerPage: 20
-      };
 
-      /* Hits per page combo values configuration */
+      /* Hits per page combo values configuration.
+         The first one is the default. */
       searchSettings.hitsperpageValues = [20, 50, 100];
 
-      /* Sort by combo values configuration */
+      /* Pagination configuration */
+      searchSettings.paginationInfo = {
+        hitsPerPage: searchSettings.hitsperpageValues[0]
+      };
+
+      /* Sort by combo values configuration.
+         The first one is the default. */
       searchSettings.sortbyValues = [
-        'relevance', 'changeDate',
-        'title', 'rating',
-        'popularity'];
+        {sortBy: 'relevance', sortOrder: ''},
+        {sortBy: 'changeDate', sortOrder: ''},
+        {sortBy: 'title', sortOrder: 'reverse'},
+        {sortBy: 'rating', sortOrder: ''},
+        {sortBy: 'popularity', sortOrder: ''},
+        {sortBy: 'denominatorDesc', sortOrder: ''},
+        {sortBy: 'denominatorAsc', sortOrder: 'reverse'}];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{

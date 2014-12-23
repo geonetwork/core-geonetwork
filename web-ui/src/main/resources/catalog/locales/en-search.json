@@ -51,6 +51,8 @@
   "relevance": "relevancy",
   "rating": "rating",
   "changeDate": "latest",
-  "popularity": "popularity"
+  "popularity": "popularity",
+  "denominatorDesc": "low scale first",
+  "denominatorAsc": "high scale first"
 
 }

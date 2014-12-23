@@ -250,7 +250,7 @@
             link: function(scope, element, attrs, searchFormCtrl) {
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
               scope.sortBy = function(v) {
-                scope.params.sortBy = v;
+                angular.extend(scope.params, v);
                 searchFormCtrl.triggerSearch(true);
               };
 
