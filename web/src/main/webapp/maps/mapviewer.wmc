@@ -59,7 +59,9 @@
 				<ol:singleTile>true</ol:singleTile>
 			</Extension>
 		</Layer>
-	</LayerList>                     <?xml version="1.0" encoding="utf-8" standalone="no" ?>
+	</LayerList>
+<!-- Comment out the demis server	- which seems to have been tacked on here!
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
                                      <ViewContext xmlns="http://www.opengis.net/context" version="1.1.0" id="OpenLayers_Context_1278" xsi:schemaLocation="http://www.opengis.net/context
                                      http://schemas.opengis.net/context/1.1.0/context.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                                          <General>
@@ -101,5 +103,6 @@
                                              </Layer>
                                          </LayerList>
                                      </ViewContext>
+-->
 
 </ViewContext>
