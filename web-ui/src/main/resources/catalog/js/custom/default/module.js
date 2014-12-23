@@ -11,8 +11,8 @@
 
 
   module.controller('gnsSearchPopularController', [
-    '$scope',
-    function($scope) {
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
         params: {

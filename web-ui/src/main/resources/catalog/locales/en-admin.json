@@ -884,6 +884,7 @@
     "userRecord": " record found for ",
     "userRecords": " records found for ",
     "userUpdateError": "User can't be created or updated",
+    "userUpdated": "User updated",
     "users": "Users",
     "usersAndGroups": "Users and groups",
     "valid": "Valid",
