@@ -1,15 +1,24 @@
-<input type="checkbox" class="md-checkbox"/>
-<div class="btn-group">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    <input type="checkbox">
-    <span ng-show="searchResults.selectedCount > 0" class="badge">{{searchResults.selectedCount}}</span>
+<div class="btn-group gn-select">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown">
+    <i class="fa"
+       data-ng-click="select()"
+       data-ng-class="getIcon()"></i>&nbsp;
+    <span data-ng-show="searchResults.selectedCount > 0"
+          class="badge">{{searchResults.selectedCount}}</span>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li><a href="" ng-click="selectAllInPage(true)" translate>Select All in page</a></li>
-    <li><a href="" ng-click="selectAll()" translate>Select All</a></li>
-    <li class="divider"></li>
-    <li><a href="" ng-click="unSelectAll()" translate>Empty selection</a></li>
+    <li><a href=""
+           data-ng-click="selectAllInPage(true)"
+           data-translate="">allInPage</a></li>
+    <li><a href=""
+           data-ng-click="selectAll()"
+           data-translate="">all</a></li>
+    <li><a href=""
+           data-ng-click="unSelectAll()"
+           data-translate="">none</a></li>
   </ul>
 </div>
 <div class="btn-group gn-selection-actions" ng-if="searchResults.selectedCount > 0">

@@ -49,5 +49,8 @@
   "exportGM03": "Export (GM03)",
   "exportRDF": "Export (RDF)",
   "exportPDF": "Export (PDF)",
-  "exportMEF": "Export (ZIP)"
+  "exportMEF": "Export (ZIP)",
+  "all": "Tous",
+  "allInPage": "Toute la page",
+  "none": "Aucun"
 }

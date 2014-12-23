@@ -9,12 +9,12 @@
     return {
       restrict: 'A',
       scope: true,
-      templateUrl: '../../catalog/components/search/searchmanager/partials/' +
+      templateUrl: '../../catalog/components/search/resultsview/partials/' +
           'selection-widget.html',
       link: function(scope, element, attrs) {
 
-        var ckb = $(element).find('.md-checkbox');
-        var watchers = [];
+        var watchers = []
+        scope.checkAll = true;
 
         // initial state
         gnHttp.callService('mdSelect', {}).success(function(res) {
@@ -26,7 +26,6 @@
           records.forEach(function(md) {
             checked = checked && md['geonet:info'].selected;
           });
-          ckb[0].checked = checked;
         };
 
         // set checkbox state on page change
@@ -42,24 +41,37 @@
           });
         });
 
-        ckb.on('click', function() {
-          scope.$apply(function() {
-            scope.selectAllInPage(ckb[0].checked);
-          });
-        });
+        scope.select = function () {
+          scope.checkAll = !scope.checkAll;
+          if (scope.checkAll) {
+            scope.selectAll();
+          } else {
+            scope.unSelectAll()
+          }
+        }
+        scope.getIcon = function () {
+           if (scope.searchResults.selectedCount === 0) {
+             return 'fa-square-o';
+           } else if (scope.searchResults.selectedCount ==
+                      scope.searchResults.count) {
+             return 'fa-check-square-o';
+           } else {
+             return 'fa-minus-square-o';
+           }
+        }
 
         scope.selectAllInPage = function(selected) {
+          var params = {
+            selected: selected ? 'add' : 'remove',
+            id: []
+          };
           scope.searchResults.records.forEach(function(record) {
+            params.id.push(record.getUuid());
             record['geonet:info'].selected = selected;
-            gnHttp.callService('mdSelect', {
-              selected: selected ? 'add' : 'remove',
-              id: record.getUuid()
-            }).success(function(res) {
-              var fn = (selected) ? Math.max : Math.min;
-              scope.searchResults.selectedCount = fn(
-                  scope.searchResults.selectedCount,
-                  parseInt(res[0], 10));
-            });
+          });
+
+          gnHttp.callService('mdSelect', params).success(function(res) {
+            scope.searchResults.selectedCount = parseInt(res[0], 10);
           });
         };
 
