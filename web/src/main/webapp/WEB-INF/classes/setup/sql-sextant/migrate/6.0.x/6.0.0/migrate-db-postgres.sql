@@ -1,1 +1,1 @@
-ALTER TABLE schematron RENAME file  TO filename;
+ALTER TABLE schematron RENAME file TO filename;
