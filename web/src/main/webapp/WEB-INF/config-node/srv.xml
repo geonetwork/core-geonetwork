@@ -6,7 +6,6 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" >
 
     <import resource="classpath*:/config-spring-geonetwork.xml"/>
-    <import resource="../config-db/database_migration.xml"/>
 
     <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
         <property name="id" value="srv" />
