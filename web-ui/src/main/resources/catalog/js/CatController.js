@@ -90,7 +90,7 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          url = $scope.url + 'info@json?type=site&type=auth';
+          url = $scope.url + 'info?_content_type=json&type=site&type=auth';
           return $http.get(url).
               success(function(data, status) {
                 $scope.info = data;
@@ -114,7 +114,7 @@
 
         // Retrieve user information if catalog is online
         var userLogin = catInfo.then(function(value) {
-          url = $scope.url + 'info@json?type=me';
+          url = $scope.url + 'info?_content_type=json&type=me';
           return $http.get(url).
               success(function(data, status) {
                 $scope.user = data.me;
@@ -136,7 +136,7 @@
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
-          url = 'qi@json?summaryOnly=true';
+          url = 'qi?_content_type=json&summaryOnly=true';
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;

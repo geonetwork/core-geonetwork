@@ -1,5 +1,12 @@
 @import "gn_search.less";
 
+/* Hide the tabset selector because tab
+   switch is available in the top tool bar */
+#main-tabset > ul:nth-child(1) {
+  display: none;
+}
+
+
 .navbar {
   margin-bottom: 14px;
   .navbar-brand {
@@ -14,6 +21,51 @@
   padding: 150px 100px;
 }
 
+
+/* Pagination */
+.gn-pager {
+  /* Hide the first/last page button */
+  .gn-pager-start {
+    li:nth-child(1) {
+      display: none;
+    }
+  }
+  .gn-pager-end {
+    li:nth-child(2) {
+      display: none;
+    }
+  }
+
+
+  /* Button on the right, current page info on the left */
+  .btn-group {
+    float: left;
+
+    /* Drop down to select hits is a simple link */
+    button {
+      .btn-link();
+    }
+
+    /* Inline hits options */
+    li {
+      a {
+        padding: 2px 10px;
+      }
+      display: inline-block;
+    }
+    li.dropdown-header {
+      display: block;
+    }
+  }
+}
+
+
+
+.gn-sort-by {
+  .btn-group > button {
+    .btn-link();
+  }
+}
 .gn-search-page {
   .nav-pills {
     margin-bottom: 1em;
@@ -77,14 +129,9 @@ ul.gn-resultview {
 }
 [data-ng-search-form] {
   .gn-top-search {
-    text-align: center;
-    background: @panel-default-heading-bg;
-    border: 1px solid @panel-default-border;
-    padding: 8px;
-    margin: 0 15px;
+    border-bottom: 1px solid @panel-default-border;
+    padding-bottom: 10px;
     margin-bottom: 10px;
-    vertical-align: middle;
-    border-radius: 3px;
     position: relative;
     [typeahead] {
       width: 300px;
@@ -101,17 +148,82 @@ ul.gn-resultview {
       left: 50%;
       margin-left: 64px;
     }
+    .gn-form-any {
+      max-width: 45vw;
+    }
   }
 }
 
 [gn-main-viewer] {
-  position: absolute;
+//  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  top: ~"calc(98px + 1.6em)";
+//  top: ~"calc(120px + 1.6em)";
   border: 1px solid @panel-default-border;
   [ngeo-map] {
-    height: 100%;
+    height: 86vh;
+  }
+}
+
+.gn-flfilter {
+
+}
+.gn-flfilter-icon {
+  text-align: center;
+  li {
+    list-style: none;
+    float: left;
+    width: 150px;
+  }
+  i {
+//    .@{fa-css-prefix}-4x;
+    font-size: 4em;
+    img {
+      width: 100px;
+    }
+  }
+}
+
+.gn-row-main {}
+
+.gn-row-info {}
+
+.gn-row-filters {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+.gn-results-switch {
+  float: left;
+}
+
+/*
+  List of records
+ */
+.gn-info-list {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  li {
+    width: 33%;
+    zoom: 1;
+    list-style: none;
+    float: left;
+    div {
+      margin: 2px;
+      padding: 8px;
+      height: 75px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-bottom: 2px solid #337ab7;
+    }
+  }
+  li.gn-more {
+    position: relative;
+    float:right;
   }
 }

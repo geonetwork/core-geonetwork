@@ -1,148 +1,64 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.guiservices.metadata.GetRelated;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterParams;
-import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.EnvironmentImpl;
-import org.fao.geonet.services.metadata.format.groovy.Functions;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Text;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * @author Jesse on 10/17/2014.
  */
-public class FullViewFormatterTest extends AbstractFormatterTest {
+public class FullViewFormatterTest extends AbstractFullViewFormatterTest {
 
-    @Autowired
-    private IsoLanguagesMapper mapper;
-
-    @Test @Ignore
-    @SuppressWarnings("unchecked")
-    public void testPrintFormat() throws Exception {
-        final FormatType formatType = FormatType.testpdf;
-        final MockHttpServletResponse response = new MockHttpServletResponse();
-
-        Format format = new Format(formatType, response).invoke();
-        Functions functions = format.getFunctions();
-        String view = format.getView();
-
-        List<String> excludes = excludes();
-
-        final Element xmlEl = Xml.loadString(xml, false);
-        final List text = Lists.newArrayList(Xml.selectNodes(xmlEl, "*//node()[not(@codeList)]/text()"));
-        text.addAll(Lists.newArrayList(Xml.selectNodes(xmlEl, "*//node()[@codeList]/@codeListValue")));
-
-        StringBuilder missingStrings = new StringBuilder();
-        for (Object t : text) {
-            final String path;
-            final String requiredText;
-            if (t instanceof Text) {
-                requiredText = ((Text) t).getTextTrim();
-                path = getXPath((Content) t).trim();
-            } else if (t instanceof Attribute) {
-                Attribute attribute = (Attribute) t;
-                final String codelist = attribute.getParent().getAttributeValue("codeList");
-                final String code = attribute.getValue();
-                requiredText = functions.codelistValueLabel(codelist, code);
-                path = getXPath(attribute.getParent()).trim() + "> @codeListValue";
-            } else {
-                throw new AssertionError(t.getClass() + " is not handled");
-            }
-            if (!requiredText.isEmpty() && !view.contains(requiredText)) {
-                if (!excludes.contains(path)) {
-                    missingStrings.append("\n").append(path).append(" -> ").append(requiredText);
-                }
-            }
-        }
-
-        if (missingStrings.length() > 0) {
-            throw new AssertionError("The following text elements are missing from the view:" + missingStrings);
-        }
+    @Test  @DirtiesContext
+    public void testServiceMdFormatting() throws Exception {
+        super.testPrintFormat();
     }
 
     protected List<String> excludes() {
         return Lists.newArrayList(
-                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
-                "gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text"
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:date > gco:DateTime > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:title > gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:date > gco:DateTime > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:series > gmd:CI_Series > gmd:name > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:series > gmd:CI_Series > gmd:issueIdentification > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:series > gmd:CI_Series > gmd:page > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:collectiveTitle > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:ISBN > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:ISSN > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:version > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:graphicOverview > gmd:MD_BrowseGraphic > gmd:fileType > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributionOrderProcess > gmd:MD_StandardOrderProcess > gmd:orderingInstructions > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributionOrderProcess > gmd:MD_StandardOrderProcess > gmd:turnaround > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:unitsOfDistribution > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:protocol > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:applicationProfile > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:description > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:offLine > gmd:MD_Medium > gmd:densityUnits > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:offLine > gmd:MD_Medium > gmd:mediumNote > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:thesaurusName > gmd:CI_Citation > gmd:alternateTitle > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:thesaurusName > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:date > gco:DateTime > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:topicCategory > gmd:MD_TopicCategoryCode > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:extent > gmd:EX_Extent > gmd:temporalElement > gmd:EX_TemporalExtent > gmd:extent > gml:TimePeriod > gml:beginPosition > Text",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:extent > gmd:EX_Extent > gmd:temporalElement > gmd:EX_TemporalExtent > gmd:extent > gml:TimePeriod > gml:endPosition > Text",
+                "> gmd:MD_Metadata > gmd:distributionInfo > gmd:MD_Distribution > gmd:transferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:protocol > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:distributionInfo > gmd:MD_Distribution > gmd:transferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:applicationProfile > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:distributionInfo > gmd:MD_Distribution > gmd:transferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:linkage > gmd:URL > Text",
+                "> gmd:MD_Metadata > gmd:distributionInfo > gmd:MD_Distribution > gmd:transferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:protocol > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:locale > gmd:PT_Locale > gmd:country > gmd:Country> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:dateType > gmd:CI_DateTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:dateType > gmd:CI_DateTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:presentationForm > gmd:CI_PresentationFormCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:onLine > gmd:CI_OnlineResource > gmd:function > gmd:CI_OnLineFunctionCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:offLine > gmd:MD_Medium > gmd:name > gmd:MD_MediumNameCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:resourceFormat > gmd:MD_Format > gmd:formatDistributor > gmd:MD_Distributor > gmd:distributorTransferOptions > gmd:MD_DigitalTransferOptions > gmd:offLine > gmd:MD_Medium > gmd:mediumFormat > gmd:MD_MediumFormatCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:type > gmd:MD_KeywordTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:thesaurusName > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:dateType > gmd:CI_DateTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:portrayalCatalogueInfo > gmd:MD_PortrayalCatalogueReference > gmd:portrayalCatalogueCitation > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:dateType > gmd:CI_DateTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:applicationSchemaInfo > gmd:MD_ApplicationSchemaInformation > gmd:name > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:dateType > gmd:CI_DateTypeCode> @codeListValue",
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:alternateTitle > gco:CharacterString > Text"
         );
-    }
-
-    private String getXPath(Content el) {
-        String path = "";
-        if (el.getParentElement() != null) {
-            path = getXPath(el.getParentElement());
-        }
-        if (el instanceof Element) {
-            return path + " > " + ((Element) el).getQualifiedName();
-        } else {
-            return path + " > " + el.getClass().getSimpleName();
-        }
-    }
-
-    @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
-        return new File(mdFile);
-    }
-
-    private class Format {
-        private FormatType formatType;
-        private MockHttpServletResponse response;
-        private Functions functions;
-        private String view;
-
-        public Format(FormatType formatType, MockHttpServletResponse response) {
-            this.formatType = formatType;
-            this.response = response;
-        }
-
-        public Functions getFunctions() {
-            return functions;
-        }
-
-        public String getView() {
-            return view;
-        }
-
-        public Format invoke() throws Exception {
-            MockHttpServletRequest request = new MockHttpServletRequest();
-
-            GetRelated related = Mockito.mock(GetRelated.class);
-            Element relatedXml = Xml.loadFile(FullViewFormatterTest.class.getResource("relations.xml"));
-            Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
-                    Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
-            _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
-
-            final String formatterId = "full_view";
-            FormatterParams fparams = getFormatterFormatterParamsPair(request, formatterId).two();
-            Environment env = new EnvironmentImpl(fparams, mapper);
-            functions = new Functions(fparams, env);
-
-//            measureFormatterPerformance(request, formatterId);
-
-//            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
-            formatService.exec("eng", formatType.name(), "" + id, null, formatterId, "true", false, request, response);
-            view = response.getContentAsString();
-//            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
-
-            return this;
-        }
     }
 }

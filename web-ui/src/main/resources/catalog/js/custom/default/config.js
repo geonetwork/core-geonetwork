@@ -109,16 +109,29 @@
         value: 'createDateYears'
       }];
 
+
+      /* Hits per page combo values configuration.
+         The first one is the default. */
+      searchSettings.hitsperpageValues = [20, 50, 100];
+
       /* Pagination configuration */
       searchSettings.paginationInfo = {
-        hitsPerPage: 3
+        hitsPerPage: searchSettings.hitsperpageValues[0]
       };
 
-      /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
+      /* Sort by combo values configuration.
+         The first one is the default. */
+      searchSettings.sortbyValues = [
+        {sortBy: 'relevance', sortOrder: ''},
+        {sortBy: 'changeDate', sortOrder: ''},
+        {sortBy: 'title', sortOrder: 'reverse'},
+        {sortBy: 'rating', sortOrder: ''},
+        {sortBy: 'popularity', sortOrder: ''},
+        {sortBy: 'denominatorDesc', sortOrder: ''},
+        {sortBy: 'denominatorAsc', sortOrder: 'reverse'}];
 
-      /* Sort by combo values configuration */
-      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+      /* Default search by option */
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
@@ -131,7 +144,15 @@
             'partials/viewtemplates/list.html',
         tooltip: 'List',
         icon: 'fa-th-list'
+      }, {
+        tplUrl: '../../catalog/components/search/resultsview/' +
+        'partials/viewtemplates/title.html',
+        tooltip: 'Simple',
+        icon: 'fa-list'
       }];
+
+      // Set the default template to use
+      searchSettings.resultTemplate = searchSettings.resultViewTpls[0].tplUrl;
 
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {

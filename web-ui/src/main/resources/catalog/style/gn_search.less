@@ -7,6 +7,7 @@
 @import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
 @import (less) "../lib/style/datetimepicker.css";
 
+@import "gn.less";
 @import "gn_viewer.less";
 
 @fa-version: '4.1.0';
@@ -14,30 +15,6 @@
 
 @panel-heading-height: 3.8em;
 
-/* An update to 3.2 could provide responsive class
-  for block or inline layout.
-  http://getbootstrap.com/css/#responsive-utilities
-
-  Display button label in top tool bar using inline mode.
- */
-.gn-top-bar {
-  .visible-lg {
-    display: none !important;
-  }
-  @media (min-width: 1200px) {
-    .visible-lg {
-      display: inline !important;
-    }
-  }
-  .hidden-xs {
-    display: inline !important;
-  }
-  @media (max-width: 767px) {
-    .hidden-xs {
-      display: none !important;
-    }
-  }
-}
 
 .gn-facet {
   .list-group-item {
@@ -61,19 +38,28 @@
   }
 }
 
-.pager {
-  margin: 0;
-  text-align: left;
-  display: inline-block;
-  li > a {
-    padding: 2px 5px;
-    border-radius: 6px;
-    font-size: 120%;
-  }
-  em {
-    font-style: normal;
+.gn-pager {
+  .pager {
+    margin: 0;
+    text-align: left;
+    display: inline-block;
+    li > a {
+      padding: 2px 5px;
+      border-radius: 6px;
+      font-size: 120%;
+    }
+    em {
+      font-style: normal;
+    }
   }
 }
+
+.gn-select ul.dropdown-menu > li > a:first-letter,
+.gn-sort-by ul.dropdown-menu > li > a:first-letter {
+  text-transform: uppercase;
+}
+
+/* TODO: Deprecate due to change in gn-pager and gn-sort-by */
 [sortby-combo], [hitsperpage-combo] {
   display: inline-block;
   vertical-align: top;
@@ -230,7 +216,7 @@
   .md-checkbox {
     position: absolute;
     z-index: 10;
-    top: 1.3em;
+    top: 0.7em;
     left: 0.9em;
   }
   .btn-group [type=checkbox] {
@@ -295,6 +281,9 @@
     }
 
   }
+  h4 {
+    font-size: 14px;
+  }
   p {
     font-size: .9em;
   }
@@ -355,4 +344,46 @@
     }
   }
 
+}
+
+.dropdown-submenu {
+  position:relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top:0;
+  left:100%;
+  margin-top:-6px;
+  margin-left:-1px;
+  -webkit-border-radius:0 6px 6px 6px;
+  -moz-border-radius:0 6px 6px 6px;
+  border-radius:0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display:block;
+}
+.dropdown-submenu>a:after {
+  display:block;
+  content:" ";
+  float:right;
+  width:0;
+  height:0;
+  border-color:transparent;
+  border-style:solid;
+  border-width:5px 0 5px 5px;
+  border-left-color:#cccccc;
+  margin-top:5px;
+  margin-right:-10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color:#ffffff;
+}
+.dropdown-submenu.pull-left {
+  float:none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left:-100%;
+  margin-left:10px;
+  -webkit-border-radius:6px 0 6px 6px;
+  -moz-border-radius:6px 0 6px 6px;
+  border-radius:6px 0 6px 6px;
 }

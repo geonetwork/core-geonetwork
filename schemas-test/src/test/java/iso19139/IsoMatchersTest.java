@@ -20,7 +20,7 @@ public class IsoMatchersTest extends AbstractFormatterTest {
 
     @Override
     protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
+        final String mdFile = AbstractFullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
         return new File(mdFile);
     }
 

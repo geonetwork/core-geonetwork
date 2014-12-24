@@ -8,7 +8,6 @@
   goog.require('sxt_panier_directive');
   goog.require('sxt_categorytree');
 
-
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',

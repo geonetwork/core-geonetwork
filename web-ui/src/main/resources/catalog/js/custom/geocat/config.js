@@ -107,16 +107,22 @@
         value: 'orgNames'
       }];
 
-      /* Pagination configuration */
-      searchSettings.paginationInfo = {
-        hitsPerPage: 10
-      };
+
 
       /* Hits per page combo values configuration */
       searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
 
+      /* Pagination configuration */
+      searchSettings.paginationInfo = {
+        hitsPerPage: searchSettings.hitsperpageValues[1]
+      };
+
       /* Sort by combo values configuration */
-      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+      searchSettings.sortbyValues = [
+        {sortBy: 'relevance', sortOrder: ''},
+        {sortBy: 'title', sortOrder: 'reverse'},
+        {sortBy: 'rating', sortOrder: ''}];
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
