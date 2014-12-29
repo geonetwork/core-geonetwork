@@ -171,10 +171,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <bean id="ldapUserDetailsService"
 		class="org.fao.geonet.kernel.security.ldap.LdapUserDetailsManager">
 		<constructor-arg ref="contextSource" />
-		<constructor-arg name="groupMemberAttributeName" 
+		<!--<constructor-arg name="groupMemberAttributeName"
 			value="${ldap.privilege.search.group.queryprop}" />
 		<constructor-arg name="query" 
-			value="${ldap.privilege.search.group.query}" />
+			value="${ldap.privilege.search.group.query}" />-->
 		<property name="groupSearchBase" 
 			value="${ldap.privilege.search.group.object}" />
 		<property name="usernameMapper" ref="usernameMapper" />
