@@ -1,0 +1,107 @@
+<div class="row">
+  <div class="col-md-3 gn-record-info">
+
+    <button class="btn btn-primary"
+            data-ng-click="closeRecord(currentRecord)">
+      <i class="fa fa-search"></i>
+      <span data-translate="">backToSearch</span>
+    </button>
+
+
+    <img class="gn-img-thumbnail"
+         data-ng-src="{{::currentRecord.getThumbnails().small}}"
+         data-ng-if="currentRecord.getThumbnails().small"/>
+
+    <h4 data-translate="">contact</h4>
+    <blockquote data-ng-if="currentRecord.getContacts().resource">
+      {{::currentRecord.getContacts().resource}}
+    </blockquote>
+
+    <h4 data-translate="">extent</h4>
+
+    <h4 data-translate="">sourceCatalog</h4>
+    <img ng-src="../../images/logos/{{::currentRecord.source}}.gif"
+         class="gn-source-logo"/>
+  </div>
+  <div class="col-md-9 gn-record">
+    <h1>
+      <span data-ng-if="currentRecord.type.indexOf('dataset')>=0"
+              class="fa fa-database"
+              title="{{'dataset' | translate}}"></span>
+            <span data-ng-if="currentRecord.type.indexOf('software')>=0"
+                  class="fa fa-hdd-o"
+                  title="{{'software' | translate}}"></span>
+            <span data-ng-if="currentRecord.type.indexOf('map')>=0"
+                  class="fa fa-globe"
+                  title="{{'map' | translate}}"></span>
+            <span data-ng-if="currentRecord.type.indexOf('application')>=0"
+                  class="fa fa-hdd-o"
+                  title="{{'application' | translate}}"></span>
+            <span data-ng-if="currentRecord.type.indexOf('basicgeodata')>=0"
+                  class="fa fa-globe"
+                  title="{{'geodata' | translate}}"></span>
+            <span data-ng-if="currentRecord.type.indexOf('service')>=0"
+                  class="fa fa-globe"
+                  title="{{'service' | translate}}"></span>
+      {{::currentRecord.title}}
+    </h1>
+
+    <div>
+      <i class="fa fa-calendar"></i>
+      <span data-translate="">updatedOn</span>
+      {{currentRecord['geonet:info'].changeDate}}</div>
+
+
+
+    <p>
+      {{::currentRecord.abstract}}
+    </p>
+
+    <h2 data-translate="">downloadsAndResources</h2>
+
+    <ul>
+      <li data-ng-repeat="link in ::currentRecord.getLinksByType('OGC', 'DOWNLOAD', 'LINK')">
+        <div data-ng-href="link.url"
+           target="_blank"
+           title="{{link.desc}}">
+          {{link.name}}
+          <span class="badge">{{link.contentType}}</span>
+        </div>
+      </li>
+    </ul>
+
+    <h2 data-translate="">aboutThisResource</h2>
+
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <th data-translate="">listOfCategories</th>
+          <td>
+            <a data-ng-repeat="cat in ::currentRecord.category"
+                 data-ng-href="#?tab=search&_cat={{cat}}">
+              <i class="fa"
+                 title="{{cat | translate}}">
+                <img data-ng-src="../../images/category/{{cat}}.png"/>
+              </i>
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-if="::currentRecord.keyword">
+          <th>keywords</th>
+          <td>
+            <span class="badge" data-ng-repeat="k in ::currentRecord.keyword">{{k}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 data-translate="">preview</h2>
+
+
+    <h2 data-translate="">metadataInformation</h2>
+
+    <blockquote data-ng-if="currentRecord.getContacts().metadata">
+      {{::currentRecord.getContacts().metadata}}
+    </blockquote>
+  </div>
+</div>

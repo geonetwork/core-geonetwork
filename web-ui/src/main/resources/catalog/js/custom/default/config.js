@@ -136,19 +136,19 @@
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
+        'partials/viewtemplates/grid.html',
+        tooltip: 'Grid',
+        icon: 'fa-th'
+      }, {
+        tplUrl: '../../catalog/components/search/resultsview/' +
             'partials/viewtemplates/title.html',
-        tooltip: 'Simple',
+        tooltip: 'List',
         icon: 'fa-list'
       }, {
         tplUrl: '../../catalog/components/search/resultsview/' +
             'partials/viewtemplates/list.html',
-        tooltip: 'List',
+        tooltip: 'Complete',
         icon: 'fa-th-list'
-      }, {
-        tplUrl: '../../catalog/components/search/resultsview/' +
-        'partials/viewtemplates/title.html',
-        tooltip: 'Simple',
-        icon: 'fa-list'
       }];
 
       // Set the default template to use

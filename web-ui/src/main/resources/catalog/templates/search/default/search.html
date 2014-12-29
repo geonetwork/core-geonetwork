@@ -23,6 +23,7 @@
               <div class="input-group gn-form-any">
                 <input type="text"
                        class="form-control input-lg"
+                       autofocus=""
                        data-ng-model="homeAnyField"
                        placeholder="{{'anyPlaceHolder' | translate}}"
                        data-typeahead="address for address in getAnySuggestions($viewValue)"
@@ -90,9 +91,24 @@
                     <ul class="gn-info-list">
                       <li data-ng-repeat="md in searchResults.records">
                         <div>
-                          <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
-                            {{md.title || md.defaultTitle}}
-                          </a>
+                          <div class="gn-md-thumbnail">
+                            <img class="gn-img-thumbnail"
+                                 data-ng-src="{{md.getThumbnails().small}}"
+                                 data-ng-if="md.getThumbnails().small"/>
+                          </div>
+                          <div class="gn-md-title">
+                            <a data-ng-click="openRecord(md)">
+                              {{md.title || md.defaultTitle}}
+                            </a>
+                            <br/>
+                            <a data-ng-repeat="cat in ::md.category"
+                               data-ng-href="#?tab=search&_cat={{cat}}">
+                              <i class="fa"
+                                 title="{{cat | translate}}">
+                                <img data-ng-src="../../images/category/{{cat}}.png"/>
+                              </i>
+                            </a>
+                          </div>
                         </div>
                       </li>
                       <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=changeDate">
@@ -113,9 +129,24 @@
                     <ul class="gn-info-list">
                       <li data-ng-repeat="md in searchResults.records">
                         <div>
-                          <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                          <div class="gn-md-thumbnail">
+                            <img class="gn-img-thumbnail"
+                                 data-ng-src="{{md.getThumbnails().small}}"
+                                 data-ng-if="md.getThumbnails().small"/>
+                          </div>
+                          <div class="gn-md-title">
+                            <a data-ng-click="openRecord(md)">
                               {{md.title || md.defaultTitle}}
-                          </a>
+                            </a>
+                            <br/>
+                            <a data-ng-repeat="cat in ::md.category"
+                               data-ng-href="#?tab=search&_cat={{cat}}">
+                              <i class="fa"
+                                 title="{{cat | translate}}">
+                                <img data-ng-src="../../images/category/{{cat}}.png"/>
+                              </i>
+                            </a>
+                          </div>
                         </div>
                       </li>
                       <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
@@ -127,6 +158,12 @@
               </tabset>
             </div>
           </div>
+        </div>
+      </tab>
+      <tab heading="{{mainTabs.view.title}}"
+           active="currentRecord != null">
+        <div class="container-fluid">
+          <div data-ng-include="'../../catalog/templates/search/default/recordView.html'"></div>
         </div>
       </tab>
       <tab heading="{{mainTabs.search.title}}"

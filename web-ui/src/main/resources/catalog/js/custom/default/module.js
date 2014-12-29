@@ -63,10 +63,29 @@
           titleInfo: '',
           active: false
         },
+        search: {
+          title: 'view',
+          titleInfo: '',
+          active: false
+        },
         map: {
           title: 'Map',
           active: false
         }};
+
+      // TODO: Previous record should be stored on the client side
+      $scope.previousRecords = [];
+      $scope.currentRecord = null;
+      $scope.openRecord = function (md){
+        $scope.currentRecord = md;
+        // TODO: do not add duplicates
+        $scope.previousRecords.push($scope.currentRecord);
+      }
+      $scope.closeRecord = function (md){
+        $scope.currentRecord = null;
+        $scope.mainTabs.search.active = true;
+      }
+
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
