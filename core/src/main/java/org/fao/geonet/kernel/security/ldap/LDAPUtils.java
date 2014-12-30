@@ -58,10 +58,14 @@ public class LDAPUtils {
         User loadedUser = userRepo.findOneByUsername(userName);
         User toSave;
         if (loadedUser != null) {
-            if (importPrivilegesFromLdap) {
-                loadedUser.setProfile(user.getUser().getProfile());
+            // If we don't import privileges from LDAP
+            // Set the LDAP user profile to be the one set
+            // in the local database. If not, the db profile
+            // would be always reset by merge.
+            if (!importPrivilegesFromLdap) {
+                user.getUser().setProfile(loadedUser.getProfile());
             }
-            loadedUser.mergeUser(user.getUser(), true);
+            loadedUser.mergeUser(user.getUser(), false);
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 Log.debug(Geonet.LDAP, "  - Update LDAP user " + user.getUsername() + " (" + loadedUser.getId() + ") in local database.");
             }
