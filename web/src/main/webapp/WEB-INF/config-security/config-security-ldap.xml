@@ -71,6 +71,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="profileMapping">
             <map/>
         </property>
+        <property name="ldapBaseDn" value="${ldap.base.dn}"/>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
 		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />

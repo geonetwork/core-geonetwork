@@ -188,7 +188,6 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 				p.setCn(cn);
 				ldapManager.createUser(p.createUserDetails());
 			}
-
 			LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo,
 					importPrivilegesFromLdap, createNonExistingLdapGroup);
 		} catch (Exception e) {
