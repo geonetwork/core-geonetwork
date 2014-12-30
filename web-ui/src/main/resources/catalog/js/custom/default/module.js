@@ -50,6 +50,7 @@
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+      $scope.$location = $location;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
 
       $scope.mainTabs = {
@@ -74,15 +75,25 @@
         }};
 
       // TODO: Previous record should be stored on the client side
+      var searchUrl = '';
       $scope.previousRecords = [];
       $scope.currentRecord = null;
+
       $scope.openRecord = function (md){
         $scope.currentRecord = md;
+        searchUrl = $location.search();
+        $location.search({uuid: md['geonet:info'].uuid});
+        $scope.currentRecord.links = md.getLinksByType('LINK');
+        $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
+        $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
+        $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
         // TODO: do not add duplicates
         $scope.previousRecords.push($scope.currentRecord);
       }
+
       $scope.closeRecord = function (md){
         $scope.currentRecord = null;
+        $location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       }
 

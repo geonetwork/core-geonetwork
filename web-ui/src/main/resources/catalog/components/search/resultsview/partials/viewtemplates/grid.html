@@ -6,6 +6,7 @@
 
       <!--Edit button-->
       <a class="gn-md-edit-btn"
+         data-ng-show="authenticated"
          data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
          title="{{'edit' | translate}}">
         <i class="fa fa-pencil"></i>
@@ -100,7 +101,7 @@
     <div class="btn-group"
          data-ng-class="::links.length > 0 ? '' : 'invisible'">
       <button type="button"
-              class="btn btn-success dropdown-toggle"
+              class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
               title="{{'weblink' | translate}}">
         <span class="fa fa-link"></span>
@@ -116,7 +117,7 @@
     <div class="btn-group"
          data-ng-class="::downloads.length > 0 ? '' : 'invisible'">
       <button type="button"
-              class="btn btn-success dropdown-toggle"
+              class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
         <span class="fa fa-download"></span>
         <span data-translate="">download</span>
@@ -135,7 +136,7 @@
     <div class="btn-group"
          data-ng-class="layers.length > 0 ? '' : 'invisible'">
       <button type="button"
-              class="btn btn-success dropdown-toggle"
+              class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
         <span class="fa fa-globe"></span>
         <span data-translate="">addToMap</span>
