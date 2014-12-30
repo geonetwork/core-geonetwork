@@ -151,7 +151,7 @@
       }];
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
+      searchSettings.hitsperpageValues = [10, 20, 50, 100];
 
       searchSettings.paginationInfo = {
         hitsPerPage: searchSettings.hitsperpageValues[0]
