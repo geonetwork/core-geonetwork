@@ -566,8 +566,26 @@
           }
         }
         return ret;
+      },
+      getBoxAsPolygon: function() {
+        // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
+        if (this.geoBox) {
+          var coords = this.geoBox.split('|');
+          return 'Polygon((' +
+            coords[0] + ' ' +
+            coords[1] + ',' +
+            coords[2] + ' ' +
+            coords[1] + ',' +
+            coords[2] + ' ' +
+            coords[3] + ',' +
+            coords[0] + ' ' +
+            coords[3] + ',' +
+            coords[0] + ' ' +
+            coords[1] + '))';
+        } else {
+          return null;
+        }
       }
-
     };
     return Metadata;
   });

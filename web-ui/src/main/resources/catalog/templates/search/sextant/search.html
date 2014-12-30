@@ -40,9 +40,13 @@
               <div ng-class="{ 'col-md-7': collapsed.search && !collapsed.facet , 'col-md-9': collapsed.search && collapsed.facet, 'col-md-6': !collapsed.search && collapsed.facet , 'col-md-4': !collapsed.search && !collapsed.facet}" class="maincol hfull sxt-center-panel">
                 <div class="panel panel-default hfull" ng-show="!initial">
                   <div class="panel-heading">
-                    <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
-                    <div data-gn-pagination="paginationInfo"
-                         data-hits-values="searchObj.hitsperpageValues"></div>
+                    <div class="btn-toolbar">
+                      <div sortby-combo params="searchObj.params"
+                           gn-sortby-values="searchObj.sortbyValues"
+                           class="pull-right"></div>
+                      <div data-gn-pagination="paginationInfo"
+                           data-hits-values="searchObj.hitsperpageValues"></div>
+                    </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
                   <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
