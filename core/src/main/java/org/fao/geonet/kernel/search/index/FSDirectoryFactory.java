@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel.search.index;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NRTCachingDirectory;
@@ -43,8 +44,8 @@ public class FSDirectoryFactory implements DirectoryFactory {
     @Autowired
     private GeonetworkDataDirectory _dataDir;
 
-    private volatile Path taxonomyFile;
-    private volatile Path indexFile;
+    protected volatile Path taxonomyFile;
+    protected volatile Path indexFile;
 
     public synchronized void init() throws IOException {
         if (taxonomyFile == null) {
@@ -129,7 +130,8 @@ public class FSDirectoryFactory implements DirectoryFactory {
     }
 
     @Nonnull
-    private Path createNewIndexDirectory(String baseName) throws IOException {
+    @VisibleForTesting
+    protected Path createNewIndexDirectory(String baseName) throws IOException {
         Path newFile = _dataDir.getLuceneDir().resolve(baseName);
         int i = 0;
         while (Files.exists(newFile) || Files.exists(newFile.resolve(DELETE_DIR_FLAG_FILE))) {

@@ -11,6 +11,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
@@ -238,7 +239,7 @@ public class SelectionManager {
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				SearchManager searchMan = gc.getBean(SearchManager.class);
 				try {
-					searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+					searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 					ServiceConfig sc = new ServiceConfig();
 					((LuceneSearcher)searcher).search(context, request, sc);
 				} catch (Exception e) {

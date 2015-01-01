@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -213,8 +214,7 @@ public class Export implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager searchMan = gc.getBean(SearchManager.class);
-		MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
-				Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		Set<String> uuids = new HashSet<String>();
 

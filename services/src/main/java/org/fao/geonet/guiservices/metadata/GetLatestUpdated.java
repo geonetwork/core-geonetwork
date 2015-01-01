@@ -31,6 +31,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.GeonetContext;
@@ -99,7 +100,7 @@ public class GetLatestUpdated implements Service
 
 			// perform the search and return the results read from the index
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
-			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+			MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 			searcher.search(context, _request, _config);
 			Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(context, _maxItems);
 			for (Integer id : allMdInfo.keySet()) {

@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -117,7 +118,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
         }
 
 		// --- Search remote node
-		MetaSearcher s = searchMan.newSearcher(SearchManager.Z3950, Geonet.File.SEARCH_Z3950_CLIENT);
+		MetaSearcher s = searchMan.newSearcher(SearcherType.Z3950, Geonet.File.SEARCH_Z3950_CLIENT);
 
 		ServiceConfig config = new ServiceConfig();
 

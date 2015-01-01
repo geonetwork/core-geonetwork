@@ -132,11 +132,8 @@ import javax.annotation.PreDestroy;
 public class SearchManager {
     private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";
-	public static final int LUCENE = 1;
-	public static final int Z3950 = 2;
-	public static final int UNUSED = 3;
 
-	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
+    private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
 
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
@@ -624,7 +621,7 @@ public class SearchManager {
      * @return
      * @throws Exception
      */
-	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
+	public MetaSearcher newSearcher(SearcherType type, String stylesheetName) throws Exception {
 		switch (type) {
 			case LUCENE:
                 return new LuceneSearcher(this, stylesheetName, _luceneConfig);
