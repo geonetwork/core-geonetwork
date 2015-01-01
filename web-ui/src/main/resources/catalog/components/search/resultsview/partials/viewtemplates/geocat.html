@@ -4,20 +4,27 @@
 
     <div class="media">
 
-
       <div class="media-body">
         <div class="pull-right btn-group md-actions">
-          <button type="button" class="btn btn-sm btn-default" translate>view</button>
-          <button type="button" class="btn btn-sm btn-default" translate>zoomTo</button>
           <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span translate>actions</span> <span class="caret"></span>
+            <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}">Action</a></li>
-            <li><a ng-href="xml_iso19139?uuid={{md.getUuid()}}" target="_blank">XML</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a ng-href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview"><i class="fa fa-eye"/><span translate>View</span></a></li>
+            <li><a ng-href="" data-ng-click="" translate>zoomto</a></li>
+            <li ng-if="user['@authenticated'] == 'true'"><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank">edit</a></li>
+            <li ng-if="user['@authenticated'] == 'true'"><a ng-click="mdService.publish(md)">publish</a></li>
+            <li class="dropdown-submenu pull-left">
+              <a tabindex="-1" href="" translate>Export</a>
+              <ul class="dropdown-menu ">
+                <li><a ng-href="xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">exportXML</a></li>
+                <li><a ng-href="xml_iso19139?uuid={{md.getUuid()}}" target="_blank">exportcheXML</a></li>
+                <li><a ng-href="gm03.xml?uuid={{md.getUuid()}}" target="_blank">exportGM03</a></li>
+                <li><a ng-href="" data-ng-click="mdService.metadataRDF(md.getUuid())">exportRDF</a></li>
+                <li><a ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid())">exportPDF</a></li>
+                <li><a ng-href="" data-ng-click="mdService.metadataMEF(md.getUuid())">exportMEF</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
         <h4>
@@ -33,7 +40,7 @@
           <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
         </a>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
-        <p class="md-date" ng-if="::showDate.date">(<i translate>{{::showDate.type}}</i> : {{::showDate.date}})</p>
+        <p class="md-date" ng-if="showDate.date">(<i translate>{{showDate.type}}</i> : {{showDate.date}})</p>
         <p class="md-owner" ng-if="md['geonet:info'].owner">
           (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users" target="_blank">{{user.username}}</a>)</p>
       </div>

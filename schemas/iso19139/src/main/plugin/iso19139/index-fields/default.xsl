@@ -382,9 +382,18 @@
 		  <xsl:for-each select="gmd:spatialRepresentationType">
 		    <Field name="spatialRepresentationType" string="{gmd:MD_SpatialRepresentationTypeCode/@codeListValue}" store="true" index="true"/>
 		  </xsl:for-each>
-			
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			
+
+			<xsl:for-each select="gmd:resourceMaintenance/
+				gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/
+				gmd:MD_MaintenanceFrequencyCode/@codeListValue[. != '']">
+				<Field name="updateFrequency" string="{string(.)}" store="true" index="true"/>
+			</xsl:for-each>
+
+			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue[. != '']">
+				<Field name="status" string="{string(.)}" store="true" index="true"/>
+			</xsl:for-each>
+
+
 			<xsl:for-each select="gmd:resourceConstraints">
 				<xsl:for-each select="//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue">
 					<Field name="accessConstr" string="{string(.)}" store="true" index="true"/>

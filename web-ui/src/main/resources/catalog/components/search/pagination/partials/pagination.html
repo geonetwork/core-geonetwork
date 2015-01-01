@@ -2,11 +2,15 @@
      data-ng-show="config.pages > 0">
   <ul class="pager gn-pager-start">
     <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
-      <a href="" data-ng-click="first()"
-         data-translate><i class="fa fa-angle-double-left"></i></a></li>
+      <a href="" data-ng-click="first()">
+        <i class="fa fa-angle-double-left"></i>
+      </a>
+    </li>
     <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
-      <a href="" data-ng-click="previous()"
-         data-translate><i class="fa fa-angle-left"></i></a></li>
+      <a href="" data-ng-click="previous()">
+        <i class="fa fa-angle-left"></i>
+      </a>
+    </li>
   </ul>
   <!-- A dropdown button to select the number of page
   and indicating the current page info -->
@@ -32,10 +36,14 @@
   </div>
   <ul class="pager gn-pager-end">
     <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
-      <a href="" data-ng-click="next()"
-         data-translate><i class="fa fa-angle-right"></i></a></li>
+      <a href="" data-ng-click="next()">
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </li>
     <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
-      <a href="" data-ng-click="last()"
-         data-translate><i class="fa fa-angle-double-right"></i></a></li>
+      <a href="" data-ng-click="last()">
+        <i class="fa fa-angle-double-right"></i>
+      </a>
+    </li>
   </ul>
 </div>
