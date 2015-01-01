@@ -31,6 +31,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -100,20 +101,31 @@ public class Format extends AbstractFormatService {
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
 
-    @RequestMapping(value = "/{lang}/md.format.{type}")
-    public void exec(
+    @RequestMapping(value = "/{lang}/xml.format.{type}")
+    public void execXml(
             @PathVariable final String lang,
             @PathVariable final String type,
-            @RequestParam(required = false) final String id,
-            @RequestParam(required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(value = "metadata") final String metadata,
+            @RequestParam(value = "schema") final String schema,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
-        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, id, uuid, xslid, skipPopularity,
-                hide_withheld, request);
+        Element metadataEl = Xml.loadString(metadata, false);
+        Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
+        metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
+
+        final ServiceContext context = createServiceContext(lang, formatType, request);
+        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid,
+                request, context, metadataEl, metadataInfo);
+
+        writeOutResponse(lang, response, formatType, result);
+    }
+
+    public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, Pair<FormatterImpl, FormatterParams>
+            result) throws Exception {
         FormatterImpl formatter = result.one();
         FormatterParams fparams = result.two();
 
@@ -130,6 +142,24 @@ public class Format extends AbstractFormatService {
             response.setContentLength(bytes.length);
             response.getOutputStream().write(bytes);
         }
+    }
+
+    @RequestMapping(value = "/{lang}/md.format.{type}")
+    public void exec(
+            @PathVariable final String lang,
+            @PathVariable final String type,
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(defaultValue = "n") final String skipPopularity,
+            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
+            final HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        FormatType formatType = FormatType.valueOf(type.toLowerCase());
+        Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
+                skipPopularity,
+                hide_withheld, request);
+        writeOutResponse(lang, response, formatType, result);
     }
 
     private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
@@ -150,15 +180,23 @@ public class Format extends AbstractFormatService {
     }
 
     @VisibleForTesting
-    Pair<FormatterImpl, FormatterParams> createFormatterAndParams(
+    Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
             final String lang, final FormatType type, final String id, final String uuid, final String xslid,
             final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
 
-        ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+        ServiceContext context = createServiceContext(lang, type, request);
         final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
 
+        return createFormatterAndParams(lang, type, xslid, request, context, metadata, metadataInfo);
+    }
+
+    private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
+        return this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+    }
+
+    private Pair<FormatterImpl, FormatterParams> createFormatterAndParams(String lang, FormatType type, String xslid, HttpServletRequest request, ServiceContext context, Element metadata, Metadata metadataInfo) throws Exception {
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {

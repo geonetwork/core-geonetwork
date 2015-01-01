@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -245,4 +246,35 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return Integer.parseInt(id.get(0));
     }
 
+    protected void measurePerformance(TestFunction testFunction) throws Exception {
+        long start = System.nanoTime();
+        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() - start < fiveSec) {
+            testFunction.exec();
+        }
+        System.out.println("Starting big run");
+        final int secondsRan = 30;
+        final long thirtySec = TimeUnit.SECONDS.toNanos(secondsRan);
+        start = System.nanoTime();
+        double executions = 0;
+        while (System.nanoTime() - start < thirtySec) {
+            testFunction.exec();
+            executions++;
+        }
+        long end = System.nanoTime();
+
+        final long duration = end - start;
+        System.out.println("Executed " + executions + " in "+ (TimeUnit.NANOSECONDS.toSeconds(duration * 1000) / 1000)+" seconds.");
+        System.out.println("   Average of " + round(((double) TimeUnit.NANOSECONDS.toMillis(duration)) / executions) + "ms per execution;");
+        System.out.println("   Average of " + round(executions / TimeUnit.NANOSECONDS.toSeconds(duration)) + " executions per second;");
+    }
+
+
+    protected void addTestSpecificData(GeonetworkDataDirectory geonetworkDataDirectory) throws IOException {
+
+    }
+
+    public boolean resetLuceneIndex() {
+        return true;
+    }
 }
