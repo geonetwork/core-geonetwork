@@ -98,7 +98,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         }
         public ImportMetadata invoke(int iterations) throws Exception {
             assertTrue("iterations must be greater than 0 but was: " + iterations, iterations > 0);
-                    testClass.loginAsAdmin(context);
+            testClass.loginAsAdmin(context);
 
             int remainingFilesToImport = iterations * mefFilesToLoad.size();
             int numberOfImported = 0;
@@ -119,7 +119,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                     Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
                 }
                 Element params = new Element("request");
-                if (iterations > 0 && !uuidAction.equalsIgnoreCase(Params.GENERATE_UUID)) {
+                if (iterations > 1 && !uuidAction.equalsIgnoreCase(Params.GENERATE_UUID)) {
                     throw new AssertionError("If iterations (the number or times each mef file is imported) is greater than 1"
                                              + " then uuidAction must be " + Params.GENERATE_UUID);
                 }

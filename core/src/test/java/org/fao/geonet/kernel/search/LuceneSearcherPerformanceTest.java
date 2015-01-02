@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.search.index.FSDirectoryFactory;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,7 +54,7 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test //@Ignore
+    @Test @Ignore
     public void testSearchAndPresent() throws Exception {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
@@ -62,10 +63,10 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
         final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
         importMetadata.setUuidAction(Params.GENERATE_UUID);
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
-        importMetadata.invoke(1);
+        importMetadata.invoke(100);
         searchManager.forceIndexChanges();
 
-        loginAsNewUser(context);
+//        loginAsNewUser(context);
 
         measurePerformance(searchAndPresent(context));
     }
