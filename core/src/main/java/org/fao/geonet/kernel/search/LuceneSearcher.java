@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
@@ -74,8 +75,10 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
@@ -307,7 +310,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     }
 					String id = doc.get("_id");
 					Element md = null;
-	
+
 					if (fast) {
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
 					}
@@ -322,20 +325,16 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     else if ("index".equals(sFast)) {
 					    // Retrieve information from the index for the record
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
-					    
-						// Retrieve dynamic properties according to context (eg. editable)
-                        Map<String, Element> map = Maps.newHashMap();
-                        map.put(id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
-                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, map);
-                    }
-                    else if (srvContext != null) {
+
+                        buildPrivilegesMetadataInfo(srvContext, doc, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                    } else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
                         md = gc.getBean(DataManager.class).getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
 					}
-	
-					//--- a metadata could have been deleted just before showing 
+
+					//--- a metadata could have been deleted just before showing
 					//--- search results
-	
+
 					if (md != null) {
 						// Calculate score and add it to info elem
 						if (_luceneConfig.isTrackDocScores()) {
@@ -354,7 +353,89 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		return response;
 	}
 
-	/**
+    private void buildPrivilegesMetadataInfo(ServiceContext context, Document doc, Element infoEl) throws Exception {
+        final Integer owner = Integer.valueOf(doc.get(Geonet.IndexFieldNames.OWNER));
+        final String groupOwnerString = doc.get(Geonet.IndexFieldNames.GROUP_OWNER);
+
+        MetadataSourceInfo sourceInfo = new MetadataSourceInfo();
+        sourceInfo.setOwner(owner);
+        if (groupOwnerString != null) {
+            sourceInfo.setGroupOwner(Integer.valueOf(groupOwnerString));
+        }
+        final AccessManager accessManager = context.getBean(AccessManager.class);
+        boolean isOwner = accessManager.isOwner(context, sourceInfo);
+
+        HashSet<ReservedOperation> operations;
+        if (isOwner) {
+            operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
+        } else {
+            final Collection<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+//            groups.add(ReservedGroup.all.getId());
+//            groups.add(ReservedGroup.guest.getId());
+//            if (accessManager.isIntranet(context.getIpAddress())) {
+//                groups.add(ReservedGroup.intranet.getId());
+//            }
+
+            operations = Sets.newHashSet();
+            if (context.getUserSession() != null && context.getUserSession().getUserId() != null) {
+                for (ReservedOperation operation : ReservedOperation.values()) {
+                    IndexableField[] opFields = doc.getFields(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
+
+                    for (IndexableField field : opFields) {
+                        Integer groupId = Integer.valueOf(field.stringValue());
+                        if (groups.contains(groupId)) {
+                            operations.add(operation);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                final IndexableField[] groupsPublished = doc.getFields(Geonet.IndexFieldNames.GROUP_PUBLISHED);
+                for (IndexableField field : groupsPublished) {
+                    Integer groupId = Integer.valueOf(field.stringValue());
+                    if (groups.contains(groupId)) {
+                        operations.add(ReservedOperation.view);
+                        break;
+                    }
+                }
+            }
+        }
+        if (isOwner || operations.contains(ReservedOperation.editing)) {
+            addElement(infoEl, Edit.Info.Elem.EDIT, "true");
+        }
+
+        if (isOwner) {
+            addElement(infoEl, Edit.Info.Elem.OWNER, "true");
+        }
+
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
+        addOperationsElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
+        addOperationsElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
+        addOperationsElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
+        addOperationsElement(infoEl, ReservedOperation.dynamic.name(), operations.contains(ReservedOperation.dynamic));
+        addOperationsElement(infoEl, ReservedOperation.featured.name(), operations.contains(ReservedOperation.featured));
+
+        if (!operations.contains(ReservedOperation.download)) {
+            addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, hasOperation(doc, ReservedGroup.guest, ReservedOperation.download));
+        }
+    }
+
+    private String hasOperation(Document doc, ReservedGroup group, ReservedOperation operation) {
+        String groupId = String.valueOf(group.getId());
+        final IndexableField[] fields = doc.getFields(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
+        for (IndexableField field : fields) {
+            if (groupId.equals(field.stringValue())) {
+                return Boolean.TRUE.toString();
+            }
+        }
+        return Boolean.FALSE.toString();
+    }
+
+    private static void addOperationsElement(Element root, String name, Object value) {
+        root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
+    }
+
+    /**
 	 * Perform a query, loop over results in order to find values containing the search value for a specific field.
 	 * 
 	 * If the field is not stored in the index, an empty collection is returned.

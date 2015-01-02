@@ -614,4 +614,37 @@ public final class Geonet {
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
     }
+
+    public static class IndexFieldNames {
+
+        public static final String HASXLINKS = "_hasxlinks";
+        public static final String XLINK = "_xlink";
+        public static final String ROOT = "_root";
+        public static final String SCHEMA = "_schema";
+        public static final String CREATE_DATE = "_createDate";
+        public static final String CHANGE_DATE = "_changeDate";
+        public static final String SOURCE = "_source";
+        public static final String IS_TEMPLATE = "_isTemplate";
+        public static final String UUID = "_uuid";
+        public static final String IS_HARVESTED = "_isHarvested";
+        public static final String OWNER = "_owner";
+        public static final String DUMMY = "_dummy";
+        public static final String POPULARITY = "_popularity";
+        public static final String RATING = "_rating";
+        public static final String DISPLAY_ORDER = "_displayOrder";
+        public static final String EXTRA = "_extra";
+        public static final String USERINFO = "_userinfo";
+        public static final String GROUP_OWNER = "_groupOwner";
+        public static final String GROUP_WEBSITE = "_groupWebsite";
+        public static final String LOGO = "_logo";
+        public static final String OP_PREFIX = "_op";
+        public static final String GROUP_PUBLISHED = "_groupPublished";
+        public static final String CAT = "_cat";
+        public static final String STATUS = "_status";
+        public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String VALID = "_valid";
+        public static final String ID = "_id";
+        public static final String ANY = "any";
+        public static final String LOCALE = "locale";
+    }
 }

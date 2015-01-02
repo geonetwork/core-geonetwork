@@ -696,7 +696,7 @@ public class SearchManager {
         
         // Update Lucene index
         List<IndexInformation> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, root);
-        _tracker.deleteDocuments(new Term("_id", id));
+        _tracker.deleteDocuments(new Term(Geonet.IndexFieldNames.ID, id));
         for(IndexInformation document : docs ) {
             _tracker.addDocument(document);
         }
@@ -839,7 +839,7 @@ public class SearchManager {
     }
 
 	private String getLocaleFromIndexDoc(Element doc) {
-		String locale = doc.getAttributeValue("locale");
+		String locale = doc.getAttributeValue(Geonet.IndexFieldNames.LOCALE);
 		if(locale == null || locale.trim().isEmpty()) {
 		    locale = Geonet.DEFAULT_LANGUAGE;
 		}
@@ -975,10 +975,10 @@ public class SearchManager {
 				// FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				// if (reader.isDeleted(i)) continue; 
 				
-				DocumentStoredFieldVisitor idXLinkSelector = new DocumentStoredFieldVisitor("_id", "_hasxlinks");
+				DocumentStoredFieldVisitor idXLinkSelector = new DocumentStoredFieldVisitor(Geonet.IndexFieldNames.ID, "_hasxlinks");
 				reader.document(i, idXLinkSelector);
 				Document doc = idXLinkSelector.getDocument();
-				String id = doc.get("_id");
+				String id = doc.get(Geonet.IndexFieldNames.ID);
 				String hasxlinks = doc.get("_hasxlinks");
                 if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                     Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+hasxlinks+"'");
@@ -1016,10 +1016,10 @@ public class SearchManager {
 				// FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				// if (reader.isDeleted(i)) continue;
 				
-				DocumentStoredFieldVisitor idChangeDateSelector = new DocumentStoredFieldVisitor("_id", "_changeDate");
+				DocumentStoredFieldVisitor idChangeDateSelector = new DocumentStoredFieldVisitor(Geonet.IndexFieldNames.ID, "_changeDate");
                 reader.document(i, idChangeDateSelector);
                 Document doc = idChangeDateSelector.getDocument();
-				String id = doc.get("_id");
+				String id = doc.get(Geonet.IndexFieldNames.ID);
 				if (id == null) {
 					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
 					continue;
@@ -1085,7 +1085,7 @@ public class SearchManager {
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
-        final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
+        final Element request = new Element("request").addContent(new Element(Geonet.IndexFieldNames.ANY).setText(searchValue));
         String language = LuceneSearcher.determineLanguage(context, request, _settingInfo).analyzerLanguage;
         final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(language, true);
         String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, analyzer);
@@ -1214,7 +1214,7 @@ public class SearchManager {
             SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
             StringBuilder sb = new StringBuilder();
             allText(xml, sb);
-            SearchManager.addField(xmlDoc, "any", sb.toString(), false, true);
+            SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
             documents.addContent(xmlDoc);
         }
         return documents;
@@ -1236,11 +1236,11 @@ public class SearchManager {
     @SuppressWarnings(value = "unchecked")
     private void mergeDefaultLang( Element defaultLang, List<Element> otherLanguages ) {
         final String langCode;
-        if (defaultLang.getAttribute("locale") == null) {
+        if (defaultLang.getAttribute(Geonet.IndexFieldNames.LOCALE) == null) {
             langCode = "";
         }
         else {
-            langCode = defaultLang.getAttributeValue("locale");
+            langCode = defaultLang.getAttributeValue(Geonet.IndexFieldNames.LOCALE);
         }
 
         Element toMerge = null;
@@ -1248,11 +1248,11 @@ public class SearchManager {
         for( Element element : otherLanguages ) {
             Assert.isTrue(element.getName().equals("Document"));
             String clangCode;
-            if (element.getAttribute("locale") == null) {
+            if (element.getAttribute(Geonet.IndexFieldNames.LOCALE) == null) {
                 clangCode = "";
             }
             else {
-                clangCode = element.getAttributeValue("locale");
+                clangCode = element.getAttributeValue(Geonet.IndexFieldNames.LOCALE);
             }
 
             if (clangCode.equals(langCode)) {

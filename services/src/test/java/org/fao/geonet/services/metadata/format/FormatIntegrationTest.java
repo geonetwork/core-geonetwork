@@ -200,6 +200,12 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertEqualsText("Title", view, "*//div[@class='tr']");
     }
 
+
+
+    @Test
+    public void testXmlFormat() throws Exception {
+
+    }
     @Test
     public void testExecGroovy() throws Exception {
         final String formatterName = "groovy-test-formatter";

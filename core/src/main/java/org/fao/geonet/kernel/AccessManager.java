@@ -26,7 +26,6 @@ package org.fao.geonet.kernel;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
@@ -35,14 +34,15 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -69,7 +69,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class AccessManager {
 
     @Autowired
-    private HarvesterSettingRepository _settingRepository;
+    private SettingRepository _settingRepository;
 
     @Autowired
     private OperationRepository _opRepository;
@@ -124,13 +124,13 @@ public class AccessManager {
 		Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
-			results = new HashSet<Operation>(_opRepository.findAll());
+			results = new HashSet<>(_opRepository.findAll());
 		} else {
     		if (operations == null) {
-    		    results = new HashSet<Operation>(getAllOperations(context, mdId, ip));
+    		    results = new HashSet<>(getAllOperations(context, mdId, ip));
     		}
             else {
-                results = new HashSet<Operation>(operations);
+                results = new HashSet<>(operations);
     		}
 
     		UserSession us = context.getUserSession();
@@ -524,7 +524,7 @@ public class AccessManager {
      * @param ip
      * @return
      */
-	private boolean isIntranet(String ip) {
+	public boolean isIntranet(String ip) {
 		//--- consider IPv4 & IPv6 loopback
 		//--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
 
@@ -542,8 +542,8 @@ public class AccessManager {
 
         // IPv4
 
-		HarvesterSetting network = _settingRepository.findOneByPath("system/intranet/network");
-		HarvesterSetting netmask = _settingRepository.findOneByPath("system/intranet/netmask");
+		Setting network = _settingRepository.findOne("system/intranet/network");
+        Setting netmask = _settingRepository.findOne("system/intranet/netmask");
 
         try {
             if (network != null && netmask != null) {
@@ -569,9 +569,21 @@ public class AccessManager {
 			return 0;
 		} else {
 			StringTokenizer st = new StringTokenizer(ip, ".");
+            if (!st.hasMoreElements()) {
+                return 0;
+            }
 			long a1 = Integer.parseInt(st.nextToken());
+            if (!st.hasMoreElements()) {
+                return 0;
+            }
 			long a2 = Integer.parseInt(st.nextToken());
+            if (!st.hasMoreElements()) {
+                return 0;
+            }
 			long a3 = Integer.parseInt(st.nextToken());
+            if (!st.hasMoreElements()) {
+                return 0;
+            }
 			long a4 = Integer.parseInt(st.nextToken());
 			return a1<<24 | a2<<16 | a3<<8 | a4;
 		}

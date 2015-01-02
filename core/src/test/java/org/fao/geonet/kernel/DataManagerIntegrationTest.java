@@ -82,17 +82,16 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         String schema = _dataManager.autodetectSchema(sampleMetadataXml);
 
         final String mdId1 = _dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
-                        sampleMetadataXml.getNamespace()), "uuid",
-                userSession.getUserIdAsInt(),
-                "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
+                sampleMetadataXml.getNamespace()), "uuid",  userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
+                "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
                 false, false);
 
 
         Element info = new Element("info", Geonet.Namespaces.GEONET);
         Map<String, Element> map = Maps.newHashMap();
         map.put(mdId1, info);
-            info.removeContent();
-            _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
+        info.removeContent();
+        _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
         assertEqualsText("true", info, "edit");
         assertEqualsText("true", info, "owner");
         assertEqualsText("true", info, "isPublishedToAll");
