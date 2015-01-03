@@ -133,7 +133,7 @@ public class LuceneConfig {
         private final Facet.SortBy sortBy;
         private final Facet.SortOrder sortOrder;
         private int max;
-        private final String translator;
+        private final String translatorString;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -144,7 +144,7 @@ public class LuceneConfig {
             name = summaryElement.getAttributeValue("name");
             plural = summaryElement.getAttributeValue("plural");
             indexKey = summaryElement.getAttributeValue("indexKey");
-            translator = summaryElement.getAttributeValue("translator");
+            translatorString = summaryElement.getAttributeValue("translator");
             
             String maxString = summaryElement.getAttributeValue("max");
             if (maxString == null) {
@@ -170,7 +170,7 @@ public class LuceneConfig {
             this.name = config.name;
             this.plural = config.plural;
             this.indexKey = config.indexKey;
-            this.translator = config.translator;
+            this.translatorString = config.translatorString;
             this.max = config.max;
             this.sortBy = config.sortBy;
             this.sortOrder = config.sortOrder;
@@ -232,7 +232,7 @@ public class LuceneConfig {
         }
         public Translator getTranslator(ServiceContext context, String langCode) {
             try {
-                return Translator.createTranslator(translator, context, langCode);
+                return Translator.createTranslator(translatorString, context, langCode);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
