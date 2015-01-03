@@ -6,7 +6,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
-import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
+import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;

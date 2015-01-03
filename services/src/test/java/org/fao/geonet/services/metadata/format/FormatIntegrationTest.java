@@ -1,8 +1,10 @@
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.collect.Lists;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
+import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -12,9 +14,11 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -24,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -44,8 +49,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@ContextConfiguration(inheritLocations = true, locations = "classpath:formatter-test-context.xml")
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Autowired
@@ -62,6 +69,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private SourceRepository sourceRepository;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    protected MockRequestFactoryGeonet requestFactory;
+
     private ServiceContext serviceContext;
     private int id;
     private String schema;
@@ -200,12 +210,39 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertEqualsText("Title", view, "*//div[@class='tr']");
     }
 
+    @Test
+    public void testXmlFormatUpload() throws Exception {
+        final Element sampleMetadataXml = getSampleMetadataXml();
+        final Element element = Xml.selectElement(sampleMetadataXml, "*//gmd:MD_Format", Lists.newArrayList(ISO19139Namespaces.GMD));
 
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139",  "true", false, request, response);
+
+        final String view = response.getContentAsString();
+        assertTrue(view.contains("KML (1)"));
+        assertTrue(view.contains("Format"));
+    }
 
     @Test
-    public void testXmlFormat() throws Exception {
+    public void testXmlFormatUrl() throws Exception {
+        final Element sampleMetadataXml = getSampleMetadataXml();
+        final Element element = Xml.selectElement(sampleMetadataXml, "*//gmd:MD_Format", Lists.newArrayList(ISO19139Namespaces.GMD));
+        final String url = "http://FormatIntegrationTest.com:8080";
+        final MockXmlRequest mockRequest = new MockXmlRequest("FormatIntegrationTest.com", 8080, "http");
+        mockRequest.when(url).thenReturn(element);
 
+        requestFactory.registerRequest(true, mockRequest.getHost(), mockRequest.getPort(), mockRequest.getProtocol(), mockRequest);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139",  "true", false, request, response);
+
+        final String view = response.getContentAsString();
+        assertTrue(view.contains("KML (1)"));
+        assertTrue(view.contains("Format"));
     }
+
     @Test
     public void testExecGroovy() throws Exception {
         final String formatterName = "groovy-test-formatter";

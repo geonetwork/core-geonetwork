@@ -25,8 +25,11 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
@@ -43,11 +46,13 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,6 +98,8 @@ public class Format extends AbstractFormatService {
     private DataManager dataManager;
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
+    @Autowired
+    private GeonetHttpRequestFactory requestFactory;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -106,12 +113,25 @@ public class Format extends AbstractFormatService {
             @PathVariable final String lang,
             @PathVariable final String type,
             @RequestParam(value = "xsl", required = false) final String xslid,
-            @RequestParam(value = "metadata") final String metadata,
+            @RequestParam(value = "metadata", required = false) String metadata,
+            @RequestParam(value = "url", required = false) final String url,
             @RequestParam(value = "schema") final String schema,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        if (url == null && metadata == null) {
+            throw new IllegalArgumentException("Either the metadata or url parameter must be declared.");
+        }
+        if (url != null && metadata != null) {
+            throw new IllegalArgumentException("Only one of metadata or url parameter must be declared.");
+        }
+
+        if (metadata == null) {
+            HttpUriRequest getMetadataRequest = new HttpGet(url);
+            final ClientHttpResponse execute = requestFactory.execute(getMetadataRequest);
+            metadata = new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
+        }
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         Element metadataEl = Xml.loadString(metadata, false);
         Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");

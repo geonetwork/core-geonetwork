@@ -1,10 +1,12 @@
-package org.fao.geonet.kernel.harvest;
+package org.fao.geonet;
 
+import com.google.common.base.Function;
 import com.vividsolutions.jts.util.Assert;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -12,13 +14,21 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.MockXmlRequest;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.mock.http.client.MockClientHttpResponse;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Creates requests that return hardcoded responses.
@@ -44,6 +54,15 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
         final Request key = new Request(host, port, protocol, null);
         final Object request = getRequest(key);
         return (XmlRequest) request;
+    }
+
+
+    @Override
+    public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
+        final URI uri = request.getURI();
+        final Request key = new Request(uri.getHost(), uri.getPort(), uri.getScheme(), null);
+        final XmlRequest xmlRequest = (XmlRequest) getRequest(key);
+        return new MockClientHttpResponse(Xml.getString(xmlRequest.execute()).getBytes(Constants.CHARSET), HttpStatus.OK);
     }
 
     private Object getRequest(Request key) {
