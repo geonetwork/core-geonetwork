@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.search.index.FSDirectoryFactory;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,7 +54,7 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test //@Ignore
+    @Test @Ignore
     public void testSearchAndPresent() throws Exception {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);

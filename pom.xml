@@ -333,6 +333,9 @@
             <configuration>
                 <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M</argLine>
                 <forkCount>4</forkCount>
+                <excludes>
+                    <exclude>**/*PerformanceTest.java</exclude>
+                </excludes>
             </configuration>
         </plugin>
         <plugin>
