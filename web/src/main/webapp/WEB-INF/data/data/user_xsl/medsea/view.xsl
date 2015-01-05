@@ -29,7 +29,8 @@
                 select="/root/schemas/iso19139/codelists"/>
   <xsl:variable name="metadata"
                 select="/root/gmd:MD_Metadata"/>
-
+  <xsl:variable name="dateFormat"
+              select="'[H1]:[m01]:[s01] [D1] [MNn] [Y]'"/>
 
   <!-- The configuration should be the one from the schema
   TODO add relative link to the document ? -->
@@ -147,6 +148,8 @@
               href="{root/url}/apps/sextant/css/schema/reset.css"/>
         <link rel="stylesheet" type="text/css"
               href="{root/url}/apps/sextant/css/schema/emodnet.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="{root/url}/apps/sextant/css/schema/medsea.css"/>
         <div class="tpl-emodnet">
           <div class="ui-layout-content">
              <xsl:for-each
@@ -203,7 +206,7 @@
                           </td>
                           <td class="print_data">
                             <xsl:for-each select="$nodes">
-                              <p><xsl:apply-templates mode="render-value"/></p>
+                              <xsl:apply-templates mode="render-value"/>
                             </xsl:for-each>
                           </td>
                         </tr>
@@ -224,9 +227,40 @@
   </xsl:template>
 
   <xsl:template mode="render-value" match="gmd:EX_GeographicBoundingBox">
-    BBOX
-    <img class="gn-img-extent"
-          src="region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom="/>
+
+    <xsl:variable name="box"
+                  select="concat('POLYGON((',
+                  gmd:eastBoundLongitude/gco:Decimal, ' ',
+                  gmd:southBoundLatitude/gco:Decimal, ',',
+                  gmd:eastBoundLongitude/gco:Decimal, ' ',
+                  gmd:northBoundLatitude/gco:Decimal, ',',
+                  gmd:westBoundLongitude/gco:Decimal, ' ',
+                  gmd:northBoundLatitude/gco:Decimal, ',',
+                  gmd:westBoundLongitude/gco:Decimal, ' ',
+                  gmd:southBoundLatitude/gco:Decimal, ',',
+                  gmd:eastBoundLongitude/gco:Decimal, ' ',
+                  gmd:southBoundLatitude/gco:Decimal, '))')"/>
+    <xsl:variable name="numberFormat" select="'0.00'"/>
+    <table class="bbox">
+      <tr>
+        <td></td>
+        <td><xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, $numberFormat)"/></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $numberFormat)"/></td>
+        <td>
+          <img class="gn-img-extent"
+                 src="region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
+        </td>
+        <td><xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $numberFormat)"/></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, $numberFormat)"/></td>
+        <td></td>
+      </tr>
+    </table>
 
   </xsl:template>
 
@@ -238,6 +272,14 @@
     </ul>
   </xsl:template>
 
+
+  <xsl:template mode="render-value" match="gmd:CI_ResponsibleParty">
+    <ul>
+      <li><xsl:value-of select="gmd:organisationName/gco:CharacterString"/></li>
+      <li><xsl:value-of select=".//gmd:electronicMailAddress/gco:CharacterString"/></li>
+    </ul>
+  </xsl:template>
+
   <xsl:template mode="render-value" match="@codeListValue">
     <xsl:variable name="id" select="."/>
     <xsl:value-of select="$schemaCodelists//entry[code = $id]/label"/>
@@ -246,9 +288,16 @@
   <xsl:template mode="render-value" match="gco:CharacterString|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:Date|gco:DateTime|
-       gco:LocalName|gmd:PT_FreeText">
-    <xsl:value-of select="."/>
+       gco:LocalName|gmd:PT_FreeText|gml:beginPosition|gml:endPosition|gco:Date|gco:DateTime|
+        gml:beginPosition|gml:endPosition">
+    <p><xsl:value-of select="."/></p>
   </xsl:template>
+
+
+  <xsl:template mode="render-value" match="gmd:dateStamp/*">
+    <xsl:value-of select="format-dateTime(., $dateFormat)"/>
+  </xsl:template>
+
 
   <xsl:template mode="render-value" match="*|@*"/>
 

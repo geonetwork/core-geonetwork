@@ -1,0 +1,11 @@
+
+.print_data ul li {
+    list-style: none;
+}
+
+.print_data ul {
+    padding-left: 0px;
+}
+.print_data table.bbox tr td {
+    text-align: center;
+}
