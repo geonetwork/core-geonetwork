@@ -29,5 +29,5 @@ if ($mode -eq "build") {
 
 $Env:MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR -Dfile.encoding=UTF8"
 
-cmd /c "cd $WEB_DIR &&  mvn jetty:run -Penv-dev -Pwidgets $args"
+cmd /c "cd $WEB_DIR &&  mvn jetty:run -Penv-prod -DskipTests $args"
 cd $scriptPath

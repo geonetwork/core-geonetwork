@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import bak.pcj.set.IntBitSet;
 import bak.pcj.set.IntSet;
+import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Collector;
@@ -71,10 +72,11 @@ public class DuplicateDocFilter extends Filter {
 
     @Override
     public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
-		final BitSet bits = new BitSet(context.reader().maxDoc());
-        final FieldCache.Ints mdIds = FieldCache.DEFAULT.getInts(context.reader(), Geonet.IndexFieldNames.ID, false);
+        final AtomicReader reader = context.reader();
+        final BitSet bits = new BitSet(reader.maxDoc());
+        final FieldCache.Ints mdIds = FieldCache.DEFAULT.getInts(reader, Geonet.IndexFieldNames.ID, false);
 
-        new IndexSearcher(context.reader()).search(_query, new Collector() {
+        new IndexSearcher(reader).search(_query, new Collector() {
 
             private int docBase;
             private IndexReader reader;
