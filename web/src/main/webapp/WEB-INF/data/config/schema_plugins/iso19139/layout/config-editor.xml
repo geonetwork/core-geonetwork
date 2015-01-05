@@ -1952,7 +1952,8 @@
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
+          <field name="additionalInfo"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
