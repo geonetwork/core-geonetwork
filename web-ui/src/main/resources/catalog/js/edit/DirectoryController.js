@@ -257,7 +257,13 @@
       $scope.startImportEntry = function() {
         $scope.selectEntry(null);
         $scope.isImporting = true;
-        $scope.importData.group = $scope.groups[0].id;
+        $scope.importData = {
+          data: null,
+          insert_mode: 0,
+          template: 's',
+          fullPrivileges: 'y',
+          group: $scope.groups[0].id
+        };
       };
 
       $scope.importEntry = function(formId) {
