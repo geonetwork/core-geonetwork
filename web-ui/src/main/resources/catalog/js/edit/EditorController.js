@@ -44,7 +44,8 @@
        'gn_import_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
+       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
+       'ngRoute']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -148,6 +149,7 @@
           // Check requested metadata exists
           gnSearchManagerService.gnSearch({
             _id: $routeParams.id,
+            _content_type: 'json',
             _isTemplate: 'y or n or s',
             fast: 'index'
           }).then(function(data) {
