@@ -108,11 +108,12 @@
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
   <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
-  <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
+  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth*</minDepth>
-  <maxDepth>Max depth*</maxDepth>
-  <verticalResolution>Vertical resolution</verticalResolution>
+  <minDepth>Min depth (meters)</minDepth>
+  <maxDepth>Max depth (meters)</maxDepth>
+  <verticalResolution>Vertical resolution (meters)</verticalResolution>
+  <listOfObservationLevel>List of observations level</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
@@ -130,6 +131,7 @@
   <acronym>Project acronym</acronym>
   <projectTitle>Project title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
+  <edmoId>EDMO id</edmoId>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
     <div class="row">

@@ -1585,7 +1585,7 @@
                 <key label="acronym"
                      xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
                 <key label="edmerpId"
-                                                                                                    xpath="gmd:CI_ResponsibleParty/@id"/>
+                      xpath="gmd:CI_ResponsibleParty/@id"/>
               </values>
               <snippet>
                 <gmd:pointOfContact>
@@ -1678,10 +1678,12 @@
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="edmoId"
+                     xpath="gmd:CI_ResponsibleParty/@id"/>
               </values>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
+                  <gmd:CI_ResponsibleParty id="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -1810,6 +1812,12 @@
               name="verticalResolution"
               xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
                 gmd:MD_Georectified/gmd:numberOfDimensions"/>
+
+
+          <field name="listOfObservationLevel"
+                 xpath="/gmd:MD_Metadata/gmd:contentInfo/
+                      gmd:MD_CoverageDescription/gmd:dimension/
+                      gmd:MD_RangeDimension/gmd:descriptor"/>
         </section>
       </tab>
       <tab id="timeCoverage">

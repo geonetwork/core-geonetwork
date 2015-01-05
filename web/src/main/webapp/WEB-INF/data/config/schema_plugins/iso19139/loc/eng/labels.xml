@@ -909,6 +909,10 @@
 		<label>Distance</label>
 		<description>Ground sample distance</description>
 		<condition>Provide a distance if no equivalent Scale is documented</condition>
+		<helper relAtt="uom">
+			<option value="1" title="second">seconds</option>
+			<option value="1" title="meter">meters</option>
+		</helper>
 		<!--<helper relAtt="uom">
 			<option value="0.10" title="cm">10 cm</option>
 			<option value="0.25" title="cm">25 cm</option>
@@ -2043,7 +2047,6 @@
     <helper relAtt="uom">
       <option value="1" title="second">seconds</option>
       <option value="1" title="minute">minutes</option>
-      <option value="1" title="hour">hours</option>
       <option value="1" title="hour">hours</option>
       <option value="1" title="day">days</option>
       <option value="1" title="month">months</option>

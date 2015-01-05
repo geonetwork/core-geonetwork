@@ -695,6 +695,25 @@
       </gmd:transferOptions>
     </gmd:MD_Distribution>
   </gmd:distributionInfo>
+  <gmd:contentInfo>
+    <gmd:MD_CoverageDescription>
+      <gmd:attributeDescription>
+        <gco:RecordType>observation</gco:RecordType>
+      </gmd:attributeDescription>
+      <gmd:contentType>
+        <gmd:MD_CoverageContentTypeCode
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CoverageContentTypeCode"
+                codeListValue="physicalMeasurement"/>
+      </gmd:contentType>
+      <gmd:dimension>
+        <gmd:MD_RangeDimension>
+          <gmd:descriptor>
+            <gco:CharacterString></gco:CharacterString>
+          </gmd:descriptor>
+        </gmd:MD_RangeDimension>
+      </gmd:dimension>
+    </gmd:MD_CoverageDescription>
+  </gmd:contentInfo>
   <gmd:dataQualityInfo>
     <gmd:DQ_DataQuality>
       <gmd:scope>
