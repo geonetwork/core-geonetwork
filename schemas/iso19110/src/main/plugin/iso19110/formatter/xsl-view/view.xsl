@@ -2,6 +2,7 @@
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -23,7 +24,6 @@
 
   <!-- Some utility -->
   <xsl:include href="../../layout/evaluate.xsl"/>
-  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -31,21 +31,21 @@
 
   <!-- Define the metadata to be loaded for this schema plugin-->
   <xsl:variable name="metadata"
-                select="/root/gmd:MD_Metadata"/>
+                select="/root/(gfc:FC_FeatureType|gfc:FC_FeatureCatalogue)"/>
 
 
 
 
   <!-- Specific schema rendering -->
-  <xsl:template mode="getMetadataTitle" match="gmd:MD_Metadata">
+  <xsl:template mode="getMetadataTitle" match="gfc:FC_FeatureType|gfc:FC_FeatureCatalogue">
     <xsl:variable name="value"
-                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
+                  select="gmx:name"/>
     <xsl:value-of select="$value/gco:CharacterString"/>
   </xsl:template>
 
-  <xsl:template mode="getMetadataAbstract" match="gmd:MD_Metadata">
+  <xsl:template mode="getMetadataAbstract" match="gfc:FC_FeatureType|gfc:FC_FeatureCatalogue">
     <xsl:variable name="value"
-                  select="gmd:identificationInfo/*/gmd:abstract"/>
+                  select="gmx:scope"/>
     <xsl:value-of select="$value/gco:CharacterString"/>
   </xsl:template>
 
@@ -91,19 +91,6 @@
     </div>
   </xsl:template>
 
-  <!-- Bbox is displayed with an overview and the geom displayed on it
-  and the coordinates displayed around -->
-  <xsl:template mode="render-field"
-                match="gmd:EX_GeographicBoundingBox[
-          gmd:westBoundLongitude/gco:Decimal != '']">
-    <xsl:copy-of select="gn-fn-render:bbox(
-                            xs:double(gmd:westBoundLongitude/gco:Decimal),
-                            xs:double(gmd:southBoundLatitude/gco:Decimal),
-                            xs:double(gmd:eastBoundLongitude/gco:Decimal),
-                            xs:double(gmd:northBoundLatitude/gco:Decimal))"/>
-  </xsl:template>
-
-
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
                 match="*[gmd:CI_ResponsibleParty]">
@@ -126,85 +113,6 @@
       </dd>
     </dl>
   </xsl:template>
-
-
-  <!-- Display thesaurus name and the list of keywords -->
-  <xsl:template mode="render-field"
-                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title]"
-                priority="200">
-    <dl class="gn-keyword">
-      <dt>
-        <xsl:apply-templates mode="render-value"
-                             select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
-
-        <xsl:if test="*/gmd:type/*[@codeListValue != '']">
-          (<xsl:apply-templates mode="render-value"
-                                select="*/gmd:type/*/@codeListValue"/>)
-        </xsl:if>
-      </dt>
-      <dd>
-        <div>
-          <ul>
-            <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*/gmd:keyword/*"/>
-            </li>
-          </ul>
-        </div>
-      </dd>
-    </dl>
-  </xsl:template>
-  <xsl:template mode="render-field"
-                match="gmd:descriptiveKeywords[not(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title)]"
-                priority="200">
-    <dl class="gn-keyword">
-      <dt>
-        <xsl:value-of select="$schemaStrings/noThesaurusName"/>
-        <xsl:if test="*/gmd:type/*[@codeListValue != '']">
-          (<xsl:apply-templates mode="render-value"
-                                select="*/gmd:type/*/@codeListValue"/>)
-        </xsl:if>
-      </dt>
-      <dd>
-        <div>
-          <ul>
-            <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*/gmd:keyword/*"/>
-            </li>
-          </ul>
-        </div>
-      </dd>
-    </dl>
-  </xsl:template>
-
-  <!-- Display all graphic overviews in one block -->
-  <xsl:template mode="render-field"
-                match="gmd:graphicOverview[1]">
-    <dl>
-      <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
-      </dt>
-      <dd>
-        <ul>
-        <xsl:for-each select="parent::node()/gmd:graphicOverview">
-          <xsl:variable name="label">
-            <xsl:apply-templates mode="localised"
-                               select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
-          </xsl:variable>
-          <li>
-            <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
-                 alt="{$label}"
-                 class="img-thumbnail"/>
-          </li>
-        </xsl:for-each>
-        </ul>
-      </dd>
-    </dl>
-  </xsl:template>
-  <xsl:template mode="render-field"
-                match="gmd:graphicOverview[position() > 1]"/>
-
 
 
   <!-- Traverse the tree -->
@@ -267,10 +175,5 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-
-
-
-
 
 </xsl:stylesheet>
