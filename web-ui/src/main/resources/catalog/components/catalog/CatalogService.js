@@ -527,17 +527,18 @@
       },
       getThumbnails: function() {
         if (angular.isArray(this.image)) {
-          var ret = {};
+          var images = {list:[]};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             if (s[0] === 'thumbnail') {
-              ret.small = s[1];
+              images.small = s[1];
             } else if (s[0] === 'overview') {
-              ret.big = s[1];
+              images.big = s[1];
             }
+            images.list.push({url: s[1], label: s[2]});
           }
         }
-        return ret;
+        return images;
       },
       getContacts: function() {
         if (angular.isArray(this.responsibleParty)) {
