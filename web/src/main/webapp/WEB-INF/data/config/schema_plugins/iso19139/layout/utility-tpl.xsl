@@ -9,7 +9,7 @@
 
   <xsl:template name="get-iso19139-extents-as-json">[
     <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-      <xsl:variable name="format" select="'##.0000'"></xsl:variable>
+      <xsl:variable name="format" select="'#0.0000'"></xsl:variable>
 
       <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
             and number(gmd:southBoundLatitude/gco:Decimal)
