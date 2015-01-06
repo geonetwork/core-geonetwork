@@ -135,5 +135,9 @@
         icon: 'fa-th-list'
       }];
 
+      searchSettings.formatter = {
+        defaultUrl: 'md.format.xml?xsl=full_view&schema=iso19139.che&id='
+      };
+
     }]);
 })();

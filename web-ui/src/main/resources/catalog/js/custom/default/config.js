@@ -151,6 +151,19 @@
         icon: 'fa-th-list'
       }];
 
+      // For the time being metadata rendering is done
+      // using Angular template. Formatter could be used
+      // to render other layout
+      searchSettings.formatter = {
+        //defaultUrl: 'md.format.xml?xsl=full_view&id='
+        defaultUrl: 'md.format.xml?xsl=xsl-view&id='
+        // TODO: maybe formatter config should depends
+        // on the metadata schema.
+        //schema: {
+        //  iso19139: 'md.format.xml?xsl=full_view&&id='
+        //}
+      };
+
       // Set the default template to use
       searchSettings.resultTemplate = searchSettings.resultViewTpls[0].tplUrl;
 
