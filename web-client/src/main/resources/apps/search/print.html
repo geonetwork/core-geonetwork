@@ -61,7 +61,7 @@
         new Ext.Panel({
             renderTo: 'content',
             autoLoad: {
-                url: '../../srv/' + language + '/view?uuid=' + urlParameters.uuid + '&currTab=' + (urlParameters.currTab ? urlParameters.currTab : 'view-simple') + '&print',
+                url: '../../' + (urlParameters.node || 'srv') + '/' + language + '/view?uuid=' + urlParameters.uuid + '&currTab=' + (urlParameters.currTab ? urlParameters.currTab : 'view-simple') + '&print',
                 callback: function(){
                   
                   // Fieldset and page break issue on FF

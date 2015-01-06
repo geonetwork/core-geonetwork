@@ -280,7 +280,7 @@ GeoNetwork.app = function () {
         var metadataTypeField = GeoNetwork.util.SearchFormTools
                 .getMetadataTypeField(true);
         var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(
-                services.getCategories, '../images/default/category/', true);
+                services.getCategories, '../../apps/images/default/category/', true);
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
         var spatialTypes = GeoNetwork.util.SearchFormTools
                 .getSpatialRepresentationTypeField(null, true);

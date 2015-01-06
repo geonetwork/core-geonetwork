@@ -20,6 +20,10 @@
             {"name": "contactAsXML", "value": "", "type": "textarea"}
         ]
     }, {
+      "key": "add-resource-id",
+      "type": "fixed-params",
+      "params": []
+    }, {
         "key": "massive-content-update",
         "type": "template",
         "template": "../../catalog/templates/admin/tools/batch-replacer.html",
