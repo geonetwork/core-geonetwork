@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -64,6 +63,8 @@ public abstract class XmlSerializer {
 
     @Autowired
     protected SettingManager _settingManager;
+    @Autowired
+    protected AccessManager accessManager;
     @Autowired
     protected DataManager _dataManager;
     @Autowired
@@ -137,24 +138,22 @@ public abstract class XmlSerializer {
             boolean filterEditOperationElements = editXpathFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
             if (context != null) {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                AccessManager am = gc.getBean(AccessManager.class);
                 if (editXpathFilter != null) {
-                    boolean canEdit = am.canEdit(context, id);
+                    boolean canEdit = accessManager.canEdit(context, id);
                     if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
-                    boolean canDownload = am.canDownload(context, id);
+                    boolean canDownload = accessManager.canDownload(context, id);
                     if (!canDownload) {
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
                 Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
-                    boolean canDynamic = am.canDynamic(context, id);
+                    boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {
                         removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
                     }

@@ -1,80 +1,84 @@
 package iso19139
-
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
 import org.fao.geonet.services.metadata.format.FormatType
-import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
-
 /**
  * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
  *
  * @author Jesse on 11/18/2014.
  */
 class SummaryFactory {
-    static void summaryHandler(select, isoHandler) {
-        isoHandler.handlers.add name: "Summary Handler", select: select, {create(it, isoHandler).getResult()}
+    def isoHandlers, handlers, f, env
+    def navBarItems
+
+    SummaryFactory(isoHandlers) {
+        this.isoHandlers = isoHandlers
+        this.handlers = isoHandlers.handlers;
+        this.f = isoHandlers.f;
+        this.env = isoHandlers.env;
+        this.navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', isoHandlers.rootEl]
     }
-    static Summary create(metadata, isoHandler) {
-        def handlers = isoHandler.handlers;
-        def f = isoHandler.f;
-        def env = isoHandler.env;
 
-        Summary summary = new Summary(handlers, env, f)
+    static void summaryHandler(select, isoHandler) {
+        def factory = new SummaryFactory(isoHandler)
+        factory.handlers.add name: "Summary Handler", select: select, {factory.create(it).getResult()}
+    }
 
-        summary.title = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
-        summary.abstr = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
+    Summary create(metadata) {
 
-        configureKeywords(isoHandler, metadata, summary)
-        configureFormats(isoHandler, metadata, summary)
-        configureExtent(isoHandler, metadata, summary)
+        Summary summary = new Summary(this.handlers, this.env, this.f)
+
+        summary.title = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:citation'.'gmd:CI_Citation'.'gmd:title')
+        summary.abstr = this.isoHandlers.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
+
+        configureKeywords(metadata, summary)
+        configureFormats(metadata, summary)
+        configureExtent(metadata, summary)
         configureThumbnails(metadata, summary)
-        configureLinks(isoHandler, summary)
-        configureHierarchy(isoHandler, summary)
+        configureLinks(summary)
+        configureHierarchy(summary)
 
-        def navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:dataQualityInfo', 'gmd:spatialRepresentationInfo',
-                           isoHandler.rootEl]
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             def abbrName = f.nodeTranslation(s, null, "abbrLabel")
             new NavBarItem(name, abbrName, '.' + s.replace(':', "_"))
         }
-        summary.navBar = isoHandler.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
-        summary.navBarOverflow = isoHandler.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
+        summary.navBar = this.isoHandlers.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
+        summary.navBarOverflow = this.isoHandlers.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
 
-        summary.content = isoHandler.rootPackageEl(metadata)
+        summary.content = this.isoHandlers.rootPackageEl(metadata)
 
         return summary
     }
 
-    static def configureKeywords(isoHandler, metadata, summary) {
+    def configureKeywords(metadata, summary) {
         def keywords = metadata."**".findAll{it.name() == 'gmd:descriptiveKeywords'}
-        summary.keywords = isoHandler.keywordsEl(keywords).toString()
+        summary.keywords = this.isoHandlers.keywordsEl(keywords).toString()
     }
-    static def configureFormats(isoHandler, metadata, summary) {
-        def formats = metadata."**".findAll isoHandler.matchers.isFormatEl
-        summary.formats = isoHandler.formatEls(formats).toString()
+    def configureFormats(metadata, summary) {
+        def formats = metadata."**".findAll this.isoHandlers.matchers.isFormatEl
+        summary.formats = this.isoHandlers.formatEls(formats).toString()
     }
-    static def configureExtent(isoHandler, metadata, summary) {
-        def extents = metadata."**".findAll { isoHandler.matchers.isPolygon(it) || isoHandler.matchers.isBBox(it) }
-        def split = extents.split isoHandler.matchers.isPolygon
+    def configureExtent(metadata, summary) {
+        def extents = metadata."**".findAll { this.isoHandlers.matchers.isPolygon(it) || this.isoHandlers.matchers.isBBox(it) }
+        def split = extents.split this.isoHandlers.matchers.isPolygon
 
         def polygons = split[0]
         def bboxes = split[1]
 
         def extent = ""
         if (!polygons.isEmpty()) {
-            extent = isoHandler.polygonEl(true)(polygons[0]).toString()
+            extent = this.isoHandlers.polygonEl(true)(polygons[0]).toString()
         } else if (!bboxes.isEmpty()) {
-            extent = isoHandler.bboxEl(true)(bboxes[0]).toString()
+            extent = this.isoHandlers.bboxEl(true)(bboxes[0]).toString()
         }
         summary.extent = extent
     }
 
-    static def configureLinks(isoHandler, Summary summary) {
-        def env = isoHandler.env
-        Collection<String> links = env.indexInfo['link'];
+    def configureLinks(Summary summary) {
+        Collection<String> links = this.env.indexInfo['link'];
         if (links != null && !links.isEmpty()) {
             LinkBlock linkBlock = new LinkBlock("links");
             summary.links.add(linkBlock)
@@ -111,44 +115,41 @@ class SummaryFactory {
 
     }
 
-    private static void configureHierarchy(isoHandler, Summary summary) {
+    private void configureHierarchy(Summary summary) {
 
         def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
-        def uuid = isoHandler.env.metadataUUID
-        def id = isoHandler.env.metadataId
-
-        Environment env = isoHandler.env
+        def uuid = this.env.metadataUUID
+        def id = this.env.metadataId
 
         def linkBlockName = "hierarchy"
-        if (env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf) {
-            createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler)
+        if (this.env.formatType == FormatType.pdf || this.env.formatType == FormatType.testpdf) {
+            createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary)
         } else {
-            createDynamicHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler, env)
+            createDynamicHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary)
         }
 
 
     }
 
-    static void createDynamicHierarchyHtml(List<String> relatedTypes, String uuid, int id, String linkBlockName,
-                                           Summary summary, isoHandler, Environment env) {
+    void createDynamicHierarchyHtml(List<String> relatedTypes, String uuid, int id, String linkBlockName, Summary summary) {
         def placeholderId = "link-placeholder-" + linkBlockName
         def typeTranslations = new StringBuilder()
         relatedTypes.eachWithIndex {type, i ->
-            typeTranslations.append("\t'").append(type).append("': '").append(isoHandler.f.translate(type)).append('\'')
+            typeTranslations.append("\t'").append(type).append("': '").append(this.isoHandlers.f.translate(type)).append('\'')
             if (i != relatedTypes.size() - 1) {
                 typeTranslations.append(",\n");
             }
         }
         def jsVars = [
                 typeTranslations: typeTranslations,
-                metadataId: env.metadataId,
+                metadataId: this.env.metadataId,
                 relatedTypes: relatedTypes.join("|"),
-                noUuidInLink: isoHandler.f.translate("noUuidInLink"),
+                noUuidInLink: this.f.translate("noUuidInLink"),
                 placeholderId: placeholderId,
-                imagesDir: isoHandler.env.localizedUrl + "../../images/",
+                imagesDir: this.env.localizedUrl + "../../images/",
                 linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + linkBlockName
         ]
-        def js = isoHandler.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
+        def js = this.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
         def html = """
 <script type="text/javascript">
 //<![CDATA[
@@ -161,19 +162,19 @@ $js
         summary.links.add(linkBlock)
     }
 
-    static void createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler) {
+    void createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary) {
         LinkBlock hierarchy = new LinkBlock(linkBlockName)
         summary.links.add(hierarchy);
-        def bean = isoHandler.env.getBean(GetRelated.class)
+        def bean = this.isoHandlers.env.getBean(GetRelated.class)
         def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
 
         related.getChildren("relation").each {rel ->
             def type = rel.getAttributeValue("type")
-            def icon = isoHandler.env.localizedUrl + "../../images/" + type + ".png";
+            def icon = this.isoHandlers.env.localizedUrl + "../../images/" + type + ".png";
 
             def linkType = new LinkType(type, icon)
             rel.getChildren("metadata").each {md ->
-                def href = createShowMetadataHref(isoHandler, md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
+                def href = createShowMetadataHref(md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
                 def title = md.getChildText("title")
                 if (title != null) {
                     title = md.getChildText("defaultTitle")
@@ -183,11 +184,11 @@ $js
         }
     }
 
-    private static String createShowMetadataHref(isoHandler, String uuid) {
+    private String createShowMetadataHref(String uuid) {
         if (uuid.trim().isEmpty()) {
-            return "javascript:alert('" + isoHandler.f.translate("noUuidInLink") + "');"
+            return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return isoHandler.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
         }
     }
 
