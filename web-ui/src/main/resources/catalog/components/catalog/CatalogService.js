@@ -228,9 +228,9 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
-    mdCreate: 'md.create@json',
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
+    mdDeleteBatch: 'md.delete.batch',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',
