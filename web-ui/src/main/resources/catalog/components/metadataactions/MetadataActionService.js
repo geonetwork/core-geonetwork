@@ -136,7 +136,7 @@
 
         if(angular.isDefined(md)) {
           return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag,{
+              publishFlag, {
                 update: true,
                 id: md.getId()
               })).then(function(data) {
