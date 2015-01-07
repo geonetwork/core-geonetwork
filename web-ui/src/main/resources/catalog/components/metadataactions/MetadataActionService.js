@@ -3,31 +3,53 @@
 
   var module = angular.module('gn_mdactions_service', []);
 
-  module.service('gnMetadataActions', ['gnHttp',
-
-    function(gnHttp) {
+  module.service('gnMetadataActions', [
+    'gnHttp',
+    'gnMetadataManager',
+    'gnAlertService',
+    function(gnHttp, gnMetadataManager, gnAlertService) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
 
+      var alertResult = function(msg) {
+        gnAlertService.addAlert({
+          msg: msg,
+          type: 'success'
+        });
+      };
+
+      var callBatch = function(service) {
+        gnHttp.callService(service).then(function(data) {
+          alertResult(data.data);
+        });
+      };
+
       /**
-       * Export as PDF. If params is search object, we check for sortBy
-       * and sortOrder to process the print. If it is a string (uuid), we
-       * print only one metadata.
+       * Export as PDF (one or selection). If params is search object, we check
+       * for sortBy and sortOrder to process the print. If it is a string
+       * (uuid), we print only one metadata.
        * @param {Object|string} params
        */
       this.metadataPrint = function(params) {
-        var url = gnHttp.getService('mdGetPDF');
+        var url;
         if(angular.isObject(params) && params.sortBy) {
+          url = gnHttp.getService('mdGetPDFSelection');
           url += '?sortBy=' + params.sortBy;
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
           }
         }
         else if(angular.isString(params) ){
+          url = gnHttp.getService('mdGetPDF');
           url += '?uuid=' + params;
         }
-        location.replace(url);
+        if(url) {
+          location.replace(url);
+        }
+        else {
+          console.error('Error while exporting PDF');
+        }
       };
 
       /**
@@ -40,8 +62,8 @@
       };
 
       /**
-       * Export to MEF format. If uuid is provided, export one metadata,
-       * else export the whole selection.
+       * Export to MEF format (one or selection). If uuid is provided, export
+       * one metadata, else export the whole selection.
        * @param {string} uuid
        */
       this.metadataMEF = function(uuid) {
@@ -52,10 +74,18 @@
         location.replace(url);
       };
 
-      this.exportCSV = function(uuid) {
+      this.exportCSV = function() {
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
 
+      this.deleteMd = function(md) {
+        if(md) {
+          gnMetadataManager.remove(md.getId());
+        }
+        else {
+          callBatch('mdDeleteBatch');
+        }
+      };
 
       this.publish = function(md) {
         var published = md.isPublished(),

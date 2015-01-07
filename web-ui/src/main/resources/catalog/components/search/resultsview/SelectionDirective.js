@@ -4,7 +4,9 @@
 
   var module = angular.module('gn_selection_directive', []);
 
-  module.directive('gnSelectionWidget', ['gnHttp', function(gnHttp) {
+  module.directive('gnSelectionWidget', ['gnHttp', 'gnMetadataActions',
+
+    function(gnHttp, gnMetadataActions) {
 
     return {
       restrict: 'A',
@@ -13,8 +15,9 @@
           'selection-widget.html',
       link: function(scope, element, attrs) {
 
-        var watchers = []
+        var watchers = [];
         scope.checkAll = true;
+        scope.mdService = gnMetadataActions;
 
         // initial state
         gnHttp.callService('mdSelect', {}).success(function(res) {

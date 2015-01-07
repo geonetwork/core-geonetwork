@@ -242,7 +242,9 @@
     mdSelect: 'metadata.select@json', // TODO: CHANGE
 
     mdGetPDF: 'pdf',
+    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
+    mdGetMEF: 'mef.export',
     mdGetXML19139: 'xml_iso19139',
     csv : 'csv.search',
 
