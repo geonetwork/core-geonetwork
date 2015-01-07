@@ -35,13 +35,15 @@
       <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>Export (CSV)</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-send-o"></i>&nbsp;<span translate>Send email</span></a></li>
-    <li ng-if="authenticated" class="disabgit led"><a href="" ng-click="" >
+    <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'on')" >
+      <i class="fa fa-arrow-up"></i>&nbsp;<span translate>publish</span></a></li>
+    <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'off')" >
       <i class="fa fa-times"></i>&nbsp;<span translate>Unpublish</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-user"></i>&nbsp;<span translate>New owner</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-folder-o"></i>&nbsp;<span translate>Update categories</span></a></li>
-    <li ng-if="authenticated"><a href="" ng-click="" >
+    <li ng-if="authenticated"><a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())" >
       <i class="fa fa-key"></i>&nbsp;<span translate>Update privileges</span></a></li>
     <li ng-if="authenticated"><a href="" ng-click="mdService.deleteMd()" >
       <i class="fa fa-trash-o"></i>&nbsp;<span translate>Delete</span></a></li>

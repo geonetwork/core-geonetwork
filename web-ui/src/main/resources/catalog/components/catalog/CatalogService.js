@@ -249,6 +249,7 @@
     csv : 'csv.search',
 
     mdPrivileges: 'md.privileges.update',
+    mdPrivilegesBatch: 'md.privileges.batch.update',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

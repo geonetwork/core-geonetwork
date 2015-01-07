@@ -1,13 +1,18 @@
 (function() {
   goog.provide('gn_mdactions_service');
+  goog.require('gn_share_directive');
 
-  var module = angular.module('gn_mdactions_service', []);
+
+  var module = angular.module('gn_mdactions_service', [
+    'gn_share_directive'
+  ]);
 
   module.service('gnMetadataActions', [
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
-    function(gnHttp, gnMetadataManager, gnAlertService) {
+    'gnPopup',
+    function(gnHttp, gnMetadataManager, gnAlertService, gnPopup) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -16,6 +21,13 @@
         gnAlertService.addAlert({
           msg: msg,
           type: 'success'
+        });
+      };
+
+      var openModal = function(content) {
+        gnPopup.create({
+          title: 'privileges',
+          content: content
         });
       };
 
@@ -87,18 +99,52 @@
         }
       };
 
-      this.publish = function(md) {
-        var published = md.isPublished(),
-            flag = published ? 'off' : 'on';
+      this.openPrivilegesPanel = function(md, scope) {
+        gnPopup.create({
+          title: 'privileges',
+          content: '<div gn-share="'+ md.getId() +'"></div>'
+        }, scope);
+      };
 
-        return gnHttp.callService('mdPrivileges', {
-          update: true,
-          id: md.getId(),
+      this.openPrivilegesBatchPanel = function(scope) {
+        gnPopup.create({
+          title: 'privileges',
+          content: '<div gn-share-batch=""></div>'
+        }, scope);
+      };
+
+      /**
+       * Update publication on metadata (one or selection).
+       * If a md is provided, it update publication of the given md, depending
+       * on its current state. If no metadata is given, it updates the
+       * publication on all selected metadata to the given flag (on|off).
+       * @param {Object|undefined} md
+       * @param {string} flag
+       * @returns {*}
+       */
+      this.publish = function(md, flag) {
+
+        if(md) {
+          flag = md.isPublished() ? 'off' : 'on';
+        }
+        var publishFlag = {
           _1_0:  flag,
           _1_1: flag,
           _1_5: flag,
           _1_6: flag
-        });
+        };
+
+        if(angular.isDefined(md)) {
+          return gnHttp.callService('mdPrivileges', angular.extend(
+              publishFlag,{
+                update: true,
+                id: md.getId()
+              })).then(function(data) {
+            alertResult('publish');
+          });
+        } else {
+          return gnHttp.callService('mdPrivilegesBatch', publishFlag)
+        }
       };
     }]);
 })();
