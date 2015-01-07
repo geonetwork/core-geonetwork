@@ -119,8 +119,8 @@
 
       $scope.openRecord = function (md){
         $scope.currentRecord = md;
-        searchUrl = $location.search();
-        $location.search({uuid: md['geonet:info'].uuid});
+        //searchUrl = $location.search();
+        //$location.search({uuid: md['geonet:info'].uuid});
         $scope.currentRecord.links = md.getLinksByType('LINK');
         $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
         $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
@@ -136,7 +136,7 @@
 
       $scope.closeRecord = function (md){
         $scope.currentRecord = null;
-        $location.search(searchUrl);
+        //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       }
 
