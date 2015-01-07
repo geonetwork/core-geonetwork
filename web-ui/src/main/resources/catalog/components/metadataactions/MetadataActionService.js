@@ -141,6 +141,7 @@
                 id: md.getId()
               })).then(function(data) {
             alertResult('publish');
+            md.publish();
           });
         } else {
           return gnHttp.callService('mdPrivilegesBatch', publishFlag)

@@ -510,6 +510,10 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      publish: function() {
+        this['geonet:info'].isPublishedToAll = this.isPublished() ?
+            'false' : 'true'
+      },
       getLinks: function() {
         return this.link;
       },
