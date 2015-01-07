@@ -143,7 +143,7 @@
         // TODO: maybe formatter config should depends
         // on the metadata schema.
         //schema: {
-        //  iso19139: 'md.format.xml?xsl=full_view&&id='
+        //  iso19139: 'md.format.xml?xsl=full_view&id='
         //}
       };
 
