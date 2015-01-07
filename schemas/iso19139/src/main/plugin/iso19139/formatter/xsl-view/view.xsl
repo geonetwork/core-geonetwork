@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
@@ -7,121 +8,269 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="2.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
+                xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:saxon="http://saxon.sf.net/"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="#all">
 
-  <xsl:include href="sharedFormatterDir/functions.xsl"/>
+  <!-- Load the editor configuration to be able
+  to render the different views -->
+  <xsl:variable name="configuration"
+                select="document('../../layout/config-editor.xml')"/>
 
-  <xsl:variable name="configuration" as="element()">
-    <configuration>
-      <view>
-        <field xpath="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
-      </view>
-    </configuration>
-  </xsl:variable>
+  <!-- Some utility -->
+  <xsl:include href="../../layout/evaluate.xsl"/>
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
 
+  <!-- The core formatter XSL layout based on the editor configuration -->
+  <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
+  <!--<xsl:include href="../../../../../data/formatter/xslt/render-layout.xsl"/>-->
 
-  <xsl:template match="/">
-
-    <xsl:variable name="metadata" select="/root/gmd:MD_Metadata"/>
-
-    <!-- Match a service or data set identification section -->
-    <xsl:variable name="identification" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*"/>
-
-    <div>
-      <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/>
-      <xsl:call-template name="header"/>
-      <div class="row">
-        <div class="col-xs-4">
-          <img src=""/>
-        </div>
-        <div class="col-xs-8">
-          <h1><xsl:value-of select="$identification/gmd:citation/*/gmd:title"/></h1>
-          <p>
-            <xsl:value-of select="$identification/gmd:abstract"/>
-          </p>
-        </div>
-      </div>
+  <!-- Define the metadata to be loaded for this schema plugin-->
+  <xsl:variable name="metadata"
+                select="/root/gmd:MD_Metadata"/>
 
 
-      <table class="table">
-        <xsl:for-each select="$identification/gmd:descriptiveKeywords">
-          <xsl:variable name="thesaurusName" select="gmd:thesaurusName/*/gmd:title"/>
-          <tr>
-            <th><xsl:value-of select="if ($thesaurusName != '') then $thesaurusName else 'MOTS-CLEFS'"/></th>
-            <td><xsl:value-of select="string-join(*/gmd:keyword, ', ')"/></td>
-          </tr>
-        </xsl:for-each>
-        <tr>
-          <th>LICENCE</th>
-          <td><xsl:value-of select="$identification/gmd:resourceConstraints/*/gmd:accessConstraints/*/@codeListValue"/></td>
-        </tr>
-        <xsl:for-each select="$identification/gmd:pointOfContact/*">
-          <xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
-          <tr>
-            <th><xsl:value-of select="if ($role != '') then $role else 'GESTIONNAIRE'"/></th>
-            <td>
-              <xsl:value-of select="gmd:organisationName"/>
-            </td>
-          </tr>
-        </xsl:for-each>
-        <tr>
-          <th>FORMAT</th>
-          <td>
-
-          </td>
-        </tr>
-        <xsl:for-each select="$identification/gmd:citation/*/gmd:date/*">
-          <tr>
-            <th><xsl:value-of select="gmd:dateType/*/@codeListValue"/></th>
-            <td><span data-ng-humanize-time=""><xsl:value-of select="gmd:date"/></span></td>
-          </tr>
-        </xsl:for-each>
-        <tr>
-          <th>FRÉQUENCE DE MISE À JOUR</th>
-          <td></td>
-        </tr>
-      </table>
 
 
-      <div>
-        <h2>LISTE DES FICHES DISPONIBLES</h2>
-        <!-- TODO: Get relation -->
-      </div>
+  <!-- Specific schema rendering -->
+  <xsl:template mode="getMetadataTitle" match="gmd:MD_Metadata">
+    <xsl:variable name="value"
+                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
+    <xsl:value-of select="$value/gco:CharacterString"/>
+  </xsl:template>
 
-      <ul class="nav nav-pills">
-        <li class="active"><a href="#">La carte</a></li>
-        <li><a href="#">La donnée</a></li>
-        <li><a href="#">Les informations techniques</a></li>
-        <li><a href="#">Les contacts</a></li>
-      </ul>
+  <xsl:template mode="getMetadataAbstract" match="gmd:MD_Metadata">
+    <xsl:variable name="value"
+                  select="gmd:identificationInfo/*/gmd:abstract"/>
+    <xsl:value-of select="$value/gco:CharacterString"/>
+  </xsl:template>
 
-      <div>
-        <h2>La carte</h2>
-      </div>
 
-      <div>
-        <h2>La données</h2>
-      </div>
 
-      <div>
-        <h2>Les informations techniques</h2>
-      </div>
 
-      <div>
-        <h2>Les contacts</h2>
 
-        <table class="table">
-          <xsl:for-each select="$metadata/gmd:contact/*">
-            <xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
-            <tr>
-              <th><xsl:value-of select="if ($role != '') then $role else 'GESTIONNAIRE'"/></th>
-              <td>
-                <xsl:value-of select="gmd:organisationName"/>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </table>
+  <!-- Most of the elements are ... -->
+  <xsl:template mode="render-field" match="*[gco:CharacterString|gco:Integer|gco:Decimal|
+       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
+       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
+       gco:LocalName|gmd:PT_FreeText|gml:beginPosition|gml:endPosition|gco:Date|gco:DateTime|*/@codeListValue]">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
+    <dl>
+      <dt>
+        <xsl:value-of select="if ($fieldName)
+                                then $fieldName
+                                else tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
+      </dd>
+    </dl>
+  </xsl:template>
+
+
+  <!-- Some major sections are boxed -->
+  <xsl:template mode="render-field"
+                match="*[name() = $configuration/editor/fieldsWithFieldset/name
+    or @gco:isoType = $configuration/editor/fieldsWithFieldset/name]|
+      gmd:report/*|
+      gmd:result/*|
+      gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+      *[$isFlatMode = false() and gmd:* and not(gco:CharacterString) and not(gmd:URL)]">
+    <div class="entry name">
+      <h3>
+        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+      </h3>
+      <div class="target">
+        <xsl:apply-templates mode="render-field" select="*"/>
       </div>
     </div>
   </xsl:template>
+
+  <!-- Bbox is displayed with an overview and the geom displayed on it
+  and the coordinates displayed around -->
+  <xsl:template mode="render-field"
+                match="gmd:EX_GeographicBoundingBox[
+          gmd:westBoundLongitude/gco:Decimal != '']">
+    <xsl:copy-of select="gn-fn-render:bbox(
+                            xs:double(gmd:westBoundLongitude/gco:Decimal),
+                            xs:double(gmd:southBoundLatitude/gco:Decimal),
+                            xs:double(gmd:eastBoundLongitude/gco:Decimal),
+                            xs:double(gmd:northBoundLatitude/gco:Decimal))"/>
+  </xsl:template>
+
+
+  <!-- A contact is displayed with its role as header -->
+  <xsl:template mode="render-field"
+                match="*[gmd:CI_ResponsibleParty]">
+    <dl class="gn-contact">
+      <dt>
+        <xsl:apply-templates mode="render-value"
+                             select="*/gmd:role/*/@codeListValue"/>
+      </dt>
+      <dd>
+        <div>
+          <xsl:apply-templates mode="render-field"
+                               select="*/(gmd:organisationName|gmd:individualName)"/>
+        </div>
+      </dd>
+      <dd>
+        <div>
+          <xsl:apply-templates mode="render-field"
+                               select="*/gmd:contactInfo"/>
+        </div>
+      </dd>
+    </dl>
+  </xsl:template>
+
+
+  <!-- Display thesaurus name and the list of keywords -->
+  <xsl:template mode="render-field"
+                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title]"
+                priority="200">
+    <dl class="gn-keyword">
+      <dt>
+        <xsl:apply-templates mode="render-value"
+                             select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
+
+        <xsl:if test="*/gmd:type/*[@codeListValue != '']">
+          (<xsl:apply-templates mode="render-value"
+                                select="*/gmd:type/*/@codeListValue"/>)
+        </xsl:if>
+      </dt>
+      <dd>
+        <div>
+          <ul>
+            <li>
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:keyword/*"/>
+            </li>
+          </ul>
+        </div>
+      </dd>
+    </dl>
+  </xsl:template>
+  <xsl:template mode="render-field"
+                match="gmd:descriptiveKeywords[not(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title)]"
+                priority="200">
+    <dl class="gn-keyword">
+      <dt>
+        <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+        <xsl:if test="*/gmd:type/*[@codeListValue != '']">
+          (<xsl:apply-templates mode="render-value"
+                                select="*/gmd:type/*/@codeListValue"/>)
+        </xsl:if>
+      </dt>
+      <dd>
+        <div>
+          <ul>
+            <li>
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:keyword/*"/>
+            </li>
+          </ul>
+        </div>
+      </dd>
+    </dl>
+  </xsl:template>
+
+  <!-- Display all graphic overviews in one block -->
+  <xsl:template mode="render-field"
+                match="gmd:graphicOverview[1]">
+    <dl>
+      <dt>
+        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <ul>
+        <xsl:for-each select="parent::node()/gmd:graphicOverview">
+          <xsl:variable name="label">
+            <xsl:apply-templates mode="localised"
+                               select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
+          </xsl:variable>
+          <li>
+            <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
+                 alt="{$label}"
+                 class="img-thumbnail"/>
+          </li>
+        </xsl:for-each>
+        </ul>
+      </dd>
+    </dl>
+  </xsl:template>
+  <xsl:template mode="render-field"
+                match="gmd:graphicOverview[position() > 1]"/>
+
+
+
+  <!-- Traverse the tree -->
+  <xsl:template mode="render-field" match="*">
+    <xsl:apply-templates mode="render-field"/>
+  </xsl:template>
+
+
+
+
+
+
+
+  <!-- ########################## -->
+  <!-- Render values for text ... -->
+  <xsl:template mode="render-value" match="gco:CharacterString|gco:Integer|gco:Decimal|
+       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
+       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
+       gco:LocalName|gml:beginPosition|gml:endPosition">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+  <xsl:template mode="render-value" match="gmd:PT_FreeText">
+    <xsl:apply-templates mode="localised" select="../node()">
+      <xsl:with-param name="langId" select="$language"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <!-- ... URL -->
+  <xsl:template mode="render-value" match="gmd:URL">
+    <a href="{.}"><xsl:value-of select="."/></a>
+  </xsl:template>
+
+  <!-- ... Dates -->
+  <xsl:template mode="render-value" match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
+    <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
+  </xsl:template>
+
+  <xsl:template mode="render-value" match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
+    <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
+  </xsl:template>
+
+  <xsl:template mode="render-value" match="gco:Date|gco:DateTime">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+  <!-- ... Codelists -->
+  <xsl:template mode="render-value" match="@codeListValue">
+    <xsl:variable name="id" select="."/>
+    <!--<xsl:value-of select="tr:node-label(tr:create($schema), .)"/>-->
+    <xsl:variable name="codelistTranslation"
+                  select="$schemaCodelists//entry[code = $id]/label"/>
+
+    <xsl:choose>
+      <xsl:when test="$codelistTranslation != ''">
+        <xsl:value-of select="$codelistTranslation"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$id"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+
+
+
+
 </xsl:stylesheet>

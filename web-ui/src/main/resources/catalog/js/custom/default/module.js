@@ -37,6 +37,36 @@
       };
     }]);
 
+  module.controller('GnMdViewController', [
+    '$scope', '$http', '$compile', 'gnSearchSettings',
+    function($scope, $http, $compile, gnSearchSettings) {
+      $scope.formatter = gnSearchSettings.formatter;
+      $scope.usingFormatter = false;
+      $scope.compileScope = $scope.$new();
+
+      $scope.format = function (f) {
+        $scope.usingFormatter = f !== undefined;
+        $scope.currentFormatter = f;
+        if (f) {
+          $http.get(f.url + $scope.currentRecord.getUuid()).then(
+            function(response) {
+              var snippet = response.data.replace(
+                '<?xml version="1.0" encoding="UTF-8"?>', '');
+
+              $('#gn-metadata-display').find('*').remove();
+              $('#gn-metadata-display').append(snippet);
+
+              $scope.compileScope.$destroy();
+
+              // Compile against a new scope
+              $scope.compileScope = $scope.$new();
+              $compile(snippet)($scope.compileScope);
+              $('#gn-metadata-display').append(snippet);
+          });
+        }
+      };
+  }]);
+
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -86,6 +116,8 @@
         $scope.currentRecord.links = md.getLinksByType('LINK');
         $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
         $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
+        $scope.currentRecord.overviews = md.getThumbnails().list;
+        $scope.currentRecord.contacts = md.getContacts();
         $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
         // TODO: do not add duplicates
         $scope.previousRecords.push($scope.currentRecord);

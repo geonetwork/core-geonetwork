@@ -32,6 +32,7 @@ public class Summary {
     protected final Environment env;
     protected final Functions functions;
 
+    private List<MenuAction> actions = Lists.newArrayList();
     private String logo;
     private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
@@ -75,7 +76,9 @@ public class Summary {
         params.put("extents", extent != null ? extent : "");
         params.put("formats", formats != null ? formats : "");
         params.put("keywords", keywords != null ? keywords : "");
+        params.put("actions", this.actions);
         params.put("isHTML", env.getFormatType() == FormatType.html);
+        params.put("isPDF", env.getFormatType() == FormatType.pdf);
 
         return handlers.fileResult("html/view-header.html", params);
     }
@@ -189,5 +192,9 @@ public class Summary {
 
     public void setFormats(String formats) {
         this.formats = formats;
+    }
+
+    public List<MenuAction> getActions() {
+        return actions;
     }
 }

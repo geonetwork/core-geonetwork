@@ -111,4 +111,9 @@ public class EnvironmentProxy implements Environment {
     public MapConfig getMapConfiguration() {
         return get().getMapConfiguration();
     }
+
+    @Override
+    public boolean canEdit() throws Exception {
+        return get().canEdit();
+    }
 }

@@ -410,11 +410,6 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches() {
-        if (_applicationContext.getBean(SystemInfo.class).isDevMode()) {
-            return;
-        }
-
-
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {

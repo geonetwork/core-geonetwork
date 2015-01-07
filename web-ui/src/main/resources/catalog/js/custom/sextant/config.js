@@ -137,6 +137,16 @@
         icon: 'fa-th-list'
       }];
 
+      searchSettings.formatter = {
+        defaultUrl: 'md.format.xml?xsl=full_view&id='
+        //defaultUrl: 'md.format.xml?xsl=xsl-view&id='
+        // TODO: maybe formatter config should depends
+        // on the metadata schema.
+        //schema: {
+        //  iso19139: 'md.format.xml?xsl=full_view&id='
+        //}
+      };
+
       searchSettings.defaultListOfThesaurus = [{
         id: 'local.theme.sextant-theme',
         labelFromThesaurus: true,

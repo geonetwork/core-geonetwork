@@ -154,10 +154,14 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild) {
+            isTemplate, isChild, tab) {
           this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-            $location.path('/metadata/' + data.id);
+              var path = '/metadata/' + data.id;
+              if (tab) {
+                path += '/tab/' + tab;
+              }
+            $location.path(path);
           });
           // TODO : handle creation error
         }
@@ -531,17 +535,18 @@
       },
       getThumbnails: function() {
         if (angular.isArray(this.image)) {
-          var ret = {};
+          var images = {list:[]};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             if (s[0] === 'thumbnail') {
-              ret.small = s[1];
+              images.small = s[1];
             } else if (s[0] === 'overview') {
-              ret.big = s[1];
+              images.big = s[1];
             }
+            images.list.push({url: s[1], label: s[2]});
           }
         }
-        return ret;
+        return images;
       },
       getContacts: function() {
         if (angular.isArray(this.responsibleParty)) {

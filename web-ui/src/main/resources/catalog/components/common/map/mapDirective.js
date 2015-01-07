@@ -173,6 +173,7 @@
                }
                feature.setGeometry(geom);
                feature.getGeometry().setCoordinates(coordinates);
+               scope.extent.map = geom.getExtent();
              };
 
              /**

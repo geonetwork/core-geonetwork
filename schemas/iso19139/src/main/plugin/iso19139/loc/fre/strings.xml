@@ -28,7 +28,9 @@
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
-  
+  <noThesaurusName>Mots clés</noThesaurusName>
+  <bboxesSection>Zone géographique</bboxesSection>
+
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
   <onElementOf> Un des éléments suivants </onElementOf>

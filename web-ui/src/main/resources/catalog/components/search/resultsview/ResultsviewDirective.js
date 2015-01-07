@@ -227,7 +227,8 @@
     }]);
 
   module.directive('gnMetadataOpen',
-      ['$http', '$sanitize', '$compile', function($http, $sanitize, $compile) {
+      ['$http', '$sanitize', '$compile', 'gnSearchSettings',
+        function($http, $sanitize, $compile, gnSearchSettings) {
         return {
           restrict: 'A',
           scope: {
@@ -237,11 +238,7 @@
 
           link: function(scope, element, attrs, controller) {
             element.on('click', function() {
-              //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
-              var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&' +
-                  'schema=iso19139.che&id=';
-              // var URI = 'http://localhost:8080/geonetwork/srv/fre/
-              // view?currTab=simple&uuid='
+              var URI = gnSearchSettings.formatter.defaultUrl;
               $http.get(URI + scope.md.getUuid()).then(function(response) {
                 scope.fragment = response.data.replace(
                     '<?xml version="1.0" encoding="UTF-8"?>', '');

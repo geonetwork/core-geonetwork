@@ -93,11 +93,23 @@
 
       /** Facets configuration */
       searchSettings.facetsConfig = [{
+        key: 'type',
+        value: 'types'
+      },{
         key: 'keyword',
         value: 'keywords'
       },{
+        key: 'category',
+        value: 'categories'
+      },{
         key: 'orgName',
         value: 'orgNames'
+      },{
+        key: 'format',
+        value: 'formats'
+      },{
+        key: 'spatialRepresentationType',
+        value: 'spatialRepresentationTypes'
       },{
         key: 'denominator',
         value: 'denominators'
@@ -107,6 +119,12 @@
       },{
         key: 'createDateYear',
         value: 'createDateYears'
+      },{
+        key: 'metadataPOC',
+        value: 'metadataPOCs'
+      },{
+        key: 'serviceType',
+        value: 'serviceTypes'
       }];
 
 
@@ -150,6 +168,24 @@
         tooltip: 'Complete',
         icon: 'fa-th-list'
       }];
+
+      // For the time being metadata rendering is done
+      // using Angular template. Formatter could be used
+      // to render other layout
+      searchSettings.formatter = {
+        //defaultUrl: 'md.format.xml?xsl=full_view&id='
+        defaultUrl: 'md.format.xml?xsl=xsl-view&id=',
+        list: [
+          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view&view=inspire&id='},
+          {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
+          {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
+        ]
+        // TODO: maybe formatter config should depends
+        // on the metadata schema.
+        //schema: {
+        //  iso19139: 'md.format.xml?xsl=full_view&&id='
+        //}
+      };
 
       // Set the default template to use
       searchSettings.resultTemplate = searchSettings.resultViewTpls[0].tplUrl;

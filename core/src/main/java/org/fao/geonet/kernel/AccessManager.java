@@ -320,7 +320,7 @@ public class AccessManager {
     public boolean isOwner(ServiceContext context, MetadataSourceInfo sourceInfo) throws Exception {
 
         UserSession us = context.getUserSession();
-        if (!us.isAuthenticated()) {
+        if (us == null || !us.isAuthenticated()) {
             return false;
         }
 

@@ -1,143 +1,165 @@
-<div class="row gn-md-view">
-  <div class="col-md-3 gn-md-side">
+<div class="row gn-md-view"
+     data-ng-controller="GnMdViewController">
 
-    <button class="btn btn-primary"
-            data-ng-click="closeRecord(currentRecord)">
-      <i class="fa fa-search"></i>
-      <span data-translate="">backToSearch</span>
-    </button>
+  <button class="btn btn-primary"
+          data-ng-click="closeRecord(currentRecord)">
+    <i class="fa fa-search"></i>
+    <span data-translate="">backToSearch</span>
+  </button>
+
+  <ul>
+    <li><a href="" data-ng-click="format()">default</a></li>
+    <li data-ng-repeat="f in formatter.list">
+      <a href="" data-ng-click="format(f)">{{f.label}}</a>
+    </li>
+  </ul>
 
 
-    <section>
-      <h4>
-        <i class="fa fa-image"></i>
-        <span data-translate="">overview</span>
-      </h4>
-      <!-- TODO caroussel on each thumbnails-->
-      <img class="gn-img-thumbnail"
-           data-ng-src="{{currentRecord.getThumbnails().small}}"
-           data-ng-if="currentRecord.getThumbnails().small"/>
-    </section>
 
-    <section>
-      <h4>
-        <i class="fa fa-envelope"></i>
-        <span data-translate="">contact</span>
-      </h4>
-      <blockquote data-ng-if="currentRecord.getContacts().resource">
-        {{currentRecord.getContacts().resource}}
-      </blockquote>
-    </section>
-
-    <section>
-      <h4>
-        <i class="fa fa-map-marker"></i>
-        <span data-translate="">extent</span>
-      </h4>
-      <!-- TODO: use map config -->
-      <img class="gn-img-extent"
-           data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{currentRecord.getBoxAsPolygon()}}"/>
-    </section>
-
-    <section>
-      <h4>
-        <i class="fa fa-fw"></i>
-        <span data-translate="">sourceCatalog</span>
-      </h4>
-      <img ng-src="../../images/logos/{{currentRecord.source}}.gif"
-           class="gn-source-logo"/>
-    </section>
-
-    <section>
-      <h4>
-        <i class="fa fa-share-square"></i>
-        <span data-translate="">shareOn</span>
-      </h4>
-      <a data-ng-href="https://plus.google.com/share?url={{currentRecord.encodedUrl}}"
-         class="btn btn-link"><i class="fa fa-google-plus"></i></a>
-      <a data-ng-href="https://twitter.com/share?url={{currentRecord.encodedUrl}}"
-         class="btn btn-link"><i class="fa fa-twitter"></i></a>
-      <a data-ng-href="https://www.facebook.com/sharer.php?u={{currentRecord.encodedUrl}}"
-         class="btn btn-link"><i class="fa fa-facebook"></i></a>
-
-    </section>
-
-    <section>
-      <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
-    </section>
+  <div data-ng-show="usingFormatter"
+       id="gn-metadata-display"
+       class="gn-metadata-display">
   </div>
 
 
-  <div class="col-md-9 gn-record">
-    <h1>
-      <span data-ng-if="currentRecord.type.indexOf('dataset')>=0"
-              class="fa fa-database"
-              title="{{'dataset' | translate}}"></span>
-            <span data-ng-if="currentRecord.type.indexOf('software')>=0"
-                  class="fa fa-hdd-o"
-                  title="{{'software' | translate}}"></span>
-            <span data-ng-if="currentRecord.type.indexOf('map')>=0"
-                  class="fa fa-globe"
-                  title="{{'map' | translate}}"></span>
-            <span data-ng-if="currentRecord.type.indexOf('application')>=0"
-                  class="fa fa-hdd-o"
-                  title="{{'application' | translate}}"></span>
-            <span data-ng-if="currentRecord.type.indexOf('basicgeodata')>=0"
-                  class="fa fa-globe"
-                  title="{{'geodata' | translate}}"></span>
-            <span data-ng-if="currentRecord.type.indexOf('service')>=0"
-                  class="fa fa-globe"
-                  title="{{'service' | translate}}"></span>
-      {{currentRecord.title || currentRecord.defaultTitle}}
-    </h1>
 
-    <div>
-      <i class="fa fa-calendar"></i>
-      <span data-translate="">updatedOn</span>
-      {{currentRecord['geonet:info'].changeDate}}</div>
+  <div data-ng-show="!usingFormatter" class="gn-metadata-display">
 
+    <div class="col-md-3 gn-md-side">
 
+      <section data-ng-if="currentRecord.overviews.length > 0">
+        <h4>
+          <i class="fa fa-image"></i>
+          <span data-translate="">overview</span>
+        </h4>
+        <!-- TODO caroussel on each thumbnails-->
+        <p data-ng-repeat="img in currentRecord.overviews">
+        <img class="gn-img-thumbnail img-thumbnail"
+             alt="{{img.label}}"
+             data-ng-src="{{img.url}}"/>
+        </p>
+      </section>
 
-    <div class="well">
-      {{currentRecord.abstract}}
+      <section data-ng-if="currentRecord.contacts.resource">
+        <h4>
+          <i class="fa fa-envelope"></i>
+          <span data-translate="">contact</span>
+        </h4>
+        <blockquote>
+          {{currentRecord.contacts.resource}}
+        </blockquote>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-map-marker"></i>
+          <span data-translate="">extent</span>
+        </h4>
+        <!-- TODO: use map config -->
+        <img class="gn-img-extent"
+             data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{currentRecord.getBoxAsPolygon()}}"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-fw"></i>
+          <span data-translate="">sourceCatalog</span>
+        </h4>
+        <img ng-src="../../images/logos/{{currentRecord.source}}.gif"
+             class="gn-source-logo"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-share-square"></i>
+          <span data-translate="">shareOn</span>
+        </h4>
+        <a data-ng-href="https://plus.google.com/share?url={{currentRecord.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-google-plus"></i></a>
+        <a data-ng-href="https://twitter.com/share?url={{currentRecord.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-twitter"></i></a>
+        <a data-ng-href="https://www.facebook.com/sharer.php?u={{currentRecord.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-facebook"></i></a>
+
+      </section>
+
+      <section>
+        <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
+      </section>
     </div>
 
-    <h2 data-translate="">downloadsAndResources</h2>
-    <ul>
-      <li ng-repeat="link in currentRecord.layers">
-        <a href="{{::link.url}}"
-           target="_blank">{{::link.desc}}
-        <span class="badge">{{::link.contentType}}</span>
-        </a>
-      </li>
-    </ul>
-    <ul>
-      <li ng-repeat="link in currentRecord.downloads">
-        <a href="{{::link.url}}"
-           target="_blank">{{::link.desc}}
-          <span class="badge">{{::link.contentType}}</span>
-        </a>
-      </li>
-    </ul>
-    <ul>
-      <li ng-repeat="link in currentRecord.links">
-        <a href="{{::link.url}}"
-           target="_blank">{{::link.desc}}
-          <span class="badge">{{::link.contentType}}</span>
-        </a>
-      </li>
-    </ul>
+
+    <div class="col-md-9 gn-record">
+      <h1>
+        <span data-ng-if="currentRecord.type.indexOf('dataset')>=0"
+              class="fa fa-database"
+              title="{{'dataset' | translate}}"></span>
+        <span data-ng-if="currentRecord.type.indexOf('software')>=0"
+              class="fa fa-hdd-o"
+              title="{{'software' | translate}}"></span>
+        <span data-ng-if="currentRecord.type.indexOf('map')>=0"
+              class="fa fa-globe"
+              title="{{'map' | translate}}"></span>
+        <span data-ng-if="currentRecord.type.indexOf('application')>=0"
+              class="fa fa-hdd-o"
+              title="{{'application' | translate}}"></span>
+        <span data-ng-if="currentRecord.type.indexOf('basicgeodata')>=0"
+              class="fa fa-globe"
+              title="{{'geodata' | translate}}"></span>
+        <span data-ng-if="currentRecord.type.indexOf('service')>=0"
+              class="fa fa-globe"
+              title="{{'service' | translate}}"></span>
+        {{currentRecord.title || currentRecord.defaultTitle}}
+
+      </h1>
+
+      <div>
+        <i class="fa fa-calendar"></i>
+        <span data-translate="">updatedOn</span>
+        {{currentRecord['geonet:info'].changeDate}}</div>
 
 
-    <h2 data-translate="">aboutThisResource</h2>
 
-    <table class="table table-striped">
-      <tbody>
-        <tr>
+      <div class="well">
+        {{currentRecord.abstract}}
+      </div>
+
+      <h2 data-translate="">downloadsAndResources</h2>
+      <ul>
+        <li ng-repeat="link in currentRecord.layers">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        <li ng-repeat="link in currentRecord.downloads">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        <li ng-repeat="link in currentRecord.links">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+
+
+      <h2 data-translate="">aboutThisResource</h2>
+
+      <table class="table table-striped">
+        <tbody>
+        <tr data-ng-if="currentRecord.category.length > 0">
           <th data-translate="">listOfCategories</th>
           <td>
             <a data-ng-repeat="cat in currentRecord.category"
-                 data-ng-href="#?tab=search&_cat={{cat}}">
+               data-ng-href="#?tab=search&_cat={{cat}}">
               <i class="fa"
                  title="{{cat | translate}}">
                 <img data-ng-src="../../images/category/{{cat}}.png"/>
@@ -167,11 +189,11 @@
             </ul>
           </td>
         </tr>
-        <tr>
+        <tr data-ng-if="currentRecord.contacts.resource">
           <th data-translate="">contact</th>
           <td>
-            <blockquote data-ng-if="currentRecord.getContacts().resource">
-              {{currentRecord.getContacts().resource}}
+            <blockquote>
+              {{currentRecord.contacts.resource}}
             </blockquote>
           </td>
         </tr>
@@ -195,21 +217,21 @@
           <th data-translate="">tempExtent</th>
           <td>{{currentRecord.tempExtentBegin}} - {{currentRecord.tempExtentEnd}}</td>
         </tr>
-        <tr>
+        <tr data-ng-if="currentRecord.datasetLang">
           <th data-translate="">language</th>
-          <td>{{currentRecord.datasetLang}}</td>
+          <td>{{currentRecord.datasetLang | translate}}</td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
 
-    <h2 data-translate="">preview</h2>
+      <h2 data-translate="">preview</h2>
+      <div class="gn-map-preview"/>
+
+      <h2 data-translate="">technicalInformation</h2>
 
 
-    <h2 data-translate="">technicalInformation</h2>
-
-
-    <table class="table table-bordered">
-      <tbody>
+      <table class="table table-bordered">
+        <tbody>
         <tr data-ng-if="currentRecord.crs">
           <th data-translate="">crs</th>
           <td>{{currentRecord.crs}}</td>
@@ -228,23 +250,19 @@
           <th data-translate="">lineage</th>
           <td>{{currentRecord.lineage}}</td>
         </tr>
-        <tr>
-          <th data-translate="">sourceDataset</th>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
 
-    <h2 data-translate="">metadataInformation</h2>
+      <h2 data-translate="">metadataInformation</h2>
 
-    <a class="btn btn-link"
-       data-ng-href="xml.metadata.get?id={{currentRecord.getId()}}">
-      <i class="fa fa-file-code-o fa-2x"/>
-      <span data-translate="">metadataInXML</span>
-    </a>
+      <a class="btn btn-link"
+         data-ng-href="xml.metadata.get?id={{currentRecord.getId()}}">
+        <i class="fa fa-file-code-o fa-2x"/>
+        <span data-translate="">metadataInXML</span>
+      </a>
 
-    <table class="table table-striped">
-      <tbody>
+      <table class="table table-striped">
+        <tbody>
         <tr>
           <th data-translate="">contact</th>
           <td>
@@ -255,13 +273,14 @@
         </tr>
         <tr>
           <th data-translate="">metadataLanguage</th>
-          <td>{{currentRecord.language}}</td>
+          <td>{{currentRecord.language | translate}}</td>
         </tr>
         <tr>
           <th data-translate="">uuid</th>
           <td>{{currentRecord['geonet:info'].uuid}}</td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
