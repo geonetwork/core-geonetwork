@@ -292,12 +292,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			int nrHits = getTo() - (getFrom()-1);
 			if (tdocs.scoreDocs.length >= nrHits) {
                 Set<Integer> userGroups = null;
-
-				for (int i = 0; i < nrHits; i++) {
-					Document doc;
-                    IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
+                try (IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);) {
                     _versionToken = indexAndTaxonomy.version;
-                    try {
+
+                    for (int i = 0; i < nrHits; i++) {
+                        Document doc;
                         if (inFastMode) {
                             // no selector
                             doc = indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc);
@@ -306,46 +305,43 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                             indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
                             doc = docVisitor.getDocument();
                         }
-                    } finally {
-                        _sm.releaseIndexReader(indexAndTaxonomy);
-                    }
-					String id = doc.get("_id");
-					Element md = null;
+                        String id = doc.get("_id");
+                        Element md = null;
 
-					if (fast) {
-						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
-					}
-                    else if ("indexpdf".equals(sFast)) {
-                        if (userGroups == null) {
-                            userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(),  srvContext.getIpAddress(), false);
+                        if (fast) {
+                            md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
+                        } else if ("indexpdf".equals(sFast)) {
+                            if (userGroups == null) {
+                                userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
+
+                            }
+
+                            // Retrieve information from the index for the record
+                            md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+                        } else if ("index".equals(sFast)) {
+                            // Retrieve information from the index for the record
+                            md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+
+                            buildPrivilegesMetadataInfo(srvContext, doc, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        } else if (srvContext != null) {
+                            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+                            md = gc.getBean(DataManager.class).getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
                         }
 
-                        // Retrieve information from the index for the record
-                        md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+                        //--- a metadata could have been deleted just before showing
+                        //--- search results
+
+                        if (md != null) {
+                            // Calculate score and add it to info elem
+                            if (_luceneConfig.isTrackDocScores()) {
+                                Float score = tdocs.scoreDocs[i].score;
+                                Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+                                addElement(info, Edit.Info.Elem.SCORE, score.toString());
+                            }
+                            response.addContent(md);
+                        }
                     }
-                    else if ("index".equals(sFast)) {
-					    // Retrieve information from the index for the record
-						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
-
-                        buildPrivilegesMetadataInfo(srvContext, doc, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
-                    } else if (srvContext != null) {
-                        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-                        md = gc.getBean(DataManager.class).getMetadata(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes);
-					}
-
-					//--- a metadata could have been deleted just before showing
-					//--- search results
-
-					if (md != null) {
-						// Calculate score and add it to info elem
-						if (_luceneConfig.isTrackDocScores()) {
-							Float score = tdocs.scoreDocs[i].score;
-							Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-							addElement(info, Edit.Info.Elem.SCORE, score.toString());
-						}
-						response.addContent(md);
-					}
-				}
+                }
 			} else {
 				throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
 			}

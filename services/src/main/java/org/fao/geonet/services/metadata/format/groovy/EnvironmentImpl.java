@@ -14,6 +14,7 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -195,5 +196,12 @@ public class EnvironmentImpl implements Environment {
         final Integer width = settingManager.getValueAsInt("region/getmap/width");
         final Integer thumbnailWidth = settingManager.getValueAsInt("region/getmap/summaryWidth");
         return new MapConfig(background, mapproj, width, thumbnailWidth);
+    }
+
+    @Override
+    public boolean canEdit() throws Exception {
+        final AccessManager bean = serviceContext.getBean(AccessManager.class);
+        return bean.isOwner(serviceContext, this.metadataInfo.getSourceInfo())
+               || bean.hasEditPermission(serviceContext, String.valueOf(this.metadataInfo.getId()));
     }
 }

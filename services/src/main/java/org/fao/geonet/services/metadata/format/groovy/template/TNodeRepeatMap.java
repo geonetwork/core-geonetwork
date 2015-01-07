@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.fao.geonet.SystemInfo;
@@ -13,13 +14,15 @@ import java.util.Map;
  */
 public class TNodeRepeatMap extends TNode {
     private final String key, rowKeyName, rowValueName;
+    private final boolean onlyChildren;
 
-    public TNodeRepeatMap(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String key, String rowKeyName, String rowValueName)
+    public TNodeRepeatMap(SystemInfo info, TextContentParser parser, boolean onlyChildren, String qName, Attributes attributes, String key, String rowKeyName, String rowValueName)
             throws IOException {
         super(info, parser, qName, attributes);
         this.key = key;
         this.rowKeyName = rowKeyName;
         this.rowValueName = rowValueName;
+        this.onlyChildren = onlyChildren;
     }
 
     @Override
@@ -27,8 +30,13 @@ public class TNodeRepeatMap extends TNode {
         final Object modelValue = context.getModelValue(this.key);
 
         if (!(modelValue instanceof Map)) {
-            throw new TemplateException(
-                    "Expected a map for (" + rowKeyName + ", " + rowValueName + ") in " + this.key + " but got a " + modelValue);
+            if (modelValue == null) {
+                String options = Joiner.on(", ").join(context.getAllModelKeys());
+                throw new TemplateException("There is no model item with the key: " + this.key + ".  Options include: " + options);
+            } else {
+                throw new TemplateException(
+                        "Expected a map for (" + rowKeyName + ", " + rowValueName + ") in " + this.key + " but got a " + modelValue);
+            }
 
         }
         @SuppressWarnings("unchecked")
@@ -49,14 +57,18 @@ public class TNodeRepeatMap extends TNode {
 
             TRenderContext childContext = context.childContext(newModelMap);
 
-            context.append("<").append(qName);
-            attributes.render(childContext);
-            context.append(">");
+            if (!this.onlyChildren) {
+                context.append("<").append(qName);
+                attributes.render(childContext);
+                context.append(">");
+            }
 
             for (TNode node : getChildren()) {
                 node.render(childContext);
             }
-            end.render(childContext);
+            if (!this.onlyChildren) {
+                end.render(childContext);
+            }
 
             i++;
         }

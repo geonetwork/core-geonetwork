@@ -15,8 +15,9 @@
         <img fmt-if="logo" class="logo" src="{{logo}}"></img>
         <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
         <span class="title">{{title}}</span>
+        <div fmt-include="html/drop-down-list.html" class="pull-right" />
     </h1>
-    <ul class="view-outline nav nav-pills">
+    <ul fmt-if="!isPDF" class="view-outline nav nav-pills">
         <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">{{overview}}</a></li>
         <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
         <li fmt-repeat="item in navBar" title="{{item.name}}"><a href="" rel="{{item.rel}}">{{item.abbrName}}</a></li>
@@ -35,7 +36,7 @@
         </h3>
 
         <div class="entry target">
-            <img class="thumbnail" src="{{thumbnail}}"></img>
+            <img fmt-if="{{thumbnail}}" class="thumbnail" src="{{thumbnail}}"></img>
             <div fmt-if="abstract" class="entry abstract">
                 <h3>
                     <button type="button" class="btn btn-default toggler">
