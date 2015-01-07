@@ -40,10 +40,9 @@
             </div>
             <div class="col-xs-6">
               <div class="jumbotron">
-                <h1 data-translate="">welcomeTitle</h1>
+                <h1 data-translate="" data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
 
                 <p data-translate="">welcomeText</p>
-                <p data-translate="">versionDetails</p>
               </div>
             </div>
           </div>
@@ -258,7 +257,13 @@
         <li><a href="https://github.com/geonetwork/core-geonetwork">
           <i class="fa fa-github"></i>
           <span data-translate="">github</span></a></li>
+        <li>
+          <a data-translate=""
+             data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
+            versionDetails</a>
+        </li>
       </ul>
+
     </div>
   </div>
 </div>
