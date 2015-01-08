@@ -83,7 +83,6 @@
 
 
     <util:list id="initCacheUrls">
-        <value>../../static/srv_custom_style.css</value>
         <value>../../static/lib.js</value>
         <value>../../static/nv.d3.css</value>
         <value>../../static/gn_search_default.css</value>

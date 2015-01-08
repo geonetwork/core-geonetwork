@@ -18,7 +18,8 @@ public class MetadataValidation extends GeonetEntity {
     private MetadataValidationStatus _status;
     private int _tested;
     private int _failed;
-    private ISODate _validationDate;
+    private ISODate _validationDate = new ISODate();
+    private boolean required = true;
 
     /**
      * Return the id object of this entity.
@@ -85,46 +86,6 @@ public class MetadataValidation extends GeonetEntity {
     }
 
     /**
-     * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     *
-     * @return
-     */
-    public int getTested() {
-        return _tested;
-    }
-
-    /**
-     * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     *
-     * @param tested
-     * @return this entity object
-     */
-    public MetadataValidation setTested(int tested) {
-        this._tested = tested;
-        return this;
-    }
-
-    /**
-     * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     *
-     * @return
-     */
-    public int getFailed() {
-        return _failed;
-    }
-
-    /**
-     * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     *
-     * @param failed
-     * @return this entity object
-     */
-    public MetadataValidation setFailed(int failed) {
-        this._failed = failed;
-        return this;
-    }
-
-    /**
      * The moment that the validation completed.
      *
      * @return The moment that the validation completed.
@@ -142,5 +103,26 @@ public class MetadataValidation extends GeonetEntity {
         this._validationDate = validationDate;
         return this;
 
+    }
+
+    public MetadataValidation setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
+    /**
+     * Set if this type of validation is required for the metadata to be considered valid.  Some validation tests are informational
+     * only (see {@link org.fao.geonet.domain.Schematron}) if the test is informational only then required is false and it will not
+     * affect the metadata's overall validity.
+     */
+    @Column(nullable = true)
+    public boolean isRequired() {
+        return required;
+    }
+
+    @Override
+    public String toString() {
+        String reqString = required ? "required" : "not-required";
+        return "MetadataValidation{" + _id.getMetadataId() + ", " + _id.getValidationType()+ ", " + _status + ", " + reqString + "}";
     }
 }
