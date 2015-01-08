@@ -40,8 +40,8 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.harvesterHistoryPaging = {
-        page:  1,
-        size:  3,
+        page: 1,
+        size: 3,
         pages: 0,
         total: 0
       };
@@ -78,7 +78,7 @@
         if (!backgroundLoad) {
           $scope.harvesterHistory = undefined;
         } else {
-          list = $("ul.timeline, .timeline-panel");
+          list = $('ul.timeline, .timeline-panel');
           list.addClass('loading');
         }
         $http.get('admin.harvester.history?uuid=' + uuid + '&page=' + page + '&size=' + size + '&_content_type=json').success(function(data) {

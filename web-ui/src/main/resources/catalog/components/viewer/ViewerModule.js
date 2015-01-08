@@ -57,14 +57,14 @@
 
       var map = $scope.searchObj.viewerMap;
 
-      if(gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
+      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
         gnOwsCapabilities.getWMSCapabilities(gnViewerSettings.wmsUrl).
             then(function(capObj) {
-          var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-              gnViewerSettings.layerName, capObj);
-          var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
-              layerInfo);
-        });
+              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                  gnViewerSettings.layerName, capObj);
+              var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
+                  layerInfo);
+            });
       }
 
 

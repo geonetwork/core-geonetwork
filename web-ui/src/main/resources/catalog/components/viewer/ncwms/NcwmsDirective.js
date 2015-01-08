@@ -106,7 +106,8 @@
                     url: url,
                     content: '<div class="gn-popup-iframe ' +
                         activeTool + '">' +
-                        '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
+                        '<img style="width:100%;height:100%;" ' +
+                        'src="{{options.url}}" />' +
                         '</div>'
                   });
                   scope.$apply(function() {
@@ -114,7 +115,7 @@
                   });
                   setTimeout(function() {
                     resetInteraction();
-                  }, 100)
+                  }, 100);
                 }, this);
 
             map.addInteraction(drawInteraction);
@@ -139,12 +140,12 @@
             var ncInfo = layer.ncInfo;
 
             layer.set('cextent', ol.proj.transform([
-                      parseFloat(ncInfo.bbox[0]),
-                      parseFloat(ncInfo.bbox[1]),
-                      parseFloat(ncInfo.bbox[2]),
-                      parseFloat(ncInfo.bbox[3])],
-                    'EPSG:4326',
-                    map.getView().getProjection().getCode())
+              parseFloat(ncInfo.bbox[0]),
+              parseFloat(ncInfo.bbox[1]),
+              parseFloat(ncInfo.bbox[2]),
+              parseFloat(ncInfo.bbox[3])],
+            'EPSG:4326',
+            map.getView().getProjection().getCode())
             );
 
             scope.params = layer.getSource().getParams() || {};

@@ -248,7 +248,8 @@
               values: '=gnSortbyValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.params.sortBy = scope.params.sortBy || scope.values[0].sortBy;
+              scope.params.sortBy = scope.params.sortBy ||
+                  scope.values[0].sortBy;
               scope.sortBy = function(v) {
                 angular.extend(scope.params, v);
                 searchFormCtrl.triggerSearch(true);

@@ -131,7 +131,7 @@
                   scope.groups = data.data.group;
                   angular.forEach(scope.groups, function(g) {
                     g.reserved = true;
-                  })
+                  });
                 }
             );
           };

@@ -64,7 +64,7 @@
 
       /**
        * Keep a reference on main cat scope
-       * @returns {*}
+       * @return {*}
        */
       $scope.getCatScope = function() {return $scope};
 
