@@ -8,9 +8,14 @@
 
     function(searchSettings) {
 
-      proj4.defs('EPSG:21781', '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=660.077,13.551,369.344,2.484,1.783,2.939,5.66 +units=m +no_defs');
+      proj4.defs('EPSG:21781', '+proj=somerc +lat_0=46.95240555555556' +
+          ' +lon_0=7.439583333333333 +k_0=1 +x_0=600000' +
+          ' +y_0=200000 +ellps=bessel +towgs84=660.077,13.551,' +
+          '369.344,2.484,1.783,2.939,5.66 +units=m +no_defs');
+
       ol.proj.get('EPSG:21781').setExtent([420000, 30000, 900000, 350000]);
-      ol.proj.get('EPSG:21781').setWorldExtent([5.9700, 45.8300, 10.4900, 47.8100]);
+      ol.proj.get('EPSG:21781').setWorldExtent(
+          [5.9700, 45.8300, 10.4900, 47.8100]);
 
       searchSettings.olStyles = {
         drawBbox: new ol.style.Style({
@@ -58,7 +63,8 @@
       var defaultUrl = 'http://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
           '20140520/21781/' +
           '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
-      var url = angular.isDefined(searchSettings.mapConfig) ? searchSettings.mapConfig.url || defaultUrl : defaultUrl;
+      var url = angular.isDefined(searchSettings.mapConfig) ?
+          searchSettings.mapConfig.url || defaultUrl : defaultUrl;
 
       var chLayer = new ol.layer.Tile({
         source: new ol.source.WMTS(({
@@ -75,7 +81,8 @@
       searchSettings.searchMap = new ol.Map({
         layers: [chLayer],
         view: new ol.View({
-          resolutions: [1250, 1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1, 0.5, 0.25, 0.1],
+          resolutions: [1250, 1000, 750, 650, 500, 250, 100, 50, 20,
+            10, 5, 2.5, 2, 1, 0.5, 0.25, 0.1],
           extent: [420000, 30000, 900000, 350000],
           projection: 'EPSG:21781',
           center: [660000, 190000],
@@ -126,11 +133,13 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/geocat.html',
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/geocat.html',
         tooltip: 'Geocat',
         icon: 'fa-th-list'
       }];

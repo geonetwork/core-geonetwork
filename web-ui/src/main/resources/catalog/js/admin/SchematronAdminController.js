@@ -236,7 +236,8 @@
           group.criteria = [];
           for (i = 0; i < criteria.length; i++) {
             var template = angular.copy(criteria[i]);
-            gnSchematronAdminService.criteria.add(criteria[i], group.criteria[i], group);
+            gnSchematronAdminService.criteria.add(criteria[i],
+                group.criteria[i], group);
           }
         });
       };

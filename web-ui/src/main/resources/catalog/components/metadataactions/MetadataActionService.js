@@ -113,7 +113,7 @@
           gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('resetSearch');
-          });;
+          });
         }
         else {
           callBatch('mdDeleteBatch').then(function() {

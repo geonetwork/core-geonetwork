@@ -21,14 +21,14 @@
          * Uses for model -> ui
          * @param {array} a
          * @param {string} v
-         * @returns
+         * @return {string|undefined}
          */
         var findLabel = function(a, v) {
-          for(var i=0;i< a.length;i++) {
-            if(a[i].id == v) {
+          for (var i = 0; i < a.length; i++) {
+            if (a[i].id == v) {
               return a[i].name;
             }
-          };
+          }
         };
 
         return {
@@ -163,7 +163,7 @@
                 for (i = 0; i < added.length; i++) {
                   $(element).tagsinput('add', {
                     id: added[i],
-                    name: findLabel(data, added[i]),
+                    name: findLabel(data, added[i])
                   });
                 }
               }, true);

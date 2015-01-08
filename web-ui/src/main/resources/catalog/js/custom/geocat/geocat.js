@@ -77,8 +77,10 @@
         }
       };
 
-      // To access CatController $scope (gnsGeocat > GnSearchController > GnCatController)
-      $scope.$parent.$parent.langs = {'fre': 'fr', 'eng': 'en', 'ger': 'ge', 'ita': 'it'};
+      // To access CatController $scope
+      // (gnsGeocat > GnSearchController > GnCatController)
+      $scope.$parent.$parent.langs = {'fre': 'fr', 'eng': 'en',
+        'ger': 'ge', 'ita': 'it'};
 
 
       $('#anySearchField').focus();
@@ -185,7 +187,8 @@
           data: topicCats,
           config: {
             templates: {
-              suggestion: Handlebars.compile('<p class="topiccat-{{hierarchy}}">{{name}}</p>')
+              suggestion: Handlebars.compile(
+                  '<p class="topiccat-{{hierarchy}}">{{name}}</p>')
             }
           }
         };
@@ -202,22 +205,23 @@
         mode: 'prefetch',
         promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('sources', 'groups')).success(function(data) {
-            var res = [];
-            var parseBlock = function(block) {
-              var a = data[block];
-              for (var i = 0; i < a.length; i++) {
-                res.push({
-                  id: a[i]['@id'],
-                  name: a[i].name
-                });
-              }
-            };
-            parseBlock('sources');
-            parseBlock('group');
+          $http.get(suggestService.getInfoUrl('sources', 'groups')).
+              success(function(data) {
+                var res = [];
+                var parseBlock = function(block) {
+                  var a = data[block];
+                  for (var i = 0; i < a.length; i++) {
+                    res.push({
+                      id: a[i]['@id'],
+                      name: a[i].name
+                    });
+                  }
+                };
+                parseBlock('sources');
+                parseBlock('group');
 
-            defer.resolve(res);
-          });
+                defer.resolve(res);
+              });
           return defer.promise;
         })()
       };
@@ -243,8 +247,8 @@
       // draw polygon or bbox set the field (not AU ones).
       var setSearchGeometry = function(geometry) {
         $scope.searchObj.params.geometry = wktFormat.writeGeometry(
-            geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
-            );
+            geometry.clone().transform(
+                map.getView().getProjection(), 'EPSG:4326'));
       };
 
       /** Manage draw area on search map */
@@ -336,7 +340,7 @@
         }
       });
 
-      // Remove geometry on map if geometry field is reset from url or from model
+      // Remove geometry on map if geometry field's reset from url or from model
       $scope.$watch('searchObj.params.geometry', function(v) {
         if (!v || v == '') {
           featureOverlay.getFeatures().clear();
@@ -400,7 +404,8 @@
             addCantonFeature(cs[i]).then(function() {
               if (--nbCantons == 0) {
                 $scope.searchObj.params.geometry = geom;
-                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
+                map.getView().fitExtent(
+                    cantonSource.getExtent(), map.getSize());
               }
             });
           }
