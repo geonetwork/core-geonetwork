@@ -187,7 +187,8 @@
               }
             });
           });
-          $http.get('md.privileges.update@json', {params: params})
+          //TODO: fix service that crash with _content_type parameter
+          $http.get('md.privileges.update', {params: params})
             .success(function(data) {
                 defer.resolve(data);
               }).error(function(data) {

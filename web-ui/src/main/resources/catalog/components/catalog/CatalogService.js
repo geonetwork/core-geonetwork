@@ -232,9 +232,9 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
-    mdCreate: 'md.create@json',
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
+    mdDeleteBatch: 'md.delete.batch',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',
@@ -246,10 +246,14 @@
     mdSelect: 'metadata.select@json', // TODO: CHANGE
 
     mdGetPDF: 'pdf',
+    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
+    mdGetMEF: 'mef.export',
     mdGetXML19139: 'xml_iso19139',
+    csv : 'csv.search',
 
     mdPrivileges: 'md.privileges.update',
+    mdPrivilegesBatch: 'md.privileges.batch.update',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

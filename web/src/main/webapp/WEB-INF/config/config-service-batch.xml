@@ -7,5 +7,17 @@
             ]]></documentation>
       <class name=".services.metadata.replace.MassiveReplaceContent"/>
     </service>
+
+    <service name="md.delete.batch">
+      <documentation><![CDATA[
+            Service to delete all selected metadatas.
+            ]]></documentation>
+
+      <class name=".services.metadata.BatchDelete" />
+
+      <output sheet="metadata-batch-results.xsl">
+        <xml name="info" file="xml/metadata-batchDelete.xml" />
+      </output>
+    </service>
   </services>
 </geonet>
