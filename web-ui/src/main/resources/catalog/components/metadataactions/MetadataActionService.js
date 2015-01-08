@@ -140,7 +140,7 @@
        * @param {string} md
        */
       this.duplicate = function(md) {
-        duplicateMetadata(md.getId(),false);
+        duplicateMetadata(md.getId(), false);
       };
 
       /**
@@ -148,7 +148,7 @@
        * @param {string} md
        */
       this.createChild = function(md) {
-        duplicateMetadata(md.getId(),true);
+        duplicateMetadata(md.getId(), true);
       };
 
       /**

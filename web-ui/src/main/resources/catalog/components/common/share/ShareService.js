@@ -184,7 +184,7 @@
           var params = {};
           var url;
 
-          if(angular.isDefined(metadataId)) {
+          if (angular.isDefined(metadataId)) {
             url = 'md.privileges.update';
             params.id = metadataId;
           }

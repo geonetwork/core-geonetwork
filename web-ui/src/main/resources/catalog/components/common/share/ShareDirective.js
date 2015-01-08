@@ -53,7 +53,7 @@
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
-          if(!scope.batch) {
+          if (!scope.batch) {
             loadPrivileges = function() {
               gnShareService.loadPrivileges(scope.id, scope.user.profile).then(
                   fillGrid);
