@@ -112,7 +112,12 @@
           gnMetadataManager.remove(md.getId());
         }
         else {
-          callBatch('mdDeleteBatch');
+          // TODO: see how to manage the refresh
+          callBatch('mdDeleteBatch').then(function() {
+            gnHttp.callService('mdSelect', {
+              selected: 'remove-all'
+            });
+          });
         }
       };
 
@@ -126,7 +131,7 @@
       this.openPrivilegesBatchPanel = function(scope) {
         gnPopup.create({
           title: 'privileges',
-          content: '<div gn-share-batch=""></div>'
+          content: '<div gn-share="" gn-share-batch="true"></div>'
         }, scope);
       };
 

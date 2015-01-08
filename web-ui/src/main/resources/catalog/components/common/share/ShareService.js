@@ -91,7 +91,11 @@
          */
         loadPrivileges: function(metadataId, userProfile) {
           var defer = $q.defer();
-          $http.get('md.privileges@json?id=' + metadataId)
+          var url = angular.isDefined(metadataId) ?
+              'md.privileges?_content_type=json&id=' + metadataId :
+              'md.privileges.batch?_content_type=json';
+
+          $http.get(url)
             .success(function(data) {
                 var groups = data !== 'null' ? data.group : null;
                 if (data == null) {
@@ -177,9 +181,16 @@
          */
         savePrivileges: function(metadataId, groups) {
           var defer = $q.defer();
-          var params = {
-            id: metadataId
-          };
+          var params = {};
+          var url;
+
+          if(angular.isDefined(metadataId)) {
+            url = 'md.privileges.update';
+            params.id = metadataId;
+          }
+          else {
+            url = 'md.privileges.batch.update';
+          }
           angular.forEach(groups, function(g) {
             angular.forEach(g.privileges, function(p, key) {
               if (p.value === true) {
@@ -188,7 +199,7 @@
             });
           });
           //TODO: fix service that crash with _content_type parameter
-          $http.get('md.privileges.update', {params: params})
+          $http.get(url, {params: params})
             .success(function(data) {
                 defer.resolve(data);
               }).error(function(data) {
