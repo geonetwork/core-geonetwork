@@ -4,9 +4,10 @@
 
   goog.require('gn_search');
   goog.require('gn_search_default_config');
+  goog.require('gn_search_default_directive');
 
   var module = angular.module('gn_search_default',
-      ['gn_search', 'gn_search_default_config']);
+      ['gn_search', 'gn_search_default_config', 'gn_search_default_directive']);
 
 
 
@@ -54,17 +55,24 @@
                     '<?xml version="1.0" encoding="UTF-8"?>', '');
 
                 $('#gn-metadata-display').find('*').remove();
-                $('#gn-metadata-display').append(snippet);
 
                 $scope.compileScope.$destroy();
 
                 // Compile against a new scope
                 $scope.compileScope = $scope.$new();
-                $compile(snippet)($scope.compileScope);
-                $('#gn-metadata-display').append(snippet);
+                var content = $compile(snippet)($scope.compileScope);
+
+                $('#gn-metadata-display').append(content);
               });
-        }
-      };
+          }
+        };
+
+        // Reset current formatter to open the next record
+        // in default mode.
+        $scope.$watch('currentRecord', function () {
+          $scope.usingFormatter = false;
+          $scope.currentFormatter = null;
+        });
     }]);
 
   module.controller('gnsDefault', [
@@ -72,11 +80,12 @@
     '$location',
     'suggestService',
     '$http',
+    'gnUtilityService',
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
-    function($scope, $location, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap) {
+    function($scope, $location, suggestService, $http, gnUtilityService,
+             gnSearchSettings, gnViewerSettings, gnMap) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -111,21 +120,24 @@
 
       $scope.openRecord = function(md) {
         $scope.currentRecord = md;
-        searchUrl = $location.search();
-        $location.search({uuid: md['geonet:info'].uuid});
+        //searchUrl = $location.search();
+        //$location.search({uuid: md['geonet:info'].uuid});
         $scope.currentRecord.links = md.getLinksByType('LINK');
         $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
         $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
         $scope.currentRecord.overviews = md.getThumbnails().list;
         $scope.currentRecord.contacts = md.getContacts();
         $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
+
+        gnUtilityService.scrollTo();
+
         // TODO: do not add duplicates
         $scope.previousRecords.push($scope.currentRecord);
       };
 
       $scope.closeRecord = function(md) {
         $scope.currentRecord = null;
-        $location.search(searchUrl);
+        //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
 

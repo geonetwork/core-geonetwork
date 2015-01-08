@@ -38,32 +38,35 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String servletPath = httpRequest.getServletPath();
-            if (servletPath.isEmpty()) {
-                servletPath = "/" + User.NODE_APPLICATION_CONTEXT_KEY;
-            }
-            final String nodeName = servletPath.substring(1);
-            String nodeId = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
-            if (getServletContext().getAttribute(nodeId) == null) {
-                nodeId =  User.NODE_APPLICATION_CONTEXT_KEY+request.getParameter("node");
-
+        try {
+            if (request instanceof HttpServletRequest) {
+                HttpServletRequest httpRequest = (HttpServletRequest) request;
+                String servletPath = httpRequest.getServletPath();
+                if (servletPath.isEmpty()) {
+                    servletPath = "/" + User.NODE_APPLICATION_CONTEXT_KEY;
+                }
+                final String nodeName = servletPath.substring(1);
+                String nodeId = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
                 if (getServletContext().getAttribute(nodeId) == null) {
-                    nodeId = loadNodeIdFromReferrer(request, httpRequest, nodeId);
+                    nodeId = User.NODE_APPLICATION_CONTEXT_KEY + request.getParameter("node");
+
+                    if (getServletContext().getAttribute(nodeId) == null) {
+                        nodeId = loadNodeIdFromReferrer(request, httpRequest, nodeId);
+                    }
+                    if (nodeId == null || getServletContext().getAttribute(nodeId) == null) {
+                        // use default;
+                        nodeId = User.NODE_APPLICATION_CONTEXT_KEY;
+                    }
                 }
-                if (nodeId == null || getServletContext().getAttribute(nodeId) == null) {
-                    // use default;
-                    nodeId = User.NODE_APPLICATION_CONTEXT_KEY;
-                }
+                applicationContextAttributeKey.set(nodeId);
+                final ConfigurableApplicationContext applicationContext = getApplicationContextFromServletContext(getServletContext());
+                ApplicationContextHolder.set(applicationContext);
+                getDelegateFilter(nodeId, (WebApplicationContext) applicationContext).doFilter(request, response, filterChain);
+            } else {
+                response.getWriter().write(request.getClass().getName() + " is not a supported type of request");
             }
-            applicationContextAttributeKey.set(nodeId);
-            final ConfigurableApplicationContext applicationContext = getApplicationContextFromServletContext(getServletContext());
-            ApplicationContextHolder.set(applicationContext);
-            getDelegateFilter(nodeId, (WebApplicationContext) applicationContext).doFilter(request, response, filterChain);
+        } finally {
             ApplicationContextHolder.clear();
-        } else {
-            response.getWriter().write(request.getClass().getName() + " is not a supported type of request");
         }
     }
 

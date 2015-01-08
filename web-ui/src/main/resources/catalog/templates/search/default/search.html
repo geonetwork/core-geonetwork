@@ -87,34 +87,8 @@
                         data-ng-search-form=""
                         data-runSearch="true"
                         data-ng-show="searchResults.records.length > 0">
-                    <ul class="gn-info-list">
-                      <li data-ng-repeat="md in searchResults.records">
-                        <div>
-                          <div class="gn-md-thumbnail">
-                            <img class="gn-img-thumbnail"
-                                 data-ng-src="{{md.getThumbnails().small}}"
-                                 data-ng-if="md.getThumbnails().small"/>
-                          </div>
-                          <div class="gn-md-title">
-                            <a data-ng-click="openRecord(md)">
-                              {{md.title || md.defaultTitle}}
-                            </a>
-                            <br/>
-                            <a data-ng-repeat="cat in ::md.category"
-                               data-ng-href="#?tab=search&_cat={{cat}}">
-                              <i class="fa"
-                                 title="{{cat | translate}}">
-                                <img data-ng-src="../../images/category/{{cat}}.png"/>
-                              </i>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=changeDate">
-                        <span data-translate="">viewMore</span>
-                        <i class="fa fa-ellipsis-h"></i>
-                      </a></li>
-                    </ul>
+
+                    <div data-gn-info-list=""></div>
                   </form>
                 </tab>
                 <tab heading="{{'preferredRecords' | translate}}"
@@ -125,34 +99,8 @@
                         data-ng-search-form=""
                         data-runSearch="true"
                         data-ng-show="searchResults.records.length > 0">
-                    <ul class="gn-info-list">
-                      <li data-ng-repeat="md in searchResults.records">
-                        <div>
-                          <div class="gn-md-thumbnail">
-                            <img class="gn-img-thumbnail"
-                                 data-ng-src="{{md.getThumbnails().small}}"
-                                 data-ng-if="md.getThumbnails().small"/>
-                          </div>
-                          <div class="gn-md-title">
-                            <a data-ng-click="openRecord(md)">
-                              {{md.title || md.defaultTitle}}
-                            </a>
-                            <br/>
-                            <a data-ng-repeat="cat in ::md.category"
-                               data-ng-href="#?tab=search&_cat={{cat}}">
-                              <i class="fa"
-                                 title="{{cat | translate}}">
-                                <img data-ng-src="../../images/category/{{cat}}.png"/>
-                              </i>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
-                        <span data-translate="">viewMore</span>
-                        <i class="fa fa-ellipsis-h"></i>
-                      </a></li>
-                    </ul>
+                    <div data-gn-info-list=""></div>
+                  </form>
                 </tab>
               </tabset>
             </div>

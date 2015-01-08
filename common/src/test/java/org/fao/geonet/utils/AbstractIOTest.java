@@ -103,6 +103,16 @@ public abstract class AbstractIOTest {
     }
 
     @Test
+    public void testCopyFromNonExistantDir() throws Exception {
+        IO.copyDirectoryOrFile(IO.toPath("lkasjflkajsfljsaflasjflksajfaslj32487asfjk"), IO.toPath("to"), true);
+    }
+
+    @Test
+    public void testMoveNonExistantDir() throws Exception {
+        IO.moveDirectoryOrFile(IO.toPath("lkasjflkajsfljsaflasjflksajfaslj32487asfjk"), IO.toPath("to"), true);
+    }
+
+    @Test
     public final void testMove() throws Exception {
         final Path file = getRootPath().resolve("src.txt");
         Files.createFile(file);

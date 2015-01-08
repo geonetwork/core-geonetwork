@@ -1,10 +1,10 @@
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * Id object for the {@link MetadataValidation} entity.
@@ -96,5 +96,10 @@ public class MetadataValidationId implements Serializable {
         } else if (!_validationType.equals(other._validationType))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return  "[" + _metadataId + ", " + _validationType + "]";
     }
 }

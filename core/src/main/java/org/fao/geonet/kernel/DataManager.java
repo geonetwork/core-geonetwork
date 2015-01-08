@@ -1914,7 +1914,9 @@ public class DataManager {
                 validations.add(new MetadataValidation().
                         setId(new MetadataValidationId(intMetadataId, "dtd")).
                         setStatus(MetadataValidationStatus.VALID).
-                        setRequired(true));
+                        setRequired(true).
+                        setNumTests(1).
+                        setNumFailures(0));
                 if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
                 }
@@ -1922,7 +1924,9 @@ public class DataManager {
                 validations.add(new MetadataValidation().
                         setId(new MetadataValidationId(intMetadataId, "dtd")).
                         setStatus(MetadataValidationStatus.INVALID).
-                        setRequired(true));
+                        setRequired(true).
+                        setNumTests(1).
+                        setNumFailures(1));
 
                 if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.", e);
@@ -1936,11 +1940,18 @@ public class DataManager {
             // do XSD validation
             Element md = doc.getRootElement();
             Element xsdErrors = getXSDXmlReport(schema, md);
+
+            int xsdErrorCount = 0;
             if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+                xsdErrorCount = xsdErrors.getContent().size();
+            }
+            if (xsdErrorCount > 0) {
                 validations.add(new MetadataValidation().
                         setId(new MetadataValidationId(intMetadataId, "xsd")).
                         setStatus(MetadataValidationStatus.INVALID).
-                        setRequired(true));
+                        setRequired(true).
+                        setNumTests(xsdErrorCount).
+                        setNumFailures(xsdErrorCount));
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.");
                 valid = false;
@@ -1948,7 +1959,9 @@ public class DataManager {
                 validations.add(new MetadataValidation().
                         setId(new MetadataValidationId(intMetadataId, "xsd")).
                         setStatus(MetadataValidationStatus.VALID).
-                        setRequired(true));
+                        setRequired(true).
+                        setNumTests(1).
+                        setNumFailures(0));
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
             }
@@ -2009,12 +2022,18 @@ public class DataManager {
         //-- get an XSD validation report and add results to the metadata
         //-- as geonet:xsderror attributes on the affected elements
         Element xsdErrors = getXSDXmlReport(schema, md);
-        if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+        int xsdErrorCount = 0;
+        if (xsdErrors != null) {
+            xsdErrorCount = xsdErrors.getContent().size();
+        }
+        if (xsdErrorCount > 0) {
             errorReport.addContent(xsdErrors);
             validations.add(new MetadataValidation().
                     setId(new MetadataValidationId(intMetadataId, "xsd")).
                     setStatus(MetadataValidationStatus.INVALID).
-                    setRequired(true));
+                    setRequired(true).
+                    setNumTests(xsdErrorCount).
+                    setNumFailures(xsdErrorCount));
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
@@ -2023,7 +2042,9 @@ public class DataManager {
             validations.add(new MetadataValidation().
                     setId(new MetadataValidationId(intMetadataId, "xsd")).
                     setStatus(MetadataValidationStatus.VALID).
-                    setRequired(true));
+                    setRequired(true).
+                    setNumTests(1).
+                    setNumFailures(0));
 
             if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
                 Log.trace(Geonet.DATA_MANAGER, "Valid.");
@@ -2147,9 +2168,6 @@ public class DataManager {
                         Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
                     }
 
-
-                    Integer ifNotValid = (requirement == SchematronRequirement.REQUIRED ? 0 : 2);
-
                     String ruleId = schematron.getRuleName();
 
                     Element report = new Element("report", Edit.NAMESPACE);
@@ -2190,7 +2208,9 @@ public class DataManager {
                                 validations.add(new MetadataValidation().
                                         setId(new MetadataValidationId(metadataId, ruleId)).
                                         setStatus(invalidRules!=0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID).
-                                        setRequired(requirement == SchematronRequirement.REQUIRED));
+                                        setRequired(requirement == SchematronRequirement.REQUIRED).
+                                        setNumTests(firedRules).
+                                        setNumFailures(invalidRules));
 
                             }
                         }
@@ -3213,9 +3233,12 @@ public class DataManager {
                     isValid = "0";
                 }
 
+                String ratio = "xsd".equals(type) ? "" : vi.getNumFailures() + "/" + vi.getNumTests();
+
                 info.addContent(new Element(Edit.Info.Elem.VALID + "_details").
                         addContent(new Element("type").setText(type)).
-                        addContent(new Element("status").setText(vi.isValid() ? "1" : "0"))
+                        addContent(new Element("status").setText(vi.isValid() ? "1" : "0").
+                        addContent(new Element("ratio").setText(ratio)))
                 );
             }
             addElement(info, Edit.Info.Elem.VALID, isValid);
