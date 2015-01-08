@@ -64,15 +64,15 @@
 
                 $('#gn-metadata-display').append(content);
               });
-          }
-        };
+        }
+      };
 
-        // Reset current formatter to open the next record
-        // in default mode.
-        $scope.$watch('currentRecord', function () {
-          $scope.usingFormatter = false;
-          $scope.currentFormatter = null;
-        });
+      // Reset current formatter to open the next record
+      // in default mode.
+      $scope.$watch('currentRecord', function() {
+        $scope.usingFormatter = false;
+        $scope.currentFormatter = null;
+      });
     }]);
 
   module.controller('gnsDefault', [
@@ -80,12 +80,15 @@
     '$location',
     'suggestService',
     '$http',
+    '$translate',
     'gnUtilityService',
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
-    function($scope, $location, suggestService, $http, gnUtilityService,
-             gnSearchSettings, gnViewerSettings, gnMap) {
+    'hotkeys',
+    function($scope, $location, suggestService, $http, $translate,
+             gnUtilityService, gnSearchSettings, gnViewerSettings,
+             gnMap, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -103,7 +106,7 @@
           titleInfo: '',
           active: false
         },
-        search: {
+        view: {
           title: 'view',
           titleInfo: '',
           active: false
@@ -112,6 +115,48 @@
           title: 'Map',
           active: false
         }};
+
+      hotkeys.bindTo($scope)
+        .add({
+            combo: 'h',
+            description: $translate('hotkeyHome'),
+            callback: function(event) {
+              $scope.mainTabs.home.active = true;
+            }
+          }).add({
+            combo: 't',
+            description: $translate('hotkeyFocusToSearch'),
+            callback: function(event) {
+              event.preventDefault();
+              var anyField = $('#gn-any-field');
+              if (anyField) {
+                gnUtilityService.scrollTo();
+                $scope.mainTabs.search.active = true;
+                anyField.focus();
+              }
+            }
+          }).add({
+            combo: 'enter',
+            description: $translate('hotkeySearchTheCatalog'),
+            allowIn: 'INPUT',
+            callback: function() {
+              $location.search('tab=search');
+            }
+            //}).add({
+            //  combo: 'r',
+            //  description: $translate('hotkeyResetSearch'),
+            //  allowIn: 'INPUT',
+            //  callback: function () {
+            //    $scope.resetSearch();
+            //  }
+          }).add({
+            combo: 'm',
+            description: $translate('hotkeyMap'),
+            callback: function(event) {
+              $scope.mainTabs.map.active = true;
+            }
+          });
+
 
       // TODO: Previous record should be stored on the client side
       var searchUrl = '';
@@ -139,7 +184,8 @@
           $scope.currentRecord.overviews = thumbnails.list;
         }
         $scope.currentRecord.contacts = md.getContacts();
-        $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
+        $scope.currentRecord.encodedUrl =
+            encodeURIComponent($location.absUrl());
 
         gnUtilityService.scrollTo();
 
@@ -152,12 +198,12 @@
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
-      $scope.nextRecord = function () {
+      $scope.nextRecord = function() {
         $scope.openRecord($scope.currentRecordIndex + 1, $scope.records);
-      }
-      $scope.previousRecord = function () {
+      };
+      $scope.previousRecord = function() {
         $scope.openRecord($scope.currentRecordIndex - 1, $scope.records);
-      }
+      };
 
 
 

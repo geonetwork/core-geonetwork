@@ -117,6 +117,18 @@
   "updatePrivileges" :"Mettre à jour les privilèges",
   "exportSummary" :"Exporter le résumé",
   "mdNew" : "Créer une métadonnée",
-  "mdImport" : "Importer une métadonnée"
+  "mdImport" : "Importer une métadonnée",
+  "hotkeyHome": "Page d'accueil",
+  "hotkeyFocusToSearch": "Positioner le curseur dans la zone de recherche et commencer à saisir !",
+  "hotkeySearchTheCatalog": "Lancer la recherche",
+  "hotkeyMap": "Faites votre carte !",
+  "hotkeySortBy": "Le tri suivant",
+  "hotkeyFirstPage": "Aller à la première page",
+  "hotkeyPreviousPage": "Page précédente",
+  "hotkeyNextPage": "Page suivante",
+  "hotkeyLastPage": "Dernière page",
+  "hotkeySelectAll": "Sélectionner toutes les fiches",
+  "hotkeySelectAllInPage": "Sélectionner toutes les fiches de la page",
+  "hotkeyUnSelectAll": "Sélectionner aucune fiche"
 
 }

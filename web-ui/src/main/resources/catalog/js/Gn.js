@@ -14,7 +14,7 @@
    * @type {module|*}
    */
   var module = angular.module('gn', [
-    'gn_locale'
+    'gn_locale', 'cfp.hotkeys'
   ]);
 
 })();

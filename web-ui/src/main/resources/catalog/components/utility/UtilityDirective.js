@@ -198,8 +198,8 @@
       };
     }]);
 
-   module.directive('gnHumanizeTime', [
-    function () {
+  module.directive('gnHumanizeTime', [
+    function() {
       return {
         restrict: 'A',
         replace: true,
@@ -210,7 +210,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
-          scope.$watch('date', function (originalDate) {
+          scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
               // YYYY-MM-DDTHH:mm:ssZ which are the formats
@@ -219,10 +219,12 @@
               if (date.isValid()) {
                 var fromNow = date.fromNow();
                 var formattedDate = scope.format ?
-                  date.format(scope.format) :
-                  date.toString();
-                scope.value = scope.fromNow !== undefined ? fromNow : formattedDate;
-                scope.title = scope.fromNow  !== undefined ? formattedDate : fromNow;
+                    date.format(scope.format) :
+                    date.toString();
+                scope.value = scope.fromNow !== undefined ?
+                    fromNow : formattedDate;
+                scope.title = scope.fromNow !== undefined ?
+                    formattedDate : fromNow;
               }
             }
           });

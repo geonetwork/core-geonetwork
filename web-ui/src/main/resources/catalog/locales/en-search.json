@@ -111,5 +111,17 @@
   "updatePrivileges" :"Update privileges",
   "exportSummary" :"Export summary",
   "mdNew" : "New metadata",
-  "mdImport" : "Import metadata"
+  "mdImport" : "Import metadata",
+  "hotkeySortBy": "The next sort option",
+  "hotkeyHome": "Home page",
+  "hotkeyFocusToSearch": "Focus to search input and start typing!",
+  "hotkeySearchTheCatalog": "Trigger search",
+  "hotkeyMap": "Make your map!",
+  "hotkeyFirstPage": "Move to first page",
+  "hotkeyPreviousPage": "Move to prevous page",
+  "hotkeyNextPage": "Move to next page",
+  "hotkeyLastPage": "Move to last page",
+  "hotkeySelectAll": "Select all search results",
+  "hotkeySelectAllInPage": "Select all in current page",
+  "hotkeyUnSelectAll": "Unselect all records"
 }

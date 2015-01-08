@@ -3,8 +3,8 @@
 
   var module = angular.module('gn_pagination_directive', []);
 
-  module.directive('gnPagination', [
-                                    function() {
+  module.directive('gnPagination', ['hotkeys', '$translate',
+                                    function(hotkeys, $translate) {
 
       return {
         restrict: 'A',
@@ -71,6 +71,26 @@
             scope.updateSearch();
           };
           controller.activatePagination();
+
+          hotkeys.bindTo(scope)
+            .add({
+                combo: 'ctrl+left',
+                description: $translate('hotkeyFirstPage'),
+                callback: scope.first
+              }).add({
+                combo: 'left',
+                description: $translate('hotkeyPreviousPage'),
+                callback: scope.previous
+              }).add({
+                combo: 'right',
+                description: $translate('hotkeyNextPage'),
+                callback: scope.next
+              }).add({
+                combo: 'ctrl+right',
+                description: $translate('hotkeyLastPage'),
+                callback: scope.last
+              });
+
         }
       };
     }]);

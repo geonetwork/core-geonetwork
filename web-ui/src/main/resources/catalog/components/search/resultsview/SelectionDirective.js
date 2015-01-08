@@ -4,9 +4,11 @@
 
   var module = angular.module('gn_selection_directive', []);
 
-  module.directive('gnSelectionWidget', ['gnHttp', 'gnMetadataActions',
-
-    function(gnHttp, gnMetadataActions) {
+  module.directive('gnSelectionWidget', [
+    '$translate', 'hotkeys',
+    'gnHttp', 'gnMetadataActions',
+    function($translate, hotkeys,
+             gnHttp, gnMetadataActions) {
 
       return {
         restrict: 'A',
@@ -99,7 +101,22 @@
               });
             });
           };
-
+          hotkeys.bindTo(scope)
+            .add({
+                combo: 'a',
+                description: $translate('hotkeySelectAll'),
+                callback: scope.selectAll
+              }).add({
+                combo: 'p',
+                description: $translate('hotkeySelectAllInPage'),
+                callback: function() {
+                  scope.selectAllInPage(true);
+                }
+              }).add({
+                combo: 'n',
+                description: $translate('hotkeyUnSelectAll'),
+                callback: scope.unSelectAll
+              });
         }
       };
 
