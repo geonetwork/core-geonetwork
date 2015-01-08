@@ -6,10 +6,10 @@
     <i class="fa fa-search"></i>
     <span data-translate="">backToSearch</span>
   </button>
-
-
+  
   <button class="btn btn-link"
           data-ng-class="currentRecordIndex === 0 ? 'disabled' : ''"
+          data-ng-show="records"
           data-ng-click="previousRecord()">
     <i class="fa fa-angle-left"></i>
     <span data-translate="">previous</span>
@@ -17,6 +17,7 @@
 
   <button class="btn btn-link"
           data-ng-class="currentRecordIndex === 'TODO' ? 'disabled' : ''"
+          data-ng-show="records"
           data-ng-click="nextRecord()">
     <span data-translate="">next</span>
     <i class="fa fa-angle-right"></i>
