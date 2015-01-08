@@ -117,6 +117,10 @@
                 description: $translate('hotkeyUnSelectAll'),
                 callback: scope.unSelectAll
               });
+
+          scope.$on('mdSelectAll', scope.selectAll);
+          scope.$on('mdSelectNone', scope.unSelectAll);
+
         }
       };
 
