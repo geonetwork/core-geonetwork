@@ -24,7 +24,9 @@
             <li ng-if="user['@authenticated'] == 'true'" class="dropdown-submenu">
               <a tabindex="-1" href="" translate>Other</a>
               <ul class="dropdown-menu ">
-                <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-file-zip-o"></i><span translate>privileges</span></a></li>
+                <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
+                <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
+                <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
               </ul>
             </li>
             <li class="dropdown-submenu">

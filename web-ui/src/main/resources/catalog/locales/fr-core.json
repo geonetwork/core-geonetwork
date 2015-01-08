@@ -142,5 +142,10 @@
     "usernameHelp": "Nom à utiliser pour l'identification.",
     "west": "Ouest",
     "year": "Année",
-    "zip": "Code postal"
+    "zip": "Code postal",
+    "delete": "Delete",
+    "edit" : "Edit",
+    "duplicate": "Duplicate",
+    "createChild": "Create a child",
+    "privileges": "Privileges"
 }

@@ -38,6 +38,23 @@
       };
 
       /**
+       * Duplicate a metadata that can be a new child of the source one.
+       * @param {string} id
+       * @param {boolean} child
+       */
+      var duplicateMetadata = function(id, child) {
+        var url = 'catalog.edit#/';
+        if (id) {
+          if (child) {
+            url += 'create?childOf=' + id;
+          } else {
+            url += 'create?from=' + id;
+          }
+        }
+        window.open(url, '_blank');
+      };
+
+      /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.
@@ -90,7 +107,7 @@
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
 
-      this.adeleteMd = function(md) {
+      this.deleteMd = function(md) {
         if (md) {
           gnMetadataManager.remove(md.getId());
         }
@@ -111,6 +128,22 @@
           title: 'privileges',
           content: '<div gn-share-batch=""></div>'
         }, scope);
+      };
+
+      /**
+       * Duplicate the given metadata. Open the editor in new page.
+       * @param {string} md
+       */
+      this.duplicate = function(md) {
+        duplicateMetadata(md.getId(),false);
+      };
+
+      /**
+       * Create a child of the given metadata. Open the editor in new page.
+       * @param {string} md
+       */
+      this.createChild = function(md) {
+        duplicateMetadata(md.getId(),true);
       };
 
       /**

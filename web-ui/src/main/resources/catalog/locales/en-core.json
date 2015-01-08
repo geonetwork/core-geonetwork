@@ -142,5 +142,10 @@
     "usernameHelp": "Name to use when sign in",
     "west": "West",
     "year": "Year",
-    "zip": "ZIP"
+    "zip": "ZIP",
+    "delete": "Supprimer",
+    "edit" : "Editer",
+    "duplicate": "Dupliquer",
+    "createChild": "Créer un enfant",
+    "privileges": "Privilèges"
 }
