@@ -45,7 +45,8 @@ class SummaryFactory {
         configureLinks(summary)
         configureHierarchy(summary)
 
-        configureActionMenu(summary)
+        isoHandlers.commonHandlers.configureSummaryActionMenu(summary)
+
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             def abbrName = f.nodeTranslation(s, null, "abbrLabel")
@@ -53,56 +54,10 @@ class SummaryFactory {
         }
         summary.navBar = this.isoHandlers.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow = this.isoHandlers.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
-        summary.navBarOverflow.add(new NavBarItem(f.translate("xml"), f.translate("xml"), "", "xml.metadata.get?uuid=${env.metadataUUID}") )
+        summary.navBarOverflow.add(isoHandlers.commonHandlers.createXmlNavBarItem())
         summary.content = this.isoHandlers.rootPackageEl(metadata)
 
         return summary
-    }
-
-    private void configureActionMenu(Summary summary) {
-        def url = env.localizedUrl
-        if (env.canEdit()) {
-            summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
-            def publishUrl = {
-                def on = it ? "on" : "off"
-                "md.privileges.update?update=true&id=${env.metadataId}&_1_0=$on&_1_1=$on&_1_5=$on&_1_6=$on"
-            }
-
-            def basicPublicJs = { isPublish ->
-                """\$.ajax({
-                        url: '${publishUrl(isPublish)}',
-                        success: function() {
-                            \$('li#menu-action-publish').toggleClass('disabled');
-                            \$('li#menu-action-unpublish').toggleClass('disabled');
-                        }
-                      })""".replaceAll(/\s+/, " ")
-            }
-
-
-            def published = env.indexInfo.get("_groupPublished").contains("all") || env.indexInfo.get("_groupPublished").contains("guest")
-            def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
-            summary.actions << publishAction
-            if (!published && env.indexInfo.get("_valid").contains("1")) {
-                publishAction.liClasses = ""
-            }
-            def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
-            summary.actions << unpublishAction
-            if (published) {
-                unpublishAction.liClasses = ""
-            }
-        }
-        summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
-                new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
-                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-print"),
-                new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
-        ]);
-
-        def shareURL = { it + URLEncoder.encode("${url}md.format.html?xsl=full_view&uuid=${this.env.metadataUUID}", "UTF-8") }
-        summary.actions << new MenuAction(label: "share", iconClasses: "fa fa-share", submenu: [
-                new MenuAction(label: "googlePlus", javascript: "window.open('${shareURL('https://plus.google.com/share?url=')}')", iconClasses: "fa fa-google-plus"),
-                new MenuAction(label: "twitter", javascript: "window.open('${shareURL('https://twitter.com/share?url=')}')", iconClasses: "fa fa-twitter"),
-                new MenuAction(label: "facebook", javascript: "window.open('${shareURL('href="https://www.facebook.com/sharer.php?u=')}')", iconClasses: "fa fa-facebook")
-        ]);
     }
 
     def configureKeywords(metadata, summary) {

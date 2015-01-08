@@ -1,5 +1,5 @@
 var formatterOnComplete = function () {
-  var navAnchors = $('.view-outline a[rel]');
+  var navAnchors = $('.view-outline a[rel], .view-outline a[href]');
 
   $('.gn-metadata-view .toggler').on('click', function(e) {
     $(this).toggleClass('closed');
@@ -10,8 +10,8 @@ var formatterOnComplete = function () {
 
   $.each(navAnchors, function (idx) {
     var rel = $($.attr(navAnchors[idx], 'rel'));
-    var href = $($.attr(navAnchors[idx], 'href'));
-    if (rel.length == 0 && href.length == 0) {
+    var href = $.attr(navAnchors[idx], 'href');
+    if (rel.length == 0 && !href) {
       $(navAnchors[idx]).attr('disabled', 'disabled');
     }
   });
@@ -23,15 +23,18 @@ var formatterOnComplete = function () {
     el.parent().addClass('active');
   };
   navAnchors.on('click', function(e) {
-    selectGroup($(this));
-    e.preventDefault();
+    var href = $(this).attr('href');
+    if (!href) {
+      selectGroup($(this));
+      e.preventDefault();
+    }
   });
 
   if (navAnchors.length < 2) {
     $('.view-outline').hide();
   }
 
-  if (navAnchors.length >0) {
+  if (navAnchors.length > 0) {
     selectGroup(navAnchors.first());
   }
 
