@@ -34,9 +34,9 @@
 
         map.on('singleclick', function(e) {
 
-          for(var i=0;i<map.getInteractions().getArray().length;i++) {
+          for (var i = 0; i < map.getInteractions().getArray().length; i++) {
             var interaction = map.getInteractions().getArray()[i];
-            if(interaction instanceof ol.interaction.Draw &&
+            if (interaction instanceof ol.interaction.Draw &&
                 interaction.getActive()) {
               return;
             }

@@ -62,6 +62,12 @@
       $scope.authenticated = false;
       $scope.initialized = false;
 
+      /**
+       * Keep a reference on main cat scope
+       * @return {*}
+       */
+      $scope.getCatScope = function() {return $scope};
+
       gnConfigService.load().then(function(c) {
         // Config loaded
         //gnMap.importProj4js();

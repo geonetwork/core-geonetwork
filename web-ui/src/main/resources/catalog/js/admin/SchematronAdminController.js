@@ -226,7 +226,7 @@
           while (isNameTaken(name + i)) {
             i++;
           }
-          newGroup.id.name = name + i
+          newGroup.id.name = name + i;
         }
 
         gnSchematronAdminService.group.add(newGroup, groups, function(group) {
@@ -234,9 +234,9 @@
           updateGroupCount(group, 1);
           var i, criteria = group.criteria;
           group.criteria = [];
-          for(i = 0; i < criteria.length; i++) {
-              var template = angular.copy(criteria[i]);
-              gnSchematronAdminService.criteria.add(criteria[i], group.criteria[i], group);
+          for (i = 0; i < criteria.length; i++) {
+            var template = angular.copy(criteria[i]);
+            gnSchematronAdminService.criteria.add(criteria[i], group.criteria[i], group);
           }
         });
       };
@@ -251,7 +251,7 @@
           var findSchema, findSchematron, schema, schematron;
           findSchema = function(schemaName) {
             var key, schemaDef;
-            for(key in $scope.schematrons) {
+            for (key in $scope.schematrons) {
               if ($scope.schematrons.hasOwnProperty(key)) {
                 schemaDef = $scope.schematrons[key];
                 if (schemaDef.name === schemaName) {
@@ -265,7 +265,7 @@
           findSchematron = function(schemaDef, schematronId) {
             var key, schematron;
             if (schematronId) {
-              for(key in schemaDef.schematron) {
+              for (key in schemaDef.schematron) {
                 if (schemaDef.schematron.hasOwnProperty(key)) {
                   schematron = schemaDef.schematron[key];
                   if (schematronId === schematron.id) {

@@ -286,7 +286,7 @@
 
     <include>config/config-service-admin-schema.xml</include>
     <include>config/config-service-admin-schematron.xml</include>
-    <include>config/config-service-batch-replace.xml</include>
+    <include>config/config-service-batch.xml</include>
 
     <include>config/config-service-admin-notification.xml</include>
     <include>config/config-service-admin-index.xml</include>

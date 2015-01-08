@@ -77,8 +77,8 @@
       };
 
       return {
-        create: function(options) {
-          return new Popup(options);
+        create: function(options, scope) {
+          return new Popup(options, scope);
         }
       };
     }]);

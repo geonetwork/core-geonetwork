@@ -410,11 +410,6 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches() {
-        if (_applicationContext.getBean(SystemInfo.class).isDevMode()) {
-            return;
-        }
-
-
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -438,7 +433,7 @@ public class Geonetwork implements ApplicationHandler {
 
                 final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
                 Integer mdId = null;
-                if (metadatas.getSize() > 0) {
+                if (metadatas.getNumberOfElements() > 0) {
                     mdId = metadatas.getContent().get(0).getId();
                 }
 
@@ -450,7 +445,10 @@ public class Geonetwork implements ApplicationHandler {
                     }
 
                     try {
-                        new URL(url).getContent();
+                        Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
+                        if (!url.matches("[^{}]*\\{\\{\\w+\\}\\}[^{}]*")) {
+                            new URL(url).getContent();
+                        }
                     } catch (IOException e) {
                         // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
                     }

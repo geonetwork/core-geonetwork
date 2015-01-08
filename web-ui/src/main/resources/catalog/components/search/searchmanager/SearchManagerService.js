@@ -19,9 +19,9 @@
       var format = function(data) {
         // Retrieve facet and add name as property and remove @count
         var facets = {}, results = -1,
-          listOfArrayFields = ['image', 'link',
-            'format', 'keyword', 'otherConstr',
-            'Constraints', 'SecurityConstraints'];
+            listOfArrayFields = ['image', 'link',
+              'format', 'keyword', 'otherConstr',
+              'Constraints', 'SecurityConstraints'];
 
         // When using summaryOnly=true, the facet is the root element
         if (data[0] && data[0]['@count']) {
@@ -51,8 +51,8 @@
             // when only one value returned.
             for (var property in metadata) {
               if (metadata.hasOwnProperty(property) &&
-                listOfArrayFields.indexOf(property) != -1 &&
-                typeof metadata[property] === 'string') {
+                  listOfArrayFields.indexOf(property) != -1 &&
+                  typeof metadata[property] === 'string') {
                 metadata[property] = [metadata[property]];
               }
             }

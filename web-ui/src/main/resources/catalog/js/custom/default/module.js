@@ -45,35 +45,35 @@
       $scope.usingFormatter = false;
       $scope.compileScope = $scope.$new();
 
-      $scope.format = function (f) {
+      $scope.format = function(f) {
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
           $http.get(f.url + $scope.currentRecord.getUuid()).then(
-            function(response) {
-              var snippet = response.data.replace(
-                '<?xml version="1.0" encoding="UTF-8"?>', '');
+              function(response) {
+                var snippet = response.data.replace(
+                    '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-              $('#gn-metadata-display').find('*').remove();
+                $('#gn-metadata-display').find('*').remove();
 
-              $scope.compileScope.$destroy();
+                $scope.compileScope.$destroy();
 
-              // Compile against a new scope
-              $scope.compileScope = $scope.$new();
-              var content = $compile(snippet)($scope.compileScope);
+                // Compile against a new scope
+                $scope.compileScope = $scope.$new();
+                var content = $compile(snippet)($scope.compileScope);
 
-              $('#gn-metadata-display').append(content);
-            });
-        }
-      };
+                $('#gn-metadata-display').append(content);
+              });
+          }
+        };
 
-      // Reset current formatter to open the next record
-      // in default mode.
-      $scope.$watch('currentRecord', function () {
-        $scope.usingFormatter = false;
-        $scope.currentFormatter = null;
-      });
-  }]);
+        // Reset current formatter to open the next record
+        // in default mode.
+        $scope.$watch('currentRecord', function () {
+          $scope.usingFormatter = false;
+          $scope.currentFormatter = null;
+        });
+    }]);
 
   module.controller('gnsDefault', [
     '$scope',
@@ -118,7 +118,7 @@
       $scope.previousRecords = [];
       $scope.currentRecord = null;
 
-      $scope.openRecord = function (md){
+      $scope.openRecord = function(md) {
         $scope.currentRecord = md;
         //searchUrl = $location.search();
         //$location.search({uuid: md['geonet:info'].uuid});
@@ -133,13 +133,13 @@
 
         // TODO: do not add duplicates
         $scope.previousRecords.push($scope.currentRecord);
-      }
+      };
 
-      $scope.closeRecord = function (md){
+      $scope.closeRecord = function(md) {
         $scope.currentRecord = null;
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
-      }
+      };
 
       $scope.infoTabs = {
         lastRecords: {

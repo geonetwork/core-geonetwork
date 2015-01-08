@@ -131,9 +131,9 @@
          * @return {HttpPromise} Future object
          */
         importFromXml: function(data) {
-          return $http.post('md.insert?_content_type=json',data, {
+          return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
-                'application/x-www-form-urlencoded'}
+                  'application/x-www-form-urlencoded'}
           });
         },
 
@@ -157,10 +157,10 @@
             isTemplate, isChild, tab) {
           this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-              var path = '/metadata/' + data.id;
-              if (tab) {
-                path += '/tab/' + tab;
-              }
+            var path = '/metadata/' + data.id;
+            if (tab) {
+              path += '/tab/' + tab;
+            }
             $location.path(path);
           });
           // TODO : handle creation error
@@ -232,9 +232,9 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
-    mdCreate: 'md.create@json',
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
+    mdDeleteBatch: 'md.delete.batch',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',
@@ -246,10 +246,14 @@
     mdSelect: 'metadata.select@json', // TODO: CHANGE
 
     mdGetPDF: 'pdf',
+    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
+    mdGetMEF: 'mef.export',
     mdGetXML19139: 'xml_iso19139',
+    csv: 'csv.search',
 
     mdPrivileges: 'md.privileges.update',
+    mdPrivilegesBatch: 'md.privileges.batch.update',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
@@ -349,7 +353,7 @@
           /**
            * Return service url for a given key
            * @param {string} serviceKey
-           * @returns {*}
+           * @return {*}
            */
           getService: function(serviceKey) {
             return gnHttpServices[serviceKey];
@@ -506,6 +510,10 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      publish: function() {
+        this['geonet:info'].isPublishedToAll = this.isPublished() ?
+            'false' : 'true';
+      },
       getLinks: function() {
         return this.link;
       },
@@ -531,7 +539,7 @@
       },
       getThumbnails: function() {
         if (angular.isArray(this.image)) {
-          var images = {list:[]};
+          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             if (s[0] === 'thumbnail') {
@@ -563,16 +571,16 @@
         if (this.geoBox) {
           var coords = this.geoBox.split('|');
           return 'Polygon((' +
-            coords[0] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[1] + '))';
+              coords[0] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[1] + '))';
         } else {
           return null;
         }

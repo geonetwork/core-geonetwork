@@ -142,6 +142,18 @@
 
           };
 
+          scope.zoomToMdExtent = function(md, map) {
+            var extent = gnMap.getBboxFromMd(md);
+            if (extent) {
+              var proj = map.getView().getProjection();
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                  proj.getExtent();
+              map.getView().fitExtent(extent, map.getSize());
+            }
+          };
+
+
           scope.hoverOL.setMap(scope.map);
         }
       };
@@ -208,15 +220,7 @@
         link: function(scope, element, attrs, controller) {
 
           element.bind('dblclick', function() {
-
-            var extent = gnMap.getBboxFromMd(scope.md);
-            if (extent) {
-              var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
-                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                  proj.getExtent();
-              scope.map.getView().fitExtent(extent, scope.map.getSize());
-            }
+            scope.zoomToMdExtent(scope.md, scope.map);
           });
         }
       };
@@ -225,28 +229,28 @@
   module.directive('gnMetadataOpen',
       ['$http', '$sanitize', '$compile', 'gnSearchSettings',
         function($http, $sanitize, $compile, gnSearchSettings) {
-        return {
-          restrict: 'A',
-          scope: {
-            md: '=gnMetadataOpen',
-            selector: '@gnMetadataOpenSelector'
-          },
+         return {
+           restrict: 'A',
+           scope: {
+             md: '=gnMetadataOpen',
+             selector: '@gnMetadataOpenSelector'
+           },
 
-          link: function(scope, element, attrs, controller) {
-            element.on('click', function() {
-              var URI = gnSearchSettings.formatter.defaultUrl;
-              $http.get(URI + scope.md.getUuid()).then(function(response) {
-                scope.fragment = response.data.replace(
-                    '<?xml version="1.0" encoding="UTF-8"?>', '');
-                var el = document.createElement('div');
-                el.setAttribute('gn-metadata-display', '');
-                $(scope.selector).append(el);
-                $compile(el)(scope);
-              });
-            });
-          }
-        };
-      }]
+           link: function(scope, element, attrs, controller) {
+             element.on('click', function() {
+               var URI = gnSearchSettings.formatter.defaultUrl;
+               $http.get(URI + scope.md.getUuid()).then(function(response) {
+                 scope.fragment = response.data.replace(
+                 '<?xml version="1.0" encoding="UTF-8"?>', '');
+                 var el = document.createElement('div');
+                 el.setAttribute('gn-metadata-display', '');
+                 $(scope.selector).append(el);
+                 $compile(el)(scope);
+               });
+             });
+           }
+         };
+       }]
   );
 
   module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {

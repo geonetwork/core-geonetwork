@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import groovy.util.slurpersupport.GPathResult;
@@ -24,17 +25,24 @@ public class TNodeRepeatIter extends TNode {
     private static final String MIDDLE_KEY = "$middle";
     private final String key;
     private final String rowContextKey;
+    private final boolean onlyChildren;
 
-    public TNodeRepeatIter(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
+    public TNodeRepeatIter(SystemInfo info, TextContentParser parser, boolean onlyChildren, String qName, Attributes attributes, String key, String rowContextKey) throws IOException {
         super(info, parser, qName, attributes);
         this.key = key;
         this.rowContextKey = rowContextKey;
+        this.onlyChildren = onlyChildren;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void render(TRenderContext context) throws IOException {
         final Object modelValue = context.getModelValue(this.key);
+
+        if (modelValue == null) {
+            String options = Joiner.on(", ").join(context.getAllModelKeys());
+            throw new TemplateException("There is no model item with the key: " + this.key + ".  Options include: " + options);
+        }
 
         Iterable<Object> iter;
         int size;
@@ -66,15 +74,19 @@ public class TNodeRepeatIter extends TNode {
             addIndexInfo(newModelMap, i, size);
 
             TRenderContext childContext = context.childContext(newModelMap);
-
-            context.append("<").append(qName);
-            attributes.render(childContext);
-            context.append(">");
+            if (!this.onlyChildren) {
+                context.append("<").append(qName);
+                attributes.render(childContext);
+                context.append(">");
+            }
 
             for (TNode node : getChildren()) {
                 node.render(childContext);
             }
-            end.render(childContext);
+
+            if (!this.onlyChildren) {
+                end.render(childContext);
+            }
 
             i++;
         }

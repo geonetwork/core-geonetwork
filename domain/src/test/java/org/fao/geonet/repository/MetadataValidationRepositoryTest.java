@@ -73,9 +73,7 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         id.setMetadataId(metadata.getId());
         id.setValidationType("valType" + val);
         validation.setId(id);
-        validation.setFailed(val);
         validation.setStatus(val % 2 == 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID);
-        validation.setTested(val * 2);
         validation.setValidationDate(new ISODate());
         validation.setValid(val % 2 == 1);
 
