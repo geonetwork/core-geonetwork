@@ -228,6 +228,27 @@ ul.gn-resultview {
       max-width: 45vw;
     }
   }
+  .loading {
+    position: absolute;
+    top: 1.8em;
+    font-size: 40px;
+    left: 46%;
+    text-shadow: 0 0 1px white;
+    z-index: 200;
+    background: rgba(255,255,255,.7);
+    border-radius: 1em;
+    padding: .2em;
+  }
+}
+
+[data-gn-map-field] {
+  position: fixed !important;
+  z-index: 99;
+  width: 200px !important;
+  heigth: 200px !important;
+  right: 0px;
+  bottom: 0px;
+  margin: 5px;
 }
 
 [gn-main-viewer] {

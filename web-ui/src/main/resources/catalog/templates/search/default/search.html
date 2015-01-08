@@ -124,9 +124,10 @@
           <div data-ng-include="'../../catalog/templates/search/default/searchResults.html'"></div>-->
 
           <div class="row"
-               data-ng-show="!searching && searchResults.records.length > 0">
+               data-ng-show="searchResults.records.length > 0">
             <div class="col-md-offset-3 col-md-2 relative">
-              <div gn-selection-widget results="searchResults"></div>
+              <div data-gn-selection-widget=""
+                   data-results="searchResults"></div>
               <!-- TODO: Add action on selection -->
             </div>
             <div class="col-md-7">
@@ -146,11 +147,8 @@
           </div>
 
           <div class="row">
-            <div class="col-md-3">
-               <span class="loading fa fa-spinner fa-spin fa-2x"
-                     data-ng-show="searching"></span>
-
-              <div data-ng-show="!searching && searchResults.records.length > 0"
+            <div class="col-md-3 gn-search-facet">
+              <div data-ng-show="searchResults.records.length > 0"
                    data-gn-facet-list="searchResults.facet"
                    data-facet-config="facetsConfig"
                    data-current-facets="currentFacets">
@@ -160,8 +158,7 @@
               <div class="gn-results-heading">
                 <div data-gn-facet-breadcrumb="currentFacets"></div>
               </div>
-
-              <span class="loading fa fa-spinner fa-spin fa-2x"
+              <span class="loading fa fa-spinner fa-spin"
                     data-ng-show="searching"></span>
 
               <div class="alert alert-warning" role="alert"
@@ -170,7 +167,7 @@
                 <span data-translate="">zarooResult</span>
               </div>
 
-              <div data-ng-show="!searching && searchResults.records.length > 0"
+              <div data-ng-show="searchResults.records.length > 0"
                    data-gn-results-container=""
                    data-search-results="searchResults"
                    data-template-url="resultTemplate"
@@ -178,6 +175,10 @@
 
             </div>
           </div>
+
+          <div data-gn-map-field="searchObj.searchMap"
+               data-gn-map-field-geom="searchObj.params.geometry"></div>
+
         </div>
       </tab>
       <tab select="displayMapTab()" active="mainTabs.map.active">
