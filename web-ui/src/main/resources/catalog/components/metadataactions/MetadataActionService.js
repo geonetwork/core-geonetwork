@@ -32,7 +32,7 @@
       };
 
       var callBatch = function(service) {
-        gnHttp.callService(service).then(function(data) {
+        return gnHttp.callService(service).then(function(data) {
           alertResult(data.data);
         });
       };
