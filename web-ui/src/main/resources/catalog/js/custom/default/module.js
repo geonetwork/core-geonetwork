@@ -117,15 +117,27 @@
       var searchUrl = '';
       $scope.previousRecords = [];
       $scope.currentRecord = null;
-
-      $scope.openRecord = function(md) {
+      $scope.currentRecordIndex = null;
+      $scope.openRecord = function(mdOrIndex, records) {
+        $scope.records = records;
+        var md = mdOrIndex;
+        if (typeof mdOrIndex === 'number') {
+          md = records[mdOrIndex];
+          $scope.currentRecordIndex = mdOrIndex;
+        } else {
+          $scope.currentRecordIndex = this.$index;
+        }
         $scope.currentRecord = md;
+
         //searchUrl = $location.search();
         //$location.search({uuid: md['geonet:info'].uuid});
         $scope.currentRecord.links = md.getLinksByType('LINK');
         $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
         $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
-        $scope.currentRecord.overviews = md.getThumbnails().list;
+        var thumbnails = md.getThumbnails();
+        if (thumbnails) {
+          $scope.currentRecord.overviews = thumbnails.list;
+        }
         $scope.currentRecord.contacts = md.getContacts();
         $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
 
@@ -140,6 +152,14 @@
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
+      $scope.nextRecord = function () {
+        $scope.openRecord($scope.currentRecordIndex + 1, $scope.records);
+      }
+      $scope.previousRecord = function () {
+        $scope.openRecord($scope.currentRecordIndex - 1, $scope.records);
+      }
+
+
 
       $scope.infoTabs = {
         lastRecords: {

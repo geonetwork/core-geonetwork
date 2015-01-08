@@ -8,6 +8,20 @@
   </button>
 
 
+  <button class="btn btn-link"
+          data-ng-class="currentRecordIndex === 0 ? 'disabled' : ''"
+          data-ng-click="previousRecord()">
+    <i class="fa fa-angle-left"></i>
+    <span data-translate="">previous</span>
+  </button>
+
+  <button class="btn btn-link"
+          data-ng-class="currentRecordIndex === 'TODO' ? 'disabled' : ''"
+          data-ng-click="nextRecord()">
+    <span data-translate="">next</span>
+    <i class="fa fa-angle-right"></i>
+  </button>
+
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-link dropdown-toggle"
             data-toggle="dropdown"
