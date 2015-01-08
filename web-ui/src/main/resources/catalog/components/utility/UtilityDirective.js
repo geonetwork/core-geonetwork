@@ -335,29 +335,29 @@
           max: -1
         };
 
-        for(var k in obj) {
-          if(k < year.min) year.min = k;
-          if(k > year.max) year.max = k;
+        for (var k in obj) {
+          if (k < year.min) year.min = k;
+          if (k > year.max) year.max = k;
         }
-        for(k in obj[year.min]) {
-          if(k < month.min) month.min = k;
+        for (k in obj[year.min]) {
+          if (k < month.min) month.min = k;
         }
-        for(k in obj[year.max]) {
-          if(k > month.max) month.max = k;
+        for (k in obj[year.max]) {
+          if (k > month.max) month.max = k;
         }
-        for(k in obj[year.min][month.min]) {
-          if(obj[year.min][month.min][k] < day.min) day.min =
-              obj[year.min][month.min][k];
+        for (k in obj[year.min][month.min]) {
+          if (obj[year.min][month.min][k] < day.min) day.min =
+                obj[year.min][month.min][k];
         }
-        for(k in obj[year.max][month.max]) {
-          if(obj[year.min][month.min][k] > day.max) day.max =
-              obj[year.min][month.min][k];
+        for (k in obj[year.max][month.max]) {
+          if (obj[year.min][month.min][k] > day.max) day.max =
+                obj[year.min][month.min][k];
         }
 
         return {
           min: month.min + 1 + '/' + day.min + '/' + year.min,
           max: month.max + 1 + '/' + day.max + '/' + year.max
-        }
+        };
       };
 
       return {
@@ -380,13 +380,13 @@
           };
 
           var limits;
-          if(scope.dates) {
+          if (scope.dates) {
             limits = getMaxInProp(scope.dates);
 
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
-            beforeShowDay:  function(dt, a, b) {
+            beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
             startDate: limits.min,

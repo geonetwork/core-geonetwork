@@ -405,7 +405,7 @@
         } else {
           $http.get('admin.group.update?' + $(formId).serialize())
           .success(uploadImportMdDone())
-          .error(uploadImportMdError)
+          .error(uploadImportMdError);
         }
       };
 

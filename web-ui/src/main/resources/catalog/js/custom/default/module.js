@@ -44,28 +44,28 @@
       $scope.usingFormatter = false;
       $scope.compileScope = $scope.$new();
 
-      $scope.format = function (f) {
+      $scope.format = function(f) {
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
           $http.get(f.url + $scope.currentRecord.getUuid()).then(
-            function(response) {
-              var snippet = response.data.replace(
-                '<?xml version="1.0" encoding="UTF-8"?>', '');
+              function(response) {
+                var snippet = response.data.replace(
+                    '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-              $('#gn-metadata-display').find('*').remove();
-              $('#gn-metadata-display').append(snippet);
+                $('#gn-metadata-display').find('*').remove();
+                $('#gn-metadata-display').append(snippet);
 
-              $scope.compileScope.$destroy();
+                $scope.compileScope.$destroy();
 
-              // Compile against a new scope
-              $scope.compileScope = $scope.$new();
-              $compile(snippet)($scope.compileScope);
-              $('#gn-metadata-display').append(snippet);
-          });
+                // Compile against a new scope
+                $scope.compileScope = $scope.$new();
+                $compile(snippet)($scope.compileScope);
+                $('#gn-metadata-display').append(snippet);
+              });
         }
       };
-  }]);
+    }]);
 
   module.controller('gnsDefault', [
     '$scope',
@@ -109,7 +109,7 @@
       $scope.previousRecords = [];
       $scope.currentRecord = null;
 
-      $scope.openRecord = function (md){
+      $scope.openRecord = function(md) {
         $scope.currentRecord = md;
         searchUrl = $location.search();
         $location.search({uuid: md['geonet:info'].uuid});
@@ -121,13 +121,13 @@
         $scope.currentRecord.encodedUrl = encodeURIComponent($location.absUrl());
         // TODO: do not add duplicates
         $scope.previousRecords.push($scope.currentRecord);
-      }
+      };
 
-      $scope.closeRecord = function (md){
+      $scope.closeRecord = function(md) {
         $scope.currentRecord = null;
         $location.search(searchUrl);
         $scope.mainTabs.search.active = true;
-      }
+      };
 
       $scope.infoTabs = {
         lastRecords: {

@@ -14,7 +14,7 @@
             <li><a ng-href="" data-ng-click="zoomToMdExtent(md,map)"><i class="fa fa-globe"></i><span translate>zoomto</span></a></li>
             <li ng-if="user['@authenticated'] == 'true'"><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
             <li ng-if="user['@authenticated'] == 'true'"><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
-            <li ng-if="user['@authenticated'] == 'true'">
+            <li ng-if="user['@authenticated'] == 'true'" data-ng-class="{disabled : md.valid != 1}">
               <a ng-click="mdService.publish(md)">
                 <i class="fa" data-ng-class="md.isPublished() ? 'fa-times' : 'fa-arrow-up'"></i>
                 <span data-ng-if="md.isPublished()" translate>unpublish</span>

@@ -154,7 +154,7 @@
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
-        'partials/viewtemplates/grid.html',
+            'partials/viewtemplates/grid.html',
         tooltip: 'Grid',
         icon: 'fa-th'
       }, {
@@ -176,7 +176,8 @@
         //defaultUrl: 'md.format.xml?xsl=full_view&id='
         defaultUrl: 'md.format.xml?xsl=xsl-view&id=',
         list: [
-          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view&view=inspire&id='},
+          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view' +
+              '&view=inspire&id='},
           {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
           {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
         ]

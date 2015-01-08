@@ -22,11 +22,11 @@
    *
    */
   module.controller('gnsGeocat', [
-      '$scope',
-      '$timeout',
-      'gnMap',
-      'gnSearchSettings',
-      '$window',
+    '$scope',
+    '$timeout',
+    'gnMap',
+    'gnSearchSettings',
+    '$window',
     function($scope, $timeout, gnMap, gnSearchSettings, $window) {
 
       var localStorage = $window.localStorage || {};
@@ -38,10 +38,10 @@
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) : {
-        search: true,
-        facet: false,
-        map: false
-      };
+            search: true,
+            facet: false,
+            map: false
+          };
 
       var storeCollapsed = function() {
         localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
@@ -52,28 +52,28 @@
 
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
-        if(!$scope.collapsed.search) {
+        if (!$scope.collapsed.search) {
           $scope.collapsed.facet = true;
         }
-        $timeout(function(){
+        $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 300);
       };
 
       $scope.toggleSearchMap = function() {
         $scope.collapsed.map = !$scope.collapsed.map;
-        $timeout(function(){
+        $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 1);
       };
 
       $scope.resultviewFns = {
-        addMdLayerToMap: function (link) {
-          gnMap.addWmsToMap(gnSearchSettings.searchMap,{
-                LAYERS:link.name
-              },{
-                url: link.url
-              });
+        addMdLayerToMap: function(link) {
+          gnMap.addWmsToMap(gnSearchSettings.searchMap, {
+            LAYERS: link.name
+          },{
+            url: link.url
+          });
         }
       };
 
@@ -103,11 +103,11 @@
       // Fill last updated section
       callSearch('changeDate', 15).then(function(data) {
         $scope.lastUpdated = [];
-        for(var i=0;i<data.metadata.length;i++) {
+        for (var i = 0; i < data.metadata.length; i++) {
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
-  }]);
+    }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -171,16 +171,16 @@
       }];
 
       // data store for topic category
-      if(gnSearchSettings.gnStores) {
+      if (gnSearchSettings.gnStores) {
         var topicCats = gnSearchSettings.gnStores.topicCat;
         angular.forEach(topicCats, function(cat, i) {
           topicCats[i] = {
             id: cat[0],
             name: cat[1],
             hierarchy: cat[0].indexOf('_') > 0 ? 'second' : 'main'
-          }
+          };
         });
-        $scope.topicCatsOptions= {
+        $scope.topicCatsOptions = {
           mode: 'local',
           data: topicCats,
           config: {
@@ -191,7 +191,7 @@
         };
 
         // data store for formats
-        $scope.formatsOptions= {
+        $scope.formatsOptions = {
           mode: 'local',
           data: topicCats //TODO
         };
@@ -200,16 +200,16 @@
       // config for sources option (sources and groups)
       $scope.sourcesOptions = {
         mode: 'prefetch',
-        promise: (function(){
+        promise: (function() {
           var defer = $q.defer();
           $http.get(suggestService.getInfoUrl('sources', 'groups')).success(function(data) {
             var res = [];
             var parseBlock = function(block) {
               var a = data[block];
-              for(var i=0; i<a.length;i++) {
+              for (var i = 0; i < a.length; i++) {
                 res.push({
                   id: a[i]['@id'],
-                  name : a[i].name
+                  name: a[i].name
                 });
               }
             };
@@ -228,7 +228,7 @@
       $scope.removeLayers = function() {
         var toRemove = [];
         map.getLayers().forEach(function(l) {
-          if(l.getSource() instanceof ol.source.TileWMS) {
+          if (l.getSource() instanceof ol.source.TileWMS) {
             toRemove.push(l);
           }
         });
@@ -243,8 +243,8 @@
       // draw polygon or bbox set the field (not AU ones).
       var setSearchGeometry = function(geometry) {
         $scope.searchObj.params.geometry = wktFormat.writeGeometry(
-          geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
-        );
+            geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
+            );
       };
 
       /** Manage draw area on search map */
@@ -280,7 +280,7 @@
       var dragboxInteraction = new ol.interaction.DragBox({
         style: gnSearchSettings.olStyles.drawBbox
       });
-      dragboxInteraction.on('boxend', function(){
+      dragboxInteraction.on('boxend', function() {
         var f = new ol.Feature();
         var g = dragboxInteraction.getGeometry();
 
@@ -291,7 +291,7 @@
           dragboxInteraction.active = false;
         }, 0);
       });
-      dragboxInteraction.on('drawstart', function(){
+      dragboxInteraction.on('drawstart', function() {
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(dragboxInteraction);
@@ -303,31 +303,31 @@
        * Clear the drawing and activate the drawing Interaction again.
        */
       $scope.refreshDraw = function(e) {
-        if($scope.restrictArea == 'draw') {
+        if ($scope.restrictArea == 'draw') {
           featureOverlay.getFeatures().clear();
           drawInteraction.active = true;
           e.stopPropagation();
         }
       };
       $scope.refreshDrag = function(e) {
-        if($scope.restrictArea == 'bbox') {
+        if ($scope.restrictArea == 'bbox') {
           featureOverlay.getFeatures().clear();
           dragboxInteraction.active = true;
           e.stopPropagation();
         }
       };
 
-      $scope.$watch('restrictArea', function(v){
+      $scope.$watch('restrictArea', function(v) {
         $scope.searchObj.params.geometry = '';
         $scope.regions.countries = '';
         $scope.regions.cantons = '';
         $scope.regions.cities = '';
 
-        if(angular.isDefined(v)) {
-          if($scope.restrictArea == 'draw') {
+        if (angular.isDefined(v)) {
+          if ($scope.restrictArea == 'draw') {
             drawInteraction.active = true;
           }
-          else if($scope.restrictArea == 'bbox') {
+          else if ($scope.restrictArea == 'bbox') {
             dragboxInteraction.active = true;
           }
           else {
@@ -338,7 +338,7 @@
 
       // Remove geometry on map if geometry field is reset from url or from model
       $scope.$watch('searchObj.params.geometry', function(v) {
-        if(!v || v =='') {
+        if (!v || v == '') {
           featureOverlay.getFeatures().clear();
         }
       });
@@ -361,7 +361,7 @@
       var getRegionOptions = function(type) {
         return {
           mode: 'prefetch',
-          promise: gnRegionService.loadRegion({id:type}, 'fre')
+          promise: gnRegionService.loadRegion({id: type}, 'fre')
         };
       };
       $scope.regionOptions = {
@@ -386,19 +386,19 @@
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
-      var onRegionSelect = function(v){
+      var onRegionSelect = function(v) {
         cantonSource.clear();
         if (angular.isDefined(v) && v != '') {
           var cs = v.split(' OR ');
           var geom;
           for (var i = 0; i < cs.length; i++) {
-            if(!geom) {
+            if (!geom) {
               geom = 'region:' + cs[i];
             } else {
               geom += ',region:' + cs[i];
             }
-            addCantonFeature(cs[i]).then(function(){
-              if(--nbCantons == 0) {
+            addCantonFeature(cs[i]).then(function() {
+              if (--nbCantons == 0) {
                 $scope.searchObj.params.geometry = geom;
                 map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
               }
@@ -425,10 +425,10 @@
         var url = 'qi@json?summaryOnly=true';
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
-      });
+        });
       } else {
         $scope.triggerSearch(true);
-            }
+      }
     }]);
 
   module.directive('gcFixMdlinks', [
@@ -437,11 +437,11 @@
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope) {
+        link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
 
-          if(scope.md.type.indexOf('service') >= 0) {
+          if (scope.md.type.indexOf('service') >= 0) {
             scope.layers = [];
             angular.forEach(scope.md.wmsuri, function(uri) {
               var e = uri.split('###');
@@ -450,37 +450,37 @@
                 name: e[1],
                 desc: e[1],
                 url: e[2]
-       });
-            })
+              });
+            });
           } else {
             scope.layers = scope.md.getLinksByType('OGC', 'kml');
           }
 
           var d;
-          if(scope.md['geonet:info'].changeDate) {
+          if (scope.md['geonet:info'].changeDate) {
             d = {
               date: scope.md['geonet:info'].changeDate,
               type: 'changeDate'
-            }
+            };
           }
           else if (scope.md['geonet:info'].publishedDate) {
             d = {
               date: scope.md['geonet:info'].publishedDate,
               type: 'changeDate'
-            }
+            };
           }
           else if (scope.md['geonet:info'].createDate) {
             d = {
               date: scope.md['geonet:info'].createDate,
               type: 'createDate'
-            }
+            };
           }
           scope.showDate = {
             date: moment(d).format('YYYY-MM-DD'),
             type: d.type
           };
         }
-      }
+      };
     }]);
 
 })();

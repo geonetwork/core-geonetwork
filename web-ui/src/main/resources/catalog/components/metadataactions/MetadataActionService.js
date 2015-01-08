@@ -1,10 +1,10 @@
 (function() {
   goog.provide('gn_mdactions_service');
-  goog.require('gn_share_directive');
+  goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share_directive'
+    'gn_share'
   ]);
 
   module.service('gnMetadataActions', [
@@ -45,18 +45,18 @@
        */
       this.metadataPrint = function(params) {
         var url;
-        if(angular.isObject(params) && params.sortBy) {
+        if (angular.isObject(params) && params.sortBy) {
           url = gnHttp.getService('mdGetPDFSelection');
           url += '?sortBy=' + params.sortBy;
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
           }
         }
-        else if(angular.isString(params) ){
+        else if (angular.isString(params)) {
           url = gnHttp.getService('mdGetPDF');
           url += '?uuid=' + params;
         }
-        if(url) {
+        if (url) {
           location.replace(url);
         }
         else {
@@ -90,8 +90,8 @@
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
 
-      this.deleteMd = function(md) {
-        if(md) {
+      this.adeleteMd = function(md) {
+        if (md) {
           gnMetadataManager.remove(md.getId());
         }
         else {
@@ -102,7 +102,7 @@
       this.openPrivilegesPanel = function(md, scope) {
         gnPopup.create({
           title: 'privileges',
-          content: '<div gn-share="'+ md.getId() +'"></div>'
+          content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope);
       };
 
@@ -120,30 +120,31 @@
        * publication on all selected metadata to the given flag (on|off).
        * @param {Object|undefined} md
        * @param {string} flag
-       * @returns {*}
+       * @return {*}
        */
       this.publish = function(md, flag) {
 
-        if(md) {
+        if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
         var publishFlag = {
-          _1_0:  flag,
+          _1_0: flag,
           _1_1: flag,
           _1_5: flag,
           _1_6: flag
         };
 
-        if(angular.isDefined(md)) {
+        if (angular.isDefined(md)) {
           return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag,{
+              publishFlag, {
                 update: true,
                 id: md.getId()
               })).then(function(data) {
             alertResult('publish');
+            md.publish();
           });
         } else {
-          return gnHttp.callService('mdPrivilegesBatch', publishFlag)
+          return gnHttp.callService('mdPrivilegesBatch', publishFlag);
         }
       };
     }]);
