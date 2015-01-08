@@ -206,6 +206,54 @@
                 match="gmd:graphicOverview[position() > 1]"/>
 
 
+  <xsl:template mode="render-field"
+                match="gmd:distributionFormat[1]"
+                priority="200">
+    <dl class="gn-format">
+      <dt>
+        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <ul>
+          <xsl:for-each select="parent::node()/gmd:distributionFormat">
+            <li>
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:name"/>
+              (<xsl:apply-templates mode="render-value"
+                                    select="*/gmd:version"/>)
+              <p>
+              <xsl:apply-templates mode="render-field"
+                      select="*/(gmd:amendmentNumber|gmd:specification|
+                              gmd:fileDecompressionTechnique|gmd:formatDistributor)"/>
+              </p>
+            </li>
+          </xsl:for-each>
+        </ul>
+      </dd>
+    </dl>
+  </xsl:template>
+  <xsl:template mode="render-field"
+                match="gmd:distributionFormat[position() > 1]"/>
+
+
+  <xsl:template mode="render-field"
+                match="gmd:date"
+                priority="200">
+    <dl class="gn-date">
+      <dt>
+        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:if test="*/gmd:dateType/*[@codeListValue != '']">
+          <!-- TODO: translate -->
+          (<xsl:apply-templates mode="render-value"
+                                select="*/gmd:dateType/*/@codeListValue"/>)
+        </xsl:if>
+      </dt>
+      <dd>
+          <xsl:apply-templates mode="render-value"
+                               select="*/gmd:date/*"/>
+      </dd>
+    </dl>
+  </xsl:template>
 
   <!-- Traverse the tree -->
   <xsl:template mode="render-field" match="*">
@@ -239,16 +287,29 @@
   </xsl:template>
 
   <!-- ... Dates -->
-  <xsl:template mode="render-value" match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
+  <xsl:template mode="render-value"
+                match="gco:Date[matches(., '[0-9]{4}')]">
+    <span data-gn-humanize-time="{.}" data-format="YYYY"></span>
   </xsl:template>
 
-  <xsl:template mode="render-value" match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
-    <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
+  <xsl:template mode="render-value"
+                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}')]">
+    <span data-gn-humanize-time="{.}" data-format="MMM YYYY"></span>
   </xsl:template>
 
-  <xsl:template mode="render-value" match="gco:Date|gco:DateTime">
-    <xsl:value-of select="."/>
+  <xsl:template mode="render-value"
+                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
+    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"></span>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
+    <span data-gn-humanize-time="{.}"></span>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="gco:Date|gco:DateTime">
+    <span data-gn-humanize-time="{.}"></span>
   </xsl:template>
 
   <!-- ... Codelists -->

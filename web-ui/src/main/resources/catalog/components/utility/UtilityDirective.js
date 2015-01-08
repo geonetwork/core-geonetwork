@@ -198,6 +198,39 @@
       };
     }]);
 
+   module.directive('gnHumanizeTime', [
+    function () {
+      return {
+        restrict: 'A',
+        replace: true,
+        template: '<span title="{{title}}">{{value}}</span>',
+        scope: {
+          date: '@gnHumanizeTime',
+          format: '@',
+          fromNow: '@'
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.$watch('date', function (originalDate) {
+            if (originalDate) {
+              // Moment will properly parse YYYY, YYYY-MM,
+              // YYYY-MM-DDTHH:mm:ssZ which are the formats
+              // used in the common metadata standards.
+              var date = moment(originalDate);
+              if (date.isValid()) {
+                var fromNow = date.fromNow();
+                var formattedDate = scope.format ?
+                  date.format(scope.format) :
+                  date.toString();
+                scope.value = scope.fromNow !== undefined ? fromNow : formattedDate;
+                scope.title = scope.fromNow  !== undefined ? formattedDate : fromNow;
+              }
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnDirectoryEntryPicker

@@ -7,13 +7,25 @@
     <span data-translate="">backToSearch</span>
   </button>
 
-  <ul>
-    <li><a href="" data-ng-click="format()">default</a></li>
-    <li data-ng-repeat="f in formatter.list">
-      <a href="" data-ng-click="format(f)">{{f.label}}</a>
-    </li>
-  </ul>
 
+  <div class="btn-group pull-right">
+    <button type="button" class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-eye"></i>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li class="dropdown-header" data-translate="">chooseAView</li>
+      <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
+        <a href="" data-ng-click="format()">default</a>
+      </li>
+      <li data-ng-repeat="f in formatter.list"
+          data-ng-class="f === currentFormatter ? 'disabled' : ''">
+        <a href="" data-ng-click="format(f)">{{f.label}}</a>
+      </li>
+    </ul>
+  </div>
 
 
   <div data-ng-show="usingFormatter"
@@ -116,7 +128,9 @@
       <div>
         <i class="fa fa-calendar"></i>
         <span data-translate="">updatedOn</span>
-        {{currentRecord['geonet:info'].changeDate}}</div>
+        <span data-gn-humanize-time="{{currentRecord['geonet:info'].changeDate}}"
+              data-from-now=""></span>
+      </div>
 
 
 
@@ -211,7 +225,7 @@
         </tr>
         <tr data-ng-if="currentRecord.publicationDate">
           <th data-translate="">publicationDate</th>
-          <td>{{currentRecord.publicationDate}}</td>
+          <td data-gn-humanize-time="">{{currentRecord.publicationDate}}</td>
         </tr>
         <tr data-ng-if="currentRecord.tempExtentBegin">
           <th data-translate="">tempExtent</th>

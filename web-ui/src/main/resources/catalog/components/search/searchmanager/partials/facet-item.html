@@ -7,7 +7,7 @@
       <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
     </a>
     <button ng-click="toggle()" ng-if="facetResults[facet].length-initialMaxItems > 0" class="btn btn-link">
-      {{facetResults[facet].length-initialMaxItems}} {{ (facetResults[facet].length >= maxItems) ? 'more' : 'less' }}
+      {{facetResults[facet].length-initialMaxItems}} {{ (facetResults[facet].length >= maxItems) ? ('more' | translate) : ('less' | translate) }}
     </button>
   </div>
 </div>
