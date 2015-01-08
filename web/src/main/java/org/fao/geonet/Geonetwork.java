@@ -445,6 +445,7 @@ public class Geonetwork implements ApplicationHandler {
                     }
 
                     try {
+                        Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
                         new URL(url).getContent();
                     } catch (IOException e) {
                         // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
