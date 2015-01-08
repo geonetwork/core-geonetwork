@@ -584,6 +584,22 @@
         } else {
           return null;
         }
+      },
+      getOwnername: function() {
+        if (this.userinfo) {
+          var userinfo = this.userinfo.split('|');
+          try {
+            if(userinfo[2] !== userinfo[1]) {
+              return userinfo[2] + " " + userinfo[1];
+            } else {
+              return userinfo[1];
+            }
+          } catch (e) {
+            return '';
+          }
+        } else {
+          return '';
+        }
       }
     };
     return Metadata;
