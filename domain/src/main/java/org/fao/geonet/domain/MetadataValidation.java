@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataValidationEntityListenerManager;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 
 /**
@@ -19,7 +20,7 @@ public class MetadataValidation extends GeonetEntity {
     private int numTests = 0;
     private int numFailures = 0;
     private ISODate validationDate = new ISODate();
-    private boolean required = true;
+    private Boolean required = Boolean.TRUE;
 
     /**
      * Return the id object of this entity.
@@ -105,7 +106,7 @@ public class MetadataValidation extends GeonetEntity {
 
     }
 
-    public MetadataValidation setRequired(boolean required) {
+    public MetadataValidation setRequired(Boolean required) {
         this.required = required;
         return this;
     }
@@ -116,8 +117,9 @@ public class MetadataValidation extends GeonetEntity {
      * affect the metadata's overall validity.
      */
     @Column(nullable = true)
-    public boolean isRequired() {
-        return required;
+    @Nonnull
+    public Boolean isRequired() {
+        return required == null ? Boolean.TRUE : required;
     }
 
     /**
