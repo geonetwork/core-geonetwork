@@ -5,4 +5,7 @@
     <links>Links</links>
     <parent>Parent</parent>
     <noUuidInLink>No uuid in link</noUuidInLink>
+    <complete>Complete</complete>
+    <overview>Overview</overview>
+    <xml>XML</xml>
 </strings>
