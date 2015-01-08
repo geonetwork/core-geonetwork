@@ -101,5 +101,12 @@
   "sourceDataset": "Source dataset",
   "metadataInXML": "Download metadata",
   "language": "Language",
-  "metadataLanguage": "Metadata language"
+  "metadataLanguage": "Metadata language",
+  "sendMail" : "Send Email",
+  "newOwner": "New Owner",
+  "updateCategories" :"Update categories",
+  "updatePrivileges" :"Update privileges",
+  "exportSummary" :"Export summary",
+  "mdNew" : "New metadata",
+  "mdImport" : "Import metadata"
 }

@@ -28,33 +28,33 @@
   </button>
   <ul class="dropdown-menu" role="menu">
     <li><a href="" ng-click="mdService.metadataMEF()">
-      <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>Export (ZIP)</span></a></li>
+      <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>exportMEF</span></a></li>
     <li><a href="" ng-click="mdService.metadataPrint(searchObj.params)">
-      <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>Export (PDF)</span></a></li>
+      <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>exportPDF</span></a></li>
     <li><a href="" ng-click="mdService.exportCSV()">
-      <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>Export (CSV)</span></a></li>
+      <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>exportCSV</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-send-o"></i>&nbsp;<span translate>Send email</span></a></li>
+      <i class="fa fa-send-o"></i>&nbsp;<span translate>sendMail</span></a></li>
     <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'on')" >
       <i class="fa fa-arrow-up"></i>&nbsp;<span translate>publish</span></a></li>
     <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'off')" >
-      <i class="fa fa-times"></i>&nbsp;<span translate>Unpublish</span></a></li>
+      <i class="fa fa-times"></i>&nbsp;<span translate>unpublish</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-user"></i>&nbsp;<span translate>New owner</span></a></li>
+      <i class="fa fa-user"></i>&nbsp;<span translate>newOwner</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-folder-o"></i>&nbsp;<span translate>Update categories</span></a></li>
+      <i class="fa fa-folder-o"></i>&nbsp;<span translate>updateCategories</span></a></li>
     <li ng-if="authenticated"><a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())" >
-      <i class="fa fa-key"></i>&nbsp;<span translate>Update privileges</span></a></li>
+      <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span></a></li>
     <li ng-if="authenticated"><a href="" ng-click="mdService.deleteMd()" >
-      <i class="fa fa-trash-o"></i>&nbsp;<span translate>Delete</span></a></li>
+      <i class="fa fa-trash-o"></i>&nbsp;<span translate>delete</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-table"></i>&nbsp;<span translate>Index</span></a></li>
+      <i class="fa fa-table"></i>&nbsp;<span translate>index</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-share-square-o"></i>&nbsp;<span translate>Export summary</span></a></li>
+      <i class="fa fa-share-square-o"></i>&nbsp;<span translate>exportSummary</span></a></li>
     <li class="divider" ng-if="authenticated"></li>
     <li ng-if="authenticated"><a href="catalog.edit#/create" target="_blank">
-      <i class="fa fa-file-o"></i>&nbsp;<span translate>New metadata</span></a></li>
+      <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
     <li ng-if="authenticated"><a href="catalog.edit#/import" target="_blank">
-      <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>Import metadata</span></a></li>
+      <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
   </ul>
 </div>

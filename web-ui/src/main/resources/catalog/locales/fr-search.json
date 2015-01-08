@@ -76,6 +76,7 @@
   "exportRDF": "Export (RDF)",
   "exportPDF": "Export (PDF)",
   "exportMEF": "Export (ZIP)",
+  "exportCSV": "Export (CSV)",
   "all": "Tous",
   "allInPage": "Toute la page",
   "none": "Aucun",
@@ -106,5 +107,13 @@
   "sourceDataset": "Données sources",
   "metadataInXML": "Télécharger la fiche",
   "language": "Langue",
-  "metadataLanguage": "Langue de la fiche"
+  "metadataLanguage": "Langue de la fiche",
+  "sendMail" : "Envoyer un email",
+  "newOwner": "Nouveau propriétaire",
+  "updateCategories" :"Mettre à jour les catégories",
+  "updatePrivileges" :"Mettre à jour les privilèges",
+  "exportSummary" :"Exporter le résumé",
+  "mdNew" : "Créer une métadonnée",
+  "mdImport" : "Importer une métadonnée"
+
 }
