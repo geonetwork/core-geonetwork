@@ -53,7 +53,7 @@ class SummaryFactory {
         }
         summary.navBar = this.isoHandlers.packageViews.findAll{navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow = this.isoHandlers.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
-
+        summary.navBarOverflow.add(new NavBarItem(f.translate("xml"), f.translate("xml"), "", "xml.metadata.get?uuid=${env.metadataUUID}") )
         summary.content = this.isoHandlers.rootPackageEl(metadata)
 
         return summary
@@ -61,8 +61,6 @@ class SummaryFactory {
 
     private void configureActionMenu(Summary summary) {
         def url = env.localizedUrl
-        summary.actions << new MenuAction(label: "xml", javascript: "window.open('xml.metadata.get?uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-code")
-
         if (env.canEdit()) {
             summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
             def publishUrl = {

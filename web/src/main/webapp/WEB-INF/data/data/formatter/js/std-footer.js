@@ -9,8 +9,9 @@ var formatterOnComplete = function () {
   });
 
   $.each(navAnchors, function (idx) {
-    var rel = $.attr(navAnchors[idx], 'rel');
-    if ($(rel).length == 0) {
+    var rel = $($.attr(navAnchors[idx], 'rel'));
+    var href = $($.attr(navAnchors[idx], 'href'));
+    if (rel.length == 0 && href.length == 0) {
       $(navAnchors[idx]).attr('disabled', 'disabled');
     }
   });

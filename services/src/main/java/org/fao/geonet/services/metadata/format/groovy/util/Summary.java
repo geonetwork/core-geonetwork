@@ -20,12 +20,14 @@ import java.util.List;
 /**
  * Represents the summary of a metadata element.  It is often the top section of a metadata view and summarizes the critical part
  * of the metadata to most users.
- *
+ * <p/>
  * The purpose of this class is to provide consistent way to display a summary of a metadata for all schemas.  The formatter/view only
  * needs to populate the fields of this class (or subclass) and the class can take care of presentation.
- *
+ * <p/>
  * This implementation includes logo, thumbnail, title, abstract, navigation bar and the content (view).  Any of the fields can be
  * left with their default values and they will not be displayed in the Summary.
+ * <p/>
+ * The data is rendered with the view-header.html template.
  */
 public class Summary {
     protected final Handlers handlers;
@@ -151,6 +153,7 @@ public class Summary {
     public void addNavBarItem(NavBarItem item) {
         this.navBar.add(item);
     }
+
     public void setNavBar(List<NavBarItem> navBar) {
         this.navBar = navBar;
     }
@@ -158,6 +161,7 @@ public class Summary {
     public void addNavBarOverflow(NavBarItem item) {
         this.navBarOverflow.add(item);
     }
+
     public void setNavBarOverflow(List<NavBarItem> navBarOverflow) {
         this.navBarOverflow = navBarOverflow;
     }
