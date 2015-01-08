@@ -258,40 +258,6 @@
       templateUrl: '../../catalog/components/search/resultsview/partials/' +
           'metadata.html',
       link: function(scope, element, attrs, controller) {
-
-        var domRendered = false;
-
-        var addEvents = function() {
-          element.find('.toggler').on('click', function() {
-            $(this).toggleClass('closed');
-            $(this).parent().nextAll('.target').first().toggle();
-          });
-
-          element.find('.nav-pills a[rel]').on('click', function(e) {
-            element.find('.gn-metadata-view > .entry').hide();
-            $($(this).attr('rel')).show();
-            e.preventDefault();
-          });
-
-        };
-
-        // We need to wait that the HTML is rendered into ng-bind-html directive
-        // Angular can't tell us so we must do a timeout
-        var callTimeout = function() {
-          return $timeout(function() {
-            console.log('loop');
-            if (element.find('.toggler').length > 0) {
-              domRendered = true;
-              addEvents();
-            }
-          }, 100).then(function() {
-            if (!domRendered) {
-              callTimeout();
-            }
-          });
-        };
-        callTimeout();
-
         scope.dismiss = function() {
           element.remove();
         };
