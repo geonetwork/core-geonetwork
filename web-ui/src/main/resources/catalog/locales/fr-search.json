@@ -25,7 +25,7 @@
   "download": "Télécharger",
   "visualize": "Visualiser",
   "welcomeTitle": "Accèder aux informations de {{orgName}}",
-  "welcomeText": "Vous trouverez ici des donées, des services et des cartes et plus encore ...",
+  "welcomeText": "Vous trouverez ici des données, des services et des cartes et plus encore ...",
   "getstarted": "",
   "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",
   "browseTopics": "Parcourir les thèmes",

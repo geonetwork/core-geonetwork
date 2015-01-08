@@ -287,9 +287,10 @@ ul.gn-resultview {
     zoom: 1;
     list-style: none;
     float: left;
+    font-size: 80%;
     > div {
       margin: 2px;
-      padding: 2px;
+      padding: 5px;
       height: 96px;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
@@ -309,11 +310,15 @@ ul.gn-resultview {
         margin-left: 92px;
         a {
           font-weight: 700;
-          font-size: 80%;
           color: #333333;
           text-transform: uppercase;
         }
       }
+    }
+    div:nth-child(2) {
+      overflow: hidden;
+      max-height: 100%;
+      text-overflow: ellipsis;
     }
   }
   li.gn-more {
