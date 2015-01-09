@@ -159,51 +159,53 @@
 
 
       // TODO: Previous record should be stored on the client side
-      var searchUrl = '';
-      $scope.previousRecords = [];
-      $scope.currentRecord = null;
-      $scope.currentRecordIndex = null;
+      var mdView = {
+        previousRecords: [],
+        current: {
+          record: null,
+          index: null
+        }
+      };
+      $scope.mdView = mdView;
+
       $scope.openRecord = function(mdOrIndex, records) {
-        $scope.records = records;
+        mdView.records = records;
         var md = mdOrIndex;
         if (typeof mdOrIndex === 'number') {
           md = records[mdOrIndex];
-          $scope.currentRecordIndex = mdOrIndex;
+          mdView.current.index = mdOrIndex;
         } else {
-          $scope.currentRecordIndex = this.$index;
+          mdView.current.index = this.$index;
         }
-        $scope.currentRecord = md;
 
-        //searchUrl = $location.search();
-        //$location.search({uuid: md['geonet:info'].uuid});
-        $scope.currentRecord.links = md.getLinksByType('LINK');
-        $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
-        $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
-        var thumbnails = md.getThumbnails();
-        if (thumbnails) {
-          $scope.currentRecord.overviews = thumbnails.list;
-        }
-        $scope.currentRecord.contacts = md.getContacts();
-        $scope.currentRecord.encodedUrl =
-            encodeURIComponent($location.absUrl());
+        angular.extend(md, {
+          links: md.getLinksByType('LINK'),
+          downloads: md.getLinksByType('DOWNLOAD'),
+          layers: md.getLinksByType('OGC', 'kml'),
+          contacts: md.getContacts(),
+          overviews: md.getThumbnails() ? md.getThumbnails() : undefined,
+          encodedUrl: encodeURIComponent($location.absUrl())
+        });
+
+        mdView.current.record = md;
 
         gnUtilityService.scrollTo();
 
         // TODO: do not add duplicates
-        $scope.previousRecords.push($scope.currentRecord);
+        mdView.previousRecords.push(md);
       };
 
       $scope.closeRecord = function(md) {
-        $scope.currentRecord = null;
+        mdView.current.record = null;
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
-        $scope.openRecord($scope.currentRecordIndex + 1, $scope.records);
+        $scope.openRecord(mdView.current.index + 1, mdView.records);
       };
       $scope.previousRecord = function() {
-        $scope.openRecord($scope.currentRecordIndex - 1, $scope.records);
+        $scope.openRecord(mdView.current.index - 1, mdView.records);
       };
 
 
