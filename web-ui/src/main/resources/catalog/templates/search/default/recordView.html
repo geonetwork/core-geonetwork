@@ -15,7 +15,7 @@
     <span data-translate="">previous</span>
   </button>
   <button class="btn btn-link"
-          data-ng-class="mdView.current.index === 'TODO' ? 'disabled' : ''"
+          data-ng-class="mdView.current.index === mdView.records.length-1 ? 'disabled' : ''"
           data-ng-show="mdView.records"
           data-ng-click="nextRecord()">
     <span data-translate="">next</span>
