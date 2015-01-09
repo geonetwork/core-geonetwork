@@ -129,6 +129,18 @@
   "hotkeyLastPage": "Dernière page",
   "hotkeySelectAll": "Sélectionner toutes les fiches",
   "hotkeySelectAllInPage": "Sélectionner toutes les fiches de la page",
-  "hotkeyUnSelectAll": "Sélectionner aucune fiche"
-
+  "hotkeyUnSelectAll": "Sélectionner aucune fiche",
+  "clickToSelectYear": "Cliquer pour sélectionner une année",
+  "what": "Quoi ?",
+  "when": "Quand ?",
+  "where": "Où ?",
+  "resourcesCreatedTheLast": "<strong>Ressources</strong> créées",
+  "recordsCreatedTheLast": "<strong>Fiches</strong> mises à jour",
+  "today": "Aujourd'hui",
+  "yesterday": "Hier",
+  "thisWeek": "Cette semaine",
+  "thisMonth": "Ce mois",
+  "last3Months": "Ces 3 derniers mois",
+  "last6Months": "Ces 6 derniers mois",
+  "thisYear": "Cette année"
 }

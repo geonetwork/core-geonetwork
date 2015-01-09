@@ -123,5 +123,18 @@
   "hotkeyLastPage": "Move to last page",
   "hotkeySelectAll": "Select all search results",
   "hotkeySelectAllInPage": "Select all in current page",
-  "hotkeyUnSelectAll": "Unselect all records"
+  "hotkeyUnSelectAll": "Unselect all records",
+  "clickToSelectYear": "Click on bar to select year",
+  "what": "What ?",
+  "when": "When ?",
+  "where": "Where ?",
+  "resourcesCreatedTheLast": "<strong>Resources</strong> created in the last",
+  "recordsCreatedTheLast": "<strong>Records</strong> created in the last",
+  "today": "today",
+  "yesterday": "yesterday",
+  "thisWeek": "thisWeek",
+  "thisMonth": "thisMonth",
+  "last3Months": "last3Months",
+  "last6Months": "last6Months",
+  "thisYear": "lastYear"
 }
