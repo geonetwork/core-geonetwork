@@ -85,10 +85,11 @@
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
+    'gnMdView',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, hotkeys) {
+             gnMap, gnMdView, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -168,47 +169,23 @@
       };
       $scope.mdView = mdView;
 
-      $scope.openRecord = function(mdOrIndex, records) {
-        mdView.records = records;
-        var md = mdOrIndex;
-        if (typeof mdOrIndex === 'number') {
-          md = records[mdOrIndex];
-          mdView.current.index = mdOrIndex;
-        } else {
-          mdView.current.index = this.$index;
-        }
-
-        angular.extend(md, {
-          links: md.getLinksByType('LINK'),
-          downloads: md.getLinksByType('DOWNLOAD'),
-          layers: md.getLinksByType('OGC', 'kml'),
-          contacts: md.getContacts(),
-          overviews: md.getThumbnails() ? md.getThumbnails() : undefined,
-          encodedUrl: encodeURIComponent($location.absUrl())
-        });
-
-        mdView.current.record = md;
-
+      $scope.openRecord = function(index, md, records) {
+        gnMdView.feedMd(index, md, records, mdView);
         gnUtilityService.scrollTo();
-
-        // TODO: do not add duplicates
-        mdView.previousRecords.push(md);
       };
 
-      $scope.closeRecord = function(md) {
+      $scope.closeRecord = function() {
         mdView.current.record = null;
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
-        $scope.openRecord(mdView.current.index + 1, mdView.records);
+        $scope.openRecord(mdView.current.index + 1);
       };
       $scope.previousRecord = function() {
-        $scope.openRecord(mdView.current.index - 1, mdView.records);
+        $scope.openRecord(mdView.current.index - 1);
       };
-
-
 
       $scope.infoTabs = {
         lastRecords: {
