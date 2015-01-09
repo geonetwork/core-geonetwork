@@ -243,7 +243,7 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
-    mdSelect: 'metadata.select@json', // TODO: CHANGE
+    mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
     mdGetPDF: 'pdf',
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE

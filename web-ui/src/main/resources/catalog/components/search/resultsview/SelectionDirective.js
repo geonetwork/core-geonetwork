@@ -75,7 +75,9 @@
               record['geonet:info'].selected = selected;
             });
 
-            gnHttp.callService('mdSelect', params).success(function(res) {
+            gnHttp.callService('mdSelect', params, {
+              method: 'POST'
+            }).success(function(res) {
               scope.searchResults.selectedCount = parseInt(res[0], 10);
             });
           };
