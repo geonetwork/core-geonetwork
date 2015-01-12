@@ -1134,8 +1134,9 @@
     <module>sde</module>
     <module>domain</module>
     <module>oaipmh</module>
-    <module>schemas</module>
+    <module>events</module>
     <module>core</module>
+    <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>

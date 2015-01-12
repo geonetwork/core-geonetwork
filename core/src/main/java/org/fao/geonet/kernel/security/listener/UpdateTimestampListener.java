@@ -1,11 +1,9 @@
 package org.fao.geonet.kernel.security.listener;
 
-
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -20,46 +18,45 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  * Can be de/activated adding config-security-core(-overrides).xml
  * 
  * <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener"
- * id="updateTimestampListener"> <property name="activate" value="true"/> </bean>
+ * id="updateTimestampListener"> <property name="activate" value="true"/>
+ * </bean>
  * 
  * 
  * @author delawen
  * @author Jose García
  * 
  */
-public class UpdateTimestampListener implements ApplicationListener<ApplicationEvent> {
+public class UpdateTimestampListener implements
+		ApplicationListener<AbstractAuthenticationEvent> {
 
+	@Autowired
+	private UserRepository _userRepository;
 
-    @Autowired
-    private UserRepository _userRepository;
+	@Override
+	/**
+	 * Depending on which type of app event we will log one or other thing.
+	 */
+	public void onApplicationEvent(AbstractAuthenticationEvent e) {
 
-    @Override
-    /**
-     * Depending on which type of app event we will log one or other thing.
-     */
-    public void onApplicationEvent(ApplicationEvent ev) {
+		if (e instanceof InteractiveAuthenticationSuccessEvent
+				|| e instanceof AuthenticationSuccessEvent
+				|| e instanceof AuthenticationSwitchUserEvent) {
 
-        if (ev instanceof AbstractAuthenticationEvent) {
-            AbstractAuthenticationEvent e = (AbstractAuthenticationEvent) ev;
+			try {
+				UserDetails userDetails = (UserDetails) e.getAuthentication()
+						.getPrincipal();
 
-            if (e instanceof InteractiveAuthenticationSuccessEvent
-                    || e instanceof AuthenticationSuccessEvent
-                    || e instanceof AuthenticationSwitchUserEvent) {
+				User user = _userRepository.findOneByUsername(userDetails
+						.getUsername());
+				user.setLastLoginDate(new ISODate().toString());
+				_userRepository.save(user);
 
-                try {
-                    UserDetails userDetails = (UserDetails) e
-                            .getAuthentication().getPrincipal();
+			} catch (Exception ex) {
+				// TODO: Log exception
+				ex.printStackTrace();
+			}
 
-                    User user = _userRepository.findOneByUsername(userDetails.getUsername());
-                    user.setLastLoginDate(new ISODate().toString());
-                    _userRepository.save(user);
+		}
 
-                } catch (Exception ex) {
-                    // TODO: Log exception
-                    ex.printStackTrace();
-                }
-
-            }
-        }
-    }
+	}
 }

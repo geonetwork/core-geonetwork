@@ -29,6 +29,13 @@
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
