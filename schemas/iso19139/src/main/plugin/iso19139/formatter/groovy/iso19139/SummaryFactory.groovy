@@ -105,22 +105,30 @@ class SummaryFactory {
                     title = href;
                 }
 
+                def imagesDir = "../../images/formatter/"
                 def type = "link";
+                def icon = "";
+                def iconClasses = "";
                 if (mimetype.contains("kml")) {
                     type = "kml";
+                    icon = imagesDir + "kml.png";
                 } else if (mimetype.contains("OGC:")) {
                     type = "ogc";
                 } else if (mimetype.contains("wms")) {
                     type = "wms";
+                    icon = imagesDir + "wms.png";
                 } else if (mimetype.contains("download")) {
                     type = "download";
+                    iconClasses = "fa fa-download"
                 } else if (mimetype.contains("link")) {
                     type = "link";
+                    iconClasses = "fa fa-link"
                 } else if (mimetype.contains("wfs")) {
                     type = "wfs";
+                    icon = imagesDir + "wfs.png";
                 }
 
-                def linkType = new LinkType(type, null)
+                def linkType = new LinkType(type, icon, iconClasses)
                 linkBlock.put(linkType, new Link(href, title))
             }
         }

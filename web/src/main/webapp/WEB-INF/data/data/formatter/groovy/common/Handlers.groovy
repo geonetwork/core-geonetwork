@@ -187,9 +187,9 @@ public class Handlers {
 
         related.getChildren("relation").each { rel ->
             def type = rel.getAttributeValue("type")
-            def icon = this.env.localizedUrl + "../../images/" + type + ".png";
+            def icon = this.env.localizedUrl + "../../images/formatter/" + type + ".png";
 
-            def linkType = new LinkType(type, icon)
+            def linkType = new LinkType(type, icon, null)
 
             def md = rel.getChild("metadata")
 

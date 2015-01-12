@@ -7,7 +7,11 @@
     </h3>
     <table class="table row target" >
         <tr fmt-repeat="link in linkBlock.links" class="row">
-            <td fmt-translate="" class="col-md-2 link-block-title">{{link.type.name}}-link</td>
+            <td class="col-md-2 link-block-title">
+                <i fmt-if="link.type.iconClasses" classes="{{link.type.iconClasses}}"></i>
+                <img fmt-if="link.type.icon" src="{{link.type.icon}}"></img>
+                <span fmt-translate="" >{{link.type.name}}-link</span>
+            </td>
             <td class="col-md-10">
             <div fmt-repeat="link in link.links">
                 <a fmt-if="isPDF" href="{{link.href | escapeXmlAttrs}}" target="_blank">{{link.text | escapeXmlContent}}</a>

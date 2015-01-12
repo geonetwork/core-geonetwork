@@ -467,7 +467,7 @@ public class AccessManager {
      */
     public boolean hasEditPermission(final ServiceContext context, final String id) throws Exception {
         UserSession us = context.getUserSession();
-        if (!us.isAuthenticated())
+        if (us == null || !us.isAuthenticated())
             return false;
 
 

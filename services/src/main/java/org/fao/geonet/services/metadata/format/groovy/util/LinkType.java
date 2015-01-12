@@ -22,11 +22,17 @@ public class LinkType {
      */
     @Nullable
     public final String icon;
+    /**
+     * The classes to put on the i element
+     */
+    @Nullable
+    public final String iconClasses;
 
-    public LinkType(@Nonnull String name, @Nullable String icon) {
+    public LinkType(@Nonnull String name, @Nullable String icon, @Nullable String iconClasses) {
         Objects.requireNonNull(name);
         this.name = name;
         this.icon = icon;
+        this.iconClasses = iconClasses;
     }
 
     @Override
