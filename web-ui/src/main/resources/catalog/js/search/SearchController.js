@@ -38,7 +38,7 @@
       $scope.paginationInfo = gnSearchSettings.paginationInfo;
 
       /* Default result view template */
-      $scope.resultTemplate = gnSearchSettings.resultViewTpls[1].tplUrl;
+      $scope.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.getAnySuggestions = function(val) {
         return suggestService.getAnySuggestions(val);
