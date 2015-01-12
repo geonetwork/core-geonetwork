@@ -74,7 +74,7 @@
                  data-ng-change="change()"/>
           <h4>
             <a href=""
-               data-ng-click="openRecord(md, searchResults.records)"
+               data-ng-click="openRecord($index, md, searchResults.records)"
                title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
           </h4>
         </div>
