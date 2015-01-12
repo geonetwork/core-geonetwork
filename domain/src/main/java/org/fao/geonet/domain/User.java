@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -379,50 +380,53 @@ public class User extends GeonetEntity implements UserDetails {
      * @param mergeNullData if true then also set null values from other user. If false then only merge non-null data
      */
     public void mergeUser(User otherUser, boolean mergeNullData) {
-        if (mergeNullData || otherUser.getUsername() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getUsername())) {
             setUsername(otherUser.getUsername());
         }
-        if (mergeNullData || otherUser.getSurname() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getSurname())) {
             setSurname(otherUser.getSurname());
         }
-        if (mergeNullData || otherUser.getName() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getName())) {
             setName(otherUser.getName());
         }
-        if (mergeNullData || otherUser.getOrganisation() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getOrganisation())) {
             setOrganisation(otherUser.getOrganisation());
         }
-        if (mergeNullData || otherUser.getKind() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getKind())) {
             setKind(otherUser.getKind());
         }
-        if (mergeNullData || otherUser.getProfile() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherUser.getProfile().name())) {
             setProfile(otherUser.getProfile());
         }
 
-        _email.clear();
-        _email.addAll(otherUser.getEmailAddresses());
-
-        ArrayList<Address> otherAddresses = new ArrayList<Address>(otherUser.getAddresses());
-
-        for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext(); ) {
-            Address address = iterator.next();
-            boolean found = false;
-
-            for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
-                Address otherAddress = iterator2.next();
-                if (otherAddress.getId() == address.getId()) {
-                    address.mergeAddress(otherAddress, mergeNullData);
-                    found = true;
-                    iterator2.remove();
-                    break;
-                }
-            }
-
-            if (!found) {
-                iterator.remove();
-            }
+        if (mergeNullData || !otherUser.getEmailAddresses().isEmpty()) {
+            _email.clear();
+            _email.addAll(otherUser.getEmailAddresses());
         }
 
-        _addresses.addAll(otherAddresses);
+        ArrayList<Address> otherAddresses = new ArrayList<Address>(otherUser.getAddresses());
+        if (mergeNullData || !otherAddresses.isEmpty()) {
+            for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext(); ) {
+                Address address = iterator.next();
+                boolean found = false;
+
+                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
+                    Address otherAddress = iterator2.next();
+                    if (otherAddress.getId() == address.getId()) {
+                        address.mergeAddress(otherAddress, mergeNullData);
+                        found = true;
+                        iterator2.remove();
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    iterator.remove();
+                }
+            }
+            _addresses.addAll(otherAddresses);
+        }
+
         getSecurity().mergeSecurity(otherUser.getSecurity(), mergeNullData);
     }
 
