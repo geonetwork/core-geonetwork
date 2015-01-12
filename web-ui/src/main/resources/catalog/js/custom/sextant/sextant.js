@@ -31,9 +31,10 @@
     'sxtGlobals',
     'gnNcWms',
     '$timeout',
+    'gnMdView',
     function($scope, $location, $window, suggestService, $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout) {
+        $timeout, gnMdView) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -122,6 +123,34 @@
         }
       });
 
+      /** Manage metadata view */
+      var mdView = {
+        previousRecords: [],
+        current: {
+          record: null,
+          index: null
+        }
+      };
+      $scope.mdView = mdView;
+
+      $scope.openRecord = function(index, md, records) {
+        gnMdView.feedMd(index, md, records, mdView);
+        //gnUtilityService.scrollTo();
+      };
+
+      $scope.closeRecord = function() {
+        mdView.current.record = null;
+        //$location.search(searchUrl);
+        $scope.mainTabs.search.active = true;
+      };
+      $scope.nextRecord = function() {
+        // TODO: When last record of page reached, go to next page...
+        $scope.openRecord(mdView.current.index + 1);
+      };
+      $scope.previousRecord = function() {
+        $scope.openRecord(mdView.current.index - 1);
+      };
+
       ///////////////////////////////////////////////////////////////////
 
       angular.extend($scope.searchObj, {
@@ -189,6 +218,43 @@
       if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
         $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
       }
+    }]);
+
+  module.controller('GnMdViewController', [
+    '$scope', '$http', '$compile', 'gnSearchSettings',
+    function($scope, $http, $compile, gnSearchSettings) {
+      $scope.formatter = gnSearchSettings.formatter;
+      $scope.usingFormatter = false;
+      $scope.compileScope = $scope.$new();
+
+      $scope.format = function(f) {
+        $scope.usingFormatter = f !== undefined;
+        $scope.currentFormatter = f;
+        if (f) {
+          $http.get(f.url + $scope.currentRecord.getUuid()).then(
+              function(response) {
+                var snippet = response.data.replace(
+                    '<?xml version="1.0" encoding="UTF-8"?>', '');
+
+                $('#gn-metadata-display').find('*').remove();
+
+                $scope.compileScope.$destroy();
+
+                // Compile against a new scope
+                $scope.compileScope = $scope.$new();
+                var content = $compile(snippet)($scope.compileScope);
+
+                $('#gn-metadata-display').append(content);
+              });
+        }
+      };
+
+      // Reset current formatter to open the next record
+      // in default mode.
+      $scope.$watch('currentRecord', function() {
+        $scope.usingFormatter = false;
+        $scope.currentFormatter = null;
+      });
     }]);
 
   module.directive('sxtFixMdlinks', [

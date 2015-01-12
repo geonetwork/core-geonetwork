@@ -204,6 +204,9 @@
 
 
 ul.gn-resultview {
+
+  @thumbnail-width: 170px;
+
   .metadata {
     position: absolute;
     top: 0;
@@ -268,6 +271,73 @@ ul.gn-resultview {
       color: @sxt-orange;
     }
   }
+
+  li.gn-grid {
+    @grid-bottom-margin: 2px;
+
+    float: left;
+    border: 1px solid @list-group-border;
+    min-width: 300px;
+    width: 48%;
+    height: 300px;
+    .gn-md-details {
+      margin-left: @thumbnail-width;
+    }
+    /* Properly align category icons */
+    .fa img {
+      vertical-align: text-bottom;
+    }
+    .gn-md-title {
+      margin-top: 5px;
+      background-color: @list-group-bg;
+      bottom: 0px;
+      opacity: .8;
+      input {
+        float: left;
+      }
+      h4 {
+        /* Leave space for selection checkbox */
+        padding-left: 20px;
+        margin-top: 0px;
+        a {
+          text-transform: uppercase;
+          font-weight: 700;
+          font-size: 120%;
+          color: #333333;
+        }
+      }
+    }
+    .gn-source-logo {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      margin: @grid-bottom-margin;
+      z-index: 10;
+      border-radius: 50%;
+      max-width: 40px;
+      max-height: 40px;
+      min-height: 20px;
+      height: auto;
+    }
+    .gn-md-thumbnail {
+      position: absolute;
+      top: 82px;
+      opacity: .8;
+      .gn-img-thumbnail {
+        max-width: @thumbnail-width;
+        max-height: 140px;
+        min-height: 40px;
+        margin: @grid-bottom-margin;
+        height: auto;
+      }
+    }
+    .gn-md-links {
+      position: absolute;
+      bottom: @grid-bottom-margin;
+      background: none;
+    }
+  }
+
 }
 
 [gn-main-viewer] {
