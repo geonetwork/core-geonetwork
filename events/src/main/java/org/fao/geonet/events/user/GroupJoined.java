@@ -17,9 +17,6 @@ public class GroupJoined extends UserUpdated {
 			throw new NullPointerException("Group cannot be null");
 		}
 		this.userGroup = userGroup;
-
-		System.out.println("GROUP JOINED!!!!!!!!!!!!!!!!!!");
-		System.out.println(getUserGroup());
 	}
 	
 	public UserGroup getUserGroup() {
