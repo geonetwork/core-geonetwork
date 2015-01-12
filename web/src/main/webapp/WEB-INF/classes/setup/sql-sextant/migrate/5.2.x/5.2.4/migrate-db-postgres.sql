@@ -7,4 +7,4 @@ UPDATE Settings SET value =
 -- withheld element filter is now configured as a per schema basis
 DELETE FROM Settings WHERE name = 'system/hidewithheldelements/enable';
 DELETE FROM Settings WHERE name = 'system/hidewithheldelements/keepMarkedElement';
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'false', 2, 2320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'true', 2, 2320, 'y');
