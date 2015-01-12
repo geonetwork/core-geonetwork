@@ -7,11 +7,11 @@ $.ajax('md.format.xml?xsl=hierarchy_view&id={{metadataId}}', {
       return;
     }
 
-    linkBlockClass.html(html);
+    linkBlockClass.replaceWith(html);
 
     if (linkBlockClass.children().length > 0) {
       linkBlockClass.show();
-      linkBlockClass.find(".toggler").on('click', formatterSectionTogglersEventHandler);
+      $(".{{linkBlockClass}} .toggler").on('click', formatterSectionTogglersEventHandler);
     } else {
       linkBlockClass.hide();
     }

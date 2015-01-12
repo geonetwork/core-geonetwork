@@ -179,7 +179,7 @@ public class Handlers {
         def uuid = this.env.metadataUUID
         def id = this.env.metadataId
 
-        LinkBlock hierarchy = new LinkBlock("hierarchy")
+        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-code-fork")
         def bean = this.env.getBean(GetRelated.class)
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)

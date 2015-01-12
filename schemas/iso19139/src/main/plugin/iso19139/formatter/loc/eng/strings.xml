@@ -2,7 +2,7 @@
     <general>General</general>
     <noFormatName>No format name provided</noFormatName>
     <link-link>Link</link-link>
-    <kml-link>KML File for download</kml-link>
-    <wms-link>Web Map Server urls</wms-link>
+    <kml-link>KML</kml-link>
+    <wms-link>WMS</wms-link>
     <noThesaurusName>No Thesaurus Name</noThesaurusName>
 </strings>
