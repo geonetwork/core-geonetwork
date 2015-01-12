@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -96,7 +97,7 @@ public class GetRandom implements Service
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager searchMan = gc.getBean(SearchManager.class);
-			MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+			MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 			try {
 				// FIXME: featured should be at metadata level, not at group level

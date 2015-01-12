@@ -79,4 +79,9 @@ public interface Environment extends CurrentLanguageHolder {
      * Retrieves the background, width and mapproj parameters from settings and puts them into the map config.
      */
     public MapConfig getMapConfiguration();
+
+    /**
+     * Return true is the current user has edit permissions for the current metadata
+     */
+    public boolean canEdit() throws Exception;
 }

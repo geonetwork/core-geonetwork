@@ -22,6 +22,7 @@ package org.fao.geonet.services.util.z3950.provider.GN;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -69,7 +70,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        .getHandlerContext(Geonet.CONTEXT_NAME);
                        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-                       metasearcher = searchMan.newSearcher(SearchManager.LUCENE,
+                       metasearcher = searchMan.newSearcher(SearcherType.LUCENE,
                                        Geonet.File.SEARCH_Z3950_SERVER);
 
                } catch (Exception e) {

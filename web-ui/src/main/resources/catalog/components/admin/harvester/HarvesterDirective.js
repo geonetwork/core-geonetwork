@@ -23,7 +23,8 @@
             'identification.html',
         link: function(scope, element, attrs) {
           scope.lang = 'eng'; // FIXME
-          $http.get('admin.harvester.info?type=icons&_content_type=json', {cache: true})
+          $http.get('admin.harvester.info?type=icons&_content_type=json',
+              {cache: true})
           .success(function(data) {
                 scope.icons = data[0];
               });

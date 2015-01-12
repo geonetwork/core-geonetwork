@@ -63,7 +63,7 @@
         var re = /type\s*=\s*([^,|^}|^\s]*)/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if(layer.name) {
+          if (layer.name) {
             if (layer.group == 'Background layers' && layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
               var olLayer = gnMap.createLayerForType(type);
@@ -196,11 +196,11 @@
             title: layer.get('title'),
             group: layer.get('group'),
             server: [{
-                onlineResource: [{
-                    href: url
-                  }],
-                service: 'urn:ogc:serviceType:WMS'
-              }]
+              onlineResource: [{
+                href: url
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }]
           });
         });
 
@@ -265,7 +265,8 @@
         }
         else { // we suppose it's WMS
           gnOwsCapabilities.getWMSCapabilities(res.href).then(function(capObj) {
-            var info = gnOwsCapabilities.getLayerInfoFromCap(layer.name, capObj);
+            var info = gnOwsCapabilities.getLayerInfoFromCap(
+                layer.name, capObj);
             info.group = layer.group;
             var l = gnMap.addWmsToMapFromCap(map, info);
             l.setOpacity(layer.opacity);

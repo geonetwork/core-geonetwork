@@ -4,7 +4,7 @@
   goog.require('gn_category');
   goog.require('gn_importxsl');
 
-  var module = angular.module('gn_import_controller',[
+  var module = angular.module('gn_import_controller', [
     'gn_importxsl',
     'gn_category',
     'blueimp.fileupload'
@@ -77,13 +77,13 @@
         $scope.report = null;
         $scope.error = null;
 
-        if($scope.importMode == 'uploadFile') {
+        if ($scope.importMode == 'uploadFile') {
           var uploadScope = angular.element('#md-import-file').scope();
           uploadScope.submit();
-        } else if($scope.importMode == 'importFromDir') {
+        } else if ($scope.importMode == 'importFromDir') {
           gnMetadataManager.importFromDir($(formId).serialize()).then(
-            onSuccessFn, onErrorFn);
-        } else  {
+              onSuccessFn, onErrorFn);
+        } else {
           gnMetadataManager.importFromXml($(formId).serialize()).then(
               onSuccessFn, onErrorFn);
         }

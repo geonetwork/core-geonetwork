@@ -27,6 +27,10 @@ public class DublinCoreSchemaPlugin
                 .build();
     }
 
+    public DublinCoreSchemaPlugin() {
+        super(IDENTIFIER);
+    }
+
 
     /**
      * Always return null. Not implemented for dublin core records.

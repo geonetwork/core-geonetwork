@@ -50,8 +50,10 @@ public class Handlers {
         summary.abstr = getAbstract(el)
         summary.content = handlers.processElements(el.children())
         summary.addNavBarItem(new NavBarItem(f.translate('complete'), null, '.container > .entry:not(.overview)'))
+        summary.addNavBarItem(commonHandlers.createXmlNavBarItem())
         summary.addCompleteNavItem = false
-        summary.addOverviewNavItem = false
+        summary.addOverviewNavItem = true
+        commonHandlers.configureSummaryActionMenu(summary)
 
         LinkBlock linkBlock = new LinkBlock(f.translate("links"));
         summary.links.add(linkBlock)

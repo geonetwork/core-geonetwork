@@ -374,10 +374,10 @@
               var matrixIds = new Array(nbMatrix);
               for (var z = 0; z < nbMatrix; ++z) {
                 var matrixId = matrixSet.matrixIds[z];
-                var size = ol.extent.getWidth(projectionExtent)
-                    / matrixId.tileWidth;
-                resolutions[z] = matrixId.scaleDenominator * 0.00028
-                    / projection.getMetersPerUnit();
+                var size = ol.extent.getWidth(projectionExtent) /
+                    matrixId.tileWidth;
+                resolutions[z] = matrixId.scaleDenominator * 0.00028 /
+                    projection.getMetersPerUnit();
                 matrixIds[z] = matrixId.identifier;
               }
 

@@ -1,6 +1,11 @@
 package common
-
+import jeeves.server.context.ServiceContext
+import org.fao.geonet.constants.Geonet
+import org.fao.geonet.guiservices.metadata.GetRelated
+import org.fao.geonet.kernel.GeonetworkDataDirectory
 import org.fao.geonet.services.metadata.format.groovy.Environment
+import org.fao.geonet.services.metadata.format.groovy.util.*
+import org.fao.geonet.utils.Xml
 
 public class Handlers {
     private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -116,6 +121,110 @@ public class Handlers {
             return required + '</body></html>'
         } else {
             return required
+        }
+    }
+
+
+    NavBarItem createXmlNavBarItem() {
+        return new NavBarItem(f.translate("xml"), f.translate("xml"), "", "xml.metadata.get?uuid=${env.metadataUUID}")
+    }
+    def configureSummaryActionMenu(Summary summary) {
+        def url = env.localizedUrl
+        if (env.canEdit()) {
+            summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
+            def publishUrl = {
+                def on = it ? "on" : "off"
+                "md.privileges.update?update=true&id=${env.metadataId}&_1_0=$on&_1_1=$on&_1_5=$on&_1_6=$on"
+            }
+
+            def basicPublicJs = { isPublish ->
+                """\$.ajax({
+                        url: '${publishUrl(isPublish)}',
+                        success: function() {
+                            \$('li#menu-action-publish').toggleClass('disabled');
+                            \$('li#menu-action-unpublish').toggleClass('disabled');
+                        }
+                      })""".replaceAll(/\s+/, " ")
+            }
+
+
+            def published = env.indexInfo.get("_groupPublished").contains("all") || env.indexInfo.get("_groupPublished").contains("guest")
+            def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
+            summary.actions << publishAction
+            if (!published && env.indexInfo.get("_valid").contains("1")) {
+                publishAction.liClasses = ""
+            }
+            def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
+            summary.actions << unpublishAction
+            if (published) {
+                unpublishAction.liClasses = ""
+            }
+        }
+        summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
+                new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
+                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-print"),
+                new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
+        ]);
+
+        def shareURL = { it + URLEncoder.encode("${url}md.format.html?xsl=full_view&uuid=${this.env.metadataUUID}", "UTF-8") }
+        summary.actions << new MenuAction(label: "share", iconClasses: "fa fa-share", submenu: [
+                new MenuAction(label: "googlePlus", javascript: "window.open('${shareURL('https://plus.google.com/share?url=')}')", iconClasses: "fa fa-google-plus"),
+                new MenuAction(label: "twitter", javascript: "window.open('${shareURL('https://twitter.com/share?url=')}')", iconClasses: "fa fa-twitter"),
+                new MenuAction(label: "facebook", javascript: "window.open('${shareURL('href="https://www.facebook.com/sharer.php?u=')}')", iconClasses: "fa fa-facebook")
+        ]);
+    }
+
+    def loadHierarchyLinkBlocks() {
+        def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
+        def uuid = this.env.metadataUUID
+        def id = this.env.metadataId
+
+        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-code-fork")
+        def bean = this.env.getBean(GetRelated.class)
+        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
+        def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
+        def related = Xml.transform(new org.jdom.Element("root").addContent(raw), relatedXsl);
+
+        related.getChildren("relation").each { rel ->
+            def type = rel.getAttributeValue("type")
+            def icon = this.env.localizedUrl + "../../images/formatter/" + type + ".png";
+
+            def linkType = new LinkType(type, icon, null)
+
+            def md = rel.getChild("metadata")
+
+            def mdEl, relUuid;
+            if (md != null) {
+                relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
+                mdEl = md;
+            } else {
+                relUuid = rel.getChildText("uuid")
+                mdEl = rel
+            }
+
+            if (relUuid != null) {
+                def href = createShowMetadataHref(relUuid)
+                def title = mdEl.getChildText("title")
+                if (title == null) {
+                    title = mdEl.getChildText("defaultTitle")
+                }
+
+                if (title != null && title.length() > 60) {
+                    title = title.substring(0, 57) + "...";
+                }
+
+                hierarchy.put(linkType, new Link(href, title))
+            }
+        }
+
+        return hierarchy;
+    }
+
+    private String createShowMetadataHref(String uuid) {
+        if (uuid.trim().isEmpty()) {
+            return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
+        } else {
+            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
         }
     }
 

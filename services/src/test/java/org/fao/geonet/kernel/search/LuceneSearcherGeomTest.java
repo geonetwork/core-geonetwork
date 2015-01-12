@@ -89,7 +89,7 @@ public class LuceneSearcherGeomTest extends AbstractCoreIntegrationTest {
                 new Element("sortBy").setText(""),
                 new Element("to").setText("10")
         ));
-        final MetaSearcher metaSearcher = sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+        final MetaSearcher metaSearcher = sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
         metaSearcher.search(this.serviceContext, request, new ServiceConfig());
         return metaSearcher.present(this.serviceContext, request, new ServiceConfig());

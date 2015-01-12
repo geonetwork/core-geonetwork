@@ -131,9 +131,9 @@
          * @return {HttpPromise} Future object
          */
         importFromXml: function(data) {
-          return $http.post('md.insert?_content_type=json',data, {
+          return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
-                'application/x-www-form-urlencoded'}
+                  'application/x-www-form-urlencoded'}
           });
         },
 
@@ -232,9 +232,9 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
-    mdCreate: 'md.create@json',
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
+    mdDeleteBatch: 'md.delete.batch',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',
@@ -243,14 +243,17 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
-    layerSelection: 'md.layer.select@json', //TODO: remove
-    mdSelect: 'metadata.select@json', // TODO: CHANGE
+    mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
     mdGetPDF: 'pdf',
+    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
+    mdGetMEF: 'mef.export',
     mdGetXML19139: 'xml_iso19139',
+    csv: 'csv.search',
 
     mdPrivileges: 'md.privileges.update',
+    mdPrivilegesBatch: 'md.privileges.batch.update',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
@@ -359,7 +362,7 @@
           /**
            * Return service url for a given key
            * @param {string} serviceKey
-           * @returns {*}
+           * @return {*}
            */
           getService: function(serviceKey) {
             return gnHttpServices[serviceKey];
@@ -516,6 +519,10 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      publish: function() {
+        this['geonet:info'].isPublishedToAll = this.isPublished() ?
+            'false' : 'true';
+      },
       getLinks: function() {
         return this.link;
       },
@@ -541,17 +548,18 @@
       },
       getThumbnails: function() {
         if (angular.isArray(this.image)) {
-          var ret = {};
+          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             if (s[0] === 'thumbnail') {
-              ret.small = s[1];
+              images.small = s[1];
             } else if (s[0] === 'overview') {
-              ret.big = s[1];
+              images.big = s[1];
             }
+            images.list.push({url: s[1], label: s[2]});
           }
         }
-        return ret;
+        return images;
       },
       getContacts: function() {
         if (angular.isArray(this.responsibleParty)) {
@@ -572,18 +580,34 @@
         if (this.geoBox) {
           var coords = this.geoBox.split('|');
           return 'Polygon((' +
-            coords[0] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[1] + '))';
+              coords[0] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[1] + '))';
         } else {
           return null;
+        }
+      },
+      getOwnername: function() {
+        if (this.userinfo) {
+          var userinfo = this.userinfo.split('|');
+          try {
+            if (userinfo[2] !== userinfo[1]) {
+              return userinfo[2] + ' ' + userinfo[1];
+            } else {
+              return userinfo[1];
+            }
+          } catch (e) {
+            return '';
+          }
+        } else {
+          return '';
         }
       }
     };

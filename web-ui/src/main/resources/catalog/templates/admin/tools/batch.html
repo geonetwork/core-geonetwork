@@ -100,7 +100,8 @@
           <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
 
           <fieldset data-ng-hide="!selectedProcess">
-            <legend data-translate="">batchProcessParameters</legend>
+            <legend data-translate=""
+                    data-ng-hide="selectedProcess.params.length == 0">batchProcessParameters</legend>
 
             <div data-ng-switch="selectedProcess.type">
               <div data-ng-switch-when="fixed-params">

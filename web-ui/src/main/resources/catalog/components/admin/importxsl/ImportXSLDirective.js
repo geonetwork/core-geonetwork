@@ -20,7 +20,8 @@
         templateUrl: '../../catalog/components/admin/importxsl/partials/' +
             'importxsl.html',
         link: function(scope, element, attrs) {
-          $http.get('admin.harvester.info?type=importStylesheets&_content_type=json')
+          $http.get('admin.harvester.info?' +
+              'type=importStylesheets&_content_type=json')
             .success(function(data) {
                 scope.stylesheets = data[0];
               });

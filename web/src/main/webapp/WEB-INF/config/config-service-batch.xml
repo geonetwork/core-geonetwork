@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="metadata.batch.replace.new">
+      <documentation><![CDATA[
+            Service to apply the metadata massive update process configured to the selected metadata.
+            ]]></documentation>
+      <class name=".services.metadata.replace.MassiveReplaceContent"/>
+    </service>
+
+    <service name="md.delete.batch">
+      <documentation><![CDATA[
+            Service to delete all selected metadatas.
+            ]]></documentation>
+
+      <class name=".services.metadata.BatchDelete" />
+
+      <output sheet="metadata-batch-results.xsl">
+        <xml name="info" file="xml/metadata-batchDelete.xml" />
+      </output>
+    </service>
+  </services>
+</geonet>

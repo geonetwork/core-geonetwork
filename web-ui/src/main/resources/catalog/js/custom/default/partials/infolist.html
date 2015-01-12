@@ -1,0 +1,35 @@
+<ul class="gn-info-list">
+  <li data-ng-repeat="md in searchResults.records"
+      data-ng-click="openRecord(md)"
+      data-ng-mouseenter="showMore(true)"
+      data-ng-mouseleave="showMore(false)"
+      id="gn-info-list{{md.getUuid()}}">
+    <div>
+      <div class="gn-md-thumbnail">
+        <img class="gn-img-thumbnail"
+             data-ng-src="{{md.getThumbnails().small}}"
+             data-ng-if="md.getThumbnails().small"/>
+      </div>
+      <div class="gn-md-title">
+        <a >
+          {{md.title || md.defaultTitle}}
+        </a>
+        <br/>
+        <a data-ng-repeat="cat in ::md.category"
+           data-ng-href="#?tab=search&_cat={{cat}}">
+          <i class="fa"
+             title="{{cat | translate}}">
+            <img data-ng-src="../../images/category/{{cat}}.png"/>
+          </i>
+        </a>
+      </div>
+    </div>
+    <div class="hidden">
+      {{md.abstract}}
+    </div>
+  </li>
+  <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
+    <span data-translate="">viewMore</span>
+    <i class="fa fa-ellipsis-h"></i>
+  </a></li>
+</ul>

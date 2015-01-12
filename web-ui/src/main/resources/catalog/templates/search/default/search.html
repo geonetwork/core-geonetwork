@@ -40,10 +40,9 @@
             </div>
             <div class="col-xs-6">
               <div class="jumbotron">
-                <h1 data-translate="">welcomeTitle</h1>
+                <h1 data-translate="" data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
 
                 <p data-translate="">welcomeText</p>
-                <p data-translate="">versionDetails</p>
               </div>
             </div>
           </div>
@@ -88,34 +87,8 @@
                         data-ng-search-form=""
                         data-runSearch="true"
                         data-ng-show="searchResults.records.length > 0">
-                    <ul class="gn-info-list">
-                      <li data-ng-repeat="md in searchResults.records">
-                        <div>
-                          <div class="gn-md-thumbnail">
-                            <img class="gn-img-thumbnail"
-                                 data-ng-src="{{md.getThumbnails().small}}"
-                                 data-ng-if="md.getThumbnails().small"/>
-                          </div>
-                          <div class="gn-md-title">
-                            <a data-ng-click="openRecord(md)">
-                              {{md.title || md.defaultTitle}}
-                            </a>
-                            <br/>
-                            <a data-ng-repeat="cat in ::md.category"
-                               data-ng-href="#?tab=search&_cat={{cat}}">
-                              <i class="fa"
-                                 title="{{cat | translate}}">
-                                <img data-ng-src="../../images/category/{{cat}}.png"/>
-                              </i>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=changeDate">
-                        <span data-translate="">viewMore</span>
-                        <i class="fa fa-ellipsis-h"></i>
-                      </a></li>
-                    </ul>
+
+                    <div data-gn-info-list=""></div>
                   </form>
                 </tab>
                 <tab heading="{{'preferredRecords' | translate}}"
@@ -126,34 +99,8 @@
                         data-ng-search-form=""
                         data-runSearch="true"
                         data-ng-show="searchResults.records.length > 0">
-                    <ul class="gn-info-list">
-                      <li data-ng-repeat="md in searchResults.records">
-                        <div>
-                          <div class="gn-md-thumbnail">
-                            <img class="gn-img-thumbnail"
-                                 data-ng-src="{{md.getThumbnails().small}}"
-                                 data-ng-if="md.getThumbnails().small"/>
-                          </div>
-                          <div class="gn-md-title">
-                            <a data-ng-click="openRecord(md)">
-                              {{md.title || md.defaultTitle}}
-                            </a>
-                            <br/>
-                            <a data-ng-repeat="cat in ::md.category"
-                               data-ng-href="#?tab=search&_cat={{cat}}">
-                              <i class="fa"
-                                 title="{{cat | translate}}">
-                                <img data-ng-src="../../images/category/{{cat}}.png"/>
-                              </i>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
-                        <span data-translate="">viewMore</span>
-                        <i class="fa fa-ellipsis-h"></i>
-                      </a></li>
-                    </ul>
+                    <div data-gn-info-list=""></div>
+                  </form>
                 </tab>
               </tabset>
             </div>
@@ -161,7 +108,7 @@
         </div>
       </tab>
       <tab heading="{{mainTabs.view.title}}"
-           active="currentRecord != null">
+           active="mdView.current.record != null">
         <div class="container-fluid">
           <div data-ng-include="'../../catalog/templates/search/default/recordView.html'"></div>
         </div>
@@ -177,9 +124,10 @@
           <div data-ng-include="'../../catalog/templates/search/default/searchResults.html'"></div>-->
 
           <div class="row"
-               data-ng-show="!searching && searchResults.records.length > 0">
+               data-ng-show="searchResults.records.length > 0">
             <div class="col-md-offset-3 col-md-2 relative">
-              <div gn-selection-widget results="searchResults"></div>
+              <div data-gn-selection-widget=""
+                   data-results="searchResults"></div>
               <!-- TODO: Add action on selection -->
             </div>
             <div class="col-md-7">
@@ -199,11 +147,8 @@
           </div>
 
           <div class="row">
-            <div class="col-md-3">
-               <span class="loading fa fa-spinner fa-spin fa-2x"
-                     data-ng-show="searching"></span>
-
-              <div data-ng-show="!searching && searchResults.records.length > 0"
+            <div class="col-md-3 gn-search-facet">
+              <div data-ng-show="searchResults.records.length > 0"
                    data-gn-facet-list="searchResults.facet"
                    data-facet-config="facetsConfig"
                    data-current-facets="currentFacets">
@@ -213,8 +158,7 @@
               <div class="gn-results-heading">
                 <div data-gn-facet-breadcrumb="currentFacets"></div>
               </div>
-
-              <span class="loading fa fa-spinner fa-spin fa-2x"
+              <span class="loading fa fa-spinner fa-spin"
                     data-ng-show="searching"></span>
 
               <div class="alert alert-warning" role="alert"
@@ -223,7 +167,7 @@
                 <span data-translate="">zarooResult</span>
               </div>
 
-              <div data-ng-show="!searching && searchResults.records.length > 0"
+              <div data-ng-show="searchResults.records.length > 0"
                    data-gn-results-container=""
                    data-search-results="searchResults"
                    data-template-url="resultTemplate"
@@ -231,6 +175,10 @@
 
             </div>
           </div>
+
+          <div data-gn-map-field="searchObj.searchMap"
+               data-gn-map-field-geom="searchObj.params.geometry"></div>
+
         </div>
       </tab>
       <tab select="displayMapTab()" active="mainTabs.map.active">
@@ -258,7 +206,13 @@
         <li><a href="https://github.com/geonetwork/core-geonetwork">
           <i class="fa fa-github"></i>
           <span data-translate="">github</span></a></li>
+        <li>
+          <a data-translate=""
+             data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
+            versionDetails</a>
+        </li>
       </ul>
+
     </div>
   </div>
 </div>

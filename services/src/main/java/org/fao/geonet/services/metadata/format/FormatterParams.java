@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class FormatterParams {
     public Format format;
-    public  Map<String,String[]> params;
+    public Map<String,String[]> params;
     public ServiceContext context;
     public Path formatDir;
     public Path viewFile;

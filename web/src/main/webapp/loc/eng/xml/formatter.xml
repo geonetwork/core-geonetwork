@@ -5,4 +5,16 @@
     <links>Links</links>
     <parent>Parent</parent>
     <noUuidInLink>No uuid in link</noUuidInLink>
+    <complete>Complete</complete>
+    <overview>Overview</overview>
+    <xml>XML</xml>
+    <service-link>Service</service-link>
+    <children-link>Children</children-link>
+    <related-link>Related</related-link>
+    <parent-link>Parent</parent-link>
+    <fcat-link>Feature Catalog</fcat-link>
+    <sibling-link>Siblings</sibling-link>
+    <associated-link>Associated</associated-link>
+    <source-link>Sources</source-link>
+    <hassource-link>Has Source</hassource-link>
 </strings>

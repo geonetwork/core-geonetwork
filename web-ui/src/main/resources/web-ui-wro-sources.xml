@@ -16,6 +16,7 @@
     <jsSource webappPath="catalog/lib/angular/angular-sanitize.min.js"/>
     <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
     <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
+    <jsSource webappPath="catalog/lib/angular.ext/hotkeys/hotkeys.min.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>

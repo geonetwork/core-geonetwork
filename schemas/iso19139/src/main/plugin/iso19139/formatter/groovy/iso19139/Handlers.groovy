@@ -56,13 +56,14 @@ public class Handlers {
         commonHandlers.addDefaultStartAndEndHandlers();
         addExtentHandlers()
 
-        handlers.sort name: 'Text Elements', select: rootEl/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
-            def v1 = matchers.isContainerEl(el1) ? 1 : -1;
-            def v2 = matchers.isContainerEl(el2) ? 1 : -1;
-            return v1 - v2
-        }
+        handlers.sort name: 'Text Elements', select: matchers.isContainerEl, priority: -1, sortContainerEl
     }
 
+    def sortContainerEl = {el1, el2 ->
+        def v1 = matchers.isContainerEl(el1) ? 1 : -1;
+        def v2 = matchers.isContainerEl(el2) ? 1 : -1;
+        return v1 - v2
+    }
     def addPackageViewClass = {el -> if (packageViews.contains(el.name())) return el.name().replace(':', '_')}
 
     def addExtentHandlers() {

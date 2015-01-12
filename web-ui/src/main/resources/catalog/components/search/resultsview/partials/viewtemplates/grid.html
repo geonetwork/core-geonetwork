@@ -1,7 +1,9 @@
 <ul class="list-group gn-resultview gn-resultview-sumup">
   <li class="list-group-item gn-grid"
       data-ng-repeat="md in searchResults.records"
-      data-gn-fix-mdlinks="">
+      data-gn-fix-mdlinks=""
+      data-gn-displayextent-onhover=""
+      data-gn-zoomto-onclick="">
     <div title="{{md.abstract || md.defaultAbstract}}">
 
       <!--Edit button-->
@@ -72,7 +74,7 @@
                  data-ng-change="change()"/>
           <h4>
             <a href=""
-               data-ng-click="openRecord(md)"
+               data-ng-click="openRecord($index, md, searchResults.records)"
                title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
           </h4>
         </div>

@@ -15,6 +15,22 @@
    */
 
   .directive('gnTypeahead', [function() {
+
+        /**
+         * If data are prefetched, get the label from the value
+         * Uses for model -> ui
+         * @param {array} a
+         * @param {string} v
+         * @return {string|undefined}
+         */
+        var findLabel = function(a, v) {
+          for (var i = 0; i < a.length; i++) {
+            if (a[i].id == v) {
+              return a[i].name;
+            }
+          }
+        };
+
         return {
           restrict: 'A',
           scope: {
@@ -147,7 +163,7 @@
                 for (i = 0; i < added.length; i++) {
                   $(element).tagsinput('add', {
                     id: added[i],
-                    name: added[i]
+                    name: findLabel(data, added[i])
                   });
                 }
               }, true);
@@ -236,8 +252,8 @@
           };
         }])
 
-      .directive('sortbyCombo', [
-        function() {
+      .directive('sortbyCombo', ['$translate', 'hotkeys',
+        function($translate, hotkeys) {
           return {
             restrict: 'A',
             require: '^ngSearchForm',
@@ -248,12 +264,27 @@
               values: '=gnSortbyValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.params.sortBy = scope.params.sortBy || scope.values[0].sortBy;
+              scope.params.sortBy = scope.params.sortBy ||
+                  scope.values[0].sortBy;
               scope.sortBy = function(v) {
                 angular.extend(scope.params, v);
                 searchFormCtrl.triggerSearch(true);
               };
-
+              hotkeys.bindTo(scope)
+                .add({
+                    combo: 's',
+                    description: $translate('hotkeySortBy'),
+                    callback: function() {
+                      for (var i = 0; i < scope.values.length; i++) {
+                        if (scope.values[i].sortBy === scope.params.sortBy) {
+                          var nextOptions = i === scope.values.length - 1 ?
+                              0 : i + 1;
+                          scope.sortBy(scope.values[nextOptions]);
+                          return;
+                        }
+                      }
+                    }
+                  });
             }
           };
         }])

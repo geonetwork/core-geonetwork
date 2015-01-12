@@ -6,12 +6,19 @@
 
 
 
+
+
+
+
+
+
   goog.require('gn_map_field_directive');
+  goog.require('gn_mdactions');
   goog.require('gn_module');
   goog.require('gn_resultsview');
   goog.require('gn_search_controller');
   goog.require('gn_viewer');
-  goog.require('gn_mdactions');
+  goog.require('gn_mdview');
 
   var module = angular.module('gn_search', [
     'gn_module',
@@ -19,6 +26,7 @@
     'gn_map_field_directive',
     'gn_search_controller',
     'gn_viewer',
+    'gn_mdview',
     'gn_mdactions',
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',

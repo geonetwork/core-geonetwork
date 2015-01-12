@@ -25,12 +25,17 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -42,11 +47,14 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,12 +62,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,6 +85,9 @@ import static com.google.common.io.Files.getNameWithoutExtension;
  */
 @Controller("md.formatter.type")
 public class Format extends AbstractFormatService {
+
+    @Autowired
+    private ApplicationContext springAppContext;
 
     @Autowired
     private SettingManager settingManager;
@@ -92,6 +107,8 @@ public class Format extends AbstractFormatService {
     private DataManager dataManager;
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
+    @Autowired
+    private GeonetHttpRequestFactory requestFactory;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -100,20 +117,67 @@ public class Format extends AbstractFormatService {
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
 
-    @RequestMapping(value = "/{lang}/md.format.{type}")
-    public void exec(
+    @RequestMapping(value = "/{lang}/xml.format.{type}")
+    public void execXml(
             @PathVariable final String lang,
             @PathVariable final String type,
-            @RequestParam(required = false) final String id,
-            @RequestParam(required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid,
-            @RequestParam(defaultValue = "n") final String skipPopularity,
-            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
+            @RequestParam(value = "metadata", required = false) String metadata,
+            @RequestParam(value = "url", required = false) final String url,
+            @RequestParam(value = "schema") final String schema,
             final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        if (url == null && metadata == null) {
+            throw new IllegalArgumentException("Either the metadata or url parameter must be declared.");
+        }
+        if (url != null && metadata != null) {
+            throw new IllegalArgumentException("Only one of metadata or url parameter must be declared.");
+        }
+
+        if (metadata == null) {
+            metadata = getXmlFromUrl(lang, url, request);
+        }
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
-        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, id, uuid, xslid, skipPopularity,
-                hide_withheld, request);
+        Element metadataEl = Xml.loadString(metadata, false);
+        Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
+        metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
+
+        final ServiceContext context = createServiceContext(lang, formatType, request);
+        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid,
+                request, context, metadataEl, metadataInfo);
+
+        writeOutResponse(lang, response, formatType, result);
+    }
+
+    private String getXmlFromUrl(String lang, String url, HttpServletRequest servletRequest) throws IOException, URISyntaxException {
+        String adjustedUrl = url;
+        if (!url.startsWith("http")) {
+            adjustedUrl = settingManager.getSiteURL(lang) + url;
+        } else {
+            final URI uri = new URI(url);
+            Set allowedRemoteHosts = springAppContext.getBean("formatterRemoteFormatAllowedHosts", Set.class);
+            Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
+        }
+
+        HttpUriRequest getXmlRequest = new HttpGet(adjustedUrl);
+        final Enumeration<String> headerNames = servletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            final Enumeration<String> headers = servletRequest.getHeaders(headerName);
+            while (headers.hasMoreElements()) {
+                String header = headers.nextElement();
+                getXmlRequest.addHeader(headerName, header);
+            }
+        }
+        final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
+        if (execute.getRawStatusCode() != 200) {
+            throw new IllegalArgumentException("Request did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
+        }
+        return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
+    }
+
+    public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, Pair<FormatterImpl, FormatterParams>
+            result) throws Exception {
         FormatterImpl formatter = result.one();
         FormatterParams fparams = result.two();
 
@@ -130,6 +194,24 @@ public class Format extends AbstractFormatService {
             response.setContentLength(bytes.length);
             response.getOutputStream().write(bytes);
         }
+    }
+
+    @RequestMapping(value = "/{lang}/md.format.{type}")
+    public void exec(
+            @PathVariable final String lang,
+            @PathVariable final String type,
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(defaultValue = "n") final String skipPopularity,
+            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
+            final HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        FormatType formatType = FormatType.valueOf(type.toLowerCase());
+        Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
+                skipPopularity,
+                hide_withheld, request);
+        writeOutResponse(lang, response, formatType, result);
     }
 
     private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
@@ -150,15 +232,23 @@ public class Format extends AbstractFormatService {
     }
 
     @VisibleForTesting
-    Pair<FormatterImpl, FormatterParams> createFormatterAndParams(
+    Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
             final String lang, final FormatType type, final String id, final String uuid, final String xslid,
             final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
 
-        ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+        ServiceContext context = createServiceContext(lang, type, request);
         final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
 
+        return createFormatterAndParams(lang, type, xslid, request, context, metadata, metadataInfo);
+    }
+
+    private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
+        return this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+    }
+
+    private Pair<FormatterImpl, FormatterParams> createFormatterAndParams(String lang, FormatType type, String xslid, HttpServletRequest request, ServiceContext context, Element metadata, Metadata metadataInfo) throws Exception {
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {

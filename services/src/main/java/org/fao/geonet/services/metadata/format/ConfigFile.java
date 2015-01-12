@@ -27,6 +27,7 @@ public class ConfigFile {
     private static final String LOADER_REMOTE_REQUEST = "loader.http.permitRemoteRequests";
 
     private static final String DEPENDS_ON = "dependsOn";
+    private static final String PUBLISHED = "published";
 
     private Properties config;
 
@@ -69,7 +70,10 @@ public class ConfigFile {
         return defaultLang;
     }
 
-
+    public boolean isPublished() {
+        final String published = config.getProperty(PUBLISHED);
+        return published == null ||  "true".equals(published);
+    }
     public boolean contains(String propertyName) {
         return is(propertyName, true);
     }
@@ -144,6 +148,9 @@ public class ConfigFile {
                 out.println("# current formatter.  For example iso19139.che depends on iso19139.  This means that the");
                 out.println("# files in iso19139 are accessible by iso19139.che formatter.");
                 out.println("# " + DEPENDS_ON + "=iso19139");
+                out.println("");
+                out.println("# " + PUBLISHED + " (true/false) - declares if the formatter should be part of public listing of the formatter.");
+                out.println(PUBLISHED + "=true");
             }
         }
     }

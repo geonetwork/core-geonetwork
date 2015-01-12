@@ -10,6 +10,8 @@
     "TEMPLATE": "Template",
     "UserAdmin": "User administrator",
     "_cat": "Category",
+    "categories": "Categories",
+    "category": "Category",
     "_groupOwner": "Group",
     "_groupPublished": "Published in that group",
     "_indexingError": "Indexing error",
@@ -119,7 +121,8 @@
     "somethingWrong": "Something went wrong!",
     "south": "South",
     "spa": "Español",
-    "spatialRepresentationTypes": "Spatial types",
+    "spatialRepresentationTypes": "Data types",
+    "spatialRepresentationType": "Data type",
     "state": "State",
     "staticMap": "Static map",
     "surname": "Surname",
@@ -131,6 +134,7 @@
     "until": "Until",
     "updatePassword": "Update",
     "upload": "Upload",
+    "uuid": "Identifier",
     "url": "URL",
     "userDetails": "User details",
     "userPreferences": "User preferences",
@@ -138,5 +142,10 @@
     "usernameHelp": "Name to use when sign in",
     "west": "West",
     "year": "Year",
-    "zip": "ZIP"
+    "zip": "ZIP",
+    "delete": "Supprimer",
+    "edit" : "Editer",
+    "duplicate": "Dupliquer",
+    "createChild": "Créer un enfant",
+    "privileges": "Privilèges"
 }

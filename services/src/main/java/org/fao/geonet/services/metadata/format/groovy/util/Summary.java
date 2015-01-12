@@ -20,18 +20,21 @@ import java.util.List;
 /**
  * Represents the summary of a metadata element.  It is often the top section of a metadata view and summarizes the critical part
  * of the metadata to most users.
- *
+ * <p/>
  * The purpose of this class is to provide consistent way to display a summary of a metadata for all schemas.  The formatter/view only
  * needs to populate the fields of this class (or subclass) and the class can take care of presentation.
- *
+ * <p/>
  * This implementation includes logo, thumbnail, title, abstract, navigation bar and the content (view).  Any of the fields can be
  * left with their default values and they will not be displayed in the Summary.
+ * <p/>
+ * The data is rendered with the view-header.html template.
  */
 public class Summary {
     protected final Handlers handlers;
     protected final Environment env;
     protected final Functions functions;
 
+    private List<MenuAction> actions = Lists.newArrayList();
     private String logo;
     private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
@@ -75,7 +78,9 @@ public class Summary {
         params.put("extents", extent != null ? extent : "");
         params.put("formats", formats != null ? formats : "");
         params.put("keywords", keywords != null ? keywords : "");
+        params.put("actions", this.actions);
         params.put("isHTML", env.getFormatType() == FormatType.html);
+        params.put("isPDF", env.getFormatType() == FormatType.pdf);
 
         return handlers.fileResult("html/view-header.html", params);
     }
@@ -108,7 +113,7 @@ public class Summary {
     }
 
     private String resourceThumbnailUrl(String t) {
-        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&amp;access=public&amp;id=" + env.getMetadataId();
+        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&access=public&id=" + env.getMetadataId();
     }
 
     private boolean isSmallThumbnail(String img) {
@@ -148,6 +153,7 @@ public class Summary {
     public void addNavBarItem(NavBarItem item) {
         this.navBar.add(item);
     }
+
     public void setNavBar(List<NavBarItem> navBar) {
         this.navBar = navBar;
     }
@@ -155,6 +161,7 @@ public class Summary {
     public void addNavBarOverflow(NavBarItem item) {
         this.navBarOverflow.add(item);
     }
+
     public void setNavBarOverflow(List<NavBarItem> navBarOverflow) {
         this.navBarOverflow = navBarOverflow;
     }
@@ -189,5 +196,9 @@ public class Summary {
 
     public void setFormats(String formats) {
         this.formats = formats;
+    }
+
+    public List<MenuAction> getActions() {
+        return actions;
     }
 }

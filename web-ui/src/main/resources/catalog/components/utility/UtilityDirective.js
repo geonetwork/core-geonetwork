@@ -198,6 +198,41 @@
       };
     }]);
 
+  module.directive('gnHumanizeTime', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        template: '<span title="{{title}}">{{value}}</span>',
+        scope: {
+          date: '@gnHumanizeTime',
+          format: '@',
+          fromNow: '@'
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.$watch('date', function(originalDate) {
+            if (originalDate) {
+              // Moment will properly parse YYYY, YYYY-MM,
+              // YYYY-MM-DDTHH:mm:ssZ which are the formats
+              // used in the common metadata standards.
+              var date = moment(originalDate);
+              if (date.isValid()) {
+                var fromNow = date.fromNow();
+                var formattedDate = scope.format ?
+                    date.format(scope.format) :
+                    date.toString();
+                scope.value = scope.fromNow !== undefined ?
+                    fromNow : formattedDate;
+                scope.title = scope.fromNow !== undefined ?
+                    formattedDate : fromNow;
+              }
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnDirectoryEntryPicker
@@ -335,29 +370,29 @@
           max: -1
         };
 
-        for(var k in obj) {
-          if(k < year.min) year.min = k;
-          if(k > year.max) year.max = k;
+        for (var k in obj) {
+          if (k < year.min) year.min = k;
+          if (k > year.max) year.max = k;
         }
-        for(k in obj[year.min]) {
-          if(k < month.min) month.min = k;
+        for (k in obj[year.min]) {
+          if (k < month.min) month.min = k;
         }
-        for(k in obj[year.max]) {
-          if(k > month.max) month.max = k;
+        for (k in obj[year.max]) {
+          if (k > month.max) month.max = k;
         }
-        for(k in obj[year.min][month.min]) {
-          if(obj[year.min][month.min][k] < day.min) day.min =
-              obj[year.min][month.min][k];
+        for (k in obj[year.min][month.min]) {
+          if (obj[year.min][month.min][k] < day.min) day.min =
+                obj[year.min][month.min][k];
         }
-        for(k in obj[year.max][month.max]) {
-          if(obj[year.min][month.min][k] > day.max) day.max =
-              obj[year.min][month.min][k];
+        for (k in obj[year.max][month.max]) {
+          if (obj[year.min][month.min][k] > day.max) day.max =
+                obj[year.min][month.min][k];
         }
 
         return {
           min: month.min + 1 + '/' + day.min + '/' + year.min,
           max: month.max + 1 + '/' + day.max + '/' + year.max
-        }
+        };
       };
 
       return {
@@ -380,13 +415,13 @@
           };
 
           var limits;
-          if(scope.dates) {
+          if (scope.dates) {
             limits = getMaxInProp(scope.dates);
 
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
-            beforeShowDay:  function(dt, a, b) {
+            beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
             startDate: limits.min,

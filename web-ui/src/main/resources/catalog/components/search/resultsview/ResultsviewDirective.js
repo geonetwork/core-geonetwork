@@ -142,6 +142,18 @@
 
           };
 
+          scope.zoomToMdExtent = function(md, map) {
+            var extent = gnMap.getBboxFromMd(md);
+            if (extent) {
+              var proj = map.getView().getProjection();
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                  proj.getExtent();
+              map.getView().fitExtent(extent, map.getSize());
+            }
+          };
+
+
           scope.hoverOL.setMap(scope.map);
         }
       };
@@ -208,96 +220,10 @@
         link: function(scope, element, attrs, controller) {
 
           element.bind('dblclick', function() {
-
-            var extent = gnMap.getBboxFromMd(scope.md);
-            if (extent) {
-              var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
-                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                  proj.getExtent();
-              scope.map.getView().fitExtent(extent, scope.map.getSize());
-            }
+            scope.zoomToMdExtent(scope.md, scope.map);
           });
         }
       };
     }]);
-
-  module.directive('gnMetadataOpen',
-      ['$http', '$sanitize', '$compile', function($http, $sanitize, $compile) {
-        return {
-          restrict: 'A',
-          scope: {
-            md: '=gnMetadataOpen',
-            selector: '@gnMetadataOpenSelector'
-          },
-
-          link: function(scope, element, attrs, controller) {
-            element.on('click', function() {
-              //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
-              var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&' +
-                  'schema=iso19139.che&id=';
-              // var URI = 'http://localhost:8080/geonetwork/srv/fre/
-              // view?currTab=simple&uuid='
-              $http.get(URI + scope.md.getUuid()).then(function(response) {
-                scope.fragment = response.data.replace(
-                    '<?xml version="1.0" encoding="UTF-8"?>', '');
-                var el = document.createElement('div');
-                el.setAttribute('gn-metadata-display', '');
-                $(scope.selector).append(el);
-                $compile(el)(scope);
-              });
-            });
-          }
-        };
-      }]
-  );
-
-  module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {
-    return {
-      templateUrl: '../../catalog/components/search/resultsview/partials/' +
-          'metadata.html',
-      link: function(scope, element, attrs, controller) {
-
-        var domRendered = false;
-
-        var addEvents = function() {
-          element.find('.toggler').on('click', function() {
-            $(this).toggleClass('closed');
-            $(this).parent().nextAll('.target').first().toggle();
-          });
-
-          element.find('.nav-pills a[rel]').on('click', function(e) {
-            element.find('.gn-metadata-view > .entry').hide();
-            $($(this).attr('rel')).show();
-            e.preventDefault();
-          });
-
-        };
-
-        // We need to wait that the HTML is rendered into ng-bind-html directive
-        // Angular can't tell us so we must do a timeout
-        var callTimeout = function() {
-          return $timeout(function() {
-            console.log('loop');
-            if (element.find('.toggler').length > 0) {
-              domRendered = true;
-              addEvents();
-            }
-          }, 100).then(function() {
-            if (!domRendered) {
-              callTimeout();
-            }
-          });
-        };
-        callTimeout();
-
-        scope.dismiss = function() {
-          element.remove();
-        };
-      }
-
-    };
-  }]
-  );
 
 })();

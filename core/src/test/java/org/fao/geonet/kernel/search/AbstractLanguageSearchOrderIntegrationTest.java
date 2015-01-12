@@ -16,9 +16,7 @@ import org.jdom.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -26,9 +24,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import javax.annotation.Nonnull;
 
-import static org.junit.Assert.*;
-import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.*;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_DOC_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_UI_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.PREFER_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.PREFER_UI_LOCALE;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the order of search results with regards to language settings.
@@ -138,7 +143,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);
         }
 
-        this._luceneSearcher = _searchManager.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+        this._luceneSearcher = _searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
     }
 
     protected abstract String[] doSearch(String lang) throws Exception;

@@ -2,8 +2,8 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import com.google.common.io.CharStreams;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
-import org.fao.geonet.kernel.harvest.MockCloseableHttpResponse;
-import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
+import org.fao.geonet.MockCloseableHttpResponse;
+import org.fao.geonet.MockRequestFactoryGeonet;
 import org.jdom.Element;
 
 import java.io.InputStream;

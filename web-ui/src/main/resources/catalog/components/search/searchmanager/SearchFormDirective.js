@@ -96,6 +96,9 @@
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
 
+      //Close metadata views if some are opened
+      $scope.$broadcast('closeMdView');
+
       // Set default pagination if not set
       if ((!keepPagination &&
           !$scope.searchObj.permalink) ||

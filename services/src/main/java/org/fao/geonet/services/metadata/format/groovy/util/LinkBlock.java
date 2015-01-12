@@ -24,12 +24,21 @@ public class LinkBlock {
      * The translation key for the name of this section.
      */
     public final String name;
-    public LinkBlock(String name) {
+    /**
+     * the classes to put on the link block &lt;i> element. (may be null)
+     */
+    public final String iconClasses;
+    public LinkBlock(String name, String iconClasses) {
         this.name = name;
+        this.iconClasses = iconClasses;
     }
 
     public String getName() throws JDOMException, IOException {
         return name;
+    }
+
+    public String getIconClasses() {
+        return iconClasses;
     }
 
     public void put(LinkType type, Link link) {

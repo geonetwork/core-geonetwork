@@ -15,10 +15,10 @@ public class Link {
     }
 
     public String getHref() {
-        return href == null ? null : href.replace("&", "&amp;");
+        return href == null ? null : href;
     }
 
     public String getText() {
-        return text == null ? null : text.replace("&", "&amp;");
+        return text == null ? null : text;
     }
 }

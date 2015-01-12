@@ -33,6 +33,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.DataManager;
@@ -55,6 +56,7 @@ import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.util.z3950.Repositories;
@@ -79,8 +81,11 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -398,7 +403,62 @@ public class Geonetwork implements ApplicationHandler {
             Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
+
+        fillCaches();
+
         return gnContext;
+    }
+
+    private void fillCaches() {
+        Thread fillCaches = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String siteURL = _applicationContext.getBean(SettingManager.class).getSiteURL("eng");
+
+                while (true) {
+                    try {
+                        URL testUrl = new URL(siteURL + "home");
+                        testUrl.getContent();
+                        break;
+                    } catch (IOException e) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e1) {
+                            return;
+                        }
+                    }
+
+                }
+
+
+                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
+                Integer mdId = null;
+                if (metadatas.getNumberOfElements() > 0) {
+                    mdId = metadatas.getContent().get(0).getId();
+                }
+
+                List initCacheUrls = _applicationContext.getBean("initCacheUrls", List.class);
+                for (Object initCacheUrl : initCacheUrls) {
+                    String url = siteURL + initCacheUrl;
+                    if (mdId != null) {
+                        url = url.replace("{{mdId}}", mdId.toString());
+                    }
+
+                    try {
+                        Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
+                        if (!url.matches("[^{}]*\\{\\{\\w+\\}\\}[^{}]*")) {
+                            new URL(url).getContent();
+                        }
+                    } catch (IOException e) {
+                        // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
+                    }
+                }
+            }
+        });
+        fillCaches.setDaemon(true);
+        fillCaches.setName("Fill Caches Thread");
+        fillCaches.setPriority(Thread.MIN_PRIORITY);
+        fillCaches.start();
     }
 
     private void importDatabaseData(final ServiceContext context) {
@@ -408,7 +468,7 @@ public class Geonetwork implements ApplicationHandler {
         if (count == 0) {
             try {
                 // import data from init files
-                List<Pair<String, String>> importData = (List) context.getApplicationContext().getBean("initial-data");
+                List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
                     final DbLib dbLib = new DbLib();
                     for (Pair<String, String> pair : importData) {
                         final ServletContext servletContext = context.getServlet().getServletContext();

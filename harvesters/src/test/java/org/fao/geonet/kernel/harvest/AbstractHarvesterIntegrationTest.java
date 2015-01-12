@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.repository.HarvestHistoryRepository;

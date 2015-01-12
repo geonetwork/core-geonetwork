@@ -12,8 +12,8 @@
 
   <!-- ISO 19110 layout delegates most of the work to the ISO19139 mode-->
 
-
   <xsl:include href="layout.xsl"/>
+  <xsl:include href="evaluate.xsl"/>
 
 
   <!-- 
@@ -30,21 +30,4 @@
     <xsl:param name="base" as="node()"/>
     <xsl:apply-templates mode="mode-iso19110" select="$base"/>
   </xsl:template>
-
-
-
-  <!-- Evaluate an expression. This is schema dependant in order to properly 
-        set namespaces required for evaluate.
-        
-    "The static context for the expression includes all the in-scope namespaces, 
-    types, and functions from the calling stylesheet or query"
-    http://saxonica.com/documentation9.4-demo/html/extensions/functions/evaluate.html
-    -->
-  <xsl:template name="evaluate-iso19110">
-    <xsl:param name="base" as="node()"/>
-    <xsl:param name="in"/>
-    <xsl:copy-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
-  </xsl:template>
-
-
 </xsl:stylesheet>

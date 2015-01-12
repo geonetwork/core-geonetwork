@@ -8,6 +8,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.TestFunction;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
@@ -37,7 +38,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.io.File;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 
@@ -110,33 +110,20 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
     }
 
     protected Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
-        return this.formatService.createFormatterAndParams(getUILang(), getOutputType(),
-                    "" + id, null, formatterId, "true", false, request);
+        return this.formatService.loadMetadataAndCreateFormatterAndParams(getUILang(), getOutputType(),
+                "" + id, null, formatterId, "true", false, request);
     }
 
     protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {
-        long start = System.nanoTime();
-        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
-        systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
-        while (System.nanoTime() - start < fiveSec) {
-            formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request, new
-                    MockHttpServletResponse());
-        }
-        System.out.println("Starting big run");
-        final int secondsRan = 30;
-        final long thirtySec = TimeUnit.SECONDS.toNanos(secondsRan);
-        start = System.nanoTime();
-        double executions = 0;
-        while (System.nanoTime() - start < thirtySec) {
-            formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request, new MockHttpServletResponse());
-            executions++;
-        }
-        long end = System.nanoTime();
+        TestFunction testFunction = new TestFunction() {
+            @Override
+            public void exec() throws Exception{
+                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request,
+                        new MockHttpServletResponse());
+            }
+        };
 
-        final long duration = end - start;
-        System.out.println("Executed " + executions + " in "+ (TimeUnit.NANOSECONDS.toSeconds(duration * 1000) / 1000)+" seconds.");
-        System.out.println("   Average of " + round(((double) TimeUnit.NANOSECONDS.toMillis(duration))/executions) + "ms per execution;");
-        System.out.println("   Average of " + round(executions / TimeUnit.NANOSECONDS.toSeconds(duration)) + " executions per second;");
+        super.measurePerformance(testFunction);
     }
 
     private FormatType getOutputType() {

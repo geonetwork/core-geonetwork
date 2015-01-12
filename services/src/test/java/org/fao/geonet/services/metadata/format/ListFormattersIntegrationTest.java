@@ -33,14 +33,15 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
-        assertFormattersForSchema("iso19139", listService, "full_view", "xsl-view");
-        assertFormattersForSchema("dublin-core", listService, "full_view");
+        assertFormattersForSchema(true, "iso19139", listService, "full_view", "xsl-view");
+        assertFormattersForSchema(false, "iso19139", listService, "full_view", "xsl-view", "partial_view");
+        assertFormattersForSchema(true, "dublin-core", listService, "full_view", "xsl-view");
     }
 
-    private void assertFormattersForSchema(String schema, ListFormatters listService,
+    private void assertFormattersForSchema(boolean publishedOnly,String schema, ListFormatters listService,
                                            String... expectedFormatters) throws Exception {
 
-        final ListFormatters.FormatterDataResponse response = listService.exec(null, null, schema, false);
+        final ListFormatters.FormatterDataResponse response = listService.exec(null, null, schema, false, publishedOnly);
 
         final List<String> formatters = Lists.newArrayList(Lists.transform(response.getFormatters(), new Function<ListFormatters.FormatterData, String>() {
             @Nullable

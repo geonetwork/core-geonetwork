@@ -157,7 +157,7 @@ public final class IO {
             } else {
                 Files.walkFileTree(from, new CopyAcceptedFiles(from, actualTo, filter));
             }
-        } else {
+        } else if (Files.exists(from)) {
             if (filter == null || filter.accept(from)) {
                 final Path parent = actualTo.getParent();
                 if (parent != null && !Files.exists(parent)) {
@@ -180,11 +180,13 @@ public final class IO {
             actualTo = to;
         }
 
-        final Path parent = actualTo.getParent();
-        if (!Files.exists(parent)) {
-            Files.createDirectories(parent);
+        if (Files.exists(from)) {
+            final Path parent = actualTo.getParent();
+            if (!Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+            Files.move(from, actualTo);
         }
-        Files.move(from, actualTo);
     }
     public static boolean isEmptyDir(Path dir) throws IOException {
         try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {

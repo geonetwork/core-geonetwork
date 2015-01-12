@@ -28,7 +28,7 @@
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
-  <xsl:variable name="withD3" select="$service = 'admin.console'"/>
+  <xsl:variable name="withD3" select="$service = 'admin.console' or $service = 'catalog.search'"/>
   <xsl:variable name="searchView" select="if (/root/request/view) then /root/request/view else 'default'"></xsl:variable>
   <xsl:variable name="owsContext" select="/root/request/owscontext" />
   <xsl:variable name="wmsUrl" select="/root/request/wmsurl" />
