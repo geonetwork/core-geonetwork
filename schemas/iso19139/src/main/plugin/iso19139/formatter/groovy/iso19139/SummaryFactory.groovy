@@ -105,6 +105,10 @@ class SummaryFactory {
                     title = href;
                 }
 
+                if (title != null && title.length() > 30) {
+                    title = title.substring(0, 27) + "...";
+                }
+
                 def imagesDir = "../../images/formatter/"
                 def type = "link";
                 def icon = "";
