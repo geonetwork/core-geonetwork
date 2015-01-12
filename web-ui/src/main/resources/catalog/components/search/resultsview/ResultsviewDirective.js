@@ -226,48 +226,4 @@
       };
     }]);
 
-  module.directive('gnMetadataOpen',
-      ['$http', '$sanitize', '$compile', 'gnSearchSettings',
-        function($http, $sanitize, $compile, gnSearchSettings) {
-         return {
-           restrict: 'A',
-           scope: {
-             md: '=gnMetadataOpen',
-             selector: '@gnMetadataOpenSelector'
-           },
-
-           link: function(scope, element, attrs, controller) {
-             element.on('click', function() {
-               var URI = gnSearchSettings.formatter.defaultUrl;
-               $http.get(URI + scope.md.getUuid()).then(function(response) {
-                 scope.fragment = response.data.replace(
-                 '<?xml version="1.0" encoding="UTF-8"?>', '');
-                 var el = document.createElement('div');
-                 el.setAttribute('gn-metadata-display', '');
-                 $(scope.selector).append(el);
-                 $compile(el)(scope);
-               });
-             });
-           }
-         };
-       }]
-  );
-
-  module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {
-    return {
-      templateUrl: '../../catalog/components/search/resultsview/partials/' +
-          'metadata.html',
-      link: function(scope, element, attrs, controller) {
-        scope.dismiss = function() {
-          element.remove();
-        };
-
-        scope.$on('closeMdView', function() {
-          scope.dismiss();
-        });
-      }
-    };
-  }]
-  );
-
 })();

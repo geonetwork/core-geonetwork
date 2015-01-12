@@ -199,6 +199,7 @@
         $scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
+        // TODO: When last record of page reached, go to next page...
         $scope.openRecord($scope.currentRecordIndex + 1, $scope.records);
       };
       $scope.previousRecord = function() {
