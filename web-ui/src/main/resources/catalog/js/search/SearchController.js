@@ -19,8 +19,10 @@
     '$q',
     '$http',
     'suggestService',
+    'gnAlertService',
     'gnSearchSettings',
-    function($scope, $q, $http, suggestService, gnSearchSettings) {
+    function($scope, $q, $http, suggestService,
+             gnAlertService, gnSearchSettings) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -100,6 +102,17 @@
           return defer.promise;
         })()
       };
+
+      /**
+       * Keep a reference on main cat scope
+       * @return {*}
+       */
+      $scope.getCatScope = function() {return $scope};
+
+      // TODO: see if not redondant with CatController event management
+      $scope.$on('StatusUpdated', function(e, status) {
+        gnAlertService.addAlert(status);
+      });
 
     }]);
 })();
