@@ -34,6 +34,10 @@ public class ISO19139SchemaPlugin
                 .build();
     }
 
+    public ISO19139SchemaPlugin() {
+        super(IDENTIFIER);
+    }
+
     /**
      * Return sibling relation defined in aggregationInfo.
      *
