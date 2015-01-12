@@ -105,8 +105,8 @@ class SummaryFactory {
                     title = href;
                 }
 
-                if (title != null && title.length() > 30) {
-                    title = title.substring(0, 27) + "...";
+                if (title != null && title.length() > 60) {
+                    title = title.substring(0, 57) + "...";
                 }
 
                 def imagesDir = "../../images/formatter/"

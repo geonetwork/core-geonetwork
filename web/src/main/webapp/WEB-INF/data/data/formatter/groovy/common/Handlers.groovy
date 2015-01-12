@@ -208,6 +208,11 @@ public class Handlers {
                 if (title == null) {
                     title = mdEl.getChildText("defaultTitle")
                 }
+
+                if (title != null && title.length() > 60) {
+                    title = title.substring(0, 57) + "...";
+                }
+
                 hierarchy.put(linkType, new Link(href, title))
             }
         }
