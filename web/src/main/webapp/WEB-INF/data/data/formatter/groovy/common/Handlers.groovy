@@ -148,7 +148,7 @@ public class Handlers {
             }
 
 
-            def published = env.indexInfo.get("_groupPublished").contains("all") || env.indexInfo.get("_groupPublished").contains("guest")
+            def published = hasIndexValue("_groupPublished", "all")
             def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
             summary.actions << publishAction
             if (!published && env.indexInfo.get("_valid").contains("1")) {
@@ -172,6 +172,11 @@ public class Handlers {
                 new MenuAction(label: "twitter", javascript: "window.open('${shareURL('https://twitter.com/share?url=')}')", iconClasses: "fa fa-twitter"),
                 new MenuAction(label: "facebook", javascript: "window.open('${shareURL('href="https://www.facebook.com/sharer.php?u=')}')", iconClasses: "fa fa-facebook")
         ]);
+    }
+
+    def boolean hasIndexValue(indexField, value) {
+        def values = env.indexInfo.get(indexField)
+        values != null && values.contains(value)
     }
 
     def loadHierarchyLinkBlocks() {
