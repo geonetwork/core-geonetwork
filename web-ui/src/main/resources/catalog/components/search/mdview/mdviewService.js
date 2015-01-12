@@ -18,7 +18,7 @@
             downloads: md.getLinksByType('DOWNLOAD'),
             layers: md.getLinksByType('OGC', 'kml'),
             contacts: md.getContacts(),
-            overviews: md.getThumbnails() ? md.getThumbnails() : undefined,
+            overviews: md.getThumbnails() ? md.getThumbnails().list : undefined,
             encodedUrl: encodeURIComponent($location.absUrl())
           });
 
