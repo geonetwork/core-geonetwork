@@ -1,12 +1,6 @@
 
 package org.fao.geonet.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.exceptions.BadServerResponseEx;
@@ -15,6 +9,12 @@ import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.http.client.ClientHttpResponse;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 //=============================================================================
 
@@ -36,7 +36,7 @@ public class XmlRequest extends AbstractHttpRequest {
 
     XmlRequest(String host, int port, String protocol, GeonetHttpRequestFactory requestFactory)
 	{
-        super(protocol, host, port, requestFactory);
+        super(protocol, host, port, null);
 
         setMethod(Method.GET);
 	}

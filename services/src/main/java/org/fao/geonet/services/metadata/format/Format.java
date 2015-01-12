@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.apache.http.client.methods.HttpGet;
@@ -52,6 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,12 +62,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -79,6 +85,9 @@ import static com.google.common.io.Files.getNameWithoutExtension;
  */
 @Controller("md.formatter.type")
 public class Format extends AbstractFormatService {
+
+    @Autowired
+    private ApplicationContext springAppContext;
 
     @Autowired
     private SettingManager settingManager;
@@ -116,8 +125,6 @@ public class Format extends AbstractFormatService {
             @RequestParam(value = "metadata", required = false) String metadata,
             @RequestParam(value = "url", required = false) final String url,
             @RequestParam(value = "schema") final String schema,
-            @RequestParam(defaultValue = "n") final String skipPopularity,
-            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         if (url == null && metadata == null) {
@@ -128,9 +135,7 @@ public class Format extends AbstractFormatService {
         }
 
         if (metadata == null) {
-            HttpUriRequest getMetadataRequest = new HttpGet(url);
-            final ClientHttpResponse execute = requestFactory.execute(getMetadataRequest);
-            metadata = new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
+            metadata = getXmlFromUrl(lang, url, request);
         }
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         Element metadataEl = Xml.loadString(metadata, false);
@@ -142,6 +147,33 @@ public class Format extends AbstractFormatService {
                 request, context, metadataEl, metadataInfo);
 
         writeOutResponse(lang, response, formatType, result);
+    }
+
+    private String getXmlFromUrl(String lang, String url, HttpServletRequest servletRequest) throws IOException, URISyntaxException {
+        String adjustedUrl = url;
+        if (!url.startsWith("http")) {
+            adjustedUrl = settingManager.getSiteURL(lang) + url;
+        } else {
+            final URI uri = new URI(url);
+            Set allowedRemoteHosts = springAppContext.getBean("formatterRemoteFormatAllowedHosts", Set.class);
+            Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
+        }
+
+        HttpUriRequest getXmlRequest = new HttpGet(adjustedUrl);
+        final Enumeration<String> headerNames = servletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            final Enumeration<String> headers = servletRequest.getHeaders(headerName);
+            while (headers.hasMoreElements()) {
+                String header = headers.nextElement();
+                getXmlRequest.addHeader(headerName, header);
+            }
+        }
+        final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
+        if (execute.getRawStatusCode() != 200) {
+            throw new IllegalArgumentException("Request did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
+        }
+        return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
     public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, Pair<FormatterImpl, FormatterParams>

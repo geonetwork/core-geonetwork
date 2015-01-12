@@ -97,4 +97,7 @@
         <value>md.format.xml?xsl=xml_view&amp;id={{mdId}}</value>
     </util:list>
 
+    <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
+    </util:set>
+
 </beans>

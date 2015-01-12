@@ -28,14 +28,14 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Super class for classes that encapsulate requests.
@@ -106,6 +106,9 @@ public class AbstractHttpRequest {
     }
 
     public void setAddress(String address) {
+        if (!address.startsWith("/")) {
+            throw new IllegalArgumentException("address must start with /");
+        }
         this.address = address;
     }
 

@@ -1,16 +1,26 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UserGroupRepositoryTest extends AbstractSpringDataTest {
@@ -103,6 +113,33 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         assertTrue(found.contains(ug1));
         assertTrue(found.contains(ug2));
         assertEquals(2, found.size());
+    }
+
+    @Test
+    public void testFindAllByAndUserId() {
+        UserGroup ug1 = newUserGroup();
+        ug1.setProfile(Profile.Guest);
+        UserGroup ug2 = newUserGroup();
+        UserGroup ug3 = new UserGroup().setGroup(ug1.getGroup()).setUser(ug1.getUser()).setProfile(Profile.Reviewer);
+        ug1 = _repo.save(ug1);
+        _repo.save(ug2);
+        ug3 = _repo.save(ug3);
+
+        assertEquals(3, _repo.count());
+
+        Specification<UserGroup> spec =Specifications
+                .where(UserGroupSpecs.hasUserId(ug1.getUser().getId()))
+                .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
+
+        List<UserGroup> found = _repo.findAll(spec);
+
+        assertTrue(found.contains(ug3));
+        assertEquals(1, found.size());
+
+        final List<Integer> groupIds = _repo.findGroupIds(spec);
+
+        assertEquals(1, groupIds.size());
+        assertTrue(groupIds.contains(ug3.getGroup().getId()));
     }
 
     @Test

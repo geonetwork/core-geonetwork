@@ -49,4 +49,9 @@ public class LinkType {
     public String getName(Functions functions) throws Exception {
         return functions.translate(name);
     }
+
+    @Override
+    public String toString() {
+        return "LinkType{" + "name='" + name + '\'' + '}';
+    }
 }

@@ -113,7 +113,7 @@ public class Summary {
     }
 
     private String resourceThumbnailUrl(String t) {
-        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&amp;access=public&amp;id=" + env.getMetadataId();
+        return env.getLocalizedUrl() + "resources.get?fname=" + t + "&access=public&id=" + env.getMetadataId();
     }
 
     private boolean isSmallThumbnail(String img) {

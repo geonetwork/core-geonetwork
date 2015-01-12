@@ -1,9 +1,11 @@
 package common
-
+import jeeves.server.context.ServiceContext
+import org.fao.geonet.constants.Geonet
+import org.fao.geonet.guiservices.metadata.GetRelated
+import org.fao.geonet.kernel.GeonetworkDataDirectory
 import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.util.MenuAction
-import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem
-import org.fao.geonet.services.metadata.format.groovy.util.Summary
+import org.fao.geonet.services.metadata.format.groovy.util.*
+import org.fao.geonet.utils.Xml
 
 public class Handlers {
     private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -171,4 +173,54 @@ public class Handlers {
                 new MenuAction(label: "facebook", javascript: "window.open('${shareURL('href="https://www.facebook.com/sharer.php?u=')}')", iconClasses: "fa fa-facebook")
         ]);
     }
+
+    def loadHierarchyLinkBlocks() {
+        def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
+        def uuid = this.env.metadataUUID
+        def id = this.env.metadataId
+
+        LinkBlock hierarchy = new LinkBlock("hierarchy")
+        def bean = this.env.getBean(GetRelated.class)
+        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
+        def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
+        def related = Xml.transform(new org.jdom.Element("root").addContent(raw), relatedXsl);
+
+        related.getChildren("relation").each { rel ->
+            def type = rel.getAttributeValue("type")
+            def icon = this.env.localizedUrl + "../../images/" + type + ".png";
+
+            def linkType = new LinkType(type, icon)
+
+            def md = rel.getChild("metadata")
+
+            def mdEl, relUuid;
+            if (md != null) {
+                relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
+                mdEl = md;
+            } else {
+                relUuid = rel.getChildText("uuid")
+                mdEl = rel
+            }
+
+            if (relUuid != null) {
+                def href = createShowMetadataHref(relUuid)
+                def title = mdEl.getChildText("title")
+                if (title == null) {
+                    title = mdEl.getChildText("defaultTitle")
+                }
+                hierarchy.put(linkType, new Link(href, title))
+            }
+        }
+
+        return hierarchy;
+    }
+
+    private String createShowMetadataHref(String uuid) {
+        if (uuid.trim().isEmpty()) {
+            return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
+        } else {
+            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
+        }
+    }
+
 }

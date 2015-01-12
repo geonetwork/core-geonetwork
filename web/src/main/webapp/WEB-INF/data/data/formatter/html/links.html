@@ -1,0 +1,20 @@
+<div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name | escapeXmlAttrs}}" >
+    <h3>
+        <button type="button" class="btn btn-default toggler">
+            <i class="fa fa-arrow-circle-down"></i>
+        </button>
+        <span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
+    </h3>
+    <table class="table row target" >
+        <tr fmt-repeat="link in linkBlock.links" class="row">
+            <td fmt-translate="" class="col-md-2 link-block-title">{{link.type.name}}-link</td>
+            <td class="col-md-10">
+            <div fmt-repeat="link in link.links">
+                <a fmt-if="isPDF" href="{{link.href | escapeXmlAttrs}}" target="_blank">{{link.text | escapeXmlContent}}</a>
+                <a fmt-if="!isPDF" href="{{link.href}}" target="_blank">{{link.text | escapeXmlContent}}</a>
+            </div>
+            </td>
+        </tr>
+        <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
+    </table>
+</div>

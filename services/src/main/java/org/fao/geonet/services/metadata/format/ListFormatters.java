@@ -51,7 +51,7 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
 
 /**
  * List all formatters
- * 
+ *
  * @author jeichar
  */
 @Controller("md.formatter.list")
@@ -64,7 +64,9 @@ public class ListFormatters extends AbstractFormatService {
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
-    private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter) throws IOException {
+    private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter,
+                               boolean publishedOnly)
+            throws IOException {
         if (!Files.exists(file)) {
             return;
         }
@@ -73,6 +75,10 @@ public class ListFormatters extends AbstractFormatService {
                 boolean add = true;
                 if (FORMATTER_FILTER.accept(formatter)) {
                     ConfigFile config = new ConfigFile(formatter, true, null);
+                    if (publishedOnly && !config.isPublished()) {
+                        continue;
+                    }
+
                     List<String> applicableSchemas = config.listOfApplicableSchemas();
 
                     if (!schema.equalsIgnoreCase("all") && !isSchemaPluginFormatter) {
@@ -95,7 +101,7 @@ public class ListFormatters extends AbstractFormatService {
                         response.add(formatterData);
                     }
                 } else {
-                    addFormatters(schema, response, root, formatter, isSchemaPluginFormatter);
+                    addFormatters(schema, response, root, formatter, isSchemaPluginFormatter, publishedOnly);
                 }
             }
         }
@@ -125,7 +131,7 @@ public class ListFormatters extends AbstractFormatService {
 
     @XmlRootElement(name = "formatter")
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class FormatterData implements Serializable  {
+    public static final class FormatterData implements Serializable {
         private static final long serialVersionUID = 2015204126746590712L;
         @XmlElement(name = "schema")
         private final String schema;
@@ -138,7 +144,7 @@ public class ListFormatters extends AbstractFormatService {
 
         @Override
         public String toString() {
-            return "FormatterData{" +"schema ='" + schema + '\'' + ", id='" + id + '\'' + '}';
+            return "FormatterData{" + "schema ='" + schema + '\'' + ", id='" + id + '\'' + '}';
         }
 
 
@@ -152,41 +158,42 @@ public class ListFormatters extends AbstractFormatService {
     }
 
     @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public FormatterDataResponse exec(
             @RequestParam(required = false) final String id,
             @RequestParam(required = false) final String uuid,
             @RequestParam(defaultValue = "all") String schema,
-            @RequestParam(defaultValue = "false") boolean pluginOnly
-            ) throws Exception {
+            @RequestParam(defaultValue = "false") boolean pluginOnly,
+            @RequestParam(defaultValue = "true") boolean publishedOnly
+    ) throws Exception {
         if (id != null || uuid != null) {
-	        try {
-	        	loadMetadata(this.repository, id, uuid);
-	        } catch (Throwable e) {
-	        	// its ok.  just can't use metadata
-	        }
+            try {
+                loadMetadata(this.repository, id, uuid);
+            } catch (Throwable e) {
+                // its ok.  just can't use metadata
+            }
         }
 
         if (schema == null)
-        	schema = "all";
-        
+            schema = "all";
+
         schema = schema.trim();
-        
+
         FormatterDataResponse response = new FormatterDataResponse();
         if (!pluginOnly) {
             Path userXslDir = this.dataDirectory.getFormatterDir();
-            addFormatters(schema, response, userXslDir, userXslDir, false);
-            		}
+            addFormatters(schema, response, userXslDir, userXslDir, false, publishedOnly);
+        }
 
         final Set<String> schemas = this.schemaManager.getSchemas();
         for (String schemaName : schemas) {
             if (schema.equals("all") || schema.equals(schemaName)) {
                 final Path schemaDir = this.schemaManager.getSchemaDir(schemaName);
                 final Path formatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
-                addFormatters(schemaName, response, formatterDir, formatterDir, true);
-            	}
+                addFormatters(schemaName, response, formatterDir, formatterDir, true, publishedOnly);
             }
+        }
         return response;
     }
 

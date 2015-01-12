@@ -60,21 +60,7 @@
             {{formats}}
             {{extents}}
 
-            <div fmt-repeat="linkBlock in links" class="summary-links summary-links-{{linkBlock.name | escapeXmlAttrs}}" >
-                <h3>
-                    <button type="button" class="btn btn-default toggler">
-                        <i class="fa fa-arrow-circle-down"></i>
-                    </button>
-                    <span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
-                </h3>
-                <div class="row target" >
-                    <div fmt-repeat="link in linkBlock.links" class="row">
-                        <div fmt-translate="" class="link-block-title col-xs-12">{{link.type.name}}-link</div>
-                        <div fmt-repeat="link in link.links" class="col-xs-6 col-md-4"><a href="{{link.href | escapeXmlAttrs}}">{{link.text | escapeXmlContent}}</a></div>
-                    </div>
-                    <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
-                </div>
-            </div>
+            <div fmt-include="html/links.html" fmt-include-replace="true"/>
         </div>
     </div>
 

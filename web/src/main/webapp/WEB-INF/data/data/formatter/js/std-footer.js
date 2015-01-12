@@ -1,12 +1,14 @@
+var formatterSectionTogglersEventHandler = function(e) {
+  $(this).toggleClass('closed');
+  $(this).parent().nextAll('.target').first().toggle();
+
+  e.preventDefault();
+};
+
 var formatterOnComplete = function () {
   var navAnchors = $('.view-outline a[rel], .view-outline a[href]');
 
-  $('.gn-metadata-view .toggler').on('click', function(e) {
-    $(this).toggleClass('closed');
-    $(this).parent().nextAll('.target').first().toggle();
-
-    e.preventDefault();
-  });
+  $('.gn-metadata-view .toggler').on('click', formatterSectionTogglersEventHandler);
 
   $.each(navAnchors, function (idx) {
     var rel = $($.attr(navAnchors[idx], 'rel'));

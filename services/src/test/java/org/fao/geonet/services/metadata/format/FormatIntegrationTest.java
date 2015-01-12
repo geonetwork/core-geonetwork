@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -154,7 +155,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExec() throws Exception {
-        final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false);
+        final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false, false);
 
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
@@ -217,14 +218,14 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139",  "true", false, request, response);
+        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139", request, response);
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
         assertTrue(view.contains("Format"));
     }
 
-    @Test
+    @Test @DirtiesContext
     public void testXmlFormatUrl() throws Exception {
         final Element sampleMetadataXml = getSampleMetadataXml();
         final Element element = Xml.selectElement(sampleMetadataXml, "*//gmd:MD_Format", Lists.newArrayList(ISO19139Namespaces.GMD));
@@ -236,7 +237,27 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139",  "true", false, request, response);
+        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", request, response);
+
+        final String view = response.getContentAsString();
+        assertTrue(view.contains("KML (1)"));
+        assertTrue(view.contains("Format"));
+    }
+
+    @Test @DirtiesContext
+    public void testXmlFormatRelativeUrl() throws Exception {
+        final Element sampleMetadataXml = getSampleMetadataXml();
+        final Element element = Xml.selectElement(sampleMetadataXml, "*//gmd:MD_Format", Lists.newArrayList(ISO19139Namespaces.GMD));
+        final String url = "http://localhost:8080/srv/eng/request";
+        final MockXmlRequest mockRequest = new MockXmlRequest("localhost", 8080, "http");
+        mockRequest.setAddress("/srv/eng/request");
+        mockRequest.when(url).thenReturn(element);
+
+        requestFactory.registerRequest(true, mockRequest.getHost(), mockRequest.getPort(), mockRequest.getProtocol(), mockRequest);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", request, response);
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
