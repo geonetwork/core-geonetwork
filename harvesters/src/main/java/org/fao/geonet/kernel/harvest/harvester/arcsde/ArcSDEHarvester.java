@@ -26,21 +26,29 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +72,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 	static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
 	private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
 	private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
-	private static String ARC_TO_ISO19115_TRANSFORMER_LOCATION;
-	private static String ISO19115_TO_ISO19139_TRANSFORMER_LOCATION;
+	private static Path ARC_TO_ISO19115_TRANSFORMER_LOCATION;
+	private static Path ISO19115_TO_ISO19139_TRANSFORMER_LOCATION;
 
     @Override
 	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -244,7 +252,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
         dataMan.flush();
 
@@ -265,49 +273,48 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        String source = params.uuid;
-        String createDate = null;
+        ISODate createDate = null;
         try {
-            createDate = dataMan.extractDateModified(schema, xml);
+            createDate = new ISODate(dataMan.extractDateModified(schema, xml));
         } catch (Exception ex) {
             log.error("ArcSDEHarverter - addMetadata - can't get metadata modified date for metadata with uuid= " +
                     uuid + ", using current date for modified date");
-            createDate = new ISODate().toString();
+            createDate = new ISODate();
         }
 
-        String docType = null, title = null, isTemplate = null, group = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(xml.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setCreateDate(createDate).
+                setChangeDate(createDate);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
-                         isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
+        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
-
-
-		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, source);
+        String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                aligner.addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
-
-        dataMan.flush();
 
         dataMan.indexMetadata(id, false);
-		return id;
-	}
+
+        return id;
+    }
 	
 	@Override
 	protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
         synchronized (ArcSDEHarvester.class) {
             if (ARC_TO_ISO19115_TRANSFORMER_LOCATION == null) {
-                ARC_TO_ISO19115_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ARC_TO_ISO19115_TRANSFORMER;
-                ISO19115_TO_ISO19139_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ISO19115_TO_ISO19139_TRANSFORMER;
+                ARC_TO_ISO19115_TRANSFORMER_LOCATION = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ARC_TO_ISO19115_TRANSFORMER);
+                ISO19115_TO_ISO19139_TRANSFORMER_LOCATION = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ISO19115_TO_ISO19139_TRANSFORMER);
             }
         }
         params = new ArcSDEParams(dataMan);

@@ -23,23 +23,33 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 //=============================================================================
 
@@ -150,41 +160,47 @@ public class Aligner
 
 	private String addMetadata(Element info) throws Exception
 	{
-		String remoteId   = info.getChildText("id");
-		String remoteUuid = info.getChildText("uuid");
-		String schema     = info.getChildText("schema");
-		String createDate = info.getChildText("createDate");
-		String changeDate = info.getChildText("changeDate");
+        String remoteId = info.getChildText("id");
+        String remoteUuid = info.getChildText("uuid");
+        String schema = info.getChildText("schema");
+        String createDate = info.getChildText("createDate");
+        String changeDate = info.getChildText("changeDate");
 
-        if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote id="+ remoteId);
+        if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote id=" + remoteId);
 
-		Element md = getRemoteMetadata(req, remoteId);
+        Element md = getRemoteMetadata(req, remoteId);
 
-		if (md == null)
-		{
-			log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
-			return null;
-		}
+        if (md == null) {
+            log.warning("  - Cannot get metadata (possibly bad XML) with remote id=" + remoteId);
+            return null;
+        }
 
         //
         //  insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, md, params.uuid, Integer.parseInt(params.ownerId), group, remoteUuid,
-                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(remoteUuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setChangeDate(new ISODate(changeDate)).
+                setCreateDate(new ISODate(createDate));
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
+        @SuppressWarnings("unchecked")
+        List<Element> categories = info.getChildren("category");
+        addCategories(metadata, categories);
 
-		int iId = Integer.parseInt(id);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
-		dataMan.setTemplate(iId, MetadataType.METADATA, null);
-		dataMan.setHarvested(iId, params.uuid);
+        String id = String.valueOf(metadata.getId());
 
 		result.addedMetadata++;
-
-		@SuppressWarnings("unchecked")
-        List<Element> categories = info.getChildren("category");
-        addCategories(id, categories);
 
         addPrivileges(id);
 
@@ -195,19 +211,29 @@ public class Aligner
 	//--- Categories
 	//--------------------------------------------------------------------------
 
-	private void addCategories(String id, List<Element> categ) throws Exception
-	{
-        for (Element aCateg : categ) {
-            String catName = aCateg.getText();
-            String catId = localCateg.getID(catName);
-
-            if (catId != null) {
-                //--- remote category exists locally
-
-                if(log.isDebugEnabled()) log.debug("    - Setting category : " + catName);
-                dataMan.setCategory(context, id, catId);
+	private void addCategories(Metadata metadata, List<Element> categ) throws Exception {
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        Collection<String> catNames = Lists.transform(categ, new Function<Element, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull Element input) {
+                String catName = input.getText();
+                return localCateg.getID(catName);
             }
+        });
+        catNames = Collections2.filter(catNames, new Predicate<String>() {
+            @Override
+            public boolean apply(@Nullable String input) {
+                return input != null;
+            }
+        });
+        final List<MetadataCategory> categories = categoryRepository.findAll(MetadataCategorySpecs.hasCategoryNameIn(catNames));
+
+        if(log.isDebugEnabled()) {
+            log.debug("    - Setting categories : " + categories);
         }
+
+        metadata.getCategories().addAll(categories);
 	}
 
 	//--------------------------------------------------------------------------

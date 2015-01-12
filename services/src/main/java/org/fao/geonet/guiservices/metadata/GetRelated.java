@@ -39,7 +39,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -51,6 +50,7 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Set;
 
 /**
@@ -155,7 +155,7 @@ public class GetRelated implements Service {
     private static String maxRecords = "1000";
     private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
     
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
     }
 

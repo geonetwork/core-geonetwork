@@ -26,7 +26,7 @@ import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.search.TranslatorFactory;
 
 public class ItemConfig {
-    private static final String TEMPLATE = "   * %s: {max=%s, sort by=%s, sort order=%s, translator=%s, depth=%s}\n";
+    private static final String TEMPLATE = "   * %s: {max=%s, sort by=%s, sort order=%s, translator=%s, depth=%s}%n";
 
     /**
      * Default number of values for a facet

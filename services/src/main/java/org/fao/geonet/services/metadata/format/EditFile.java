@@ -25,14 +25,13 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
-import java.io.File;
-import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
@@ -45,13 +44,12 @@ public class EditFile extends AbstractFormatService {
         ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, Params.ID);
-        String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
 
         Element result = new Element("data");
 
-        String data = FileUtils.readFileToString(new File(formatDir, file.replace('/', File.separatorChar)), Constants.ENCODING);
+        String data = new String(Files.readAllBytes(formatDir), Constants.ENCODING);
 
         result.setText(data);
 
@@ -59,7 +57,7 @@ public class EditFile extends AbstractFormatService {
     }
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

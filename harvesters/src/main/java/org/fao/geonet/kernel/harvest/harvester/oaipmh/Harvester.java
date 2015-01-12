@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import jeeves.server.context.ServiceContext;
-
 import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -36,6 +35,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -46,7 +46,6 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -60,10 +59,9 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,7 +101,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	    this.log = log;
 
 		ListIdentifiersRequest req = new ListIdentifiersRequest(context.getBean(GeonetHttpRequestFactory.class));
-		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+		req.setSchemaPath(context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH));
 
         XmlRequest t = req.getTransport();
 		try {
@@ -310,23 +308,27 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         //
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, md, ri.id, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(ri.id);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setChangeDate(ri.changeDate).
+                setCreateDate(ri.changeDate);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
 
         dataMan.flush();
 
@@ -343,7 +345,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             if(log.isDebugEnabled()) log.debug("  - Getting remote metadata with id : "+ ri.id);
 
 			GetRecordRequest req = new GetRecordRequest(transport);
-			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
+			req.setSchemaPath(context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH));
+
 			req.setIdentifier(ri.id);
 			req.setMetadataPrefix(ri.prefix);
 
@@ -412,7 +415,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Element toDublinCore(Element md)
 	{
-		String styleSheet = context.getAppPath() +"conversion/oai_dc-to-dublin-core/main.xsl";
+		Path styleSheet = context.getAppPath().resolve("conversion/oai_dc-to-dublin-core/main.xsl");
 
 		try
 		{
@@ -487,7 +490,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();
             dataMan.indexMetadata(id, false);

@@ -38,13 +38,11 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -58,7 +56,7 @@ public class GetMine implements Service
 {
 	String profile;
 	
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		profile = params.getValue("profile");
 	}
 

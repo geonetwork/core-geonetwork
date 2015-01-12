@@ -29,16 +29,16 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.specification.MetadataRelationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -52,7 +52,7 @@ import org.springframework.data.jpa.domain.Specifications;
  */
 public class Insert extends NotInReadOnlyModeService {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	/*

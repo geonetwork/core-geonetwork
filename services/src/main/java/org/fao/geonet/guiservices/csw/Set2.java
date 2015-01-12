@@ -22,9 +22,6 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.responses.OkResponse;
@@ -38,6 +35,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Copy of Set - only takes care of saving GetCapabilities properties

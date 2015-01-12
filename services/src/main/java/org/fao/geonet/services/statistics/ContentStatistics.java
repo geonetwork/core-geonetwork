@@ -22,24 +22,22 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.statistic.MetadataStatisticSpec;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
+import org.fao.geonet.services.statistics.response.ContentStats;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
-import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -49,20 +47,21 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * </ul>
  * 
  */
-public class ContentStatistics extends NotInReadOnlyModeService {
+@Controller("content.statistics")
+public class ContentStatistics {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
-    
-    @Override
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        Element response = new Element("response");
+    @Autowired
+    private MetadataRepository metadataRepository;
+
+    @RequestMapping(value = {"/{lang}/statistics-content"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public ContentStats exec() throws Exception {
+        ContentStats response = new ContentStats();
         
         // Add parameter by source catalog
         // Add parameter by group and owner
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Specifications<Metadata> isMetadataType = where(isType(MetadataType.METADATA));
         final long totalNonTemplateMetadata = metadataRepository.count(isMetadataType);
         final long totalTemplateMetadata = metadataRepository.count(isType(MetadataType.TEMPLATE));
@@ -72,11 +71,11 @@ public class ContentStatistics extends NotInReadOnlyModeService {
                 (MetadataStatisticSpec.StandardSpecs.metadataCount(), OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         // Total number of metadata by type
-        SearchStatistics.addSingleDBValueToElement(response, totalNonTemplateMetadata, "nb_metadata", "total");
-        SearchStatistics.addSingleDBValueToElement(response, totalHarvestedNonTemplateMetadata, "nb_harvested", "total");
-        SearchStatistics.addSingleDBValueToElement(response, totalTemplateMetadata, "nb_template", "total");
-        SearchStatistics.addSingleDBValueToElement(response, totalSubTemplateMetadata, "nb_subtemplate", "total");
-        SearchStatistics.addSingleDBValueToElement(response, totalPublicMetadata, "nb_metadata_public", "total");
+        response.setTotalNonTemplateMetadata(totalNonTemplateMetadata);
+        response.setTotalHarvestedNonTemplateMetadata(totalHarvestedNonTemplateMetadata);
+        response.setTotalTemplateMetadata(totalTemplateMetadata);
+        response.setTotalSubTemplateMetadata(totalSubTemplateMetadata);
+        response.setTotalPublicMetadata(totalPublicMetadata);
 
         return response;
     }

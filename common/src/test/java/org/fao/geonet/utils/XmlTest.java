@@ -1,5 +1,8 @@
 package org.fao.geonet.utils;
 
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import org.fao.geonet.Constants;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -7,11 +10,19 @@ import org.jdom.Text;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+
 
 /**
  * Test methods in the {@link org.fao.geonet.utils.Xml} utility class
@@ -25,8 +36,90 @@ public class XmlTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        TEST_METADATA = Xml.loadFile(XmlTest.class.getClassLoader().getResource("sampleXml.xml"));
+        TEST_METADATA = Xml.loadFile(XmlTest.class.getResource("xmltest/sampleXml.xml"));
     }
+
+    @Test
+    public void testLoadXml() throws Exception {
+        Path path = Paths.get(XmlTest.class.getResource("xmltest/xml.xsd").toURI());
+        Element element = Xml.loadFile(path);
+        assertXsdFile(element);
+
+        final Path test = setupMemoryFs(path);
+
+        element = Xml.loadFile(test.resolve(path.getFileName().toString()));
+        assertXsdFile(element);
+    }
+
+    @Test
+    public void testLoadString() throws Exception {
+        Path path = Paths.get(XmlTest.class.getResource("xmltest/sampleXml.xml").toURI());
+        String data = new String(Files.readAllBytes(path), Constants.CHARSET);
+        Element element = Xml.loadString(data, false);
+        assertSampleXml(element);
+    }
+
+    private void assertSampleXml(Element element) {
+        assertNotNull(element.getChild("fileIdentifier", GMD));
+        assertNotNull(element.getChild("language", GMD));
+        assertNotNull(element.getChild("characterSet", GMD));
+        assertNotNull(element.getChild("contact", GMD));
+        assertNotNull(element.getChild("dateStamp", GMD));
+    }
+
+    @Test
+    public void testLoadStream() throws Exception {
+        final InputStream resourceAsStream = XmlTest.class.getResourceAsStream("xmltest/sampleXml.xml");
+        Element element = Xml.loadStream(resourceAsStream);
+        assertSampleXml(element);
+    }
+
+    protected void assertXsdFile(Element element) {
+        assertNotNull(element);
+        assertNotNull(element.getChild("annotation", Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema")));
+    }
+
+    protected Path setupMemoryFs(Path path) throws IOException {
+        FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
+        final Path test = fs.getPath("test");
+        IO.copyDirectoryOrFile(path.getParent(), test, false);
+        return test;
+    }
+
+    @Test
+    public void testTransformDefaultTransformer() throws Exception {
+        TransformerFactoryFactory.init(null);
+        doTestTransform();
+    }
+
+    protected void doTestTransform() throws Exception {
+        Path path = Paths.get(XmlTest.class.getResource("xmltest/xsl/test.xsl").toURI());
+        Element result = Xml.transform(new Element("el"), path);
+        assertTransformedXml(result);
+
+        final Path test = setupMemoryFs(path.getParent());
+        result = Xml.transform(new Element("el"), test.resolve("xsl/test.xsl"));
+        assertTransformedXml(result);
+    }
+
+    @Test
+    public void testTransformSaxonTransformer() throws Exception {
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        try {
+            doTestTransform();
+        } finally {
+            TransformerFactoryFactory.init(null);
+        }
+    }
+
+    protected void assertTransformedXml(Element result) {
+        assertEquals("root", result.getName());
+        assertEquals(3, result.getChildren().size());
+        assertEquals("dep1", result.getChildText("dep1"));
+        assertEquals("dep2", result.getChildText("dep2"));
+        assertEquals("dep3", result.getChildText("dep3"));
+    }
+
 
     @Test
     public void testGetXPathExpr() throws Exception {

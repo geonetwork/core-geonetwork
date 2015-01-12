@@ -226,7 +226,7 @@ public class ItemBuilder {
         return new Comparator<CategorySummary>() {
             @Override
             public int compare(final CategorySummary e1, final CategorySummary e2) {
-                return -wrappedComparator.compare(e1, e2);
+                return wrappedComparator.compare(e2, e1);
             }
         };
     }

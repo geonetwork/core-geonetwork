@@ -15,8 +15,9 @@
 		<icon><xsl:value-of select="icon/value" /></icon>
 		<rejectDuplicateResource><xsl:value-of select="rejectDuplicateResource/value"/></rejectDuplicateResource>
 		<hopCount><xsl:value-of select="hopCount/value" /></hopCount>
-    <xslfilter><xsl:value-of select="xslfilter/value" /></xslfilter>
+        <xslfilter><xsl:value-of select="xslfilter/value" /></xslfilter>
 		<queryScope><xsl:value-of select="queryScope/value" /></queryScope>
+		<outputSchema><xsl:value-of select="outputSchema/value" /></outputSchema>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

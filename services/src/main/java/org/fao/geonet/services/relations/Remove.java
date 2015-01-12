@@ -26,13 +26,14 @@ package org.fao.geonet.services.relations;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
@@ -44,7 +45,7 @@ public class Remove extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

@@ -26,12 +26,14 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
+import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.utils.IO;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.springframework.core.io.ClassPathResource;
 
@@ -43,17 +45,19 @@ public abstract class AbstractTermTest {
         }
     };
 
-    protected ThesaurusManager mockThesaurusManagerWith(String fileName) throws IOException, ConfigurationException {
-        File thesaurusFile = new ClassPathResource(fileName, this.getClass()).getFile();
+    protected ThesaurusManager mockThesaurusManagerWith(String fileName) throws Exception {
+        final String className = this.getClass().getSimpleName() + ".class";
+        Path directory = IO.toPath(this.getClass().getResource(className).toURI()).getParent();
+        Path thesaurusFile = directory.resolve(fileName);
         Thesaurus thesaurus = loadThesaurusFile(isoLangMapper, thesaurusFile);
         ThesaurusManager mockManager = mock(ThesaurusManager.class);
         when(mockManager.getThesaurusByConceptScheme(anyString())).thenReturn(thesaurus);
         return mockManager;
     }
 
-    private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, File thesaurusFile)
+    private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
       throws ConfigurationException {
-        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getName(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
+        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
         thesaurus.initRepository();
         return thesaurus;
     }

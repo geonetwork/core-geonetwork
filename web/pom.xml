@@ -40,6 +40,11 @@
       </dependency>
 
     <dependency>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr-runtime</artifactId>
+          <version>3.5.2</version>
+      </dependency>
+    <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
     </dependency>
@@ -66,10 +71,6 @@
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-aop</artifactId>
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
@@ -291,11 +292,6 @@
     <!-- Generated dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>jeeves</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -475,8 +471,15 @@
           <version>${project.version}</version>
       </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
+      <dependency>
+          <groupId>ro.isdc.wro4j</groupId>
+          <artifactId>wro4j-maven-plugin</artifactId>
+          <version>${wro.version}</version>
+          <scope>test</scope>
+      </dependency>
+
+      <!-- Add dependencies to schema plugin
+      having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
@@ -709,6 +712,12 @@
               ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
+          <systemProperties>
+            <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+              <value>500000</value>
+            </systemProperty>
+          </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
         </configuration>
@@ -732,80 +741,6 @@
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>findbugs-maven-plugin</artifactId>
 		  </plugin>
-
-            <!--
-                The following plugin is the maven configuration for:
-                Web Resource Optimizer For Java (WRO4J)  https://code.google.com/p/wro4j/wiki/Introduction
-
-                The output files are unimportant because the purpose of the maven plugin (in our usage) is to
-                only check that the javascript and css file can be correctly compiled, linted, compressed, etc...
-
-                There is a Servlet filter (see web.xml) that does the actual compilation,linting,compression at runtime.
-                The filter allows a developer to be able to make live modifications and automatically have the
-                compiling/linting/compression done during the development rather than just at build time.
-
-                WRO4J intelligently caches minified files (and automatically handles gzipping)
-            -->
-            <plugin>
-                <groupId>ro.isdc.wro4j</groupId>
-                <artifactId>wro4j-maven-plugin</artifactId>
-                <version>${wro.version}</version>
-                <executions>
-                    <execution>
-                        <id>test-javascript-optimization</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- The targetGroups are the groups to test for existence.  if they are not found then
-                         an error is raised.  Currently the groups from web-ui and web-client are listed
-                         here.  If web-client (for example) is removed then remove the group below
-
-                         Note:  all groups must be on the same line with not whitespace.
-                    -->
-                    <targetGroups>gn,gn_admin,gn_login,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
-                    <minimize>true</minimize>
-                    <destinationFolder>${wro4jOutput}</destinationFolder>
-                    <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
-                    <jsDestinationFolder>${wro4jOutput}/js</jsDestinationFolder>
-                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
-                    <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
-                    <extraConfigFile>${build.webapp.resources}/WEB-INF/wro.properties</extraConfigFile>
-                    <incrementalBuildEnabled>false</incrementalBuildEnabled>
-                    <parallelProcessing>true</parallelProcessing>
-                    <options>sub</options>
-                    <failFast>true</failFast>
-                    <failNever>false</failNever>
-                    <failThreshold>0</failThreshold>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>wro4j</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>web-ui</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>geonetwork-client</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.sommeri</groupId>
-                        <artifactId>less4j</artifactId>
-                        <version>1.2.1</version>
-                    </dependency>
-                </dependencies>
-
-            </plugin>
         </plugins>
 		</build>
 	</profile>

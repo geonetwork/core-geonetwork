@@ -38,13 +38,15 @@ import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 
 /**
  * Adds an ISO19135 register record as a thesaurus (or updates it if has 
  * already been added).
  */
 public class AddRegister extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

@@ -18,7 +18,8 @@ var gnHarvestercsw = {
         },
         "capabilitiesUrl" : "http://",
         "rejectDuplicateResource" : "false",
-        "xslfilter": []
+        "xslfilter": [],
+        "outputSchema": ""
       },
       "content" : {
         "validate" : "false"
@@ -77,6 +78,7 @@ var gnHarvestercsw = {
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
+      + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
       + '  </site>'
       + gnHarvestercsw.buildResponseCSWSearch($scope)
       + '  <options>'

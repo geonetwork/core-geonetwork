@@ -23,29 +23,43 @@
 
 package org.fao.geonet.kernel.mef;
 
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
 import javax.annotation.Nonnull;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
@@ -156,14 +168,13 @@ public class MEFLib {
 
     // --------------------------------------------------------------------------
 	
-	public static List<String> doImport(Element params, ServiceContext context,
-			File mefFile, String stylePath) throws Exception {
+	public static List<String> doImport(Element params, ServiceContext context, Path mefFile, Path stylePath) throws Exception {
 		return Importer.doImport(params, context, mefFile, stylePath);
 	}
 
 	// --------------------------------------------------------------------------
 
-	public static String doExport(ServiceContext context, String uuid,
+	public static Path doExport(ServiceContext context, String uuid,
 			String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 		return MEFExporter.doExport(context, uuid, Format.parse(format),
 				skipUUID, resolveXlink, removeXlinkAttribute);
@@ -171,8 +182,8 @@ public class MEFLib {
 
 	// --------------------------------------------------------------------------
 
-	public static String doMEF2Export(ServiceContext context,
-			Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
+	public static Path doMEF2Export(ServiceContext context,
+			Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
 		return MEF2Exporter.doExport(context, uuids, Format.parse(format),
 				skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
@@ -180,7 +191,7 @@ public class MEFLib {
 
 	// --------------------------------------------------------------------------
 
-	public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
+	public static void visit(Path mefFile, IVisitor visitor, IMEFVisitor v)
 			throws Exception {
 		visitor.visit(mefFile, v);
 	}
@@ -192,29 +203,20 @@ public class MEFLib {
 	 *            mefFile to check version
 	 * @return v1
 	 */
-	public static Version getMEFVersion(File mefFile) {
+	public static Version getMEFVersion(Path mefFile) {
+        try (FileSystem fileSystem = ZipUtil.openZipFs(mefFile)) {
+            final Path metadataXmlFile = fileSystem.getPath("metadata.xml");
+            final Path infoXmlFile = fileSystem.getPath("info.xml");
+            if (Files.exists(metadataXmlFile) || Files.exists(infoXmlFile)) {
+                return Version.V1;
+            } else {
 
-		try {
-			ZipInputStream zis = new ZipInputStream(
-					new FileInputStream(mefFile));
-			ZipEntry entry;
-
-			try {
-				while ((entry = zis.getNextEntry()) != null) {
-					String fullName = entry.getName();
-					if (fullName.equals("metadata.xml") || fullName.equals("info.xml"))
-						return Version.V1;
-					zis.closeEntry();
-				}
-			} finally {
-				zis.close();
-			}
-			return Version.V2;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	};
+                return Version.V2;
+            }
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
+	}
 
 	/**
 	 * Get metadata record.
@@ -241,18 +243,6 @@ public class MEFLib {
         metadata.setData(Xml.getString(data));
 
         return metadata;
-	}
-
-	/**
-	 * Add an entry to ZIP file
-	 * 
-	 * @param zos
-	 * @param name
-	 * @throws IOException
-	 */
-	static void createDir(ZipOutputStream zos, String name) throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
 	}
 
 	/**
@@ -335,7 +325,7 @@ public class MEFLib {
 	 * @throws Exception
 	 */
 	static String buildInfoFile(ServiceContext context, Metadata md,
-			Format format, String pubDir, String priDir, boolean skipUUID)
+			Format format, Path pubDir, Path priDir, boolean skipUUID)
 			throws Exception {
 		Element info = new Element("info");
 		info.setAttribute("version", VERSION);
@@ -344,8 +334,8 @@ public class MEFLib {
 		info.addContent(buildInfoCategories(md));
 		info.addContent(buildInfoPrivileges(context, md));
 
-		info.addContent(buildInfoFiles("public", pubDir));
-		info.addContent(buildInfoFiles("private", priDir));
+		info.addContent(buildInfoFiles("public", pubDir.toString()));
+		info.addContent(buildInfoFiles("private", priDir.toString()));
 
 		return Xml.getString(new Document(info));
 	}
@@ -550,7 +540,7 @@ public class MEFLib {
 	static String getChangeDate(List<Element> files, String fileName)
 			throws Exception {
 		for (Element f : files) {
-			Element file = (Element) f;
+			Element file = f;
 			String name = file.getAttributeValue("name");
 			String date = file.getAttributeValue("changeDate");
 

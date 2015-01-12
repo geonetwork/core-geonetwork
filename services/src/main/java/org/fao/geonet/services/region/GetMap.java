@@ -26,17 +26,17 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.awt.ShapeWriter;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.utils.BinaryFile;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -44,16 +44,25 @@ import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import javax.imageio.ImageIO;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -100,7 +109,7 @@ public class GetMap implements Service {
     private Map<String, String> _namedBackgrounds = new HashMap<String, String>();
     private SortedSet<ExpandFactor> _expandFactors = new TreeSet<ExpandFactor>();
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this._format = params.getMandatoryValue("format");
         List<Element> expandFactors = params.getChildren("expandFactors");
         for (Element factorEl : expandFactors) {
@@ -224,9 +233,11 @@ public class GetMap implements Service {
             graphics.dispose();
         }
 
-        File tmpFile = File.createTempFile("GetMap", "." + _format);
-        ImageIO.write(image, _format, tmpFile);
-        return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
+        Path tmpFile = Files.createTempFile("GetMap", "." + _format);
+        try (OutputStream out = Files.newOutputStream(tmpFile)) {
+            ImageIO.write(image, _format, out);
+        }
+        return BinaryFile.encode(200, tmpFile, true).getElement();
     }
 
     private double calculateExpandFactor(Envelope bboxOfImage, String srs) throws Exception {

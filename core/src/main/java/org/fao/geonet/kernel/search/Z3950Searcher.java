@@ -23,12 +23,39 @@
 package org.fao.geonet.kernel.search;
 
 
-import java.io.File;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
+import org.jzkit.search.LandscapeSpecification;
+import org.jzkit.search.StatelessSearchResultsPageDTO;
+import org.jzkit.search.impl.StatelessQueryService;
+import org.jzkit.search.landscape.SimpleLandscapeSpecification;
+import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
+import org.jzkit.search.util.QueryModel.QueryModel;
+import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.InformationFragment;
+import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
+import org.jzkit.search.util.ResultSet.IRResultSetStatus;
+import org.jzkit.service.z3950server.ZSetInfo;
+import org.springframework.context.ApplicationContext;
+
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -37,35 +64,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.TransformerFactoryFactory;
-import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.region.RegionsDAO;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.DOMBuilder;
-import org.jzkit.search.LandscapeSpecification;
-import org.jzkit.search.StatelessSearchResultsPageDTO;
-import org.jzkit.search.impl.StatelessQueryService;
-import org.jzkit.search.landscape.SimpleLandscapeSpecification;
-import org.jzkit.search.util.QueryModel.QueryModel;
-import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
-import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.InformationFragment;
-import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
-import org.jzkit.search.util.ResultSet.IRResultSetStatus;
-import org.jzkit.service.z3950server.ZSetInfo;
-import org.springframework.context.ApplicationContext;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50
@@ -263,14 +261,13 @@ class Z3950Searcher extends MetaSearcher
 						if (docObj instanceof org.w3c.dom.Document) {
 							org.w3c.dom.Document dochtml = (org.w3c.dom.Document)fraghtml.getOriginalObject();	
 							String fileid = UUID.randomUUID().toString();
-							String filename = srvContext.getAppPath()+_searchMan.getHtmlCacheDir()+File.separator+fileid+".html";
+							Path filename = srvContext.getAppPath().resolve(_searchMan.getHtmlCacheDir()).resolve(fileid+".html");
 							elementFileName = srvContext.getBaseUrl()+"/"+_searchMan.getHtmlCacheDir()+"/"+fileid+".html";
-							File outHtmlFile = new File(filename);
-							try {
+                            try {
 								Transformer xformer = TransformerFactoryFactory.getTransformerFactory().newTransformer();
 								xformer.setOutputProperty(OutputKeys.METHOD, "text");
 								Source source = new DOMSource(dochtml);
-								Result result = new StreamResult(outHtmlFile.toURI().getPath());
+								Result result = new StreamResult(filename.toUri().getPath());
 								xformer.transform(source,result);
 							} catch (TransformerConfigurationException e) {
 								e.printStackTrace();

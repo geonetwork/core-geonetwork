@@ -63,6 +63,7 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
 
     @Before
     public void setup() throws Exception {
+        super.setup();
         serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 

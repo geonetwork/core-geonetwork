@@ -23,16 +23,10 @@
 
 package org.fao.geonet.services.resources;
 
-import java.net.URL;
-
-import javax.servlet.http.HttpServletRequest;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
+import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -47,9 +41,14 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.net.URL;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Delete an uploaded file from the data directory and remote its
@@ -58,21 +57,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ReadWriteController
 @Controller("resource.del.and.detach")
 public class RemoveAndProcess  {
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
 
-    @Autowired 
-    private ServiceContext context;
     @Autowired
     private DataManager dm;
+    @Autowired
+    private XslProcessing xslProcessing;
+    @Autowired
+    private ServiceManager serviceManager;
     
-	@RequestMapping(value = "/{lang}/resource.del.and.detach", produces = {
+	@RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody IdResponse serviceSpecificExec(HttpServletRequest request, @RequestParam(value=Params.URL) String url, 
-    		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid)
+    public @ResponseBody IdResponse serviceSpecificExec(@PathVariable String lang,
+                                                        HttpServletRequest request,
+                                                        @RequestParam(value=Params.URL) String url,
+                                                        @RequestParam(defaultValue="") String id,
+                                                        @RequestParam(defaultValue="") String uuid)
             throws Exception {
-        if(id.trim().isEmpty()){
-			id = dm.getMetadataId(uuid);
+        ServiceContext context = serviceManager.createServiceContext("resource.del.and.detach", lang, request);
+        if(id.trim().isEmpty()) {
+            id = dm.getMetadataId(uuid);
         }
         Lib.resource.checkEditPrivilege(context, id);
         
@@ -98,8 +101,10 @@ public class RemoveAndProcess  {
         removeHook.onDelete(context, request, Integer.parseInt(id), filename, access);
 
         // Set parameter and process metadata to remove reference to the uploaded file
-        request.getParameterMap().put("name", new String[]{filename});
-        request.getParameterMap().put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
+        Map<String, String[]> allParams = Maps.newHashMap(request.getParameterMap());
+
+        allParams.put("name", new String[]{filename});
+        allParams.put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
         String process = "onlinesrc-remove";
         XslProcessingReport report = new XslProcessingReport(process);
@@ -107,8 +112,8 @@ public class RemoveAndProcess  {
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = XslProcessing.get().process(id, process,
-                    true, context.getAppPath(), report, true, siteURL, request);
+            processedMetadata = xslProcessing.process(context, id, process,
+                    true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()

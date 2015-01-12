@@ -36,6 +36,7 @@ import org.jdom.Element;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -46,7 +47,7 @@ public class Add implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	// --------------------------------------------------------------------------
 	// ---

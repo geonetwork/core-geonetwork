@@ -33,6 +33,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** This service is used by metadata.show/edit to retrieve the current
@@ -43,7 +45,7 @@ public class GetCurrentMDTab implements Service
 {
     String sessionTabProperty = Geonet.Session.METADATA_SHOW;
     
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

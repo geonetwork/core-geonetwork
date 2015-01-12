@@ -31,8 +31,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -40,10 +38,10 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +56,7 @@ public class Sitemap implements Service {
     private static final String FORMAT_XML = "xml";
     private static final String FORMAT_HTML = "html";
 
-    public void init(String appPath, ServiceConfig config) throws Exception { }
+    public void init(Path appPath, ServiceConfig config) throws Exception { }
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {

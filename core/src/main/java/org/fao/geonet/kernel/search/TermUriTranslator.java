@@ -34,7 +34,7 @@ public class TermUriTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
-    private Thesaurus thesaurus;
+    private transient Thesaurus thesaurus;
 
     private String langCode;
 

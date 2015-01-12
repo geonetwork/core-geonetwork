@@ -144,7 +144,8 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:"+siteId, "queryScope", params.queryScope);
         settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
         settingMan.add("id:"+siteId, "xslfilter",     params.xslfilter);
-		
+        settingMan.add("id:"+siteId, "outputSchema",     params.outputSchema);
+
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(path, "search", "");	
 		

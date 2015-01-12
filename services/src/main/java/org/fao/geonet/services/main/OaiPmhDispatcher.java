@@ -30,6 +30,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class OaiPmhDispatcher implements Service
@@ -40,7 +42,7 @@ public class OaiPmhDispatcher implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(Path appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

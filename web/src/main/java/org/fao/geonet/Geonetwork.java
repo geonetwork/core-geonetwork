@@ -30,6 +30,7 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -60,6 +61,7 @@ import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.XmlResolver;
@@ -79,10 +81,11 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
@@ -97,11 +100,10 @@ import javax.sql.DataSource;
  */
 public class Geonetwork implements ApplicationHandler {
     private Logger logger;
-    private String appPath;
+    private Path appPath;
     private SearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ThreadPool threadPool;
-    private String FS = File.separator;
     private ConfigurableApplicationContext _applicationContext;
 
     //---------------------------------------------------------------------------
@@ -128,15 +130,12 @@ public class Geonetwork implements ApplicationHandler {
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
-        appPath = context.getAppPath();
+        ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
+        appPath = finder.getAppPath();
         String baseURL = context.getBaseUrl();
         String webappName = baseURL.substring(1);
         // TODO : if webappName is "". ie no context
 
-        ServletContext servletContext = null;
-        if (context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
         final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
         String version = systemInfo.getVersion();
         String subVersion = systemInfo.getSubVersion();
@@ -169,7 +168,7 @@ public class Geonetwork implements ApplicationHandler {
         @SuppressWarnings("unchecked")
         Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
 
-        JeevesJCS.setConfigFilename(appPath + "WEB-INF/classes/cache.ccf");
+        JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
         JeevesJCS.getInstance(Processor.XLINK_JCS);
@@ -248,13 +247,13 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Schema manager...");
 
-        String schemaPluginsDir = dataDirectory.getSchemaPluginsDir().getAbsolutePath();
-        String schemaCatalogueFile = dataDirectory.getConfigDir()+File.separator+Geonet.File.SCHEMA_PLUGINS_CATALOG;
+        Path schemaPluginsDir = dataDirectory.getSchemaPluginsDir();
+        Path schemaCatalogueFile = dataDirectory.getConfigDir().resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         boolean createOrUpdateSchemaCatalog = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_PLUGINS_CATALOG_UPDATE).equals("true");
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(_applicationContext, appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(_applicationContext, appPath, dataDirectory.getResourcesDir(), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -323,22 +322,22 @@ public class Geonetwork implements ApplicationHandler {
 
         if (xmlSerializer instanceof XmlSerializerSvn && svnManager != null) {
             svnManager.setContext(context);
-            String subversionPath = dataDirectory.getMetadataRevisionDir().getCanonicalPath();
-            svnManager.setSubversionPath(subversionPath);
+            Path subversionPath = dataDirectory.getMetadataRevisionDir().toAbsolutePath().normalize();
+            svnManager.setSubversionPath(subversionPath.toString());
             svnManager.init();
         }
 
         /**
          * Initialize language detector
          */
-        LanguageDetector.init(appPath + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
+        LanguageDetector.init(appPath.resolve(_applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class)));
 
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
 
         logger.info("  - Thesaurus...");
 
-        _applicationContext.getBean(ThesaurusManager.class).init(context, appPath, thesauriDir);
+        _applicationContext.getBean(ThesaurusManager.class).init(context, thesauriDir);
 
 
         //------------------------------------------------------------------------
@@ -413,8 +412,8 @@ public class Geonetwork implements ApplicationHandler {
                     final DbLib dbLib = new DbLib();
                     for (Pair<String, String> pair : importData) {
                         final ServletContext servletContext = context.getServlet().getServletContext();
-                        final String appPath = context.getAppPath();
-                        final String filePath = pair.one();
+                        final Path appPath = context.getAppPath();
+                        final Path filePath = IO.toPath(pair.one());
                         final String filePrefix = pair.two();
                         Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
                         dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
@@ -494,18 +493,14 @@ public class Geonetwork implements ApplicationHandler {
      * @param context
      * @param appPath
      */
-    private void createSiteLogo(String nodeUuid, ServiceContext context, String appPath) {
+    private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            String logosDir = Resources.locateLogosDir(context);
-            File logo = new File(logosDir, nodeUuid + ".gif");
-            if (!logo.exists()) {
-                FileOutputStream os = new FileOutputStream(logo);
-                try {
-                    os.write(Resources.loadImage(context.getServlet().getServletContext(), appPath, "images/logos/dummy.gif", new byte[0]).one());
-                    logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
-                } finally {
-                    os.close();
-                }
+            Path logosDir = Resources.locateLogosDir(context);
+            Path logo =logosDir.resolve(nodeUuid + ".gif");
+            if (!Files.exists(logo)) {
+                final ServletContext servletContext = context.getServlet().getServletContext();
+                byte[] logoData = Resources.loadImage(servletContext, appPath, "images/logos/dummy.gif", new byte[0]).one();
+                Files.write(logo, logoData);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());
@@ -515,12 +510,13 @@ public class Geonetwork implements ApplicationHandler {
     /**
      * Set system properties to those required
      *
-     * @param path webapp path
+     * @param webappDir webapp path
      */
-    private void setProps(String path, ServiceConfig handlerConfig) {
+    private void setProps(Path webappDir, ServiceConfig handlerConfig) {
 
-        final String schemapluginUriCatalog = handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + FS + "schemaplugin-uri-catalog.xml";
-        String webapp = SchemaManager.registerXmlCatalogFiles(path, schemapluginUriCatalog);
+        final Path configDir = IO.toPath(handlerConfig.getValue(Geonet.Config.CONFIG_DIR));
+        final Path schemapluginUriCatalog = configDir.resolve("schemaplugin-uri-catalog.xml");
+        Path webInf = SchemaManager.registerXmlCatalogFiles(webappDir, schemapluginUriCatalog);
 
         //--- Set mime-mappings
         String mimeProp = System.getProperty("mime-mappings");
@@ -528,7 +524,7 @@ public class Geonetwork implements ApplicationHandler {
         if (!mimeProp.equals("")) {
             logger.info("Overriding mime-mappings property (was set to " + mimeProp + ")");
         }
-        mimeProp = webapp + "mime-types.properties";
+        mimeProp = webInf.resolve("mime-types.properties").toString();
         System.setProperty("mime-mappings", mimeProp);
         logger.info("mime-mappings property set to " + mimeProp);
 

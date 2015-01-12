@@ -25,21 +25,19 @@ package org.fao.geonet.kernel.search.classifier;
 import static org.fao.geonet.test.CategoryTestHelper.assertCategoryListEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.sesame.config.ConfigurationException;
 
 public class TermLabelTest extends AbstractTermTest {
 
     private TermLabel termLabelClassifier;
     
     @Before 
-    public void setup() throws IOException, ConfigurationException {
+    public void setup() throws Exception {
         ThesaurusManager manager = mockThesaurusManagerWith("BroaderTerm.rdf");
         termLabelClassifier = new TermLabel(manager, "scheme", "eng");
     }

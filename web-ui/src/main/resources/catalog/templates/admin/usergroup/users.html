@@ -14,9 +14,9 @@
         <div class="list-group">
           <a href="" class="list-group-item"
             data-ng-repeat="u in pageItems()"
-            data-ng-class="u.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
-            <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
-            {{u.name}} {{u.surname}} ({{u.profile | translate}})
+            data-ng-class="u.value.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
+            <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.value.email | md5}}?s=18"/>
+            {{u.value.name}} {{u.value.surname}} ({{u.value.profile | translate}})
           </a>
           <span data-gn-pagination-list=""
                 data-items="users | filter:userSearch | orderBy:'name'"

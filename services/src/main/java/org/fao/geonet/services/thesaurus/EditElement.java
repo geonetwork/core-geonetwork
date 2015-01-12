@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 //=============================================================================
@@ -50,7 +51,7 @@ import java.util.ArrayList;
  */
 
 public class EditElement implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

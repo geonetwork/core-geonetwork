@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.user;
 
-import com.vividsolutions.jts.util.Assert;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -38,8 +37,8 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class Update extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

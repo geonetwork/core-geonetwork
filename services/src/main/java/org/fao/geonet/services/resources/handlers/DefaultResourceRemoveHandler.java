@@ -24,18 +24,16 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.io.File;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -54,11 +52,10 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
 
         try {
             // delete online resource
-            File dir  = new File(Lib.resource.getDir(context, access, metadataId));
-            File file = new File(dir, fileName);
+            Path dir  = Lib.resource.getDir(context, access, metadataId);
+            Path file = dir.resolve(fileName);
 
-            if (file.exists() && !file.delete())
-                throw new OperationAbortedEx("unable to delete resource");
+            Files.deleteIfExists(file);
 
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
@@ -97,11 +94,10 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
 
         try {
             // delete online resource
-            File dir  = new File(Lib.resource.getDir(context, access, metadataId));
-            File file = new File(dir, fileName);
+            Path dir  = Lib.resource.getDir(context, access, metadataId);
+            Path file = dir.resolve(fileName);
 
-            if (file.exists() && !file.delete())
-                throw new OperationAbortedEx("unable to delete resource");
+            Files.deleteIfExists(file);
 
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 

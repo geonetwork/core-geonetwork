@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specifications.*;
@@ -49,7 +50,7 @@ public class GetByOwner implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
     }
 
     //--------------------------------------------------------------------------

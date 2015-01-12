@@ -34,6 +34,7 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class SearchTermsStatistics extends NotInReadOnlyModeService {
     private static final String LIMIT_PARAM = "limit";
     public static final int DEFAULT_LIMIT = 25;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

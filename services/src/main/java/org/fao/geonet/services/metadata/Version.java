@@ -35,11 +35,13 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Adds a metadata to the subversion repository.
  */
 public class Version extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

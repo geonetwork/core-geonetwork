@@ -36,6 +36,7 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -55,7 +56,7 @@ public class List implements Service
 	private String _externalDir;	
 	private String _initType;
 	
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		
 		_localThesaurusDir = File.separator+Geonet.CodeList.LOCAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
 		_externalDir = File.separator+Geonet.CodeList.EXTERNAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
@@ -100,7 +101,7 @@ public class List implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-		String THESAURUS_DIR = thesaurusMan.getThesauriDirectory();
+		Path THESAURUS_DIR = thesaurusMan.getThesauriDirectory();
 			
 		Element thesauriList = new Element("thesaurusList");
 	
@@ -152,8 +153,6 @@ public class List implements Service
 	/**
 	 * Browse directory tree and return thesaurus in xml and rdf format
 	 * 
-	 * @param params
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */

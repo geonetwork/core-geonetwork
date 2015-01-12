@@ -32,12 +32,12 @@ public class TranslatorCachingWrapper implements Translator {
     private static final float LOAD_FACTOR = 0.9f;
     private static final int INITIAL_CAPACITY = 16;
 
-    private Translator wrapperTranslator;
+    private Translator wrappedTranslator;
 
     private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<String, String>(INITIAL_CAPACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
 
     public TranslatorCachingWrapper(Translator wrappedTranslator) {
-        this.wrapperTranslator = wrappedTranslator;
+        this.wrappedTranslator = wrappedTranslator;
     }
 
     @Override
@@ -45,8 +45,8 @@ public class TranslatorCachingWrapper implements Translator {
         String value = cache.get(key);
 
         if (value == null) {
-            value = wrapperTranslator.translate(key);
-            cache.put(key, value);
+            value = wrappedTranslator.translate(key);
+            cache.putIfAbsent(key, value);
         }
 
         return value;

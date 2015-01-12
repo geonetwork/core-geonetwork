@@ -33,10 +33,11 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import javax.annotation.Nonnull;
 
 public class Update extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

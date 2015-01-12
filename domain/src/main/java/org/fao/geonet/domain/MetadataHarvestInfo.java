@@ -71,9 +71,11 @@ public class MetadataHarvestInfo {
      *
      * @param uuid the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
      * @see #isHarvested()
+     * @return this harvest info object
      */
-    public void setUuid(String uuid) {
+    public MetadataHarvestInfo setUuid(String uuid) {
         this._uuid = uuid;
+        return this;
     }
 
     /**
@@ -90,7 +92,7 @@ public class MetadataHarvestInfo {
      * Set the optional uri indicating what was harvested to get this metadata.
      *
      * @param uri the optional uri indicating what was harvested to get this metadata.
-     * @return this data info object
+     * @return this harvest info object
      */
     public MetadataHarvestInfo setUri(String uri) {
         this._uri = uri;

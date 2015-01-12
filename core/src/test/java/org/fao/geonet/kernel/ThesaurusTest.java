@@ -1,13 +1,5 @@
 package org.fao.geonet.kernel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.rdf.Query;
@@ -25,23 +17,34 @@ import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
     private Thesaurus writableThesaurus;
     private static final String TEST_KEYWORD = "http://test.com/keywords#testKeyword";
 
     @Before
-    public void prepareEmptyThesaurus() throws ConfigurationException {
-        File file = new File(this.thesaurusFile.getParentFile(), ThesaurusTest.class.getSimpleName()+"_empyt.rdf");
-        file.delete();
-        this.writableThesaurus = new Thesaurus(isoLangMapper, file.getName(), null, null, Geonet.CodeList.LOCAL, file.getName(), file, null, true);
-        super.setRepository(writableThesaurus);
+    public void prepareEmptyThesaurus() throws ConfigurationException, IOException {
+        Path file = this.thesaurusFile.getParent().resolve(ThesaurusTest.class.getSimpleName() + "_empyt.rdf");
+        Files.deleteIfExists(file);
+
+        this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
+                file.getFileName().toString(), file, null, true);
+        writableThesaurus.initRepository();
     }
     
     @After
-    public void deleteEmptyThesaurus() {
+    public void deleteEmptyThesaurus() throws IOException {
         writableThesaurus.getRepository().shutDown();
-        writableThesaurus.getFile().delete();
+        Files.deleteIfExists(writableThesaurus.getFile());
     }
     
     public ThesaurusTest() {

@@ -248,7 +248,8 @@
               $scope.processReport = data;
               $scope.processReportWarning = data.notFound != 0 ||
                   data.notOwner != 0 ||
-                  data.notProcessFound != 0;
+                  data.notProcessFound != 0 ||
+                  data.metadataErrorReport.metadataErrorReport.length != 0;
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('processFinished'),
                 timeout: 2,

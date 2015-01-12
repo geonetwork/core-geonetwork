@@ -28,7 +28,7 @@ import org.fao.geonet.kernel.search.classifier.Value;
 
 public class Dimension {
 
-    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s}\n";
+    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s}%n";
 
     public static final String FACET_FIELD_SUFFIX = "_facet";
 

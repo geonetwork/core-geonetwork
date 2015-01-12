@@ -39,10 +39,12 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -55,7 +57,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
@@ -127,9 +129,16 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
         //--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
-		r.process();
-
+//      AFA we don't have a better fix
+//      https://github.com/geonetwork/core-geonetwork/issues/620
+//		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+//		r.process();
+        //--- reindex metadata
+        List<String> list = new ArrayList<String>();
+        for (int mdId : metadata) {
+            list.add(Integer.toString(mdId));
+        }
+        dm.indexMetadata(list);
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)

@@ -23,10 +23,6 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -36,6 +32,9 @@ import org.fao.geonet.kernel.rdf.Selectors;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -47,9 +46,9 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.admin.AdminListener;
 import org.openrdf.sesame.admin.DummyAdminListener;
-import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -63,12 +62,17 @@ import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
@@ -80,7 +84,7 @@ public class Thesaurus {
 
 	private String dname;
 
-	private File thesaurusFile;
+	private Path thesaurusFile;
 
 	private LocalRepository repository;
 
@@ -121,10 +125,10 @@ public class Thesaurus {
 	 * @param type
 	 * @param dname category/domain name of thesaurus
 	 */
-	public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
+	public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
 	    this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
 	}
-    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
 		this.isoLanguageMapper = isoLanguageMapper;
 		this.fname = fname;
@@ -162,7 +166,7 @@ public class Thesaurus {
 		return fname;
 	}
 
-	public File getFile() {
+	public Path getFile() {
 		return thesaurusFile;
 	}
 
@@ -232,7 +236,7 @@ public class Thesaurus {
 	    RepositoryConfig repConfig = new RepositoryConfig(getKey());
 
         SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
-        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().getAbsolutePath(),
+        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().toUri().toString(),
                 RDFFormat.RDFXML);
         repConfig.addSail(syncSail);
         repConfig.addSail(memSail);
@@ -701,7 +705,7 @@ public class Thesaurus {
      * @param ignoreMissingError 
      *
      */
-    private void retrieveThesaurusTitle(File thesaurusFile, String defaultTitle, boolean ignoreMissingError) {
+    private void retrieveThesaurusTitle(Path thesaurusFile, String defaultTitle, boolean ignoreMissingError) {
 				// set defaults as in the case of a local thesaurus file, this info
 				// may not be present yet
 				this.title = defaultTitle;
@@ -982,7 +986,7 @@ public class Thesaurus {
 
         // ------------------------------- Deprecated methods -----------------------------
         /**
-         * @deprecated since 2.9.0.  Use {@link #add(KeywordBean)}
+         * @deprecated since 2.9.0.  Use {@link #addElement(KeywordBean)}
          */
         URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
                 AccessDeniedException {
@@ -996,7 +1000,7 @@ public class Thesaurus {
         }
 
         /**
-         * @deprecated since 2.9.0 use {@link #add(KeywordBean)}
+         * @deprecated since 2.9.0 use {@link #addElement(KeywordBean)}
          */
         URI addElement(String code, String prefLab, String note, String east, String west, String south,
                                String north, String lang) throws IOException, AccessDeniedException, GraphException {
@@ -1013,7 +1017,7 @@ public class Thesaurus {
 
 
         /**
-         * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean)}
+         * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
          */
         URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
                 MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
@@ -1025,7 +1029,7 @@ public class Thesaurus {
             return updateElement(keyword, false);
         }
         /**
-         * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean)}
+         * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean, boolean)}
          */
         URI updateElement(String namespace, String id, String prefLab, String note, String east, String west,
                                   String south, String north, String lang) throws AccessDeniedException, IOException,

@@ -10,6 +10,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Select a list of elements stored in session
  * Returns status 
@@ -19,7 +21,7 @@ public class Select implements Service {
 	
 	String init_type;
 	
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		init_type = params.getValue(Params.TYPE);
 	}
 

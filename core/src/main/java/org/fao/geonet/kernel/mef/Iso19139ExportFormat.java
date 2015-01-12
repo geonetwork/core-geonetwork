@@ -7,14 +7,14 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
 import java.util.Collections;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
 
 /**
- * Created with IntelliJ IDEA.
+ * Export the metadata in Iso19139 standard.
  * User: Jesse
  * Date: 11/8/13
  * Time: 3:35 PM
@@ -29,7 +29,7 @@ public class Iso19139ExportFormat extends ExportFormat {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             DataManager dm = gc.getBean(DataManager.class);
             MetadataSchema metadataSchema = dm.getSchema(schema);
-            String path = metadataSchema.getSchemaDir() + "/convert/to19139.xsl";
+            Path path = metadataSchema.getSchemaDir().resolve("convert/to19139.xsl");
 
             String data19139 = formatData(metadata, true, path);
             return Collections.singleton(Pair.read(FILE_METADATA_19139, data19139));

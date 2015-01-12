@@ -1304,7 +1304,7 @@ public class LuceneQueryBuilder {
         return booleanQuery;
     }
     
-    private class DrillDownPath {
+    private static class DrillDownPath {
         private final String dimension;
         private final String[] path;
 

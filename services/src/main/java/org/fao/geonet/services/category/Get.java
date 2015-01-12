@@ -32,13 +32,15 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Returns a specific category given its id
   */
 
 public class Get implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

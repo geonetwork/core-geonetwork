@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 //=============================================================================
@@ -50,7 +51,7 @@ public class GetGeom implements Service {
 
     private GeomFormat format;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         format = GeomFormat.valueOf(params.getMandatoryValue("format"));
     }
 

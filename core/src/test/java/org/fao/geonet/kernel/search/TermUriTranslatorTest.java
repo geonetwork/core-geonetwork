@@ -2,8 +2,8 @@ package org.fao.geonet.kernel.search;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
@@ -47,14 +47,15 @@ public class TermUriTranslatorTest {
     }
 
     private ThesaurusFinder createThesaurusFinderFor(IsoLanguagesMapper isoLangMapper, String fileName) throws IOException, ConfigurationException {
-        File thesaurusFile = new ClassPathResource(fileName, this.getClass()).getFile();
+        //TODO: Load from in memory data directory?
+        Path thesaurusFile = new ClassPathResource(fileName, this.getClass()).getFile().toPath();
         Thesaurus thesaurus = loadThesaurusFile(isoLangMapper, thesaurusFile);
         return new SingleThesaurusFinder(thesaurus);
     }
 
-    private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, File thesaurusFile)
+    private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
       throws ConfigurationException {
-        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getName(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
+        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
         thesaurus.initRepository();
         return thesaurus;
     }

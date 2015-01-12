@@ -22,7 +22,6 @@
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
 
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -31,12 +30,12 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class Get implements Service {
 
     private static final char SEPARATOR = '~';
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     /**

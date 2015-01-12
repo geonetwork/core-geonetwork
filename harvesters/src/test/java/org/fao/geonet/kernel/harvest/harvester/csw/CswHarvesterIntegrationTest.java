@@ -1,17 +1,18 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
 import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.MockXmlRequest;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.util.Map;
 import javax.annotation.Nullable;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Integration Test for the Csw Harvester class.
@@ -37,8 +38,7 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
         final MockXmlRequest cswServerRequest = new MockXmlRequest(HOST, PORT, PROTOCOL);
         cswServerRequest.when(CAPABILITIES_URL)
                 .thenReturn(fileStream("capabilities.xml"));
-        final String queryString = "?request=GetRecordById&service=CSW&version=2.0.2&outputSchema=http://www.isotc211" +
-                         ".org/2005/gmd&elementSetName=full&id=";
+        final String queryString = "?request=GetRecordById&service=CSW&version=2.0.2&outputSchema=" + getOutputSchema() + "&elementSetName=full&id=";
         cswServerRequest.when(REQUEST+queryString+"7e926fbf-00fb-4ff5-a99e-c8576027c4e7")
                 .thenReturn(fileStream("GetRecordById-7e926fbf-00fb-4ff5-a99e-c8576027c4e7.xml"));
         cswServerRequest.when(REQUEST+queryString+"da165110-88fd-11da-a88f-000d939bc5d8")
@@ -48,23 +48,48 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
             public boolean apply(@Nullable HttpRequestBase input) {
 
                 final boolean isHttpPost = input instanceof HttpPost;
-                final boolean correctPath = input.getURI().toString().equalsIgnoreCase(REQUEST);
-                if (!(isHttpPost && correctPath)) {
+                final boolean correctPath = input.getURI().toString().startsWith(REQUEST);
+                if (!correctPath) {
                     return false;
                 }
-                final Element xml;
-                try {
-                    xml = Xml.loadStream(((HttpPost) input).getEntity().getContent());
-                } catch (Throwable e) {
-                    return false;
-                }
-                final boolean isGetRecords = "GetRecords".equalsIgnoreCase(xml.getName());
-                final Element queryEl = xml.getChild("Query", Csw.NAMESPACE_CSW);
-                final String typeNames = queryEl.getAttributeValue("typeNames");
-                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") && typeNames.contains("csw:Record");
-                final boolean isSummary = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText().equals("summary");
-                final boolean noQueryFilter = queryEl.getChildren().size() == 1;
 
+                String request,typeNames, elementSetName;
+                final boolean noQueryFilter;
+
+                if (isHttpPost) {
+                    final Element xml;
+                    try {
+                        xml = Xml.loadStream(((HttpPost) input).getEntity().getContent());
+                    } catch (Throwable e) {
+                        return false;
+                    }
+                    request = xml.getName();
+                    final Element queryEl = xml.getChild("Query", Csw.NAMESPACE_CSW);
+                    typeNames = queryEl.getAttributeValue("typeNames");
+                    elementSetName = queryEl.getChild("ElementSetName", Csw.NAMESPACE_CSW).getText();
+                    noQueryFilter = queryEl.getChildren().size() == 1;
+                } else {
+                    final String[] params = input.getURI().getQuery().split("\\&");
+                    Map<String, String> paramMap = Maps.newHashMap();
+                    for (String param : params) {
+                        final String[] split = param.split("=");
+                        String key = split[0].toLowerCase();
+                        String value = "";
+                        if (split.length > 1) {
+                            value = split[1];
+                        }
+                        paramMap.put(key, value);
+                    }
+
+                    request = paramMap.get("request");
+                    typeNames = paramMap.get("typenames");
+                    elementSetName = paramMap.get("elementsetname");
+                    noQueryFilter = paramMap.get("query") == null || paramMap.get("query").isEmpty();
+                }
+
+                final boolean isGetRecords = "GetRecords".equalsIgnoreCase(request);
+                final boolean correctTypeNames = typeNames.contains("gmd:MD_Metadata") && typeNames.contains("csw:Record");
+                final boolean isSummary = elementSetName.equals("summary");
                 return isGetRecords && correctTypeNames && isSummary && noQueryFilter;
             }
         }).thenReturn(fileStream("getRecords.xml"));
@@ -75,13 +100,13 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     }
 
     protected void customizeParams(Element params) {
-        addCswSpecificParams(params);
+        addCswSpecificParams(params, getOutputSchema());
     }
 
-    public static void addCswSpecificParams(Element params) {
+    public static void addCswSpecificParams(Element params, String outputSchema) {
         params.getChild("site")
                 .addContent(new Element("capabilitiesUrl").setText(CAPABILITIES_URL))
-                .addContent(new Element("outputSchema").setText(OUTPUT_SCHEMA));
+                .addContent(new Element("outputSchema").setText(outputSchema));
     }
 
     @Override
@@ -92,5 +117,9 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     @Override
     protected int getExpectedTotalFound() {
         return 2;
+    }
+
+    public String getOutputSchema() {
+        return OUTPUT_SCHEMA;
     }
 }

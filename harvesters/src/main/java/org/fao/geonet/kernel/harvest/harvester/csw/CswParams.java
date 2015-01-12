@@ -66,6 +66,7 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", "off");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
@@ -76,8 +77,6 @@ public class CswParams extends AbstractParams {
             // TODO should not swallow
         }
 		icon     = Util.getParam(site, "icon", "default.gif");
-
-		addSearches(searches);
 
 		if (searches!=null){
 			if (searches.getChild("search")!=null){
@@ -117,6 +116,7 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
         xslfilter = Util.getParam(site, "xslfilter", "");
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
 		icon     = Util.getParam(site, "icon", icon);
 
@@ -124,8 +124,6 @@ public class CswParams extends AbstractParams {
 		//--- set these new ones
 
 		if (searches != null){
-			addSearches(searches);
-			
 			if (searches.getChild("search")!=null){
 			    @SuppressWarnings("unchecked")
                 List<Element> tmp = searches.getChild("search").getChildren(); 
@@ -141,23 +139,7 @@ public class CswParams extends AbstractParams {
 	//---
 	//---------------------------------------------------------------------------
 
-    /**
-     *
-     * @return
-     */
-	public Iterable<Search> getSearches() {
-        return alSearches;
-    }
-	
 	//public Iterable<Element> getSearchElements() { return eltSearches; }
-
-    /**
-     *
-     * @return
-     */
-	public boolean isSearchEmpty() {
-        return alSearches.isEmpty();
-    }
 
     /**
      *
@@ -173,37 +155,11 @@ public class CswParams extends AbstractParams {
 	 	copy.queryScope = queryScope;
 	 	copy.hopCount = hopCount;
         copy.xslfilter = xslfilter;
+		copy.outputSchema = outputSchema;
 
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
-		
 		copy.eltSearches = eltSearches;
 
 		return copy;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     *
-     * @param searches
-     */
-	private void addSearches(Element searches) {
-		alSearches.clear();
-
-		if (searches == null) {
-			return;
-        }
-
-        for (Object o : searches.getChildren("search")) {
-            Element search = (Element) o;
-
-            alSearches.add(new Search(search));
-        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -214,6 +170,7 @@ public class CswParams extends AbstractParams {
 
 	public String capabUrl;
 	public String icon;
+	public String outputSchema;
     public boolean rejectDuplicateResource;
     public String queryScope;
     public Integer hopCount;
@@ -227,7 +184,6 @@ public class CswParams extends AbstractParams {
      */
     public String  xslfilter;
 
-	private List<Search> alSearches = new ArrayList<Search>();
 	public List<Element> eltSearches = new ArrayList<Element>();
 	
 }

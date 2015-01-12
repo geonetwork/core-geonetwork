@@ -32,6 +32,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * TODO javadoc.
  *
@@ -43,7 +45,7 @@ public class Update implements Service {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

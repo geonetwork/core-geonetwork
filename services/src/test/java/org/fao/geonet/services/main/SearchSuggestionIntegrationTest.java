@@ -2,36 +2,46 @@ package org.fao.geonet.services.main;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.jdom.Attribute;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import static org.fao.geonet.domain.Pair.read;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the SearchSuggestion Service
  * Created by Jesse on 2/4/14.
  */
+@ContextConfiguration(inheritLocations = true, locations = "classpath:suggestions-context.xml")
 public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationTest {
     private static final SearchSuggestion searchSuggestionService = new SearchSuggestion();
     private ServiceContext context;
 
     @BeforeClass
     public static void initService() throws Exception {
-        searchSuggestionService.init("", new ServiceConfig(Lists.newArrayList(
+        searchSuggestionService.init(IO.toPath("."), new ServiceConfig(Lists.newArrayList(
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_DEFAULT_SEARCH_FIELD, "any"),
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_MAX_NUMBER_OF_TERMS, "10000000"),
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_THRESHOLD, "1000")
@@ -48,6 +58,8 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
         importMetadata.getMefFilesToLoad().add("mef1-example.mef");
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
+
+        assertEquals(4, context.getBean(MetadataRepository.class).count(MetadataSpecs.hasType(MetadataType.METADATA)));
     }
 
     @Test

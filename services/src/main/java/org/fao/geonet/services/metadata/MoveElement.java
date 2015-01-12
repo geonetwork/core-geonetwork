@@ -33,6 +33,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** For editing : move a tag up or down. Access is restricted
@@ -48,7 +50,7 @@ public class MoveElement implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		String dir = params.getMandatoryValue(Geonet.Config.DIR);
 

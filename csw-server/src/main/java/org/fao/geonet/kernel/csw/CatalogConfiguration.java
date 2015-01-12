@@ -25,25 +25,22 @@ package org.fao.geonet.kernel.csw;
 
 import jeeves.constants.ConfigFile;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.ServletContext;
 
 public class CatalogConfiguration {
 
@@ -85,7 +82,7 @@ public class CatalogConfiguration {
         if (!initialized) {
             Log.info(Geonet.CSW, "  - Catalogue services for the web...");
 
-            final String webappDir = _dataDir.getWebappDir();
+            final Path webappDir = _dataDir.getWebappDir();
             try {
                 loadCatalogConfig(webappDir, Csw.CONFIG_FILE);
             } catch (Exception e) {
@@ -94,14 +91,14 @@ public class CatalogConfiguration {
             initialized = true;
         }
     }
-	private void loadCatalogConfig(String path, String configFile)
+	private void loadCatalogConfig(Path path, String configFileName)
 			throws Exception {
-		configFile = path + File.separator + "WEB-INF" + File.separator + configFile;
+        Path configFile = path.resolve("WEB-INF").resolve(configFileName);
 
 		Log.info(Geonet.CSW, "Loading : " + configFile);
 
 		Element configRoot = Xml.loadFile(configFile);
-        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile, _servletContext, _dataDir.getWebappDir(), configRoot);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile.toString(), _servletContext, _dataDir.getWebappDir(), configRoot);
 
         @SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);

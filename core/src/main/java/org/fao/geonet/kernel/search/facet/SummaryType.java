@@ -30,7 +30,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 
 public class SummaryType {
 
-    private static final String TEMPLATE = "  * %s {format=%s}\n";
+    private static final String TEMPLATE = "  * %s {format=%s}%n";
 
     private String name;
 

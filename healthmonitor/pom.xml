@@ -12,11 +12,6 @@
     	<name>GeoNetwork health monitor</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.geonetwork-opensource</groupId>

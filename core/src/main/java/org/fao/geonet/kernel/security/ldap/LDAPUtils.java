@@ -49,7 +49,7 @@ public class LDAPUtils {
 	 * @param user
 	 * @throws Exception
 	 */
-    static void saveUser(LDAPUser user, UserRepository userRepo, GroupRepository groupRepo, UserGroupRepository userGroupRepo,
+    static synchronized void saveUser(LDAPUser user, UserRepository userRepo, GroupRepository groupRepo, UserGroupRepository userGroupRepo,
             boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup) throws Exception {
         String userName = user.getUsername();
         if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -78,10 +78,11 @@ public class LDAPUtils {
             toSave = user.getUser();
         }
         toSave.getSecurity().setAuthType(LDAPConstants.LDAP_FLAG);
-        userRepo.save(toSave);
+        toSave = userRepo.save(toSave);
+        user.setUser(toSave);
 
 		// Add user groups
-		if (importPrivilegesFromLdap && !Profile.Administrator.equals(user.getUser().getProfile())) {
+		if (importPrivilegesFromLdap) {
             userGroupRepo.deleteAllByIdAttribute(UserGroupId_.userId, singleton(user.getUser().getId()));
 			for(Map.Entry<String, Profile> privilege : user.getPrivileges().entries()) {
 				// Add group privileges for each groups
@@ -94,7 +95,7 @@ public class LDAPUtils {
 				
 				if (group == null && createNonExistingLdapGroup) {
 				    group = new Group().setName(groupName);
-				    groupRepo.save(group);
+				    group = groupRepo.save(group);
 				    
 				    if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
@@ -104,7 +105,13 @@ public class LDAPUtils {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
                     }
-				    userGroupRepo.save(new UserGroup().setId(new UserGroupId(user.getUser(), group)).setProfile(profile));
+                    UserGroupId usergroupId = new UserGroupId(user.getUser(), group);
+                    UserGroup usergroup = new UserGroup();
+                    usergroup.setId(usergroupId);
+                    usergroup.setGroup(group);
+                    usergroup.setUser(toSave);
+                    usergroup.setProfile(profile);
+				    userGroupRepo.save(usergroup);
 					
 						if (profile == Profile.Reviewer) {
 						    try {
