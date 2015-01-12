@@ -56,7 +56,7 @@ public class KeywordSearchParamsBuilder {
         if(keyword != null) {
             KeywordSearchType searchType = KeywordSearchType.parseString(Util.getParam(params, XmlParams.pTypeSearch, KeywordSearchType.MATCH.name()));
             parsedParams.keyword(keyword, searchType, true);
-            parsedParams.uri(keyword);
+            parsedParams.uri(keyword, searchType, true);
         }
         
         String uri = Util.getParam(params, XmlParams.pUri, null);
@@ -96,6 +96,8 @@ public class KeywordSearchParamsBuilder {
         
         return parsedParams;
     }
+
+
     /**
      * if set to true then the params will not throw exceptions when incorrectly configured.
      * 
@@ -305,6 +307,11 @@ public class KeywordSearchParamsBuilder {
         this.searchClauses.add(new URISearchClause(keywordURI));
         return this;
     }
+    public KeywordSearchParamsBuilder uri(String keywordURI, KeywordSearchType searchType, boolean ignoreCase) {
+        this.searchClauses.add(new URISearchClause(searchType, keywordURI, ignoreCase));
+        return this;
+    }
+
     public void relationship(String relatedId, KeywordRelation relation, KeywordSearchType searchType, boolean ignoreCase) {
         this.selectClauses.add(Selectors.BROADER);
         this.searchClauses.add(new RelationShipClause(relation, relatedId, searchType, ignoreCase));
