@@ -9,9 +9,9 @@ $.ajax('md.format.xml?xsl=hierarchy_view&id={{metadataId}}', {
 
     linkBlockClass.replaceWith(html);
 
-    if (linkBlockClass.children().length > 0) {
-      linkBlockClass.show();
-      $(".{{linkBlockClass}} .toggler").on('click', formatterSectionTogglersEventHandler);
+    linkBlockClass = $(".{{linkBlockClass}}");
+    if (linkBlockClass.find("table").children().length > 0) {
+      linkBlockClass.find(".toggler").on('click', formatterSectionTogglersEventHandler);
     } else {
       linkBlockClass.hide();
     }
