@@ -2,16 +2,6 @@
 
   goog.provide('gn_search_sextant');
 
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
@@ -31,6 +21,7 @@
   module.controller('gnsSextant', [
     '$scope',
     '$location',
+    '$window',
     'suggestService',
     '$http',
     'gnSearchSettings',
@@ -39,37 +30,46 @@
     'gnThesaurusService',
     'sxtGlobals',
     'gnNcWms',
-    function($scope, $location, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
+    '$timeout',
+    function($scope, $location, $window, suggestService, $http, gnSearchSettings,
+        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
+        $timeout) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+      $scope.mainTabs = gnSearchSettings.mainTabs;
 
-      $scope.mainTabs = {
-        search: {
-          title: 'Search',
-          titleInfo: 0,
-          active: false
-        },
-        map: {
-          title: 'Map',
-          active: false,
-          titleInfo: 0
+      var localStorage = $window.localStorage || {};
 
-        },
-        panier: {
-          title: 'Panier',
-          active: false,
-          titleInfo: 0
-        }};
+      $scope.collapsed = localStorage.searchWidgetCollapsed ?
+        JSON.parse(localStorage.searchWidgetCollapsed) :
+        { search: true,
+          facet: false };
+
+      $scope.toggleSearch = function() {
+        $scope.collapsed.search = !$scope.collapsed.search;
+        if(!$scope.collapsed.search) {
+          $scope.collapsed.facet = true;
+        }
+        $timeout(function(){
+          gnSearchSettings.searchMap.updateSize();
+        }, 300);
+      };
+
+      var storeCollapsed = function() {
+        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
+      };
+      $scope.$watch('collapsed.search', storeCollapsed);
+      $scope.$watch('collapsed.facet', storeCollapsed);
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
       $scope.displayMapTab = function() {
-        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
-          setTimeout(function() {
+        if (angular.isUndefined(viewerMap.getSize()) || viewerMap.getSize()[0] == 0 ||
+            viewerMap.getSize()[1] == 0) {
+          $timeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
               viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
@@ -184,8 +184,11 @@
         }
       };
 
+      // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-
+      if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
+        $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
+      }
     }]);
 
   module.directive('sxtFixMdlinks', [
