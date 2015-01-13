@@ -147,5 +147,6 @@
     "edit" : "Editer",
     "duplicate": "Dupliquer",
     "createChild": "Créer un enfant",
-    "privileges": "Privilèges"
+    "privileges": "Privilèges",
+    "whoCanAccess": "Who has access"
 }
