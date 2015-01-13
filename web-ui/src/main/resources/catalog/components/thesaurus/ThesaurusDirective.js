@@ -83,8 +83,7 @@
                          .getXML(thesaurusIdentifier).then(
                          function(data) {
                    // Add the fragment to the form
-                   scope.snippet = gnEditorXMLService.
-                                 buildXML(scope.elementName, data);
+                   scope.snippet = data;
                    scope.snippetRef = gnEditor.
                                  buildXMLFieldName(
                                    scope.elementRef,

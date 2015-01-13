@@ -55,14 +55,18 @@
              // Separator between each contact XML
              // snippet
              var separator = '&&&';
-             // URL used for creating XLink. Could be good to have
-             // that as settings to define local:// or http:// xlinks.
-             var url = gnConfigService.getServiceURL() + 'eng/subtemplate';
+
+             // Define type of XLinks: local:// or http:// based on
+             // catalog configuration.
+             var url =
+               gnConfig[gnConfig.key.isXLinkLocal] === true ?
+               'local://' + scope.$parent.lang + '/subtemplate':
+               gnConfigService.getServiceURL() + scope.$parent.lang + '/subtemplate';
              scope.gnConfig = gnConfig;
              scope.templateAddAction = scope.templateAddAction === 'true';
              scope.isContact = scope.templateType === 'contact';
              scope.hasDynamicVariable = scope.variables &&
-             scope.variables.match('{.*}') !== null;
+                scope.variables.match('{.*}') !== null;
              scope.subtemplateFilter = '';
 
              // Search only for contact subtemplate
