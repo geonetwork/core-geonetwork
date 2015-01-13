@@ -43,16 +43,16 @@
       var localStorage = $window.localStorage || {};
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
-        JSON.parse(localStorage.searchWidgetCollapsed) :
-        { search: true,
-          facet: false };
+          JSON.parse(localStorage.searchWidgetCollapsed) :
+          { search: true,
+            facet: false };
 
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
-        if(!$scope.collapsed.search) {
+        if (!$scope.collapsed.search) {
           $scope.collapsed.facet = true;
         }
-        $timeout(function(){
+        $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 300);
       };
@@ -215,8 +215,8 @@
 
       // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
+      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
+        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
       }
     }]);
 
