@@ -14,8 +14,9 @@
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
+    'gnSearchSettings',
     function($rootScope, $timeout, gnHttp,
-             gnMetadataManager, gnAlertService, gnPopup) {
+             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -200,5 +201,17 @@
           return gnHttp.callService('mdPrivilegesBatch', publishFlag);
         }
       };
+
+      /**
+       * Get html formatter link for the given md
+       * @param {Object} md
+       */
+      this.getPermalink = function(md) {
+        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+        gnPopup.createModal({
+          title: 'permalink',
+          content: '<a href="'+url+'" target="_blank">'+url+'</a>'
+        });
+      }
     }]);
 })();
