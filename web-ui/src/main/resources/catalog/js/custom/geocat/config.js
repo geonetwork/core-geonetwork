@@ -134,14 +134,14 @@
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/title.html',
-        tooltip: 'Simple',
-        icon: 'fa-list'
-      }, {
-        tplUrl: '../../catalog/components/search/resultsview/' +
             'partials/viewtemplates/geocat.html',
         tooltip: 'Geocat',
         icon: 'fa-th-list'
+      }, {
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/title.html',
+        tooltip: 'Simple',
+        icon: 'fa-list'
       }];
 
       searchSettings.formatter = {
