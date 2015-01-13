@@ -56,8 +56,8 @@
         </a>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
         <p class="md-date" ng-if="showDate.date">(<i translate>{{showDate.type}}</i> : {{showDate.date}})</p>
-        <p class="md-owner" ng-if="md['geonet:info'].owner">
-          (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users" target="_blank">{{user.username}}</a>)</p>
+        <p class="md-owner">
+          (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users" target="_blank">{{md.getOwnername()}}</a>)</p>
       </div>
     </div>
 

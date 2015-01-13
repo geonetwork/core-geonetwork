@@ -22,11 +22,11 @@
    *
    */
   module.controller('gnsGeocat', [
-    '$scope',
-    '$timeout',
-    'gnMap',
-    'gnSearchSettings',
-    '$window',
+      '$scope',
+      '$timeout',
+      'gnMap',
+      'gnSearchSettings',
+      '$window',
     function($scope, $timeout, gnMap, gnSearchSettings, $window) {
 
       var localStorage = $window.localStorage || {};
@@ -38,10 +38,10 @@
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) : {
-            search: true,
-            facet: false,
-            map: false
-          };
+        search: true,
+        facet: false,
+        map: false
+      };
 
       var storeCollapsed = function() {
         localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
@@ -71,9 +71,9 @@
         addMdLayerToMap: function(link) {
           gnMap.addWmsToMap(gnSearchSettings.searchMap, {
             LAYERS: link.name
-          },{
-            url: link.url
-          });
+              },{
+                url: link.url
+              });
         }
       };
 
@@ -98,7 +98,8 @@
           sortBy: sortBy,
           fast: 'index',
           from: 1,
-          to: to
+          to: to,
+          _content_type: 'json'
         });
       };
 
@@ -109,7 +110,7 @@
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
-    }]);
+  }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -134,7 +135,7 @@
       $scope.regions = {};
 
       // data store for types field
-      $scope.types = ['any',
+      $scope.types = [
         'dataset',
         'basicgeodata',
         'basicgeodata-federal',
@@ -213,7 +214,8 @@
                   for (var i = 0; i < a.length; i++) {
                     res.push({
                       id: a[i]['@id'],
-                      name: a[i].name
+                      name: (a[i].label && a[i].label[$scope.lang]) ?
+                      a[i].label[$scope.lang] : a[i].name
                     });
                   }
                 };
@@ -225,6 +227,18 @@
           return defer.promise;
         })()
       };
+
+      // config for format suggestion multiselect
+      $scope.formatsOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'formatWithVersion',
+              'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
 
       $scope.gnMap = gnMap;
       var map = $scope.searchObj.searchMap;
@@ -430,10 +444,10 @@
         var url = 'qi@json?summaryOnly=true';
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
-        });
+      });
       } else {
         $scope.triggerSearch(true);
-      }
+            }
     }]);
 
   module.directive('gcFixMdlinks', [
@@ -455,7 +469,7 @@
                 name: e[1],
                 desc: e[1],
                 url: e[2]
-              });
+       });
             });
           } else {
             scope.layers = scope.md.getLinksByType('OGC', 'kml');
@@ -467,19 +481,19 @@
               date: scope.md['geonet:info'].changeDate,
               type: 'changeDate'
             };
-          }
+            }
           else if (scope.md['geonet:info'].publishedDate) {
             d = {
               date: scope.md['geonet:info'].publishedDate,
               type: 'changeDate'
             };
-          }
+            }
           else if (scope.md['geonet:info'].createDate) {
             d = {
               date: scope.md['geonet:info'].createDate,
               type: 'createDate'
             };
-          }
+            }
           scope.showDate = {
             date: moment(d).format('YYYY-MM-DD'),
             type: d.type
