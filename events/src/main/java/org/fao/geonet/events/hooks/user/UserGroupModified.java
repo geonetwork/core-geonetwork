@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class GroupModified implements GeonetworkEntityListener<UserGroup>,
+public class UserGroupModified implements GeonetworkEntityListener<UserGroup>,
         ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;
