@@ -79,7 +79,7 @@
       select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
 
     <xsl:variable name="isTheaurusAvailable"
-      select="count($listOfThesaurus/thesaurus[contains(title, $thesaurusTitle)]) > 0"/>
+      select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
     <xsl:choose>
       <xsl:when test="$isTheaurusAvailable">
 
@@ -94,13 +94,14 @@
                       select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
+
         <xsl:variable name="thesaurusConfig"
                       as="element()?"
                       select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
         <!-- Single quote are escaped inside keyword. 
           TODO: support multilingual editing of keywords
           -->
-        <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], '|')"/>
+        <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
@@ -109,11 +110,11 @@
                               then $thesaurusConfig/@transformations
                               else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'"/>
 
-        <!-- Get current transformation mode based on XML fragement analysis -->
+        <!-- Get current transformation mode based on XML fragment analysis -->
         <xsl:variable name="transformation"
-          select="if (count(gmd:keyword/gmx:Anchor) > 0) 
+          select="if (parent::node()/@xlink:href) then 'to-iso19139-keyword-as-xlink'
+          else if (count(gmd:keyword/gmx:Anchor) > 0)
           then 'to-iso19139-keyword-with-anchor' 
-          else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
           else 'to-iso19139-keyword'"/>
 
         <xsl:variable name="parentName" select="name(..)"/>
@@ -146,7 +147,7 @@
           -->
         <div data-gn-keyword-selector="{$widgetMode}"
           data-metadata-id="{$metadataId}"
-          data-element-ref="{concat('_X', ../gn:element/@ref)}"
+          data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
           data-thesaurus-title="{$thesaurusTitle}"
           data-thesaurus-key="{$thesaurusKey}"
           data-keywords="{$keywords}" data-transformations="{$transformations}"
