@@ -235,7 +235,7 @@
   <xsl:template mode="render-field"
                 match="gmd:distributionFormat[position() > 1]"/>
 
-
+  <!-- Date -->
   <xsl:template mode="render-field"
                 match="gmd:date"
                 priority="200">
@@ -254,6 +254,34 @@
       </dd>
     </dl>
   </xsl:template>
+
+
+  <!-- Enumeration -->
+  <xsl:template mode="render-field"
+                match="gmd:topicCategory[1]|gmd:obligation[1]|gmd:pointInPixel[1]"
+                priority="200">
+    <dl class="gn-date">
+      <dt>
+        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <ul>
+          <xsl:for-each select="parent::node()/(gmd:topicCategory|gmd:obligation|gmd:pointInPixel)">
+            <li>
+            <xsl:apply-templates mode="render-value"
+                                 select="*"/>
+            </li>
+          </xsl:for-each>
+        </ul>
+      </dd>
+    </dl>
+  </xsl:template>
+  <xsl:template mode="render-field"
+                match="gmd:topicCategory[position() > 1]|
+                        gmd:obligation[position() > 1]|
+                        gmd:pointInPixel[position() > 1]"/>
+
+
 
   <!-- Traverse the tree -->
   <xsl:template mode="render-field" match="*">
@@ -312,16 +340,26 @@
     <span data-gn-humanize-time="{.}"></span>
   </xsl:template>
 
+  <xsl:template mode="render-value"
+          match="gmd:language/gco:CharacterString">
+    <span data-translate=""><xsl:value-of select="."/></span>
+  </xsl:template>
+
   <!-- ... Codelists -->
   <xsl:template mode="render-value" match="@codeListValue">
     <xsl:variable name="id" select="."/>
-    <!--<xsl:value-of select="tr:node-label(tr:create($schema), .)"/>-->
     <xsl:variable name="codelistTranslation"
-                  select="$schemaCodelists//entry[code = $id]/label"/>
-
+                  select="tr:codelist-value-label(
+                            tr:create($schema),
+                            parent::node()/local-name(), $id)"/>
     <xsl:choose>
       <xsl:when test="$codelistTranslation != ''">
-        <xsl:value-of select="$codelistTranslation"/>
+
+        <xsl:variable name="codelistDesc"
+                      select="tr:codelist-value-desc(
+                            tr:create($schema),
+                            parent::node()/local-name(), $id)"/>
+        <span title="{$codelistDesc}"><xsl:value-of select="$codelistTranslation"/></span>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$id"/>
@@ -329,6 +367,30 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Enumeration -->
+  <xsl:template mode="render-value"
+                match="gmd:MD_TopicCategoryCode|
+                        gmd:MD_ObligationCode|
+                        gmd:MD_PixelOrientationCode">
+    <xsl:variable name="id" select="."/>
+    <xsl:variable name="codelistTranslation"
+                  select="tr:codelist-value-label(
+                            tr:create($schema),
+                            local-name(), $id)"/>
+    <xsl:choose>
+      <xsl:when test="$codelistTranslation != ''">
+
+        <xsl:variable name="codelistDesc"
+                      select="tr:codelist-value-desc(
+                            tr:create($schema),
+                            local-name(), $id)"/>
+        <span title="{$codelistDesc}"><xsl:value-of select="$codelistTranslation"/></span>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$id"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 
 
