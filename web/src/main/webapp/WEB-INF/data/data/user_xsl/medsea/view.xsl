@@ -70,9 +70,9 @@
     Add try/catch block to log out when a label id duplicated
     in loc files. XSLv3 could be useful for that.
     -->
-    <xsl:message>#<xsl:value-of select="$name"/></xsl:message>
+    <!--<xsl:message>#<xsl:value-of select="$name"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
-    <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>
+    <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
 
     <xsl:variable name="escapedName">
       <xsl:choose>
@@ -226,7 +226,11 @@
     </html>
   </xsl:template>
 
-  <xsl:template mode="render-value" match="gmd:EX_GeographicBoundingBox">
+  <xsl:template mode="render-value" match="gmd:EX_GeographicBoundingBox[
+                                            gmd:northBoundLatitude/gco:Decimal != '' and
+                                            gmd:southBoundLatitude/gco:Decimal != '' and
+                                            gmd:eastBoundLongitude/gco:Decimal != '' and
+                                            gmd:westBoundLongitude/gco:Decimal != '']">
 
     <xsl:variable name="box"
                   select="concat('POLYGON((',
