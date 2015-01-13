@@ -40,7 +40,7 @@ import java.lang.reflect.Method;
  *
  * @author jesse, francois
  */
-public class DbDescTranslator extends Translator {
+public class DbDescTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 

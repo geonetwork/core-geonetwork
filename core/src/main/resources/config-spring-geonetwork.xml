@@ -18,7 +18,14 @@
     <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
     <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />
     <bean id="Iso19139ExportFormat" class="org.fao.geonet.kernel.mef.Iso19139ExportFormat" lazy-init="true"/>
-    <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true"/>
+
+    <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true">
+        <constructor-arg ref="facets"/>
+        <constructor-arg ref="summaryTypes"/>
+    </bean>
+
+    <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
+
     <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
     <bean id="LuceneIndexLanguageTracker" class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
     <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager" lazy-init="true"/>

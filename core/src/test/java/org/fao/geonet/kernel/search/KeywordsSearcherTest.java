@@ -69,6 +69,14 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             }
             
             @Override
+            public Thesaurus getThesaurusByConceptScheme(String conceptSchemeUri) {
+                for (Thesaurus thesaurus: getThesauriMap().values()) {
+                    if (thesaurus.hasConceptScheme(conceptSchemeUri)) return thesaurus;
+                }
+                return null;
+            }
+
+            @Override
             public Map<String, Thesaurus> getThesauriMap() {
                 return Collections.unmodifiableMap(map);
             }
@@ -82,11 +90,8 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     
     private Thesaurus createThesaurus(Path directory, String string) throws Exception {
         Path thesaurusBlahFile = directory.resolve(string+".rdf");
-        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
-        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
-
-        Thesaurus thes = new Thesaurus(appContext, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
-        setRepository(thes);
+        Thesaurus thes = new Thesaurus(isoLangMapper, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
+        thes.initRepository();
         if(!Files.exists(thesaurusBlahFile) || Files.size(thesaurusBlahFile) == 0) {
             populateThesaurus(thes, smallWords, "http://"+string+".com#", string+"Val", string+"Note", languages);
         }

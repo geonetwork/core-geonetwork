@@ -60,4 +60,18 @@ public abstract class Wheres {
     public static Where ilike(String columnName, String value) {
         return new WhereClause(columnName+" LIKE \""+value+"\" IGNORE CASE");
     }
+
+    /**
+     * Create a where clause that tries to match a preferred label column for 
+     * the provided language code to the provided value
+     * @param lang the language to find
+     * @param value the label value to find
+     * @return a Where object that tries to match the preferred label column to
+     * the provided value
+     */
+    public static Where prefLabel(String lang, String value) {
+        String columnName = lang+Selectors.LABEL_POSTFIX;
+        return new WhereClause(columnName+" LIKE \""+value+"\"");
+    }
+    
 }

@@ -2,8 +2,10 @@ package org.fao.geonet.services.main;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
@@ -14,10 +16,12 @@ import org.jdom.Element;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -30,6 +34,7 @@ import static org.junit.Assert.assertTrue;
  * Test the SearchSuggestion Service
  * Created by Jesse on 2/4/14.
  */
+@ContextConfiguration(inheritLocations = true, locations = "classpath:suggestions-context.xml")
 public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationTest {
     private static final SearchSuggestion searchSuggestionService = new SearchSuggestion();
     private ServiceContext context;

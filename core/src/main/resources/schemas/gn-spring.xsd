@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.fao.org/geonetwork/spring"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    targetNamespace="http://www.fao.org/geonetwork/spring"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    
+    <xsd:element name="facets">
+        <xsd:complexType>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="facet"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="facet">
+        <xsd:complexType>
+            <xsd:attribute name="name" use="required" type="xsd:string"/>
+            <xsd:attribute name="indexKey" use="required" type="xsd:string"/>
+            <xsd:attribute name="label" use="required" type="xsd:string"/>
+            <xsd:attribute name="classifier" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="summaryTypes">
+        <xsd:complexType>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="summaryType"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="summaryType">
+        <xsd:complexType>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="item"/>
+            </xsd:choice>
+            <xsd:attribute name="name" use="required" type="xsd:string"/>
+            <xsd:attribute name="format">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="DIMENSION"/>
+                      <xsd:enumeration value="FACET_NAME"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="item">
+        <xsd:complexType>
+            <xsd:attribute name="facet" use="required" type="xsd:string"/>
+            <xsd:attribute name="sortBy">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="value"/>
+                        <xsd:enumeration value="numValue"/>
+                        <xsd:enumeration value="count"/>
+                        <xsd:enumeration value="label"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="sortOrder">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="asc"/>
+                      <xsd:enumeration value="desc"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="max">
+                <xsd:simpleType>
+                   <xsd:restriction base="xsd:integer">
+                      <xsd:minInclusive value="1"/>
+                      <xsd:maxInclusive value="1000"/>
+                   </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="depth">
+                <xsd:simpleType>
+                   <xsd:restriction base="xsd:integer">
+                      <xsd:minInclusive value="1"/>
+                   </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="translator" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

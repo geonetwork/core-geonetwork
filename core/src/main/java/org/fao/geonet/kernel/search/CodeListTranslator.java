@@ -34,7 +34,7 @@ import org.fao.geonet.kernel.SchemaManager;
  * 
  * @author jesse
  */
-public class CodeListTranslator extends Translator {
+public class CodeListTranslator implements Translator {
     private static final long serialVersionUID = 1L;
     private Map<String, String> _codeList;
 

@@ -4,11 +4,15 @@ import com.google.common.collect.Lists;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.vividsolutions.jts.geom.MultiPolygon;
+
 import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.DirectoryFactory;
@@ -43,6 +47,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import javax.sql.DataSource;
 
 import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
@@ -132,9 +137,12 @@ public class GeonetTestFixture {
 
         _directoryFactory.resetIndex();
 
+        ServiceContext serviceContext = test.createServiceContext();
+
+        _applicationContext.getBean(ThesaurusManager.class).init(serviceContext, "WEB-INF/data/config/codelist");
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
-        _applicationContext.getBean(DataManager.class).init(test.createServiceContext(), false);
+        _applicationContext.getBean(DataManager.class).init(serviceContext, false);
 
 
         addSourceUUID(dataDir);

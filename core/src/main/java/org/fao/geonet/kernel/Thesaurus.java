@@ -25,6 +25,11 @@ package org.fao.geonet.kernel;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.exceptions.TermNotFoundException;
+import org.fao.geonet.kernel.rdf.Query;
+import org.fao.geonet.kernel.rdf.QueryBuilder;
+import org.fao.geonet.kernel.rdf.Selectors;
+import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.LangUtils;
@@ -93,6 +98,8 @@ public class Thesaurus {
     
     private String keywordUrl;
 
+    private IsoLanguagesMapper isoLanguageMapper;
+
 /*    @SuppressWarnings("unused")
 	private String version;
 
@@ -111,7 +118,6 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String authority;
 */
-	private ApplicationContext context;
 
 	/**
 	 * @param fname
@@ -119,12 +125,12 @@ public class Thesaurus {
 	 * @param type
 	 * @param dname category/domain name of thesaurus
 	 */
-	public Thesaurus(ApplicationContext context, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
-	    this(context, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
+	public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
+	    this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
 	}
-    public Thesaurus(ApplicationContext context, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
-		this.context = context;
+		this.isoLanguageMapper = isoLanguageMapper;
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
@@ -183,6 +189,7 @@ public class Thesaurus {
   public String getKeywordUrl() {
 		return keywordUrl;
 	}
+  
 
   public void retrieveThesaurusTitle() {
     retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
@@ -258,6 +265,21 @@ public class Thesaurus {
 
         //printResultsTable(resultsTable);
 		return repository.performTableQuery(QueryLanguage.SERQL, query);
+	}
+
+	public boolean hasConceptScheme(String uri) {
+
+		String query = "SELECT conceptScheme"
+		             + " FROM {conceptScheme} rdf:type {skos:ConceptScheme}"
+		             + " WHERE conceptScheme = <" + uri + ">"
+		             + " USING NAMESPACE skos = <http://www.w3.org/2004/02/skos/core#>"; 
+
+		try {
+			return performRequest(query).getRowCount() > 0;
+		} catch (Exception e) {
+			Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept scheme for " + thesaurusFile + ". Error is: " + e.getMessage());
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -800,7 +822,7 @@ public class Thesaurus {
 		}
 
         public IsoLanguagesMapper getIsoLanguageMapper() {
-            return context.getBean(IsoLanguagesMapper.class);
+            return isoLanguageMapper;
         }
 
         /**
@@ -825,6 +847,141 @@ public class Thesaurus {
 
              myGraph.add(subjectURI, relationURI, relatedSubjectURI);
              myGraph.add(relatedSubjectURI, opposteRelationURI, subjectURI);
+        }
+
+        /**
+         * Gets a keyword using its id
+         * 
+         * @param subject the keyword to retrieve
+         * @return keyword 
+         */
+        public KeywordBean getKeyword(String uri, String... languages) {
+            List<KeywordBean> keywords;
+
+            try {
+                Query<KeywordBean> query = QueryBuilder
+                    .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                    .where(Wheres.ID(uri))
+                    .build();
+
+                keywords = query.execute(this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            if (keywords.isEmpty()) {
+                throw new TermNotFoundException(getTermNotFoundMessage(uri));
+            }
+
+            return keywords.get(0);
+        }
+
+        private String getTermNotFoundMessage(String searchValue) {
+            return "Could not find "+searchValue+" in file "+thesaurusFile;
+        }
+
+        /**
+         * Thesaurus has keyword
+         * 
+         * @param subject the keyword to check
+         * @return boolean
+         */
+        public boolean hasKeyword(String uri) {
+            try {
+                getKeyword(uri);
+            } catch (TermNotFoundException e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Gets broader keywords
+         * 
+         * @param the keyword whose broader terms should be retrieved
+         * @return keywords
+         */
+
+        public List<KeywordBean> getBroader(String uri, String... languages) {
+            return getRelated(uri, KeywordRelation.NARROWER, languages);
+        }
+
+        /**
+         * Has broader keywords
+         * 
+         * @param the keyword to check for broader terms
+         * @return keywords
+         */
+
+        public boolean hasBroader(String uri) {
+            return getRelated(uri, KeywordRelation.NARROWER).size() > 0;
+        }
+
+        /**
+         * Gets related keywords
+         * 
+         * @param uri the keyword whose related terms should be retrieved
+         * @return keyword
+         */
+        public List<KeywordBean> getRelated(String uri, KeywordRelation request, String... languages) {
+            Query<KeywordBean> query = QueryBuilder
+                .keywordQueryBuilder(getIsoLanguageMapper(), languages)
+                .select(Selectors.related(uri, request), true)
+                .build();
+
+            try {
+                return query.execute(this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /**
+         * Returns whether there is a keyword for a label
+         * 
+         * @param label the preferred label of the keyword
+         * @param langCode the language of the label
+         * @param languages the languages to return
+         * @return boolean 
+         */
+        public boolean hasKeywordWithLabel(String label, String langCode) {
+            try {
+                getKeywordWithLabel(label, langCode);
+            } catch (TermNotFoundException e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Gets a keyword using its label.
+         * 
+         * @param label the preferred label of the keyword
+         * @param langCode the language of the label
+         * @return keyword 
+         * @throws TermNotFoundException
+         */
+        public KeywordBean getKeywordWithLabel(String label, String langCode) {
+            Query<KeywordBean> query = QueryBuilder
+                    .keywordQueryBuilder(getIsoLanguageMapper(), langCode)
+                    .where(Wheres.prefLabel(langCode, label))
+                    .build();
+
+            List<KeywordBean> matchingKeywords;
+
+            try {
+                matchingKeywords = query.execute(this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            if (matchingKeywords.size() == 0) {
+                throw new TermNotFoundException(label);
+            }
+
+            return matchingKeywords.get(0);
         }
 
         // ------------------------------- Deprecated methods -----------------------------
