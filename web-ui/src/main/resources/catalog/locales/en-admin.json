@@ -5,6 +5,7 @@
     "accessConstraints": "Access constraints",
     "activity_days": "Number of days of activity",
     "activity_months": "Number of months of activity",
+    "add-resource-id": "Compute resource identifiers",
     "addAFormatter": "Add a formatter",
     "addKeyword": "Add",
     "addNewLogo": "Add new logo",
@@ -388,7 +389,7 @@
     "harvesterSchedule": "Schedule",
     "harvesterScheduleinactive": "Failed to activate harvester.",
     "harvesterUpdated": "Harvester updated",
-    "harvesterValidate": "Validate records",
+    "harvesterValidate": "Validate records before import",
     "harvesterValidateHelp": "Invalid records will be rejected. Validation is based on the standard validation (ie. XSD, Schematrons).",
     "harvesters": "Harvesting",
     "index.lucene.config": "Lucene configuration",
@@ -457,6 +458,8 @@
     "mapservers": "Map servers",
     "massive-content-update": "Batch replacer",
     "maxNumberOfKeywords": "Number of keywords returned",
+    "metadata/resourceIdentifierPrefix": "Resource identifier prefix",
+    "metadata/resourceIdentifierPrefix-help": "In the editor, a suggestion provides the capability to compute the resource identifier automatically. This identifier is computed by concatenating this prefix with the metadata identifier (eg. http://localhost:8080/geonetwork/srv/a1fd6bb7-6425-48b6-bca3-13c9e1bc4ab1).",
     "mdPopularity": "Most popular records",
     "mem.free": "Total free memory",
     "mem.total": "Total memory",
@@ -929,5 +932,8 @@
     "z3950-host": "Host",
     "z3950-hostHelp": " ",
     "z3950-port": "Port",
-    "z3950-portPort": " "
+    "z3950-portPort": " ",
+    "NOVALIDATION": "Accept all metadata without validation",
+    "XSDVALIDATION": "Accept metadata that are XSD Valid",
+    "SCHEMATRONVALIDATION": "Accept metadata that are XSD and Schematron Valid"
 }

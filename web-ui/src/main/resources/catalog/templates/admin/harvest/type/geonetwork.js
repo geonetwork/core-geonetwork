@@ -22,7 +22,7 @@ var gnHarvestergeonetwork = {
         "xslfilter": []
       },
       "content":   {
-        "validate": "false",
+        "validate": "NOVALIDATION",
         "importxslt": "none"
       },
       "options":   {

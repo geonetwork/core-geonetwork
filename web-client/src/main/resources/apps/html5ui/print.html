@@ -1,98 +1,99 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>GeoNetwork</title>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css" />
-    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css" />
-    <link rel="stylesheet" type="text/css" href="../css/gndefault.css" />
-    <link rel="stylesheet" type="text/css" href="css/gnmetadatadefault.css" />
-    <link rel="stylesheet" type="text/css" href="css/metadata-view.css" />
-    <link rel="stylesheet" type="text/css" href="../css/gnmetadataprint.css" />
+<head>
+  <title>GeoNetwork</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css" />
+  <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css" />
+  <link rel="stylesheet" type="text/css" href="../css/gndefault.css" />
+  <link rel="stylesheet" type="text/css" href="../css/gnmetadatadefault.css" />
+  <link rel="stylesheet" type="text/css" href="../css/metadata-view.css" />
+  <link rel="stylesheet" type="text/css" href="../css/gnmetadataprint.css" />
 
-    <script type="text/javascript" src="../js/ext/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="../js/ext/ext-all.js"></script>
-    <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
-    <script type="text/javascript" src="js/map/Settings.js"></script>
+  <script type="text/javascript" src="../js/ext/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="../js/ext/ext-all.js"></script>
+  <script type="text/javascript" src="../../static/geonetwork-client-mini-nomap.js"></script>
+  <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
+  <script type="text/javascript" src="js/map/Settings.js"></script>
 
-    <script language="JavaScript" type="text/javascript">
-      Ext.onReady(function(){
-        var urlParameters = {};
-        urlParameters = GeoNetwork.Util.getParameters(location.href);
-        var language = urlParameters.hl || 'en';
-        
-        /**
-         * Function to replace one element by another in target element.
-         */
-        function replaceElm(oldTagName, newTagName, targetElm) {
-          if (targetElm === undefined || targetElm == null) {
+  <script language="JavaScript" type="text/javascript">
+    Ext.onReady(function(){
+      var urlParameters = {};
+      urlParameters = GeoNetwork.Util.getParameters(location.href);
+      var language = urlParameters.hl || 'en';
+
+      /**
+       * Function to replace one element by another in target element.
+       */
+      function replaceElm(oldTagName, newTagName, targetElm) {
+        if (targetElm === undefined || targetElm == null) {
+          return;
+        }
+        var target = targetElm || window.document;
+
+        var allFound = target.getElementsByTagName(oldTagName);
+        //console.log(oldTagName + ">" + newTagName + " : " + allFound.length);
+        for (var i = 0; i < allFound.length; i++) {
+          var allFoundInCurrent = allFound[i].getElementsByTagName(oldTagName);
+          //console.log("   contains: " + allFoundInCurrent.length + " " + oldTagName);
+          if (allFoundInCurrent.length !== 0) {
             return;
           }
-          var target = targetElm || window.document;
-          
-          var allFound = target.getElementsByTagName(oldTagName);
-          //console.log(oldTagName + ">" + newTagName + " : " + allFound.length);
-          for (var i = 0; i < allFound.length; i++) {
-            var allFoundInCurrent = allFound[i].getElementsByTagName(oldTagName);
-            //console.log("   contains: " + allFoundInCurrent.length + " " + oldTagName);
-            if (allFoundInCurrent.length !== 0) {
-              return;
-            }
-            
-            var tmp = document.createElement(newTagName);
-            for (var k = 0; k < allFound[i].attributes.length; k++) {
-              var name = allFound[i].attributes[k].name;
-              var val = allFound[i].attributes[k].value;
-              tmp.setAttribute(name, val);
-            }
-            tmp.innerHTML = allFound[i].innerHTML;
-            allFound[i].parentNode.insertBefore(tmp, allFound[i]);
-            //allFound[i].parentNode.removeChild(allFound[i]);
-            allFound[i].style.display = "none";
+
+          var tmp = document.createElement(newTagName);
+          for (var k = 0; k < allFound[i].attributes.length; k++) {
+            var name = allFound[i].attributes[k].name;
+            var val = allFound[i].attributes[k].value;
+            tmp.setAttribute(name, val);
           }
-          allFound = target.getElementsByTagName(oldTagName);
-          for (var i = 0; i < allFound.length; i++) {
-            allFound[i].parentNode.removeChild(allFound[i]);
-          }
+          tmp.innerHTML = allFound[i].innerHTML;
+          allFound[i].parentNode.insertBefore(tmp, allFound[i]);
+          //allFound[i].parentNode.removeChild(allFound[i]);
+          allFound[i].style.display = "none";
         }
-        
-        
-        new Ext.Panel({
-            renderTo: 'content',
-            autoLoad: {
-                url: '../../srv/' + language + '/view?uuid=' + urlParameters.uuid + '&currTab=' + (urlParameters.currTab ? urlParameters.currTab : 'view-simple') + '&print',
-                callback: function(){
-                  
-                  // Fieldset and page break issue on FF
-                  // https://bugzilla.mozilla.org/show_bug.cgi?id=471015
-                  if (Ext.isGecko) {
-                    var fieldsets = Ext.DomQuery.jsSelect('fieldset');
-                    Ext.each(
+        allFound = target.getElementsByTagName(oldTagName);
+        for (var i = 0; i < allFound.length; i++) {
+          allFound[i].parentNode.removeChild(allFound[i]);
+        }
+      }
+
+
+      new Ext.Panel({
+        renderTo: 'content',
+        autoLoad: {
+          url: '../../' + (urlParameters.node || 'srv') + '/' + language + '/view?uuid=' + urlParameters.uuid + '&currTab=' + (urlParameters.currTab ? urlParameters.currTab : 'view-simple') + '&print',
+          callback: function(){
+
+            // Fieldset and page break issue on FF
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=471015
+            if (Ext.isGecko) {
+              var fieldsets = Ext.DomQuery.jsSelect('fieldset');
+              Ext.each(
                       fieldsets, function(item){
                         replaceElm('legend', 'h1', item);
-                    });
-                    
-                    // From the deepest to the begin 
-                    // replace 8 levels of fieldset - could probably be smarter
-                    var maxDepth = 8;
-                    for (var i = 0; i < maxDepth; i++) {
-                      var tds = Ext.DomQuery.jsSelect('td');
-                      Ext.each(
+                      });
+
+              // From the deepest to the begin
+              // replace 8 levels of fieldset - could probably be smarter
+              var maxDepth = 8;
+              for (var i = 0; i < maxDepth; i++) {
+                var tds = Ext.DomQuery.jsSelect('td');
+                Ext.each(
                         tds, function(item){
                           replaceElm('fieldset', 'div', item);
-                      });
-                    }
-                  }
-                  
-                  // Init maps
-                  new GeoNetwork.map.ExtentMap().initMapDiv();
-                }
+                        });
+              }
             }
-        });
+
+            // Init maps
+            new GeoNetwork.map.ExtentMap().initMapDiv();
+          }
+        }
       });
-    </script>
-  </head>
-  <body>
-    <div id="content"></div>
-  </body>
+    });
+  </script>
+</head>
+<body>
+<div id="content"></div>
+</body>
 </html>

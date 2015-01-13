@@ -73,8 +73,10 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <span data-ng-hide="harvesterSelected['@id'] == ''" data-translate="">updateHarvester</span>
+      <strong data-ng-hide="harvesterSelected['@id'] == ''">{{harvesterSelected.site.name}}</strong>
+
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
-      <strong>{{harvesterSelected.site.name}}</strong>
+      <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
 
 
       <div class="btn-toolbar">

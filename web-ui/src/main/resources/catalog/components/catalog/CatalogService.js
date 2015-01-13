@@ -136,10 +136,14 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild) {
+            isTemplate, isChild, tab) {
           this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-            $location.path('/metadata/' + data.id);
+              var path = '/metadata/' + data.id;
+              if (tab) {
+                path += '/tab/' + tab;
+              }
+            $location.path(path);
           });
           // TODO : handle creation error
         }

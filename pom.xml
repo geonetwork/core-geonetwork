@@ -1093,8 +1093,6 @@
     <module>common</module>
     <module>cachingxslt</module>
     <module>sde</module>
-    <module>web-ui</module>
-    <module>web-ui-docs</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>core</module>
@@ -1103,35 +1101,31 @@
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
-    <module>web-client</module>
     <module>wro4j</module>
-    <module>web</module>
-    <module>e2e-tests</module>
   </modules>
 
   <profiles>
+    <profile>
+      <id>all</id>
+      <activation>
+        <file>
+          <exists>pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>web-ui</module>
+        <module>web-ui-docs</module>
+        <module>web-client</module>
+        <module>web</module>
+        <module>e2e-tests</module>
+        <module>geoserver</module>
+      </modules>
+    </profile>
     <!-- Python and Latex are required to build the documentation. -->
     <profile>
       <id>with-doc</id>
       <modules>
         <module>docs</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>itests</id>
-      <modules>
-        <module>web-itest</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>geoserver</id>
-      <activation>
-        <file>
-          <exists>geoserver/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>geoserver</module>
       </modules>
     </profile>
     <profile>

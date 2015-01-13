@@ -17,7 +17,7 @@ var gnHarvesterfilesystem = {
                 "icon" : "blank.gif"
             },
             "content" : {
-                "validate" : "false",
+                "validate" : "NOVALIDATION",
                 "importxslt" : "none"
             },
             "options" : {

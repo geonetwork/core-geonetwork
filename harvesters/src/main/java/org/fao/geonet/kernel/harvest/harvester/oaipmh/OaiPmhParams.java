@@ -64,8 +64,6 @@ public class OaiPmhParams extends AbstractParams
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
 
-		validate = Util.getParam(options, "validate", false);
-
 		addSearches(searches);
 	}
 
@@ -85,8 +83,6 @@ public class OaiPmhParams extends AbstractParams
 
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
-
-		validate = Util.getParam(options, "validate", validate);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones

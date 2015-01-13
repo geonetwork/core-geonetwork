@@ -5,6 +5,7 @@
     "accessConstraints": "Contraintes d'accès",
     "activity_days": "Nombre de jours d'activité",
     "activity_months": "Nombre de mois d'activité",
+    "add-resource-id": "Calcul des identifiants de la ressource",
     "addAFormatter": "Ajouter une mise en page",
     "addKeyword": "Ajouter",
     "addNewLogo": "Ajouter un nouveau logo",
@@ -386,7 +387,7 @@
     "harvesterSchedule": "Planification",
     "harvesterScheduleinactive": "Échec de l'activation du noeud.",
     "harvesterUpdated": "Noeud mis à jour",
-    "harvesterValidate": "Valider les fiches",
+    "harvesterValidate": "Valider les fiches avant l'import",
     "harvesterValidateHelp": "Les fiches invalides sont alors rejetées. La validation repose sur le standards (ie. XSD, Schematrons).",
     "harvesters": "Moissonnage",
     "index.lucene.config": "Configuration de l'index Lucene",
@@ -455,6 +456,10 @@
     "mapservers": "Serveurs cartographiques",
     "massive-content-update": "Batch replacer",
     "maxNumberOfKeywords": "Nombre max. de mots clés",
+    "metadata/resourceIdentifierPrefix": "Préfixe pour l'identifiant de la ressource",
+    "metadata/resourceIdentifierPrefix-help": "Dans l'éditeur, il est possible de calculer un identifiant pour la ressource automatiquement à l'aide des suggestions. Cet identifiant est calculé par la concaténation de ce préfixe avec l'identifiant de la fiche (eg. http://localhost:8080/geonetwork/srv/a1fd6bb7-6425-48b6-bca3-13c9e1bc4ab1).",
+    "metadataschemaValidate" : "Validation",
+    "metadataschemaValidateDes" : "Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.",
     "mdPopularity": "Enregistrements les plus populaires",
     "mem.free": "Mémoire totale libre",
     "mem.total": "Mémoire totale",
@@ -840,9 +845,6 @@
     "thredds-templateIdHelp": " ",
     "thredds-topic": "Thème",
     "thredds-unidataCfg": "UNIDATA configuration",
-
-    "metadataschemaValidate" : "Validation",
-    "metadataschemaValidateDes" : "Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.",
     "schematroncriteriagroup" : "Criteria Group",
     "xpathlabel" : "xPath",
     "xpathvalue" : "Value",
@@ -937,5 +939,8 @@
     "z3950-host": "Hôte",
     "z3950-hostHelp": " ",
     "z3950-port": "Port",
-    "z3950-portPort": " "
+    "z3950-portPort": " ",
+    "NOVALIDATION": "Accepter toutes les fiches sans validation",
+    "XSDVALIDATION": "Accepter toutes les fiches valides pour le modèle (XSD)",
+    "SCHEMATRONVALIDATION": "Accepter toutes les fiches valides pour le standard (XSD + Schematron)"
 }
