@@ -161,6 +161,7 @@ public class Handlers {
             }
         }
         summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
+                new MenuAction(label: "exportRaw", javascript: "window.open('xml.metadata.get?uuid=${this.env.metadataUUID}', '_blank')", iconClasses: "fa fa-file-code-o"),
                 new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
                 new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-file-pdf-o"),
                 new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
