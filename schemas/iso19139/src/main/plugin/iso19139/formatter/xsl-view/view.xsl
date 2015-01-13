@@ -107,22 +107,84 @@
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
                 match="*[gmd:CI_ResponsibleParty]">
+    <xsl:variable name="email">
+      <xsl:apply-templates mode="render-value"
+                           select="*/gmd:contactInfo/
+                                      */gmd:address/*/gmd:electronicMailAddress"/>
+    </xsl:variable>
+
+    <!-- Display name is <org name> - <individual name> (<position name> -->
+    <xsl:variable name="displayName">
+      <xsl:choose>
+        <xsl:when
+                test="*/gmd:organisationName and */gmd:individualName">
+          <!-- Org name may be multilingual -->
+          <xsl:apply-templates mode="render-value"
+                               select="*/gmd:organisationName"/>
+          -
+          <xsl:value-of select="*/gmd:individualName"/>
+          <xsl:if test="*/gmd:positionName">
+            (<xsl:apply-templates mode="render-value"
+                                  select="*/gmd:positionName"/>)
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <dl class="gn-contact">
       <dt>
+        <i class="fa fa-envelope"></i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
       </dt>
       <dd>
-        <div>
-          <xsl:apply-templates mode="render-field"
-                               select="*/(gmd:organisationName|gmd:individualName)"/>
-        </div>
-      </dd>
-      <dd>
-        <div>
-          <xsl:apply-templates mode="render-field"
-                               select="*/gmd:contactInfo"/>
-        </div>
+        <address>
+          <strong>
+            <xsl:choose>
+              <xsl:when test="$email">
+                <a href="mailto:{normalize-space($email)}"><xsl:value-of select="$displayName"/></a>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$displayName"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </strong><br/>
+          <xsl:for-each select="*/gmd:contactInfo/*">
+            <xsl:for-each select="gmd:address/*/(
+                                      gmd:deliveryPoint|gmd:city|
+                                      gmd:administrativeArea|gmd:postalCode|gmd:country)">
+              <xsl:apply-templates mode="render-value" select="."/><br/>
+            </xsl:for-each>
+
+            <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
+              <xsl:variable name="phoneNumber">
+                <xsl:apply-templates mode="render-value" select="."/>
+              </xsl:variable>
+              <i class="fa fa-phone"></i>
+              <a href="tel:{$phoneNumber}">
+                <xsl:value-of select="$phoneNumber"/>
+              </a>
+            </xsl:for-each>
+            <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
+              <xsl:variable name="phoneNumber">
+                <xsl:apply-templates mode="render-value" select="."/>
+              </xsl:variable>
+              <i class="fa fa-fax"></i>
+              <a href="tel:{normalize-space($phoneNumber)}">
+                <xsl:value-of select="normalize-space($phoneNumber)"/>
+              </a>
+            </xsl:for-each>
+
+            <xsl:apply-templates mode="render-field"
+                                 select="gmd:hoursOfService|gmd:contactInstructions"/>
+            <xsl:apply-templates mode="render-field"
+                                 select="gmd:onlineResource"/>
+
+          </xsl:for-each>
+        </address>
       </dd>
     </dl>
   </xsl:template>
@@ -300,7 +362,7 @@
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gml:beginPosition|gml:endPosition">
-    <xsl:value-of select="."/>
+    <xsl:value-of select="normalize-space(.)"/>
   </xsl:template>
 
   <xsl:template mode="render-value" match="gmd:PT_FreeText">
