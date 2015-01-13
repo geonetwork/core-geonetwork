@@ -44,9 +44,6 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.events.user.GroupJoined;
-import org.fao.geonet.events.user.UserCreated;
-import org.fao.geonet.events.user.UserUpdated;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -55,8 +52,6 @@ import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,9 +64,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("admin.user.update")
 @ReadWriteController
-public class Update implements ApplicationEventPublisherAware {
+public class Update  {
 
-	private ApplicationEventPublisher eventPublisher;
 	@Autowired
 	private UserGroupRepository userGroupRepository;
 	@Autowired
@@ -200,12 +194,10 @@ public class Update implements ApplicationEventPublisherAware {
             if (operation.equals(Params.Operation.NEWUSER)) {
                 user = userRepository.save(user);
                 
-                this.eventPublisher.publishEvent(new UserCreated(user));
 
 				setUserGroups(user, groups);
 			} else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO)) {
                 user = userRepository.save(user);
-                this.eventPublisher.publishEvent(new UserUpdated(user));
 
                 //--- add groups
                 userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
@@ -214,7 +206,6 @@ public class Update implements ApplicationEventPublisherAware {
 			} else if (operation.equals(Params.Operation.RESETPW)) {
              user = userRepository.save(user);
              
-             this.eventPublisher.publishEvent(new UserUpdated(user));
 			} else {
                 throw new IllegalArgumentException("unknown user update operation " + operation);
             }
@@ -314,20 +305,6 @@ public class Update implements ApplicationEventPublisherAware {
 		}
 
         userGroupRepository.save(toAdd);
-        
-        for(UserGroup g : toAdd) {
-        	this.eventPublisher.publishEvent(new GroupJoined(g));
-        }
 
-	}
-
-	/**
-	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-	 * @param applicationEventPublisher
-	 */
-	@Override
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
-		this.eventPublisher = applicationEventPublisher;		
 	}
 }

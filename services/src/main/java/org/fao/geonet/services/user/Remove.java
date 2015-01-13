@@ -26,36 +26,24 @@ package org.fao.geonet.services.user;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.events.user.UserDeleted;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,10 +56,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("admin.user.remove")
 @ReadWriteController
-public class Remove implements ApplicationEventPublisherAware {
+public class Remove {
 
 
-	private ApplicationEventPublisher eventPublisher;
 	@Autowired
 	private UserGroupRepository userGroupRepository;
 	@Autowired
@@ -128,21 +115,10 @@ public class Remove implements ApplicationEventPublisherAware {
             userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(iId));
             userRepository.delete(iId);
             
-            this.eventPublisher.publishEvent(new UserDeleted(iId));
 		} else {
 			throw new IllegalArgumentException("You don't have rights to delete this user");
 		}
 
 		return Jeeves.Elem.RESPONSE;
-	}
-	
-	/**
-	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-	 * @param applicationEventPublisher
-	 */
-	@Override
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
-		this.eventPublisher = applicationEventPublisher;		
 	}
 }

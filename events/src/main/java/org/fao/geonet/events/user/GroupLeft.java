@@ -3,28 +3,24 @@
  */
 package org.fao.geonet.events.user;
 
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 
 public class GroupLeft extends UserUpdated {
 
-	private static final long serialVersionUID = 62462987237984509L;
-	
-	private Group group;
+    private static final long serialVersionUID = 62462987237984509L;
 
-	public GroupLeft(User user, Group group) {
-		super(user);
-		if(group == null) {
-			throw new NullPointerException("Group cannot be null");
-		}
-		this.group = group;
-	}
-	
-	/**
-	 * @return the group
-	 */
-	public Group getGroup() {
-		return group;
-	}
+    private UserGroup userGroup;
+
+    public GroupLeft(UserGroup userGroup) {
+        super(userGroup.getUser());
+        if (userGroup.getGroup() == null) {
+            throw new NullPointerException("Group cannot be null");
+        }
+        this.userGroup = userGroup;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
 
 }

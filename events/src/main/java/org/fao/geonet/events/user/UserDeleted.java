@@ -3,24 +3,14 @@
  */
 package org.fao.geonet.events.user;
 
-import org.springframework.context.ApplicationEvent;
+import org.fao.geonet.domain.User;
 
-public class UserDeleted extends ApplicationEvent {
+public class UserDeleted extends UserEvent {
 
-	private static final long serialVersionUID = 664629348720509L;
-	
-	private Integer id;
+    private static final long serialVersionUID = 664629348720509L;
 
-	public UserDeleted(Integer id) {
-		super(id);
-		this.id = id;
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
+    public UserDeleted(User u) {
+        super(u);
+    }
 
 }
