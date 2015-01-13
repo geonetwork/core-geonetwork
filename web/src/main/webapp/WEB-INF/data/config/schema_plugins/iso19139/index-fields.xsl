@@ -335,9 +335,12 @@
             <xsl:variable name="currentType" select="string(.)"/>
             <xsl:for-each
                 select="$listOfKeywords">
-              <Field name="thesaurus-{$fieldNameTemp}"
+							<Field name="thesaurus-{if (ends-with($fieldNameTemp, '.rdf'))
+																			then substring-before($fieldNameTemp, '.rdf')
+																			else $fieldNameTemp}"
                      string="{string(.)}"
-                     store="true" index="true"/>
+                     store="true"
+										 index="true"/>
 
             </xsl:for-each>
           </xsl:if>
