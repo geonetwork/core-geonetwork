@@ -17,6 +17,7 @@
   <xsl:include href="metadata-geo.xsl"/>
   <xsl:include href="metadata-inspire.xsl"/>
   <xsl:include href="metadata-view.xsl"/>
+  <xsl:include href="metadata-markup.xsl"/>
 
   <!-- Use this mode on the root element to add hidden fields to the editor -->
   <xsl:template mode="schema-hidden-fields" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
@@ -1375,7 +1376,7 @@
     The name of the element starts with _X which means XML snippet update mode.
     -->
     <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}_replace" rows="" cols="" class="debug">
-      <xsl:apply-templates mode="geonet-cleaner" select="."/>
+      <xsl:apply-templates mode="geonet-cleaner" select="parent::node()"/>
     </textarea>
     
   </xsl:template>
