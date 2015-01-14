@@ -29,6 +29,7 @@
   "getstarted": "",
   "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",
   "browseTopics": "Parcourir les thèmes",
+  "browseTypes": "Type de ressources",
   "versionDetails": "Propulsé par <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
   "lastRecords": "Nouveautés",
   "preferredRecords": "Plus vues",

@@ -298,11 +298,7 @@
     cursor: pointer;
     background-color:  #428bca;
   }
-
   .gn-md-edit-btn {
-    .btn();
-    .btn-primary();
-    .btn-circle();
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -310,9 +306,15 @@
     z-index: 10;
   }
 }
+.gn-md-edit-btn {
+  .btn();
+  .btn-primary();
+  .btn-circle();
+}
 
 [data-ng-search-form],
-[ng-search-form] {
+[ng-search-form],
+.gn-search-page {
   .whidden,
   [class*=col-md] {
     transition: width ease .25s;
@@ -337,7 +339,8 @@
     }
   }
 
-  [gn-map-field] {
+  [gn-map-field],
+  [data-gn-map-field] {
     border: 1px solid @btn-default-border;
     border-radius: 3px;
     position: relative;

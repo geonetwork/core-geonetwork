@@ -15,7 +15,7 @@
 
         <div class="container-fluid">
           <div class="row gn-row-main">
-            <div class="col-xs-6">
+            <div class="col-xs-8">
               <h1 data-translate="">getstarted</h1>
               <p data-translate=""
                  data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
@@ -37,8 +37,55 @@
                   </a>
                 </span>
               </div>
+
+              <div class="row gn-row-filters"
+                   data-ng-show="searchInfo.facet['categories']">
+                <div class="col-xs-12">
+                  <h1 data-translate="">browseTopics</h1>
+                  <!-- Here is a facet with icon to do a first level
+                  filter
+                  Directive to display a first level of filter based on
+                  a facet which has to be available.
+
+                  An icon could be provided as a CSS class name or
+                  a pattern matching a URL resolving to an image.
+
+                  Properties
+                  <div data-flfilter="categories"
+                       data-title=""
+                       data-icon-path="../../images/category/{{['@name']}}.png">
+                  -->
+                  <ul class="gn-flfilter gn-flfilter-icon">
+                    <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
+                      <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
+                        <i class="gn-icon">
+                          <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
+                        </i>
+                        <div>{{facet['@label']}} ({{facet['@count']}})</div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row gn-row-filters"
+                   data-ng-show="searchInfo.facet['types']">
+                <div class="col-xs-12">
+                  <h1 data-translate="">browseTypes</h1>
+
+                  <ul class="gn-flfilter gn-flfilter-icon">
+                    <li data-ng-repeat="(key, facet) in searchInfo.facet['types']"
+                        data-ng-show="facet['@label']">
+                      <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
+                        <i class="gn-icon gn-icon-{{facet['@name']}}"></i>
+                        <div>{{facet['@label']}} ({{facet['@count']}})</div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
             </div>
-            <div class="col-xs-6">
+            <div class="col-xs-4">
               <div class="jumbotron">
                 <h1 data-translate="" data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
 
@@ -46,35 +93,7 @@
               </div>
             </div>
           </div>
-          <div class="row gn-row-filters"
-               data-ng-show="searchInfo.facet['categories']">
-            <div class="col-xs-12">
-              <h1 data-translate="">browseTopics</h1>
-              <!-- Here is a facet with icon to do a first level
-              filter
-              Directive to display a first level of filter based on
-              a facet which has to be available.
 
-              An icon could be provided as a CSS class name or
-              a pattern matching a URL resolving to an image.
-
-              Properties
-              <div data-flfilter="categories"
-                   data-title=""
-                   data-icon-path="../../images/category/{{['@name']}}.png">
-              -->
-              <ul class="gn-flfilter gn-flfilter-icon">
-                <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
-                  <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
-                    <i class="gn-icon">
-                      <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
-                    </i>
-                    <div>{{facet['@label']}} ({{facet['@count']}})</div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
           <div class="row gn-row-info">
             <div class="col-xs-12">
               <tabset id="info-tabset"

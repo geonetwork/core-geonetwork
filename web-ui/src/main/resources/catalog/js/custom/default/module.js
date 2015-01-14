@@ -132,6 +132,14 @@
       };
       $scope.mdView = mdView;
 
+      $scope.canEdit = function (record) {
+        // TODO: take catalog config for harvested records
+        if (record && record["geonet:info"] &&
+            record["geonet:info"].edit == 'true') {
+          return true;
+        }
+        return false
+      };
       $scope.openRecord = function(index, md, records) {
         gnMdView.feedMd(index, md, records, mdView);
         gnUtilityService.scrollTo();
@@ -194,9 +202,10 @@
         }
       });
 
-      $scope.$watch('searchObj.advancedMode', function(val) {
-        if (val && (searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0)) {
+      $scope.$watch('mainTabs.search.active', function(val) {
+        if (val &&
+          (searchMap.getSize()[0] == 0 ||
+          searchMap.getSize()[1] == 0)) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
@@ -210,5 +219,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap
       }, gnSearchSettings.sortbyDefault);
+
+
     }]);
 })();
