@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-default toggler">
             <i class="fa fa-arrow-circle-down"></i>
         </button>
-        <i fmt-if="linkBlock.iconClasses" class="{{linkBlock.iconClasses}}"></i>&amp;nbsp;<span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
+        <i fmt-if="linkBlock.iconClasses" class="{{linkBlock.iconClasses}} pad-right"></i><span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
     </h3>
     <table class="table row target" >
         <tr fmt-repeat="link in linkBlock.links" class="row">

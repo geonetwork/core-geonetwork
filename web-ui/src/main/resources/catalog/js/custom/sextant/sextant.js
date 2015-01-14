@@ -31,9 +31,10 @@
     'sxtGlobals',
     'gnNcWms',
     '$timeout',
+    'gnMdView',
     function($scope, $location, $window, suggestService, $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout) {
+        $timeout, gnMdView) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -42,16 +43,16 @@
       var localStorage = $window.localStorage || {};
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
-        JSON.parse(localStorage.searchWidgetCollapsed) :
-        { search: true,
-          facet: false };
+          JSON.parse(localStorage.searchWidgetCollapsed) :
+          { search: true,
+            facet: false };
 
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
-        if(!$scope.collapsed.search) {
+        if (!$scope.collapsed.search) {
           $scope.collapsed.facet = true;
         }
-        $timeout(function(){
+        $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 300);
       };
@@ -122,6 +123,34 @@
         }
       });
 
+      /** Manage metadata view */
+      var mdView = {
+        previousRecords: [],
+        current: {
+          record: null,
+          index: null
+        }
+      };
+      $scope.mdView = mdView;
+
+      $scope.openRecord = function(index, md, records) {
+        gnMdView.feedMd(index, md, records, mdView);
+        //gnUtilityService.scrollTo();
+      };
+
+      $scope.closeRecord = function() {
+        mdView.current.record = null;
+        //$location.search(searchUrl);
+        $scope.mainTabs.search.active = true;
+      };
+      $scope.nextRecord = function() {
+        // TODO: When last record of page reached, go to next page...
+        $scope.openRecord(mdView.current.index + 1);
+      };
+      $scope.previousRecord = function() {
+        $scope.openRecord(mdView.current.index - 1);
+      };
+
       ///////////////////////////////////////////////////////////////////
 
       angular.extend($scope.searchObj, {
@@ -186,8 +215,8 @@
 
       // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
+      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
+        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
       }
     }]);
 

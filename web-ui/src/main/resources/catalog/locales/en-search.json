@@ -42,6 +42,7 @@
   "getstarted": "Get started",
   "searchOver": "Search over <strong>{{records}}</strong> data sets, services and maps, ...",
   "browseTopics": "Browse topics",
+  "browseTypes": "Browse resources",
   "versionDetails": "Powered by <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
   "lastRecords": "Latest news",
   "preferredRecords": "Most popular",

@@ -19,8 +19,10 @@
     '$q',
     '$http',
     'suggestService',
+    'gnAlertService',
     'gnSearchSettings',
-    function($scope, $q, $http, suggestService, gnSearchSettings) {
+    function($scope, $q, $http, suggestService,
+             gnAlertService, gnSearchSettings) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -38,7 +40,7 @@
       $scope.paginationInfo = gnSearchSettings.paginationInfo;
 
       /* Default result view template */
-      $scope.resultTemplate = gnSearchSettings.resultViewTpls[1].tplUrl;
+      $scope.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.getAnySuggestions = function(val) {
         return suggestService.getAnySuggestions(val);
@@ -100,6 +102,17 @@
           return defer.promise;
         })()
       };
+
+      /**
+       * Keep a reference on main cat scope
+       * @return {*}
+       */
+      $scope.getCatScope = function() {return $scope};
+
+      // TODO: see if not redondant with CatController event management
+      $scope.$on('StatusUpdated', function(e, status) {
+        gnAlertService.addAlert(status);
+      });
 
     }]);
 })();

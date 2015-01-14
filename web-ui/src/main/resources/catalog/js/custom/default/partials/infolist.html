@@ -1,6 +1,6 @@
 <ul class="gn-info-list">
   <li data-ng-repeat="md in searchResults.records"
-      data-ng-click="openRecord(md)"
+      data-ng-click="openRecord(null, md, null)"
       data-ng-mouseenter="showMore(true)"
       data-ng-mouseleave="showMore(false)"
       id="gn-info-list{{md.getUuid()}}">

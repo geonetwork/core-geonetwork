@@ -252,8 +252,8 @@
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
-    mdPrivileges: 'md.privileges.update',
-    mdPrivilegesBatch: 'md.privileges.batch.update',
+    mdPrivileges: 'md.privileges.update@json',
+    mdPrivilegesBatch: 'md.privileges.batch.update@json',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

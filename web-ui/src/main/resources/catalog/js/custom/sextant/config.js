@@ -106,7 +106,10 @@
         search: {
           title: 'Search',
           titleInfo: 0,
-          active: false
+          active: true
+        },
+        view: {
+          title: 'view'
         },
         map: {
           title: 'Map',
@@ -138,27 +141,26 @@
         value: 'createDateYears'
       }];
 
-      /* Pagination configuration */
-      searchSettings.paginationInfo = {
-        hitsPerPage: 20
-      };
-
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/' +
-            'viewtemplates/title.html',
+        tplUrl: '../../catalog/templates/search/sextant/mdview/list.html',
         tooltip: 'Simple',
-        icon: 'fa-list'
+        icon: 'fa-th-list'
       }, {
         tplUrl: '../../catalog/components/search/resultsview/partials/' +
-            'viewtemplates/sextant.html',
-        tooltip: 'Thumbnails',
-        icon: 'fa-th-list'
+            'viewtemplates/grid.html',
+        tooltip: 'Grid',
+        icon: 'fa-th'
       }];
 
       searchSettings.formatter = {
-        defaultUrl: 'md.format.xml?xsl=full_view&id='
-        //defaultUrl: 'md.format.xml?xsl=xsl-view&id='
+        defaultUrl: 'md.format.xml?xsl=full_view&id=',
+        list: [
+          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view' +
+                '&view=inspire&id='},
+          {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
+          {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
+        ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
         //schema: {
@@ -184,7 +186,7 @@
       searchSettings.hitsperpageValues = [10, 20, 50, 100];
 
       searchSettings.paginationInfo = {
-        hitsPerPage: searchSettings.hitsperpageValues[0]
+        hitsPerPage: searchSettings.hitsperpageValues[1]
       };
       /* Sort by combo values configuration */
       searchSettings.sortbyValues = [

@@ -74,9 +74,7 @@
                   features = [new ol.Feature(props)];
                 }
               } else {
-                features = format.readFeatures(response, {
-                  featureProjection: map.getView().getProjection()
-                });
+                features = format.readFeatures(response);
               }
               if (features) {
                 features.forEach(function(f) { f.layer = layer.get('label'); });

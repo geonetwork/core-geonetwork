@@ -185,11 +185,11 @@
           var url;
 
           if (angular.isDefined(metadataId)) {
-            url = 'md.privileges.update';
+            url = 'md.privileges.update?_content_type=json';
             params.id = metadataId;
           }
           else {
-            url = 'md.privileges.batch.update';
+            url = 'md.privileges.batch.update?_content_type=json';
           }
           angular.forEach(groups, function(g) {
             angular.forEach(g.privileges, function(p, key) {

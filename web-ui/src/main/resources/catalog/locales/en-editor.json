@@ -164,7 +164,6 @@
     "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
     "validationReport": "Validation",
-    "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
     "xmlSnippet": "XML snippet",
     "xsltToApply": "Apply XSLT conversion",

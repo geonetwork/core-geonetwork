@@ -152,10 +152,10 @@ class SummaryFactory {
 //<![CDATA[
 $js
 //]]></script>
-<div><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Loading...</div>
+<div><i class="fa fa-circle-o-notch fa-spin pad-right"></i>Loading...</div>
 """
 
-        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-code-fork")
+        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-sitemap")
         linkBlock.html = html
         summary.links.add(linkBlock)
     }

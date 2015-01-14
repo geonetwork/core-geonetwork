@@ -5,6 +5,8 @@
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
                 select="/root/info/record/datainfo/schemaid"/>
+  <xsl:variable name="metadataId"
+                select="/root/info/record/id"/>
 
   <xsl:variable name="schemaCodelists"><null/></xsl:variable>
 

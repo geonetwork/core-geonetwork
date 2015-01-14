@@ -38,43 +38,6 @@
       };
     }]);
 
-  module.controller('GnMdViewController', [
-    '$scope', '$http', '$compile', 'gnSearchSettings',
-    function($scope, $http, $compile, gnSearchSettings) {
-      $scope.formatter = gnSearchSettings.formatter;
-      $scope.usingFormatter = false;
-      $scope.compileScope = $scope.$new();
-
-      $scope.format = function(f) {
-        $scope.usingFormatter = f !== undefined;
-        $scope.currentFormatter = f;
-        if (f) {
-          $http.get(f.url + $scope.currentRecord.getUuid()).then(
-              function(response) {
-                var snippet = response.data.replace(
-                    '<?xml version="1.0" encoding="UTF-8"?>', '');
-
-                $('#gn-metadata-display').find('*').remove();
-
-                $scope.compileScope.$destroy();
-
-                // Compile against a new scope
-                $scope.compileScope = $scope.$new();
-                var content = $compile(snippet)($scope.compileScope);
-
-                $('#gn-metadata-display').append(content);
-              });
-        }
-      };
-
-      // Reset current formatter to open the next record
-      // in default mode.
-      $scope.$watch('currentRecord', function() {
-        $scope.usingFormatter = false;
-        $scope.currentFormatter = null;
-      });
-    }]);
-
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -169,6 +132,14 @@
       };
       $scope.mdView = mdView;
 
+      $scope.canEdit = function (record) {
+        // TODO: take catalog config for harvested records
+        if (record && record["geonet:info"] &&
+            record["geonet:info"].edit == 'true') {
+          return true;
+        }
+        return false
+      };
       $scope.openRecord = function(index, md, records) {
         gnMdView.feedMd(index, md, records, mdView);
         gnUtilityService.scrollTo();
@@ -231,9 +202,10 @@
         }
       });
 
-      $scope.$watch('searchObj.advancedMode', function(val) {
-        if (val && (searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0)) {
+      $scope.$watch('mainTabs.search.active', function(val) {
+        if (val &&
+          (searchMap.getSize()[0] == 0 ||
+          searchMap.getSize()[1] == 0)) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
@@ -247,5 +219,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap
       }, gnSearchSettings.sortbyDefault);
+
+
     }]);
 })();
