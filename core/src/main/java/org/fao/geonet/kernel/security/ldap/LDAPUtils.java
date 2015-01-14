@@ -72,7 +72,7 @@ public class LDAPUtils {
      * @param user
      * @throws Exception
      */
-    
+
     @Transactional
     public synchronized void saveUser(LDAPUser user,
             boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup)
