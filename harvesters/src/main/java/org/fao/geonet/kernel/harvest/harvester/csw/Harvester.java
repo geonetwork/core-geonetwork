@@ -382,8 +382,15 @@ class Harvester implements IHarvester<HarvestResult>
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
-                    buildFilterQueryable(queriables, "csw:" + entry.getKey(), entry.getValue());
-                }
+					// If the queriable has the namespace, use it
+					String queryableName = entry.getKey();
+					if (queryableName.contains("__")) {
+						queryableName = queryableName.replace("__", ":");
+					} else if (!queryableName.contains(":")) {
+						queryableName = "csw:" + queryableName;
+					}
+					buildFilterQueryable(queriables, queryableName, entry.getValue());
+				}
             }
         } else {
             log.debug("no search criterion specified, harvesting all ... ");
