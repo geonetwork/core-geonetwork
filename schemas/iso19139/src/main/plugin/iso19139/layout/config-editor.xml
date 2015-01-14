@@ -1410,7 +1410,7 @@
                  in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="metadata">
-        <section name="gmd:MD_Metadata">
+        <section name="metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
