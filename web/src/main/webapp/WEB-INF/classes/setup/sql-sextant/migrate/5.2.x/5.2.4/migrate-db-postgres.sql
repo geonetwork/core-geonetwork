@@ -8,3 +8,4 @@ UPDATE Settings SET value =
 DELETE FROM Settings WHERE name = 'system/hidewithheldelements/enable';
 DELETE FROM Settings WHERE name = 'system/hidewithheldelements/keepMarkedElement';
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'true', 2, 2320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/localXlinkEnable', 'true', 2, 2311, 'n');
