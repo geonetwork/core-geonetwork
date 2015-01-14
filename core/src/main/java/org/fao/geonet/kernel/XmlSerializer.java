@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.ThreadLocalCleaner;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -45,6 +46,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,8 +75,10 @@ public abstract class XmlSerializer {
     protected DataManager _dataManager;
     @Autowired
     private MetadataRepository _metadataRepository;
+    @Autowired
+    private ThreadLocalCleaner threadLocalCleaner;
 
-	private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
+	private static ThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<>();
 	public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
 	    ThreadLocalConfiguration config = configThreadLocal.get();
 	    if(config == null && setIfNotPresent) {
@@ -87,6 +91,11 @@ public abstract class XmlSerializer {
 	public static void clearThreadLocal() {
 		configThreadLocal.set(null);
 	}
+
+    @PostConstruct
+    void init() {
+        configThreadLocal = threadLocalCleaner.createInheritableThreadLocal(ThreadLocalConfiguration.class);
+    }
 
     /**
      *

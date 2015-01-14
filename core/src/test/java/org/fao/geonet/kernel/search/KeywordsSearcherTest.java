@@ -23,6 +23,7 @@ import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
@@ -509,7 +510,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         assertNull(searcher.getKeywordFromResultsById(100));
     }
 
-    @Test
+    @Test @Ignore
     public void testKeywordSearchUsingId() throws Exception {
         KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
         String keywordId = FOO_COM_NS+1;

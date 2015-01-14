@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jeeves.ThreadLocalCleaner;
 import jeeves.component.ProfileManager;
 
 import jeeves.server.ServiceConfig;
@@ -20,6 +21,7 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nonnull;
 
@@ -388,7 +390,11 @@ public final class XslUtil
 		return src.toString().matches(pattern.toString());
 	}
 
-    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<>();
+    public static void initThreadLocal(ApplicationContext applicationContext) {
+        ThreadLocalCleaner threadLocalCleaner = applicationContext.getBean(ThreadLocalCleaner.class);
+        allowScripting = threadLocalCleaner.createInheritableThreadLocal(Boolean.class);
+    }
     public static void setNoScript() {
         allowScripting.set(false);
     }

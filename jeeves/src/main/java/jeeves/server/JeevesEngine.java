@@ -27,6 +27,7 @@
 
 package jeeves.server;
 
+import jeeves.ThreadLocalCleaner;
 import jeeves.component.ProfileManager;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
@@ -90,6 +91,8 @@ public class JeevesEngine {
     private MonitorManager _monitorManager;
     @Autowired
 	private ConfigurableApplicationContext _applicationContext;
+    @Autowired
+	private ThreadLocalCleaner threadLocalCleaner;
 
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
     private List<Element> _appHandList = new ArrayList<Element>();
@@ -577,6 +580,7 @@ public class JeevesEngine {
 
 	public void dispatch(ServiceRequest srvReq, UserSession session)
 	{
+        threadLocalCleaner.webRequestStarting();
 		if (srvReq.getService() == null || srvReq.getService().length() == 0)
 			srvReq.setService(_defaultSrv);
 

@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * Time: 11:04 AM
  */
 public class ApplicationContextHolder {
-    private static InheritableThreadLocal<ConfigurableApplicationContext> holder = new InheritableThreadLocal<ConfigurableApplicationContext>();
+    private static ThreadLocal<ConfigurableApplicationContext> holder = new InheritableThreadLocal<ConfigurableApplicationContext>();
 
     public static ConfigurableApplicationContext get() {
         return holder.get();
@@ -24,4 +25,7 @@ public class ApplicationContextHolder {
         holder.remove();
     }
 
+    public static void init(ThreadLocal<ConfigurableApplicationContext> threadLocal) {
+        holder = threadLocal;
+    }
 }

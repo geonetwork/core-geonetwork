@@ -16,6 +16,7 @@
     <tx:annotation-driven proxy-target-class="true"/>
 
 
+    <bean id="threadLocalCleaner" class="jeeves.ThreadLocalCleaner"/>
     <bean id="SchemaManager" class="org.fao.geonet.kernel.SchemaManager" lazy-init="true"/>
     <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
     <bean id="languageProfilesDir" class="java.lang.String">

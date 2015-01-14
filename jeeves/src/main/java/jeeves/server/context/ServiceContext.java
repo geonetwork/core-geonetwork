@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import jeeves.ThreadLocalCleaner;
 import jeeves.component.ProfileManager;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
@@ -49,7 +50,7 @@ import java.util.Map;
  */
 public class ServiceContext extends BasicContext {
 
-    private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
+    private static ThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<>();
 
     /**
      * ServiceManager sets the service context thread local when dispatch is called.  this method will
@@ -69,6 +70,10 @@ public class ServiceContext extends BasicContext {
         THREAD_LOCAL_INSTANCE.set(this);
     }
 
+    public static void initThreadLocal(ConfigurableApplicationContext applicationContext) {
+        ThreadLocalCleaner cleaner = applicationContext.getBean(ThreadLocalCleaner.class);
+        THREAD_LOCAL_INSTANCE = cleaner.createInheritableThreadLocal(ServiceContext.class);
+    }
 
     private UserSession _userSession = new UserSession();
 

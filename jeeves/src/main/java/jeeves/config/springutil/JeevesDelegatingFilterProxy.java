@@ -1,7 +1,10 @@
 package jeeves.config.springutil;
 
+import jeeves.ThreadLocalCleaner;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.GenericFilterBean;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -29,10 +33,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 5:15 PM
  */
 public class JeevesDelegatingFilterProxy extends GenericFilterBean {
-    private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
+    private static ThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<>();
     private HashMap<String, Filter> _nodeIdToFilterMap = new HashMap<String, Filter>();
 
-    
+    @Autowired
+    private ThreadLocalCleaner threadLocalCleaner;
+
+    @PostConstruct
+    private void init() {
+        ApplicationContextHolder.init(threadLocalCleaner.createInheritableThreadLocal(ConfigurableApplicationContext.class));
+        applicationContextAttributeKey = threadLocalCleaner.createInheritableThreadLocal(String.class);
+    }
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request instanceof HttpServletRequest) {
