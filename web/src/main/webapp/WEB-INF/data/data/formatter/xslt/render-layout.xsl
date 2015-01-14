@@ -19,15 +19,20 @@
   <xsl:template match="/">
     <div class="container gn-metadata-view">
       <!--<xsl:message>#Render tab: <xsl:value-of select="$tab"/></xsl:message>-->
-      <article>
+      <article id="gn-metadata-view-{$metadataId}">
         <header>
           <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
-          <p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>
+          <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
           <!-- TODO : Add thumbnail to header -->
-          <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
+          <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
-
+        <!--
+        TODO: scrollspy or tabs on header ?
+        <div class="gn-scroll-spy"
+             data-gn-scroll-spy="gn-metadata-view-{$metadataId}"
+             data-watch=""
+             data-filter="div > h3"/>-->
         <footer>
 
         </footer>

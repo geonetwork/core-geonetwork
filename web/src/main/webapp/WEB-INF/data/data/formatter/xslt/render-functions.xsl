@@ -93,5 +93,40 @@
 
   </xsl:function>
 
+  <!-- Template to get metadata title using its uuid.
+         Title is loaded from current language index if available.
+         If not, default title is returned.
+         If failed, return uuid. -->
+  <xsl:function name="gn-fn-render:getMetadataTitle">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:param name="language" as="xs:string"/>
 
+    <xsl:variable name="metadataTitle"
+                  select="util:getIndexField(
+                  $language,
+                  $uuid,
+                  'title',
+                  $language)"/>
+    <xsl:choose>
+      <xsl:when test="$metadataTitle=''">
+        <xsl:variable name="metadataDefaultTitle"
+                      select="util:getIndexField(
+                      $language,
+                      $uuid,
+                      '_defaultTitle',
+                      $language)"/>
+        <xsl:choose>
+          <xsl:when test="$metadataDefaultTitle=''">
+            <xsl:value-of select="$uuid"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$metadataDefaultTitle"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$metadataTitle"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
 </xsl:stylesheet>
