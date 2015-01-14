@@ -9,11 +9,14 @@
 
   module.service('gnMetadataActions', [
     '$rootScope',
+    '$timeout',
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
-    function($rootScope, gnHttp, gnMetadataManager, gnAlertService, gnPopup) {
+    'gnSearchSettings',
+    function($rootScope, $timeout, gnHttp,
+             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -25,11 +28,22 @@
         });
       };
 
-      var openModal = function(content) {
-        gnPopup.create({
-          title: 'privileges',
-          content: content
-        });
+      /**
+       * Open a popup and compile object content.
+       * Bind to an event to close the popup.
+       * @param {Object} o popup config
+       * @param {Object} scope to build content uppon
+       * @param {string} eventName
+       */
+      var openModal = function(o, scope, eventName) {
+        var popup = gnPopup.create(o, scope);
+        var myListener = $rootScope.$on(eventName,
+            function(e,o) {
+              $timeout(function() {
+                popup.close();
+              }, 0);
+              myListener();
+            });
       };
 
       var callBatch = function(service) {
@@ -124,17 +138,17 @@
       };
 
       this.openPrivilegesPanel = function(md, scope) {
-        gnPopup.create({
+        openModal({
           title: 'privileges',
           content: '<div gn-share="' + md.getId() + '"></div>'
-        }, scope);
+        }, scope, 'PrivilegesUpdated');
       };
 
       this.openPrivilegesBatchPanel = function(scope) {
-        gnPopup.create({
+        openModal({
           title: 'privileges',
           content: '<div gn-share="" gn-share-batch="true"></div>'
-        }, scope);
+        }, scope, 'PrivilegesUpdated');
       };
 
       /**
@@ -187,5 +201,17 @@
           return gnHttp.callService('mdPrivilegesBatch', publishFlag);
         }
       };
+
+      /**
+       * Get html formatter link for the given md
+       * @param {Object} md
+       */
+      this.getPermalink = function(md) {
+        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+        gnPopup.createModal({
+          title: 'permalink',
+          content: '<a href="'+url+'" target="_blank">'+url+'</a>'
+        });
+      }
     }]);
 })();

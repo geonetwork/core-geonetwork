@@ -1,0 +1,314 @@
+<div class="row gn-md-view"
+     data-ng-controller="GnMdViewController">
+
+  <button class="btn btn-primary"
+          data-ng-click="closeRecord(mdView.current.record)">
+    <i class="fa fa-search"></i>
+    <span data-translate="">backToSearch</span>
+  </button>
+
+  <button class="btn btn-link"
+          data-ng-class="mdView.current.index === 0 ? 'disabled' : ''"
+          data-ng-show="mdView.records"
+          data-ng-click="previousRecord()">
+    <i class="fa fa-angle-left"></i>
+    <span data-translate="">previous</span>
+  </button>
+  <button class="btn btn-link"
+          data-ng-class="mdView.current.index === mdView.records.length-1 ? 'disabled' : ''"
+          data-ng-show="mdView.records"
+          data-ng-click="nextRecord()">
+    <span data-translate="">next</span>
+    <i class="fa fa-angle-right"></i>
+  </button>
+
+  <div class="btn-group pull-right">
+    <button type="button" class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-eye"></i>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li class="dropdown-header" data-translate="">chooseAView</li>
+      <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
+        <a href="" data-ng-click="format()">default</a>
+      </li>
+      <li data-ng-repeat="f in formatter.list"
+          data-ng-class="f === currentFormatter ? 'disabled' : ''">
+        <a href="" data-ng-click="format(f)">{{f.label}}</a>
+      </li>
+    </ul>
+  </div>
+
+
+  <div data-ng-show="usingFormatter"
+       id="gn-metadata-display"
+       class="gn-metadata-display">
+  </div>
+
+
+
+  <div data-ng-show="!usingFormatter" class="gn-metadata-display">
+
+    <div class="col-md-3 gn-md-side">
+
+      <section data-ng-if="mdView.current.record.overviews.length > 0">
+        <h4>
+          <i class="fa fa-image"></i>
+          <span data-translate="">overview</span>
+        </h4>
+        <!-- TODO caroussel on each thumbnails-->
+        <p data-ng-repeat="img in mdView.current.record.overviews">
+        <img class="gn-img-thumbnail img-thumbnail"
+             alt="{{img.label}}"
+             data-ng-src="{{img.url}}"/>
+        </p>
+      </section>
+
+      <section data-ng-if="mdView.current.record.contacts.resource">
+        <h4>
+          <i class="fa fa-envelope"></i>
+          <span data-translate="">contact</span>
+        </h4>
+        <blockquote>
+          {{mdView.current.record.contacts.resource}}
+        </blockquote>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-map-marker"></i>
+          <span data-translate="">extent</span>
+        </h4>
+        <!-- TODO: use map config -->
+        <img class="gn-img-extent"
+             data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-fw"></i>
+          <span data-translate="">sourceCatalog</span>
+        </h4>
+        <img ng-src="../../images/logos/{{mdView.current.record.source}}.gif"
+             class="gn-source-logo"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-share-square"></i>
+          <span data-translate="">shareOn</span>
+        </h4>
+        <a data-ng-href="https://plus.google.com/share?url={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-google-plus"></i></a>
+        <a data-ng-href="https://twitter.com/share?url={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-twitter"></i></a>
+        <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-facebook"></i></a>
+
+      </section>
+
+      <section>
+        <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
+      </section>
+    </div>
+
+
+    <div class="col-md-9 gn-record">
+      <h1>
+        <span data-ng-if="mdView.current.record.type.indexOf('dataset')>=0"
+              class="fa fa-database"
+              title="{{'dataset' | translate}}"></span>
+        <span data-ng-if="mdView.current.record.type.indexOf('software')>=0"
+              class="fa fa-hdd-o"
+              title="{{'software' | translate}}"></span>
+        <span data-ng-if="mdView.current.record.type.indexOf('map')>=0"
+              class="fa fa-globe"
+              title="{{'map' | translate}}"></span>
+        <span data-ng-if="mdView.current.record.type.indexOf('application')>=0"
+              class="fa fa-hdd-o"
+              title="{{'application' | translate}}"></span>
+        <span data-ng-if="mdView.current.record.type.indexOf('basicgeodata')>=0"
+              class="fa fa-globe"
+              title="{{'geodata' | translate}}"></span>
+        <span data-ng-if="mdView.current.record.type.indexOf('service')>=0"
+              class="fa fa-globe"
+              title="{{'service' | translate}}"></span>
+        {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+
+      </h1>
+
+      <div>
+        <i class="fa fa-calendar"></i>
+        <span data-translate="">updatedOn</span>
+        <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
+              data-from-now=""></span>
+      </div>
+
+
+
+      <div class="well">
+        {{mdView.current.record.abstract}}
+      </div>
+
+      <h2 data-translate="">downloadsAndResources</h2>
+      <ul>
+        <li ng-repeat="link in mdView.current.record.layers">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        <li ng-repeat="link in mdView.current.record.downloads">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        <li ng-repeat="link in mdView.current.record.links">
+          <a href="{{::link.url}}"
+             target="_blank">{{::link.desc}}
+            <span class="badge">{{::link.contentType}}</span>
+          </a>
+        </li>
+      </ul>
+
+
+      <h2 data-translate="">aboutThisResource</h2>
+
+      <table class="table table-striped">
+        <tbody>
+        <tr data-ng-if="mdView.current.record.category.length > 0">
+          <th data-translate="">listOfCategories</th>
+          <td>
+            <a data-ng-repeat="cat in mdView.current.record.category"
+               data-ng-href="#?tab=search&_cat={{cat}}">
+              <i class="fa"
+                 title="{{cat | translate}}">
+                <img data-ng-src="../../images/category/{{cat}}.png"/>
+              </i>
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.keyword">
+          <th data-translate="">keywords</th>
+          <td>
+            <span class="badge" data-ng-repeat="k in mdView.current.record.keyword">{{k}}</span>
+          </td>
+        </tr>
+        <tr>
+          <th data-translate="">constraints</th>
+          <td>
+            <ul>
+              <li data-ng-repeat="c in mdView.current.record.Constraints track by $index">{{c}}</li>
+            </ul>
+
+            <ul>
+              <li data-ng-repeat="c in mdView.current.record.SecurityConstraints track by $index">{{c}}</li>
+            </ul>
+
+            <ul>
+              <li data-ng-repeat="c in mdView.current.record.otherConstr track by $index">{{c}}</li>
+            </ul>
+          </td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.contacts.resource">
+          <th data-translate="">contact</th>
+          <td>
+            <blockquote>
+              {{mdView.current.record.contacts.resource}}
+            </blockquote>
+          </td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.credit">
+          <th data-translate="">credit</th>
+          <td>{{mdView.current.record.credit}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.status">
+          <th data-translate="">status</th>
+          <td>{{mdView.current.record.status}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.updateFrequency">
+          <th data-translate="">updateFrequency</th>
+          <td>{{mdView.current.record.updateFrequency}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.publicationDate">
+          <th data-translate="">publicationDate</th>
+          <td data-gn-humanize-time="">{{mdView.current.record.publicationDate}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.tempExtentBegin">
+          <th data-translate="">tempExtent</th>
+          <td>{{mdView.current.record.tempExtentBegin}} - {{mdView.current.record.tempExtentEnd}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.datasetLang">
+          <th data-translate="">language</th>
+          <td>{{mdView.current.record.datasetLang | translate}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h2 data-translate="">preview</h2>
+      <div class="gn-map-preview"/>
+
+      <h2 data-translate="">technicalInformation</h2>
+
+
+      <table class="table table-bordered">
+        <tbody>
+        <tr data-ng-if="mdView.current.record.crs">
+          <th data-translate="">crs</th>
+          <td>{{mdView.current.record.crs}}</td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.format">
+          <th data-translate="">format</th>
+          <td>
+            <ul>
+              <li data-ng-repeat="f in mdView.current.record.format">
+                <span class="badge">{{f}}</span>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr data-ng-if="mdView.current.record.lineage">
+          <th data-translate="">lineage</th>
+          <td>{{mdView.current.record.lineage}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h2 data-translate="">metadataInformation</h2>
+
+      <a class="btn btn-link"
+         data-ng-href="xml.metadata.get?id={{mdView.current.record.getId()}}">
+        <i class="fa fa-file-code-o fa-2x"/>
+        <span data-translate="">metadataInXML</span>
+      </a>
+
+      <table class="table table-striped">
+        <tbody>
+        <tr>
+          <th data-translate="">contact</th>
+          <td>
+            <blockquote data-ng-if="mdView.current.record.getContacts().metadata">
+              {{mdView.current.record.getContacts().metadata}}
+            </blockquote>
+          </td>
+        </tr>
+        <tr>
+          <th data-translate="">metadataLanguage</th>
+          <td>{{mdView.current.record.language | translate}}</td>
+        </tr>
+        <tr>
+          <th data-translate="">uuid</th>
+          <td>{{mdView.current.record['geonet:info'].uuid}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

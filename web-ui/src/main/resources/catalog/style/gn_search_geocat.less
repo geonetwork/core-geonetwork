@@ -1,4 +1,5 @@
 @import "gn_search.less";
+@import "gn_metadata.less";
 
 @navbar-height: 34px;
 
@@ -321,11 +322,18 @@ h1, h2, h3, h4, h5, h6,
 
   .md-links {
     margin-top: .5em;
-    .dropdown-menu {
-      font-size: 90%;
-    }
   }
 
+  .dropdown-menu {
+    font-size: 90%;
+  }
+}
+
+.gn-zarroo {
+  position: absolute;
+  top: 5em;
+  left: 1em;
+  width: ~"calc(100% - 2em)";
 }
 
 .submit {
@@ -419,7 +427,6 @@ h1, h2, h3, h4, h5, h6,
       position: absolute;
       bottom: 0;
       width: 100%;
-      z-index: 2000;
     }
     [search-results],
     .panel-body {
@@ -472,4 +479,13 @@ h1, h2, h3, h4, h5, h6,
   p.topiccat-second {
     padding-left: 40px;
   }
+  font-size: 13px;
+}
+
+.gn-pager .pager li > a {
+  border-radius: 4px;
+  width: 1.2em;
+  text-align: center;
+  padding: 4px 5px;
+  vertical-align: middle;
 }

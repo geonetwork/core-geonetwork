@@ -133,5 +133,6 @@
     "usernameHelp": "Nombre a usar cuando se hace login.",
     "west": "Oeste",
     "year": "Año",
-    "zip": "ZIP"
+    "zip": "ZIP",
+    "whoCanAccess": "Quién tiene acceso"
 }

@@ -89,6 +89,10 @@
 
           scope.$watchCollection('searchResults.records', function(rec) {
 
+            //scroll to top
+            element.animate({scrollTop: top});
+
+            // get md extent boxes
             fo.getFeatures().clear();
             if (!angular.isArray(rec) ||
                 angular.isUndefined(scope.map.getTarget())) {
