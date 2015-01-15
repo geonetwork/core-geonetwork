@@ -68,7 +68,6 @@ public class LDAPUtils {
     /**
      * Save or update an LDAP user to the local GeoNetwork database.
      * 
-     * 
      * @param user
      * @throws Exception
      */
