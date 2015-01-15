@@ -28,7 +28,7 @@ public class Matchers {
 
     def isTextEl = {el ->
         !el.'gco:CharacterString'.text().isEmpty() ||
-                !el.'gco:PT_FreeText'.'gco:textGroup'.'gmd:LocalisedCharacterString'.text().isEmpty()
+                !el.'gmd:PT_FreeText'.'gmd:textGroup'.'gmd:LocalisedCharacterString'.text().isEmpty()
     }
 
     def isContainerEl = {el ->

@@ -41,9 +41,9 @@ public class Handlers {
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
         handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
 
-        handlers.skip matchers.hasDateChild, {it.children()}
-        handlers.skip matchers.hasCodeListChild, {it.children()}
-        handlers.skip matchers.isSkippedContainer, {it.children()}
+        handlers.skip name: "skip date parent element", select: matchers.hasDateChild, {it.children()}
+        handlers.skip name: "skip codelist parent element", select: matchers.hasCodeListChild, {it.children()}
+        handlers.skip name: "skip containers: " + matchers.skipContainers, select: matchers.isSkippedContainer, {it.children()}
 
         handlers.add select: 'gmd:locale', group: true, localeEls
         handlers.add 'gmd:CI_Date', ciDateEl
