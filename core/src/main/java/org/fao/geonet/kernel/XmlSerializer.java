@@ -185,25 +185,26 @@ public abstract class XmlSerializer {
                 if (downloadXpathFilter != null) {
                     boolean canDownload = am.canDownload(context, id);
                     if (!canDownload) {
-                        removeFilteredElement(metadataXml, ReservedOperation.download, downloadXpathFilter, namespaces);
+                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.download, downloadXpathFilter, namespaces);
                     }
                 }
                 Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
                     boolean canDynamic = am.canDynamic(context, id);
                     if (!canDynamic) {
-                        removeFilteredElement(metadataXml, ReservedOperation.dynamic, dynamicXpathFilter, namespaces);
+                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.dynamic, dynamicXpathFilter, namespaces);
                     }
                 }
             }
             if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
-                removeFilteredElement(metadataXml, ReservedOperation.editing, editXpathFilter, namespaces);
+                removeFilteredElement(_settingManager, metadataXml, ReservedOperation.editing, editXpathFilter, namespaces);
             }
         }
         return (Element) metadataXml.detach();
     }
 
-    public static void removeFilteredElement(Element metadata,
+    public static void removeFilteredElement(SettingManager manager,
+                                             Element metadata,
                                              ReservedOperation operation,
                                              final Pair<String, Element> xPathAndMarkedElement,
                                              List<Namespace> namespaces) throws JDOMException {
@@ -221,7 +222,7 @@ public abstract class XmlSerializer {
                 Element element = (Element) object;
                 if(mark != null) {
                     element.removeContent();
-                    element.addContent(new Comment(WITH_HELD_COMMENT + operation.name()));
+                    element.addContent(new Comment(createWithheldCommentText(manager, operation)));
                     // Remove attributes
                     @SuppressWarnings("unchecked")
                     List<Attribute> atts = new ArrayList<>(element.getAttributes());
@@ -248,6 +249,10 @@ public abstract class XmlSerializer {
         }
     }
 
+    private static String createWithheldCommentText(SettingManager settingManager, ReservedOperation operation) {
+        return WITH_HELD_COMMENT + operation.name() + "_" + settingManager.getSiteId();
+    }
+
     /**
      * TODO javadoc.
      *
@@ -260,10 +265,29 @@ public abstract class XmlSerializer {
      */
 	protected Metadata insertDb(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(dataXml);
-
-        newMetadata.setData(Xml.getString(dataXml));
+        removeWithheldComments(dataXml);
+        newMetadata.setDataAndFixCR(dataXml);
         return _metadataRepository.save(newMetadata);
 	}
+
+    private void removeWithheldComments(Element dataXml) {
+        List<Comment> toDetach = new ArrayList<>();
+        final Iterator descendants = dataXml.getDescendants();
+        while (descendants.hasNext()) {
+            Object next = descendants.next();
+
+            if (next instanceof Comment) {
+                Comment comment = (Comment) next;
+                if (comment.getText().startsWith(WITH_HELD_COMMENT)) {
+                    toDetach.add(comment);
+                }
+            }
+        }
+
+        for (Comment comment : toDetach) {
+            comment.detach();
+        }
+    }
 
     /**
      *  Updates an xml element into the database. The new data replaces the old one.
@@ -303,67 +327,70 @@ public abstract class XmlSerializer {
     }
 
     private void assertWithheldElementsAreFull(Metadata unmodifiedMetadata, Element updatedXml, MetadataSchema schema) {
-        try (IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1)){
-            final IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
-            final Term idTerm = new Term(LuceneIndexField.ID, String.valueOf(unmodifiedMetadata.getId()));
-            final TopDocs doc = searcher.search(new TermQuery(idTerm), 1);
-            Assert.equals(1, doc.totalHits, "No document with id '" + unmodifiedMetadata.getId() + "' was found in the index");
+        if (!unmodifiedMetadata.getHarvestInfo().isHarvested()) {
+            try (IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1)) {
+                final IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
+                final Term idTerm = new Term(LuceneIndexField.ID, String.valueOf(unmodifiedMetadata.getId()));
+                final TopDocs doc = searcher.search(new TermQuery(idTerm), 1);
+                Assert.equals(1, doc.totalHits, "No document with id '" + unmodifiedMetadata.getId() + "' was found in the index");
 
-            final Document document = indexAndTaxonomy.indexReader.document(doc.scoreDocs[0].doc, WITHHELD_FIELDS_IN_INDEX);
-            Set<ReservedOperation> checkRequired = Sets.newHashSet();
-            for (String field : WITHHELD_FIELDS_IN_INDEX) {
-                String value = document.get(field);
-                if ("y".equals(value)) {
-                    String opName = field.substring(LuceneIndexField.WITHHELD_OP_PREFIX.length());
-                    final ReservedOperation op = ReservedOperation.valueOf(opName);
-                    checkRequired.add(op);
-                }
-            }
-
-            if (!checkRequired.isEmpty()) {
-                final Iterator descendants = updatedXml.getDescendants();
-                while (descendants.hasNext()) {
-                    Object next = descendants.next();
-                    if (next instanceof Element) {
-                        Element element = (Element) next;
-                        if (hasWithheldComment(element)) {
-                            throw new IllegalStateException("ERROR trying to save a metadata where withheld data has been stripped");
-                        }
+                final Document document = indexAndTaxonomy.indexReader.document(doc.scoreDocs[0].doc, WITHHELD_FIELDS_IN_INDEX);
+                Set<ReservedOperation> checkRequired = Sets.newHashSet();
+                for (String field : WITHHELD_FIELDS_IN_INDEX) {
+                    String value = document.get(field);
+                    if ("y".equals(value)) {
+                        String opName = field.substring(LuceneIndexField.WITHHELD_OP_PREFIX.length());
+                        final ReservedOperation op = ReservedOperation.valueOf(opName);
+                        checkRequired.add(op);
                     }
                 }
 
-                final Element unmodifiedXml = unmodifiedMetadata.getXmlData(false);
-                for (ReservedOperation operation : checkRequired) {
-                    final Pair<String, Element> operationFilter = schema.getOperationFilter(operation);
-                    if (operationFilter != null) {
-                        String xpath = operationFilter.one();
-                        if (Xml.selectNodes(updatedXml, xpath, schema.getNamespaces()).isEmpty()) {
-                            int numWithheld = Xml.selectNodes(unmodifiedXml, xpath, schema.getNamespaces()).size();
-                            Throwable e = new RuntimeException();
-                            Log.warning(Geonet.DATA_MANAGER, "Possible error with withheld elements.  Before update there was: " + numWithheld + " after update there were none.", e);
+                if (!checkRequired.isEmpty()) {
+                    final Iterator descendants = updatedXml.getDescendants();
+                    while (descendants.hasNext()) {
+                        Object next = descendants.next();
+                        if (next instanceof Comment) {
+                            Comment comment = (Comment) next;
+                            if (isWithheldComment(comment)) {
+                                String msg = "ERROR trying to update a metadata where withheld data has been stripped in metadata: "
+                                                 + unmodifiedMetadata.getId();
+                                final IllegalStateException exception = new IllegalStateException(msg);
+                                Log.error(Geonet.DATA_MANAGER, msg,
+                                        exception);
+                                throw exception;
+
+                            }
                         }
                     }
 
+                    final Element unmodifiedXml = unmodifiedMetadata.getXmlData(false);
+                    for (ReservedOperation operation : checkRequired) {
+                        final Pair<String, Element> operationFilter = schema.getOperationFilter(operation);
+                        if (operationFilter != null) {
+                            String xpath = operationFilter.one();
+                            if (Xml.selectNodes(updatedXml, xpath, schema.getNamespaces()).isEmpty()) {
+                                int numWithheld = Xml.selectNodes(unmodifiedXml, xpath, schema.getNamespaces()).size();
+                                Throwable e = new RuntimeException();
+                                Log.warning(Geonet.DATA_MANAGER, "Possible error with withheld elements.  Before update there was: " + numWithheld + " after update there were none.", e);
+
+                            }
+                        }
+
+                    }
                 }
+            } catch (IOException | JDOMException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException | JDOMException e) {
-            throw new RuntimeException(e);
         }
+
+
     }
 
-    private boolean hasWithheldComment(Element element) {
-        final List content = element.getContent();
-        for (Object o : content) {
-            if (o instanceof Comment) {
-                Comment comment = (Comment) o;
-                final String text = comment.getText();
-                if (text != null) {
-                    for (ReservedOperation op : WITHHELD_OPS) {
-                        if (text.equals(WITH_HELD_COMMENT + op.name())) {
-                            return true;
-                        }
-                    }
-                }
+    private boolean isWithheldComment(Comment comment) {
+        String text = comment.getText();
+        for (ReservedOperation op : WITHHELD_OPS) {
+            if (createWithheldCommentText(_settingManager, op).equals(text)) {
+                return true;
             }
         }
         return false;

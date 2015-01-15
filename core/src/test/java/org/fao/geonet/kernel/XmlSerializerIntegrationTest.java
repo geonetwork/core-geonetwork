@@ -8,9 +8,11 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Comment;
@@ -24,8 +26,10 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -38,6 +42,8 @@ import static org.mockito.Mockito.when;
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     XmlSerializer _xmlSerializer;
+    @Autowired
+    SettingManager settingManager;
     @Autowired
     DataManager _dataManager;
     @Autowired
@@ -77,7 +83,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     public void setSchemaFilters(boolean withHeld, boolean keepMarkedElement) {
         MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
-        Map<String, Pair<String, Element>> filters = new HashMap<String, Pair<String, Element>>();
+        Map<String, Pair<String, Element>> filters = new HashMap<>();
         if (withHeld) {
             if (keepMarkedElement) {
                 Element mark = new Element("keepMarkedElement");
@@ -162,7 +168,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
             Element el = (Element) o;
             assertEquals(1, el.getContentSize());
             assertTrue(el.getContent(0) instanceof Comment);
-            assertEquals(XmlSerializer.WITH_HELD_COMMENT + ReservedOperation.editing.name(), el.getContent(0).getValue());
+            assertEquals(XmlSerializer.WITH_HELD_COMMENT + ReservedOperation.editing.name() + "_" + this.settingManager.getSiteId(), el.getContent(0).getValue());
         }
     }
 
@@ -196,6 +202,55 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     public void testUpdateWithheldDynamic() throws Exception {
         final ServiceContext serviceContext = mockServiceContext(true, true, false);
         loadAndUpdate(serviceContext);
+    }
+
+    @Test
+    public void testUpdateWithheldFromOtherServer() throws Exception {
+        mockServiceContext(false, false, false);
+        final String id = "" + _mdId;
+        Element loadedMetadata = _xmlSerializer.internalSelect(id, false);
+        settingManager.setSiteUuid(UUID.randomUUID().toString());
+        _dataManager.indexMetadata(id, true);
+
+        ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        _xmlSerializer.update(id, loadedMetadata, new ISODate().getDateAndTime(), false, "uuid", serviceContext);
+    }
+
+    @Test
+    public void testSaveDeletesWithheldComments() throws Exception {
+        mockServiceContext(false, false, false);
+        final String id = "" + _mdId;
+        Element loadedMetadata = _xmlSerializer.internalSelect(id, false);
+        assertTrue(numWithheldCommentInMetadata(loadedMetadata) > 0);
+
+        ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        serviceContext.getBean(SettingManager.class).setSiteUuid(UUID.randomUUID().toString());
+        final Metadata newMd = new Metadata().setDataAndFixCR((Element) loadedMetadata.clone()).setUuid(UUID.randomUUID().toString());
+        newMd.getDataInfo().setSchemaId("iso19139").setType(MetadataType.METADATA);
+        newMd.getSourceInfo().setOwner(metadata.getSourceInfo().getOwner()).setSourceId(metadata.getSourceInfo().getSourceId());
+        final Metadata insertedMd = _xmlSerializer.insert(metadata, (Element) loadedMetadata.clone(), serviceContext);
+
+        mockServiceContext(true, true, true);
+        loadedMetadata = _xmlSerializer.internalSelect("" + insertedMd.getId(), false);
+        assertEquals(0, numWithheldCommentInMetadata(loadedMetadata));
+    }
+
+    private int numWithheldCommentInMetadata(Element loadedMetadata) {
+        final Iterator descendants = loadedMetadata.getDescendants();
+        int count = 0;
+        while (descendants.hasNext()) {
+            Object next = descendants.next();
+            if (next instanceof Comment) {
+                Comment comment = (Comment) next;
+                if (comment.getText().startsWith(XmlSerializer.WITH_HELD_COMMENT)) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
     private void loadAndUpdate(ServiceContext serviceContext) throws Exception {

@@ -3409,7 +3409,7 @@ public class DataManager {
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = servContext.getBean(DataManager.class).getSchema(metadata.getDataInfo().getSchemaId());
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            XmlSerializer.removeFilteredElement(md, ReservedOperation.editing, editXpathFilter, mds.getNamespaces());
+            XmlSerializer.removeFilteredElement(settingMan, md, ReservedOperation.editing, editXpathFilter, mds.getNamespaces());
 
             String uuid = getMetadataUuid( metadataId);
             servContext.getBean(MetadataNotifierManager.class).updateMetadata(md, metadataId, uuid, servContext);
