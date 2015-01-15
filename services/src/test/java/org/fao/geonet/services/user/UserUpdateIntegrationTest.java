@@ -1,57 +1,66 @@
 package org.fao.geonet.services.user;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.GroupRepositoryTest;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.*;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.geonetwork.http.proxy.util.ServletConfigUtil;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
  * Test User update service.
  * <p/>
- * User: Jesse
- * Date: 10/16/13
- * Time: 3:20 PM
+ * User: Jesse Date: 10/16/13 Time: 3:20 PM
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:encoder-bean.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(inheritLocations = true, locations = {"classpath:encoder-bean.xml", "classpath*:config-node/srv.xml"})
 public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
-    private static final String COMPAT_UPDATE_PARAMS = "<request>\n" +
-                                                       "  <zip>zip1</zip>\n" +
-                                                       "  <groups_RegisteredUser>2</groups_RegisteredUser>\n" +
-                                                       "  <state>state1</state>\n" +
-                                                       "  <surname>lastname</surname>\n" +
-                                                       "  <org>c2c</org>\n" +
-                                                       "  <password>password</password>\n" +
-                                                       "  <kind>consultant</kind>\n" +
-                                                       "  <city>city1</city>\n" +
-                                                       "  <country>ca</country>\n" +
-                                                       "  <id />\n" +
-                                                       "  <operation>%s</operation>\n" +
-                                                       "  <username>newuser</username>\n" +
-                                                       "  <password2>newuser</password2>\n" +
-                                                       "  <groups_Reviewer>2</groups_Reviewer>\n" +
-                                                       "  <email>newuser@email.com</email>\n" +
-                                                       "  <address>address1</address>\n" +
-                                                       "  <groups_UserAdmin>2</groups_UserAdmin>\n" +
-                                                       "  <name>firstname</name>\n" +
-                                                       "  <groups_Editor>2</groups_Editor>\n" +
-                                                       "  <profile>UserAdmin</profile>\n" +
-                                                       "</request>";
+    private static final String COMPAT_UPDATE_PARAMS = "<request>\n"
+            + "  <zip>zip1</zip>\n"
+            + "  <groups_RegisteredUser>2</groups_RegisteredUser>\n"
+            + "  <state>state1</state>\n" + "  <surname>lastname</surname>\n"
+            + "  <org>c2c</org>\n" + "  <password>password</password>\n"
+            + "  <kind>consultant</kind>\n" + "  <city>city1</city>\n"
+            + "  <country>ca</country>\n" + "  <id>%s</id>\n"
+            + "  <operation>%s</operation>\n"
+            + "  <username>newuser</username>\n"
+            + "  <password2>newuser</password2>\n"
+            + "  <groups_Reviewer>2</groups_Reviewer>\n"
+            + "  <email>newuser@email.com</email>\n"
+            + "  <address>address1</address>\n"
+            + "  <groups_UserAdmin>2</groups_UserAdmin>\n"
+            + "  <name>firstname</name>\n"
+            + "  <groups_Editor>2</groups_Editor>\n"
+            + "  <profile>UserAdmin</profile>\n" + "</request>";
 
     @Autowired
     UserGroupRepository _userGroupRepository;
@@ -61,17 +70,39 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
     PasswordEncoder _encoder;
     private AtomicInteger _inc = new AtomicInteger();
 
+    private MockMvc mockMvc;
+
+    @Before
+    public void setUp() {
+        MockServletContext servletContext = new MockServletContext(
+                "../web/src/main/webapp");
+
+        XmlWebApplicationContext springContext = new XmlWebApplicationContext();
+        springContext.setConfigLocation("classpath:node-test.xml");
+        springContext.setServletContext(servletContext);
+        springContext.refresh();
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(springContext)
+                .build();
+
+    }
+
     @Test
     public void testExecAddNewUserCompatibilityModeAsAdmin() throws Exception {
-        Element request = Xml.loadString(String.format(COMPAT_UPDATE_PARAMS, Params.Operation.NEWUSER), false);
+        String xml = String.format(COMPAT_UPDATE_PARAMS, "",
+                Params.Operation.NEWUSER);
 
-        final Update update = new Update();
+        long numUsers = _userRepo.count() + 1;
 
-        ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAsAdmin();
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/srv/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
-        assertEquals(2, _userRepo.count());
+        assertEquals(numUsers, _userRepo.count());
         List<User> users = _userRepo.findAllByProfile(Profile.UserAdmin);
         assertEquals(1, users.size());
 
@@ -79,27 +110,30 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         assertExpectedUser(user);
 
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile.Editor)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .RegisteredUser)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .UserAdmin)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile.Reviewer)));
-        assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .Administrator)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.Editor)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.RegisteredUser)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.UserAdmin)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.Reviewer)));
+        assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2)
+                .setUserId(user.getId()).setProfile(Profile.Administrator)));
 
     }
 
     @Test
-    public void testExecFullUpdateUserCompatibilityModeAsAdmin() throws Exception {
+    public void testExecFullUpdateUserCompatibilityModeAsAdmin()
+            throws Exception {
 
-        User startUser = new User()
-                .setName("abc")
-                .setKind("abc")
-                .setOrganisation("abc")
-                .setProfile(Profile.Guest)
-                .setSurname("abc")
-                .setUsername("abc");
+        User startUser = new User().setName("abc").setKind("abc")
+                .setOrganisation("abc").setProfile(Profile.Guest)
+                .setSurname("abc").setUsername("abc");
         startUser.getSecurity().setPassword("abc");
 
         startUser = _userRepo.save(startUser);
@@ -107,14 +141,16 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         assertEquals(0, _userGroupRepository.count());
         assertEquals(2, _userRepo.count());
 
-        Element request = Xml.loadString(String.format(COMPAT_UPDATE_PARAMS, Params.Operation.FULLUPDATE), false);
-        request.getChild("id").setText(""+startUser.getId());
+        String xml = String.format(COMPAT_UPDATE_PARAMS, startUser.getId(),
+                Params.Operation.FULLUPDATE);
 
-        final Update update = new Update();
-
-        ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAsAdmin();
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
         assertEquals(2, _userRepo.count());
         User user = _userRepo.findOne(startUser.getId());
@@ -123,14 +159,20 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         assertExpectedUser(user);
 
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile.Editor)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .RegisteredUser)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .UserAdmin)));
-        assertNotNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile.Reviewer)));
-        assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2).setUserId(user.getId()).setProfile(Profile
-                .Administrator)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.Editor)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.RegisteredUser)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.UserAdmin)));
+        assertNotNull(_userGroupRepository.findOne(new UserGroupId()
+                .setGroupId(2).setUserId(user.getId())
+                .setProfile(Profile.Reviewer)));
+        assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2)
+                .setUserId(user.getId()).setProfile(Profile.Administrator)));
 
     }
 
@@ -143,20 +185,24 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         assertEquals(2, _userRepo.count());
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + startUser.getId() + "</"
+                + Params.ID + ">" + "<" + Params.PASSWORD + ">password</"
+                + Params.PASSWORD + ">" + "<" + Params.OPERATION + ">"
+                + Params.Operation.RESETPW + "</" + Params.OPERATION + ">"
+                + "</request>";
 
-        ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.ID).setText("" + startUser.getId()))
-                .addContent(new Element(Params.PASSWORD).setText("password"))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.RESETPW));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAsAdmin();
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
     }
+
     @Test
     public void testExecPasswordUpdate() throws Exception {
 
@@ -166,18 +212,19 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         assertEquals(2, _userRepo.count());
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + startUser.getId() + "</"
+                + Params.ID + ">" + "<" + Params.PASSWORD + ">password</"
+                + Params.PASSWORD + ">" + "<" + Params.OPERATION + ">"
+                + Params.Operation.RESETPW + "</" + Params.OPERATION + ">"
+                + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(startUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.ID).setText(""+startUser.getId()))
-                .addContent(new Element(Params.PASSWORD).setText("password"))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.RESETPW));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(startUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
@@ -192,51 +239,55 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         assertEquals(2, _userRepo.count());
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + startUser.getId() + "</"
+                + Params.ID + ">" + "<" + Params.NAME + ">firstname</"
+                + Params.NAME + ">" + "<" + Params.OPERATION + ">"
+                + Params.Operation.EDITINFO + "</" + Params.OPERATION + ">"
+                + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(startUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.ID).setText(""+startUser.getId()))
-                .addContent(new Element(Params.NAME).setText("firstname"))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.EDITINFO));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(startUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCannotOwnEscalatePrivilegesToEditor() throws Exception {
         final Profile profile = Profile.Editor;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCannotOwnEscalatePrivilegesToUserAdmin() throws Exception {
         final Profile profile = Profile.UserAdmin;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCannotOwnEscalatePrivilegesToAdmin() throws Exception {
         final Profile profile = Profile.Administrator;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void testCannotOwnEscalatePrivilegesToReviewer() throws Exception {
         final Profile profile = Profile.Reviewer;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
-    @Test(expected=IllegalArgumentException.class)
-    public void testUseradminCannotEscalateOthersPrivilegesToAdministrator() throws Exception {
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUseradminCannotEscalateOthersPrivilegesToAdministrator()
+            throws Exception {
 
         final Group one = _groupRepository.findOne(2);
         User toUpdateUser = getUser();
@@ -248,58 +299,64 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor).setUser(toUpdateUser).setGroup(one),
-                new UserGroup().setProfile(Profile.UserAdmin).setUser(updatingUser).setGroup(one)
-        ));
+                new UserGroup().setProfile(Profile.Editor)
+                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                        .setGroup(one)));
 
+        String xml = "<request><" + Params.ID + ">" + toUpdateUser.getId()
+                + "</" + Params.ID + ">" + "<" + Params.PROFILE + ">"
+                + Profile.Administrator.name() + "</" + Params.PROFILE + ">"
+                + "<" + Params.OPERATION + ">" + Params.Operation.EDITINFO
+                + "</" + Params.OPERATION + ">" + "</request>";
 
-        final Update update = new Update();
+        MockHttpSession session = loginAs(updatingUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(updatingUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.ID).setText(""+toUpdateUser.getId()))
-                .addContent(new Element(Params.PROFILE).setText(Profile.Administrator.name()))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.EDITINFO));
-        update.serviceSpecificExec(request, context);
     }
+
     public void testCanReducePrivileges() throws Exception {
         final Profile profile = Profile.Guest;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
-   public void testCanKeepSamePrivileges() throws Exception {
+
+    public void testCanKeepSamePrivileges() throws Exception {
         final Profile profile = Profile.RegisteredUser;
 
         assertCannotEscalateOwnPrivileges(profile);
     }
 
-    private void assertCannotEscalateOwnPrivileges(Profile profile) throws Exception {
+    private void assertCannotEscalateOwnPrivileges(Profile profile)
+            throws Exception {
         User startUser = getUser();
         startUser.setProfile(Profile.RegisteredUser);
         startUser = _userRepo.save(startUser);
 
         assertEquals(2, _userRepo.count());
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + startUser.getId() + "</"
+                + Params.ID + ">" + "<" + Params.NAME + ">newname</"
+                + Params.NAME + ">" + "<" + Params.PROFILE + ">"
+                + profile.name() + "</" + Params.PROFILE + ">" + "<"
+                + Params.OPERATION + ">" + Params.Operation.EDITINFO + "</"
+                + Params.OPERATION + ">" + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(startUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.NAME).setText("newname"))
-                .addContent(new Element(Params.ID).setText(""+startUser.getId()))
-                .addContent(new Element(Params.PROFILE).setText(profile.name()))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.EDITINFO));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(startUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExecPasswordUpdateIllegalAccess() throws Exception {
 
         User toUpdateUser = getUser();
@@ -310,24 +367,26 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser.setUsername("updater");
         updatingUser = _userRepo.save(updatingUser);
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + toUpdateUser.getId()
+                + "</" + Params.ID + ">" + "<" + Params.PASSWORD
+                + ">password</" + Params.PASSWORD + ">" + "<"
+                + Params.OPERATION + ">" + Params.Operation.RESETPW + "</"
+                + Params.OPERATION + ">" + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(updatingUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.PASSWORD).setText("password"))
-                .addContent(new Element(Params.ID).setText("" + toUpdateUser.getId()))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.RESETPW));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(updatingUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdateUserInOtherGroup() throws Exception {
         final Group one = _groupRepository.findOne(2);
-        final Group two = _groupRepository.save(GroupRepositoryTest.newGroup(_inc));
+        final Group two = _groupRepository.save(GroupRepositoryTest
+                .newGroup(_inc));
         User toUpdateUser = getUser();
         toUpdateUser = _userRepo.save(toUpdateUser);
 
@@ -337,22 +396,24 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor).setUser(toUpdateUser).setGroup(one),
-                new UserGroup().setProfile(Profile.UserAdmin).setUser(updatingUser).setGroup(two)
-            ));
+                new UserGroup().setProfile(Profile.Editor)
+                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                        .setGroup(two)));
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + toUpdateUser.getId()
+                + "</" + Params.ID + ">" + "<" + Params.PASSWORD
+                + ">password</" + Params.PASSWORD + ">" + "<"
+                + Params.OPERATION + ">" + Params.Operation.RESETPW + "</"
+                + Params.OPERATION + ">" + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(updatingUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.PASSWORD).setText("password"))
-                .addContent(new Element(Params.ID).setText("" + toUpdateUser.getId()))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.RESETPW));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(updatingUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
     }
 
@@ -368,42 +429,37 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor).setUser(toUpdateUser).setGroup(one),
-                new UserGroup().setProfile(Profile.UserAdmin).setUser(updatingUser).setGroup(one)
-            ));
+                new UserGroup().setProfile(Profile.Editor)
+                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                        .setGroup(one)));
 
-        final Update update = new Update();
+        String xml = "<request><" + Params.ID + ">" + toUpdateUser.getId()
+                + "</" + Params.ID + ">" + "<" + Params.PASSWORD
+                + ">password</" + Params.PASSWORD + ">" + "<"
+                + Params.OPERATION + ">" + Params.Operation.RESETPW + "</"
+                + Params.OPERATION + ">" + "</request>";
 
-        ServiceContext context = createServiceContext();
-        final UserSession userSession = new UserSession();
-        userSession.loginAs(updatingUser);
-        context.setUserSession(userSession);
-
-        Element request = new Element("request")
-                .addContent(new Element(Params.PASSWORD).setText("password"))
-                .addContent(new Element(Params.ID).setText("" + toUpdateUser.getId()))
-                .addContent(new Element(Params.OPERATION).setText(Params.Operation.RESETPW));
-        update.serviceSpecificExec(request, context);
+        MockHttpSession session = loginAs(updatingUser);
+        MockHttpServletRequestBuilder get = MockMvcRequestBuilders
+                .get("/eng/admin.user.update");
+        get.session(session);
+        get.content(xml);
+        get.accept(org.springframework.http.MediaType.APPLICATION_JSON);
+        mockMvc.perform(get);
 
         User user = _userRepo.findOne(toUpdateUser.getId());
         assertExpectedUser(user);
     }
 
     private User getUser() {
-        User startUser = new User()
-                .setName("firstname")
-                .setKind("consultant")
-                .setOrganisation("c2c")
-                .setProfile(Profile.UserAdmin)
-                .setSurname("lastname")
-                .setUsername("newuser");
+        User startUser = new User().setName("firstname").setKind("consultant")
+                .setOrganisation("c2c").setProfile(Profile.UserAdmin)
+                .setSurname("lastname").setUsername("newuser");
         startUser.getSecurity().setPassword(_encoder.encode("password"));
-        startUser.getAddresses().add(new Address()
-                .setAddress("address1")
-                .setCity("city1")
-                .setCountry("ca")
-                .setState("state1")
-                .setZip("zip1"));
+        startUser.getAddresses().add(
+                new Address().setAddress("address1").setCity("city1")
+                        .setCountry("ca").setState("state1").setZip("zip1"));
         startUser.getEmailAddresses().add("newuser@email.com");
 
         return startUser;

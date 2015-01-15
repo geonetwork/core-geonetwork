@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Define here all GUI specific parameters to be used in XSL stylesheet.
+ Each parameter could be retrieved using /root/gui/config/your-parameter-key xpath.
+ Updating a parameter don't need a restart (but need an XSL cache refresh if XSL caching is on).
+-->
+<config>
+ 
+ <!-- Client configuration in order to redirect to default UI 
+  (ie. main.home service) or to another custom client.
+  
+  For widget mode:
+  * parameters attribute is appended to URL. Use it to define a default map extent for example or change default language.
+  * createParameter attribute is appended to URL when the application is called from the administration > New metadata menu.
+  * stateId attribute is the identifier of the search form (if stateful) in the application. It is used to build quick links section in the administration.
+ -->
+ 
+    <client type="redirect" widget="true" url="search" createParameter="#create" stateId="s"/>
+ 
+ <!-- Classic interface using the xslt layout-templates -->
+ <!-- <client type="redirect" widget="false" url="main.home" parameters="" stateId="" createParameter=""/> -->
+ <!-- Widget client with tabbed interface (metadata documents open in tab) -->
+ <!--<client type="redirect" widget="true" url="tabsearch" createParameter="#create" stateId="s"/>-->
+ <!-- Widget client with sliding panel interface (metadata records open in a window) -->
+ <!--<client type="redirect" widget="true" url="find" parameters="" createParameter="#create" stateId="s"/>-->
+ <!-- As above but with extra parameters set: custom extent in debug mode in french --> 
+ <!--<client type="redirect" widget="true" url="find" parameters="extent=-5.1,41,9.7,51&amp;hl=fre" createParameter="#create" stateId="s"/>-->
+ 
+ <!-- Comment out languages to hide them
+ from language selector. -->
+ <languages>
+     <ara/>
+     <cat/>
+     <chi/>
+     <dut/>
+     <eng/>
+     <fin/>
+     <fre/>
+     <ger/>
+     <ita/>
+     <nor/>
+     <pol/>
+     <por/>
+     <rus/>
+     <spa/>
+     <tur/>
+ </languages>
+ 
+ 
+ <map>
+  <!-- Configuration for map displayed in metadata sheet
+  (view or edit mode). -->
+  <metadata>
+   <width>100%</width>
+   <height>300px</height>
+  </metadata>
+  <proj>
+   <!-- List all needed projections for view and editing maps.
+    If more than one projection is available, bounding box
+    coordinates will be displayed in the list of available projection.
+    
+    Default attribute define the default projection to use. Do
+    not define more than one default projection.
+    
+   -->
+   <crs code="EPSG:4326" default="1" edit="1"/><!-- WGS84 is mandatory because ISO store it by default in LatLong-->
+      <crs code="EPSG:900913" def="+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs "/>
+      <!--
+       <crs code="EPSG:4258" def="+proj=longlat +ellps=GRS80 +no_defs"/>
+       <crs code="EPSG:3786" edit="1" def="+proj=eqc +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +a=6371007 +b=6371007 +units=m +no_defs "></crs>
+   <crs code="EPSG:27572" edit="1" def="+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs"/>
+   -->
+  </proj>
+
+  <!-- Setting used in the new UI (html5ui) to configure the layers in the maps. TODO: Use also in classic UI
+
+       - If this setting is true OSM is used in the map viewers.
+       - If this setting is false, html5ui uses the layers configured in /geonetwork/maps/mapviewer.wmc
+       You can configure your custom WMS layers in that file.
+  -->
+  <osm_map>true</osm_map>
+ </map>
+
+
+ <!-- Configuration for small map search 
+    mapSearch/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options) 
+       
+    layers/layer: 
+        server      url of the server
+        tocName     layer name in map
+        params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
+        options     OpenLayers options hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
+ -->
+  <mapSearch options="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(-180,-90,180,90), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90)}">
+  <layers>
+    <layer server="http://localhost:8080/geoserver/wms" tocName="Borders"  params="{layers: 'gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline', transparent: 'true', format: 'image/png'}"  options="{}" />
+    <layer server="http://localhost:8080/geoserver/wms" tocName="Ortophoto" params="{layers: 'gn:world', format: 'image/jpeg'}" options="{isBaseLayer: true}" />
+  </layers>
+ </mapSearch>
+ 
+  <!-- Configuration for map viewer
+    mapViewer/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options)
+
+    proj/crs:       Projections used in mapViewer
+        code        CSR code
+        default     Indicates the default CRS (values: 0, 1)
+        
+    layers/layer: 
+        server      url of the server
+        tocName     layer name in map
+        params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
+        options     OpenLayers options hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
+ -->
+  <mapViewer options="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(-180,-90,180,90), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(-180,-90,180,90)}">
+  <layers>
+    <layer server="http://localhost:8080/geoserver/wms" tocName="Borders"  params="{layers: 'gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline', transparent: 'true', format: 'image/png'}"  options="{}" />
+    <layer server="http://localhost:8080/geoserver/wms" tocName="Ortophoto" params="{layers: 'gn:world', format: 'image/jpeg'}" options="{isBaseLayer: true}" />
+  </layers>
+  <scales values="[7500000, 5000000, 2500000,  1000000, 750000, 500000, 250000, 100000, 75000, 50000, 25000, 10000, 7500, 5000, 2500, 1000]" />
+  <!--scales values="[]" /-->
+  <proj>
+    <crs code="EPSG:4326" default="1" name="WGS84 (lat/lon)" />
+  </proj>  
+  <servers>
+    <server name="NASA JPL OneEarth Web Mapping Server (WMS)" url="http://wms.jpl.nasa.gov/wms.cgi?" />
+    <server name="NASA Earth Observations (NEO) WMS" url="http://neowms.sci.gsfc.nasa.gov/wms/wms?" />
+    <server name="DEMIS World Map Server" url="http://www2.demis.nl/mapserver/wms.asp?" />
+    <server name="Geoserver" url="http://localhost:8080/geoserver/wms?" />
+  </servers>
+ </mapViewer>
+ 
+  <!-- 
+    Google translation service (http://code.google.com/apis/language/translate/overview.html):
+    Set this parameter to "1" to activate google translation service.
+    Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
+    
+    WARNING: "The Google Translate API has been officially deprecated as of May 26, 2011...
+    the number of requests you may make per day will be limited and 
+    the API will be shut off completely on December 1, 2011".
+  -->
+ <editor-google-translate>0</editor-google-translate>
+ 
+ 
+ <!-- Metadata relation information
+ Comment out this element to turn off metadata relation display in metadata
+ edit and view mode. 
+ -->
+ <editor-metadata-relation/>
+ <!-- Display error only when loading validation report 
+  <editor-validation-errors-only-on-load/>-->
+ 
+  <!-- Display the geopublisher option for all updloaded files-->
+ 	<editor-geopublisher/>
+ 
+ 
+ <!-- Display metadata tabs in edit and view mode. 
+  ISO and INSPIRE view only available for ISO19139 records.
+  Default view is always visible.
+  
+  Use the flat attribute in order to display elements in simple mode 
+  (ie. could not access to all elements defined in the schema)
+  
+  Use the default attribute in order to use this view in search result panel.
+  It is recommended to use the simple or inspire view because user will not
+  have access to section tab switcher.
+
+  Important:
+    * Visibility of views is now configured in GUI, inside System configuration > Metadata views
+    * Extra/advanced attributes of views like flat or other specific attributes (see INSPIRE panel) are configured in this file
+
+ -->
+ <metadata-tab>
+   <!--   In flat mode, define custom configuration for a view:
+     * ancestorException: define which non existing children of the exception must be displayed (eg. use spatialResolution 
+     in order to be able to add spatialResolution in this view mode. spatialResolution is a complex element which provide a 
+     selection)
+     * exception: define which non existing element must be displayed (eg. pointOfContact)
+     * flatException: define which element to not display using flat mode (eg. topicCategory will allow to remove
+     or add element of that type even in flat mode but the element will be boxed).
+    -->
+  <simple flat="true">
+		<exception schema="sensorML" for="component,input,onlineResource,electronicMailAddress,voice,facsimile,deliveryPoint,coordinate,input,date"/>
+	</simple>
+  <advanced/><!-- This view should not be removed as this is the only view to be able
+  to edit all elements defined in a schema. -->
+  <iso/>
+  <!-- This view display all INSPIRE recommended elements
+  in a view.  -->
+  <inspire flat="true">
+   	 <ancestorException schema="iso19139" for="EX_TemporalExtent,CI_Date,spatialResolution"/>
+     <exception schema="iso19139" for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,distributionFormat,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
+  </inspire>
+  <xml/>
+ </metadata-tab>
+
+<!-- Define the default selection for metadata element substitutions in the editor -->
+ <editor-default-substitutions>
+    <!-- Default for gmd:language from 2 alternatives: gco:CharacterString, gmd:LanguageCode -->
+    <element name="gmd:language" default="gmd:LanguageCode" />
+ </editor-default-substitutions>
+
+ <!-- Add an option to be able to toggle all fieldsets
+  in view and edit mode. -->
+ <metadata-view-toggleTab/>
+ <metadata-show showMapPanel="true"/>
+ 
+ <!-- Actions configuration
+ -->
+ <editor-actions>
+  <!-- Action to allow editors to compute bounding box from keyword analysis. -->
+  <compute-extent-from-keyword/> 
+ </editor-actions>
+ 
+ 
+ 
+ 
+  <!-- Subtemplate configuration.
+  
+  Subtemplate only works with the GUI widget client interface.
+  The configuration allows to define the types of supported subtemplate
+  and their parent (where they can be inserted). 
+  Subtemplate are only supported for iso19139 or profile records.
+  -->
+  
+  <editor-subtemplate>
+    <mapping>
+      <subtemplate type="gmd:CI_ResponsibleParty">
+        <parent id="gmd:pointOfContact"/>
+        <parent id="gmd:userContactInfo"/>
+        <parent id="gmd:distributorContact"/>
+        <parent id="gmd:citedResponsibleParty"/>
+        <parent id="gmd:contact"/>
+        <!--
+          TODO : gmd:source could be find in
+          LI_Lineage an in MD_ExtendedElementInformation_Type
+          <parent id="gmd:source"/>
+          It's not a CI_ResponsibleParty in LI_Lineage
+        -->
+        <parent id="gmd:processor"/>
+        <parent id="gmd:responsibleParty"/>
+      </subtemplate>
+      <subtemplate type="gmd:EX_Extent">
+        <parent id="gmd:extent"/>
+      </subtemplate>
+      <subtemplate type="gmd:MD_Keywords">
+        <parent id="gmd:descriptiveKeywords"/>
+      </subtemplate>
+      <subtemplate type="gmd:DQ_FormatConsistency">
+        <parent id="gmd:report"/>
+      </subtemplate>
+    </mapping>
+  </editor-subtemplate>
+
+ <!-- Proxy URL to use for XHR. 
+ Check that the proxy could query allowed hosts.
+ <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
+ -->
+ <proxy-url>../../proxy?</proxy-url>    
+ 
+ <!-- Display or not category information : Categories are stored in the database and a metadata
+ record could be linked to one or more categories. -->
+ <category>
+  <!-- 
+   To disable that feature
+   comment this out. This will hide categories in search criteria, search results, 
+   metadata editing and administration interface.
+  -->
+  <admin/>
+  
+  <!-- Display category as icon in search results. Categories could be :
+    * define from category table or
+    * define based on schema : iso19139 could be service or dataset and iso19110 is feature catalogue (internal category)
+  
+  mode attribute could be:
+   * all : all categories
+   * db : only from category table
+   * internal : only internal category
+  <display-in-search mode="db"/>
+  -->
+  
+ </category>
+
+ <!-- Display rating feature in search results panel. -->
+ <rating/>
+
+ <search>
+  <!-- Display or not keyword selection panel in advanced search panel 
+   <keyword-selection-panel/> 
+  -->
+	<!-- Optional user interface mechanism for editor - not ready yet
+		<use-separate-window-for-editor-viewer/>
+	-->
+	<!-- Optional user interface mechanism - displays banner functions using
+	     drop down modal box which overlays the current web page instead of 
+			 replacing it.
+			 Banner functions are 'Administration', 'Feedback', 'Links' etc
+			 The idea here is that displaying these light-weight functions in a 
+			 modal box means that the main page is not disturbed
+		<use-modal-box-for-banner-functions/>
+	-->
+	<!-- Show Remote/Distributed search tab - enables distributed/remote search
+	     using Z3950 - note that if you query the Australian Z3950 sites, you 
+			 will need to add the anzmeta plugin schema to GeoNetwork using the 
+			 add schema/profile function on the administration page. If you want to
+			 do this, you should add the schema from a URL as follows:
+			 http://geonetwork.globaldial.com/testdownloads/anzmeta.zip
+		<show-remote-search/> 
+	-->
+ </search>
+	
+	
+  <repository>
+    <thesaurus>http://raw.github.com/geonetwork/util-repository/master/thesaurus.xml</thesaurus>
+  </repository>
+</config>
