@@ -1,5 +1,4 @@
-<div data-ng-hide="categories.length === 0">
-    <label class="control-label">{{label | translate}}</label>
+<div class="dynamic-list" data-ng-hide="categories.length === 0">
     <select class="form-control" data-ng-model="element">
         <option></option>
         <option data-ng-repeat="c in categories" value="{{c['@id']}}" 

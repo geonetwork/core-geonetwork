@@ -35,8 +35,18 @@
       /** Upload management */
       $scope.action = 'xml.mef.import.ui';
       var uploadImportMdDone = function(evt, data) {
+        $scope.importing = false;
+        $scope.report = {
+          id: data.jqXHR.responseJSON.id
+        };
       };
-      var uploadImportMdError = function(data) {
+      var uploadImportMdError = function(evt, data,o) {
+        $scope.importing = false;
+        var response = new DOMParser().parseFromString(
+            data.jqXHR.responseText, 'text/xml');
+        $scope.report = {
+          message: response.getElementsByTagName('message')[0].innerHTML
+        } ;
       };
 
       // upload directive options
@@ -73,17 +83,26 @@
       };
 
       $scope.importRecords = function(formId) {
-        $scope.importing = true;
         $scope.report = null;
         $scope.error = null;
 
         if ($scope.importMode == 'uploadFile') {
           var uploadScope = angular.element('#md-import-file').scope();
-          uploadScope.submit();
+          if(uploadScope.queue.length > 0) {
+            $scope.importing = true;
+            uploadScope.submit();
+          }
+          else {
+            $scope.report = {
+              message: 'noFileSelected'
+            };
+          }
         } else if ($scope.importMode == 'importFromDir') {
+          $scope.importing = true;
           gnMetadataManager.importFromDir($(formId).serialize()).then(
               onSuccessFn, onErrorFn);
         } else {
+          $scope.importing = true;
           gnMetadataManager.importFromXml($(formId).serialize()).then(
               onSuccessFn, onErrorFn);
         }
