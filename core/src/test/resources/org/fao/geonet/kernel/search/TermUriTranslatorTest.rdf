@@ -1,0 +1,29 @@
+<rdf:RDF 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+    <skos:ConceptScheme rdf:about="http://www.my.com/test">
+        <dc:title>Test classification scheme</dc:title>
+    </skos:ConceptScheme>
+
+    <skos:TopConcept rdf:about="http://www.my.com/test#ocean">
+        <skos:inScheme rdf:resource="http://www.my.com/test" />
+        <skos:prefLabel xml:lang="en">ocean</skos:prefLabel>
+        <skos:narrower rdf:resource="http://www.my.com/test#ocean_temperature"/>
+    </skos:TopConcept>
+
+    <skos:Concept rdf:about="http://www.my.com/test#ocean_temperature">
+        <skos:inScheme rdf:resource="http://www.my.com/test" />
+        <skos:prefLabel xml:lang="en">ocean temperature</skos:prefLabel>
+        <skos:broader rdf:resource="http://www.my.com/test#ocean"/>
+        <skos:narrower rdf:resource="http://www.my.com/test#sea_surface_temperature"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.my.com/test#sea_surface_temperature">
+        <skos:inScheme rdf:resource="http://www.my.com/test" />
+        <skos:prefLabel xml:lang="en">sea surface temperature</skos:prefLabel>
+        <skos:broader rdf:resource="http://www.my.com/test#ocean_temperature"/>
+    </skos:Concept>
+
+</rdf:RDF>

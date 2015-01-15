@@ -10,6 +10,7 @@
 
 	<import resource="config-spring-env.xml" />
 	<import resource="config-security/config-security.xml" />
+	<import resource="config-summary.xml" />
 	<import resource="classpath:JZkitApplicationContext.xml" />
 
 	<import resource="config-db/initial_data.xml" />

@@ -83,6 +83,8 @@ public class CswParams extends AbstractParams {
 			    @SuppressWarnings("unchecked")
                 List<Element> tmp = searches.getChild("search").getChildren();
 				eltSearches = tmp;
+			} else {
+				eltSearches = new ArrayList<Element>();
 			}
 		}
 

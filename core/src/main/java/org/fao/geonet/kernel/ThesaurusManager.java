@@ -27,6 +27,7 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -203,10 +204,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                         continue;
                     }
 
-                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
+                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
 
                 } else {
-                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
+                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
                 }
 
                 try {
@@ -335,7 +336,26 @@ public class ThesaurusManager implements ThesaurusFinder {
     @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriMap.get(thesaurusName);
-	}	
+	}
+
+	@Override
+	public Thesaurus getThesaurusByConceptScheme(String uri) {
+		
+		for (Map.Entry<String, Thesaurus> entry : thesauriMap.entrySet()) {
+			try {
+				Thesaurus thesaurus = entry.getValue();
+				
+				if (thesaurus.hasConceptScheme(uri)) {
+					return thesaurus;
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;	
+	}
 
 	/**
 	 * @param name
@@ -362,7 +382,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String aRdfDataFile = uuid+".rdf";
         Path thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, thesaurusFile, siteURL);
+        Thesaurus gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, type, thesaurusFile, siteURL);
 
 		try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)){
 			getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
@@ -388,5 +408,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		return theKey;
 	}
+
+    private IsoLanguagesMapper getIsoLanguagesMapper(ServiceContext context) {
+        return context.getBean(IsoLanguagesMapper.class);
+    }
 
 }
