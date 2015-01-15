@@ -127,12 +127,12 @@ class SummaryFactory {
                 } else if (mimetype.contains("download")) {
                     type = "download";
                     iconClasses = "fa fa-download"
-                } else if (mimetype.contains("link")) {
-                    type = "link";
-                    iconClasses = "fa fa-link"
                 } else if (mimetype.contains("wfs")) {
                     type = "wfs";
                     icon = imagesDir + "wfs.png";
+                } else {
+                    type = "link";
+                    iconClasses = "fa fa-link"
                 }
 
                 def linkType = new LinkType(type, icon, iconClasses)
