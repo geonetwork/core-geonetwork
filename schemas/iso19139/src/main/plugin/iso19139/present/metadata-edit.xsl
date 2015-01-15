@@ -1375,7 +1375,7 @@
     The name of the element starts with _X which means XML snippet update mode.
     -->
     <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}_replace" rows="" cols="" class="debug">
-      <xsl:apply-templates mode="geonet-cleaner" select="."/>
+      <xsl:apply-templates mode="geonet-cleaner" select="parent::node()"/>
     </textarea>
     
   </xsl:template>
