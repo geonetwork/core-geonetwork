@@ -16,12 +16,22 @@ class SummaryFactory {
 
     def navBarItems
 
-    SummaryFactory(isoHandlers) {
+    /*
+     * This field can be set by the creator and provided a closure that will be passed the summary object.  The closure can
+     * perform customization for its needs.
+     */
+    Closure<Summary> summaryCustomizer = null
+
+    SummaryFactory(isoHandlers, summaryCustomizer) {
         this.isoHandlers = isoHandlers
         this.handlers = isoHandlers.handlers;
         this.f = isoHandlers.f;
         this.env = isoHandlers.env;
         this.navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', isoHandlers.rootEl]
+        this.summaryCustomizer = summaryCustomizer;
+    }
+    SummaryFactory(isoHandlers) {
+        this(isoHandlers, null)
     }
 
     static void summaryHandler(select, isoHandler) {
@@ -62,6 +72,10 @@ class SummaryFactory {
         summary.navBarOverflow = this.isoHandlers.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow.add(isoHandlers.commonHandlers.createXmlNavBarItem())
         summary.content = this.isoHandlers.rootPackageEl(metadata)
+
+        if (summaryCustomizer != null) {
+            summaryCustomizer(summary);
+        }
 
         return summary
     }
