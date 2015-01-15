@@ -151,7 +151,12 @@ public class Handlers {
             def published = hasIndexValue("_groupPublished", "all")
             def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
             summary.actions << publishAction
-            if (!published && env.indexInfo.get("_valid").contains("1")) {
+
+            def isValid = env.indexInfo.get("_valid")
+            if (isValid == null) {
+                isValid = '-1';
+            }
+            if (!published && isValid.contains("1")) {
                 publishAction.liClasses = ""
             }
             def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")

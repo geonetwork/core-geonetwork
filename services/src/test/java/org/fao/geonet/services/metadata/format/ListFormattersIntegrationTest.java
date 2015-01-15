@@ -33,9 +33,9 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
-        assertFormattersForSchema(true, "iso19139", listService, "full_view", "xsl-view");
+        assertFormattersForSchema(true, "iso19139", listService, "full_view");
         assertFormattersForSchema(false, "iso19139", listService, "full_view", "xsl-view", "partial_view");
-        assertFormattersForSchema(true, "dublin-core", listService, "full_view", "xsl-view");
+        assertFormattersForSchema(true, "dublin-core", listService, "full_view");
     }
 
     private void assertFormattersForSchema(boolean publishedOnly,String schema, ListFormatters listService,

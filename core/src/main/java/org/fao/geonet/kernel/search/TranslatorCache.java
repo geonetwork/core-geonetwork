@@ -51,7 +51,7 @@ public class TranslatorCache {
             }
 
         }
-        this.cache.put(key, Optional.of(value));
+        this.cache.put(key, Optional.fromNullable(value));
     }
 
 

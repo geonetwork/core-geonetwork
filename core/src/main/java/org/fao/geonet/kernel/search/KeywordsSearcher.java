@@ -106,7 +106,6 @@ public class KeywordsSearcher {
     /**
      * TODO javadoc.
      *
-     * @param srvContext servicecontext
      * @param params params
      * @throws Exception hmm
      */

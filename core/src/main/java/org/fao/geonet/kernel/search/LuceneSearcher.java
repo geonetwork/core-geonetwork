@@ -906,7 +906,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
         Filter filter;
         if (spatialfilter == null) {
             filter = duplicateRemovingFilter;

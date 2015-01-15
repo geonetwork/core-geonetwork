@@ -36,7 +36,7 @@ public class XmlRequest extends AbstractHttpRequest {
 
     XmlRequest(String host, int port, String protocol, GeonetHttpRequestFactory requestFactory)
 	{
-        super(protocol, host, port, null);
+        super(protocol, host, port, requestFactory);
 
         setMethod(Method.GET);
 	}

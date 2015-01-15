@@ -70,7 +70,9 @@ public class GeonetTestFixture {
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);
-        FILE_SYSTEM_POOL.release(currentFs);
+        if (currentFs != null) {
+            FILE_SYSTEM_POOL.release(currentFs);
+        }
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
@@ -94,7 +96,8 @@ public class GeonetTestFixture {
                                    !entry.toString().contains("removed") &&
                                    !entry.toString().contains("metadata_subversion") &&
                                    !entry.toString().contains("upload") &&
-                                   !entry.toString().contains("resources" + File.separator + "xml");
+                                   !entry.toString().contains("index") &&
+                                   !entry.toString().contains("resources");
                         }
                     });
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
