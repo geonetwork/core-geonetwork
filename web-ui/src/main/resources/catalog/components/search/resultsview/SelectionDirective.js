@@ -145,8 +145,14 @@
 
       }
     };
-
   }]);
 
+  module.directive('gnContributeWidget', [ function() {
 
+    return {
+      restrict: 'A',
+      templateUrl: '../../catalog/components/search/resultsview/partials/' +
+          'contribute-widget.html'
+      };
+  }]);
 })();
