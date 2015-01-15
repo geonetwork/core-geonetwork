@@ -1799,7 +1799,7 @@ public class DataManager {
         }
 
         //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(schema, md);
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
