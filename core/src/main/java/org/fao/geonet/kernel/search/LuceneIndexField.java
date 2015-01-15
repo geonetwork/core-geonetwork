@@ -81,4 +81,5 @@ public class LuceneIndexField {
 	public static final String VALID = "_valid";
 	public static final String WEST = "westBL";
 
+    public static final String WITHHELD_OP_PREFIX = "_withheld_";
 }

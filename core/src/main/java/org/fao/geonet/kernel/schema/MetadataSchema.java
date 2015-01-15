@@ -27,21 +27,30 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.util.*;
-
-import org.fao.geonet.domain.*;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronCriteriaGroupId;
+import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 //==============================================================================
 
@@ -450,7 +459,8 @@ public class MetadataSchema
      * @param operation
      * @return The XPath to select element to filter or null
      */
-    public Pair<String, Element> getOperationFilter(ReservedOperation operation) {
+    @Nullable
+    public Pair<String, Element> getOperationFilter(@Nonnull ReservedOperation operation) {
         return hmOperationFilters.get(operation.name());
     }
 

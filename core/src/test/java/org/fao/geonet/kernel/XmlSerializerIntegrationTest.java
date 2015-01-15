@@ -1,11 +1,24 @@
 package org.fao.geonet.kernel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.vividsolutions.jts.util.AssertionFailedException;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Comment;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -14,22 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
@@ -39,7 +43,6 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     MetadataRepository _metadataRepo;
 
-	private static final String OWNER_ID = "1234";
     private static final String XPATH_WITHHELD = "*//*[@gco:nilReason = 'withheld']";
     private static final String XPATH_DOWNLOAD = "*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']";
     private static final String XPATH_DYNAMIC = "*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]";
@@ -49,9 +52,10 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                     Geonet.Namespaces.GMD);
 
     final Metadata metadata = new Metadata();
-	{
-		InputStream in = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
-		try {
+
+    {
+        InputStream in = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
+        try {
             String data = IOUtils.toString(in);
             metadata.setData(data)
                     .setUuid("uuid");
@@ -63,11 +67,11 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                     .setSourceId("sourceid");
 
         } catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			IOUtils.closeQuietly(in);
-		}
-	}
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+    }
 
     private int _mdId;
 
@@ -99,36 +103,37 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         setSchemaFilters(true, true);
         this._mdId = _metadataRepo.save(metadata).getId();
     }
-	@Test
-	public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
+
+    @Test
+    public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
         setSchemaFilters(false, true);
-		assertHiddenElements(false, false);
-	}
+        assertHiddenElements(false, false);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
         setSchemaFilters(true, true);
-		Field field = ServiceContext.class.getDeclaredField("THREAD_LOCAL_INSTANCE");
-		field.setAccessible(true);
-		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
-		threadLocalInstance.set(null);
-		assertHiddenElements(true);
-	}
+        Field field = ServiceContext.class.getDeclaredField("THREAD_LOCAL_INSTANCE");
+        field.setAccessible(true);
+        InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
+        threadLocalInstance.set(null);
+        assertHiddenElements(true);
+    }
 
-	@Test
-	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-		mockServiceContext(true, false, false);
-		
-		assertHiddenElements(false);
-	}
+    @Test
+    public void testInternalSelectHidingWithheldAdministrator() throws Exception {
+        mockServiceContext(true, false, false);
 
-	@Test
-	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-		mockServiceContext(false, false, false);
-		
-		assertHiddenElements(true);
-	}
+        assertHiddenElements(false);
+    }
+
+    @Test
+    public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
+        mockServiceContext(false, false, false);
+
+        assertHiddenElements(true);
+    }
 
     @Test
     public void testInternalSelectHidingDownloadAndDynamicNotLoggedIn() throws Exception {
@@ -146,33 +151,62 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         assertDynamicElements(true);
     }
 
-	@Test
-	public void testInternalCompleteHidingHiddenElement() throws Exception {
-		mockServiceContext(false, false, false);
+    @Test
+    public void testInternalCompleteHidingHiddenElement() throws Exception {
+        mockServiceContext(false, false, false);
 
-		Element loadedMetadata = _xmlSerializer.internalSelect("1", false);
-		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
+        List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
-		assertEquals(0, withheld.size());
-	}
+        for (Object o : withheld) {
+            Element el = (Element) o;
+            assertEquals(1, el.getContentSize());
+            assertTrue(el.getContent(0) instanceof Comment);
+            assertEquals(XmlSerializer.WITH_HELD_COMMENT + ReservedOperation.editing.name(), el.getContent(0).getValue());
+        }
+    }
 
-	@Test
-	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-		mockServiceContext(false, false, false);
-		
-		assertHiddenElements(true);
-	}
-	
-	@Test
-	public void testInternalSelectHidingWithheldOwner() throws Exception {
-		mockServiceContext(true, false, false);
-		
-		assertHiddenElements(false);
-	}
+    @Test
+    public void testInternalSelectHidingWithheldNotOwner() throws Exception {
+        mockServiceContext(false, false, false);
 
-	private ServiceContext mockServiceContext(boolean canEdit,
+        assertHiddenElements(true);
+    }
+
+    @Test
+    public void testInternalSelectHidingWithheldOwner() throws Exception {
+        mockServiceContext(true, false, false);
+
+        assertHiddenElements(false);
+    }
+
+    @Test(expected = AssertionFailedException.class)
+    public void testUpdateWithheldEditing() throws Exception {
+        final ServiceContext serviceContext = mockServiceContext(false, true, true);
+        loadAndUpdate(serviceContext);
+    }
+
+    @Test(expected = AssertionFailedException.class)
+    public void testUpdateWithheldDownload() throws Exception {
+        final ServiceContext serviceContext = mockServiceContext(true, false, true);
+        loadAndUpdate(serviceContext);
+    }
+
+    @Test(expected = AssertionFailedException.class)
+    public void testUpdateWithheldDynamic() throws Exception {
+        final ServiceContext serviceContext = mockServiceContext(true, true, false);
+        loadAndUpdate(serviceContext);
+    }
+
+    private void loadAndUpdate(ServiceContext serviceContext) throws Exception {
+        final String id = "" + _mdId;
+        Element loadedMetadata = _xmlSerializer.internalSelect(id, false);
+        _xmlSerializer.update(id, loadedMetadata, new ISODate().getDateAndTime(), false, "uuid", serviceContext);
+    }
+
+    private ServiceContext mockServiceContext(boolean canEdit,
                                               boolean canDownload,
-                                              boolean canDynamic) throws Exception{//boolean isAdmin, String userId) {
+                                              boolean canDynamic) throws Exception {//boolean isAdmin, String userId) {
         ServiceContext context = mock(ServiceContext.class);
         doCallRealMethod().when(context).setAsThreadLocal();
 
@@ -186,51 +220,52 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         GeonetContext gc = mock(GeonetContext.class);
         when(gc.getBean(AccessManager.class)).thenReturn(accessManager);
         when(context.getHandlerContext(Geonet.CONTEXT_NAME)).thenReturn(gc);
-        
-		context.setAsThreadLocal();
-		return context;
-	}
 
-	private void assertHiddenElements(boolean checkElementsAreHidden) throws Exception {
-		assertHiddenElements(true, checkElementsAreHidden);
-	}
+        context.setAsThreadLocal();
+        return context;
+    }
 
-	private void assertHiddenElements(boolean isEnabled, boolean checkElementsAreHidden) throws Exception {
-		final int numberMdResolution;
-		final int numberAttributes;
-		if(checkElementsAreHidden) {
-			numberMdResolution = 0;
-			numberAttributes = 1;
-		} else {
-			numberMdResolution = 1;
-			numberAttributes = 2;
-		}
+    private void assertHiddenElements(boolean checkElementsAreHidden) throws Exception {
+        assertHiddenElements(true, checkElementsAreHidden);
+    }
 
-		Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
-		List<?> resolutionElem = Xml.selectNodes(loadedMetadata,
+    private void assertHiddenElements(boolean isEnabled, boolean checkElementsAreHidden) throws Exception {
+        final int numberMdResolution;
+        final int numberAttributes;
+        if (checkElementsAreHidden) {
+            numberMdResolution = 0;
+            numberAttributes = 1;
+        } else {
+            numberMdResolution = 1;
+            numberAttributes = 2;
+        }
+
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
+        List<?> resolutionElem = Xml.selectNodes(loadedMetadata,
                 "*//gmd:MD_Resolution",
                 XML_SELECT_NAMESPACE);
-		assertEquals(numberMdResolution, resolutionElem.size());
-		
-		@SuppressWarnings("unchecked")
-		List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
+        assertEquals(numberMdResolution, resolutionElem.size());
+
+        @SuppressWarnings("unchecked")
+        List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
                 XPATH_WITHHELD, Arrays.asList(Geonet.Namespaces.GCO));
-		assertEquals(1, withheld.size());
-		assertEquals(numberAttributes, withheld.get(0).getAttributes().size());
-		assertEquals("withheld", withheld.get(0).getAttributeValue("nilReason", Geonet.Namespaces.GCO));
-		
-		int actualNumberOfChildElements = 0;
-		for (Object element : withheld.get(0).getChildren()) {
-			if (element instanceof Element) {
-				actualNumberOfChildElements += 1;
-			}
-		}
-		assertEquals(numberMdResolution, actualNumberOfChildElements);
-		
-		if(checkElementsAreHidden) {
-			assertEquals("", withheld.get(0).getText());
-		}
-	}
+        assertEquals(1, withheld.size());
+        assertEquals(numberAttributes, withheld.get(0).getAttributes().size());
+        assertEquals("withheld", withheld.get(0).getAttributeValue("nilReason", Geonet.Namespaces.GCO));
+
+        int actualNumberOfChildElements = 0;
+        for (Object element : withheld.get(0).getChildren()) {
+            if (element instanceof Element) {
+                actualNumberOfChildElements += 1;
+            }
+        }
+        assertEquals(numberMdResolution, actualNumberOfChildElements);
+
+        if (checkElementsAreHidden) {
+            assertEquals("", withheld.get(0).getText());
+        }
+    }
+
     private void assertDownloadElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
         Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
@@ -240,6 +275,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                 XML_SELECT_NAMESPACE);
         assertEquals(numberDownload, withheld.size());
     }
+
     private void assertDynamicElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
         Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);

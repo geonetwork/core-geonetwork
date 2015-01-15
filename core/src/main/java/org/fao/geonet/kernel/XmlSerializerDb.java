@@ -23,14 +23,12 @@
 
 package org.fao.geonet.kernel;
 
-import java.sql.SQLException;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+
+import java.sql.SQLException;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
@@ -94,7 +92,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @throws SQLException
      */
 	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
-		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
+		updateDb(id, xml, changeDate, updateDateStamp, uuid);
 	}
 
     /**

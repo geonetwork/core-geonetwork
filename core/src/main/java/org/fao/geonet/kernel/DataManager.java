@@ -40,16 +40,6 @@ import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.search.index.IndexingList;
-import org.fao.geonet.kernel.search.index.IndexingTask;
-import org.fao.geonet.repository.specification.*;
-import org.fao.geonet.repository.statistic.PathSpec;
-import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.Xml.ErrorHandler;
-
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -101,7 +91,9 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
@@ -127,6 +119,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -632,6 +625,12 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
+
+            final MetadataSchema metadataSchema = schemaMan.getSchema(schema);
+            addWithheldFields(metadataSchema, md, moreFields, ReservedOperation.editing);
+            addWithheldFields(metadataSchema, md, moreFields, ReservedOperation.download);
+            addWithheldFields(metadataSchema, md, moreFields, ReservedOperation.dynamic);
+
             searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
@@ -641,6 +640,24 @@ public class DataManager {
                 indexing.remove(metadataId);
             } finally {
                 indexLock.unlock();
+            }
+        }
+    }
+
+    private void addWithheldFields(MetadataSchema schema, Element md, Vector<Element> moreFields, ReservedOperation op) throws
+            JDOMException {
+        final Pair<String, Element> operationFilter = schema.getOperationFilter(op);
+        if (operationFilter == null) {
+            return;
+        }
+        String xpath = operationFilter.one();
+        final List<?> withheld = Xml.selectNodes(md, xpath, schema.getNamespaces());
+
+        for (Object o : withheld) {
+            Element el = (Element) o;
+            if (el.getContentSize() > 0) {
+                moreFields.add(SearchManager.makeField(LuceneIndexField.WITHHELD_OP_PREFIX + op.name(), "y", false, true));
+                return;
             }
         }
     }
@@ -3392,7 +3409,7 @@ public class DataManager {
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = servContext.getBean(DataManager.class).getSchema(metadata.getDataInfo().getSchemaId());
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            XmlSerializer.removeFilteredElement(md, editXpathFilter, mds.getNamespaces());
+            XmlSerializer.removeFilteredElement(md, ReservedOperation.editing, editXpathFilter, mds.getNamespaces());
 
             String uuid = getMetadataUuid( metadataId);
             servContext.getBean(MetadataNotifierManager.class).updateMetadata(md, metadataId, uuid, servContext);

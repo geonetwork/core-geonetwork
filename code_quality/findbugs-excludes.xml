@@ -154,6 +154,7 @@
 			<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
 			<Class name="org.fao.geonet.kernel.search.SearchManager" />
 			<Class name="org.fao.geonet.kernel.XmlSerializer" />
+			<Class name="jeeves.config.springutil.JeevesDelegatingFilterProxy" />
 		</Or>
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>

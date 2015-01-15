@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+
+    <bean id="threadLocalCleaner" class="jeeves.ThreadLocalCleaner"/>
     <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
     <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
     <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>

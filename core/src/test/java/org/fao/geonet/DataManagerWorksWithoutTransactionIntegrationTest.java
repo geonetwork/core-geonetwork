@@ -46,7 +46,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                                 new ISODate().getDateAndTime(), false, false);
                         Element newMd = new Element("MD_Metadata", GMD).addContent(new Element("fileIdentifier",
                                 GMD).addContent(new Element("CharacterString", GCO)));
-
+                        _dataManager.indexMetadata(mdId, true);
                         Metadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                                 new ISODate().getDateAndTime(), false);
                         assertNotNull(updateMd);

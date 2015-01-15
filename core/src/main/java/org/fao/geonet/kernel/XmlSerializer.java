@@ -23,11 +23,17 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Sets;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.ThreadLocalCleaner;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.apache.log4j.Priority;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -35,30 +41,47 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
+import org.jdom.Comment;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import javax.annotation.PostConstruct;
 
 /**
  * This class is responsible of reading and writing xml on the database. 
  * It works on tables like (id, data, lastChangeDate).
  */
 public abstract class XmlSerializer {
-	public static class ThreadLocalConfiguration {
+    private static final Set<ReservedOperation> WITHHELD_OPS = Sets.newHashSet(
+            ReservedOperation.editing,
+            ReservedOperation.dynamic,
+            ReservedOperation.download);
+    private static final Set<String> WITHHELD_FIELDS_IN_INDEX = Sets.newHashSet();
+    static {
+        for (ReservedOperation withheldOp : WITHHELD_OPS) {
+            WITHHELD_FIELDS_IN_INDEX.add(LuceneIndexField.WITHHELD_OP_PREFIX + withheldOp.name());
+        }
+    }
+    @VisibleForTesting
+    static final String WITH_HELD_COMMENT = "Data_Withheld_";
+
+    public static class ThreadLocalConfiguration {
 	    private boolean forceFilterEditOperation = false;
 
         public boolean isForceFilterEditOperation() {
@@ -70,7 +93,11 @@ public abstract class XmlSerializer {
 	}
 
     @Autowired
+    protected SchemaManager schemaManager;
+    @Autowired
     protected SettingManager _settingManager;
+    @Autowired
+    protected SearchManager searchManager;
     @Autowired
     protected DataManager _dataManager;
     @Autowired
@@ -78,19 +105,17 @@ public abstract class XmlSerializer {
     @Autowired
     private ThreadLocalCleaner threadLocalCleaner;
 
-	private static ThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<>();
-	public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
-	    ThreadLocalConfiguration config = configThreadLocal.get();
-	    if(config == null && setIfNotPresent) {
-	        config = new ThreadLocalConfiguration();
-	        configThreadLocal.set(config);
-	    }
-	    
-	    return config;
-	}
-	public static void clearThreadLocal() {
-		configThreadLocal.set(null);
-	}
+    private static ThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<>();
+
+    public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
+        ThreadLocalConfiguration config = configThreadLocal.get();
+        if (config == null && setIfNotPresent) {
+            config = new ThreadLocalConfiguration();
+            configThreadLocal.set(config);
+        }
+
+        return config;
+    }
 
     @PostConstruct
     void init() {
@@ -119,18 +144,6 @@ public abstract class XmlSerializer {
 		}
 	}
 
-    public boolean isLoggingEmptyWithHeld() {
-        if (_settingManager == null) {
-            return false;
-        }
-
-        String enableLogging = _settingManager.getValue("system/hidewithheldelements/enableLogging");
-        if (enableLogging != null) {
-            return enableLogging.equals("true");
-        } else {
-            return false;
-        }
-    }
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
      *
@@ -143,15 +156,13 @@ public abstract class XmlSerializer {
 	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
         Metadata metadata = _metadataRepository.findOne(id);
 
-		if (metadata == null)
-			return null;
+        if (metadata == null)
+            return null;
 
-		String xmlData = metadata.getData();
-		Element metadataXml = Xml.loadString(xmlData, false);
+        String xmlData = metadata.getData();
+        Element metadataXml = Xml.loadString(xmlData, false);
 
-        logEmptyWithheld(id, metadataXml, "XmlSerializer.internalSelect", isIndexingTask);
-
-		if (!isIndexingTask) {
+        if (!isIndexingTask) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -161,93 +172,39 @@ public abstract class XmlSerializer {
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
             boolean filterEditOperationElements = editXpathFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
-            if(context != null) {
+            if (context != null) {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 AccessManager am = gc.getBean(AccessManager.class);
                 if (editXpathFilter != null) {
                     boolean canEdit = am.canEdit(context, id);
-                    if(canEdit) {
+                    if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
                     boolean canDownload = am.canDownload(context, id);
-                    if(!canDownload) {
-                        removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
+                    if (!canDownload) {
+                        removeFilteredElement(metadataXml, ReservedOperation.download, downloadXpathFilter, namespaces);
                     }
                 }
                 Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
                     boolean canDynamic = am.canDynamic(context, id);
-                    if(!canDynamic) {
-                      removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                    if (!canDynamic) {
+                        removeFilteredElement(metadataXml, ReservedOperation.dynamic, dynamicXpathFilter, namespaces);
                     }
                 }
-    		}
-    		if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
-                removeFilteredElement(metadataXml, editXpathFilter, namespaces);
             }
-		}
-		return (Element) metadataXml.detach();
-	}
-    private static final List<Namespace> XML_SELECT_NAMESPACE = Arrays.asList(Geonet.Namespaces.GCO, Geonet.Namespaces.GMD);
-    private static final String WITHHELD = "withheld";
-    @SuppressWarnings("serial")
-    private static final Filter EMPTY_WITHHELD = new Filter() {
-
-        @Override
-        public boolean matches(Object obj) {
-            if (obj instanceof Element) {
-                Element elem = (Element) obj;
-                String withheld = elem.getAttributeValue("nilReason", Geonet.Namespaces.GCO);
-                if(WITHHELD.equalsIgnoreCase(withheld) && elem.getChildren().size() == 0 && elem.getTextTrim().isEmpty()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-    private boolean logEmptyWithheld(String id, Element metadata, String methodName, boolean isIndexingTask) {
-        if (isLoggingEmptyWithHeld()) {
-            if (Log.isEnabledFor(Geonet.DATA_MANAGER, Priority.WARN_INT)) {
-                Iterator<?> emptyWithheld = metadata.getDescendants(EMPTY_WITHHELD);
-                if (emptyWithheld.hasNext()) {
-                    StringBuilder withheld = new StringBuilder();
-                    while (emptyWithheld.hasNext()) {
-                        Element next = (Element) emptyWithheld.next();
-                        withheld.append("\n    ");
-                        xpath(withheld, next);
-                    }
-                    Log.warning(Geonet.DATA_MANAGER, "[" + WITHHELD + "] " +
-                            "In method [" + methodName + "] Metadata id=" + id +
-                            " has withheld elements that don't contain any data: " + withheld +
-                            ". Is indexing: " + isIndexingTask);
-
-                    return true;
-                }
+            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+                removeFilteredElement(metadataXml, ReservedOperation.editing, editXpathFilter, namespaces);
             }
         }
-        return false;
+        return (Element) metadataXml.detach();
     }
-    private void xpath(StringBuilder buffer, Element next) {
-		if(next.getParentElement() != null) {
-			xpath(buffer, next.getParentElement());
-			buffer.append("/");
-		}
-		
-		String name = next.getName();
-		Namespace namespace = next.getNamespace();
-		buffer.append(namespace.getPrefix()).append(":").append(name);
-		if(next.getParentElement() != null) {
-			List<?> children = next.getParentElement().getChildren(name, namespace);
-			if(children.size() > 1) {
-				buffer.append('[').append(children.indexOf(next)+1).append(']');
-			}
-		}
-	}
 
     public static void removeFilteredElement(Element metadata,
+                                             ReservedOperation operation,
                                              final Pair<String, Element> xPathAndMarkedElement,
                                              List<Namespace> namespaces) throws JDOMException {
         // xPathAndMarkedElement seem can be null in some schemas like dublin core
@@ -264,16 +221,17 @@ public abstract class XmlSerializer {
                 Element element = (Element) object;
                 if(mark != null) {
                     element.removeContent();
-
+                    element.addContent(new Comment(WITH_HELD_COMMENT + operation.name()));
                     // Remove attributes
                     @SuppressWarnings("unchecked")
-                    List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+                    List<Attribute> atts = new ArrayList<>(element.getAttributes());
                     for (Attribute attribute : atts) {
                         attribute.detach();
                     }
 
                     // Insert attributes or children element of the mark
-                    List<Attribute> markAtts = new ArrayList<Attribute>(mark.getAttributes());
+                    @SuppressWarnings("unchecked")
+                    List<Attribute> markAtts = new ArrayList<>(mark.getAttributes());
                     for (Attribute attribute : markAtts) {
                         element.setAttribute((Attribute) attribute.clone());
                     }
@@ -304,8 +262,7 @@ public abstract class XmlSerializer {
 		if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
-        Metadata savedMetadata = _metadataRepository.save(newMetadata);
-		return savedMetadata;
+        return _metadataRepository.save(newMetadata);
 	}
 
     /**
@@ -318,51 +275,23 @@ public abstract class XmlSerializer {
      * @param uuid null to not update metadata uuid column or the uuid value to be used for the update.
      * @throws SQLException
      */
-	protected void updateDb(final String id, final Element xml, final String changeDate, final String root,
+    protected void updateDb(final String id, final Element xml, final String changeDate,
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
-        if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb", false)) {
-            StackTraceElement[] stacktrace = new Exception("").getStackTrace();
-            StringBuffer info = new StringBuffer();
-            info.append('[').append(WITHHELD).append(']');
-            info.append(" Metadata id=").append(id);
-            info.append(" Extra information related to updating the metadata with an empty withheld element:");
-            final String indent = "\n    ";
-            ServiceContext serviceContext = ServiceContext.get();
-            if (serviceContext != null) {
-                UserSession userSession = serviceContext.getUserSession();
-                if (userSession != null) {
-                    UserSession session = userSession;
-                    info.append(indent).append("User: ").append(session.getUsername());
-                    info.append(indent).append("Userid: ").append(session.getUserId());
-                }
-                info.append(indent).append("IP: ").append(serviceContext.getIpAddress());
-            }
-
-            info.append(indent).append("StackTrace: ");
-            final String doubleIndent = "\n        ";
-            for (int i = 0; i < stacktrace.length; i++) {
-                StackTraceElement traceElement = stacktrace[i];
-                if (traceElement.getClassName().startsWith("org.fao.geonet")) {
-                    info.append(doubleIndent).append(traceElement.getClassName()).append('.').append(traceElement.getMethodName())
-                            .append('(').append(traceElement.getLineNumber()).append(')');
-                }
-            }
-            Log.warning(Geonet.DATA_MANAGER, info.toString());
-        }
-
-		if (resolveXLinks()) Processor.removeXLink(xml);
+        if (resolveXLinks()) Processor.removeXLink(xml);
 
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
 
-        md.setDataAndFixCR(xml);
+        assertWithheldElementsAreFull(md, xml, schemaManager.getSchema(md.getDataInfo().getSchemaId()));
 
-        if (updateDateStamp)  {
-            if (changeDate == null)	{
-                md.getDataInfo().setChangeDate( new ISODate());
+        md.setDataAndFixCR(xml);
+        md.getDataInfo().setRoot(xml.getQualifiedName());
+        if (updateDateStamp) {
+            if (changeDate == null) {
+                md.getDataInfo().setChangeDate(new ISODate());
             } else {
-                md.getDataInfo().setChangeDate( new ISODate(changeDate));
+                md.getDataInfo().setChangeDate(new ISODate(changeDate));
             }
         }
 
@@ -371,7 +300,74 @@ public abstract class XmlSerializer {
         }
 
         _metadataRepository.save(md);
-	}
+    }
+
+    private void assertWithheldElementsAreFull(Metadata unmodifiedMetadata, Element updatedXml, MetadataSchema schema) {
+        try (IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1)){
+            final IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
+            final Term idTerm = new Term(LuceneIndexField.ID, String.valueOf(unmodifiedMetadata.getId()));
+            final TopDocs doc = searcher.search(new TermQuery(idTerm), 1);
+            Assert.equals(1, doc.totalHits, "No document with id '" + unmodifiedMetadata.getId() + "' was found in the index");
+
+            final Document document = indexAndTaxonomy.indexReader.document(doc.scoreDocs[0].doc, WITHHELD_FIELDS_IN_INDEX);
+            Set<ReservedOperation> checkRequired = Sets.newHashSet();
+            for (String field : WITHHELD_FIELDS_IN_INDEX) {
+                String value = document.get(field);
+                if ("y".equals(value)) {
+                    String opName = field.substring(LuceneIndexField.WITHHELD_OP_PREFIX.length());
+                    final ReservedOperation op = ReservedOperation.valueOf(opName);
+                    checkRequired.add(op);
+                }
+            }
+
+            if (!checkRequired.isEmpty()) {
+                final Iterator descendants = updatedXml.getDescendants();
+                while (descendants.hasNext()) {
+                    Object next = descendants.next();
+                    if (next instanceof Element) {
+                        Element element = (Element) next;
+                        if (hasWithheldComment(element)) {
+                            throw new IllegalStateException("ERROR trying to save a metadata where withheld data has been stripped");
+                        }
+                    }
+                }
+
+                final Element unmodifiedXml = unmodifiedMetadata.getXmlData(false);
+                for (ReservedOperation operation : checkRequired) {
+                    final Pair<String, Element> operationFilter = schema.getOperationFilter(operation);
+                    if (operationFilter != null) {
+                        String xpath = operationFilter.one();
+                        if (Xml.selectNodes(updatedXml, xpath, schema.getNamespaces()).isEmpty()) {
+                            int numWithheld = Xml.selectNodes(unmodifiedXml, xpath, schema.getNamespaces()).size();
+                            Throwable e = new RuntimeException();
+                            Log.warning(Geonet.DATA_MANAGER, "Possible error with withheld elements.  Before update there was: " + numWithheld + " after update there were none.", e);
+                        }
+                    }
+
+                }
+            }
+        } catch (IOException | JDOMException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean hasWithheldComment(Element element) {
+        final List content = element.getContent();
+        for (Object o : content) {
+            if (o instanceof Comment) {
+                Comment comment = (Comment) o;
+                final String text = comment.getText();
+                if (text != null) {
+                    for (ReservedOperation op : WITHHELD_OPS) {
+                        if (text.equals(WITH_HELD_COMMENT + op.name())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Deletes an xml element given its id.

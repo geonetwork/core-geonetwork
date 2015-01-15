@@ -31,7 +31,6 @@ import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -123,7 +122,7 @@ public class XmlSerializerSvn extends XmlSerializer {
 	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
 
 		// old XML comes from the database
-		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
+		updateDb(id, xml, changeDate, updateDateStamp, uuid);
 
 		if (svnMan == null) { // do nothing
 			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");

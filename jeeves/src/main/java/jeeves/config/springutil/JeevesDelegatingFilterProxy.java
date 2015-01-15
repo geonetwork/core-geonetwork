@@ -6,15 +6,10 @@ import org.fao.geonet.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -24,7 +19,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,14 +34,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 5:15 PM
  */
 public class JeevesDelegatingFilterProxy extends GenericFilterBean {
-    private static ThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<>();
+    private static ThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
     private HashMap<String, Filter> _nodeIdToFilterMap = new HashMap<String, Filter>();
 
     @Autowired
-    private ThreadLocalCleaner threadLocalCleaner;
+    private ApplicationContext applicationContext;
 
-    @PostConstruct
-    private void init() {
+    public void init() {
+        ThreadLocalCleaner threadLocalCleaner = this.applicationContext.getBean(ThreadLocalCleaner.class);
         ApplicationContextHolder.init(threadLocalCleaner.createInheritableThreadLocal(ConfigurableApplicationContext.class));
         applicationContextAttributeKey = threadLocalCleaner.createInheritableThreadLocal(String.class);
     }

@@ -24,6 +24,7 @@
     -->
     <import resource="config-versioning.xml"/>
 
+    <bean id="threadLocalCleaner" class="jeeves.ThreadLocalCleaner"/>
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
     <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
         <property name="numberOfConcurrentRequests" value="30" />
