@@ -573,7 +573,7 @@
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="$refGeoAreaKeywords/../geonet:element/@ref"/>
-								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
+								<xsl:with-param name="thesaurusId" select="'external.reference-geographical-area.NVS.C19'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refGeoAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
@@ -597,7 +597,7 @@
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
-								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-discovery-parameter'"/>
+								<xsl:with-param name="thesaurusId" select="'external.parameter.NVS.P02'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
@@ -891,7 +891,7 @@
               <xsl:with-param name="elementRef" select="../geonet:element/@ref" />
               <xsl:with-param name="widgetMode" select="'combo'" />
               <xsl:with-param name="thesaurusId"
-                select="'local.use-limitation.seadatanet.use-limitation'" />
+                select="'external.use-limitation.NVS.L08'" />
               <xsl:with-param name="listOfKeywords"
                 select="replace(replace(string-join(gmx:Anchor, '!,!'), '''', '\\'''), '!', '''')" />
               <xsl:with-param name="listOfTransformations"

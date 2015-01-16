@@ -296,7 +296,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet-ocean-discovery-parameter">geonetwork.thesaurus.local.parameter.seadatanet-ocean-discovery-parameter</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P02">geonetwork.thesaurus.external.parameter.NVS.P02</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>

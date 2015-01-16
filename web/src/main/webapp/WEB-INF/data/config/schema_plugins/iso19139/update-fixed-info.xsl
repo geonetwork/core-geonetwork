@@ -472,7 +472,7 @@
     <xsl:variable name="p02" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords/gmd:MD_Keywords
                 [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet-ocean-discovery-parameter')]/gmd:keyword/*, ' - ')"/>
+                'NVS.P02')]/gmd:keyword/*, ' - ')"/>
 
 
     <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
