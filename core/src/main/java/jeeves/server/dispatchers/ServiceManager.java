@@ -74,6 +74,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 //=============================================================================
 public class ServiceManager {
@@ -361,6 +362,22 @@ public class ServiceManager {
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 
+        String ip = request.getRemoteAddr();
+
+        final HttpSession httpSession = request.getSession(true);
+        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+        if (session == null) {
+            session = new UserSession();
+
+            httpSession.setAttribute(Jeeves.Elem.SESSION, session);
+            session.setsHttpSession(httpSession);
+
+            if (Log.isDebugEnabled(Log.REQUEST)) {
+                Log.debug(Log.REQUEST, "Session created for client : " + ip);
+            }
+        }
+
+        context.setUserSession(session);
         return context;
     }
 
