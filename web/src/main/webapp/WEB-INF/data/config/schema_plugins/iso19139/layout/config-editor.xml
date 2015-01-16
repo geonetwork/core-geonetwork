@@ -1458,11 +1458,11 @@
           displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.medsea.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.data.delivery.mechanism" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.data.delivery.mechanism" maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P03" maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P01" maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P02" maxtags="1"/>
