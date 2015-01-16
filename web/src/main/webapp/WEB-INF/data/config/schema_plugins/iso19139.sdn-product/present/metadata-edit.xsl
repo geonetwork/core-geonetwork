@@ -551,7 +551,7 @@
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
-								<xsl:with-param name="thesaurusId" select="'local.feature-type.seadatanet.feature-type'"/>
+								<xsl:with-param name="thesaurusId" select="'external.feature-type.NVS.L02'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
