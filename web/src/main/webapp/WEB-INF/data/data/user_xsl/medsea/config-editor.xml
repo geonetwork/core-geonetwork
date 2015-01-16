@@ -1463,7 +1463,7 @@
         <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
         <thesaurus key="external.theme.medsea.data.delivery.mechanism" maxtags="1"/>
-        <thesaurus key="local.parameter.seadatanet.parameter.groups.P03" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P03" maxtags="1"/>
         <thesaurus key="local.parameter.seadatanet.parameter.usage.P01" maxtags="1"/>
         <thesaurus key="local.parameter.seadatanet-ocean-discovery-parameter" maxtags="1"/>
       </thesaurusList>
@@ -1489,7 +1489,7 @@
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet.parameter.groups.P03')]"/>
+                'parameter.NVS.P03')]"/>
 
           <field
                   name="sdn-parameter-discovery"

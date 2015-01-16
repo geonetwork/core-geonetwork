@@ -559,7 +559,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.seadatanet.parameter.groups.P03">geonetwork.thesaurus.local.parameter.seadatanet.parameter.groups.P03</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P03">geonetwork.thesaurus.external.parameter.NVS.P03</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
