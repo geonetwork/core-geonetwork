@@ -37,7 +37,6 @@ public class Matchers {
 
     def isContainerEl = {el ->
         !isBasicType(el) && !isSimpleTextEl(el) &&
-                el.name() != 'gmd:topicCategory' &&
                 !isTextEl(el) && !isUrlEl(el) &&
                 !isCodeListEl(el) && !hasCodeListChild(el) &&
                 !isDateEl(el) && !hasDateChild(el) &&
