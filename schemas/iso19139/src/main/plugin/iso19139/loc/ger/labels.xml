@@ -2729,4 +2729,19 @@
     <element name="gmd:MD_RepresentativeFraction">
         <label>Representative Fraction</label>
     </element>
+    <element name="gmd:MD_ScopeCode">
+        <label>Anwendungsbereich</label>
+    </element>
+    <element name="gmd:Country">
+        <label>Land</label>
+    </element>
+    <element name="gmd:LanguageCode">
+        <label>Sprache</label>
+    </element>
+    <element name="gmd:statement">
+        <label>Erklärung</label>
+    </element>
+    <element name="gmd:LI_Lineage">
+        <label>Abstammung</label>
+    </element>
 </labels>

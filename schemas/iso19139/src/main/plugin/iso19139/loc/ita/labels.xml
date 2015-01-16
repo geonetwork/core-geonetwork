@@ -2774,4 +2774,19 @@ e di trasformazione.</label>
     <element name="gmd:DS_InitiativeTypeCode">
         <label>Tipo Initiative</label>
     </element>
+    <element name="gmd:MD_CharacterSetCode">
+        <label>Set dei caratteri dei metadati</label>
+    </element>
+    <element name="gmd:MD_SpatialRepresentationTypeCode">
+        <label>Tipo di rappresentazione spaziale</label>
+    </element>
+    <element name="gmd:MD_MaintenanceFrequencyCode">
+        <label>Frequenza di aggiornamento</label>
+    </element>
+    <element name="gmd:MD_ProgressCode" context="gmd:status">
+        <label>Stato di avanzamento</label>
+    </element>
+    <element name="gmd:Country" >
+        <label>Paese</label>
+    </element>
 </labels>
