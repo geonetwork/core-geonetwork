@@ -30,8 +30,9 @@ public class Handlers {
 
     def addDefaultHandlers() {
         handlers.add name: 'Text Elements', select: matchers.isTextEl, isoTextEl
+        handlers.add name: 'Simple Text Elements', select: matchers.isSimpleTextEl, isoSimpleTextEl
         handlers.add name: 'URL Elements', select: matchers.isUrlEl, isoUrlEl
-        handlers.add name: 'Simple Elements', select: matchers.isSimpleEl, isoSimpleEl
+        handlers.add name: 'Simple Elements', select: matchers.isBasicType, isoBasicType
         handlers.add name: 'Boolean Elements', select: matchers.isBooleanEl, isoBooleanEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
@@ -40,6 +41,7 @@ public class Handlers {
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
         handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
+        handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: false, isoSimpleTextEl
 
         handlers.skip name: "skip date parent element", select: matchers.hasDateChild, {it.children()}
         handlers.skip name: "skip codelist parent element", select: matchers.hasCodeListChild, {it.children()}
@@ -77,7 +79,12 @@ public class Handlers {
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
     def isoUrlEl = { isofunc.isoTextEl(it, isofunc.isoUrlText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
-    def isoSimpleEl = {isofunc.isoTextEl(it, it.'*'.text())}
+    def isoBasicType = {isofunc.isoTextEl(it, it.'*'.text())}
+    def isoSimpleTextEl = { isofunc.isoTextEl(it, it.text()) }
+    def isoSimpleTextElGrouped = { elems ->
+        def listItems = elems.findAll{!it.text().isEmpty()}.collect {it.text()};
+        handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
+    }
     def parseBool(text) {
         switch (text.trim().toLowerCase()){
             case "1":
