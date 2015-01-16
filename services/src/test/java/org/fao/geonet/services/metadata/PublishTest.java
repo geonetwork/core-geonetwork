@@ -201,7 +201,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         request.getSession(true).setAttribute(Jeeves.Elem.SESSION, context.getUserSession());
 
         SelectionManager sm = SelectionManager.getManager(context.getUserSession());
-        final HashSet<String> selection = Sets.newHashSet(metadataIds.get(0), metadataIds.get(1));
+        final HashSet<String> selection = Sets.newHashSet(toUUID(metadataIds.get(0)), toUUID(metadataIds.get(1)));
         sm.addAllSelection(SelectionManager.SELECTION_METADATA, selection);
 
         PublishReport report = publishService.unpublish("eng", request, null, false);
@@ -223,6 +223,10 @@ public class PublishTest extends AbstractServiceIntegrationTest {
 
         report = publishService.unpublish("eng", request, null, false);
         assertCorrectReport(report, 0, 0, 0, 2);
+    }
+
+    private String toUUID(String mdId) throws Exception {
+        return this.dataManager.getMetadataUuid(mdId);
     }
 
     private void assertCorrectReport(PublishReport report, int published, int unpublished, int unmodified, int disallowed) {

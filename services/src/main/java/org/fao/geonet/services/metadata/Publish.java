@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -32,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -111,6 +113,10 @@ public class Publish {
         final Specification<OperationAllowed> hasOperationIdIn = OperationAllowedSpecs.hasOperationIdIn(operationIds);
         while (iter.hasNext()) {
             String nextId = iter.next();
+            if (nextId == null) {
+                continue;
+            }
+
             int mdId = Integer.parseInt(nextId);
             final Specifications<OperationAllowed> allOpsSpec = Specifications.where(hasMetadataId(nextId)).and
                     (hasGroupIdIn).and(hasOperationIdIn);
@@ -134,7 +140,18 @@ public class Publish {
         if (commaSeparatedIds == null) {
             if (userSession != null) {
                 SelectionManager sm = SelectionManager.getManager(userSession);
-                return sm.getSelection(SelectionManager.SELECTION_METADATA).iterator();
+                final Iterator<String> selectionIter = sm.getSelection(SelectionManager.SELECTION_METADATA).iterator();
+                return Iterators.transform(selectionIter, new Function<String, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(String uuid) {
+                        try {
+                            return dataManager.getMetadataId(uuid);
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    }
+                });
             } else {
                 return Iterators.emptyIterator();
             }
@@ -158,7 +175,6 @@ public class Publish {
                 }
             };
         }
-
     }
 
     private void doUnpublish(ServiceContext serviceContext, PublishReport report, ArrayList<Integer> groupIds, Set<Integer> toIndex,
