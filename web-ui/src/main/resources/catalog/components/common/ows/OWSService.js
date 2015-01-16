@@ -59,9 +59,9 @@
           var parser = new ol.format.WMTSCapabilities();
           var result = parser.read(data);
 
-          result.contents.Layer = result.contents.layers;
-          result.contents.operationsMetadata = result.operationsMetadata;
-          return result.contents;
+          //result.contents.Layer = result.contents.layers;
+          result.Contents.operationsMetadata = result.operationsMetadata;
+          return result.Contents;
         };
 
         var mergeDefaultParams = function(url, defaultParams) {
@@ -156,11 +156,12 @@
           },
 
           getLayerInfoFromCap: function(name, capObj) {
-            for (var i = 0, len = capObj.layers.length;
+            var layers = capObj.layers || capObj.Layer ;
+            for (var i = 0, len = layers.length;
                  i < len; i++) {
-              if (name == capObj.layers[i].Name ||
-                  name == capObj.layers[i].identifier) {
-                return capObj.layers[i];
+              if (name == layers[i].Name ||
+                  name == layers[i].Identifier) {
+                return layers[i];
               }
             }
           }

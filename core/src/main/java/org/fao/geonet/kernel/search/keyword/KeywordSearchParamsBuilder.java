@@ -1,15 +1,7 @@
 package org.fao.geonet.kernel.search.keyword;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Util;
-
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
 import org.fao.geonet.kernel.rdf.Selector;
@@ -18,6 +10,13 @@ import org.fao.geonet.kernel.rdf.Where;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Represents the parameters for doing a broad keyword search.
@@ -103,8 +102,7 @@ public class KeywordSearchParamsBuilder {
      * 
      * This parameter is for backwards compatibility.
      * 
-     * @param b
-     * @return
+     * @param lenient
      */
     public KeywordSearchParamsBuilder lenient(boolean lenient) {
         this.lenient = lenient;

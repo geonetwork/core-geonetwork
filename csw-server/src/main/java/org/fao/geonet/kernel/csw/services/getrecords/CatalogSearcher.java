@@ -575,7 +575,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
     // ---------------------------------------------------------------------------
 
     private Filter wrapSpatialFilter() {
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
         Filter cFilter = null;
         if (_filter == null) {
             cFilter = duplicateRemovingFilter;

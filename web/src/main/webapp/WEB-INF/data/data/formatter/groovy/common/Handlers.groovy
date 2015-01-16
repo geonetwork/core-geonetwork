@@ -151,7 +151,12 @@ public class Handlers {
             def published = hasIndexValue("_groupPublished", "all")
             def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
             summary.actions << publishAction
-            if (!published && env.indexInfo.get("_valid").contains("1")) {
+
+            def isValid = env.indexInfo.get("_valid")
+            if (isValid == null) {
+                isValid = '-1';
+            }
+            if (!published && isValid.contains("1")) {
                 publishAction.liClasses = ""
             }
             def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
@@ -211,12 +216,16 @@ public class Handlers {
             if (relUuid != null) {
                 def href = createShowMetadataHref(relUuid)
                 def title = mdEl.getChildText("title")
-                if (title == null) {
+                if (title == null || title.isEmpty()) {
                     title = mdEl.getChildText("defaultTitle")
                 }
 
                 if (title != null && title.length() > 60) {
                     title = title.substring(0, 57) + "...";
+                }
+
+                if (title == null || title.isEmpty()) {
+                    title = relUuid;
                 }
 
                 hierarchy.put(linkType, new Link(href, title))

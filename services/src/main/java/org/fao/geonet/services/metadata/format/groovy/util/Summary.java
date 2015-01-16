@@ -13,6 +13,7 @@ import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -199,6 +200,30 @@ public class Summary {
     }
 
     public List<MenuAction> getActions() {
-        return actions;
+        return this.actions;
+    }
+
+    /**
+     * look up the the action using the menu names as keys for lookup.
+     *
+     * @param path the path to the action
+     */
+    public MenuAction findAction(String... path) {
+        List<MenuAction> current = this.actions;
+        for (int i = 0; i < path.length; i++) {
+            String segment = path[i];
+            for (MenuAction menuAction : current) {
+                if (segment.equals(menuAction.getLabel())) {
+                    if (i == path.length - 1) {
+                        return menuAction;
+                    } else {
+                        current = menuAction.getSubmenu();
+                        break;
+                    }
+                }
+            }
+
+        }
+        throw new IllegalArgumentException("No menu action found given the path: " + Arrays.toString(path));
     }
 }

@@ -523,7 +523,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         String keywordId = FOO_COM_NS+1;
 		Element params = new Element("params").
         		addContent(new Element("pNewSearch").setText("true")).
-        		addContent(new Element("pTypeSearch").setText("1")).
+        		addContent(new Element("pTypeSearch").setText("2")).
         		addContent(new Element("pThesauri").setText(thesaurusFoo.getKey())).
         		addContent(new Element("pMode").setText("searchBox")).
         		addContent(new Element("maxResults").setText("50")).

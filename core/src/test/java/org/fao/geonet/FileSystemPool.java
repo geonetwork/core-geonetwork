@@ -33,7 +33,7 @@ public class FileSystemPool {
     private static final int MAX_FS = 5;
     private final CreatedFs template = new CreatedFs(Jimfs.newFileSystem("template", Configuration.unix()), "/", "data");
     private int openFs = 0;
-    private Stack<CreatedFs> pool = new Stack<>();
+    private final Stack<CreatedFs> pool = new Stack<>();
 
 
     public synchronized CreatedFs getTemplate() {
@@ -54,6 +54,7 @@ public class FileSystemPool {
             fileSystem = new CreatedFs(Jimfs.newFileSystem(fsId, Configuration.unix()), "nodes", "default_data_dir");
         } else {
             fileSystem = pool.pop();
+            org.junit.Assert.assertNotNull(fileSystem);
         }
 
         syncWithTemplate(fileSystem);
@@ -63,11 +64,13 @@ public class FileSystemPool {
     }
 
     public synchronized void release(CreatedFs fs) {
+        org.junit.Assert.assertNotNull(fs);
         pool.add(fs);
     }
 
 
     private void syncWithTemplate(CreatedFs fileSystem) throws IOException {
+        org.junit.Assert.assertNotNull(fileSystem);
         removeModifiedFiles(fileSystem);
         copyMissingFiles(fileSystem);
     }

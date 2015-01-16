@@ -16,7 +16,7 @@ public class Matchers {
             'gmd:DQ_DataQuality', 'gmd:lineage', 'gmd:processStep', 'gmd:MD_Distribution', 'gmd:MD_Distributor'
     ]
 
-    def isSimpleEl = {el ->
+    def isBasicType = {el ->
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
     }
     def isDateEl = {!it.'gco:DateTime'.text().isEmpty() || !it.'gco:Date'.text().isEmpty()}
@@ -28,15 +28,20 @@ public class Matchers {
 
     def isTextEl = {el ->
         !el.'gco:CharacterString'.text().isEmpty() ||
-                !el.'gco:PT_FreeText'.'gco:textGroup'.'gmd:LocalisedCharacterString'.text().isEmpty()
+                !el.'gmd:PT_FreeText'.'gmd:textGroup'.'gmd:LocalisedCharacterString'.text().isEmpty()
+    }
+
+    def isSimpleTextEl = {el ->
+        el.children().isEmpty() && !el.text().isEmpty()
     }
 
     def isContainerEl = {el ->
-        !isTextEl(el) && !isUrlEl(el) &&
+        !isBasicType(el) && !isSimpleTextEl(el) &&
+                !isTextEl(el) && !isUrlEl(el) &&
                 !isCodeListEl(el) && !hasCodeListChild(el) &&
                 !isDateEl(el) && !hasDateChild(el) &&
                 !el.children().isEmpty()
-                //!excludeContainer.any{it == el.name()}
+        //!excludeContainer.any{it == el.name()}
     }
 
     def isRespParty = { el ->
@@ -55,6 +60,6 @@ public class Matchers {
 
     def isSkippedContainer = { el ->
         skipContainers.contains(el.name())
-}
+    }
 
 }

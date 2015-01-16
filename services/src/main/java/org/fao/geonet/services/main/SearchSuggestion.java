@@ -194,12 +194,12 @@ public class SearchSuggestion implements Service {
 
         // Starts with element first
         if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
-            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>(new StartsWithComparator(searchValueWithoutWildcard));
+            listOfSuggestions = new TreeSet<>(new StartsWithComparator(searchValueWithoutWildcard));
         } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
             // Sort by alpha and frequency
-            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>();
+            listOfSuggestions = new TreeSet<>();
         } else {
-            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>(new FrequencyComparator());
+            listOfSuggestions = new TreeSet<>(new FrequencyComparator());
         }
         
         // If a field is stored, field values could be retrieved from the index
