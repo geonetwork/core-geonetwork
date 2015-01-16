@@ -1,8 +1,8 @@
 (function() {
-  goog.provide('gn_facet_service');
+  goog.provide('gn_facets_service');
 
 
-  var module = angular.module('gn_facet_service', []);
+  var module = angular.module('gn_facets_service', []);
 
   /**
    * TODO: Translate indexkey/facetkey
