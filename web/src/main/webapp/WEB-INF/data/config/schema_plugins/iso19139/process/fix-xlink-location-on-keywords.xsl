@@ -24,6 +24,14 @@
         </xsl:copy>
     </xsl:template>
 
+    <!-- This should not happen but while updating
+    the editor may build this kind of elements
+    when the JS cache is not cleared or the first case
+    not yet fixed. -->
+    <xsl:template match="gmd:descriptiveKeywords[gmd:descriptiveKeywords[@xlink:href]]" priority="2">
+      <xsl:copy-of select="gmd:descriptiveKeywords"/>
+    </xsl:template>
+
     <!-- Do a copy of every nodes and attributes -->
     <xsl:template match="@*|node()">
         <xsl:copy>
