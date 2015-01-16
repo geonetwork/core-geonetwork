@@ -497,7 +497,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet.parameter.usage.P01">geonetwork.thesaurus.local.parameter.seadatanet.parameter.usage.P01</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P01">geonetwork.thesaurus.external.parameter.NVS.P01</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>

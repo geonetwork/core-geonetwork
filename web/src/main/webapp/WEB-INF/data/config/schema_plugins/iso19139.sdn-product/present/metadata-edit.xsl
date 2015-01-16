@@ -615,7 +615,7 @@
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
-								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-chemistry-variable'"/>
+								<xsl:with-param name="thesaurusId" select="'external.parameter.NVS.P35'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
