@@ -157,74 +157,77 @@ public class MEFLib {
 
     // --------------------------------------------------------------------------
 
-    public static List<String> doImport(Element params, ServiceContext context,
-                                        File mefFile, String stylePath) throws Exception {
-        return Importer.doImport(params, context, mefFile, stylePath);
-    }
+	
+	public static List<String> doImport(Element params, ServiceContext context,
+			File mefFile, String stylePath) throws Exception {
+		return Importer.doImport(params, context, mefFile, stylePath);
+	}
 
-    // --------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-    public static String doExport(ServiceContext context, String uuid,
-                                  String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-        return MEFExporter.doExport(context, uuid, Format.parse(format),
-                skipUUID, resolveXlink, removeXlinkAttribute);
-    }
+	public static String doExport(ServiceContext context, String uuid,
+			String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+		return MEFExporter.doExport(context, uuid, Format.parse(format),
+				skipUUID, resolveXlink, removeXlinkAttribute);
+	}
 
-    // --------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-    public static String doMEF2Export(ServiceContext context,
-                                      Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
-            throws Exception {
-        return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-                skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
-    }
+	public static String doMEF2Export(ServiceContext context,
+			Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
+			throws Exception {
+		return MEF2Exporter.doExport(context, uuids, Format.parse(format),
+				skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
+	}
 
-    // --------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 
-    public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
-            throws Exception {
-        visitor.visit(mefFile, v);
-    }
+	public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
+			throws Exception {
+		visitor.visit(mefFile, v);
+	}
 
-    /**
-     * Return MEF file version according to ZIP file content.
-     *
-     * @param mefFile
-     *            mefFile to check version
-     * @return v1
-     */
-    public static Version getMEFVersion(File mefFile) {
+	/**
+	 * Return MEF file version according to ZIP file content.
+	 * 
+	 * @param mefFile
+	 *            mefFile to check version
+	 * @return v1
+	 */
+	public static Version getMEFVersion(File mefFile) {
 
-        try {
-            ZipInputStream zis = new ZipInputStream(
-                    new FileInputStream(mefFile));
-            ZipEntry entry;
+		try {
+			ZipInputStream zis = new ZipInputStream(
+					new FileInputStream(mefFile));
+			ZipEntry entry;
 
-            try {
-                while ((entry = zis.getNextEntry()) != null) {
-                    String fullName = entry.getName();
-                    if (fullName.equals("metadata.xml") || fullName.equals("info.xml"))
-                        return Version.V1;
-                    zis.closeEntry();
-                }
-            } finally {
-                zis.close();
-            }
-            return Version.V2;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    };
+			try {
+				while ((entry = zis.getNextEntry()) != null) {
+					String fullName = entry.getName();
+					if (fullName.equals("metadata.xml") || fullName.equals("info.xml"))
+						return Version.V1;
+					zis.closeEntry();
+				}
+			} finally {
+				zis.close();
+			}
+			return Version.V2;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	};
 
-    /**
-     * Get metadata record.
-     *
-     * @param uuid
-     * @return
-     */
-    static Metadata retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
-            throws Exception {
+	/**
+	 * Get metadata record.
+	 * 
+	 * @param uuid
+	 * @return A pair composed of the domain object metadata
+	 *  AND the record to be exported (includes Xlink resolution
+	 *  and filters depending on user session).
+	 */
+	static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+			throws Exception {
 
         final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
 
@@ -232,41 +235,51 @@ public class MEFLib {
             throw new MetadataNotFoundEx("uuid=" + uuid);
         }
 
-        DataManager dm = context.getBean(DataManager.class);
 
-        String id = ""+metadata.getId();
+
+		// Retrieve the metadata document
+		// using data manager in order to
+		// apply all filters (like XLinks,
+		// withheld)
+        DataManager dm = context.getBean(DataManager.class);
+		String id = ""+metadata.getId();
         boolean forEditing = false;
         boolean withEditorValidationErrors = false;
-        Element data = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
-        data.removeChild("info", Edit.NAMESPACE);
-        String outputParamPath = Geonet.Settings.WIKI_MEFOUTPUT;
-        data = XslUtil.controlForMarkup(context, data, outputParamPath);
-        metadata.setData(Xml.getString(data));
+        Element metadataForExportXml = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
+		metadataForExportXml.removeChild("info", Edit.NAMESPACE);
+		String metadataForExportAsString = Xml.getString(metadataForExportXml);
 
-        return metadata;
-    }
+		// Prepend xml declaration if needed.
+		if (!metadataForExportAsString.startsWith("<?xml")) {
+			metadataForExportAsString =
+					"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+					metadataForExportAsString;
+		}
 
-    /**
-     * Add an entry to ZIP file
-     *
-     * @param zos
-     * @param name
-     * @throws IOException
-     */
-    static void createDir(ZipOutputStream zos, String name) throws IOException {
-        ZipEntry entry = new ZipEntry(name);
-        zos.putNextEntry(entry);
-    }
+        return Pair.read(metadata, metadataForExportAsString);
+	}
 
-    /**
-     * Add file to ZIP file
-     *
-     * @param zos
-     * @param name
-     * @param string
-     * @throws IOException
-     */
-    static void addFile(ZipOutputStream zos, String name, @Nonnull String string) throws IOException {
+	/**
+	 * Add an entry to ZIP file
+	 * 
+	 * @param zos
+	 * @param name
+	 * @throws IOException
+	 */
+	static void createDir(ZipOutputStream zos, String name) throws IOException {
+		ZipEntry entry = new ZipEntry(name);
+		zos.putNextEntry(entry);
+	}
+
+	/**
+	 * Add file to ZIP file
+	 * 
+	 * @param zos
+	 * @param name
+	 * @param string
+	 * @throws IOException
+	 */
+	static void addFile(ZipOutputStream zos, String name, @Nonnull String string) throws IOException {
         addFile(zos, name, new ByteArrayInputStream(string.getBytes("UTF-8")));
     }
     static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
