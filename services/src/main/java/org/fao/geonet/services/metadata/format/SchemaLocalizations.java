@@ -244,14 +244,14 @@ public class SchemaLocalizations {
 
     public String codelistTranslation(String codelist, String context, String type) throws Exception {
 
-        if (LANG_CODELIST_NS.equals(codelist) || "#LanguageCode".equals(codelist)) {
+        String codelistName = extractCodeListName(codelist);
+        if (LANG_CODELIST_NS.equals(codelist) || "#LanguageCode".equals(codelist) || "LanguageCode".equals(codelistName)) {
             return translateLanguageCode(context);
         }
 
-        codelist = extractCodeListName(codelist);
 
         for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
-            Element codelistEl = schemaLocalization.getCodeListIndex(this.languageHolder.getLang3()).get(codelist, context);
+            Element codelistEl = schemaLocalization.getCodeListIndex(this.languageHolder.getLang3()).get(codelistName, context);
             if (codelistEl != null) {
                 return codelistEl.getChildText(type);
             }
@@ -259,7 +259,7 @@ public class SchemaLocalizations {
         return context;
     }
 
-    private String translateLanguageCode(String value) {
+    public String translateLanguageCode(String value) {
         if (value == null) {
             return null;
         }

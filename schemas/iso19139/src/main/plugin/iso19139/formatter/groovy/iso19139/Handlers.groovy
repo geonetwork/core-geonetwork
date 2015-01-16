@@ -40,6 +40,7 @@ public class Handlers {
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
+        handlers.add select: 'gmd:language', group: false, isoLanguageEl
         handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
         handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, isoSimpleTextElGrouped
 
@@ -122,7 +123,13 @@ public class Handlers {
                 locales: locales
         ])
     }
-
+    def isoLanguageEl = { language ->
+        if (!language.'gmd:LanguageCode'.isEmpty()) {
+            f.codelistValueLabel(language.'gmd:LanguageCode')
+        } else {
+            f.translateLanguageCode(language.text());
+        }
+    }
     def onlineResourceEls = { els ->
         def links = []
 
