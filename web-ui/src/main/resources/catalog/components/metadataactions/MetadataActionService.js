@@ -181,24 +181,17 @@
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
-        var publishFlag = {
-          _1_0: flag,
-          _1_1: flag,
-          _1_5: flag,
-          _1_6: flag
-        };
+        var service = flag === 'on' ? "publish" : "unpublish";
 
         if (angular.isDefined(md)) {
-          return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag, {
-                update: true,
-                id: md.getId()
-              })).then(function(data) {
+          return gnHttp.callService(service, {
+                ids: md.getId()
+              }).then(function(data) {
             alertResult('publish');
             md.publish();
           });
         } else {
-          return gnHttp.callService('mdPrivilegesBatch', publishFlag);
+          return gnHttp.callService(service, {});
         }
       };
 

@@ -17,7 +17,7 @@
             <li ng-if="user['@authenticated'] == 'true'"><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
             <li ng-if="user['@authenticated'] == 'true'" >
               <a ng-click="mdService.publish(md)">
-                <i class="fa" data-ng-class="md.isPublished() ? 'fa-times' : 'fa-arrow-up'"></i>
+                <i class="fa" data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
                 <span data-ng-if="md.isPublished()" translate>unpublish</span>
                 <span data-ng-if="!md.isPublished()" translate>publish</span>
               </a>
