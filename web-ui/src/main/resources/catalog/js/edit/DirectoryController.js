@@ -2,10 +2,10 @@
   goog.provide('gn_directory_controller');
 
   goog.require('gn_catalog_service');
-  goog.require('gn_facets_directive');
+  goog.require('gn_facets');
 
   var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets_directive']);
+      ['gn_catalog_service', 'gn_facets']);
 
   /**
    * Controller to create new metadata record.

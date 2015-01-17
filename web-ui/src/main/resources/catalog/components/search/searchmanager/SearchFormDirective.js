@@ -11,13 +11,13 @@
 
 
   goog.require('gn_catalog_service');
-  goog.require('gn_facets_directive');
+  goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
-    'gn_facets_directive',
+    'gn_facets',
     'gn_selection_directive',
     'gn_search_form_results_directive'
   ]);
