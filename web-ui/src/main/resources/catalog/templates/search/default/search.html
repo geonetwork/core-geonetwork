@@ -75,7 +75,7 @@
                   <ul class="gn-flfilter gn-flfilter-icon">
                     <li data-ng-repeat="(key, facet) in searchInfo.facet['types']"
                         data-ng-show="facet['@label']">
-                      <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
+                      <a data-ng-href="#?tab=search&type={{facet['@name']}}">
                         <i class="gn-icon gn-icon-{{facet['@name']}}"></i>
                         <div>{{facet['@label']}} ({{facet['@count']}})</div>
                       </a>
