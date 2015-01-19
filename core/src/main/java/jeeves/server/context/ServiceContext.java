@@ -30,6 +30,7 @@ import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
@@ -67,6 +68,7 @@ public class ServiceContext extends BasicContext {
      */
     public void setAsThreadLocal() {
         THREAD_LOCAL_INSTANCE.set(this);
+        ApplicationContextHolder.set(this.getApplicationContext());
     }
 
 
