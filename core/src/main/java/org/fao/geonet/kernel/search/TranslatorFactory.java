@@ -32,10 +32,11 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class TranslatorFactory {
     
-    private final ApplicationContext context;
+    private final ConfigurableApplicationContext context;
 
     public static final Translator IDENTITY_TRANSLATOR = new Translator() {
         private static final long serialVersionUID = 1L;
@@ -46,7 +47,7 @@ public class TranslatorFactory {
     };
 
     @Autowired
-    public TranslatorFactory(ApplicationContext context) {
+    public TranslatorFactory(ConfigurableApplicationContext context) {
         this.context = context;
     }
 
