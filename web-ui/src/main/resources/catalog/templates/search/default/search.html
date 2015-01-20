@@ -107,35 +107,7 @@
             </div>
             
           </div>
-          <div class="row gn-row-filters"
-               data-ng-show="searchInfo.facet['categories']">
-            <div class="col-xs-12">
-              <h1 data-translate="">browseTopics</h1>
-              <!-- Here is a facet with icon to do a first level
-              filter
-              Directive to display a first level of filter based on
-              a facet which has to be available.
 
-              An icon could be provided as a CSS class name or
-              a pattern matching a URL resolving to an image.
-
-              Properties
-              <div data-flfilter="categories"
-                   data-title=""
-                   data-icon-path="../../images/category/{{['@name']}}.png">
-              -->
-              <ul class="gn-flfilter gn-flfilter-icon">
-                <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
-                  <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
-                    <i class="gn-icon">
-                      <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
-                    </i>
-                    <div>{{facet['@label']}} ({{facet['@count']}})</div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
           <div class="row gn-row-info">
             <div class="col-xs-12">
               <tabset id="info-tabset">
