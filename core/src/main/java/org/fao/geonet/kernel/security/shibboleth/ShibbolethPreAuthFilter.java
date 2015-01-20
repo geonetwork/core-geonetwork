@@ -58,7 +58,7 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean {
 
 	private RequestCache requestCache;
 
-	private final String SHIB_KEY = "SHIB_USER_AUTHEN";
+	private static final String SHIB_KEY = "SHIB_USER_AUTHEN";
 
 	public ShibbolethPreAuthFilter() {
 		if (Log.isDebugEnabled(Log.JEEVES)) {
