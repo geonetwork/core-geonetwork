@@ -1,34 +1,31 @@
 package org.fao.geonet.utils;
 
 import org.fao.geonet.Constants;
-import org.xml.sax.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.xml.transform.stream.StreamSource;
 
 /**
- * An input source backed by a java nio path.
- *
  * @author Jesse on 1/20/2015.
  */
-public class PathInputSource extends InputSource {
+public class PathStreamSource extends StreamSource {
     private final Path path;
 
-    public PathInputSource(Path resource) {
-        this.path = resource;
+    public PathStreamSource(Path path) {
+        this.path = path;
     }
 
     @Override
-    public void setByteStream(InputStream byteStream) {
+    public void setInputStream(InputStream inputStream) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public InputStream getByteStream() {
+    public InputStream getInputStream() {
         try {
             return Files.newInputStream(this.path);
         } catch (IOException e) {
@@ -37,20 +34,14 @@ public class PathInputSource extends InputSource {
     }
 
     @Override
-    public void setCharacterStream(Reader characterStream) {
+    public void setReader(Reader reader) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Reader getCharacterStream() {
+    public Reader getReader() {
         try {
-            final Charset cs;
-            if (getEncoding() != null) {
-                cs = Charset.forName(getEncoding());
-            } else {
-                cs = Constants.CHARSET;
-            }
-            return Files.newBufferedReader(this.path, cs);
+            return Files.newBufferedReader(this.path, Constants.CHARSET);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

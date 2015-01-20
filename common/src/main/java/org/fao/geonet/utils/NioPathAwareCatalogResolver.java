@@ -60,7 +60,7 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
             }
 
             if (Files.isRegularFile(resolvedResource)) {
-                final PathInputSource pathInputSource = new PathInputSource(resolvedResource);
+                final PathStreamSource pathInputSource = new PathStreamSource(resolvedResource);
                 pathInputSource.setSystemId(resolvedResource.toUri().toASCIIString());
                 return pathInputSource;
             }

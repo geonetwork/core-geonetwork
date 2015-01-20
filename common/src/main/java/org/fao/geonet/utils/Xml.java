@@ -1274,7 +1274,7 @@ public final class Xml
      * @throws Exception
      */
 	private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
-        PathInputSource schemaFile = new PathInputSource(schemaPath);
+        PathStreamSource schemaFile = new PathStreamSource(schemaPath);
         schemaFile.setSystemId(schemaPath.toUri().toASCIIString());
 
         final SchemaFactory factory = factory();
