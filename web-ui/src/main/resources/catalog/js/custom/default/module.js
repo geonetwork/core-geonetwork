@@ -5,9 +5,12 @@
   goog.require('gn_search');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
+  goog.require('gn_related_directive');
+  goog.require('cookie_warning');
 
   var module = angular.module('gn_search_default',
-      ['gn_search', 'gn_search_default_config', 'gn_search_default_directive']);
+      ['gn_search', 'gn_search_default_config', 'gn_search_default_directive', 'gn_related_directive',
+       'cookie_warning']);
 
 
   module.config(['$routeProvider',

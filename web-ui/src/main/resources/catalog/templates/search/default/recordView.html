@@ -162,32 +162,9 @@
       </div>
 
       <h2 data-translate="">downloadsAndResources</h2>
-      <ul>
-        <li ng-repeat="link in mdView.current.record.layers">
-          <a href="{{::link.url}}"
-             target="_blank">{{::link.desc}}
-            <span class="badge">{{::link.contentType}}</span>
-          </a>
-        </li>
-      </ul>
-      <ul>
-        <li ng-repeat="link in mdView.current.record.downloads">
-          <a href="{{::link.url}}"
-             target="_blank">{{::link.desc}}
-            <span class="badge">{{::link.contentType}}</span>
-          </a>
-        </li>
-      </ul>
-      <ul>
-        <li ng-repeat="link in mdView.current.record.links">
-          <a href="{{::link.url}}"
-             target="_blank">{{::link.desc}}
-            <span class="badge">{{::link.contentType}}</span>
-          </a>
-        </li>
-      </ul>
-
-
+      <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}">
+      </div>
+     
       <h2 data-translate="">aboutThisResource</h2>
 
       <table class="table table-striped">
