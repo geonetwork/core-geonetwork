@@ -1,19 +1,10 @@
 <div class="relatedMd" data-ng-show="relations.length > 0">
-	<ul>
-		<li data-ng-repeat="md in relations track by $index">
-			<div data-ng-switch="md['@type']">
-				<div data-ng-switch-when="thumbnail">
-					<img style="max-width: 62px; max-height: 62px"
-						src="resources.get?uuid={{uuid}}&fname={{md.id}}&access=public"></img>
-				</div>
-				<div data-ng-switch-default>
-					<span class="fa fa-{{actions[md['@type']]['iconClass'](md)}}">&nbsp;</span> <span
-						data-ng-click="exec(actions[md['@type']]['click'](md))"
-						class="{{actions[md['@type']]['class'](md)}}">{{md.title}} <span
-						class="badge">{{md['@type']}}</span>
-					</span>
-				</div>
-			</div>
-		</li>
-	</ul>
+	<div data-ng-repeat="md in relations track by $index">
+        <div data-ng-if="md['@type']!='thumbnail'" class="relatedRecord">
+            <span data-related-tooltip title="{{md['@type']}}" class="fa fa-{{actions[md['@type']]['iconClass'](md)}}">&nbsp;</span>
+            <span data-ng-click="exec(actions[md['@type']]['click'](md))"
+                class="{{actions[md['@type']]['class'](md)}}">{{md.title}} </span>
+        </div>
+	</div>
+	<div style="clear: both"></div>
 </div>

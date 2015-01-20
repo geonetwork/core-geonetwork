@@ -6,7 +6,8 @@
   var module = angular.module('gn_related_directive', [ 'gn_map_service' ]);
 
   /**
-   * Shows a list of related records given an uuid with the actions defined in config.js
+   * Shows a list of related records given an uuid with the actions defined in
+   * config.js
    */
   module
       .directive(
@@ -31,11 +32,11 @@
                     scope.mapService = gnMap;
                     scope.map = gnSearchSettings.searchMap;
                     scope.actions = gnSearchSettings.mdSettings.actions;
-                    
-                    scope.exec = function(a)  {
+
+                    scope.exec = function(a) {
                       eval(a);
                     }
-               
+
                     scope.updateRelations = function() {
                       scope.relations = [];
                       if (scope.uuid) {
@@ -64,4 +65,13 @@
                   }
                 }
               } ]);
+
+  module.directive('relatedTooltip', function() {
+    return function(scope, element, attrs) {
+      for(var i = 0; i < element.length; i++) {
+        element[i].title = scope.$parent.md['@type'];
+      }
+      element.tooltip();
+    };
+  });
 })();
