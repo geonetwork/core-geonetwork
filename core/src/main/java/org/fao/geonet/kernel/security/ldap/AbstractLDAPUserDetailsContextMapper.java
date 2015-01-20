@@ -35,14 +35,8 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -62,7 +56,7 @@ import org.springframework.util.StringUtils;
  * @author francois
  */
 public abstract class AbstractLDAPUserDetailsContextMapper implements
-		WritableUserDetailsContextMapper, ApplicationContextAware {
+		WritableUserDetailsContextMapper {
 
 	Map<String, String[]> mapping;
 
@@ -72,8 +66,6 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
 	private boolean createNonExistingLdapGroup = true;
 	private boolean createNonExistingLdapUser = false;
-
-	private ApplicationContext applicationContext;
 
 	protected DefaultSpringSecurityContextSource contextSource;
 
@@ -255,11 +247,6 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 					+ value);
 		}
 		return value;
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 
 	public boolean isCreateNonExistingLdapGroup() {
