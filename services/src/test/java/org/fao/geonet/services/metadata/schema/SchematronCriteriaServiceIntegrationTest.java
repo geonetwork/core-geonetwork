@@ -345,8 +345,12 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
 
         final int id = _group1_Name1_SchematronId1.getCriteria().get(0).getId();
 
+        int badId = id + 100;
+        while (_schematronCriteriaRepository.findOne(badId) != null) {
+            badId++;
+        }
         Element deleteParams = createParams(
-                read(Params.ID, id + 100)
+                read(Params.ID, badId)
         );
 
         assertEquals("ok", createService(DELETE).exec(deleteParams, context).getName());
