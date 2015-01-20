@@ -1,4 +1,5 @@
 @import "gn_search.less";
+@import "gn_metadata.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
@@ -18,7 +19,11 @@
 }
 
 .jumbotron {
-  padding: 150px 100px;
+  padding: 150px 100px;  
+  h1 {
+    font-size: 36px;
+  }
+
 }
 
 
@@ -202,6 +207,47 @@ ul.gn-resultview {
       width: 100%;
     }
   }
+  .view-header {
+    border-bottom: 2px solid #e5e5e5;
+  }
+  .entry {
+    margin-left: 1em;
+    border-left: 2px solid #eeeeee;
+    padding-left: 5px;
+    dl {
+      padding-bottom: 5px;
+    }
+  }
+  input[readonly] {
+    background:#fff;
+  }
+  .extent{
+    display:inline-block;position:relative;margin:2em 0 0 90px;
+  }
+  .coord{
+    position:absolute;width:100px;
+  }
+  .coord-north{
+    top:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-south{
+    bottom:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-east{
+    right:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+  .coord-west{
+    left:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+
 }
 [data-ng-search-form] {
   .gn-top-search {
@@ -310,6 +356,25 @@ ul.gn-resultview {
   border-bottom: 1px solid #ddd;
   padding-bottom: 5px;
   margin-bottom: 5px;
+  .gn-flfilter {
+
+  }
+  .gn-flfilter-icon {
+    text-align: center;
+    li {
+      list-style: none;
+      float: left;
+      width: 100px;
+    }
+    i {
+      //    .@{fa-css-prefix}-4x;
+      font-size: 4em;
+      width: 70px;
+      img {
+        width: 70px;
+      }
+    }
+  }
 }
 
 .gn-results-switch {
@@ -366,3 +431,9 @@ ul.gn-resultview {
     float:right;
   }
 }
+  .gn-bottom-bar {
+	bottom:1px;height: 50px;position:absolute;overflow:hidden;width:100%;margin-bottom:0px;
+  }
+  .gn-container { 
+	min-heigh:100%;heigh:100%;position:relative;margin-bottom:50px;
+  }
