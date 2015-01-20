@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -44,9 +45,10 @@ public abstract class AbstractSpringDataTest {
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML = "classpath*:config-spring-geonetwork-parent.xml";
     public static final String CLASSPATH_REPOSITORY_TEST_CONTEXT_XML = "classpath:domain-repository-test-context.xml";
 
-    protected AtomicInteger _inc = new AtomicInteger();
+    private final Random random = new Random();
+    protected final AtomicInteger _inc = new AtomicInteger(random.nextInt(16));
 
-    private static ThreadLocal<TransactionlessTesting> transactionlessTesting = new InheritableThreadLocal<TransactionlessTesting>();
+    private static final ThreadLocal<TransactionlessTesting> transactionlessTesting = new InheritableThreadLocal<TransactionlessTesting>();
 
     @Autowired
     private ConfigurableApplicationContext _appContext;

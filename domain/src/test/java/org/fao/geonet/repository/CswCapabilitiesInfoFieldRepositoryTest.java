@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,12 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     @Autowired
     CswCapabilitiesInfoFieldRepository _repo;
+
+    @Before
+    public void setUp() throws Exception {
+        _inc.set(0);
+
+    }
 
     @Test
     public void testFindOne() {
