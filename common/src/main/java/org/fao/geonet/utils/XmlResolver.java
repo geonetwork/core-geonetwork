@@ -161,8 +161,7 @@ public class XmlResolver extends XMLCatalogResolver {
                 if (Files.isRegularFile(resolved)) {
                     try {
                         final String uri = resolved.normalize().toUri().toASCIIString();
-                        return new DOMInputImpl(publicId, uri, uri,
-                                Files.newInputStream(resolved),
+                        return new DOMInputImpl(publicId, uri, uri, Files.newInputStream(resolved),
                                 Constants.ENCODING);
                     } catch (IOException e) {
                         Log.error(Log.JEEVES, "Error opening resource: " + resolved + " for reading", e);
