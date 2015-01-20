@@ -23,11 +23,14 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -268,14 +271,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if(log.isDebugEnabled()) log.debug("Getting remote file : "+ rf.getPath());
 			Element md = rf.getMetadata(schemaMan);
             if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
-
-            try {
-                params.validate.validate(dataMan, context, md);
-                return (Element) md.detach();
-            } catch (Exception e) {
-                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-                result.doesNotValidate++;
-            }
+            params.validate.validate(dataMan, context, md);
+            return (Element) md.detach();
 		}
 		catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());
@@ -285,6 +282,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 			log.warning("Skipping metadata with bad XML format. Path is : "+ rf.getPath());
 			result.badFormat++;
 		}
+        catch(XSDValidationErrorEx e) {
+            log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+            result.doesNotValidate++;
+        }
+        catch(SchematronValidationErrorEx e) {
+            log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+            result.doesNotValidate++;
+        }
 		catch(Exception e) {
 			log.warning("Raised exception while getting metadata file : "+ e);
 			result.unretrievable++;
