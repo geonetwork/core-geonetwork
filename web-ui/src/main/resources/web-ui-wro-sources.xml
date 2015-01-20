@@ -14,6 +14,7 @@
     <jsSource webappPath="catalog/lib/angular/angular-resource.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-sanitize.min.js"/>
+    <jsSource webappPath="catalog/lib/angular/angular-cookies.min.js"/>
     <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
     <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/hotkeys/hotkeys.min.js"/>
