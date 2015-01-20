@@ -33,7 +33,7 @@ public class NioPathHolder {
     static InputSource resolveEntity(String publicId, String systemId) throws IOException {
         Path resource = resolveResource(publicId, systemId);
         if (resource != null) {
-            return new InputSource(Files.newInputStream(resource));
+            return new PathInputSource(resource);
         }
         return null;
     }

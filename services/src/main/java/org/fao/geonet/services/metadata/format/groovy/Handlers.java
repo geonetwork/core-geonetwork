@@ -140,8 +140,8 @@ public class Handlers {
      * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
      *                      closure
      */
-    public void skip(Object select, Closure childSelector) {
-        skip(select, childSelector, 0);
+    public SkipElement skip(Object select, Closure childSelector) {
+        return skip(select, childSelector, 0);
     }
 
     /**
@@ -155,18 +155,60 @@ public class Handlers {
      *                      closure
      * @param priority      priority of the skipElement
      */
-    public void skip(Object select, Closure childSelector, int priority) {
+    public SkipElement skip(Object select, Closure childSelector, int priority) {
+        final SkipElement skipElement;
         if (select instanceof String) {
-            String nameEl = (String) select;
-            this.skipElements.add(new SkipElementName(nameEl, priority, childSelector));
+            final Pattern pattern = Pattern.compile(Pattern.quote((String) select));
+            skipElement = new SkipElementPattern(pattern, priority, childSelector);
+        } else if (select instanceof GString) {
+            final GString gString = (GString) select;
+            final Pattern pattern = Pattern.compile(Pattern.quote(gString.toString()));
+            skipElement = new SkipElementPattern(pattern, priority, childSelector);
         } else if (select instanceof Closure) {
             Closure closure = (Closure) select;
-            this.skipElements.add(new SkipElementClosure(closure, priority, childSelector));
+            skipElement = new SkipElementClosure(closure, priority, childSelector);
         } else {
             throw new IllegalArgumentException("select must either be a string or a closure but was a: " + select.getClass());
         }
+
+        this.skipElements.add(skipElement);
+        return skipElement;
     }
 
+    /**
+     * Create a handler from a map of properties to values.  There must be a 'select' attribute which can be:
+     * <ul>
+     * <li>a function for determining if this handler should be applied</li>
+     * <li>a string for matching against the name</li>
+     * <li>a regular expression for matching against the path</li>
+     * </ul>
+     * <p/>
+     * In addition any JavaBean properties on the handler maybe set using the correct JavaBean semantics.
+     * For example: priority, processChildren
+     */
+    public SkipElement skip(Map<String, Object> properties, Closure handlerFunction) {
+        Object select = properties.get(HANDLER_SELECT);
+
+        if (select == null) {
+            throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
+        }
+
+        final SkipElement handler;
+        if (select instanceof Closure) {
+            handler = skip(select, handlerFunction);
+        } else if (select instanceof String || select instanceof GString) {
+            handler = skip(select.toString(), handlerFunction);
+        } else if (select instanceof Pattern) {
+            handler = skip(select, handlerFunction);
+        } else {
+            throw new IllegalArgumentException(
+                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                    "Regular Expression(Pattern) but was " + select.getClass());
+        }
+        handler.configure(properties);
+
+        return handler;
+    }
     /**
      * Add a handler with the priority 1 which will exactly match element name and prefix.
      *

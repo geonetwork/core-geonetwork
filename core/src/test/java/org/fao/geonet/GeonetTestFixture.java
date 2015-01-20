@@ -32,7 +32,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
@@ -144,10 +143,10 @@ public class GeonetTestFixture {
 
         ServiceContext serviceContext = test.createServiceContext();
 
-        _applicationContext.getBean(ThesaurusManager.class).init(serviceContext, "WEB-INF/data/config/codelist");
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(serviceContext, false);
+        _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, dataDir.getThesauriDir().toString());
 
 
         addSourceUUID(dataDir);

@@ -9,6 +9,9 @@
     <overview>Overview</overview>
     <xml>XML</xml>
     <service-link>Service</service-link>
+    <services-link>Services</services-link>
+    <datasets-link>Datasets</datasets-link>
+    <dataset-link>Dataset</dataset-link>
     <children-link>Children</children-link>
     <related-link>Related</related-link>
     <parent-link>Parent</parent-link>

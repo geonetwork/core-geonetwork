@@ -17,7 +17,7 @@
         <span class="title">{{title | escapeXmlContent}}</span>
         <div fmt-include="html/drop-down-list.html" class="pull-right" />
     </h1>
-    <ul fmt-if="!isPDF" class="view-outline nav nav-pills">
+    <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
         <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
         <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
         <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">

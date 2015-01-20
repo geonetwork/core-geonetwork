@@ -1,0 +1,12 @@
+<div class="btn-group gn-selection-actions">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span translate>contribute</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li ng-if="authenticated"><a href="catalog.edit#/create" target="_blank">
+      <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+    <li ng-if="authenticated"><a href="catalog.edit#/import" target="_blank">
+      <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+  </ul>
+</div>

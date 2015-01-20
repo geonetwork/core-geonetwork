@@ -1,10 +1,5 @@
 package org.fao.geonet.kernel.search;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.Path;
-
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
@@ -12,6 +7,11 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.junit.Test;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static org.junit.Assert.assertEquals;
 
 public class TermUriTranslatorTest {
 
@@ -54,7 +54,7 @@ public class TermUriTranslatorTest {
     }
 
     private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
-      throws ConfigurationException {
+            throws ConfigurationException, IOException {
         Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
         thesaurus.initRepository();
         return thesaurus;

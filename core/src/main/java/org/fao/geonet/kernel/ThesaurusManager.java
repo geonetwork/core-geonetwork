@@ -68,11 +68,13 @@ public class ThesaurusManager implements ThesaurusFinder {
     /**
 	 * Initialize ThesaurusManager.
 	 *
+     *
+     * @param isTest
      * @param context ServiceContext used to check when servlet is up only
      * @param thesauriRepository
      * @throws Exception
 	 */
-	public synchronized void init(ServiceContext context, String thesauriRepository)
+	public synchronized void init(boolean isTest, ServiceContext context, String thesauriRepository)
 			throws Exception {
         if (this.initialized) {
             return;
@@ -90,20 +92,25 @@ public class ThesaurusManager implements ThesaurusFinder {
         thesauriDir = thesauriDir.toAbsolutePath();
 		thesauriDirectory = thesauriDir.toAbsolutePath();
 
-		batchBuildTable(context, thesauriDir);
+		batchBuildTable(isTest, context, thesauriDir);
 	}
 	
   /**
    * Start task to build thesaurus table once the servlet is up. 
    *
-	 * @param context ServiceContext used to check when servlet is up only
-	 * @param thesauriDir directory containing thesauri
+   * @param isTest
+   * @param context ServiceContext used to check when servlet is up only
+   * @param thesauriDir directory containing thesauri
    */
-	private void batchBuildTable(ServiceContext context, Path thesauriDir) {
+	private void batchBuildTable(boolean isTest, ServiceContext context, Path thesauriDir) {
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 		try {
 			Runnable worker = new InitThesauriTableTask(context, thesauriDir);
-			executor.execute(worker);
+            if (isTest) {
+                worker.run();
+            } else {
+                executor.execute(worker);
+            }
 		} finally {
 			executor.shutdown();
 		}

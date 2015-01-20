@@ -15,8 +15,9 @@
     'gnAlertService',
     'gnPopup',
     'gnSearchSettings',
+    '$translate',
     function($rootScope, $timeout, gnHttp,
-             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings) {
+             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings, $translate) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -181,24 +182,42 @@
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
-        var publishFlag = {
-          _1_0: flag,
-          _1_1: flag,
-          _1_5: flag,
-          _1_6: flag
-        };
+        var service = flag === 'on' ? "publish" : "unpublish";
 
-        if (angular.isDefined(md)) {
-          return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag, {
-                update: true,
-                id: md.getId()
-              })).then(function(data) {
-            alertResult('publish');
-            md.publish();
+        var publishNotification = function(data) {
+          var message = '<h4>'+$translate(service+"Completed") + '</h4><dl class="dl-horizontal"><dt>' +
+              $translate('mdPublished') + '</dt><dd>'+data.data.published+'</dd><dt>' +
+              $translate('mdUnpublished') + '</dt><dd>'+data.data.unpublished+'</dd><dt>' +
+              $translate('mdUnmodified') + '</dt><dd>'+data.data.unmodified+'</dd><dt>' +
+              $translate('mdDisallowed') + '</dt><dd>'+data.data.disallowed+'</dd></dl>';
+
+          var success = "success";
+          if (md) {
+            if ((flag === 'on' && data.data.published === 0) ||
+                (flag !== 'on' && data.data.unpublished === 0)) {
+              if (data.data.unmodified > 0) {
+                message = $translate("metadataUnchanged");
+              } else if (data.data.disallowed > 0) {
+                message = $translate("accessRestricted");
+              }
+              success = 'danger';
+            }
+          }
+          gnAlertService.addAlert({
+            msg: message,
+            type: success
           });
+
+          if (md && success === "success") {
+            md.publish();
+          }
+        };
+        if (angular.isDefined(md)) {
+          return gnHttp.callService(service, {
+                ids: md.getId()
+              }).then(publishNotification);
         } else {
-          return gnHttp.callService('mdPrivilegesBatch', publishFlag);
+          return gnHttp.callService(service, {}).then(publishNotification);
         }
       };
 

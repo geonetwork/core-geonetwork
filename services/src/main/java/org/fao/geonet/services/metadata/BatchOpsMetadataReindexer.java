@@ -19,6 +19,7 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
@@ -65,11 +66,17 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
     }
 
     public void process() throws Exception {
+        process(false);
+    }
+    public void process(boolean runInCurrentThread) throws Exception {
         int threadCount = ThreadUtils.getNumberOfThreads();
         ExecutorService executor = null;
         try {
-            executor = Executors.newFixedThreadPool(threadCount);
-
+            if (runInCurrentThread) {
+                executor = MoreExecutors.sameThreadExecutor();
+            } else {
+                executor = Executors.newFixedThreadPool(threadCount);
+            }
             int[] ids = new int[metadata.size()];
             int i = 0;
             for (Integer id : metadata) ids[i++] = id;

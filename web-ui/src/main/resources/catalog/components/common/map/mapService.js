@@ -356,42 +356,48 @@
 
               // Try to guess which matrixId to use depending projection
               var matrixSetsId;
-              for (var i = 0; i < layer.tileMatrixSetLinks.length; i++) {
-                if (layer.tileMatrixSetLinks[i].tileMatrixSet ==
+              for (var i = 0; i < layer.TileMatrixSetLink.length; i++) {
+                if (layer.TileMatrixSetLink[i].TileMatrixSet ==
                     projection.getCode()) {
-                  matrixSetsId = layer.tileMatrixSetLinks[i].tileMatrixSet;
+                  matrixSetsId = layer.TileMatrixSetLink[i].TileMatrixSet;
                   break;
                 }
               }
               if (!matrixSetsId) {
-                matrixSetsId = layer.tileMatrixSetLinks[0].tileMatrixSet;
+                matrixSetsId = layer.TileMatrixSetLink[0].TileMatrixSet;
               }
-              var matrixSet = capabilities.tileMatrixSets[matrixSetsId];
-              var nbMatrix = matrixSet.matrixIds.length;
+
+              var matrixSet;
+              for (var i = 0; i < capabilities.TileMatrixSet.length; i++) {
+                if(capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
+                  matrixSet = capabilities.TileMatrixSet[i];
+                }
+              }
+              var nbMatrix = matrixSet.TileMatrix.length;
 
               var projectionExtent = projection.getExtent();
               var resolutions = new Array(nbMatrix);
               var matrixIds = new Array(nbMatrix);
               for (var z = 0; z < nbMatrix; ++z) {
-                var matrixId = matrixSet.matrixIds[z];
+                var matrix = matrixSet.TileMatrix[z];
                 var size = ol.extent.getWidth(projectionExtent) /
-                    matrixId.tileWidth;
-                resolutions[z] = matrixId.scaleDenominator * 0.00028 /
+                    matrix.TileWidth;
+                resolutions[z] = matrix.ScaleDenominator * 0.00028 /
                     projection.getMetersPerUnit();
-                matrixIds[z] = matrixId.identifier;
+                matrixIds[z] = matrix.Identifier;
               }
 
               return this.addWMTSToMap(map, {
                 url: url,
-                layerId: layer.identifier,
-                matrixId: matrixSet.identifier,
+                layerId: layer.Identifier,
+                matrixId: matrixSet.Identifier,
                 projection: projection,
                 matrixIds: matrixIds,
                 resolutions: resolutions,
                 style: 'default',
-                format: layer.formats[0]
+                format: layer.Format[0]
               }, {
-                title: layer.title
+                title: layer.Title
               });
             }
           },

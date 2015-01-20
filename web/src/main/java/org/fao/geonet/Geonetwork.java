@@ -131,6 +131,7 @@ public class Geonetwork implements ApplicationHandler {
      * Inits the engine, loading all needed data.
      */
     public Object start(Element config, ServiceContext context) throws Exception {
+        context.setAsThreadLocal();
         logger = context.getLogger();
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
@@ -342,7 +343,7 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Thesaurus...");
 
-        _applicationContext.getBean(ThesaurusManager.class).init(context, thesauriDir);
+        _applicationContext.getBean(ThesaurusManager.class).init(false, context, thesauriDir);
 
 
         //------------------------------------------------------------------------

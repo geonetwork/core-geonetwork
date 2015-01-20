@@ -254,6 +254,8 @@
 
     mdPrivileges: 'md.privileges.update@json',
     mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    publish: 'md.publish',
+    unpublish: 'md.unpublish',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

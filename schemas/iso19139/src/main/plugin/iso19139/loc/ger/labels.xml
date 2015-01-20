@@ -2668,5 +2668,80 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element> 
+    </element>
+    <element name="gmd:MD_CharacterSetCode">
+        <label>Zeichensatz</label>
+    </element>
+    <element name="gmd:parentIdentifier">
+        <label>Identifikator des übergeordneten Metadatensatzes</label>
+    </element>
+    <element name="gmd:MD_TopologyLevelCode">
+        <label>Topologie-Ebene</label>
+    </element>
+    <element name="gmd:dateStamp">
+        <label>Zuletzt bearbeitet</label>
+    </element>
+    <element name="gmd:CI_RoleCode">
+        <label>Funktion</label>
+    </element>
+    <element name="gmd:MD_MaintenanceFrequencyCode">
+        <label>Wartungsintervalle</label>
+    </element>
+    <element name="gmd:MD_SpatialRepresentationTypeCode">
+        <label>Räumliche Darstellungsart</label>
+    </element>
+    <element name="gmd:MD_ProgressCode" context="gmd:status">
+        <label>Status Fortschritt</label>
+    </element>
+    <element name="gmd:MD_GeometricObjectTypeCode">
+        <label>Geometrische Objekttyp</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+        <label>Zugriffsbeschränkung</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+        <label>Nutzungsbeschränkung</label>
+    </element>
+    <element name="gmd:DS_AssociationTypeCode">
+        <label>Assoziationstyp</label>
+    </element>
+    <element name="gmd:DS_InitiativeTypeCode">
+        <label>Initiative Typ</label>
+    </element>
+    <element name="gmd:otherConstraints">
+        <label>Andere Einschränkungen</label>
+    </element>
+    <element name="gmd:MD_LegalConstraints">
+        <label>Rechtliche Einschränkungen</label>
+    </element>
+    <element name="gmd:MD_LegalConstraints">
+        <label>Rechtliche Einschränkungen</label>
+    </element>
+    <element name="gmd:aggregateDataSetIdentifier">
+        <label>Identifikator</label>
+    </element>
+    <element name="gmd:MD_AggregateInformation">
+        <label>Aggregationsinformation</label>
+    </element>
+    <element name="gmd:denominator">
+        <label>Räumliche Auflösung</label>
+    </element>
+    <element name="gmd:MD_RepresentativeFraction">
+        <label>Representative Fraction</label>
+    </element>
+    <element name="gmd:MD_ScopeCode">
+        <label>Anwendungsbereich</label>
+    </element>
+    <element name="gmd:Country">
+        <label>Land</label>
+    </element>
+    <element name="gmd:LanguageCode">
+        <label>Sprache</label>
+    </element>
+    <element name="gmd:statement">
+        <label>Erklärung</label>
+    </element>
+    <element name="gmd:LI_Lineage">
+        <label>Abstammung</label>
+    </element>
 </labels>

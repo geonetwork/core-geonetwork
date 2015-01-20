@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
 
 /**
 * @author Jesse on 11/4/2014.
@@ -61,7 +60,9 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
             }
 
             if (Files.isRegularFile(resolvedResource)) {
-                return new StreamSource(Files.newInputStream(resolvedResource), resolvedResource.toUri().toASCIIString());
+                final PathStreamSource pathInputSource = new PathStreamSource(resolvedResource);
+                pathInputSource.setSystemId(resolvedResource.toUri().toASCIIString());
+                return pathInputSource;
             }
         } catch (Exception e) {
             // ignore

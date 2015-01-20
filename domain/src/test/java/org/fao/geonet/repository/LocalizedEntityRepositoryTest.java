@@ -4,17 +4,17 @@ import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.domain.IsoLanguage_;
 import org.jdom.Element;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +29,11 @@ public class LocalizedEntityRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     private IsoLanguageRepository _repository;
+
+    @Before
+    public void setUp() throws Exception {
+        _inc.set(0);
+    }
 
     @Test
     public void testFindAllAsXml() throws Exception {

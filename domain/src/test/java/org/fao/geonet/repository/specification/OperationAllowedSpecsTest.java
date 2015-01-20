@@ -65,6 +65,14 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     }
 
     @Test
+    public void testHasOperationIdIn() {
+        Specification<OperationAllowed> hasGroupIdIn = OperationAllowedSpecs.hasOperationIdIn(Arrays.asList(_downloadOp.getId()));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasGroupIdIn, new Sort(operationIdPath(), metadataIdPath()));
+
+        assertEquals(found.size(), 2);
+    }
+
+    @Test
     public void testIsPublic() throws Exception {
         int viewOpId = ReservedOperation.view.getId();
         int allGroupId = ReservedGroup.all.getId();
@@ -85,8 +93,8 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
 
     @Test
     public void testHasGroupId() {
-        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasGroupId(_intranetGroup.getId());
-        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort(groupIdPath(), metadataIdPath()));
+        Specification<OperationAllowed> hasGroupId = OperationAllowedSpecs.hasGroupId(_intranetGroup.getId());
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasGroupId, new Sort(groupIdPath(), metadataIdPath()));
 
         assertEquals(found.size(), 3);
         assertEquals(_intranetGroup.getId(), found.get(0).getId().getGroupId());

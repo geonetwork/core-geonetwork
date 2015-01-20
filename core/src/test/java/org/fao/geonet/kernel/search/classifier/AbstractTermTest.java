@@ -22,20 +22,18 @@
 
 package org.fao.geonet.kernel.search.classifier;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.nio.file.Path;
-
-import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.IO;
 import org.openrdf.sesame.config.ConfigurationException;
-import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public abstract class AbstractTermTest {
 
@@ -56,7 +54,7 @@ public abstract class AbstractTermTest {
     }
 
     private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
-      throws ConfigurationException {
+            throws ConfigurationException, IOException {
         Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
         thesaurus.initRepository();
         return thesaurus;
