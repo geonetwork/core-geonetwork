@@ -124,11 +124,14 @@ public class Handlers {
         ])
     }
     def isoLanguageEl = { language ->
+        def lang;
         if (!language.'gmd:LanguageCode'.isEmpty()) {
-            f.codelistValueLabel(language.'gmd:LanguageCode')
+            lang = f.codelistValueLabel(language.'gmd:LanguageCode')
         } else {
-            f.translateLanguageCode(language.text());
+            lang = f.translateLanguageCode(language.text());
         }
+
+        commonHandlers.func.textEl(f.nodeLabel(language), lang);
     }
     def onlineResourceEls = { els ->
         def links = []
