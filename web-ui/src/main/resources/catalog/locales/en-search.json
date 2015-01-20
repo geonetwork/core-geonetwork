@@ -137,5 +137,14 @@
   "thisMonth": "thisMonth",
   "last3Months": "last3Months",
   "last6Months": "last6Months",
-  "thisYear": "lastYear"
+  "thisYear": "lastYear",
+  "publishComplete": "Publish Report",
+  "unpublishComplete": "Unpublish Report",
+  "mdPublished": "Metadata Published",
+  "mdUnpublished": "Metadata Unpublished",
+  "mdUnmodified": "Unaffected Metadata",
+  "mdDisallowed": "Restricted Metadata",
+  "metadataUnchanged": "Metadata unmodified",
+  "accessRestricted": "You do not have permission to change this metadata",
+
 }

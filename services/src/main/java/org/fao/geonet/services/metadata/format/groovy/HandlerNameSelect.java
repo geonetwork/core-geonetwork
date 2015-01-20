@@ -16,6 +16,7 @@ public class HandlerNameSelect extends Handler {
     public HandlerNameSelect(Pattern namePattern, int priority, Closure handler) {
         super(priority, handler);
         this.namePattern = namePattern;
+        setName(namePattern.toString());
     }
 
     @Override
