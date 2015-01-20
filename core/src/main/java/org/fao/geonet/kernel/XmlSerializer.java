@@ -43,20 +43,21 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
-import org.jdom.Comment;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Comment;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.sql.SQLException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -80,8 +81,7 @@ public abstract class XmlSerializer {
     }
     @VisibleForTesting
     static final String WITH_HELD_COMMENT = "Data_Withheld_";
-
-    public static class ThreadLocalConfiguration {
+	public static class ThreadLocalConfiguration {
 	    private boolean forceFilterEditOperation = false;
 
         public boolean isForceFilterEditOperation() {
@@ -94,6 +94,7 @@ public abstract class XmlSerializer {
 
     @Autowired
     protected SchemaManager schemaManager;
+
     @Autowired
     protected SettingManager _settingManager;
     @Autowired
@@ -102,10 +103,15 @@ public abstract class XmlSerializer {
     protected DataManager _dataManager;
     @Autowired
     private MetadataRepository _metadataRepository;
-    @Autowired
-    private ThreadLocalCleaner threadLocalCleaner;
 
     private static ThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<>();
+
+    @PostConstruct
+    void init() {
+        configThreadLocal = threadLocalCleaner.createInheritableThreadLocal(ThreadLocalConfiguration.class);
+    }
+    @Autowired
+    private ThreadLocalCleaner threadLocalCleaner;
 
     public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
         ThreadLocalConfiguration config = configThreadLocal.get();
@@ -117,9 +123,27 @@ public abstract class XmlSerializer {
         return config;
     }
 
-    @PostConstruct
-    void init() {
-        configThreadLocal = threadLocalCleaner.createInheritableThreadLocal(ThreadLocalConfiguration.class);
+    private static String createWithheldCommentText(SettingManager settingManager, ReservedOperation operation) {
+        return WITH_HELD_COMMENT + operation.name() + "_" + settingManager.getSiteId();
+    }
+
+    private void removeWithheldComments(Element dataXml) {
+        List<Comment> toDetach = new ArrayList<>();
+        final Iterator descendants = dataXml.getDescendants();
+        while (descendants.hasNext()) {
+            Object next = descendants.next();
+
+            if (next instanceof Comment) {
+                Comment comment = (Comment) next;
+                if (comment.getText().startsWith(WITH_HELD_COMMENT)) {
+                    toDetach.add(comment);
+                }
+            }
+        }
+
+        for (Comment comment : toDetach) {
+            comment.detach();
+        }
     }
 
     /**
@@ -143,188 +167,6 @@ public abstract class XmlSerializer {
 			return false;
 		}
 	}
-
-    /**
-     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
-     *
-     *
-     * @param id
-     * @param isIndexingTask If true, then withheld elements are not removed.
-     * @return
-     * @throws Exception
-     */
-	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
-        Metadata metadata = _metadataRepository.findOne(id);
-
-        if (metadata == null)
-            return null;
-
-        String xmlData = metadata.getData();
-        Element metadataXml = Xml.loadString(xmlData, false);
-
-        if (!isIndexingTask) {
-            ServiceContext context = ServiceContext.get();
-            MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
-
-            // Check if a filter is defined for this schema
-            // for the editing operation ie. user who can not edit
-            // will not see those elements.
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            boolean filterEditOperationElements = editXpathFilter != null;
-            List<Namespace> namespaces = mds.getNamespaces();
-            if (context != null) {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                AccessManager am = gc.getBean(AccessManager.class);
-                if (editXpathFilter != null) {
-                    boolean canEdit = am.canEdit(context, id);
-                    if (canEdit) {
-                        filterEditOperationElements = false;
-                    }
-                }
-                Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
-                if (downloadXpathFilter != null) {
-                    boolean canDownload = am.canDownload(context, id);
-                    if (!canDownload) {
-                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.download, downloadXpathFilter, namespaces);
-                    }
-                }
-                Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
-                if (dynamicXpathFilter != null) {
-                    boolean canDynamic = am.canDynamic(context, id);
-                    if (!canDynamic) {
-                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.dynamic, dynamicXpathFilter, namespaces);
-                    }
-                }
-            }
-            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
-                removeFilteredElement(_settingManager, metadataXml, ReservedOperation.editing, editXpathFilter, namespaces);
-            }
-        }
-        return (Element) metadataXml.detach();
-    }
-
-    public static void removeFilteredElement(SettingManager manager,
-                                             Element metadata,
-                                             ReservedOperation operation,
-                                             final Pair<String, Element> xPathAndMarkedElement,
-                                             List<Namespace> namespaces) throws JDOMException {
-        // xPathAndMarkedElement seem can be null in some schemas like dublin core
-        if (xPathAndMarkedElement == null) return;
-
-        String xpath = xPathAndMarkedElement.one();
-        Element mark = xPathAndMarkedElement.two();
-
-        List<?> nodes = Xml.selectNodes(metadata,
-                xpath,
-                namespaces);
-        for (Object object : nodes) {
-            if (object instanceof Element) {
-                Element element = (Element) object;
-                if(mark != null) {
-                    element.removeContent();
-                    element.addContent(new Comment(createWithheldCommentText(manager, operation)));
-                    // Remove attributes
-                    @SuppressWarnings("unchecked")
-                    List<Attribute> atts = new ArrayList<>(element.getAttributes());
-                    for (Attribute attribute : atts) {
-                        attribute.detach();
-                    }
-
-                    // Insert attributes or children element of the mark
-                    @SuppressWarnings("unchecked")
-                    List<Attribute> markAtts = new ArrayList<>(mark.getAttributes());
-                    for (Attribute attribute : markAtts) {
-                        element.setAttribute((Attribute) attribute.clone());
-                    }
-                    for (Object o : mark.getChildren()) {
-                        if (o instanceof Element) {
-                            Element e = (Element) o;
-                            element.setContent((Element) e.clone());
-                        }
-                    }
-                } else {
-                    element.detach();
-                }
-            }
-        }
-    }
-
-    private static String createWithheldCommentText(SettingManager settingManager, ReservedOperation operation) {
-        return WITH_HELD_COMMENT + operation.name() + "_" + settingManager.getSiteId();
-    }
-
-    /**
-     * TODO javadoc.
-     *
-     *
-     * @param newMetadata the metadata to insert
-     * @param dataXml the data to set on the metadata before saving
-     * @param context a service context
-     * @return the saved metadata
-     * @throws SQLException
-     */
-	protected Metadata insertDb(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
-		if (resolveXLinks()) Processor.removeXLink(dataXml);
-        removeWithheldComments(dataXml);
-        newMetadata.setDataAndFixCR(dataXml);
-        return _metadataRepository.save(newMetadata);
-	}
-
-    private void removeWithheldComments(Element dataXml) {
-        List<Comment> toDetach = new ArrayList<>();
-        final Iterator descendants = dataXml.getDescendants();
-        while (descendants.hasNext()) {
-            Object next = descendants.next();
-
-            if (next instanceof Comment) {
-                Comment comment = (Comment) next;
-                if (comment.getText().startsWith(WITH_HELD_COMMENT)) {
-                    toDetach.add(comment);
-                }
-            }
-        }
-
-        for (Comment comment : toDetach) {
-            comment.detach();
-        }
-    }
-
-    /**
-     *  Updates an xml element into the database. The new data replaces the old one.
-     *
-     * @param id
-     * @param xml
-     * @param changeDate
-     * @param updateDateStamp
-     * @param uuid null to not update metadata uuid column or the uuid value to be used for the update.
-     * @throws SQLException
-     */
-    protected void updateDb(final String id, final Element xml, final String changeDate,
-                            final boolean updateDateStamp,
-                            final String uuid) throws SQLException {
-        if (resolveXLinks()) Processor.removeXLink(xml);
-
-        int metadataId = Integer.valueOf(id);
-        Metadata md = _metadataRepository.findOne(metadataId);
-
-        assertWithheldElementsAreFull(md, xml, schemaManager.getSchema(md.getDataInfo().getSchemaId()));
-
-        md.setDataAndFixCR(xml);
-        md.getDataInfo().setRoot(xml.getQualifiedName());
-        if (updateDateStamp) {
-            if (changeDate == null) {
-                md.getDataInfo().setChangeDate(new ISODate());
-            } else {
-                md.getDataInfo().setChangeDate(new ISODate(changeDate));
-            }
-        }
-
-        if (uuid != null) {
-            md.setUuid(uuid);
-        }
-
-        _metadataRepository.save(md);
-    }
 
     private void assertWithheldElementsAreFull(Metadata unmodifiedMetadata, Element updatedXml, MetadataSchema schema) {
         if (!unmodifiedMetadata.getHarvestInfo().isHarvested()) {
@@ -395,6 +237,165 @@ public abstract class XmlSerializer {
         }
         return false;
     }
+
+    /**
+     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
+     *
+     *
+     * @param id
+     * @param isIndexingTask If true, then withheld elements are not removed.
+     * @return
+     * @throws Exception
+     */
+	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
+        Metadata metadata = _metadataRepository.findOne(id);
+
+		if (metadata == null)
+			return null;
+
+		String xmlData = metadata.getData();
+		Element metadataXml = Xml.loadString(xmlData, false);
+
+		if (!isIndexingTask) {
+            ServiceContext context = ServiceContext.get();
+            MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
+
+            // Check if a filter is defined for this schema
+            // for the editing operation ie. user who can not edit
+            // will not see those elements.
+            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
+            boolean filterEditOperationElements = editXpathFilter != null;
+            List<Namespace> namespaces = mds.getNamespaces();
+            if (context != null) {
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                AccessManager am = gc.getBean(AccessManager.class);
+                if (editXpathFilter != null) {
+                    boolean canEdit = am.canEdit(context, id);
+                    if (canEdit) {
+                        filterEditOperationElements = false;
+                    }
+                }
+                Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
+                if (downloadXpathFilter != null) {
+                    boolean canDownload = am.canDownload(context, id);
+                    if (!canDownload) {
+                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.download, downloadXpathFilter, namespaces);
+                    }
+                }
+                Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                if (dynamicXpathFilter != null) {
+                    boolean canDynamic = am.canDynamic(context, id);
+                    if (!canDynamic) {
+                        removeFilteredElement(_settingManager, metadataXml, ReservedOperation.dynamic, dynamicXpathFilter, namespaces);
+                    }
+                }
+    		}
+    		if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+                removeFilteredElement(_settingManager, metadataXml, ReservedOperation.editing, editXpathFilter, namespaces);
+            }
+		}
+		return (Element) metadataXml.detach();
+	}
+
+    public static void removeFilteredElement(SettingManager manager,
+                                             Element metadata,
+                                             ReservedOperation operation,
+                                             final Pair<String, Element> xPathAndMarkedElement,
+                                             List<Namespace> namespaces) throws JDOMException {
+        // xPathAndMarkedElement seem can be null in some schemas like dublin core
+        if (xPathAndMarkedElement == null) return;
+
+        String xpath = xPathAndMarkedElement.one();
+        Element mark = xPathAndMarkedElement.two();
+
+        List<?> nodes = Xml.selectNodes(metadata,
+                xpath,
+                namespaces);
+        for (Object object : nodes) {
+            if (object instanceof Element) {
+                Element element = (Element) object;
+                if(mark != null) {
+                    element.removeContent();
+                    element.addContent(new Comment(createWithheldCommentText(manager, operation)));
+                    // Remove attributes
+                    @SuppressWarnings("unchecked")
+                    List<Attribute> atts = new ArrayList<>(element.getAttributes());
+                    for (Attribute attribute : atts) {
+                        attribute.detach();
+                    }
+
+                    // Insert attributes or children element of the mark
+                    @SuppressWarnings("unchecked")
+                    List<Attribute> markAtts = new ArrayList<>(mark.getAttributes());
+                    for (Attribute attribute : markAtts) {
+                        element.setAttribute((Attribute) attribute.clone());
+                    }
+                    for (Object o : mark.getChildren()) {
+                        if (o instanceof Element) {
+                            Element e = (Element) o;
+                            element.setContent((Element) e.clone());
+                        }
+                    }
+                } else {
+                    element.detach();
+                }
+            }
+        }
+    }
+
+    /**
+     * TODO javadoc.
+     *
+     *
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
+     * @throws SQLException
+     */
+	protected Metadata insertDb(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		if (resolveXLinks()) Processor.removeXLink(dataXml);
+        removeWithheldComments(dataXml);
+        newMetadata.setDataAndFixCR(dataXml);
+        return _metadataRepository.save(newMetadata);
+	}
+
+    /**
+     *  Updates an xml element into the database. The new data replaces the old one.
+     *
+     * @param id
+     * @param xml
+     * @param changeDate
+     * @param updateDateStamp
+     * @param uuid null to not update metadata uuid column or the uuid value to be used for the update.
+     * @throws SQLException
+     */
+    protected void updateDb(final String id, final Element xml, final String changeDate,
+                            final boolean updateDateStamp,
+                            final String uuid) throws SQLException {
+		if (resolveXLinks()) Processor.removeXLink(xml);
+
+        int metadataId = Integer.valueOf(id);
+        Metadata md = _metadataRepository.findOne(metadataId);
+
+        assertWithheldElementsAreFull(md, xml, schemaManager.getSchema(md.getDataInfo().getSchemaId()));
+
+        md.setDataAndFixCR(xml);
+        md.getDataInfo().setRoot(xml.getQualifiedName());
+        if (updateDateStamp) {
+            if (changeDate == null) {
+                md.getDataInfo().setChangeDate(new ISODate());
+            } else {
+                md.getDataInfo().setChangeDate(new ISODate(changeDate));
+            }
+        }
+
+        if (uuid != null) {
+            md.setUuid(uuid);
+        }
+
+        _metadataRepository.save(md);
+	}
 
     /**
      * Deletes an xml element given its id.
