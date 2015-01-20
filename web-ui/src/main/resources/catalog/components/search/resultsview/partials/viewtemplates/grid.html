@@ -34,7 +34,7 @@
                data-ng-if="::md.category.length > 0">
             <span data-translate="">listOfCategories</span>
             <a data-ng-repeat="cat in ::md.category"
-               data-ng-href="#?tab=search&_cat={{cat}}">
+               data-ng-href="#/search?_cat={{cat}}">
               <i class="fa"
                  title="{{cat | translate}}">
                 <img data-ng-src="../../images/category/{{cat}}.png"/>

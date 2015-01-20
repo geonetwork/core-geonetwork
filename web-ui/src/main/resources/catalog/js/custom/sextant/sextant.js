@@ -32,7 +32,8 @@
     'gnNcWms',
     '$timeout',
     'gnMdView',
-    function($scope, $location, $window, suggestService, $http, gnSearchSettings,
+    function($scope, $location, $window, suggestService,
+             $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView) {
 
@@ -68,7 +69,8 @@
       });
 
       $scope.displayMapTab = function() {
-        if (angular.isUndefined(viewerMap.getSize()) || viewerMap.getSize()[0] == 0 ||
+        if (angular.isUndefined(viewerMap.getSize()) ||
+            viewerMap.getSize()[0] == 0 ||
             viewerMap.getSize()[1] == 0) {
           $timeout(function() {
             viewerMap.updateSize();

@@ -38,7 +38,7 @@
       var openModal = function(o, scope, eventName) {
         var popup = gnPopup.create(o, scope);
         var myListener = $rootScope.$on(eventName,
-            function(e,o) {
+            function(e, o) {
               $timeout(function() {
                 popup.close();
               }, 0);
@@ -210,8 +210,8 @@
         var url = gnSearchSettings.formatter.defaultUrl + md.getId();
         gnPopup.createModal({
           title: 'permalink',
-          content: '<a href="'+url+'" target="_blank">'+url+'</a>'
+          content: '<a href="' + url + '" target="_blank">' + url + '</a>'
         });
-      }
+      };
     }]);
 })();

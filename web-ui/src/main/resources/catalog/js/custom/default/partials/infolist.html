@@ -1,6 +1,6 @@
 <ul class="gn-info-list">
   <li data-ng-repeat="md in searchResults.records"
-      data-ng-click="openRecord(null, md, null)"
+      data-ng-click="go(md.getUuid())"
       data-ng-mouseenter="showMore(true)"
       data-ng-mouseleave="showMore(false)"
       id="gn-info-list{{md.getUuid()}}">
@@ -16,7 +16,7 @@
         </a>
         <br/>
         <a data-ng-repeat="cat in ::md.category"
-           data-ng-href="#?tab=search&_cat={{cat}}">
+           data-ng-href="#/search?_cat={{cat}}">
           <i class="fa"
              title="{{cat | translate}}">
             <img data-ng-src="../../images/category/{{cat}}.png"/>
@@ -28,7 +28,7 @@
       {{md.abstract}}
     </div>
   </li>
-  <li class="gn-more"><a data-ng-href="#?tab=search&sortBy=popularity">
+  <li class="gn-more"><a data-ng-href="#/search?sortBy=popularity">
     <span data-translate="">viewMore</span>
     <i class="fa fa-ellipsis-h"></i>
   </a></li>

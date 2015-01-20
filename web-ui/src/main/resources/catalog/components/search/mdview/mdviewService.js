@@ -27,6 +27,10 @@
 
         // TODO: do not add duplicates
         mdView.previousRecords.push(md);
+
+        // Set the route
+        $location.path('/metadata/' + md['geonet:info'].uuid);
+        $location.search('');
       };
     }
   ]);
