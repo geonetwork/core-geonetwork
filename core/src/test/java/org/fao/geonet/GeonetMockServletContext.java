@@ -15,14 +15,14 @@ import java.nio.file.Paths;
  * @author Jesse on 10/17/2014.
  */
 public class GeonetMockServletContext extends MockServletContext {
-    private Path resourcePath = IO.toPath(".");
+    private Path resourcePath = IO.toPath("");
 
     public GeonetMockServletContext() {
         super(new FileSystemResourceLoader());
     }
 
     public void setTestClass(Class testClass) {
-        this.resourcePath = AbstractCoreIntegrationTest.getWebappDir(testClass);
+        this.resourcePath = getServletRelativePath(AbstractCoreIntegrationTest.getWebappDir(testClass));
     }
 
     @Override
@@ -38,7 +38,13 @@ public class GeonetMockServletContext extends MockServletContext {
         String resourceLocation = super.getResourceLocation(path);
         if (resourceLocation.startsWith("/") || resourceLocation.startsWith("\\")) {
             resourceLocation = resourceLocation.substring(1);
-    }
+        }
         return this.resourcePath.resolve(resourceLocation).toString();
     }
+
+    private Path getServletRelativePath(Path webappDir) {
+        Path servletRelativePath = IO.toPath("").toAbsolutePath();
+        return servletRelativePath.relativize(webappDir.toAbsolutePath());
+    }
+
 }
