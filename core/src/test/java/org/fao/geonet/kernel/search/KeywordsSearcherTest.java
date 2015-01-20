@@ -536,7 +536,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         		addContent(new Element("pKeyword").setText(keywordId));
         searcher.search("fra", params);
         
-        assertEquals(1, searcher.getResults().size());
+        assertEquals(11, searcher.getResults().size());
         assertEquals(keywordId, searcher.getResults().get(0).getUriCode());
     }
 
