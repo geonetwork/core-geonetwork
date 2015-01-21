@@ -285,7 +285,7 @@
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
-      data-toggle="tooltip" data-placement="top" title="Delete this fieldset and all the contained fields"/>
+      data-toggle="tooltip" data-placement="top" title="{{{{'deleteFieldSet' | translate}}}}"/>
 
   </xsl:template>
   
@@ -939,7 +939,7 @@
         data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
         data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
-        data-toggle="tooltip" data-placement="top" title="Delete this field"/>
+        data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
     </xsl:if>
   </xsl:template>
 
@@ -1037,7 +1037,7 @@
         </xsl:choose>
       </div>
       <div class="col-sm-1">
-          <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="Delete"/>
+          <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
       </div>
     </div>
   </xsl:template>
