@@ -450,6 +450,10 @@ public class EditLib {
                           for (int i = 0; i < children.size(); i++) {
                               el.addContent(children.get(i).detach());
                           }
+                          List<Attribute> attributes = node.getAttributes();
+                          for (Attribute a : attributes) {
+                              el.setAttribute((Attribute)a.clone());
+                          }
                       } else {
                           el.addContent(node);
                       }

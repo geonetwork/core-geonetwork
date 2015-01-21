@@ -1,12 +1,12 @@
 package org.fao.geonet.kernel.search.classifier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TermLabel extends AbstractTerm {
     private String langCode;
@@ -25,7 +25,7 @@ public class TermLabel extends AbstractTerm {
         if (hasUriFor(value)) {
             return classifyUri(getUriFor(value));
         } else {
-            return new ArrayList<CategoryPath>();
+            return new ArrayList<>();
         }
     }
 

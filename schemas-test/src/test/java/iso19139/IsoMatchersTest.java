@@ -39,11 +39,12 @@ public class IsoMatchersTest extends AbstractFormatterTest {
                 + "    </gmd:textGroup>\n"
                 + "  </gmd:PT_FreeText>\n"
                 + "</gmd:title></root>", ISO19139Namespaces.GMD, ISO19139Namespaces.GCO);
-        Handler handler = handlers.findHandlerFor((GPathResult) elem.getProperty("gmd:title"));
+        final GPathResult titleEl = (GPathResult) elem.getProperty("gmd:title");
+        Handler handler = handlers.findHandlerFor(titleEl);
 
         assertNotNull(handler);
         assertTrue("Expected 'Text Elements' but got '" + handler.getName() + "'", handler.getName().equals("Text Elements"));
-        String handlerResult = executeHandler(request, formatterId, elem, handler);
+        String handlerResult = executeHandler(request, formatterId, titleEl, handler);
         assertTrue(handlerResult, handlerResult.contains("GER Citation Title"));
 
         elem = parseXml(
@@ -52,13 +53,14 @@ public class IsoMatchersTest extends AbstractFormatterTest {
                 + "<gmd:language>\n"
                 + "    <gco:CharacterString>eng</gco:CharacterString>\n"
                 + "</gmd:language></root>", ISO19139Namespaces.GMD, ISO19139Namespaces.GCO);
-        handler = handlers.findHandlerFor((GPathResult) elem.getProperty("gmd:language"));
+        final GPathResult langEl = (GPathResult) elem.getProperty("gmd:language");
+        handler = handlers.findHandlerFor(langEl);
 
         assertNotNull(handler);
         assertTrue("Expected 'Text Elements' but got '" + handler.getName() + "'", handler.getName().contains("gmd:language"));
-        handlerResult = executeHandler(request, formatterId, elem, handler);
+        handlerResult = executeHandler(request, formatterId, langEl, handler);
         assertTrue(handlerResult, handlerResult.contains("English"));
-        assertTrue(handlerResult, handlerResult.contains("Language"));
+        assertTrue(handlerResult, handlerResult.contains("Metadata language"));
     }
 
 }

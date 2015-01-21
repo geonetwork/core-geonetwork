@@ -395,6 +395,7 @@
   module.value('gnConfig', {
     key: {
       isXLinkEnabled: 'system.xlinkResolver.enable',
+      isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',

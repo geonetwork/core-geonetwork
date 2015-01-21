@@ -15,7 +15,6 @@ import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.net.URL;
 import java.nio.file.Files;
