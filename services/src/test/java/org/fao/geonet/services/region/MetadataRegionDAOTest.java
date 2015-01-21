@@ -114,6 +114,19 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void testGetGeomXPath() throws Exception {
+        final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
+
+        final Element extentEl = Xml.selectElement(metadata, "*//gml:MultiSurface", NAMESPACES);
+        final String xpath = Xml.getXPathExpr(extentEl);
+        Geometry geom = regionDAO.getGeom(this.context, "metadata:@id" + this.metadataId + ":@xpath" + xpath, false, "EPSG:4326");
+        assertNotNull(geom);
+
+        geom = regionDAO.getGeom(this.context, "metadata:@id" + this.metadataId + ":@xpath920934802934809238", false, "EPSG:4326");
+        assertNull(geom);
+    }
+
+    @Test
     public void testWrongMetadataId() throws Exception {
         final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
 

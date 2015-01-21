@@ -1,4 +1,4 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.services.region.metadata;
 
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
@@ -15,6 +15,7 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.region.MetadataRegion;
 import org.fao.geonet.utils.Xml;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
@@ -28,10 +29,11 @@ import java.util.List;
 
 public class MetadataRegionSearchRequest extends Request {
 
-    public static final String GML_ID_PREFIX = "@gml";
+    private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
+            new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
     private String id;
     private String label;
-    private ServiceContext context;
+    ServiceContext context;
     private final Parser parser;
     private GeometryFactory factory;
 
@@ -68,7 +70,7 @@ public class MetadataRegionSearchRequest extends Request {
         } else if(id != null) {
             String [] parts = id.split(":", 3);
             String mdId = parts[1];
-            String id = null;
+            String id;
             if(parts.length > 2) {
                 id = parts[2];
                 loadOnly(regions, Id.create(mdId), id);
@@ -83,46 +85,20 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private void loadOnly(List<Region> regions, Id mdId, String id) throws Exception {
-        final boolean isGmlId = id.startsWith(GML_ID_PREFIX);
-        Element metadata = findMetadata(mdId, !isGmlId);
+        MetadataRegionFinder regionFinder = null;
+        for (MetadataRegionFinder next : regionFinders) {
+            if (next.accepts(id)) {
+                regionFinder = next;
+                break;
+            }
+        }
+        Element metadata = findMetadata(mdId, regionFinder.needsEditData());
         if (metadata != null) {
-            if (isGmlId) {
-                findByGmlId(regions, mdId, id, metadata);
-            } else {
-                findByGeonetElemRef(regions, mdId, id, metadata);
-            }
+            regionFinder.findRegion(this, regions, mdId, id, metadata);
         }
     }
 
-    private void findByGmlId(List<Region> regions, Id mdId, String id, Element metadata) throws Exception {
-        String gmlId = id.substring(GML_ID_PREFIX.length());
-        final Element geomEl = Xml.selectElement(metadata, "*//*[@gml:id = '" + gmlId + "']", Lists.newArrayList(Geonet.Namespaces.GML));
-        if (geomEl != null) {
-            findContainingGmdEl(regions, mdId, geomEl);
-        }
-    }
-
-    private void findByGeonetElemRef(List<Region> regions, Id mdId, String id, Element metadata) throws Exception {
-        Iterator<?> iter = metadata.getDescendants();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (obj instanceof Element) {
-                Element el = (Element) obj;
-                Element geonet = el.getChild("element", Geonet.Namespaces.GEONET);
-                if (geonet != null && id.equals(geonet.getAttributeValue("ref"))) {
-                    Iterator<?> extent = descentOrSelf(el);
-                    if (extent.hasNext()) {
-                        regions.add(parseRegion(mdId, (Element) extent.next()));
-                        return;
-                    } else {
-                        if (findContainingGmdEl(regions, mdId, el)) return;
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean findContainingGmdEl(List<Region> regions, Id mdId, Element el) throws Exception {
+    boolean findContainingGmdEl(List<Region> regions, Id mdId, Element el) throws Exception {
         Element parent = el;
         while (parent != null) {
             if (EXTENT_FINDER.matches(parent)) {
@@ -148,7 +124,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
-    private Iterator<?> descentOrSelf(Element metadata) {
+    Iterator<?> descentOrSelf(Element metadata) {
         Iterator<?> extents;
         if(EXTENT_FINDER.matches(metadata)) {
             extents = Collections.singletonList(metadata).iterator();
@@ -158,7 +134,7 @@ public class MetadataRegionSearchRequest extends Request {
         return extents;
     }
 
-    private Region parseRegion(Id mdId, Element extentObj) throws Exception {
+    Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
 
@@ -177,7 +153,7 @@ public class MetadataRegionSearchRequest extends Request {
             double maxy = Double.parseDouble(extentObj.getChild("northBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
             geometry = factory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         }
-        
+
         if (geometry != null) {
             Element element = extentObj.getChild("element", Geonet.Namespaces.GEONET);
             if (element != null) {
@@ -304,7 +280,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
         
     }
-    
+
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");
     private static final class FindByNodeName implements Filter {
         private static final long serialVersionUID = 1L;
@@ -325,7 +301,7 @@ public class MetadataRegionSearchRequest extends Request {
             }
             return false;
         }
-        
+
     }
 
 }
