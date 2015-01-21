@@ -1,6 +1,5 @@
 package iso19139
 
-import groovy.util.slurpersupport.GPathResult
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.MapConfig
@@ -307,18 +306,11 @@ public class Handlers {
             def background = mapConfig.background
             def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
             def mdId = env.getMetadataId();
-            def gmlId = null;
-            def depthFirstIter = el.depthFirst();
-            while (gmlId == null && depthFirstIter.hasNext()) {
-                GPathResult next = depthFirstIter.next();
-                def nextGmlId = next['@gml:id'].text()
-                if (!nextGmlId.isEmpty()) {
-                    gmlId = nextGmlId;
-                }
-            }
+            def xpath = f.getXPathFrom(el);
 
-            if (gmlId != null) {
-                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@gml$gmlId\"\n" +
+
+            if (xpath != null) {
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
                         "         style=\"width:${width/4}; min-height:${width/4};\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
