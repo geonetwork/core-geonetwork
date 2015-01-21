@@ -1,37 +1,56 @@
-<a class="navbar-link" href="catalog.search#/home">
+
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="catalog.search#/home">
   <img class="gn-logo"
        ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
   <span class="visible-lg">{{info.site.name}}</span>
 </a>
-<a href="catalog.search#/search"
-   class="btn btn-default navbar-btn"
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+		  {{mainTabs}}
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="catalog.search#/search"
    title="{{'search' | translate}}">
     <i class="fa fa-search"/>
-    <span class="visible-lg" data-translate="">search</span>
-</a>
+    <span  data-translate="">search</span>
+</a></li>
+              <li>
 <a href="catalog.search#/map"
-   class="btn btn-default navbar-btn"
    title="{{'map' | translate}}">
   <i class="fa fa-globe"/>
-  <span class="visible-lg" data-translate="">map</span>
-</a>
+  <span  data-translate="">map</span>
+</a></li>
+              <li>
 <a href="catalog.edit"
-   class="btn btn-default navbar-btn"
    data-ng-show="authenticated"
    title="{{'editorBoard' | translate}}">
     <i class="fa fa-plus"/>
-    <span class="visible-lg" data-translate="">contribute</span>
-</a>
-<a class="btn btn-default navbar-btn" href="{{pages.admin}}"
+    <span  data-translate="">contribute</span>
+</a></li>
+              <li>
+<a href="{{pages.admin}}"
    data-ng-show="authenticated"
    title="{{'adminConsole' | translate}}">
     <i class="fa fa-th"/>
-    <span class="visible-lg" data-translate="">adminConsole</span>
-</a>
+    <span  data-translate="">adminConsole</span>
+</a></li>
+              
+            </ul>
 
+			<form class="navbar-form navbar-right" role="language">
+                <div class="form-group pull-right"
+                     data-gn-language-switcher="lang"
+                     data-langs="langs"/>
+            </form>
 
-<div class="navbar-collapse navbar-ex1-collapse pull-right gn-account">
-    <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-right">
         <li data-ng-show="authenticated">
           <a href="admin.console#/organization/users/{{user.username}}"
               title="{{'userDetails' | translate}}"
@@ -43,25 +62,23 @@
         </li>
         <li data-ng-show="authenticated">
           <a href="../../j_spring_security_logout"
-             class="btn btn-link"
              title="{{'signout' | translate}}">
-            <i class="fa fa-sign-out"></i>
+            <i class="fa fa-sign-out"></i> Logout
           </a>
         </li>
         <li data-ng-show="!authenticated">
             <a href="{{pages.signin}}"
-               class="btn btn-link"
+              
                data-ng-keypress="$event">
                 <i class="fa fa-sign-in"/>
-                <span class="visible-lg" data-translate="">signIn</span>
+                <span data-translate="">signIn</span>
             </a>
         </li>
-        <li>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group pull-right"
-                     data-gn-language-switcher="lang"
-                     data-langs="langs"/>
-            </form>
-        </li>
     </ul>
+	
 </div>
+</div>
+
+
+
+
