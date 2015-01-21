@@ -1,13 +1,17 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
+import groovy.util.slurpersupport.GPathResult;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.services.metadata.format.ConfigFile;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatterParams;
@@ -18,8 +22,10 @@ import org.mockito.Mockito;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -120,4 +126,29 @@ public class FunctionsTest {
         // no exception? good
     }
 
+    @Test
+    public void testGetXPath() throws Exception {
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
+        final String sampleMetadataXml = Resources.toString(resource, Constants.CHARSET);
+        final GPathResult xml = AbstractFormatterTest.parseXml(sampleMetadataXml);
+
+        GPathResult polygon = null, bbox = null;
+        final Iterator iterator = xml.depthFirst();
+        while (iterator.hasNext()) {
+            Object elem = iterator.next();
+            if (elem instanceof GPathResult) {
+                GPathResult result = (GPathResult) elem;
+                if (result.name().equals("gmd:EX_BoundingPolygon")) {
+                    polygon = result;
+                }
+                if (result.name().equals("gmd:EX_GeographicBoundingBox")) {
+                    bbox = result;
+                }
+            }
+        }
+
+        assertEquals("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[2]/gmd:EX_Extent/gmd:geographicElement[2]/gmd:EX_GeographicBoundingBox", functions.getXPathFrom(bbox));
+        assertEquals("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[2]/gmd:EX_Extent/gmd:geographicElement[1]/gmd:EX_BoundingPolygon", functions.getXPathFrom(polygon));
+
+    }
 }

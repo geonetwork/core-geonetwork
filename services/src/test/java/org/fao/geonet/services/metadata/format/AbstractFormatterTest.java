@@ -138,7 +138,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         return Math.round(num * 1000) /1000;
     }
 
-    protected GPathResult parseXml(String xmlString, Namespace... namespaces) throws Exception {
+    public static GPathResult parseXml(String xmlString, Namespace... namespaces) throws Exception {
         Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
         for (Namespace namespace : namespaces) {
             namespaceUriToPrefix.put(namespace.getPrefix(), namespace.getURI());

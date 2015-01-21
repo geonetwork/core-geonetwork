@@ -60,10 +60,10 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(
     inheritLocations = true,
     locations = {"classpath:core-repository-test-context.xml", "classpath:web-test-context.xml"}
-)
-public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
-    @Autowired
-    protected ConfigurableApplicationContext _applicationContext;
+    )
+    public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
+        @Autowired
+        protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
     protected EntityManager _entityManager;
     @Autowired
@@ -212,7 +212,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return admin;
     }
 
-    public Element getSampleMetadataXml() throws IOException, JDOMException {
+    public static Element getSampleMetadataXml() throws IOException, JDOMException {
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
