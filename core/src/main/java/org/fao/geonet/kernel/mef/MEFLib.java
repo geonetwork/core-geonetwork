@@ -29,12 +29,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -222,9 +217,11 @@ public class MEFLib {
 	 * Get metadata record.
 	 * 
 	 * @param uuid
-	 * @return
+	 * @return A pair composed of the domain object metadata
+	 *  AND the record to be exported (includes Xlink resolution
+	 *  and filters depending on user session).
 	 */
-	static Metadata retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+	static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
 
         final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
@@ -233,16 +230,27 @@ public class MEFLib {
 			throw new MetadataNotFoundEx("uuid=" + uuid);
         }
 
-        DataManager dm = context.getBean(DataManager.class);
 
+		// Retrieve the metadata document
+		// using data manager in order to
+		// apply all filters (like XLinks,
+		// withheld)
+        DataManager dm = context.getBean(DataManager.class);
 		String id = ""+metadata.getId();
         boolean forEditing = false;
         boolean withEditorValidationErrors = false;
-        Element data = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
-        data.removeChild("info", Edit.NAMESPACE);
-        metadata.setData(Xml.getString(data));
+        Element metadataForExportXml = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
+		metadataForExportXml.removeChild("info", Edit.NAMESPACE);
+		String metadataForExportAsString = Xml.getString(metadataForExportXml);
 
-        return metadata;
+		// Prepend xml declaration if needed.
+		if (!metadataForExportAsString.startsWith("<?xml")) {
+			metadataForExportAsString =
+					"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+					metadataForExportAsString;
+		}
+
+        return Pair.read(metadata, metadataForExportAsString);
 	}
 
 	/**

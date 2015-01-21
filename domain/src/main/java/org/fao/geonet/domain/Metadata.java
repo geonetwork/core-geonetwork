@@ -131,7 +131,19 @@ public class Metadata extends GeonetEntity {
     }
 
     /**
-     * Set the metadata data as a string (typically XML)
+     * Set the metadata data as a string (typically XML).
+     *
+     * Warning: Do not use it when the user is not authenticated.
+     *
+     * When using this method be sure that
+     * the data to be persisted are the complete metadata
+     * record. For example, if the current user in session
+     * is not authenticated and element filters are applied
+     * (eg. withheld), do not set the data with the response
+     * of {@link org.fao.geonet.kernel.DataManager#getMetadata}
+     * in such case as the original content may be altered.
+     *
+     * Use XmlSerializer instead in an authenticated session.
      *
      * @param data the data for this metadata record.
      * @return this metadata entity.
@@ -143,6 +155,10 @@ public class Metadata extends GeonetEntity {
 
     /**
      * Set the data and convert all the end of line characters to be only a \n character.
+     *
+     * Warning: Do not use it when the user is not authenticated.
+     *
+     * Use XmlSerializer instead in an authenticated session.
      *
      * @param xml the data as XML.
      * @return this entity.
