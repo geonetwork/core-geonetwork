@@ -279,13 +279,9 @@ public class GeonetworkDataDirectory {
         uploadDir = setDir(jeevesServlet, webappName, handlerConfig,
                 ".upload" + KEY_SUFFIX, Geonet.Config.UPLOAD_DIR, "data", "upload"
         );
-        htmlCacheDir = IO.toPath(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
-        handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.toAbsolutePath().toString());
-        try {
-            Files.createDirectories(htmlCacheDir);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig,
+                ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
 

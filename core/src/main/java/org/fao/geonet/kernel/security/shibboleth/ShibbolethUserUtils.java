@@ -142,7 +142,8 @@ public class ShibbolethUserUtils {
 		String firstname = getHeader(req, config.getFirstnameKey(), "");
 		Profile profile = Profile.findProfileIgnoreCase(getHeader(req,
 				config.getProfileKey(), ""));
-		String group = getHeader(req, config.getGroupKey(), "");
+		// TODO add group to user
+		//String group = getHeader(req, config.getGroupKey(), "");
 
 		if (username != null && username.trim().length() > 0) { 
 			// TODO ....add other constraints to be sure it's
@@ -154,9 +155,10 @@ public class ShibbolethUserUtils {
 				profile = Profile.Guest;
 			}
 
-			if (group.equals("")) {
-				group = config.getDefaultGroup();
-			}
+			// TODO add group to user
+			//if (group.equals("")) {
+			//	group = config.getDefaultGroup();
+			//}
 
 			// FIXME: needed? only accept the first 256 chars
 			if (username.length() > 256) {

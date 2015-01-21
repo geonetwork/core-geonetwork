@@ -236,7 +236,7 @@ public class Thesaurus {
 	    RepositoryConfig repConfig = new RepositoryConfig(getKey());
 
         SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
-        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().toUri().toString(),
+        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().toString(),
                 RDFFormat.RDFXML);
         repConfig.addSail(syncSail);
         repConfig.addSail(memSail);

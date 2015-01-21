@@ -58,7 +58,6 @@ public class OaiPmhParams extends AbstractParams
 		super.create(node);
 
 		Element site     = node.getChild("site");
-		Element options  = node.getChild("options");
 		Element searches = node.getChild("searches");
 
 		url      = Util.getParam(site, "url",  "");
@@ -78,7 +77,6 @@ public class OaiPmhParams extends AbstractParams
 		super.update(node);
 
 		Element site     = node.getChild("site");
-		Element options  = node.getChild("options");
 		Element searches = node.getChild("searches");
 
 		url      = Util.getParam(site,  "url",  url);
