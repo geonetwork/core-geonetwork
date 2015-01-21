@@ -59,7 +59,7 @@ input[type=text], input[type=number], select {
 
 
 .gn-editor-container {
-  padding: 10px;
+  padding: 20px 5px;
   margin-top: 45px;
 }
 
@@ -83,7 +83,7 @@ form.gn-editor {
    */
   fieldset > div.form-group.gn-field,
   fieldset > div.row.gn-field {
-    border-top: 1px solid #EEE;
+//    border-top: 1px solid #EEE;
 //    padding-left:  (@grid-gutter-width / 2);
     padding-top: 5px;
   }
@@ -107,7 +107,7 @@ form.gn-editor {
   }
   
   .form-group {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
   }
   
   legend {
@@ -138,15 +138,19 @@ form.gn-editor {
   }
   
   .control-label {
-    color: #858585;
+      color: #999999;
+      font-weight: 200;
+      padding-top: 0px;
+      line-height: 1em;
+
   }
   
   .gn-required > label {
-    color: #333333;
+ //   color: #333333;
   }
   
   .gn-move {
-    .pull-right();
+//    .pull-right();
   }
   
   legend > div.gn-move {
@@ -162,7 +166,7 @@ form.gn-editor {
   
   .gn-has-xlink {
     label, fieldset > legend {
-      opacity: .7;
+  //    opacity: .7;
     }
   }
   
@@ -245,6 +249,69 @@ form.gn-editor {
   fieldset.gn-logo {
     max-height: inherit;
   }
+  fieldset {
+      padding: 5px;
+      border: 1px solid #ebebeb;
+      border-radius: 3px;
+  }
+  .gn-field {
+      border-radius: 3px;
+      margin: 0px;
+      padding: 5px;
+  }
+  .field-bg {
+      background-color: #f7f7f7;
+  }
+  .gn-move {
+      border: none;
+  }
+  legend {
+      padding-left: 20px;
+      border: none;
+      cursor: pointer;
+      color: #333333;
+  }
+  legend:before {
+      content: "\f0d7";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      margin-top: 3px;
+      margin-left: -14px;
+      font-size: 16px;
+  }
+  legend.collapsed:before {
+      content: "\f0da"
+  }
+  i.btn.fa-times.text-danger {
+      visibility: hidden;
+      padding: 5px;
+  }
+  .show {
+      visibility: visible;
+  } 
+  .gn-value .col-xs-8 {
+      padding-left: 0px;
+  }
+  .gn-value .col-xs-4 {
+      padding-right: 0px;
+  }
+
+  .gn-required > label:after {
+      content: "*";
+      font-size: 2.5em;
+      margin: 7px 0 0 7px;
+      position: absolute;
+      color: #a94442;
+      font-weight: normal;
+  }
+  .form-horizontal .form-group {
+      margin-left: 0px;
+      margin-right: 0px;
+  }
+
 }
 
 form.gn-tab-inspire {
@@ -291,4 +358,7 @@ form.gn-tab-inspire {
 
 .gn-schematron-title {
   word-wrap: break-word;
+}
+.navbar-collapse {
+  padding-right: 0px;
 }

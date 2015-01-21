@@ -89,7 +89,7 @@
 
           var delimiter = ' or ';
           scope.field = attrs.gnFacetMultiselect;
-          scope.index = scope.field.substring(0, scope.field.length-1);
+          scope.index = scope.field.substring(0, scope.field.length - 1);
 
           scope.$watch('searchResults.facet', function(v) {
             scope.facetObj = v[scope.field];
@@ -108,7 +108,7 @@
            * Check if the facet item is checked or not, depending if the
            * value is in the search params.
            * @param {string} value
-           * @returns {*|boolean}
+           * @return {*|boolean}
            */
           scope.isInSearch = function(value) {
             return scope.searchObj.params[scope.index] &&
@@ -121,21 +121,21 @@
           // watcher on searchObj.params
           scope.updateSearch = function(value) {
             var search = scope.searchObj.params[scope.index];
-            if(angular.isUndefined(search)) {
+            if (angular.isUndefined(search)) {
               scope.searchObj.params[scope.index] = value;
             }
             else {
-              if(search == '') {
+              if (search == '') {
                 scope.searchObj.params[scope.index] = value;
               }
               else {
                 var s = search.split(delimiter);
                 var idx = s.indexOf(value);
-                if(idx < 0 ){
+                if (idx < 0) {
                   scope.searchObj.params[scope.index] += delimiter + value;
                 }
                 else {
-                  s.splice(idx,1);
+                  s.splice(idx, 1);
                   scope.searchObj.params[scope.index] = s.join(delimiter);
                 }
               }

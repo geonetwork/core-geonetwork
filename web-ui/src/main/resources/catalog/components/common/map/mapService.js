@@ -369,7 +369,7 @@
 
               var matrixSet;
               for (var i = 0; i < capabilities.TileMatrixSet.length; i++) {
-                if(capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
+                if (capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
                   matrixSet = capabilities.TileMatrixSet[i];
                 }
               }

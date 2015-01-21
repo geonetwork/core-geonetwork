@@ -2,20 +2,29 @@
   <div class="panel-heading">
     <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
-    <button type="button" class="btn btn-default btn-xs pull-right"
-      data-ng-class="showErrorsOnly ? 'active' : ''"
-      data-ng-show="hasErrors"
-      data-ng-click="toggleShowErrors()"
-      data-translate="">onlyErrors</button>
-    &nbsp;
-    <button type="button" class="btn btn-default"
-            data-ng-click="load()">
+     <button type="button" class="btn btn-default pull-right btn-xs"
+     data-ng-click="load()" data-toggle="tooltip" data-placement="top" title="{{'runValidation' | translate}}">
       <i data-ng-hide="loading" class="fa fa-refresh"/>
       <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
-    </button>
+    </button>&nbsp;
+     <div class="btn-group pull-right btn-group-xs" role="group" aria-label="..." style="margin-right:5px">
+      <button type="button" class="btn btn-default btn-xs"
+      data-ng-class="showSuccess ? 'active' : ''"
+      data-ng-click="toggleShowSuccess()"
+      data-ng-show="hasSuccess" 
+      data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
+      <span class="fa fa-thumbs-up" aria-hidden="true"></span></button>
+      <button type="button" class="btn btn-default btn-xs"
+      data-ng-class="showErrors ? 'active' : ''"
+      data-ng-click="toggleShowErrors()"
+      data-ng-show="hasErrors" 
+      data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
+      <span class="fa fa-thumbs-down" aria-hidden="true"></span></button>
+    </div>
   </div>
   <div class="panel-body" data-ng-show="ruleTypes.length !== 0">
     <div class="gn-validation-report">
+          
       <div data-ng-repeat="type in ruleTypes">
         <h4><span class="gn-schematron-title">{{type.label | translate}}</span>
             <span class="label pull-right"
@@ -35,7 +44,7 @@
             <div class="list-group" data-ng-repeat="pattern in type.patterns">
               <li class="list-group-item" data-ng-repeat="rule in pattern.rules"
                   title="{{rule.details}}"
-                  data-ng-hide="!type.expanded && (showErrorsOnly && rule['@type'] === 'success')"
+                  data-ng-show="(showErrors && rule['@type'] === 'error') || (showSuccess && rule['@type'] === 'success')"
                   data-ng-class="rule['@type'] !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
                 <h5>{{pattern.title}}</h5>
                 <p>{{rule.msg}}</p>
@@ -44,6 +53,5 @@
         </p>
       </div>
     </div>
-    
   </div>
 </div>
