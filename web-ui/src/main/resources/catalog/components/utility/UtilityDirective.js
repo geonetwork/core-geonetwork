@@ -350,6 +350,54 @@
     };
   });
 
+
+  module.directive('gnClickAndSpin', ['$parse',
+    function($parse) {
+      return {
+        restrict: 'A',
+        compile: function(scope, element, attr) {
+          var fn = $parse(element['gnClickAndSpin'], null, true);
+          return function ngEventHandler(scope, element) {
+            var running = false;
+            var icon = element.find('i');
+            var spinner = null;
+            var start = function() {
+              running = true;
+              element.addClass('running');
+              icon.addClass('hidden');
+              spinner = element.
+                  prepend('<i class="fa fa-spinner fa-spin"></i>');
+            };
+            var done = function() {
+              running = false;
+              element.removeClass('running');
+              element.find('i').first().remove();
+              icon.removeClass('hidden');
+            };
+
+            element.on('click', function(event) {
+              start();
+              var callback = function() {
+                fn(scope, {$event: event});
+              };
+              // Available on ng-click - not sure if we may use it
+              //if (forceAsyncEvents[eventName] && $rootScope.$$phase) {
+              //  scope.$evalAsync(callback);
+              //} else {
+              if (angular.isFunction(callback.then)) {
+                callback().then(function() {
+                  done();
+                });
+              } else {
+                scope.$apply(callback);
+                done();
+              }
+            });
+          };
+        }
+      };
+    }]);
+
   /**
    * Use to initialize bootstrap datepicker
    */
