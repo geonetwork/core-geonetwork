@@ -20,6 +20,20 @@ public enum TemplateType {
         }
     }
     public static TemplateType fromPath(Path path) throws IOException {
-        return fromContentType(Files.probeContentType(path));
+        String type = Files.probeContentType(path);
+        if(type == null) {
+            String file = path.getFileName().toString();
+            if(file.endsWith(".xsd") ||
+                    file.endsWith(".html") ||
+                    file.endsWith(".xml")) {
+                return XML;
+            }
+            else {
+                return TEXT;
+            }
+        }
+        else {
+            return fromContentType(Files.probeContentType(path));
+        }
     }
 }
