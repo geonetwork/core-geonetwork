@@ -838,8 +838,7 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                 scope: this,
                                 success: function (response) {
                                     // Add the fragment and save the metadata
-                                    var keywords = ["<" + tagName + " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
-                                                     response.responseText + "</" + tagName + ">"];
+                                    var keywords = [response.responseText];
                                     GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, editorPanel);
                                 }
                             });

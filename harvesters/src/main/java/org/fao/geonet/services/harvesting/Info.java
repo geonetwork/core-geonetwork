@@ -262,9 +262,9 @@ public class Info implements Service
             Element elRoot = new Element("stylesheets");
             for (Path sheet : sheets) {
 
-                    if (sheet.endsWith(".xsl")) {
+                    String id = sheet.toString();
+                    if (id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
-                        String id  = sheet.toString();
 
                         Element res = new Element(Jeeves.Elem.RECORD);
 
