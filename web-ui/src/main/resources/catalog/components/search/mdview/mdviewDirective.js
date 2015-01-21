@@ -3,9 +3,16 @@
 
   var module = angular.module('gn_mdview_directive', []);
 
-  module.directive('gnMetadataOpen',
-      ['$http', '$sanitize', '$compile', 'gnSearchSettings', '$sce',
-       function($http, $sanitize, $compile, gnSearchSettings, $sce) {
+  module.directive('gnMetadataOpen',[
+        '$http',
+        '$sanitize',
+        '$compile',
+        'gnSearchSettings',
+        '$sce',
+        'gnMdView',
+        '$location', '$rootScope',
+       function($http, $sanitize, $compile, gnSearchSettings,
+                $sce, gnMdView, $location, $rootScope) {
          return {
            restrict: 'A',
            scope: {
@@ -14,27 +21,24 @@
            },
 
            link: function(scope, element, attrs, controller) {
+
              element.on('click', function() {
-               var URI = gnSearchSettings.formatter.defaultUrl;
-               $http.get(URI + scope.md.getUuid()).then(function(response) {
-                 scope.fragment = $sce.trustAsHtml(response.data);
-                 var el = document.createElement('div');
-                 el.setAttribute('gn-metadata-display', '');
-                 $(scope.selector).append(el);
-                 $compile(el)(scope);
-               });
+               gnMdView.setLocationUuid(scope.md.getUuid());
+               scope.$apply();
              });
            }
          };
        }]
   );
 
-  module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {
+  module.directive('gnMetadataDisplay', [
+    'gnMdView', function(gnMdView) {
     return {
       templateUrl: '../../catalog/components/search/mdview/partials/' +
           'mdpanel.html',
       link: function(scope, element, attrs, controller) {
         scope.dismiss = function() {
+          gnMdView.removeLocationUuid();
           element.remove();
         };
 

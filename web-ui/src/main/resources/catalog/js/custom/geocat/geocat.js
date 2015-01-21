@@ -27,7 +27,8 @@
     'gnMap',
     'gnSearchSettings',
     '$window',
-    function($scope, $timeout, gnMap, gnSearchSettings, $window) {
+    'gnMdView',
+    function($scope, $timeout, gnMap, gnSearchSettings, $window, gnMdView) {
 
       var localStorage = $window.localStorage || {};
 
@@ -82,7 +83,7 @@
       $scope.$parent.$parent.langs = {'fre': 'fr', 'eng': 'en',
         'ger': 'ge', 'ita': 'it'};
 
-
+      gnMdView.initFormatter('.gn-resultview');
       $('#anySearchField').focus();
     }]);
 
@@ -124,11 +125,13 @@
     'gnSearchManagerService',
     'ngeoDecorateInteraction',
     '$q',
+    '$location',
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
         $timeout, suggestService, $http, gnSearchSettings,
-             gnSearchManagerService, ngeoDecorateInteraction, $q, gnMap) {
+             gnSearchManagerService, ngeoDecorateInteraction, $q,
+             $location, gnMap) {
 
 
       // Will store regions input values
@@ -445,7 +448,7 @@
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
         });
-      } else {
+      } else if($location.path().indexOf('/metadata/') != 0) {
         $scope.triggerSearch(true);
       }
     }]);

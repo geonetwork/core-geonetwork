@@ -182,10 +182,13 @@
           triggerSearchFn(false);
         } else {
           $location.search(params);
+          $location.path('/search');
         }
       };
 
       $scope.$on('$locationChangeSuccess', function() {
+        if($location.path() != '/search') return;
+        console.log('$locationChangeSuccess');
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
           delete params[o];
@@ -279,7 +282,7 @@
             }
           };
 
-          if (attrs.runsearch) {
+          if (attrs.runsearch && $location.path().indexOf('/metadata/') != 0) {
 
             // get permalink params on page load
             if (scope.searchObj.permalink) {
