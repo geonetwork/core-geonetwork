@@ -56,66 +56,61 @@
           </excludes>
       </resource>
     </resources>
+      <plugins>
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <executions>
+                  <!-- Fix JS style based on fixjsstyle.
+              See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
+                  <execution>
+                      <id>fixjsstyle</id>
+                      <phase>validate</phase>
+                      <goals>
+                          <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                          <executable>fixjsstyle</executable>
+                          <arguments>
+                              <argument>--strict</argument>
+                              <argument>-r</argument>
+                              <argument>src/main/resources/catalog/js</argument>
+                              <argument>-r</argument>
+                              <argument>src/main/resources/catalog/components</argument>
+                          </arguments>
+                      </configuration>
+                  </execution>
+                  <!-- Check JS style based on gjslint.
+              See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
+                  <execution>
+                      <id>gjslint</id>
+                      <phase>validate</phase>
+                      <goals>
+                          <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                          <executable>gjslint</executable>
+                          <arguments>
+                              <argument>--strict</argument>
+                              <argument>--custom_jsdoc_tags</argument>
+                              <argument>ngdoc,methodOf,deprecated,restrict,requires,kind,name,function,description,example</argument>
+                              <argument>-r</argument>
+                              <!-- Each source file in this directory will be checked. -->
+                              <argument>src/main/resources/catalog/js</argument>
+                              <argument>-r</argument>
+                              <argument>src/main/resources/catalog/components</argument>
+                          </arguments>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
+      </plugins>
   </build>
   <properties>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
     <closure.compile.level/>
   </properties>
     <profiles>
-        <profile>
-            <id>jslint</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <!-- Fix JS style based on fixjsstyle.
-                        See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-                            <execution>
-                                <id>fixjsstyle</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>fixjsstyle</executable>
-                                    <arguments>
-                                        <argument>--strict</argument>
-                                        <argument>-r</argument>
-                                        <argument>src/main/resources/catalog/js</argument>
-                                        <argument>-r</argument>
-                                        <argument>src/main/resources/catalog/components</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <!-- Check JS style based on gjslint.
-                        See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-                            <execution>
-                                <id>gjslint</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>gjslint</executable>
-                                    <arguments>
-                                        <argument>--strict</argument>
-                                        <argument>--custom_jsdoc_tags</argument>
-                                        <argument>ngdoc,methodOf,deprecated,restrict,requires,kind,name,function,description,example</argument>
-                                        <argument>-r</argument>
-                                        <!-- Each source file in this directory will be checked. -->
-                                        <argument>src/main/resources/catalog/js</argument>
-                                        <argument>-r</argument>
-                                        <argument>src/main/resources/catalog/components</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>tests-and-static-analysis</id>
             <activation>
