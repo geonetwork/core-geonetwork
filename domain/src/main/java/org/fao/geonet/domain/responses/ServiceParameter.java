@@ -16,6 +16,22 @@ import java.io.Serializable;
 public  class ServiceParameter implements Serializable {
     private static final long serialVersionUID = -7682021379005431348L;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @XmlAttribute
     protected String name;
 

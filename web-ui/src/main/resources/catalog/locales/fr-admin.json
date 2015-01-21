@@ -288,6 +288,7 @@
     "deleteThesaurus": "Supprimer",
     "deleteUser": "Supprimer",
     "deleteVirtualCSW": "Supprimer",
+    "virtualCswUpdateError": "Oops, il y a eu une erreur lors de la création du CSW",
     "description": "Description",
     "details": "Détails",
     "dublin-core": "Dublin Core",

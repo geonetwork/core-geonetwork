@@ -43,6 +43,14 @@ public class CswVirtualServiceListResponse implements Serializable {
     @XmlElement(name = "record")
     private List<CswVirtualServiceForList> servicesForList;
 
+    public List<CswVirtualServiceForList> getRecord() {
+        return servicesForList;
+    }
+
+    public void setRecord(List<CswVirtualServiceForList> servicesForList) {
+        this.servicesForList = servicesForList;
+    }
+
     public CswVirtualServiceListResponse() {
 
     }
