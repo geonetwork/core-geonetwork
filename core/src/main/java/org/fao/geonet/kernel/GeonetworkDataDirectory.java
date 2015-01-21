@@ -216,7 +216,11 @@ public class GeonetworkDataDirectory {
                 useDefaultDataDir = true;
             }
 
-            if (!Files.isWritable(this.systemDataDir)) {
+            try {
+                final Path testFile = this.systemDataDir.resolve("testDD.txt");
+                IO.touch(testFile);
+                Files.delete(testFile);
+            } catch (IOException e) {
                 Log.warning(
                         Geonet.DATA_DIRECTORY,
                         "    - Data directory is not writable. Set read/write privileges to user starting the catalogue (ie. "
