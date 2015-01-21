@@ -17,7 +17,8 @@
                 'partials/validationreport.html',
             scope: {},
             link: function(scope) {
-              scope.showErrorsOnly = true;
+              scope.showErrors = false;
+              scope.showSuccess = false;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.loading = false;
               scope.ruleTypes = [];
@@ -26,6 +27,7 @@
                 scope.numberOfRules = 0;
                 scope.ruleTypes = [];
                 scope.hasErrors = false;
+                scope.hasSuccess = false;
                 scope.loading = true;
 
                 gnValidation.get().then(function(ruleTypes) {
@@ -47,6 +49,7 @@
                   });
 
                   scope.ruleTypes = scope.ruleTypes.concat(optional);
+                  scope.hasSuccess = scope.ruleTypes.length > 0;
                   scope.loading = false;
                 });
               };
@@ -61,7 +64,10 @@
               };
 
               scope.toggleShowErrors = function() {
-                scope.showErrorsOnly = !scope.showErrorsOnly;
+                scope.showErrors = !scope.showErrors;
+              };
+              scope.toggleShowSuccess = function() {
+                scope.showSuccess = !scope.showSuccess;
               };
 
               scope.getClass = function(type) {

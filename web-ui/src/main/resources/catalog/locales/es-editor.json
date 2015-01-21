@@ -165,5 +165,9 @@
     "xsltToApply": "Aplicar conversión XSLT",
     "yearAndMonthMode": "Año y mes",
     "yearMode": "Sólo año",
-    "yourMetadata": "Tus metadatos"
+    "yourMetadata": "Tus metadatos",
+    "showHideErrors": "Mostrar / ocultar errores",
+    "showHideSuccess": "Mostrar / ocultar éxitos",
+    "deleteField": "Borrar este campo",
+    "deleteFieldSet": "Borrar esta sección"
 }

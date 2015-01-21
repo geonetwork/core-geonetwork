@@ -41,24 +41,24 @@
 
     <div data-gn-metadata-group-updater="groupOwner"/>
 
-    <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save(true)">
-      <i class="fa fa-save"/>&nbsp;
-      <span class="visible-lg" data-translate="">save</span>
-    </button>
-    <button type="button" class="btn navbar-btn" data-ng-click="validate()">
+    <button type="button" class="btn btn-default navbar-btn" data-ng-click="validate()">
       <i class="fa fa-check"/>&nbsp;
       <span class="visible-lg" data-translate=""
             title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
-    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="cancel()" 
+    <button type="button" class="btn btn-default navbar-btn gn-tooltip" data-ng-click="cancel()" 
       data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
       <i class="fa fa-undo"/>&nbsp;
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
-    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="close()">
+    <button type="button" class="btn btn-default navbar-btn gn-tooltip" data-ng-click="close()">
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
+    </button>
+    <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save(true)">
+      <i class="fa fa-save"/>&nbsp;
+      <span class="visible-lg" data-translate="">save</span>
     </button>
   </div>
 </nav>
