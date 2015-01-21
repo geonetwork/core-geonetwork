@@ -32,7 +32,7 @@
                 <tr data-ng-repeat="md in searchResults.records">
                   <td>{{md.title || md.defaultTitle}}</td>
                   <td>
-                    <a data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+                    <a target="_blank" data-ng-href="md.format.html?xsl=full_view&uuid={{md['geonet:info'].uuid}}">
                       <i class="fa fa-eye"></i>
                     </a>
                   </td>
