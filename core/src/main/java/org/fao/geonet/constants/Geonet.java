@@ -584,6 +584,7 @@ public final class Geonet {
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
     public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
+    public static final String CLASSIFIER = GEONETWORK + ".classifier";
     /**
      * Services.
      */

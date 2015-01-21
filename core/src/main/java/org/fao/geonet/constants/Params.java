@@ -147,7 +147,8 @@ public final class Params {
 	public static final String FILTER_GROUP     = "_groupPublished";
 	public static final String FILTER_CATEGORY     = "_cat";
     public static final String FILTER_DENOMINATOR = "denominator";
-	
+
+    public static final String CONTENT_TYPE = "_content_type";
 	
 	
 	

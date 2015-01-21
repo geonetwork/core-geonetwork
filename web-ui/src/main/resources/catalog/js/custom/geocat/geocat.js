@@ -98,7 +98,8 @@
           sortBy: sortBy,
           fast: 'index',
           from: 1,
-          to: to
+          to: to,
+          _content_type: 'json'
         });
       };
 
@@ -134,7 +135,7 @@
       $scope.regions = {};
 
       // data store for types field
-      $scope.types = ['any',
+      $scope.types = [
         'dataset',
         'basicgeodata',
         'basicgeodata-federal',
@@ -213,7 +214,8 @@
                   for (var i = 0; i < a.length; i++) {
                     res.push({
                       id: a[i]['@id'],
-                      name: a[i].name
+                      name: (a[i].label && a[i].label[$scope.lang]) ?
+                          a[i].label[$scope.lang] : a[i].name
                     });
                   }
                 };
@@ -225,6 +227,18 @@
           return defer.promise;
         })()
       };
+
+      // config for format suggestion multiselect
+      $scope.formatsOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'formatWithVersion',
+              'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
 
       $scope.gnMap = gnMap;
       var map = $scope.searchObj.searchMap;

@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
@@ -56,6 +57,8 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(inheritLocations = true, locations = "classpath:formatter-test-context.xml")
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
+    @Autowired
+    private ApplicationContext applicationContext;
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
@@ -156,10 +159,15 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     @Test
     public void testExec() throws Exception {
         final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false, false);
-
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.setPathInfo("/eng/blahblah");
             MockHttpServletResponse response = new MockHttpServletResponse();
+            final String srvAppContext = "srvAppContext";
+            request.getServletContext().setAttribute(srvAppContext, applicationContext);
+            JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(srvAppContext);
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
             formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
 
             final String view = response.getContentAsString();
@@ -171,7 +179,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             }
             try {
                 response = new MockHttpServletResponse();
-                formatService.exec("eng", "pdf", "" + id, null, formatter.getId(), "true", false, request, response);
+                formatService.exec("eng", "testpdf", "" + id, null, formatter.getId(), "true", false, request, response);
 //                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
 //                System.exit(0);
             } catch (Throwable t) {

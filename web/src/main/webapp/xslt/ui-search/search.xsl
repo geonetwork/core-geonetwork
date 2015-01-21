@@ -4,7 +4,7 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div data-ng-include="'{$uiResourcesPath}templates/search/{$searchView}/search.html'">
+    <div data-ng-include="'{$uiResourcesPath}templates/search/{$searchView}/search.html'" class="gn-full">
     </div>
   </xsl:template>
 </xsl:stylesheet>

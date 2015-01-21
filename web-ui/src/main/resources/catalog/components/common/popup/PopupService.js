@@ -76,9 +76,34 @@
         this.destroyed = true;
       };
 
+      var Modal = function(options, scope) {
+        var element = angular.element('' +
+            '<div class="modal fade in">' +
+            '<div class="modal-dialog in">' +
+            '  <div class="modal-content">' +
+            '    <div class="modal-header">' +
+            '      <button type="button" class="close" data-dismiss="modal">' +
+            '        &times;</button>' +
+            '      <h5 class="modal-title" translate>' +
+            '        <span>' + options.title + '</span></h5>' +
+            '      </div>' +
+            '    <div class="modal-body">' + options.content + '</div>' +
+            '  </div>' +
+            '</div>' +
+            '</div>');
+
+        $(document.body).append(element);
+        element.modal();
+        element.on('hidden.bs.modal', function() {
+          element.remove();
+        });
+      };
       return {
         create: function(options, scope) {
           return new Popup(options, scope);
+        },
+        createModal: function(options, scope) {
+          return new Modal(options, scope);
         }
       };
     }]);

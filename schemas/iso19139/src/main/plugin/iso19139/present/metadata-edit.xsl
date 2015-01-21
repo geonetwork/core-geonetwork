@@ -1302,8 +1302,9 @@
     <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
     
     <!-- Get current transformation mode based on XML fragement analysis -->
-    <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
-      else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+    <xsl:variable name="transformation"
+                  select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor'
+      else if (../@xlink:href) then 'to-iso19139-keyword-as-xlink'
       else 'to-iso19139-keyword'"/>
     
     <!-- Define the list of transformation mode available.
@@ -1373,8 +1374,8 @@
     <!-- Create a textarea which contains the XML snippet for updates.
     The name of the element starts with _X which means XML snippet update mode.
     -->
-    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}" rows="" cols="" class="debug">
-      <xsl:apply-templates mode="geonet-cleaner" select="."/>
+    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}_replace" rows="" cols="" class="debug">
+      <xsl:apply-templates mode="geonet-cleaner" select="parent::node()"/>
     </textarea>
     
   </xsl:template>

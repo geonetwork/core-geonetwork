@@ -116,7 +116,7 @@
                 if (stringValues.indexOf(event.item.id) === -1) {
                   stringValues.push(event.item.id);
                   prev = stringValues.slice();
-                  scope.gnValues = stringValues.join(' OR ');
+                  scope.gnValues = stringValues.join(' or ');
                   scope.$apply();
                 }
                 refreshDatum();
@@ -127,7 +127,7 @@
                 if (idx !== -1) {
                   stringValues.splice(idx, 1);
                   prev = stringValues.slice();
-                  scope.gnValues = stringValues.join(' OR ');
+                  scope.gnValues = stringValues.join(' or ');
                   scope.$apply();
                 }
                 refreshDatum();
@@ -136,7 +136,7 @@
               // model -> ui
               scope.$watch('gnValues', function() {
                 if (angular.isDefined(scope.gnValues) && scope.gnValues != '') {
-                  stringValues = scope.gnValues.split(' OR ');
+                  stringValues = scope.gnValues.split(' or ');
                 }
                 else {
                   stringValues = [];

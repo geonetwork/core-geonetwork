@@ -188,13 +188,54 @@
         //}
       };
 
+      //Set default actions to do when click on specific
+      //kind of link. eg: click on layer -> add to map
+      mdSettings = {};
+      mdSettings.actions = {
+        'onlinesrc' : {
+          'class' : function(md) {
+            return 'link';
+          },
+          'iconClass' : function(md) {
+            return 'link';
+          },
+          'click' : function(md) {
+            if (md.protocol.contains('WMS')) {
+              return 'scope.mapService.addWmsToMap(' +
+                  "scope.map , {LAYERS: '" + md.name +
+                  "'},{url: '" + md.url + "'})";
+            } else if (md.protocol.contains('WFS')) {
+              return 'scope.mapService.addWfsToMap(' +
+                  "scope.map, {LAYERS: '" + md.name +
+                  "'},{url: '" + md.url + "'})";
+            } else {
+              return "window.location.assign('" + md.url + "')";
+            }
+          }
+        },
+        'parent' : {
+          'class' : function(md) {
+            return 'parent';
+          },
+          'iconClass' : function(md) {
+            return 'sitemap';
+          },
+          'click' : function(md) {
+            //TODO open new md
+            return ''; //window.location.assign('" + md.url + "')";
+
+          }
+        }
+      };
+
       // Set the default template to use
       searchSettings.resultTemplate = searchSettings.resultViewTpls[0].tplUrl;
 
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
         viewerMap: viewerMap,
-        searchMap: searchMap
+        searchMap: searchMap,
+        mdSettings: mdSettings
       });
     }]);
 })();

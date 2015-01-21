@@ -1,82 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<bean:beans default-lazy-init="true"
+    xmlns="http://www.fao.org/geonetwork/spring"
+    xmlns:bean="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd
+    "
+>
 <!-- 
-	Configuration of the taxonomy index used for faceting.
+    Configuration of the taxonomy index used for faceting and 
+    formatting/building facet summaries
 	
-	An item element defined a facet with the following parameter:
+    Each facet to be indexed is defined in the facets element. The facets element
+    lists the facets to index and how they should be indexed using attributes on facet elements as follows:
 	
-	* name: the name of the facet (ie. the tag name in the XML response)
-	* plural: the plural for the name (ie. the parent tag of each facet values)
-	* indexKey: the name of the field in the index
-	* (optional) sortBy: the ordering for the facet. Defaults is by count.
+    * name: the name of the facet
+    * indexKey: the name of the indexing field to be used for the facet
+    * label: the label to use for the facet in returned summaries
+    * classifier: (optional) a reference to a spring bean that should be used to
+        determine facet values for the indexing field.  
+        The bean must implement the org.fao.kernel.search.classifier.Classifier interface
+        Defaults to a classifier which uses the value of the field to be indexed
+
+    When a facet definitionis modified or added, the index MUST be rebuilt.
+
+    How facet summaries should be built and formatted for each summary type is defined 
+    in the summaryTypes element. The summaryTypes element contains a number of summary type elements each
+    of which define a facet summary that can be configured for a service. Each summary type 
+    element contains a number of item elements defining facets to be returned and how they 
+    should be formatted as follows:
+
+    * facet: the name of a facet defined above
+    * (optional) sortBy: the ordering for the facet. Defaults to by count.
 	* (optional) sortOrder: asc or desc. Defaults is descendant.
-	* (optional) max: the number of values to be returned for the facet. Defaults is 10.
+    * (optional) max: the number of values to be returned for the facet. Defaults to 10.
+    * (optional) depth: the depth to which hierarchical facets should be summarised. Defaults to 1.
+    * (optional) format: the format to be used for generating facet summary elements. Defaults to 
+        'FACET_NAME'. Can also be 'DIMENSION', which uses a top level
+        dimension tag and category tags for sub-categories which is more suitable for hierarchical facets. 
   * (optional) translator: Define a DB translator to retrieve label from description
   tables (eg. categoriesdes) or codelist translator to retrieve label from schema
   codelists files.
 
   eg. for category
-  <item name="category" plural="categories" indexKey="_cat" max="45"
+
+            <item dimension="category" plural="categories" indexKey="_cat" max="45"
             translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+
   or for group
-  <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+
+            <item dimension="groupOwner" plural="groupOwners" indexKey="_groupOwner"
         max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
-  When an item is modified or added, the index MUST be rebuild.
 -->
-<summary>
-	<def>
-		<hits>
-      <item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
-			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
-			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
-			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
-			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
-			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
-			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
-				sortBy="value" sortOrder="desc" max="40"/>
-      <item name="format"  plural="formats" indexKey="format" max="15" sortBy="value"/>
-			<item name="category" plural="categories" indexKey="_cat" max="45"
-						translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
-		</hits>
-    <subtemplates>
-      <item name="subTemplateType" plural="subTemplateTypes"
-            indexKey="_root"/>
-      <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
-            max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-    </subtemplates>
-		<titles>
-			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
-			/>
-		</titles>
-		<results>
-			<item name="keyword" plural="keywords" indexKey="keyword" max="100"/>
-		</results>
-		<results_with_summary>
-			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
-			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc" max="20"/>
-			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
-			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
-			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
-			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
-			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
-				sortOrder="asc" max="40"/>
-		</results_with_summary>
-		<suggestions>
-			<item name="keyword" plural="keywords" indexKey="keyword"/>
-            <item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc"/>
-			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
-			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="orgName" max="100"/>
-			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC"/>
-			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
-			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
-			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
-				sortOrder="asc"/>
-		</suggestions>
-	</def>
-</summary>
+    <facets>
+        <facet name="keyword" indexKey="keyword" label="keywords"/>
+        <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
+        <facet name="denominator" indexKey="denominator" label="denominators"/>
+        <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
+            label="spatialRepresentationTypes"/>
+        <facet name="orgName" indexKey="orgName" label="orgNames"/>
+        <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
+        <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
+        <facet name="type" indexKey="type" label="types"/>
+        <facet name="createDateYear" indexKey="createDateYear" label="createDateYears"/>
+        <facet name="format" indexKey="format" label="formats"/>
+        <facet name="title" indexKey="title" label="titles"/>
+        <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
+    </facets>
+
+    <summaryTypes>
+        <summaryType name="hits">
+            <item facet="keyword" max="15"/>
+            <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+            <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+            <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="orgName" max="15"/>
+            <item facet="metadataPOC" max="15"/>
+            <item facet="serviceType"/>
+            <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+            <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+            <item facet="format" max="15" sortBy="value"/>
+        </summaryType>
+        <summaryType name="subtemplates">
+            <item facet="subTemplateType"/>
+            <item facet="groupOwner" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        </summaryType>
+        <summaryType name="titles">
+            <item facet="title" sortOrder="desc" max="100"/>
+        </summaryType>
+        <summaryType name="results">
+            <item facet="keyword" max="100"/>
+        </summaryType>
+        <summaryType name="results_with_summary">
+            <item facet="keyword" max="15"/>
+            <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+            <item facet="denominator" sortBy="value" sortOrder="asc" max="20"/>
+            <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="orgName" max="15"/>
+            <item facet="metadataPOC" max="15"/>
+            <item facet="serviceType"/>
+            <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+            <item facet="createDateYear" sortOrder="asc" max="40"/>
+        </summaryType>>
+        <summaryType name="suggestions">
+            <item facet="keyword"/>
+            <item facet="title" sortOrder="desc" max="100"/>
+            <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
+            <item facet="denominator" sortBy="value" sortOrder="asc"/>
+            <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="orgName" max="100"/>
+            <item facet="metadataPOC"/>
+            <item facet="serviceType"/>
+            <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+            <item facet="createDateYear" sortOrder="asc"/>
+        </summaryType>
+    </summaryTypes>
+
+</bean:beans>

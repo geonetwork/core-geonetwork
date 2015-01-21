@@ -8,7 +8,7 @@ public enum HarvestValidationEnum {
 	NOVALIDATION {
 
 		public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
-			return;
+			context.getBean(SchemaManager.class).autodetectSchema(xml);
 		}
 	},
 	

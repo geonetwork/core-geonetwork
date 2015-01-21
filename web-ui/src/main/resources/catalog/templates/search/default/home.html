@@ -1,0 +1,117 @@
+<div class="gn-search-page"
+     data-ng-controller="GnSearchController">
+  <div class=""
+       data-ng-controller="gnsDefault">
+    <div class="container-fluid">
+      <div class="row gn-row-main">
+        <div class="col-xs-8">
+          <h1 data-translate="">getstarted</h1>
+          <p data-translate=""
+             data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
+
+          <div class="input-group gn-form-any">
+            <input type="text"
+                   class="form-control input-lg"
+                   autofocus=""
+                   data-ng-model="homeAnyField"
+                   placeholder="{{'anyPlaceHolder' | translate}}"
+                   data-typeahead="address for address in getAnySuggestions($viewValue)"
+                   data-typeahead-loading="anyLoading" class="form-control"
+                   data-typeahead-min-length="1"/>
+            <span class="input-group-btn">
+              <a class="btn btn-primary btn-lg"
+                      type="button"
+                      data-ng-href="#/search?any={{homeAnyField}}">
+                <i class="fa fa-search"></i>
+              </a>
+            </span>
+          </div>
+
+          <div class="row gn-row-filters"
+               data-ng-show="searchInfo.facet['categories']">
+            <div class="col-xs-12">
+              <h1 data-translate="">browseTopics</h1>
+              <!-- Here is a facet with icon to do a first level
+              filter
+              Directive to display a first level of filter based on
+              a facet which has to be available.
+
+              An icon could be provided as a CSS class name or
+              a pattern matching a URL resolving to an image.
+
+              Properties
+              <div data-flfilter="categories"
+                   data-title=""
+                   data-icon-path="../../images/category/{{['@name']}}.png">
+              -->
+              <ul class="gn-flfilter gn-flfilter-icon">
+                <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
+                  <a data-ng-href="#/search?_cat={{facet['@name']}}">
+                    <i class="gn-icon">
+                      <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
+                    </i>
+                    <div>{{facet['@label']}} ({{facet['@count']}})</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row gn-row-filters"
+               data-ng-show="searchInfo.facet['types']">
+            <div class="col-xs-12">
+              <h1 data-translate="">browseTypes</h1>
+
+              <ul class="gn-flfilter gn-flfilter-icon">
+                <li data-ng-repeat="(key, facet) in searchInfo.facet['types']"
+                    data-ng-show="facet['@label']">
+                  <a data-ng-href="#/search?type={{facet['@name']}}">
+                    <i class="gn-icon gn-icon-{{facet['@name']}}"></i>
+                    <div>{{facet['@label']}} ({{facet['@count']}})</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-xs-4">
+          <div class="well well-md">
+            <h1 data-translate="" data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
+
+            <p data-translate="">welcomeText</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row gn-row-info">
+        <div class="col-xs-12">
+          <tabset id="info-tabset">
+            <tab heading="{{'lastRecords' | translate}}"
+                 active="infoTabs.lastRecords.active">
+              <form class="form-horizontal"
+                    role="nav"
+                    data-ng-controller="gnsSearchLatestController"
+                    data-ng-search-form=""
+                    data-runSearch="true"
+                    data-ng-show="searchResults.records.length > 0">
+
+                <div data-gn-info-list=""></div>
+              </form>
+            </tab>
+            <tab heading="{{'preferredRecords' | translate}}"
+                 active="infoTabs.preferredRecords.active">
+              <form class="form-horizontal"
+                    role="nav"
+                    data-ng-controller="gnsSearchPopularController"
+                    data-ng-search-form=""
+                    data-runSearch="true"
+                    data-ng-show="searchResults.records.length > 0">
+                <div data-gn-info-list=""></div>
+              </form>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

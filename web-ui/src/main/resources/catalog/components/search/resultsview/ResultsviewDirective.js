@@ -65,7 +65,8 @@
           scope.map = scope.$eval(attrs.map);
           //scope.searchResults = scope.$eval(attrs.searchResults);
 
-          /** Display fa icons for categories */
+          /** Display fa icons for categories
+           * TODO: Move to configuration */
           scope.catIcons = {
             featureCatalogs: 'fa-table',
             services: 'fa-cog',
@@ -89,6 +90,10 @@
 
           scope.$watchCollection('searchResults.records', function(rec) {
 
+            //scroll to top
+            element.animate({scrollTop: top});
+
+            // get md extent boxes
             fo.getFeatures().clear();
             if (!angular.isArray(rec) ||
                 angular.isUndefined(scope.map.getTarget())) {

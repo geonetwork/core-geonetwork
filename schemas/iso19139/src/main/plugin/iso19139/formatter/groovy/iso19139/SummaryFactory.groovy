@@ -16,12 +16,22 @@ class SummaryFactory {
 
     def navBarItems
 
-    SummaryFactory(isoHandlers) {
+    /*
+     * This field can be set by the creator and provided a closure that will be passed the summary object.  The closure can
+     * perform customization for its needs.
+     */
+    Closure<Summary> summaryCustomizer = null
+
+    SummaryFactory(isoHandlers, summaryCustomizer) {
         this.isoHandlers = isoHandlers
         this.handlers = isoHandlers.handlers;
         this.f = isoHandlers.f;
         this.env = isoHandlers.env;
         this.navBarItems = ['gmd:identificationInfo', 'gmd:distributionInfo', isoHandlers.rootEl]
+        this.summaryCustomizer = summaryCustomizer;
+    }
+    SummaryFactory(isoHandlers) {
+        this(isoHandlers, null)
     }
 
     static void summaryHandler(select, isoHandler) {
@@ -42,7 +52,10 @@ class SummaryFactory {
         configureThumbnails(metadata, summary)
         configureLinks(summary)
 
-        if (env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf) {
+        /*
+         * TODO fix the xslt transform required by loadHierarchyLinkBlocks when running tests.
+         */
+        if (env.formatType == FormatType.pdf/* || env.formatType == FormatType.testpdf */) {
             summary.links.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
         } else {
             createDynamicHierarchyHtml(summary)
@@ -59,6 +72,10 @@ class SummaryFactory {
         summary.navBarOverflow = this.isoHandlers.packageViews.findAll{!navBarItems.contains(it)}.collect (toNavBarItem)
         summary.navBarOverflow.add(isoHandlers.commonHandlers.createXmlNavBarItem())
         summary.content = this.isoHandlers.rootPackageEl(metadata)
+
+        if (summaryCustomizer != null) {
+            summaryCustomizer(summary);
+        }
 
         return summary
     }
@@ -124,12 +141,12 @@ class SummaryFactory {
                 } else if (mimetype.contains("download")) {
                     type = "download";
                     iconClasses = "fa fa-download"
-                } else if (mimetype.contains("link")) {
-                    type = "link";
-                    iconClasses = "fa fa-link"
                 } else if (mimetype.contains("wfs")) {
                     type = "wfs";
                     icon = imagesDir + "wfs.png";
+                } else {
+                    type = "link";
+                    iconClasses = "fa fa-link"
                 }
 
                 def linkType = new LinkType(type, icon, iconClasses)
@@ -152,10 +169,10 @@ class SummaryFactory {
 //<![CDATA[
 $js
 //]]></script>
-<div><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Loading...</div>
+<div><i class="fa fa-circle-o-notch fa-spin pad-right"></i>Loading...</div>
 """
 
-        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-code-fork")
+        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-sitemap")
         linkBlock.html = html
         summary.links.add(linkBlock)
     }

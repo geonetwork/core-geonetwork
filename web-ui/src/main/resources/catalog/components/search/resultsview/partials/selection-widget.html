@@ -36,9 +36,9 @@
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-send-o"></i>&nbsp;<span translate>sendMail</span></a></li>
     <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'on')" >
-      <i class="fa fa-arrow-up"></i>&nbsp;<span translate>publish</span></a></li>
+      <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span></a></li>
     <li ng-if="authenticated" class="disabgit led"><a ng-click="mdService.publish(undefined, 'off')" >
-      <i class="fa fa-times"></i>&nbsp;<span translate>unpublish</span></a></li>
+      <i class="fa fa-lock"></i>&nbsp;<span translate>unpublish</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-user"></i>&nbsp;<span translate>newOwner</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
@@ -51,10 +51,5 @@
       <i class="fa fa-table"></i>&nbsp;<span translate>index</span></a></li>
     <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
       <i class="fa fa-share-square-o"></i>&nbsp;<span translate>exportSummary</span></a></li>
-    <li class="divider" ng-if="authenticated"></li>
-    <li ng-if="authenticated"><a href="catalog.edit#/create" target="_blank">
-      <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
-    <li ng-if="authenticated"><a href="catalog.edit#/import" target="_blank">
-      <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
   </ul>
 </div>

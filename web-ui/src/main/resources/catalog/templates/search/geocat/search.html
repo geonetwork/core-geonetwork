@@ -69,17 +69,21 @@
           <div class="panel panel-default hfull" ng-show="!initial">
             <div class="panel-heading">
               <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
+              <div gn-contribute-widget class="pull-right"></div>
               <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
             </div>
             <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
             <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
             </div>
-            <div class="panel-footer">
-              <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"
-                   gn-hitsperpage-values="searchObj.hitsperpageValues"></div>
-              <div data-gn-pagination="paginationInfo"
-                   data-hits-values="searchObj.hitsperpageValues"></div>
+            <div class="alert alert-warning gn-zarroo" ng-show="searchResults.count == 0 && !searching">
+              <span translate>zarooResult</span>
+            </div>
+            <div class="panel-footer dropup">
+              <div ng-show="searchResults.count > 0">
+                <div data-gn-pagination="paginationInfo"
+                  data-hits-values="searchObj.hitsperpageValues" ></div>
+              </div>
             </div>
           </div>
         </div>

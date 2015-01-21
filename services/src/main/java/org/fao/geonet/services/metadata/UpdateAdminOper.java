@@ -120,8 +120,8 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		for (Element el : list) {
 			String name  = el.getName();
 
-			if (name.startsWith("_"))
-			{
+			if (name.startsWith("_") &&
+                    !Params.CONTENT_TYPE.equals(name)) {
 				StringTokenizer st = new StringTokenizer(name, "_");
 
 				String groupId = st.nextToken();

@@ -51,6 +51,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.add.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.metadata.admin.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.metadata.batch.update.privileges!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.publish!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.unpublish!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.batch.admin.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.version!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.batch.version!?.*" access="hasRole('Editor')"></sec:intercept-url>

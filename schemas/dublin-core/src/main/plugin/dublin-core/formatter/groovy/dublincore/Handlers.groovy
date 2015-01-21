@@ -55,7 +55,7 @@ public class Handlers {
         summary.addOverviewNavItem = true
         commonHandlers.configureSummaryActionMenu(summary)
 
-        LinkBlock linkBlock = new LinkBlock(f.translate("links"));
+        LinkBlock linkBlock = new LinkBlock(f.translate("links"), "fa fa-link");
         summary.links.add(linkBlock)
         def toLink = { linkEl ->
             Link link;
@@ -74,8 +74,8 @@ public class Handlers {
             return link
         }
 
-        def relatedLinkType = new LinkType("related", null)
-        def referencesLinkType = new LinkType("references", null)
+        def relatedLinkType = new LinkType("related", null, "fa fa-sitemap")
+        def referencesLinkType = new LinkType("references", null, "fa fa-arrows-h")
         el.'dc:relation'.each{linkBlock.put(relatedLinkType, toLink(it))}
         el.'dc:URI'.each{linkBlock.put(referencesLinkType, toLink(it))}
 

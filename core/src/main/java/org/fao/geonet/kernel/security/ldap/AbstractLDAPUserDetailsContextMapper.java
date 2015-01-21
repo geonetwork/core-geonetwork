@@ -35,13 +35,8 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -49,8 +44,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.InetOrgPerson;
-import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.util.StringUtils;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -61,7 +56,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
  * @author francois
  */
 public abstract class AbstractLDAPUserDetailsContextMapper implements
-		WritableUserDetailsContextMapper, ApplicationContextAware {
+		WritableUserDetailsContextMapper {
 
 	Map<String, String[]> mapping;
 
@@ -72,8 +67,6 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 	private boolean createNonExistingLdapGroup = true;
 	private boolean createNonExistingLdapUser = false;
 
-	private ApplicationContext applicationContext;
-
 	protected DefaultSpringSecurityContextSource contextSource;
 
 	private UserDetailsManager ldapManager;
@@ -82,12 +75,22 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
 	private String ldapBaseDn;
 
+	@Autowired
+	private LDAPUtils ldapUtils;
+	
 	public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
 		ctx.setAttributeValues("objectclass", new String[] { "top", "person",
 				"organizationalPerson", "inetOrgPerson" });
 		ctx.setAttributeValue("sn", user.getUsername());
 		ctx.setAttributeValue("cn", user.getUsername());
 		ctx.setAttributeValue("uid", user.getUsername());
+		
+		if(user instanceof InetOrgPerson) {
+			InetOrgPerson p = (InetOrgPerson) user;
+			ctx.setAttributeValue("mail", p.getMail());
+			ctx.setAttributeValue("displayName", p.getDisplayName());
+			ctx.setAttributeValue("sn", p.getSn());
+		}
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 		}
 		String defaultGroup = mapping.get("privilege")[1];
 
-		Map<String, ArrayList<String>> userInfo = LDAPUtils
+		Map<String, ArrayList<String>> userInfo = ldapUtils
 				.convertAttributes(userCtx.getAttributes().getAll());
 
 		LDAPUser userDetails = new LDAPUser(username);
@@ -165,22 +168,28 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 	}
 
 	@Override
-	public void saveUser(LDAPUser userDetails) {
+	public synchronized void saveUser(LDAPUser userDetails) {
 		try {
-			UserRepository userRepo = applicationContext
-					.getBean(UserRepository.class);
-			GroupRepository groupRepo = applicationContext
-					.getBean(GroupRepository.class);
-			UserGroupRepository userGroupRepo = applicationContext
-					.getBean(UserGroupRepository.class);
 
 			if (createNonExistingLdapUser
 					&& !ldapManager.userExists(userDetails.getUsername())) {
 				InetOrgPerson.Essence p = new InetOrgPerson.Essence(userDetails);
 				p.setDn(ldapBaseDnPattern.replace("{0}",
 						userDetails.getUsername()));
-				p.setSn(userDetails.getUsername());
+				String surname = userDetails.getUser().getSurname();
+				if(StringUtils.isEmpty(surname)) {
+					//sn is usually mandatory on LDAP
+					surname = userDetails.getUsername();
+				}
+				p.setSn(surname);
 				p.setUid(userDetails.getUsername());
+				p.setMail(userDetails.getUser().getEmail());
+				String name = userDetails.getUser().getName();
+				if(StringUtils.isEmpty(name)) {
+					//displayname is usually mandatory too
+					name = userDetails.getUsername();
+				}
+				p.setDisplayName(name);
 				String[] cn = ldapBaseDn.split(",");
 				for (int i = 0; i < cn.length; i++) {
 					cn[i] = cn[i].substring(cn[i].indexOf("=") + 1);
@@ -188,9 +197,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 				p.setCn(cn);
 				ldapManager.createUser(p.createUserDetails());
 			}
-
-			LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo,
-					importPrivilegesFromLdap, createNonExistingLdapGroup);
+			ldapUtils.saveUser(userDetails, importPrivilegesFromLdap, createNonExistingLdapGroup);
 		} catch (Exception e) {
 			throw new AuthenticationServiceException(
 					"Unexpected error while saving/updating LDAP user in database",
@@ -240,11 +247,6 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 					+ value);
 		}
 		return value;
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 
 	public boolean isCreateNonExistingLdapGroup() {

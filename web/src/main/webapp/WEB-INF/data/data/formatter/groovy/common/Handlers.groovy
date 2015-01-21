@@ -14,6 +14,7 @@ public class Handlers {
 
     common.Matchers matchers
     common.Functions func
+    boolean requireValidMetadataForPublish = false;
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -133,8 +134,8 @@ public class Handlers {
         if (env.canEdit()) {
             summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
             def publishUrl = {
-                def on = it ? "on" : "off"
-                "md.privileges.update?update=true&id=${env.metadataId}&_1_0=$on&_1_1=$on&_1_5=$on&_1_6=$on"
+                def service = it ? "publish" : "unpublish"
+                "md.$service?ids=${env.metadataId}"
             }
 
             def basicPublicJs = { isPublish ->
@@ -148,10 +149,15 @@ public class Handlers {
             }
 
 
-            def published = env.indexInfo.get("_groupPublished").contains("all") || env.indexInfo.get("_groupPublished").contains("guest")
+            def published = hasIndexValue("_groupPublished", "all")
             def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
             summary.actions << publishAction
-            if (!published && env.indexInfo.get("_valid").contains("1")) {
+
+            def isValid = env.indexInfo.get("_valid")
+            if (isValid == null) {
+                isValid = '-1';
+            }
+            if (!published && (!requireValidMetadataForPublish || isValid.contains("1"))) {
                 publishAction.liClasses = ""
             }
             def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
@@ -161,8 +167,9 @@ public class Handlers {
             }
         }
         summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
+                new MenuAction(label: "exportRaw", javascript: "window.open('xml.metadata.get?uuid=${this.env.metadataUUID}', '_blank')", iconClasses: "fa fa-file-code-o"),
                 new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
-                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-print"),
+                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-file-pdf-o"),
                 new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
         ]);
 
@@ -174,12 +181,17 @@ public class Handlers {
         ]);
     }
 
+    def boolean hasIndexValue(indexField, value) {
+        def values = env.indexInfo.get(indexField)
+        values != null && values.contains(value)
+    }
+
     def loadHierarchyLinkBlocks() {
         def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
         def uuid = this.env.metadataUUID
         def id = this.env.metadataId
 
-        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-code-fork")
+        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-sitemap")
         def bean = this.env.getBean(GetRelated.class)
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
@@ -205,12 +217,16 @@ public class Handlers {
             if (relUuid != null) {
                 def href = createShowMetadataHref(relUuid)
                 def title = mdEl.getChildText("title")
-                if (title == null) {
+                if (title == null || title.isEmpty()) {
                     title = mdEl.getChildText("defaultTitle")
                 }
 
                 if (title != null && title.length() > 60) {
                     title = title.substring(0, 57) + "...";
+                }
+
+                if (title == null || title.isEmpty()) {
+                    title = relUuid;
                 }
 
                 hierarchy.put(linkType, new Link(href, title))

@@ -3028,4 +3028,22 @@
     <element name="gmd:MD_CharacterSetCode">
         <label>Character Set</label>
     </element>
+    <element name="gmd:MD_TopologyLevelCode">
+        <label>Topology Level</label>
+    </element>
+    <element name="gmd:MD_GeometricObjectTypeCode">
+        <label>Geometric Object Type</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+        <label>Access Restriction</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+        <label>Use Restriction</label>
+    </element>
+    <element name="gmd:DS_AssociationTypeCode">
+        <label>Association Type</label>
+    </element>
+    <element name="gmd:DS_InitiativeTypeCode">
+        <label>Initiative Type</label>
+    </element>
 </labels>

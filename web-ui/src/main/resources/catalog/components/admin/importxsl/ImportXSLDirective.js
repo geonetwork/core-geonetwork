@@ -24,6 +24,11 @@
               'type=importStylesheets&_content_type=json')
             .success(function(data) {
                 scope.stylesheets = data[0];
+                scope.stylesheets.unshift({
+                  id: '',
+                  name: ''
+                });
+                scope.element = '';
               });
         }
       };

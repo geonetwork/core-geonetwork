@@ -9,11 +9,15 @@
 
   module.service('gnMetadataActions', [
     '$rootScope',
+    '$timeout',
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
-    function($rootScope, gnHttp, gnMetadataManager, gnAlertService, gnPopup) {
+    'gnSearchSettings',
+    '$translate',
+    function($rootScope, $timeout, gnHttp,
+             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings, $translate) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -25,11 +29,22 @@
         });
       };
 
-      var openModal = function(content) {
-        gnPopup.create({
-          title: 'privileges',
-          content: content
-        });
+      /**
+       * Open a popup and compile object content.
+       * Bind to an event to close the popup.
+       * @param {Object} o popup config
+       * @param {Object} scope to build content uppon
+       * @param {string} eventName
+       */
+      var openModal = function(o, scope, eventName) {
+        var popup = gnPopup.create(o, scope);
+        var myListener = $rootScope.$on(eventName,
+            function(e, o) {
+              $timeout(function() {
+                popup.close();
+              }, 0);
+              myListener();
+            });
       };
 
       var callBatch = function(service) {
@@ -124,17 +139,17 @@
       };
 
       this.openPrivilegesPanel = function(md, scope) {
-        gnPopup.create({
+        openModal({
           title: 'privileges',
           content: '<div gn-share="' + md.getId() + '"></div>'
-        }, scope);
+        }, scope, 'PrivilegesUpdated');
       };
 
       this.openPrivilegesBatchPanel = function(scope) {
-        gnPopup.create({
+        openModal({
           title: 'privileges',
           content: '<div gn-share="" gn-share-batch="true"></div>'
-        }, scope);
+        }, scope, 'PrivilegesUpdated');
       };
 
       /**
@@ -167,25 +182,55 @@
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
-        var publishFlag = {
-          _1_0: flag,
-          _1_1: flag,
-          _1_5: flag,
-          _1_6: flag
-        };
+        var service = flag === 'on' ? "publish" : "unpublish";
 
-        if (angular.isDefined(md)) {
-          return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag, {
-                update: true,
-                id: md.getId()
-              })).then(function(data) {
-            alertResult('publish');
-            md.publish();
+        var publishNotification = function(data) {
+          var message = '<h4>'+$translate(service+"Completed") + '</h4><dl class="dl-horizontal"><dt>' +
+              $translate('mdPublished') + '</dt><dd>'+data.data.published+'</dd><dt>' +
+              $translate('mdUnpublished') + '</dt><dd>'+data.data.unpublished+'</dd><dt>' +
+              $translate('mdUnmodified') + '</dt><dd>'+data.data.unmodified+'</dd><dt>' +
+              $translate('mdDisallowed') + '</dt><dd>'+data.data.disallowed+'</dd></dl>';
+
+          var success = "success";
+          if (md) {
+            if ((flag === 'on' && data.data.published === 0) ||
+                (flag !== 'on' && data.data.unpublished === 0)) {
+              if (data.data.unmodified > 0) {
+                message = $translate("metadataUnchanged");
+              } else if (data.data.disallowed > 0) {
+                message = $translate("accessRestricted");
+              }
+              success = 'danger';
+            }
+          }
+          gnAlertService.addAlert({
+            msg: message,
+            type: success
           });
+
+          if (md && success === "success") {
+            md.publish();
+          }
+        };
+        if (angular.isDefined(md)) {
+          return gnHttp.callService(service, {
+                ids: md.getId()
+              }).then(publishNotification);
         } else {
-          return gnHttp.callService('mdPrivilegesBatch', publishFlag);
+          return gnHttp.callService(service, {}).then(publishNotification);
         }
+      };
+
+      /**
+       * Get html formatter link for the given md
+       * @param {Object} md
+       */
+      this.getPermalink = function(md) {
+        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+        gnPopup.createModal({
+          title: 'permalink',
+          content: '<a href="' + url + '" target="_blank">' + url + '</a>'
+        });
       };
     }]);
 })();

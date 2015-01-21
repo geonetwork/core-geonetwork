@@ -27,7 +27,6 @@ import bak.pcj.set.IntBitSet;
 import bak.pcj.set.IntSet;
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.AtomicReaderContext;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.FieldCache;
@@ -41,13 +40,11 @@ import org.fao.geonet.constants.Geonet;
 
 import java.io.IOException;
 import java.util.BitSet;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * When there are multiple languages certain queries can match the same
  * "document" in each different language index. This filter allows the first
- * match but none of the later matche.
+ * match but none of the later matches.
  *
  * @author jeichar
  */
@@ -63,11 +60,9 @@ public class DuplicateDocFilter extends Filter {
 
 	private Query _query;
 	final IntSet hits = new IntBitSet();
-    private Set<String> _fieldsToLoad;
 
-	public DuplicateDocFilter(Query query, int maxResults) {
+	public DuplicateDocFilter(Query query) {
 		this._query = query;
-		_fieldsToLoad = Collections.singleton("_id");
 	}
 
     @Override
@@ -79,8 +74,6 @@ public class DuplicateDocFilter extends Filter {
         new IndexSearcher(reader).search(_query, new Collector() {
 
             private int docBase;
-            private IndexReader reader;
-
             @Override
             public void setScorer(Scorer scorer) throws IOException {
             }
@@ -88,7 +81,6 @@ public class DuplicateDocFilter extends Filter {
             @Override
             public void setNextReader(AtomicReaderContext context) throws IOException {
                 this.docBase = context.docBase;
-                this.reader = context.reader();
             }
             
             @Override

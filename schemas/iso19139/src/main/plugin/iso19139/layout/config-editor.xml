@@ -67,7 +67,7 @@
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
+    <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
               data-template-type="contact"
@@ -1410,7 +1410,7 @@
                  in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="metadata">
-        <section name="gmd:MD_Metadata">
+        <section name="metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>

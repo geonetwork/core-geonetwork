@@ -172,6 +172,12 @@
   .md-actions .dropdown-menu .fa {
     margin-right: .4em;
   }
+  .pad-right {
+    margin-right: .4em;
+  }
+  .dropdown-menu {
+    font-size: 90%;
+  }
 }
 
 
@@ -184,7 +190,8 @@ img.graphic-overview.large {
 }
 
 img.graphic-overview:not(.large):hover {
-  cursor: pointer; cursor: hand;
+  cursor: pointer;
+  cursor: hand;
 }
 
 img.graphic-overview.large.dropdown-menu {
@@ -195,7 +202,7 @@ img.graphic-overview.large.dropdown-menu {
   max-width: 128px;
 }
 
-.overview img:not(.graphic-overview) {
+.overview img:not(.graphic-overview):not(.icon) {
   max-width: 500px;
   max-height: 500px;
   padding-left: 1em;

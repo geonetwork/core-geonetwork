@@ -8,24 +8,24 @@
       <button type="button" data-ng-click="resetSearch('#anySearchField');" class="btn btn-link" >
         <span class="fa fa-undo"></span>
         <span translate>Reset</span></button>
-    </div>
+        </div>
     <div class="col-md-4">
       <button class="btn btn-link backtonormal" ng-click="advanced = !advanced"  type="button">
         <span class="fa" ng-class="(advanced) ? 'fa-angle-double-up' : 'fa-angle-double-down'"></span>
         <span translate ng-if="!advanced">advancedForm</span>
         <span translate ng-if="advanced">simpleForm</span>
       </button>
-    </div>
+      </div>
   </div>
 
     <!-- Catalog Combo -->
-    <div class="form-group">
+      <div class="form-group">
       <label for="catalogSF" class="col-md-4 col-sm-12 control-label" translate>source</label>
-      <div class="col-sm-8">
+        <div class="col-sm-8">
         <input type="text" id="catalogSF" value="" class="form-control"
                gn-values="searchObj.params._catalog" gn-typeahead="sourcesOptions"/>
+        </div>
       </div>
-    </div>
 
 
     <!-- Advanced search form -->
@@ -39,7 +39,8 @@
         <div class="form-group">
           <label for="titleF" class="col-md-4 col-sm-12 control-label" translate>title</label>
           <div class="col-sm-8">
-            <input type="text" id="titleF" value="" class="form-control" data-ng-model="searchObj.params.title"/>
+            <input type="text" id="titleF" value="" class="form-control"
+                   autocomplete="off" data-ng-model="searchObj.params.title"/>
           </div>
         </div>
 
@@ -47,7 +48,8 @@
         <div class="form-group">
           <label for="abstractF" class="col-md-4 col-sm-12 control-label" translate>abstract</label>
           <div class="col-sm-8">
-            <input type="text" id="abstractF" value="" class="form-control" data-ng-model="searchObj.params.abstract"/>
+            <input type="text" id="abstractF" value="" class="form-control"
+                   autocomplete="off" data-ng-model="searchObj.params.abstract"/>
           </div>
         </div>
 
@@ -73,7 +75,8 @@
         <div class="form-group">
           <label for="creatorF" class="col-md-4 col-sm-12 control-label" translate>contact</label>
           <div class="col-sm-8">
-            <input type="text" id="creatorF" value="" class="form-control" data-ng-model="searchObj.params.creator"/>
+            <input type="text" id="creatorF" value="" class="form-control"
+                   autocomplete="off" data-ng-model="searchObj.params.creator"/>
           </div>
         </div>
 
@@ -98,7 +101,8 @@
         <div class="form-group">
           <label for="basicidF" class="col-md-4 col-sm-12 control-label" translate>identifier</label>
           <div class="col-sm-8">
-            <input type="text" id="basicidF" value="" class="form-control" data-ng-model="searchObj.params.basicgeodataid"/>
+            <input type="text" id="basicidF" value="" class="form-control"
+                   autocomplete="off" data-ng-model="searchObj.params.basicgeodataid"/>
           </div>
         </div>
 
@@ -107,7 +111,7 @@
           <label for="formatF" class="col-md-4 col-sm-12 control-label" translate>format</label>
           <div class="col-sm-8">
             <input type="text" id="formatF" value="" class="form-control"
-                   gn-values="searchObj.params.format" gn-typeahead="topicCatsOptions"/>
+                   gn-values="searchObj.params.formatWithVersion" gn-typeahead="formatsOptions"/>
           </div>
         </div>
 
@@ -122,7 +126,8 @@
           <label for="typeAF" class="col-md-4 col-sm-12 control-label" translate>type</label>
           <div class="col-sm-8" id="typeAF">
             <select class="form-control" data-ng-model="searchObj.params.type">
-              <option data-ng-repeat="t in types">{{t}}</option>
+              <option value=""><span translate>any</span></option>
+              <option data-ng-repeat="t in types">{{t|translate}}</option>
             </select>
           </div>
         </div>
@@ -170,8 +175,8 @@
 
         <div class="form-group">
           <label class="col-md-4 col-sm-12 control-label" translate>from</label>
-          <div class="input-group date col-sm-8" data-date="" data-date-format="dd-mm-yyyy"
-            gn-bootstrap-datepicker="searchObj.params.creationDateFrom">
+          <div class="input-group date col-sm-8" data-date="" data-date-format="yyyy-mm-dd"
+            gn-bootstrap-datepicker="searchObj.params.extFrom">
             <input class="form-control" type="text">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
@@ -179,8 +184,8 @@
 
         <div class="form-group">
           <label class="col-md-4 col-sm-12 control-label" translate>to</label>
-          <div class="input-group date col-sm-8" data-date="" data-date-format="dd-mm-yyyy"
-            gn-bootstrap-datepicker="searchObj.params.creationDateTo">
+          <div class="input-group date col-sm-8" data-date="" data-date-format="yyyy-mm-dd"
+            gn-bootstrap-datepicker="searchObj.params.extTo">
             <input class="form-control" type="text">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
@@ -208,9 +213,9 @@
                 <span class="fa" ng-class="(restrictArea=='draw') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
                 <span translate>drawOnMap</span>
               </button>
-            </div>
-          </div>
-        </div>
+              </div>
+              </div>
+              </div>
 
         <div ng-show="restrictArea == 'au'">
 
@@ -256,13 +261,13 @@
           <button class="btn btn-default" data-ng-click="removeLayers()">
             <i class="fa fa-trash-o"></i>
           </button>
-          <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
+          <button class="btn btn-default" data-ng-click="gnMap.zoom(searchObj.searchMap, 1)">
             <i class="fa fa-plus"></i>
           </button>
           <button class="btn btn-default" data-ng-click="maxExtent()">
             <i class="fa fa-globe"></i>
           </button>
-          <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
+          <button class="btn btn-default"  data-ng-click="gnMap.zoom(searchObj.searchMap, -1)">
             <i class="fa fa-minus"></i>
           </button>
         </div>

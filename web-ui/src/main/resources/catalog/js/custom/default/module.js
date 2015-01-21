@@ -2,14 +2,43 @@
 
   goog.provide('gn_search_default');
 
+
+
+
+
+  goog.require('cookie_warning');
+  goog.require('gn_related_directive');
   goog.require('gn_search');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
 
   var module = angular.module('gn_search_default',
-      ['gn_search', 'gn_search_default_config', 'gn_search_default_directive']);
+      ['gn_search', 'gn_search_default_config',
+       'gn_search_default_directive', 'gn_related_directive',
+       'cookie_warning']);
 
 
+  module.config(['$routeProvider',
+    function($routeProvider) {
+      var tplUrl = '../../catalog/templates/search/default/';
+      $routeProvider.
+          when('/', {
+            templateUrl: tplUrl + 'home.html'
+          }).
+          when('/home', {
+            templateUrl: tplUrl + 'home.html'
+          }).
+          when('/map', {
+            templateUrl: tplUrl + 'map.html'
+          }).
+          when('/search', {
+            templateUrl: tplUrl + 'results.html'
+          }).
+          when('/metadata/:uuid', {
+            templateUrl: tplUrl + 'recordView.html'
+          }).
+          otherwise({redirectTo: '/home'});
+    }]);
 
   module.controller('gnsSearchPopularController', [
     '$scope', 'gnSearchSettings',
@@ -37,7 +66,6 @@
         }
       };
     }]);
-
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -59,33 +87,12 @@
       $scope.$location = $location;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
 
-      $scope.mainTabs = {
-        home: {
-          title: 'Home',
-          titleInfo: '',
-          active: true
-        },
-        search: {
-          title: 'Search',
-          titleInfo: '',
-          active: false
-        },
-        view: {
-          title: 'view',
-          titleInfo: '',
-          active: false
-        },
-        map: {
-          title: 'Map',
-          active: false
-        }};
-
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
             description: $translate('hotkeyHome'),
             callback: function(event) {
-              $scope.mainTabs.home.active = true;
+              $location.path('/home');
             }
           }).add({
             combo: 't',
@@ -95,7 +102,7 @@
               var anyField = $('#gn-any-field');
               if (anyField) {
                 gnUtilityService.scrollTo();
-                $scope.mainTabs.search.active = true;
+                $location.path('/search');
                 anyField.focus();
               }
             }
@@ -117,7 +124,7 @@
             combo: 'm',
             description: $translate('hotkeyMap'),
             callback: function(event) {
-              $scope.mainTabs.map.active = true;
+              $location.path('/map');
             }
           });
 
@@ -132,6 +139,14 @@
       };
       $scope.mdView = mdView;
 
+      $scope.canEdit = function(record) {
+        // TODO: take catalog config for harvested records
+        if (record && record['geonet:info'] &&
+            record['geonet:info'].edit == 'true') {
+          return true;
+        }
+        return false;
+      };
       $scope.openRecord = function(index, md, records) {
         gnMdView.feedMd(index, md, records, mdView);
         gnUtilityService.scrollTo();
@@ -140,7 +155,7 @@
       $scope.closeRecord = function() {
         mdView.current.record = null;
         //$location.search(searchUrl);
-        $scope.mainTabs.search.active = true;
+        $location.path('/search');
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
@@ -162,7 +177,7 @@
           active: false
         }};
       $scope.addLayerToMap = function(number) {
-        $scope.mainTabs.map.titleInfo = '+' + number;
+        // FIXME $scope.mainTabs.map.titleInfo = '+' + number;
       };
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
@@ -180,28 +195,24 @@
             }
           }, 0);
         }
-        $scope.mainTabs.map.titleInfo = '';
+        // FIXME $scope.mainTabs.map.titleInfo = '';
       };
 
       // Switch to the location requested tab.
-      $scope.$on('$locationChangeStart', function(next, current) {
-        var params = $location.search();
-        if (params.tab) {
-          var tab = $scope.mainTabs[params.tab];
-          if (tab && tab.active === false) {
-            tab.active = true;
-          }
-        }
-      });
+      //$scope.$on('$locationChangeStart', function(next, current) {
+      //  var params = $location.search();
+      //});
 
-      $scope.$watch('searchObj.advancedMode', function(val) {
-        if (val && (searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0)) {
+      $scope.$on('$routeChangeStart', function(next, current) {
+        if (searchMap.getSize()[0] == 0 ||
+            searchMap.getSize()[1] == 0) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
         }
       });
+      // FIXME This should not be necessary for the default route.
+      $location.path('/');
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -210,5 +221,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap
       }, gnSearchSettings.sortbyDefault);
+
+
     }]);
 })();

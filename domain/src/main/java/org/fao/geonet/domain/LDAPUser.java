@@ -118,6 +118,11 @@ public class LDAPUser extends InetOrgPerson implements UserDetails {
      */
     @Override
     public int hashCode() {
-    	return super.hashCode();
+        // Fix for https://github.com/geonetwork/core-geonetwork/issues/708
+        if (this.getDn() != null) {
+            return super.hashCode();
+        } else {
+            return this.getUsername().hashCode();
+        }
     }
 }

@@ -2,7 +2,10 @@ package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.MultiPolygon;
+
 import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -29,7 +32,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
@@ -41,6 +43,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import javax.sql.DataSource;
 
 import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
@@ -70,7 +73,9 @@ public class GeonetTestFixture {
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);
-        FILE_SYSTEM_POOL.release(currentFs);
+        if (currentFs != null) {
+            FILE_SYSTEM_POOL.release(currentFs);
+        }
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
@@ -94,7 +99,8 @@ public class GeonetTestFixture {
                                    !entry.toString().contains("removed") &&
                                    !entry.toString().contains("metadata_subversion") &&
                                    !entry.toString().contains("upload") &&
-                                   !entry.toString().contains("resources" + File.separator + "xml");
+                                   !entry.toString().contains("index") &&
+                                   !entry.toString().contains("resources");
                         }
                     });
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
@@ -132,13 +138,15 @@ public class GeonetTestFixture {
         assertCorrectDataDir();
 
         if (test.resetLuceneIndex()) {
-            _directoryFactory.resetIndex();
+        _directoryFactory.resetIndex();
         }
+
+        ServiceContext serviceContext = test.createServiceContext();
 
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
-        _applicationContext.getBean(DataManager.class).init(test.createServiceContext(), false);
-        _applicationContext.getBean(ThesaurusManager.class).init(test.createServiceContext(), dataDir.getThesauriDir().toString());
+        _applicationContext.getBean(DataManager.class).init(serviceContext, false);
+        _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 
 
         addSourceUUID(dataDir);

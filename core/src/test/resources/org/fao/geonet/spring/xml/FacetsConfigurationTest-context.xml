@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gns="http://www.fao.org/geonetwork/spring"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd">
+
+    <bean id="keywordSplitter" class="org.fao.geonet.kernel.search.classifier.Split">
+        <constructor-arg name="regex" value="-| *\| *"/>
+    </bean>
+
+    <gns:facets>
+        <gns:facet name="keyword" indexKey="keyword" label="Keywords"/>
+        <gns:facet name="keywordToken" indexKey="keyword" label="Keyword Tokens" classifier="keywordSplitter"/>
+    </gns:facets>
+
+</beans>

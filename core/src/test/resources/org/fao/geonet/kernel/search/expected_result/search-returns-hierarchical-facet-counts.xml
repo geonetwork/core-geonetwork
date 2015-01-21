@@ -1,0 +1,13 @@
+<summary count="5" type="local">
+  <dimension name="regionKeyword" label="Region">
+    <category value="http://geonetwork-opensource.org/regions#country" label="country" count="5">
+      <category value="http://geonetwork-opensource.org/regions#10" label="Australia" count="2" />
+      <category value="http://geonetwork-opensource.org/regions#181" label="Zimbabwe" count="1" />
+      <category value="http://geonetwork-opensource.org/regions#1220" label="All fishing areas" count="1" />
+      <category value="http://geonetwork-opensource.org/regions#68" label="France" count="1" />
+    </category>
+    <category value="http://geonetwork-opensource.org/regions#ocean" label="ocean" count="1">
+      <category value="http://geonetwork-opensource.org/regions#1220" label="All fishing areas" count="1" />
+    </category>
+  </dimension>
+</summary>

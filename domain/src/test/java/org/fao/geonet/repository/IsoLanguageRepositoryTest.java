@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 
 import org.fao.geonet.domain.IsoLanguage;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +15,11 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     IsoLanguageRepository _repo;
+
+    @Before
+    public void setUp() throws Exception {
+        _inc.set(0);
+    }
 
     @Test
     public void testFindOne() {

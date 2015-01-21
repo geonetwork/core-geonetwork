@@ -160,7 +160,6 @@
     "validate": "Validar",
     "validate-help": "Validar el registro con las reglas de validación estándar",
     "validationReport": "Validación",
-    "whoCanAccess": "Quién tiene acceso",
     "wmsServiceUrl": "URL del Servicio",
     "xmlSnippet": "XML snippet (pequeño trozo de código funcional)",
     "xsltToApply": "Aplicar conversión XSLT",

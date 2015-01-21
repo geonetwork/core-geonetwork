@@ -56,6 +56,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-cookies.js"></script>
 
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
@@ -72,7 +73,7 @@
         <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
-        <script src="{$uiResourcesPath}lib/ngeo/ngeo-whitespace.js"></script>
+        <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>

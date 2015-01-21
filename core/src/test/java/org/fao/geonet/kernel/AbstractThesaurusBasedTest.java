@@ -13,7 +13,6 @@ import org.openrdf.sesame.config.RepositoryConfig;
 import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,12 +53,10 @@ public abstract class AbstractThesaurusBasedTest {
             this.thesaurusFile = this.folder.getRoot().toPath().resolve(getClass().getSimpleName()+"TestThesaurus.rdf");
 
             Files.copy(template, thesaurusFile);
-            GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
-            appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
-            this.thesaurus = new Thesaurus(appContext, thesaurusFile.getFileName().toString(), "test", "test",
+            this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), "test", "test",
                     thesaurusFile, "http://concept");
         }
-        setRepository(this.thesaurus);
+        this.thesaurus.initRepository();
     }
 
     @After
@@ -75,27 +72,11 @@ public abstract class AbstractThesaurusBasedTest {
         Path directory = IO.toPath(AbstractThesaurusBasedTest.class.getResource(className).toURI()).getParent();
 
         this.thesaurusFile = directory.resolve("testThesaurus.rdf");
-        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
-        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
-        this.thesaurus = new Thesaurus(appContext, thesaurusFile.getFileName().toString(), null, null, "test", "test",
+        this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), null, null, "test", "test",
                 thesaurusFile, "http://concept", true);
-        setRepository(this.thesaurus);
+        this.thesaurus.initRepository();
     }
 
-	protected static void setRepository(Thesaurus thesaurus) throws ConfigurationException {
-		RepositoryConfig repConfig = new RepositoryConfig(thesaurus.getKey());
-
-        SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
-        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(thesaurus.getFile().toString(),
-                RDFFormat.RDFXML);
-        repConfig.addSail(syncSail);
-        repConfig.addSail(memSail);
-        repConfig.setWorldReadable(true);
-        repConfig.setWorldWriteable(true);
-
-        LocalRepository thesaurusRepository = Sesame.getService().createRepository(repConfig);
-        thesaurus.setRepository(thesaurusRepository);
-	}
 	private void populateThesaurus() throws Exception {
 	    populateThesaurus(this.thesaurus, keywords, THESAURUS_KEYWORD_NS, "testValue", "testNote", languages);
 	}

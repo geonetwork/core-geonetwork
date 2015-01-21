@@ -5,214 +5,30 @@
 
 <div class="gn-search-page"
      data-ng-controller="GnSearchController">
+<cookiewarning></cookiewarning>
+     
   <div class=""
        data-ng-controller="gnsDefault">
-
-    <tabset id="main-tabset"
-            type="pills">
-      <tab heading="{{mainTabs.home.title}}"
-           active="mainTabs.home.active">
-
-        <div class="container-fluid">
-          <div class="row gn-row-main">
-            <div class="col-xs-6">
-              <h1 data-translate="">getstarted</h1>
-              <p data-translate=""
-                 data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
-
-              <div class="input-group gn-form-any">
-                <input type="text"
-                       class="form-control input-lg"
-                       autofocus=""
-                       data-ng-model="homeAnyField"
-                       placeholder="{{'anyPlaceHolder' | translate}}"
-                       data-typeahead="address for address in getAnySuggestions($viewValue)"
-                       data-typeahead-loading="anyLoading" class="form-control"
-                       data-typeahead-min-length="1"/>
-                <span class="input-group-btn">
-                  <a class="btn btn-primary btn-lg"
-                          type="button"
-                          data-ng-href="#?tab=search&any={{homeAnyField}}">
-                    <i class="fa fa-search"></i>
-                  </a>
-                </span>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="jumbotron">
-                <h1 data-translate="" data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
-
-                <p data-translate="">welcomeText</p>
-              </div>
-            </div>
-          </div>
-          <div class="row gn-row-filters"
-               data-ng-show="searchInfo.facet['categories']">
-            <div class="col-xs-12">
-              <h1 data-translate="">browseTopics</h1>
-              <!-- Here is a facet with icon to do a first level
-              filter
-              Directive to display a first level of filter based on
-              a facet which has to be available.
-
-              An icon could be provided as a CSS class name or
-              a pattern matching a URL resolving to an image.
-
-              Properties
-              <div data-flfilter="categories"
-                   data-title=""
-                   data-icon-path="../../images/category/{{['@name']}}.png">
-              -->
-              <ul class="gn-flfilter gn-flfilter-icon">
-                <li data-ng-repeat="(key, facet) in searchInfo.facet['categories']">
-                  <a data-ng-href="#?tab=search&_cat={{facet['@name']}}">
-                    <i class="gn-icon">
-                      <img data-ng-src="../../images/category/{{facet['@name']}}.png"/>
-                    </i>
-                    <div>{{facet['@label']}} ({{facet['@count']}})</div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row gn-row-info">
-            <div class="col-xs-12">
-              <tabset id="info-tabset"
-                      type="pills">
-                <tab heading="{{'lastRecords' | translate}}"
-                     active="infoTabs.lastRecords.active">
-                  <form class="form-horizontal"
-                        role="nav"
-                        data-ng-controller="gnsSearchLatestController"
-                        data-ng-search-form=""
-                        data-runSearch="true"
-                        data-ng-show="searchResults.records.length > 0">
-
-                    <div data-gn-info-list=""></div>
-                  </form>
-                </tab>
-                <tab heading="{{'preferredRecords' | translate}}"
-                     active="infoTabs.preferredRecords.active">
-                  <form class="form-horizontal"
-                        role="nav"
-                        data-ng-controller="gnsSearchPopularController"
-                        data-ng-search-form=""
-                        data-runSearch="true"
-                        data-ng-show="searchResults.records.length > 0">
-                    <div data-gn-info-list=""></div>
-                  </form>
-                </tab>
-              </tabset>
-            </div>
-          </div>
-        </div>
-      </tab>
-      <tab heading="{{mainTabs.view.title}}"
-           active="mdView.current.record != null">
-        <div class="container-fluid">
-          <div data-ng-include="'../../catalog/templates/search/default/recordView.html'"></div>
-        </div>
-      </tab>
-      <tab heading="{{mainTabs.search.title}}"
-           active="mainTabs.search.active">
-        <div class="container-fluid"
-             data-ng-search-form=""
-             data-runSearch="false">
-          <div data-ng-include="'../../catalog/templates/search/default/searchForm.html'"></div>
-          <!--
-          If moving the search form to a template, the pagination does not work anymore ?
-          <div data-ng-include="'../../catalog/templates/search/default/searchResults.html'"></div>-->
-
-          <div class="row"
-               data-ng-show="searchResults.records.length > 0">
-            <div class="col-md-offset-3 col-md-2 relative">
-              <div data-gn-selection-widget=""
-                   data-results="searchResults"></div>
-              <!-- TODO: Add action on selection -->
-            </div>
-            <div class="col-md-7">
-              <div class="pull-right"
-                   data-gn-pagination="paginationInfo"
-                   data-hits-values="searchObj.hitsperpageValues"></div>
-
-              <div class="gn-results-switch pull-right"
-                   data-gn-results-tpl-switcher
-                   data-template-url="resultTemplate"></div>
-
-              <div class="pull-right"
-                   data-sortby-combo=""
-                   data-params="searchObj.params"
-                   data-gn-sortby-values="searchObj.sortbyValues"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-3 gn-search-facet">
-              <div data-ng-show="searchResults.records.length > 0"
-                   data-gn-facet-list="searchResults.facet"
-                   data-facet-config="facetsConfig"
-                   data-current-facets="currentFacets">
-              </div>
-            </div>
-            <div class="col-md-9">
-              <div class="gn-results-heading">
-                <div data-gn-facet-breadcrumb="currentFacets"></div>
-              </div>
-              <span class="loading fa fa-spinner fa-spin"
-                    data-ng-show="searching"></span>
-
-              <div class="alert alert-warning" role="alert"
-                   ng-if="!searching && searchResults.records.length == 0">
-                <i class="fa fa-frown-o"></i>
-                <span data-translate="">zarooResult</span>
-              </div>
-
-              <div data-ng-show="searchResults.records.length > 0"
-                   data-gn-results-container=""
-                   data-search-results="searchResults"
-                   data-template-url="resultTemplate"
-                   data-map="searchObj.searchMap"></div>
-
-            </div>
-          </div>
-
-          <div data-gn-map-field="searchObj.searchMap"
-               data-gn-map-field-geom="searchObj.params.geometry"></div>
-
-        </div>
-      </tab>
-      <tab select="displayMapTab()" active="mainTabs.map.active">
-        <tab-heading>
-          {{mainTabs.map.title}}
-          <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
-        </tab-heading>
-        <div class="container-fluid">
-          <div gn-main-viewer=""
-               data-map="searchObj.viewerMap">
-          </div>
-        </div>
-      </tab>
-    </tabset>
-    <div class="navbar navbar-default gn-bottom_bar">
-
-      <ul class="nav navbar-nav">
-        <li><a href="http://geonetwork-opensource.org/">
-          <i class="fa fa-fw"></i>
-          <span data-translate="">about</span>
-        </a></li>
-        <li><a href="#">
-          <i class="fa fa-twitter"></i>
-          <span data-translate="">twitter</span></a></li>
-        <li><a href="https://github.com/geonetwork/core-geonetwork">
-          <i class="fa fa-github"></i>
-          <span data-translate="">github</span></a></li>
-        <li>
-          <a data-translate=""
-             data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
-            versionDetails</a>
-        </li>
-      </ul>
-
-    </div>
+    <div data-ng-view=""></div>
   </div>
+</div>
+
+<div class="navbar navbar-default gn-bottom-bar">
+  <ul class="nav navbar-nav">
+    <li><a href="http://geonetwork-opensource.org/">
+      <i class="fa fa-fw"></i>
+      <span data-translate="">about</span>
+    </a></li>
+    <li class="hidden-sm"><a href="#">
+      <i class="fa fa-twitter"></i>
+      <span data-translate="">twitter</span></a></li>
+    <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
+      <i class="fa fa-github"></i>
+      <span data-translate="">github</span></a></li>
+    <li>
+      <a data-translate=""
+         data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
+        versionDetails</a>
+    </li>
+  </ul>
 </div>

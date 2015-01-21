@@ -23,8 +23,10 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.apache.log4j.Priority;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -39,10 +41,13 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -77,7 +82,7 @@ public abstract class XmlSerializer {
 	        config = new ThreadLocalConfiguration();
 	        configThreadLocal.set(config);
 	    }
-
+	    
 	    return config;
 	}
 	public static void clearThreadLocal() {
@@ -106,6 +111,18 @@ public abstract class XmlSerializer {
 		}
 	}
 
+    public boolean isLoggingEmptyWithHeld() {
+        if (_settingManager == null) {
+            return false;
+        }
+
+        String enableLogging = _settingManager.getValue("system/hidewithheldelements/enableLogging");
+        if (enableLogging != null) {
+            return enableLogging.equals("true");
+        } else {
+            return false;
+        }
+    }
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
      *
@@ -127,6 +144,7 @@ public abstract class XmlSerializer {
     public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
+
         if (!isIndexingTask) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
@@ -155,33 +173,17 @@ public abstract class XmlSerializer {
                 if (dynamicXpathFilter != null) {
                     boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {
-                        removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                      removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
                     }
                 }
-            }
-            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+    		}
+    		if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
                 removeFilteredElement(metadataXml, editXpathFilter, namespaces);
             }
-        }
+		}
         return metadataXml;
-    }
-
-    private void xpath(StringBuilder buffer, Element next) {
-		if(next.getParentElement() != null) {
-			xpath(buffer, next.getParentElement());
-			buffer.append("/");
-		}
-
-		String name = next.getName();
-		Namespace namespace = next.getNamespace();
-		buffer.append(namespace.getPrefix()).append(":").append(name);
-		if(next.getParentElement() != null) {
-			List<?> children = next.getParentElement().getChildren(name, namespace);
-			if(children.size() > 1) {
-				buffer.append('[').append(children.indexOf(next)+1).append(']');
-			}
-		}
 	}
+
 
     public static void removeFilteredElement(Element metadata,
                                              final Pair<String, Element> xPathAndMarkedElement,
@@ -257,8 +259,7 @@ public abstract class XmlSerializer {
 	protected void updateDb(final String id, final Element xml, final String changeDate, final String root,
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
-
-		if (resolveXLinks()) Processor.removeXLink(xml);
+        if (resolveXLinks()) Processor.removeXLink(xml);
 
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);

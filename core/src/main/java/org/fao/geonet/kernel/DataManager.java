@@ -1835,7 +1835,7 @@ public class DataManager {
         }
 
         //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(schema, md);
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
@@ -2605,9 +2605,10 @@ public class DataManager {
      * @param grpId The group identifier
      * @param opId The operation identifier
      *
+     * @return true if the operation was set.
      * @throws Exception
      */
-    public void setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
+    public boolean setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
         OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
         Optional<OperationAllowed> opAllowed = getOperationAllowedToAdd(context, mdId, grpId, opId);
 
@@ -2615,7 +2616,10 @@ public class DataManager {
         if (opAllowed.isPresent()) {
             opAllowedRepo.save(opAllowed.get());
             svnManager.setHistory(mdId + "", context);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -2645,42 +2649,46 @@ public class DataManager {
                 .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
         if (operationAllowed == null) {
-            // Check user privileges
-            // Session may not be defined when a harvester is running
-            if (context.getUserSession() != null) {
-                Profile userProfile = context.getUserSession().getProfile();
-                if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
-                    int userId = Integer.parseInt(context.getUserSession().getUserId());
-                    // Reserved groups
-                    if (ReservedGroup.isReserved(grpId)) {
-
-                        Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
-                                .and(UserGroupSpecs.hasUserId(userId));
-                        List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
-
-                        if (groupIds.isEmpty()) {
-                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
-                                                          + "Reviewer of any group.");
-                        }
-                    } else {
-                        String userGroupsOnly = settingMan.getValue("system/metadataprivs/usergrouponly");
-                        if (userGroupsOnly.equals("true")) {
-                            // If user is member of the group, user can set operation
-
-                            if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
-                                throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
-                                                              + " member of this group.");
-                            }
-                        }
-                    }
-                }
-            }
+            checkOperationPermission(context, grpId, userGroupRepo);
         }
 
         if (operationAllowed == null) {
             return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
         } else {
             return Optional.absent();
+        }
+    }
+
+    public void checkOperationPermission(ServiceContext context, int grpId, UserGroupRepository userGroupRepo) {
+        // Check user privileges
+        // Session may not be defined when a harvester is running
+        if (context.getUserSession() != null) {
+            Profile userProfile = context.getUserSession().getProfile();
+            if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
+                int userId = context.getUserSession().getUserIdAsInt();
+                // Reserved groups
+                if (ReservedGroup.isReserved(grpId)) {
+
+                    Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                            .and(UserGroupSpecs.hasUserId(userId));
+                    List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
+
+                    if (groupIds.isEmpty()) {
+                        throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
+                                                      + "Reviewer of any group.");
+                    }
+                } else {
+                    String userGroupsOnly = settingMan.getValue("system/metadataprivs/usergrouponly");
+                    if (userGroupsOnly.equals("true")) {
+                        // If user is member of the group, user can set operation
+
+                        if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
+                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
+                                                          + " member of this group.");
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -2714,9 +2722,10 @@ public class DataManager {
      * @param mdId metadata id
      * @param groupId group id
      * @param operId operation id
-     * @throws Exception hmm
      */
     public void unsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
+        checkOperationPermission(context, groupId, context.getBean(UserGroupRepository.class));
+
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
         final OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         if (repository.exists(id)) {

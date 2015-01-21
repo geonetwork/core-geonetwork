@@ -77,6 +77,7 @@
     "needHelp": "Besoin d'aide",
     "newAccountInfo": "Une fois votre demande de création de compte faite, un email vous sera envoyé. Si vous demandez un profil utilisateur avancé, l'administrateur du catalogue analysera votre demande et vous fera un retour.",
     "next": "Suivant",
+    "noFileSelected": "Aucun fichier sélectionné",
     "noRecordFound": "Pas d'enregistrement trouvé.",
     "nor": "Norsk",
     "north": "Nord",
@@ -147,5 +148,6 @@
     "edit" : "Edit",
     "duplicate": "Duplicate",
     "createChild": "Create a child",
-    "privileges": "Privileges"
+    "privileges": "Privileges",
+    "whoCanAccess": "Qui à accès ?"
 }

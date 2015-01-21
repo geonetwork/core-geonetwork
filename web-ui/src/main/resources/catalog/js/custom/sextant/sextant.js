@@ -32,7 +32,8 @@
     'gnNcWms',
     '$timeout',
     'gnMdView',
-    function($scope, $location, $window, suggestService, $http, gnSearchSettings,
+    function($scope, $location, $window, suggestService,
+             $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView) {
 
@@ -43,16 +44,16 @@
       var localStorage = $window.localStorage || {};
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
-        JSON.parse(localStorage.searchWidgetCollapsed) :
-        { search: true,
-          facet: false };
+          JSON.parse(localStorage.searchWidgetCollapsed) :
+          { search: true,
+            facet: false };
 
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
-        if(!$scope.collapsed.search) {
+        if (!$scope.collapsed.search) {
           $scope.collapsed.facet = true;
         }
-        $timeout(function(){
+        $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 300);
       };
@@ -68,7 +69,8 @@
       });
 
       $scope.displayMapTab = function() {
-        if (angular.isUndefined(viewerMap.getSize()) || viewerMap.getSize()[0] == 0 ||
+        if (angular.isUndefined(viewerMap.getSize()) ||
+            viewerMap.getSize()[0] == 0 ||
             viewerMap.getSize()[1] == 0) {
           $timeout(function() {
             viewerMap.updateSize();
@@ -215,8 +217,8 @@
 
       // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if(angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value :$scope.thesaurus[0].field};
+      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
+        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
       }
     }]);
 

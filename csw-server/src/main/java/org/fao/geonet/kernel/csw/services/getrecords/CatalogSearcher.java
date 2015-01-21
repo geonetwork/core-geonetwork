@@ -247,7 +247,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
-                    luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), luceneConfig.getTaxonomyConfiguration(),
+                    luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig.getTaxonomyConfiguration(),
                     _reader, _query, wrapSpatialFilter(), _sort, null, false,
                     luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(), luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
@@ -536,7 +536,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
                 maxRecords, _lang.presentationLanguage,
-                luceneConfig.getTaxonomy().get(resultType.toString()), luceneConfig.getTaxonomyConfiguration(),
+                luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig.getTaxonomyConfiguration(),
                 reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
                 luceneConfig.isDocsScoredInOrder()
@@ -575,7 +575,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
     // ---------------------------------------------------------------------------
 
     private Filter wrapSpatialFilter() {
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
         Filter cFilter = null;
         if (_filter == null) {
             cFilter = duplicateRemovingFilter;

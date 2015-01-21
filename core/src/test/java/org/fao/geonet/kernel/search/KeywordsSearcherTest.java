@@ -15,7 +15,6 @@ import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.net.URL;
 import java.nio.file.Files;
@@ -69,6 +68,14 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             }
             
             @Override
+            public Thesaurus getThesaurusByConceptScheme(String conceptSchemeUri) {
+                for (Thesaurus thesaurus: getThesauriMap().values()) {
+                    if (thesaurus.hasConceptScheme(conceptSchemeUri)) return thesaurus;
+                }
+                return null;
+            }
+
+            @Override
             public Map<String, Thesaurus> getThesauriMap() {
                 return Collections.unmodifiableMap(map);
             }
@@ -82,11 +89,8 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     
     private Thesaurus createThesaurus(Path directory, String string) throws Exception {
         Path thesaurusBlahFile = directory.resolve(string+".rdf");
-        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
-        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
-
-        Thesaurus thes = new Thesaurus(appContext, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
-        setRepository(thes);
+        Thesaurus thes = new Thesaurus(isoLangMapper, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
+        thes.initRepository();
         if(!Files.exists(thesaurusBlahFile) || Files.size(thesaurusBlahFile) == 0) {
             populateThesaurus(thes, smallWords, "http://"+string+".com#", string+"Val", string+"Note", languages);
         }
@@ -523,7 +527,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         String keywordId = FOO_COM_NS+1;
 		Element params = new Element("params").
         		addContent(new Element("pNewSearch").setText("true")).
-        		addContent(new Element("pTypeSearch").setText("1")).
+        		addContent(new Element("pTypeSearch").setText("2")).
         		addContent(new Element("pThesauri").setText(thesaurusFoo.getKey())).
         		addContent(new Element("pMode").setText("searchBox")).
         		addContent(new Element("maxResults").setText("50")).

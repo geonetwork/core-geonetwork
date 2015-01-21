@@ -27,6 +27,7 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -67,11 +68,13 @@ public class ThesaurusManager implements ThesaurusFinder {
     /**
 	 * Initialize ThesaurusManager.
 	 *
+     *
+     * @param isTest
      * @param context ServiceContext used to check when servlet is up only
      * @param thesauriRepository
      * @throws Exception
 	 */
-	public synchronized void init(ServiceContext context, String thesauriRepository)
+	public synchronized void init(boolean isTest, ServiceContext context, String thesauriRepository)
 			throws Exception {
         if (this.initialized) {
             return;
@@ -89,20 +92,25 @@ public class ThesaurusManager implements ThesaurusFinder {
         thesauriDir = thesauriDir.toAbsolutePath();
 		thesauriDirectory = thesauriDir.toAbsolutePath();
 
-		batchBuildTable(context, thesauriDir);
+		batchBuildTable(isTest, context, thesauriDir);
 	}
 	
   /**
    * Start task to build thesaurus table once the servlet is up. 
    *
-	 * @param context ServiceContext used to check when servlet is up only
-	 * @param thesauriDir directory containing thesauri
+   * @param isTest
+   * @param context ServiceContext used to check when servlet is up only
+   * @param thesauriDir directory containing thesauri
    */
-	private void batchBuildTable(ServiceContext context, Path thesauriDir) {
+	private void batchBuildTable(boolean isTest, ServiceContext context, Path thesauriDir) {
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 		try {
 			Runnable worker = new InitThesauriTableTask(context, thesauriDir);
-			executor.execute(worker);
+            if (isTest) {
+                worker.run();
+            } else {
+                executor.execute(worker);
+            }
 		} finally {
 			executor.shutdown();
 		}
@@ -203,10 +211,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                         continue;
                     }
 
-                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
+                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
 
                 } else {
-                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
+                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
                 }
 
                 try {
@@ -335,7 +343,26 @@ public class ThesaurusManager implements ThesaurusFinder {
     @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriMap.get(thesaurusName);
-	}	
+	}
+
+	@Override
+	public Thesaurus getThesaurusByConceptScheme(String uri) {
+		
+		for (Map.Entry<String, Thesaurus> entry : thesauriMap.entrySet()) {
+			try {
+				Thesaurus thesaurus = entry.getValue();
+				
+				if (thesaurus.hasConceptScheme(uri)) {
+					return thesaurus;
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;	
+	}
 
 	/**
 	 * @param name
@@ -362,7 +389,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String aRdfDataFile = uuid+".rdf";
         Path thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, thesaurusFile, siteURL);
+        Thesaurus gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, type, thesaurusFile, siteURL);
 
 		try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)){
 			getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
@@ -388,5 +415,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		return theKey;
 	}
+
+    private IsoLanguagesMapper getIsoLanguagesMapper(ServiceContext context) {
+        return context.getBean(IsoLanguagesMapper.class);
+    }
 
 }

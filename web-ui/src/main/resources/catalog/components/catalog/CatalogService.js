@@ -252,8 +252,10 @@
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
-    mdPrivileges: 'md.privileges.update',
-    mdPrivilegesBatch: 'md.privileges.batch.update',
+    mdPrivileges: 'md.privileges.update@json',
+    mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    publish: 'md.publish',
+    unpublish: 'md.unpublish',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
@@ -393,6 +395,7 @@
   module.value('gnConfig', {
     key: {
       isXLinkEnabled: 'system.xlinkResolver.enable',
+      isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',

@@ -29,6 +29,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
@@ -65,8 +66,11 @@ class MEFExporter {
 	 * @throws Exception
 	 */
 	public static Path doExport(ServiceContext context, String uuid,
-                                Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+		Pair<Metadata, String> recordAndMetadata =
+				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		Metadata record = recordAndMetadata.one();
+		String xmlDocumentAsString = recordAndMetadata.two();
 
 		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
 			throw new Exception("Cannot export sub template");
@@ -78,20 +82,14 @@ class MEFExporter {
 
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             // --- save metadata
-            if (!record.getData().startsWith("<?xml")) {
-                record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
-            }
-
-            byte[] binData = record.getData().getBytes(Constants.ENCODING);
+            byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
             // --- save info file
-
             binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
                     skipUUID).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
 
-            // --- save thumbnails and maps
 
             if (format == Format.PARTIAL || format == Format.FULL) {
                 if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {

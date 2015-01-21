@@ -34,6 +34,7 @@ import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -76,7 +77,8 @@ public class Add extends NotInReadOnlyModeService {
 		Path rdfFile = tm.buildThesaurusFilePath(fname, type, dname);
 		
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus thesaurus = new Thesaurus(context.getApplicationContext(), fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
+        final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
+        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database
