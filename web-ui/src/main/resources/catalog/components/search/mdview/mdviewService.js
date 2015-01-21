@@ -44,7 +44,7 @@
        * @param {string} uuid
        */
       this.setLocationUuid = function(uuid) {
-        if($location.path() == '/search') {
+        if ($location.path() == '/search') {
           $location.path('/metadata/' + uuid);
           lastSearchParams = angular.copy($location.search());
           $location.search('');
@@ -52,7 +52,7 @@
       };
 
       this.removeLocationUuid = function() {
-        if($location.path() != '/search') {
+        if ($location.path() != '/search') {
           $location.path('/search');
           $location.search(lastSearchParams);
         }
@@ -61,7 +61,7 @@
       this.initFormatter = function(selector) {
         var loadFormatter = function() {
           var url = $location.path();
-          if(url.indexOf('/metadata/') == 0) {
+          if (url.indexOf('/metadata/') == 0) {
             var uuid = url.substring(10, url.length);
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
@@ -89,7 +89,7 @@
           $(selector).append(el);
           $compile(el)(scope);
         });
-      }
+      };
     }
   ]);
 

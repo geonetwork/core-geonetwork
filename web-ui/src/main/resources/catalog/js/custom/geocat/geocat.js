@@ -448,7 +448,7 @@
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
         });
-      } else if($location.path().indexOf('/metadata/') != 0) {
+      } else if ($location.path().indexOf('/metadata/') != 0) {
         $scope.triggerSearch(true);
       }
     }]);

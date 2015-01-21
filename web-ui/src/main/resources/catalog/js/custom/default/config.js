@@ -198,7 +198,7 @@
           },
           'iconClass' : function(md) {
             return 'link';
-        },
+          },
           'click' : function(md) {
             if (md.protocol.contains('WMS')) {
               return 'scope.mapService.addWmsToMap(' +

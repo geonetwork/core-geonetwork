@@ -112,7 +112,8 @@
       };
       $scope.saveVirtualCSW = function(formId) {
 
-        $http.get('admin.config.virtualcsw.update?_content_type=json&operation=' + operation +
+        $http.get('admin.config.virtualcsw.update?' +
+            '_content_type=json&operation=' + operation +
             '&' + $(formId).serialize())
           .success(function(data) {
               loadCSWVirtual();

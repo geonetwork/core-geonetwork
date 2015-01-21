@@ -187,7 +187,7 @@
       };
 
       $scope.$on('$locationChangeSuccess', function() {
-        if($location.path() != '/search') return;
+        if ($location.path() != '/search') return;
         console.log('$locationChangeSuccess');
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
