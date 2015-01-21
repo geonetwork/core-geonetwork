@@ -236,11 +236,11 @@
         gnEditor.onFormLoad();
 
         $scope.$watch('tocIndex', function(newValue, oldValue) {
-          $timeout(function() {
-            if (angular.isDefined($scope.tocIndex) && $scope.tocIndex != '') {
+          if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
+            $timeout(function() {
               $scope.switchToTab(gnCurrentEdit.tab);
-            }
-          });
+            });
+          }
         });
       };
 
