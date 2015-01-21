@@ -87,7 +87,7 @@
                         $scope.results.push({
                           name: loc.name,
                           formattedName: formatter(loc),
-                          extent: ol.proj.transform([loc.bbox.west,
+                          extent: ol.proj.transformExtent([loc.bbox.west,
                             loc.bbox.south, loc.bbox.east, loc.bbox.north],
                           'EPSG:4326', 'EPSG:3857')
                         });

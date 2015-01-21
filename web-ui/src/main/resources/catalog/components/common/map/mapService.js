@@ -53,7 +53,7 @@
               return extent;
             }
             else {
-              return ol.proj.transform(extent,
+              return ol.proj.transformExtent(extent,
                   src, dest);
             }
           },
