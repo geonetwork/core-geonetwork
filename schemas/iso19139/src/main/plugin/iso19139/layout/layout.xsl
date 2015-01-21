@@ -132,22 +132,27 @@
 
     <xsl:variable name="elementName" select="name()"/>
     
-    <xsl:variable name="hasPTFreeText" select="count(gmd:PT_FreeText) > 0"/>
+    <xsl:variable name="hasPTFreeText"
+                  select="count(gmd:PT_FreeText) > 0"/>
+    <xsl:variable name="hasOnlyPTFreeText"
+                  select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
     <xsl:variable name="isMultilingualElement" 
-      select="$metadataIsMultilingual and 
-              count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
+                  select="$metadataIsMultilingual and
+                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
     <xsl:variable name="isMultilingualElementExpanded" 
-      select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
+                  select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
     
     <!-- For some fields, always display attributes. 
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
-    <xsl:variable name="theElement" select="gco:CharacterString|gco:Integer|gco:Decimal|
+    <xsl:variable name="theElement" select="if ($isMultilingualElement and $hasOnlyPTFreeText)
+    then gmd:PT_FreeText
+    else
+      gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText"/>
-    
+      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
     <!--
       This may not work if node context is lost eg. when an element is rendered
       after a selection with copy-of.
@@ -193,8 +198,10 @@
         
         <values>
           <!-- Or the PT_FreeText element matching the main language -->
-          <value ref="{$theElement/gn:element/@ref}" lang="{$metadataLanguage}"><xsl:value-of select="gco:CharacterString"/></value>
-          
+          <xsl:if test="gco:CharacterString">
+            <value ref="{$theElement/gn:element/@ref}" lang="{$metadataLanguage}"><xsl:value-of select="gco:CharacterString"/></value>
+          </xsl:if>
+
           <!-- the existing translation -->
           <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
             <value ref="{gn:element/@ref}" lang="{substring-after(@locale, '#')}"><xsl:value-of select="."/></value>
