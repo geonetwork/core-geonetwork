@@ -164,6 +164,7 @@
     "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
     "validationReport": "Validation",
+    "runValidation": "Run validation check",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
     "xmlSnippet": "XML snippet",
@@ -174,5 +175,9 @@
     "searchKeyword": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
     "tagsAllowed": " tag(s) allowed",
-    "suggestionListError": "Oops, something went wrong when retrieving suggestions!"
+    "suggestionListError": "Oops, something went wrong when retrieving suggestions!",
+    "showHideErrors": "Show / hide errors",
+    "showHideSuccess": "Show / hide success",
+    "deleteField": "Delete this field",
+    "deleteFiledSet": "Delete this fields set"
 }
