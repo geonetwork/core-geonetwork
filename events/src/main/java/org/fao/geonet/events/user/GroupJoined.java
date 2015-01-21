@@ -5,6 +5,12 @@ package org.fao.geonet.events.user;
 
 import org.fao.geonet.domain.UserGroup;
 
+/**
+ * Event launched when a user joins a group
+ * 
+ * @author delawen
+ *
+ */
 public class GroupJoined extends UserUpdated {
 
     private static final long serialVersionUID = 66462987237984509L;

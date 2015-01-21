@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
  * 
  * @author delawen
  * 
- * 
  */
 @Component
 public class UserGroupModified implements GeonetworkEntityListener<UserGroup>,
