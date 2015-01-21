@@ -40,13 +40,13 @@
           id: data.jqXHR.responseJSON.id
         };
       };
-      var uploadImportMdError = function(evt, data,o) {
+      var uploadImportMdError = function(evt, data, o) {
         $scope.importing = false;
         var response = new DOMParser().parseFromString(
             data.jqXHR.responseText, 'text/xml');
         $scope.report = {
           message: response.getElementsByTagName('message')[0].innerHTML
-        } ;
+        };
       };
 
       // upload directive options
@@ -88,7 +88,7 @@
 
         if ($scope.importMode == 'uploadFile') {
           var uploadScope = angular.element('#md-import-file').scope();
-          if(uploadScope.queue.length > 0) {
+          if (uploadScope.queue.length > 0) {
             $scope.importing = true;
             uploadScope.submit();
           }
