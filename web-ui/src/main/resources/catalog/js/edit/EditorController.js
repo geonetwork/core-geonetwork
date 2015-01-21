@@ -383,6 +383,10 @@
         gnEditor.removeAttribute(gnCurrentEdit.id, ref);
         return false;
       };
+      $scope.switchTypeAndSave = function(refreshForm) {
+        $scope.setTemplate(!$scope.isTemplate());
+        $scope.save(refreshForm);
+      };
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
 

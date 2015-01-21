@@ -11,21 +11,6 @@
       </li>
     </ul>
   </div>
-  <div class="pull-left">
-    <div class="form-group navbar-btn">
-      <div class="btn-group">
-        <button type="button" class="btn btn-default"
-          data-ng-class="{'active': !isTemplate()}" data-ng-click="setTemplate(false)"
-          ><span data-translate="">METADATA</span>
-          <i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
-        </button>
-        <button type="button" class="btn btn-default"
-          data-ng-class="{'active': isTemplate()}" data-ng-click="setTemplate(true)"
-          ><i class="fa" data-ng-class="isTemplate() ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
-          <span data-translate="">TEMPLATE</span></button>
-      </div>
-    </div>
-  </div>
 
   <p class="navbar-text gn-tooltip"
     data-ng-mouseover="getSaveStatus()" title="{{saveStatus}}">
@@ -56,9 +41,23 @@
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
-    <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save(true)">
-      <i class="fa fa-save"/>&nbsp;
-      <span class="visible-lg" data-translate="">save</span>
-    </button>
+    <div class="btn-group">
+      <button type="button"
+              data-ng-click="save(true)"
+              class="btn btn-primary">
+        <i class="fa fa-save"/>&nbsp;
+        <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
+      </button>
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li><a href=""
+               data-ng-click="switchTypeAndSave(true)">
+          {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
+        </a></li>
+      </ul>
+    </div>
+
   </div>
 </nav>
