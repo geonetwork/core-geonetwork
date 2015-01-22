@@ -77,10 +77,11 @@
     'gnViewerSettings',
     'gnMap',
     'gnMdView',
+    'gnMdViewObj',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, gnMdView, hotkeys) {
+             gnMap, gnMdView, mdView, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -130,14 +131,8 @@
 
 
       // TODO: Previous record should be stored on the client side
-      var mdView = {
-        previousRecords: [],
-        current: {
-          record: null,
-          index: null
-        }
-      };
       $scope.mdView = mdView;
+      gnMdView.initMdView();
 
       $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
@@ -148,14 +143,12 @@
         return false;
       };
       $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records, mdView);
-        gnUtilityService.scrollTo();
+        gnMdView.feedMd(index, md, records);
       };
 
       $scope.closeRecord = function() {
         mdView.current.record = null;
-        //$location.search(searchUrl);
-        $location.path('/search');
+        gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
@@ -184,9 +177,9 @@
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
-
       $scope.displayMapTab = function() {
-        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
+        if (!angular.isArray(viewerMap.getSize()) ||
+            viewerMap.getSize().indexOf(0) >= 0 ) {
           setTimeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
@@ -204,15 +197,15 @@
       //});
 
       $scope.$on('$routeChangeStart', function(next, current) {
-        if (searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0) {
+        if (!angular.isArray(searchMap.getSize()) ||
+            searchMap.getSize().indexOf(0) >= 0 ) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
         }
       });
       // FIXME This should not be necessary for the default route.
-      $location.path('/');
+      //$location.path('/');
 
       angular.extend($scope.searchObj, {
         advancedMode: false,

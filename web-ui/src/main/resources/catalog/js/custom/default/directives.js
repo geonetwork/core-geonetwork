@@ -4,8 +4,8 @@
 
   var module = angular.module('gn_search_default_directive', []);
 
-  module.directive('gnInfoList', ['$location',
-    function($location) {
+  module.directive('gnInfoList', ['gnMdView',
+    function(gnMdView) {
       return {
         restrict: 'A',
         replace: true,
@@ -18,7 +18,8 @@
             $(div.children()[isDisplay ? 1 : 0]).removeClass('hidden');
           };
           scope.go = function(uuid) {
-            $location.path('/metadata/' + uuid);
+            gnMdView(index, md, records);
+            gnMdView.setLocationUuid(uuid);
           };
         }
       };
