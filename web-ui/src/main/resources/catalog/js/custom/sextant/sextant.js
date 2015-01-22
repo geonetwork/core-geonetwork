@@ -46,11 +46,7 @@
       var localStorage = $window.localStorage || {};
 
       // Manage routing
-      $scope.$on('$locationChangeSuccess', function(newUrl, oldUrl) {
-        if (gnSearchLocation.isSearch()) {
-          $scope.mainTabs.search.active = true;
-        }
-      });
+      gnSearchLocation.initTabRouting($scope.mainTabs);
 
       // Manage the collapsed search and facet panels
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
@@ -144,9 +140,7 @@
       };
 
       $scope.closeRecord = function() {
-        //mdView.current.record = null;
         gnMdView.removeLocationUuid();
-        //$scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
