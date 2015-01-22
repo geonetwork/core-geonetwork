@@ -21,6 +21,14 @@
         return $location.path().indexOf(this.METADATA) == 0;
       };
 
+      this.isMap = function() {
+        return $location.path() == this.MAP;
+      };
+
+      this.saveLastUrl = function() {
+        this.lastSearchUrl = $location.absUrl();
+      };
+
       this.setUuid = function(uuid) {
         $location.path(this.METADATA + uuid);
       };

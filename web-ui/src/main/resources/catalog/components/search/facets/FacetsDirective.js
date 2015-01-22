@@ -92,7 +92,7 @@
           scope.index = scope.field.substring(0, scope.field.length - 1);
 
           scope.$watch('searchResults.facet', function(v) {
-            scope.facetObj = v[scope.field];
+            if(v) scope.facetObj = v[scope.field];
           });
 
           // Manage elements displayed

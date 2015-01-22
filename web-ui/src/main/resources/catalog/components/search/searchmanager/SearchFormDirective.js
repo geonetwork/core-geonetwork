@@ -27,7 +27,7 @@
    */
   var searchFormController =
       function($scope, $location, gnSearchManagerService,
-               gnFacetService, Metadata) {
+               gnFacetService, Metadata, gnSearchLocation) {
     var defaultParams = {
       fast: 'index',
       _content_type: 'json'
@@ -181,14 +181,17 @@
         if (angular.equals(params, $location.search())) {
           triggerSearchFn(false);
         } else {
-          $location.search(params);
-          $location.path('/search');
+          gnSearchLocation.setSearch(params);
         }
       };
 
       $scope.$on('$locationChangeSuccess', function() {
         if ($location.path() != '/search') return;
         console.log('$locationChangeSuccess');
+        if($location.absUrl() == gnSearchLocation.lastSearchUrl) {
+          console.log('search alreay loaded');
+          return;
+        }
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
           delete params[o];
@@ -260,7 +263,8 @@
     '$location',
     'gnSearchManagerService',
     'gnFacetService',
-    'Metadata'
+    'Metadata',
+    'gnSearchLocation'
   ];
 
   module.directive('ngSearchForm', [
@@ -273,6 +277,7 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
+          console.log('link searchFormDirective');
           scope.resetSearch = function(htmlQuery) {
             scope.controller.resetSearch();
             //TODO: remove geocat ref
