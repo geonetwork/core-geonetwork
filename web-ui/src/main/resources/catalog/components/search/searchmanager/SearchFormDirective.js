@@ -40,7 +40,7 @@
     /** Object were are stored result search information */
     $scope.searchResults = {
       records: [],
-      count: 0
+      count: -1
     };
 
     $scope.searching = 0;

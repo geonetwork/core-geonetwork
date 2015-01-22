@@ -1,6 +1,6 @@
 <div class="container-fluid"
      data-ng-search-form=""
-     data-runSearch="false">
+     data-runSearch="true">
   <div data-ng-include="'../../catalog/templates/search/default/searchForm.html'"></div>
 
   <div class="row"
@@ -42,7 +42,7 @@
             data-ng-show="searching"></span>
 
       <div class="alert alert-warning" role="alert"
-           ng-if="!searching && searchResults.records.length == 0">
+           ng-if="!searching && searchResults.count == 0">
         <i class="fa fa-frown-o"></i>
         <span data-translate="">zarooResult</span>
       </div>
