@@ -22,7 +22,7 @@
       };
 
       this.isMap = function() {
-        return $location.path().indexOf(this.METADATA) == 0;
+        return $location.path() == this.MAP;
       };
 
       this.saveLastUrl = function() {

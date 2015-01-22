@@ -33,10 +33,11 @@
     '$timeout',
     'gnMdView',
     'gnMdViewObj',
+    'gnSearchLocation',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView, mdView) {
+        $timeout, gnMdView, mdView, gnSearchLocation) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -44,6 +45,14 @@
 
       var localStorage = $window.localStorage || {};
 
+      // Manage routing
+      $scope.$on('$locationChangeSuccess', function(newUrl, oldUrl) {
+        if(gnSearchLocation.isSearch()) {
+          $scope.mainTabs.search.active = true;
+        }
+      });
+
+      // Manage the collapsed search and facet panels
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) :
           { search: true,
@@ -135,9 +144,9 @@
       };
 
       $scope.closeRecord = function() {
-        mdView.current.record = null;
+        //mdView.current.record = null;
         gnMdView.removeLocationUuid();
-        $scope.mainTabs.search.active = true;
+        //$scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
