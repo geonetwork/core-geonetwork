@@ -88,21 +88,19 @@
         link: function(scope, element, attrs, controller) {
 
           var delimiter = ' or ';
+          var oldParams;
+
           scope.field = attrs.gnFacetMultiselect;
           scope.index = scope.field.substring(0, scope.field.length - 1);
 
           scope.$watch('searchResults.facet', function(v) {
-            if (v) scope.facetObj = v[scope.field];
+            if (oldParams && oldParams != scope.searchObj.params[scope.index]) {
+            }
+            else if(v) {
+              oldParams = scope.searchObj.params[scope.index];
+              scope.facetObj = v[scope.field];
+            }
           });
-
-          // Manage elements displayed
-          var initialMaxItems = 5;
-          scope.initialMaxItems = initialMaxItems;
-          scope.maxItems = initialMaxItems;
-          scope.toggle = function() {
-            scope.maxItems = (scope.maxItems == Infinity) ?
-                initialMaxItems : Infinity;
-          };
 
           /**
            * Check if the facet item is checked or not, depending if the
