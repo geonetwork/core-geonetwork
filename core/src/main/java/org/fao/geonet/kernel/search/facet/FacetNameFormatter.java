@@ -44,7 +44,7 @@ public class FacetNameFormatter implements Formatter {
         categoryTag.setAttribute("count", Integer.toString(result.count));
         categoryTag.setAttribute("name", result.value);
 
-        if (!result.value.equals(result.label)) {
+        if (!result.value.equals(result.label) && !result.label.trim().isEmpty()) {
             categoryTag.setAttribute("label", result.label);
         }
 

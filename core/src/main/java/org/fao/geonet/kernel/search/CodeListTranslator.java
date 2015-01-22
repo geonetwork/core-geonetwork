@@ -49,10 +49,10 @@ public class CodeListTranslator implements Translator {
         }
 
         String value = _codeList.get(key);
-        if(value != null) {
+        if(value != null && !value.trim().isEmpty()) {
             return value;
         } else {
-            return null;
+            return key;
         }
     }
 
