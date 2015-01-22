@@ -23,28 +23,39 @@
       <i class="fa fa-lock"/>
       <span data-translate="">share</span>
     </button>-->
+
+    <button type="button" class="btn btn-default navbar-btn"
+            data-gn-click-and-spin="startVersioning()"
+            title="{{'startVersioning-help' | translate}}">
+      <i class="fa fa-history"/>&nbsp;
+      <span class="visible-lg" data-translate="">startVersioning</span>
+    </button>
+
     <div data-gn-metadata-category-updater="mdCategories"/>
 
     <div data-gn-metadata-group-updater="groupOwner"/>
 
-    <button type="button" class="btn btn-default navbar-btn" data-ng-click="validate()">
+    <button type="button" class="btn btn-default navbar-btn"
+            gn-click-and-spin="validate()">
       <i class="fa fa-check"/>&nbsp;
       <span class="visible-lg" data-translate=""
             title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
-    <button type="button" class="btn btn-default navbar-btn gn-tooltip" data-ng-click="cancel()" 
+    <button type="button" class="btn btn-default navbar-btn gn-tooltip"
+            gn-click-and-spin="cancel()"
       data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
       <i class="fa fa-undo"/>&nbsp;
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
-    <button type="button" class="btn btn-default navbar-btn gn-tooltip" data-ng-click="close()">
+    <button type="button" class="btn btn-default navbar-btn gn-tooltip"
+            gn-click-and-spin="close()">
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
     <div class="btn-group">
       <button type="button"
-              data-ng-click="save(true)"
+              data-gn-click-and-spin="save(true)"
               class="btn btn-primary">
         <i class="fa fa-save"/>&nbsp;
         <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
@@ -54,7 +65,7 @@
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li><a href=""
-               data-ng-click="switchTypeAndSave(true)">
+               data-gn-click-and-spin="switchTypeAndSave(true)">
           {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
         </a></li>
       </ul>

@@ -257,6 +257,17 @@
              });
              return defer.promise;
            },
+           startVersioning: function() {
+             var defer = $q.defer();
+             $http.get('md.versioning.start?id=' + gnCurrentEdit.id)
+               .success(function(data) {
+               defer.resolve(data);
+             })
+               .error(function(data) {
+               defer.reject(data);
+             });
+             return defer.promise;
+           },
            /**
            * Called after the edit form has been loaded.
            * Fill gnCurrentEdit all the info of the current

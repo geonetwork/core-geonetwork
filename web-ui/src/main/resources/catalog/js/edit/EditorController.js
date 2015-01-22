@@ -254,6 +254,10 @@
         });
       };
 
+      $scope.startVersioning = function() {
+        return gnEditor.startVersioning();
+      };
+
       /**
        * Update the form according to the target tab
        * properties and save.
@@ -395,12 +399,11 @@
       };
       $scope.switchTypeAndSave = function(refreshForm) {
         $scope.setTemplate(!$scope.isTemplate());
-        $scope.save(refreshForm);
+        return $scope.save(refreshForm);
       };
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
-
-        gnEditor.save(refreshForm)
+        var promise = gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = false;
@@ -415,7 +418,7 @@
                 type: 'danger'});
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
+        return promise;
       };
       var closeEditor = function() {
         $scope.layout.hideTopToolBar = false;
@@ -431,7 +434,8 @@
       };
 
       $scope.cancel = function(refreshForm) {
-        gnEditor.cancel(refreshForm)
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return gnEditor.cancel(refreshForm)
           .then(function(form) {
               // Refresh editor form after cancel
               //  $scope.savedStatus = gnCurrentEdit.savedStatus;
@@ -448,12 +452,10 @@
                 timeout: 0,
                 type: 'danger'});
             });
-        $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
       };
 
       $scope.close = function() {
-        gnEditor.save(false)
+        var promise = gnEditor.save(false)
           .then(function(form) {
               closeEditor();
             }, function(error) {
@@ -463,8 +465,8 @@
                 timeout: 0,
                 type: 'danger'});
             });
-
-        return false;
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return promise;
       };
       $scope.getSaveStatus = function() {
         if (gnCurrentEdit.savedTime) {
@@ -490,7 +492,7 @@
 
       $scope.validate = function() {
         $('#showvalidationerrors')[0].value = 'true';
-        $scope.save(true);
+        return $scope.save(true);
       };
 
 

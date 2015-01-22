@@ -335,5 +335,27 @@
       <class name=".services.metadata.UpdateCategories" />
     </service>
 
+    <service name="md.category.batch.update">
+      <class name=".services.metadata.BatchUpdateCategories" />
+    </service>
+
+    <service name="md.versioning.start">
+      <documentation><![CDATA[
+        Start versioning of a metadata record
+
+        Parameters:
+        * id: The metadata id
+        ]]></documentation>
+      <class name=".services.metadata.Version" />
+    </service>
+
+    <service name="md.batch.versioning">
+      <documentation><![CDATA[
+        Start versioning of the selected records
+
+        ]]></documentation>
+      <class name=".services.metadata.BatchVersion" />
+    </service>
+
   </services>
 </geonet>

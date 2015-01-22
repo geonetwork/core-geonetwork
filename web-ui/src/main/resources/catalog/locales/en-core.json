@@ -115,6 +115,8 @@
     "selectAll": "All",
     "selectNone": "None",
     "send": "Send",
+    "startVersioning": "",
+    "startVersioning-help": "Save version history (beta)",
     "setMetadataGroup": "Change metadata group",
     "setMetadataCategories": "Change metadata categories",
     "sendAComment": "Send us a comment",

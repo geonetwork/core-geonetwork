@@ -74,7 +74,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.version">
+        <service name="metadata.version" deprecated="true">
             <class name=".services.metadata.Version" />
 
             <output sheet="infomodal.xsl">
@@ -84,7 +84,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.version">
+        <service name="metadata.batch.version" deprecated="true">
             <class name=".services.metadata.BatchVersion" />
 
             <output sheet="metadata-batch-results.xsl">

@@ -113,6 +113,8 @@
     "scrollTop": "Retourner en haut de la page",
     "selectAll": "Tous",
     "selectNone": "Aucun",
+    "startVersioning": "",
+    "startVersioning-help": "Sauvegarder l'historique des versions (beta)",
     "send": "Envoyer",
     "sendAComment": "Envoyer nous un commentaire",
     "sendPasswordLinkToMyEmail": "Récupérer mon mot de passe",
