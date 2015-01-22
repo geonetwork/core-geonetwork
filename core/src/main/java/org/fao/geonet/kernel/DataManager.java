@@ -473,6 +473,8 @@ public class DataManager {
         for (String metadataId : metadataIds) {
             indexMetadata(metadataId, false);
         }
+
+        searchMan.forceIndexChanges();
     }
     /**
      * TODO javadoc.
@@ -1335,7 +1337,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id), false);
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -1483,7 +1485,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), false);
+        indexMetadata(Integer.toString(metadataId), true);
 
         return rating;
     }
@@ -1861,7 +1863,7 @@ public class DataManager {
         } finally {
             if(index) {
                 //--- update search criteria
-                indexMetadata(metadataId, false);
+                indexMetadata(metadataId, true);
             }
         }
         // Return an up to date metadata record

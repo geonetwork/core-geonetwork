@@ -383,6 +383,8 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
             }
         }
 
+        context.getBean(SearchManager.class).forceIndexChanges();
+
 		return serverResults;
 	}
 

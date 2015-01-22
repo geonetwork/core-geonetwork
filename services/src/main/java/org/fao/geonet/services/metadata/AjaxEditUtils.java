@@ -630,7 +630,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, false);
+        dataManager.indexMetadata(id, true);
 
         return true;
 	}
@@ -686,7 +686,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, false);
+        dataManager.indexMetadata(id, true);
 
         return true;
 	}
