@@ -163,5 +163,6 @@
   "mdUnmodified": "Unaffected Metadata",
   "mdDisallowed": "Restricted Metadata",
   "metadataUnchanged": "Metadata unmodified",
-  "accessRestricted": "You do not have permission to change this metadata"
+  "accessRestricted": "You do not have permission to change this metadata",
+  "copiedToClip": "Text copied in clipboard !"
 }

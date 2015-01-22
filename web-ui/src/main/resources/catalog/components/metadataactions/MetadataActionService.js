@@ -10,13 +10,14 @@
   module.service('gnMetadataActions', [
     '$rootScope',
     '$timeout',
+    '$location',
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
     'gnSearchSettings',
     '$translate',
-    function($rootScope, $timeout, gnHttp,
+    function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnPopup,
              gnSearchSettings, $translate) {
 
@@ -232,10 +233,12 @@
        * @param {Object} md
        */
       this.getPermalink = function(md) {
-        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+
+        var url = $location.absUrl().split('#')[0] + '#/metadata/'
+            + md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
-          content: '<a href="' + url + '" target="_blank">' + url + '</a>'
+          content: '<div gn-permalink-input="' + url + '"></div>'
         });
       };
     }]);

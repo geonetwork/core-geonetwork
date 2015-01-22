@@ -10,9 +10,7 @@
     'gnSearchSettings',
     '$sce',
     'gnMdView',
-    '$location', '$rootScope',
-    function($http, $sanitize, $compile, gnSearchSettings,
-        $sce, gnMdView, $location, $rootScope) {
+    function($http, $sanitize, $compile, gnSearchSettings, $sce, gnMdView) {
       return {
         restrict: 'A',
         scope: {
