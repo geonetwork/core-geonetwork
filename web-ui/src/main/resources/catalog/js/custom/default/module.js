@@ -6,7 +6,14 @@
 
 
 
+
+
+
+
+
+
   goog.require('cookie_warning');
+  goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search');
   goog.require('gn_search_default_config');
@@ -15,7 +22,7 @@
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning']);
+       'cookie_warning', 'gn_mdactions_directive']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -158,7 +165,7 @@
 
 
       // Manage route at start and on $location change
-      if(!$location.path()) {
+      if (!$location.path()) {
         $location.path('/home');
       }
       $scope.activeTab = $location.path().
@@ -168,13 +175,13 @@
         $scope.activeTab = $location.path().
             match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
 
-        if(gnSearchLocation.isSearch() && (!angular.isArray(
+        if (gnSearchLocation.isSearch() && (!angular.isArray(
             searchMap.getSize()) || searchMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);
         }
-        if(gnSearchLocation.isMap() && (!angular.isArray(
+        if (gnSearchLocation.isMap() && (!angular.isArray(
             viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             viewerMap.updateSize();

@@ -225,7 +225,7 @@
             </output>
         </service>
 
-        <service name="metadata.status.form">
+        <service name="metadata.status.form" deprecated="false">
             <class name=".services.metadata.GetStatus" />
 
             <output sheet="metadata-status.xsl" />
@@ -233,7 +233,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.status">
+        <service name="metadata.status" deprecated="">
             <class name=".services.metadata.UpdateStatus" />
 
         </service>

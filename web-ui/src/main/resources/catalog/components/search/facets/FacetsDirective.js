@@ -96,7 +96,7 @@
           scope.$watch('searchResults.facet', function(v) {
             if (oldParams && oldParams != scope.searchObj.params[scope.index]) {
             }
-            else if(v) {
+            else if (v) {
               oldParams = scope.searchObj.params[scope.index];
               scope.facetObj = v[scope.field];
             }

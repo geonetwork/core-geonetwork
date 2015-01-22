@@ -357,5 +357,26 @@
       <class name=".services.metadata.BatchVersion" />
     </service>
 
+
+    <service name="md.status.list">
+      <documentation><![CDATA[
+        Get the list of all possible status.
+        ]]></documentation>
+      <class name=".services.metadata.GetStatus" />
+    </service>
+
+
+    <service name="md.status.update">
+
+      <documentation><![CDATA[
+        Update metadata status.
+
+        Parameters:
+        * id: The metadata id
+        * status: The new status
+        * changeMessage: The log message
+        ]]></documentation>
+      <class name=".services.metadata.UpdateStatus" />
+    </service>
   </services>
 </geonet>

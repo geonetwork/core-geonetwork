@@ -1,9 +1,11 @@
 (function() {
 
   goog.provide('gn_related_directive');
-  goog.require('gn_map_service');
+  goog.require('gn_relatedresources_service');
 
-  var module = angular.module('gn_related_directive', ['gn_map_service']);
+  var module = angular.module('gn_related_directive', [
+    'gn_relatedresources_service'
+  ]);
 
   /**
    * Shows a list of related records given an uuid with the actions defined in
@@ -14,15 +16,13 @@
           'gnRelated',
           [
         '$http',
-        'gnMap',
-        'gnSearchSettings',
-        function($http, gnMap, gnSearchSettings) {
+        'gnRelatedResources',
+        function($http, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
               return attrs.template ||
-                 '../../catalog/components/' +
-                 'metadataactions/partials/related.html';
+                      '../../catalog/components/metadataactions/partials/related.html';
             },
             scope: {
               uuid: '@gnRelated',
@@ -31,25 +31,22 @@
               list: '@'
             },
             link: function(scope, element, attrs, controller) {
-              scope.mapService = gnMap;
-              scope.map = gnSearchSettings.searchMap;
-              scope.actions = gnSearchSettings.mdSettings.actions;
-
-              scope.exec = function(a) {
-                eval(a);
-              };
 
               scope.updateRelations = function() {
                 scope.relations = [];
                 if (scope.uuid) {
                   if (!scope.list) {
-                    $http.get('md.relations?_content_type=json&uuid=' +
-                       scope.uuid +
-                       (scope.types ? '&type=' + scope.types :
-                       '')).success(function(data, status, headers, config) {
+                    $http
+                              .get(
+                       'md.relations?_content_type=json&uuid=' +
+                       scope.uuid + (scope.types ? '&type=' +
+                       scope.types : ''))
+                              .success(function(data, status, headers, config) {
                          if (data && data != 'null' && data.relation) {
                            if (!angular.isArray(data.relation))
-                             data.relation = [data.relation];
+                             data.relation = [
+                               data.relation
+                             ];
                            for (i = 0; i < data.relation.length; i++) {
                              scope.relations.push(data.relation[i]);
                            }
@@ -61,6 +58,12 @@
                 }
               };
 
+              scope.getTitle = function(md) {
+                return md.title['#text'] || md.title;
+              };
+
+              scope.config = gnRelatedResources;
+
               scope.$watch('uuid', function() {
                 scope.updateRelations();
               });
@@ -68,7 +71,8 @@
               scope.updateRelations();
             }
           };
-        }]);
+        }
+          ]);
 
   module.directive('relatedTooltip', function() {
     return function(scope, element, attrs) {

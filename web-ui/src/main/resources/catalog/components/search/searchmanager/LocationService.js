@@ -55,13 +55,13 @@
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
-          if(that.isSearch()) {
+          if (that.isSearch()) {
             tabs.search.active = true;
           }
-          else if(that.isMap()) {
+          else if (that.isMap()) {
             tabs.map.active = true;
           }
-          else if(that.isMdView()) {
+          else if (that.isMdView()) {
             tabs.view.active = true;
           }
         };

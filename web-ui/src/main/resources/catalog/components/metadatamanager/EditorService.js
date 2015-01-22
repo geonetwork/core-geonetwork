@@ -231,43 +231,6 @@
              $(gnCurrentEdit.formId).
              find('input[id="version"]').val(version);
            },
-           assignGroup: function(groupId) {
-             var defer = $q.defer();
-             $http.get('md.group.update?id=' + gnCurrentEdit.id +
-             '&groupid=' + groupId)
-              .success(function(data) {
-               defer.resolve(data);
-             })
-              .error(function(data) {
-               defer.reject(data);
-             });
-             return defer.promise;
-           },
-           assignCategories: function(categories) {
-             var defer = $q.defer(), ids = '';
-             angular.forEach(categories, function(value) {
-               ids += '&_' + value + '=on';
-             });
-             $http.get('md.category.update?id=' + gnCurrentEdit.id + ids)
-               .success(function(data) {
-               defer.resolve(data);
-             })
-               .error(function(data) {
-               defer.reject(data);
-             });
-             return defer.promise;
-           },
-           startVersioning: function() {
-             var defer = $q.defer();
-             $http.get('md.versioning.start?id=' + gnCurrentEdit.id)
-               .success(function(data) {
-               defer.resolve(data);
-             })
-               .error(function(data) {
-               defer.reject(data);
-             });
-             return defer.promise;
-           },
            /**
            * Called after the edit form has been loaded.
            * Fill gnCurrentEdit all the info of the current
