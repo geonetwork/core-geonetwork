@@ -190,7 +190,7 @@
         if (!gnSearchLocation.isSearch()) return;
 
         // We are getting back to the search, no need to reload it
-        if($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
+        if ($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
