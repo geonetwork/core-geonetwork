@@ -47,7 +47,7 @@
 
       // Manage routing
       $scope.$on('$locationChangeSuccess', function(newUrl, oldUrl) {
-        if(gnSearchLocation.isSearch()) {
+        if (gnSearchLocation.isSearch()) {
           $scope.mainTabs.search.active = true;
         }
       });

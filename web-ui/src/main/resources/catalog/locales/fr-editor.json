@@ -140,7 +140,6 @@
     "setCRS": "Définir le système de coordonnées",
     "setDynamicGraphicOverview": "Définir l'aperçu de la fiche à partir d'une requête GetMap sur le service associé",
     "setExtent": "Définir l'étendue",
-    "setMetadataGroup": "Changer le groupe de la fiche",
     "share": "Partager",
     "share-help": "Définir qui peut consulter cette fiche",
     "sharingSettings": "Paramètre du partage",

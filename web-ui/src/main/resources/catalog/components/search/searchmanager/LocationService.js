@@ -34,7 +34,7 @@
       };
 
       this.getUuid = function() {
-        if(this.isMdView()) {
+        if (this.isMdView()) {
           var url = $location.path();
           return url.substring(this.METADATA.length, url.length);
         }
@@ -49,7 +49,7 @@
       };
       this.getParams = function() {
         return $location.search();
-      }
+      };
     }
   ]);
 

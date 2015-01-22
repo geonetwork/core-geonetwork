@@ -12,7 +12,7 @@
     }
   });
 
-    module.service('gnMdView', [
+  module.service('gnMdView', [
     'gnSearchLocation',
     '$rootScope',
     'gnMdFormatter',
@@ -76,7 +76,7 @@
       };
 
       this.openMdView = function(index, md, records) {
-        if(md && index) {
+        if (md && index) {
           this.feedMd(index, md, records);
         }
         this.setUuid(md.getUuid());
@@ -93,12 +93,12 @@
         var that = this;
         var loadMdView = function(oldUrl, newUrl) {
           var uuid = gnSearchLocation.getUuid();
-          if(uuid) {
-            if(!gnMdViewObj.current.record ||
+          if (uuid) {
+            if (!gnMdViewObj.current.record ||
                 gnMdViewObj.current.record.getUuid() != uuid) {
 
               // Check if the md is in current search
-              if (angular.isArray(gnMdViewObj.records)){
+              if (angular.isArray(gnMdViewObj.records)) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
                   if (md.getUuid() == uuid) {
@@ -110,13 +110,13 @@
 
               // get a new search to pick the md
               gnSearchManagerService.gnSearch({
-                uuid:uuid,
-                fast:'index',
-                _content_type:'json'
+                uuid: uuid,
+                fast: 'index',
+                _content_type: 'json'
               }).then(function(data) {
-                if(data.metadata.length == 1) {
+                if (data.metadata.length == 1) {
                   data.metadata[0] = new Metadata(data.metadata[0]);
-                  that.feedMd(0,undefined, data.metadata);
+                  that.feedMd(0, undefined, data.metadata);
                 }
               });
             }
