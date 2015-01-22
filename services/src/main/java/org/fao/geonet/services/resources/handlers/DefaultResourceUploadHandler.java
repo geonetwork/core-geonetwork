@@ -113,6 +113,10 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
 			Path targetDir, String overwrite) throws Exception {
 		File f = new File(targetDir.toFile(), filename);
 		
+		if(!Files.exists(targetDir)) {
+            Files.createDirectories(targetDir);
+		}
+		
 		// check if file already exists and do whatever overwrite wants
 		if (Files.exists(f.toPath())) {
 			if (overwrite.equals("no")) {

@@ -27,6 +27,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 import lizard.tiff.Tiff;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -56,6 +58,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -110,7 +113,7 @@ public class Set {
 
 		//--- check if the metadata has been modified from last time
 
-		if (version != null && !dataMan.getVersion(id).equals(version))
+		if (version != null && !StringUtils.isEmpty(version) && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
         //-----------------------------------------------------------------------
