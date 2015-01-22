@@ -109,14 +109,14 @@
         }
       };
       function loadEditors() {
-        $http.get('admin.ownership.editors@json')
+        $http.get('admin.ownership.editors?_content_type=json')
             .success(function(data) {
               $scope.editors = data;
             });
       }
       $scope.selectUser = function(id) {
         $scope.editorSelectedId = id;
-        $http.get('admin.usergroups.list@json?id=' + id)
+        $http.get('admin.usergroups.list?_content_type=json&id=' + id)
             .success(function(data) {
               var uniqueGroup = {};
               angular.forEach(data, function(value) {
@@ -128,7 +128,7 @@
             }).error(function(data) {
             });
 
-        $http.get('admin.ownership.groups@json?id=' + id)
+        $http.get('admin.ownership.groups?_content_type=json&id=' + id)
           .success(function(data) {
               // If user does not have group and only one
               // target group, a simple object is returned
@@ -158,7 +158,7 @@
             '</targetGroup></request>';
 
         params.running = true;
-        $http.post('admin.ownership.transfer@json', xml, {
+        $http.post('admin.ownership.transfer?_content_type=json', xml, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
@@ -186,26 +186,29 @@
       }
 
       function loadGroups() {
-        $http.get('admin.group.list@json').success(function(data) {
-          $scope.batchSearchGroups = data;
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('admin.group.list?_content_type=json').
+            success(function(data) {
+              $scope.batchSearchGroups = data;
+            }).error(function(data) {
+              // TODO
+            });
       }
       function loadUsers() {
-        $http.get('admin.user.list@json').success(function(data) {
-          $scope.batchSearchUsers = data;
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('admin.user.list?_content_type=json').
+            success(function(data) {
+              $scope.batchSearchUsers = data;
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadCategories() {
-        $http.get('info@json?type=categories').success(function(data) {
-          $scope.batchSearchCategories = data.metadatacategory;
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('info?_content_type=json&type=categories').
+            success(function(data) {
+              $scope.batchSearchCategories = data.metadatacategory;
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       /**
@@ -216,7 +219,7 @@
 
       function checkLastBatchProcessReport() {
         // Check if processing
-        return $http.get('md.processing.batch.report@json').
+        return $http.get('md.processing.batch.report?_content_type=json').
             success(function(data, status) {
               if (data != 'null') {
                 $scope.processReport = data;
@@ -244,7 +247,7 @@
         if (process != undefined) {
           service = process;
         } else {
-          service = 'md.processing.batch@json';
+          service = 'md.processing.batch?_content_type=json';
         }
 
         $scope.processing = true;
@@ -355,7 +358,8 @@
                 $timeout(checkIsIndexing, indexCheckInterval);
               }
               // Get the number of records (template, records, subtemplates)
-              $http.get('qi?_content_type=json&template=y or n or s&summaryOnly=true').
+              $http.get('qi?_content_type=json&' +
+                 'template=y or n or s&summaryOnly=true').
                  success(function(data, status) {
                    $scope.numberOfIndexedRecords = data[0]['@count'];
                  });
