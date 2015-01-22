@@ -20,7 +20,7 @@
     'gnMdViewObj',
     'gnSearchManagerService',
     'gnSearchSettings',
-    function($location, $rootScope, gnMdFormatter, Metadata,
+    function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings) {
 
       var lastSearchParams = {};
@@ -37,7 +37,7 @@
           layers: md.getLinksByType('OGC', 'kml'),
           contacts: md.getContacts(),
           overviews: md.getThumbnails() ? md.getThumbnails().list : undefined,
-          encodedUrl: encodeURIComponent($location.absUrl())
+          encodedUrl: encodeURIComponent(gnSearchLocation.absUrl())
         });
 
         gnMdViewObj.current.record = md;
@@ -56,16 +56,17 @@
        * @param {string} uuid
        */
       this.setLocationUuid = function(uuid) {
-        if ($location.isSearch()) {
-          lastSearchParams = angular.copy($location.getParams());
-          $location.removeParams();
+        if (gnSearchLocation.isSearch()) {
+          lastSearchParams = angular.copy(gnSearchLocation.getParams());
+          gnSearchLocation.saveLastUrl();
+          gnSearchLocation.removeParams();
         }
-        $location.setUuid(uuid);
+        gnSearchLocation.setUuid(uuid);
       };
 
       this.removeLocationUuid = function() {
-        if (!$location.isSearch()) {
-          $location.setSearch(lastSearchParams);
+        if (!gnSearchLocation.isSearch()) {
+          gnSearchLocation.setSearch(lastSearchParams);
         }
       };
 
@@ -79,7 +80,7 @@
       this.initMdView = function(scope) {
         var that = this;
         var loadMdView = function() {
-          var uuid = $location.getUuid();
+          var uuid = gnSearchLocation.getUuid();
           if(uuid) {
             if(!gnMdViewObj.current.record ||
                 gnMdViewObj.current.record.getUuid() != uuid) {
@@ -97,20 +98,20 @@
             }
           }
         };
-        $rootScope.$on('$locationChangeSuccess', loadMdView);
+        $rootScope.$on('gnSearchLocationChangeSuccess', loadMdView);
       };
 
       this.initFormatter = function(selector) {
         var loadFormatter = function() {
-          var url = $location.path();
-          if ($location.isMdView()) {
+          var url = gnSearchLocation.path();
+          if (gnSearchLocation.isMdView()) {
             var uuid = url.substring(10, url.length);
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
           }
         };
         loadFormatter();
-        $rootScope.$on('$locationChangeSuccess', loadFormatter);
+        $rootScope.$on('gnSearchLocationChangeSuccess', loadFormatter);
       };
     }
   ]);

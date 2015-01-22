@@ -32,10 +32,11 @@
     'gnNcWms',
     '$timeout',
     'gnMdView',
+    'gnMdViewObj',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView) {
+        $timeout, gnMdView, mdView) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -126,23 +127,16 @@
       });
 
       /** Manage metadata view */
-      var mdView = {
-        previousRecords: [],
-        current: {
-          record: null,
-          index: null
-        }
-      };
       $scope.mdView = mdView;
+      gnMdView.initMdView();
 
       $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records, mdView);
-        //gnUtilityService.scrollTo();
+        gnMdView.feedMd(index, md, records);
       };
 
       $scope.closeRecord = function() {
         mdView.current.record = null;
-        //$location.search(searchUrl);
+        gnMdView.removeLocationUuid();
         $scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
