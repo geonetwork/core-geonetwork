@@ -205,7 +205,7 @@
         }
       });
       // FIXME This should not be necessary for the default route.
-      //$location.path('/');
+      $location.path('/home');
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
