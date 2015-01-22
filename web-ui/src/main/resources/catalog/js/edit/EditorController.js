@@ -160,6 +160,16 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.mdCategories = [];
+            var categories = data.metadata[0].category;
+            if (categories) {
+              if (angular.isArray(categories)) {
+                $scope.mdCategories = categories;
+              } else {
+                $scope.mdCategories.push(categories);
+              }
+            }
+
             $scope.groupOwner = data.metadata[0].groupOwner;
             $scope.mdTitle = data.metadata[0].title ||
                 data.metadata[0].defaultTitle;
@@ -471,7 +481,7 @@
         }
       };
 
-      $scope.$on('AddElement', function(event, ref, name, 
+      $scope.$on('AddElement', function(event, ref, name,
           insertRef, position, attribute) {
             $scope.add(ref, name, insertRef, position, attribute);
           });

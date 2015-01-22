@@ -119,6 +119,8 @@
     "search": "Rechercher",
     "service": "Service",
     "serviceTypes": "Type de service",
+    "setMetadataGroup": "Changer le groupe de la fiche",
+    "setMetadataCategories": "Changer les catégories de la fiche",
     "signIn": "S'identifier",
     "signedInAs": " ",
     "signout": "Se déconnecter",

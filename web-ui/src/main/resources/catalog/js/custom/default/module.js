@@ -179,7 +179,7 @@
 
       $scope.displayMapTab = function() {
         if (!angular.isArray(viewerMap.getSize()) ||
-            viewerMap.getSize().indexOf(0) >= 0 ) {
+            viewerMap.getSize().indexOf(0) >= 0) {
           setTimeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
@@ -198,7 +198,7 @@
 
       $scope.$on('$routeChangeStart', function(next, current) {
         if (!angular.isArray(searchMap.getSize()) ||
-            searchMap.getSize().indexOf(0) >= 0 ) {
+            searchMap.getSize().indexOf(0) >= 0) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);

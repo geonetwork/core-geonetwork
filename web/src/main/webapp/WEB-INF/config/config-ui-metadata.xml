@@ -322,5 +322,18 @@
       <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
+    <service name="md.category.update">
+      <documentation><![CDATA[
+        Update metadata category by first removing all existing
+        and then setting the one provided in parameters.
+
+        Parameters:
+        * id: The metadata id
+        * _<category_id>=on : The category ids
+
+        ]]></documentation>
+      <class name=".services.metadata.UpdateCategories" />
+    </service>
+
   </services>
 </geonet>

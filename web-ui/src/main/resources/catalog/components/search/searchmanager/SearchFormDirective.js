@@ -188,7 +188,7 @@
       $scope.$on('$locationChangeSuccess', function() {
         if ($location.path() != '/search') return;
         console.log('$locationChangeSuccess');
-        if($location.absUrl() == gnSearchLocation.lastSearchUrl) {
+        if ($location.absUrl() == gnSearchLocation.lastSearchUrl) {
           console.log('search alreay loaded');
           return;
         }

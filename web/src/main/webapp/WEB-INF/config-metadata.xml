@@ -240,7 +240,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.category.form">
+        <service name="metadata.category.form" deprecated="true">
             <class name=".services.metadata.GetCategories" />
 
             <output sheet="metadata-category.xsl" />
@@ -248,7 +248,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.category">
+        <service name="metadata.category" deprecated="true">
             <class name=".services.metadata.UpdateCategories" />
 
         </service>
