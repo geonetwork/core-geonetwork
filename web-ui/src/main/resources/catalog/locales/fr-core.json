@@ -1,4 +1,7 @@
 {
+    "all": "Tous",
+    "allInPage": "Toute la page",
+    "none": "Aucun",
     "BadParameterEx": "Paramètre incorrect",
     "Editor": "Editeur",
     "Keywords": "Keywords",

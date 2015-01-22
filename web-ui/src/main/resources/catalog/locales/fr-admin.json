@@ -521,6 +521,8 @@
     "os.arch": "Architecture du système",
     "os.name": "Nom du système",
     "prefix": "Prefixe",
+    "processError": "Oops, il y a eu des erreurs lors du traitement.",
+    "processFinished": "Traitement terminé.",
     "processRecommendedOnHostChange": "Mettre à jour les fiches",
     "processRecommendedOnHostChange-help": "Après modification de l'hôte, il est recommandé de mettre à jour les URLs contenues dans les fiches (eg. aperçus, documents téléchargés, XLinks). Cliquer ici pour remplacer {{old}} par {{by}}.",
     "processReport-done": "Nombre de fiches traitées",

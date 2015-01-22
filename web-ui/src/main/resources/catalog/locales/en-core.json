@@ -1,4 +1,7 @@
 {
+    "all": "all",
+    "allInPage": "all in page",
+    "none": "none",
     "BadParameterEx": "Wrong parameter",
     "Editor": "Editor",
     "Keywords": "Keywords",

@@ -2,9 +2,10 @@
   goog.provide('gn_admintools_controller');
 
 
+  goog.require('gn_search');
 
   var module = angular.module('gn_admintools_controller',
-      []);
+      ['gn_search']);
 
 
   /**
@@ -102,12 +103,17 @@
       $scope.editorGroups = {};
       $scope.searchObj = {
         permalink: false,
+        hitsperpageValues: [20, 50, 100],
         params: {
           sortBy: 'changeDate',
+          _isTemplate: 'y or n',
           from: 1,
           to: 9
         }
       };
+      $scope.resultTemplate = '../../catalog/' +
+          'components/search/resultsview/' +
+          'partials/viewtemplates/title.html';
       function loadEditors() {
         $http.get('admin.ownership.editors?_content_type=json')
             .success(function(data) {
@@ -252,7 +258,7 @@
 
         $scope.processing = true;
         $scope.processReport = null;
-        $http.get(service + '?' +
+        $http.get(service + '&' +
             formParams)
           .success(function(data) {
               $scope.processReport = data;
@@ -295,7 +301,7 @@
         if ($('#batchSearchTemplateY')[0].checked) values.push('y');
         if ($('#batchSearchTemplateN')[0].checked) values.push('n');
         if ($('#batchSearchTemplateS')[0].checked) values.push('s');
-        params._isTemplate = values.join(' or ');
+        $scope.searchObj.params._isTemplate = values.join(' or ');
       };
 
       var initProcessByRoute = function() {

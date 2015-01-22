@@ -19,6 +19,8 @@
 
           var watchers = [];
           scope.checkAll = true;
+          scope.withoutActionMenu =
+              angular.isDefined(attrs.withoutActionMenu) ? true : false;
           scope.mdService = gnMetadataActions;
 
           // initial state
