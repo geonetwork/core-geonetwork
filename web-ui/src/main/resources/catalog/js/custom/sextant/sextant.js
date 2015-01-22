@@ -140,9 +140,7 @@
       };
 
       $scope.closeRecord = function() {
-        //mdView.current.record = null;
         gnMdView.removeLocationUuid();
-        //$scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...

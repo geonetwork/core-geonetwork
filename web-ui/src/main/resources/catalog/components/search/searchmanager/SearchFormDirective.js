@@ -287,7 +287,11 @@
             }
           };
 
-          if (attrs.runsearch && gnSearchLocation.isSearch()) {
+          // Run a first search on directive rendering if attr is specified
+          // Don't run it on page load if the permalink is 'on' and the
+          // $location is not set to 'search'
+          if (attrs.runsearch &&
+              (!scope.searchObj.permalink || gnSearchLocation.isSearch())) {
 
             // get permalink params on page load
             if (scope.searchObj.permalink) {

@@ -56,10 +56,11 @@
     'gnMap',
     'gnMdView',
     'gnMdViewObj',
+    'gnSearchLocation',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, gnMdView, mdView, hotkeys) {
+             gnMap, gnMdView, mdView, gnSearchLocation, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -126,7 +127,6 @@
       };
 
       $scope.closeRecord = function() {
-        mdView.current.record = null;
         gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
@@ -156,32 +156,28 @@
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
-      $scope.displayMapTab = function() {
-        if (!angular.isArray(viewerMap.getSize()) ||
-            viewerMap.getSize().indexOf(0) >= 0) {
-          setTimeout(function() {
-            viewerMap.updateSize();
-            if (gnViewerSettings.initialExtent) {
-              viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
-                  viewerMap.getSize());
-            }
-          }, 0);
-        }
-        // FIXME $scope.mainTabs.map.titleInfo = '';
-      };
 
-      // Switch to the location requested tab.
-      //$scope.$on('$locationChangeStart', function(next, current) {
-      //  var params = $location.search();
-      //});
+      // Manage route at start and on $location change
+      if(!$location.path()) {
+        $location.path('/home');
+      }
+      $scope.activeTab = $location.path().
+          match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
 
       $scope.$on('$locationChangeSuccess', function(next, current) {
         $scope.activeTab = $location.path().
             match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
-        if (!angular.isArray(searchMap.getSize()) ||
-            searchMap.getSize().indexOf(0) >= 0) {
+
+        if(gnSearchLocation.isSearch() && (!angular.isArray(
+            searchMap.getSize()) || searchMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             searchMap.updateSize();
+          }, 0);
+        }
+        if(gnSearchLocation.isMap() && (!angular.isArray(
+            viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
+          setTimeout(function() {
+            viewerMap.updateSize();
           }, 0);
         }
       });
