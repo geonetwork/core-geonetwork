@@ -1,0 +1,34 @@
+<form name="myForm">
+  <div class="row">
+    <div class="col-md-4">
+      <!-- TODO: Status are disabled based on profiles and
+      previous values. See https://github.com/geonetwork/core-geonetwork/blob/develop/web/src/main/webapp/xsl/metadata-status.xsl#L15 -->
+      <div class="form-group radio"
+           data-ng-repeat="s in status | orderBy: 'displayorder'">
+        <label>
+          <input type="radio"
+                 name="status"
+                 value="{{s.id}}"
+                 data-ng-model="newStatus.value">
+          <span>{{s.label[lang]}}</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="form-group">
+        <label for="gn-change-message"
+               data-translate="">statusLogMessage</label>
+        <textarea class="form-control"
+                  id="gn-change-message"
+                  placeholder="{{'defaultChangeLogMessage' | translate}}"
+                  data-ng-model="changeMessage"></textarea>
+      </div>
+
+      <button class="btn btn-default"
+              data-gn-click-and-spin="updateStatus()">
+        <i class="fa fa-bell"></i>
+        <span data-translate="">updateStatus</span>
+      </button>
+    </div>
+  </div>
+</form>

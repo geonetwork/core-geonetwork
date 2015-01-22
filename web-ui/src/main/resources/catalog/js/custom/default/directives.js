@@ -36,7 +36,7 @@
             'partials/mdactionmenu.html',
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
-          scope.md = scope.$eval(attrs.gnMetadataActions);
+          scope.md = scope.$eval(attrs.gnMdActionsMenu);
         }
       };
     }

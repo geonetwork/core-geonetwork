@@ -29,10 +29,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
   goog.require('gn_import_controller');
+  goog.require('gn_mdactions_service');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_share');
@@ -45,7 +56,7 @@
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
-       'ngRoute']);
+       'ngRoute', 'gn_mdactions_service']);
 
   var tplFolder = '../../catalog/templates/editor/';
 

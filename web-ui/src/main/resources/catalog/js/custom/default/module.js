@@ -6,7 +6,14 @@
 
 
 
+
+
+
+
+
+
   goog.require('cookie_warning');
+  goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search');
   goog.require('gn_search_default_config');
@@ -15,7 +22,7 @@
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning']);
+       'cookie_warning', 'gn_mdactions_directive']);
 
 
   module.controller('gnsSearchPopularController', [

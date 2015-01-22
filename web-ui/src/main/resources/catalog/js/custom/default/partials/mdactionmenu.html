@@ -38,6 +38,12 @@
       <i class="fa fa-key"></i>&nbsp;
       <span data-translate="">privileges</span>
     </a></li>
+    <li><a data-ng-href=""
+           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())">
+      <i class="fa fa-bell"></i>&nbsp;
+      <span data-translate="">updateStatus</span>
+    </a></li>
     <li class="divider"></li>
 
     <!-- TODO: rating, category, status, versionning -->
