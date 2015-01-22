@@ -357,7 +357,7 @@
        */
       function checkIsIndexing() {
         // Check if indexing
-        return $http.get('info@_content_type=json&type=index').
+        return $http.get('info?_content_type=json&type=index').
             success(function(data, status) {
               $scope.isIndexing = data.index == 'true';
               if ($scope.isIndexing) {

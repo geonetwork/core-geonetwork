@@ -26,7 +26,7 @@
     </appender>
 
     <!-- Geonetwork module (and submodule) logging -->
-    <logger name="geonetwork">
+    <logger name="geonetwork" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
@@ -70,7 +70,7 @@
     <logger name="geonetwork.formatter">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.harvester">
+    <logger name="geonetwork.harvester" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
@@ -110,7 +110,7 @@
     </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
-    <logger name="jeeves">
+    <logger name="jeeves" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
@@ -146,12 +146,12 @@
 
 
     <!--  Spring logging configuration -->
-    <logger name="org.springframework">
+    <logger name="org.springframework" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.springframework.beans">
+    <logger name="org.springframework.beans" additivity="false">
         <level value="WARN" />
         <appender-ref ref="fileAppender" />
     </logger>
@@ -166,7 +166,7 @@
     </logger>
 
     <!--  JZKIT logging configuration -->
-    <logger name="com.k_int">
+    <logger name="com.k_int" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
@@ -180,27 +180,27 @@
     <logger name="org.jzkit.search.impl.LRUCache">
         <level value="WARN" />
     </logger>
-    <logger name="ro.isdc.wro.http">
+    <logger name="ro.isdc.wro.http" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="allConsoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.SQL">
+    <logger name="org.hibernate.SQL" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.type">
+    <logger name="org.hibernate.type" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.hibernate.tool.hbm2ddl">
+    <logger name="org.hibernate.tool.hbm2ddl" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="org.xhtmlrenderer">
+    <logger name="org.xhtmlrenderer" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
