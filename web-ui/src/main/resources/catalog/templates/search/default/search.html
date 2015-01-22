@@ -8,10 +8,16 @@
 <div class="gn-search-page"
      data-ng-controller="GnSearchController">
 <cookiewarning></cookiewarning>
-     
   <div class=""
        data-ng-controller="gnsDefault">
-    <div data-ng-view=""></div>
+    <div data-ng-include="'../../catalog/templates/search/default/home.html'"
+         data-ng-show="activeTab == '/home'"/>
+    <div data-ng-include="'../../catalog/templates/search/default/results.html'"
+         data-ng-show="activeTab == '/search'"/>
+    <div data-ng-include="'../../catalog/templates/search/default/map.html'"
+         data-ng-show="activeTab == '/map'"/>
+    <div data-ng-include="'../../catalog/templates/search/default/recordView.html'"
+         data-ng-show="activeTab == '/metadata'"/>
   </div>
 </div>
 

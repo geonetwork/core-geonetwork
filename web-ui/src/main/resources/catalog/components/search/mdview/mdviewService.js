@@ -132,7 +132,7 @@
       this.initFormatter = function(selector) {
         var loadFormatter = function() {
           var uuid = gnSearchLocation.getUuid();
-          if(uuid) {
+          if (uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
           }
