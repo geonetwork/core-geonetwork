@@ -25,6 +25,22 @@
     }
   ]);
 
+
+  module.directive('gnMdActionsMenu', ['gnMetadataActions',
+    function(gnMetadataActions) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/js/custom/default/' +
+            'partials/mdactionmenu.html',
+        link: function linkFn(scope, element, attrs) {
+          scope.mdService = gnMetadataActions;
+          scope.md = scope.$eval(attrs.gnMetadataActions);
+        }
+      };
+    }
+  ]);
+
   module.directive('gnPeriodChooser', [
     function() {
       return {

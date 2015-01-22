@@ -94,6 +94,7 @@
   "more": "de plus",
   "less": "en moins",
   "metadataContact": "Contact pour la fiche",
+  "metadataRemoved": "La fiche {{title}} a été supprimée.",
   "extent": "Étendue de la ressource",
   "aboutThisResource": "À propos de cette ressource",
   "preview": "Aperçu",

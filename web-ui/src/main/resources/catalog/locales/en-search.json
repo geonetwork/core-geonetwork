@@ -89,6 +89,7 @@
   "overview": "Overview",
   "chooseAView": "Display mode",
   "metadataContact": "Contact for the metadata",
+  "metadataRemoved": "{{title}} removed.",
   "extent": "Resource extent",
   "aboutThisResource": "About this resource",
   "preview": "Preview",

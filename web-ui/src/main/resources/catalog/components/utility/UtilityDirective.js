@@ -364,6 +364,7 @@
             var start = function() {
               running = true;
               element.addClass('running');
+              element.addClass('disabled');
               icon.addClass('hidden');
               spinner = element.
                   prepend('<i class="fa fa-spinner fa-spin"></i>');
@@ -371,6 +372,7 @@
             var done = function() {
               running = false;
               element.removeClass('running');
+              element.removeClass('disabled');
               element.find('i').first().remove();
               icon.removeClass('hidden');
             };
@@ -378,20 +380,23 @@
             element.on('click', function(event) {
               start();
               var callback = function() {
-                fn(scope, {$event: event});
+                return fn(scope, {$event: event});
               };
               // Available on ng-click - not sure if we may use it
               //if (forceAsyncEvents[eventName] && $rootScope.$$phase) {
               //  scope.$evalAsync(callback);
               //} else {
-              if (angular.isFunction(callback.then)) {
-                callback().then(function() {
-                  done();
-                });
-              } else {
-                scope.$apply(callback);
+              callback().then(function() {
                 done();
-              }
+              });
+              //if (angular.isFunction(callback.then)) {
+              //  callback().then(function() {
+              //    done();
+              //  });
+              //} else {
+              //  scope.$apply(callback);
+              //  done();
+              //}
             });
           };
         }

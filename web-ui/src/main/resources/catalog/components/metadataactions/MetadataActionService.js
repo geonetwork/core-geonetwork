@@ -126,13 +126,13 @@
 
       this.deleteMd = function(md) {
         if (md) {
-          gnMetadataManager.remove(md.getId()).then(function() {
+          return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('resetSearch');
           });
         }
         else {
-          callBatch('mdDeleteBatch').then(function() {
+          return callBatch('mdDeleteBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('resetSearch');
           });

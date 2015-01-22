@@ -291,10 +291,23 @@
     z-index: 10;
   }
 }
+
+
 .gn-md-edit-btn {
   .btn();
   .btn-primary();
   .btn-circle();
+}
+.gn-md-delete-btn {
+  .btn();
+  .btn-danger();
+  .btn-circle();
+}
+
+/* Add space between button when pulled right */
+.gn-md-edit-btn.pull-right,
+.gn-md-delete-btn.pull-right {
+  margin-right: 5px;
 }
 
 [data-ng-search-form],

@@ -148,6 +148,7 @@
     "edit" : "Edit",
     "duplicate": "Duplicate",
     "createChild": "Create a child",
-    "privileges": "Privileges",
+    "privileges": "Partager",
+    "privilegesUpdated": "Les droits d'accès ont été mis à jour",
     "whoCanAccess": "Qui à accès ?"
 }

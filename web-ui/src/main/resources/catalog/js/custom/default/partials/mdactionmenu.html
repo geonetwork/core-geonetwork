@@ -1,0 +1,84 @@
+<div class="btn-group md-actions">
+  <button type="button" 
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown" 
+          aria-expanded="false">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <!--<li><a data-ng-href=""
+           data-gn-metadata-open="md"
+           data-gn-metadata-open-selector=".gn-resultview">
+      <i class="fa fa-eye"/>&nbsp;
+      <span data-translate="">view</span>
+    </a></li>-->
+    <!--<li><a data-ng-href=""
+           data-ng-click="zoomToMdExtent(md,map)">
+      <i class="fa fa-globe"></i>&nbsp;
+      <span data-translate="">zoomto</span>
+    </a></li>
+    <li data-ng-if="user['@authenticated'] == 'true'">
+      <a data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
+         target="_blank">
+        <i class="fa fa-pencil"></i>&nbsp;
+        <span data-translate="">edit</span>
+      </a>
+    </li>-->
+    <li data-ng-if="user['@authenticated'] == 'true'" >
+      <a data-ng-click="mdService.publish(md)">
+        <i class="fa"
+           data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
+        <span data-ng-if="md.isPublished()" data-translate="">unpublish</span>
+        <span data-ng-if="!md.isPublished()" data-translate="">publish</span>
+      </a>
+    </li>
+    <li><a data-ng-href=""
+           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
+      <i class="fa fa-key"></i>&nbsp;
+      <span data-translate="">privileges</span>
+    </a></li>
+    <li class="divider"></li>
+
+    <!-- TODO: rating, category, status, versionning -->
+
+    <li><a data-ng-href=""
+           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-click="mdService.duplicate(md)">
+      <i class="fa fa-copy"></i>&nbsp;
+      <span data-translate="">duplicate</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-click="mdService.createChild(md)">
+      <i class="fa fa-sitemap"></i>&nbsp;
+      <span data-translate="">createChild</span>
+    </a></li>
+    <li class="divider"></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.getPermalink(md)">
+      <i class="fa fa-link"/>&nbsp;
+      <span data-translate="">permalink</span>
+    </a></li>
+    <li><a data-ng-href="xml.metadata.get?uuid={{md.getUuid()}}"
+           target="_blank">
+      <i class="fa fa-file-code-o"></i>&nbsp;
+      <span data-translate="">exportXML</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.metadataRDF(md.getUuid())">
+      <i class="fa fa-share-alt"></i>&nbsp;
+      <span data-translate="">exportRDF</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.metadataPrint(md.getUuid())">
+      <i class="fa fa-file-pdf-o"></i>&nbsp;
+      <span data-translate="">exportPDF</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.metadataMEF(md.getUuid())">
+      <i class="fa fa-file-zip-o"></i>&nbsp;
+      <span data-translate="">exportMEF</span>
+    </a></li>
+  </ul>
+</div>

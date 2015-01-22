@@ -100,7 +100,14 @@
       $scope.groupinfo = {};
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
-
+      $scope.searchObj = {
+        permalink: false,
+        params: {
+          sortBy: 'changeDate',
+          from: 1,
+          to: 9
+        }
+      };
       function loadEditors() {
         $http.get('admin.ownership.editors@json')
             .success(function(data) {
@@ -341,14 +348,14 @@
        */
       function checkIsIndexing() {
         // Check if indexing
-        return $http.get('info@json?type=index').
+        return $http.get('info@_content_type=json&type=index').
             success(function(data, status) {
               $scope.isIndexing = data.index == 'true';
               if ($scope.isIndexing) {
                 $timeout(checkIsIndexing, indexCheckInterval);
               }
               // Get the number of records (template, records, subtemplates)
-              $http.get('qi@json?template=y or n or s&summaryOnly=true').
+              $http.get('qi?_content_type=json&template=y or n or s&summaryOnly=true').
                  success(function(data, status) {
                    $scope.numberOfIndexedRecords = data[0]['@count'];
                  });
@@ -358,7 +365,7 @@
       checkIsIndexing();
 
       $scope.rebuildIndex = function() {
-        $http.get('admin.index.rebuild?reset=yes')
+        return $http.get('admin.index.rebuild?reset=yes')
             .success(function(data) {
               checkIsIndexing();
             })
@@ -372,7 +379,7 @@
       };
 
       $scope.optimizeIndex = function() {
-        $http.get('admin.index.optimize')
+        return $http.get('admin.index.optimize')
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('indexOptimizationInProgress'),
@@ -390,7 +397,7 @@
       };
 
       $scope.reloadLuceneConfig = function() {
-        $http.get('admin.index.config.reload')
+        return $http.get('admin.index.config.reload')
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('luceneConfigReloaded'),
@@ -407,7 +414,7 @@
       };
 
       $scope.clearXLinkCache = function() {
-        $http.get('admin.index.rebuildxlinks')
+        return $http.get('admin.index.rebuildxlinks')
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('xlinkCacheCleared'),

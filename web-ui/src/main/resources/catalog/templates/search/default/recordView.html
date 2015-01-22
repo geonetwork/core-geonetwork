@@ -23,6 +23,8 @@
   </button>
 
 
+  <div class="gn-md-actions-btn pull-right" data-gn-md-actions-menu="mdView.current.record"/>
+
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-link dropdown-toggle"
             data-toggle="dropdown"
@@ -43,7 +45,13 @@
   </div>
 
 
-  <!--Edit button-->
+  <a class="gn-md-delete-btn pull-right"
+     data-ng-show="canEdit(mdView.current.record)"
+     data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+     title="{{'delete' | translate}}">
+
+    <i class="fa fa-trash-o" data-ng-class="deletingRecord ? 'fa-spin' : ''"></i>
+  </a>
   <a class="gn-md-edit-btn pull-right"
      data-ng-show="canEdit(mdView.current.record)"
      data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
