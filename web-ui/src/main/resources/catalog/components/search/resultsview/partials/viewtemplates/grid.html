@@ -30,8 +30,8 @@
 
       <div class="row">
         <div class="col-md-12">
-          <div class="gn-md-category pull-left"
-               data-ng-if="::md.category.length > 0">
+          <div class="gn-md-category"
+               data-ng-class="::md.category.length > 0 ? '' : 'invisible'">
             <span data-translate="">listOfCategories</span>
             <a data-ng-repeat="cat in ::md.category"
                data-ng-href="#/search?_cat={{cat}}">
@@ -42,28 +42,6 @@
             </a>
           </div>
 
-          <!-- Icon for types - usually only one -->
-          <div class="gn-md-type pull-right">
-            <!-- TODO : add feature cat -->
-            <span data-ng-if="md.type.indexOf('dataset')>=0"
-                  class="fa fa-database"
-                  title="{{'dataset' | translate}}"></span>
-            <span data-ng-if="md.type.indexOf('software')>=0"
-                  class="fa fa-hdd-o"
-                  title="{{'software' | translate}}"></span>
-            <span data-ng-if="md.type.indexOf('map')>=0"
-                  class="fa fa-globe"
-                  title="{{'map' | translate}}"></span>
-            <span data-ng-if="md.type.indexOf('application')>=0"
-                  class="fa fa-hdd-o"
-                  title="{{'application' | translate}}"></span>
-            <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
-                  class="fa fa-globe"
-                  title="{{'geodata' | translate}}"></span>
-            <span data-ng-if="md.type.indexOf('service')>=0"
-                  class="fa fa-globe"
-                  title="{{'service' | translate}}"></span>
-          </div>
         </div>
       </div>
 
@@ -75,7 +53,28 @@
           <h4>
             <a href=""
                data-ng-click="openRecord($index, md, searchResults.records)"
-               title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+               title="{{md.title || md.defaultTitle}}">
+              <!-- Icon for types - usually only one -->
+                <!-- TODO : add feature cat -->
+              <span data-ng-if="md.type.indexOf('dataset')>=0"
+                    class="fa fa-database"
+                    title="{{'dataset' | translate}}"></span>
+              <span data-ng-if="md.type.indexOf('software')>=0"
+                    class="fa fa-hdd-o"
+                    title="{{'software' | translate}}"></span>
+              <span data-ng-if="md.type.indexOf('map')>=0"
+                    class="fa fa-globe"
+                    title="{{'map' | translate}}"></span>
+              <span data-ng-if="md.type.indexOf('application')>=0"
+                    class="fa fa-hdd-o"
+                    title="{{'application' | translate}}"></span>
+              <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
+                    class="fa fa-globe"
+                    title="{{'geodata' | translate}}"></span>
+              <span data-ng-if="md.type.indexOf('service')>=0"
+                    class="fa fa-globe"
+                    title="{{'service' | translate}}"></span>
+              {{md.title || md.defaultTitle}}</a>
           </h4>
         </div>
       </div>
@@ -122,7 +121,6 @@
               class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
         <span class="fa fa-download"></span>
-        <span data-translate="">download</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
@@ -141,7 +139,6 @@
               class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
         <span class="fa fa-globe"></span>
-        <span data-translate="">addToMap</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
