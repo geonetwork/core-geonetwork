@@ -9,11 +9,11 @@ import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
-import java.util.List;
 import javax.annotation.Nullable;
-import java.util.Set;
 
 /**
  * A runnable for indexing multiple metadata in a separate thread.
@@ -96,6 +96,9 @@ final class IndexMetadataTask implements Runnable {
             if (_user != null && _context.getUserSession().getUserId() == null) {
                 _context.getUserSession().loginAs(_user);
             }
+            searchManager.forceIndexChanges();
+        } catch (IOException e) {
+            Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
         }

@@ -681,7 +681,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             dataMan.flush();
 
-            dataMan.indexMetadata(reg.id, false);
+            dataMan.indexMetadata(reg.id, true);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

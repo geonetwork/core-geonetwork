@@ -393,7 +393,7 @@ public class FragmentHarvester extends BaseAligner {
 
         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
-		dataMan.indexMetadata(id, false);
+		dataMan.indexMetadata(id, true);
 
         dataMan.flush();
 
@@ -581,7 +581,7 @@ public class FragmentHarvester extends BaseAligner {
              dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
          }
 
-         dataMan.indexMetadata(id, false);
+         dataMan.indexMetadata(id, true);
 
          dataMan.flush();
      }
@@ -631,7 +631,7 @@ public class FragmentHarvester extends BaseAligner {
         }
         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
-		dataMan.indexMetadata(id, false);
+		dataMan.indexMetadata(id, true);
 
         if(log.isDebugEnabled()) {
             log.debug("	- Commit "+id);

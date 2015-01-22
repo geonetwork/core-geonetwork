@@ -499,7 +499,7 @@ public class Aligner extends BaseAligner
         }
         context.getBean(MetadataRepository.class).save(metadata);
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 		result.addedMetadata++;
 
 		return id;
@@ -800,7 +800,7 @@ public class Aligner extends BaseAligner
         metadataRepository.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 	}
 
 

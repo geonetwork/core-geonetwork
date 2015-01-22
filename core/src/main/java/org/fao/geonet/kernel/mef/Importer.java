@@ -422,7 +422,7 @@ public class Importer {
                 Files.createDirectories(pubDir);
                 Files.createDirectories(priDir);
 
-                dm.indexMetadata(metadataIdMap.get(index), false);
+                dm.indexMetadata(metadataIdMap.get(index), true);
             }
 
             // --------------------------------------------------------------------
