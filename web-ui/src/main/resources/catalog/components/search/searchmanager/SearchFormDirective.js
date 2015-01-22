@@ -186,12 +186,12 @@
       };
 
       $scope.$on('$locationChangeSuccess', function() {
-        if ($location.path() != '/search') return;
-        console.log('$locationChangeSuccess');
-        if ($location.absUrl() == gnSearchLocation.lastSearchUrl) {
-          console.log('search alreay loaded');
-          return;
-        }
+        // We are not in a url search so leave
+        if (!gnSearchLocation.isSearch()) return;
+
+        // We are getting back to the search, no need to reload it
+        if($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
+
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
           delete params[o];
@@ -268,8 +268,8 @@
   ];
 
   module.directive('ngSearchForm', [
-    '$location',
-    function($location) {
+    'gnSearchLocation',
+    function(gnSearchLocation) {
       return {
         restrict: 'A',
         scope: true,
@@ -287,11 +287,12 @@
             }
           };
 
-          if (attrs.runsearch && $location.path().indexOf('/metadata/') != 0) {
+          if (attrs.runsearch && gnSearchLocation.isSearch()) {
 
             // get permalink params on page load
             if (scope.searchObj.permalink) {
-              angular.extend(scope.searchObj.params, $location.search());
+              angular.extend(scope.searchObj.params,
+                  gnSearchLocation.getParams());
             }
 
             var initial = jQuery.isEmptyObject(scope.searchObj.params);

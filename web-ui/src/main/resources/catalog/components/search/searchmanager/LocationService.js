@@ -5,7 +5,8 @@
 
   module.service('gnSearchLocation', [
     '$location',
-    function($location) {
+    '$rootScope',
+    function($location, $rootScope) {
 
       this.SEARCH = '/search';
       this.MAP = '/map';
@@ -49,6 +50,23 @@
       };
       this.getParams = function() {
         return $location.search();
+      };
+
+      this.initTabRouting = function(tabs) {
+        var that = this;
+        var updateTabs = function() {
+          if(that.isSearch()) {
+            tabs.search.active = true;
+          }
+          else if(that.isMap()) {
+            tabs.map.active = true;
+          }
+          else if(that.isMdView()) {
+            tabs.view.active = true;
+          }
+        };
+        updateTabs();
+        $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
     }
   ]);

@@ -46,11 +46,7 @@
       var localStorage = $window.localStorage || {};
 
       // Manage routing
-      $scope.$on('$locationChangeSuccess', function(newUrl, oldUrl) {
-        if (gnSearchLocation.isSearch()) {
-          $scope.mainTabs.search.active = true;
-        }
-      });
+      gnSearchLocation.initTabRouting($scope.mainTabs);
 
       // Manage the collapsed search and facet panels
       $scope.collapsed = localStorage.searchWidgetCollapsed ?

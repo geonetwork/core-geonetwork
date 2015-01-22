@@ -106,10 +106,11 @@
         search: {
           title: 'Search',
           titleInfo: 0,
-          active: true
+          active: false
         },
         view: {
-          title: 'view'
+          title: 'view',
+          active: false
         },
         map: {
           title: 'Map',
