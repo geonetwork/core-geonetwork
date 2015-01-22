@@ -18,28 +18,6 @@
        'cookie_warning']);
 
 
-  module.config(['$routeProvider',
-    function($routeProvider) {
-      var tplUrl = '../../catalog/templates/search/default/';
-      $routeProvider.
-          when('/', {
-            templateUrl: tplUrl + 'home.html'
-          }).
-          when('/home', {
-            templateUrl: tplUrl + 'home.html'
-          }).
-          when('/map', {
-            templateUrl: tplUrl + 'map.html'
-          }).
-          when('/search', {
-            templateUrl: tplUrl + 'results.html'
-          }).
-          when('/metadata/:uuid', {
-            templateUrl: tplUrl + 'recordView.html'
-          }).
-          otherwise({redirectTo: '/home'});
-    }]);
-
   module.controller('gnsSearchPopularController', [
     '$scope', 'gnSearchSettings',
     function($scope, gnSearchSettings) {
@@ -86,6 +64,7 @@
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.$location = $location;
+      $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
 
       hotkeys.bindTo($scope)
@@ -196,7 +175,9 @@
       //  var params = $location.search();
       //});
 
-      $scope.$on('$routeChangeStart', function(next, current) {
+      $scope.$on('$locationChangeSuccess', function(next, current) {
+        $scope.activeTab = $location.path().
+            match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
         if (!angular.isArray(searchMap.getSize()) ||
             searchMap.getSize().indexOf(0) >= 0) {
           setTimeout(function() {
@@ -204,8 +185,6 @@
           }, 0);
         }
       });
-      // FIXME This should not be necessary for the default route.
-      $location.path('/home');
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
