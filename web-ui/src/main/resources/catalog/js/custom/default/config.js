@@ -221,12 +221,12 @@
                 'click' : function(md) {
                   if (md.protocol.contains('WMS')) {
                     return 'scope.mapService.addWmsToMap('
-                        + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else if (md.protocol.contains('WFS')) {
                     return 'scope.mapService.addWfsToMap('
-                        + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else {
                     return "window.location.assign('" + md.url + "')";
                   }
@@ -242,12 +242,12 @@
                 'click' : function(md) {
                   if (md.protocol.contains('WMS')) {
                     return 'scope.mapService.addWmsToMap('
-                        + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else if (md.protocol.contains('WFS')) {
                     return 'scope.mapService.addWfsToMap('
-                        + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else {
                     return "window.location.assign('" + md.url + "')";
                   }
@@ -263,12 +263,12 @@
                 'click' : function(md) {
                   if (md.protocol.contains('WMS')) {
                     return 'scope.mapService.addWmsToMap('
-                        + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else if (md.protocol.contains('WFS')) {
                     return 'scope.mapService.addWfsToMap('
-                        + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else {
                     return "window.location.assign('" + md.url + "')";
                   }
@@ -284,12 +284,33 @@
                 'click' : function(md) {
                   if (md.protocol.contains('WMS')) {
                     return 'scope.mapService.addWmsToMap('
-                        + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else if (md.protocol.contains('WFS')) {
                     return 'scope.mapService.addWfsToMap('
-                        + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
-                        + md.url + "'})";
+                          + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
+                  } else {
+                    return "window.location.assign('" + md.url + "')";
+                  }
+                }
+              },
+              'hasfeaturecat' : {
+                'class' : function(md) {
+                  return 'fcats';
+                },
+                'iconClass' : function(md) {
+                  return 'table';
+                },
+                'click' : function(md) {
+                  if (md.protocol.contains('WMS')) {
+                    return 'scope.mapService.addWmsToMap('
+                          + "scope.map , {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
+                  } else if (md.protocol.contains('WFS')) {
+                    return 'scope.mapService.addWfsToMap('
+                          + "scope.map, {LAYERS: '" + md.name + "'},{url: '"
+                          + md.url + "'})";
                   } else {
                     return "window.location.assign('" + md.url + "')";
                   }
@@ -304,7 +325,7 @@
                 },
                 'click' : function(md) {
                   return window.location.hash = '#/metadata/'
-                      + md['geonet:info'].uuid;
+                        + md['geonet:info'].uuid;
                 }
               },
               'sibling' : {
@@ -316,7 +337,7 @@
                 },
                 'click' : function(md) {
                   return window.location.hash = '#/metadata/'
-                      + md['geonet:info'].uuid;
+                        + md['geonet:info'].uuid;
                 }
               },
               'associated' : {
@@ -332,7 +353,36 @@
                 },
                 'click' : function(md) {
                   return window.location.hash = '#/metadata/'
-                      + md['geonet:info'].uuid;
+                        + md['geonet:info'].uuid;
+                }
+              },
+              'sibling' : {
+                'class' : function(md) {
+                  return md.type;
+                },
+                'iconClass' : function(md) {
+                  if (md.type === 'dataset') {
+                    return 'files-o';
+                  } else {
+                    return 'sitemap fa-rotate-180';
+                  }
+                },
+                'click' : function(md) {
+                  return window.location.hash = '#/metadata/'
+                        + md['geonet:info'].uuid;
+                }
+              },
+              'children' : {
+                'class' : function(md) {
+                  return md.type;
+                },
+                'iconClass' : function(md) {
+                  return 'sitemap fa-rotate-180';
+                  
+                },
+                'click' : function(md) {
+                  return window.location.hash = '#/metadata/'
+                        + md['geonet:info'].uuid;
                 }
               }
             };
