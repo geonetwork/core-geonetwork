@@ -131,11 +131,13 @@
 
       this.initFormatter = function(selector) {
         var loadFormatter = function() {
-          var url = gnSearchLocation.path();
-          if (gnSearchLocation.isMdView()) {
-            var uuid = url.substring(10, url.length);
+          var uuid = gnSearchLocation.getUuid();
+          if(uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
+          }
+          else {
+            $rootScope.$broadcast('closeMdView');
           }
         };
         loadFormatter();
