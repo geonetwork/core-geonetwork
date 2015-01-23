@@ -79,6 +79,8 @@
     Note: If using more than one catalog in different schema
     hibernate may failed to create sequence
     (https://hibernate.atlassian.net/browse/HHH-5538).
+    In that case you may want to use a custom dialect
+    <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
     -->
 	</util:map>
 
