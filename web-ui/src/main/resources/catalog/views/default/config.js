@@ -181,16 +181,18 @@
           // For the time being metadata rendering is done
           // using Angular template. Formatter could be used
           // to render other layout
+
+          // TODO: formatter should be defined per schema
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
             defaultUrl: 'md.format.xml?xsl=xsl-view&id=',
             list: [{
-              label: 'inspire',
-              url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
-            }, {
-              label: 'full',
-              url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
-            }, {
+            //  label: 'inspire',
+            //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
+            //}, {
+            //  label: 'full',
+            //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
+            //}, {
               label: 'groovy',
               url: 'md.format.xml?xsl=full_view&id='
             }]
