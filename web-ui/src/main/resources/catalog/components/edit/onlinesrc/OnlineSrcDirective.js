@@ -714,19 +714,19 @@
                    */
                   scope.addToSelection =
                       function(md, associationType, initiativeType) {
-                        if (associationType && initiativeType) {
+                        if (associationType) {
                           var idx = findObj(md);
                           if (idx < 0) {
                             scope.selection.push({
                               md: md,
                               associationType: associationType,
-                              initiativeType: initiativeType
+                              initiativeType: initiativeType || ''
                             });
                           }
                           else {
                             angular.extend(scope.selection[idx], {
                               associationType: associationType,
-                              initiativeType: initiativeType
+                              initiativeType: initiativeType || ''
                             });
                           }
                         }
