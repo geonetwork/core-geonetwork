@@ -954,5 +954,10 @@
     "z3950-portPort": " ",
     "NOVALIDATION": "Accept all metadata without validation",
     "XSDVALIDATION": "Accept metadata that are XSD Valid",
-    "SCHEMATRONVALIDATION": "Accept metadata that are XSD and Schematron Valid"
+    "SCHEMATRONVALIDATION": "Accept metadata that are XSD and Schematron Valid",
+    "production" : "Production",
+    "development" : "Development",
+    "integration" : "Integration",
+    "profileUpdated" : "System Profile has been updated",
+    "profileUpdatedFailed" : "Failure updating System Profile"
 }

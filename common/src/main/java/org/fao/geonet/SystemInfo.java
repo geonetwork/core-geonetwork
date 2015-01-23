@@ -1,5 +1,9 @@
 package org.fao.geonet;
 
+import org.jdom.Element;
+
+import java.util.Arrays;
+
 /**
  * Contains information about the system.
  *
@@ -88,5 +92,15 @@ public class SystemInfo {
      */
     public boolean isDevMode() {
         return STAGE_DEVELOPMENT.equals(stagingProfile) || STAGE_TESTING.equals(stagingProfile);
+    }
+
+    public Element toXml() {
+        return new Element("systemInfo").addContent(Arrays.asList(
+                new Element("stagingProfile").setText(this.stagingProfile),
+                new Element("buildOsInfo").setText(this.buildOsInfo),
+                new Element("buildJavaVendor").setText(this.buildJavaVendor),
+                new Element("buildJavaVersion").setText(this.buildJavaVersion),
+                new Element("buildDate").setText(this.buildDate)
+        ));
     }
 }
