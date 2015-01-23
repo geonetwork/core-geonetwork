@@ -8,10 +8,14 @@
         <div class="btn-group col-sm-offset-2 col-sm-10">
           <button type="button" class="btn btn-default"
             data-ng-class="{'btn-primary': mode == 'url'}"
-            data-ng-click="mode = 'url'">{{'url' | translate}}</button>
+            data-ng-click="mode = 'url'">
+            <i class="fa fa-link"></i>&nbsp;
+            {{'url' | translate}}</button>
           <button type="button" class="btn btn-default"
             data-ng-class="{'btn-primary': mode == 'upload'}"
-            data-ng-click="mode = 'upload'">{{'upload' | translate}}</button>
+            data-ng-click="mode = 'upload'">
+            <i class="fa fa-upload"></i>&nbsp;
+            {{'upload' | translate}}</button>
         </div>
       </div>
       
@@ -107,7 +111,8 @@
   <div class="">
     <button type="button" class="btn navbar-btn btn-success"
       data-ng-click="addOnlinesrc()">
-      <i class="fa fa-archive" /><i class="icon-external-link"></i>
+      <i class="fa fa-archive" />
+      <i class="icon-external-link"></i>&nbsp;
       <span data-translate="">addOnlinesrc</span>
     </button>
   </div>
