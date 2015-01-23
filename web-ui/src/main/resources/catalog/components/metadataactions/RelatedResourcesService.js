@@ -40,11 +40,7 @@
           };
 
           var addWFSToMap = function(md) {
-            gnMap.addWfsToMap(gnSearchSettings.viewerMap, {
-              'LAYERS' : md.name
-            }, {
-              'url' : md.url
-            });
+            //TODO open dialog to download features
           };
 
           var addKMLToMap = function(md) {
@@ -72,7 +68,7 @@
             },
             'WFS' : {
               iconClass: 'fa fa-link',
-              action: addWFSToMap
+              action: openLink
             },
             'KML' : {
               iconClass: 'fa fa-link',
