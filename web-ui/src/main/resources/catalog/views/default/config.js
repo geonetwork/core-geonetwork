@@ -193,7 +193,7 @@
             //  label: 'full',
             //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
             //}, {
-              label: 'groovy',
+              label: 'full',
               url: 'md.format.xml?xsl=full_view&id='
             }]
             // TODO: maybe formatter config should depends
