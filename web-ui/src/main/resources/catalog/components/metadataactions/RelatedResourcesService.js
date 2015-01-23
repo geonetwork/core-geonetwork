@@ -46,11 +46,7 @@
           };
 
           var addKMLToMap = function(md) {
-            gnMap.addKmlToMap(gnSearchSettings.viewerMap, {
-              'LAYERS' : md.name
-            }, {
-              'url' : md.url
-            });
+            gnMap.addKmlToMap(md.name, md.url, gnSearchSettings.viewerMap);
           };
 
           var openMd = function(md) {
@@ -59,7 +55,12 @@
           };
 
           var openLink = function(link) {
-            return window.location.assign(link.url);
+            if (link.url.indexOf('http') == 0 ||
+                link.url.indexOf('ftp') == 0) {
+              return window.location.assign(link.url);
+            } else {
+              return window.location.assign(link.title);
+            }
           };
 
           this.map = {
@@ -89,7 +90,7 @@
             },
             'DEFAULT' : {
               iconClass: '',
-              action: console.log
+              action: openLink
             }
           };
 
@@ -123,17 +124,20 @@
                           .contains('KML'))) {
               return 'KML';
             } else if (resource.protocol &&
-                resource.protocol.contains('DOWNLOAD')) {
+                (resource.protocol.contains('DOWNLOAD') ||
+                    resource.protocol.contains('LINK'))) {
               return 'LINK';
             } else if (resource['@type'] &&
                 (resource['@type'] === 'sibling' ||
                     resource['@type'] === 'parent' ||
-                    resource['@type'] === 'associated')) {
+                    resource['@type'] === 'associated' ||
+                    resource['@type'] === 'datasets')) {
               return 'MD';
             } else if (resource['@type'] && resource['@type'] === 'fcats') {
               return 'CATALOG';
             }
 
+            console.log(resource);
             return 'DEFAULT';
           };
         }
