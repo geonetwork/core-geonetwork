@@ -60,6 +60,11 @@
         },
 
         runProcessMdXml: function(params) {
+          if (!params._content_type) {
+            angular.extend(params, {
+              _content_type: 'json'
+            });
+          }
           return gnHttp.callService('processXml', params);
         }
 

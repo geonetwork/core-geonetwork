@@ -295,6 +295,21 @@
 
 	</xsl:template>
 
+	<!-- Thumbnail may not contains full URL for the one updated to the catalog -->
+	<xsl:template match="gmd:MD_BrowseGraphic[
+					gmd:fileDescription/gco:CharacterString = 'thumbnail' or
+					gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/
+						gmd:fileName[gco:CharacterString != '' and not(starts-with(gco:CharacterString, 'http'))]">
+			<gmd:fileName>
+				<gco:CharacterString>
+					<xsl:value-of select="concat(
+					    /root/env/siteURL, 'resources.get?',
+					    'uuid=', /root/env/uuid,
+					    '&amp;fname=', gco:CharacterString)"/>
+				</gco:CharacterString>
+			</gmd:fileName>
+	</xsl:template>
+
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.

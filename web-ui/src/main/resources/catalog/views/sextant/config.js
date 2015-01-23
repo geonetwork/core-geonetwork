@@ -106,10 +106,11 @@
         search: {
           title: 'Search',
           titleInfo: 0,
-          active: true
+          active: false
         },
         view: {
-          title: 'view'
+          title: 'view',
+          active: false
         },
         map: {
           title: 'Map',
@@ -143,7 +144,7 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/templates/search/sextant/mdview/list.html',
+        tplUrl: '../../catalog/views/sextant/templates/mdview/list.html',
         tooltip: 'Simple',
         icon: 'fa-th-list'
       }, {

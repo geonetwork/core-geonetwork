@@ -9,7 +9,7 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/js/custom/default/' +
+        templateUrl: '../../catalog/views/default/directives/' +
             'partials/infolist.html',
         link: function linkFn(scope, element, attr) {
           scope.showMore = function(isDisplay) {
@@ -32,11 +32,11 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/js/custom/default/' +
+        templateUrl: '../../catalog/views/default/directives/' +
             'partials/mdactionmenu.html',
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
-          scope.md = scope.$eval(attrs.gnMetadataActions);
+          scope.md = scope.$eval(attrs.gnMdActionsMenu);
         }
       };
     }
@@ -47,7 +47,7 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/js/custom/default/' +
+        templateUrl: '../../catalog/views/default/directives/' +
             'partials/periodchooser.html',
         scope: {
           label: '@gnPeriodChooser',
@@ -96,7 +96,7 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/js/custom/default/' +
+        templateUrl: '../../catalog/views/default/directives/' +
             'partials/timefilter.html',
         link: function linkFn(scope, element, attr) {
           var container = $(element).find('svg');

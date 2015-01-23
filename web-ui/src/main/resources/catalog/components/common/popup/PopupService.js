@@ -92,6 +92,8 @@
             '</div>' +
             '</div>');
 
+        element = $compile(element)($rootScope.$new());
+
         $(document.body).append(element);
         element.modal();
         element.on('hidden.bs.modal', function() {

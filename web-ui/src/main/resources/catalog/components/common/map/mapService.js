@@ -202,6 +202,27 @@
             }
           },
 
+          addKmlToMap: function(name, url, map) {
+            if (!url || url == '') {
+              return;
+            }
+
+            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+            var kmlSource = new ol.source.KML({
+              projection: map.getView().getProjection(),
+              url: proxyUrl
+            });
+
+            var vector = new ol.layer.Vector({
+              source: kmlSource,
+              label: name
+            });
+
+            ngeoDecorateLayer(vector);
+            vector.displayInLayerManager = true;
+            map.getLayers().push(vector);
+          },
+
           addWmsToMap: function(map, layerParams, layerOptions, index) {
 
             var options = layerOptions || {};

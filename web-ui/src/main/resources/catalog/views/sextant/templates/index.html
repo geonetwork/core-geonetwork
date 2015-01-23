@@ -25,7 +25,7 @@
                 </button>
                 <div class="panel panel-default hfull">
                   <div class="panel-body gn-searchform">
-                    <div data-ng-include="'../../catalog/templates/search/sextant/searchForm.html'"></div>
+                    <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
                   </div>
                   <div class="panel-footer">
                     <div class="submit">
@@ -82,9 +82,9 @@
         </div>
       </tab>
       <tab heading="{{mainTabs.view.title}}"
-           active="mdView.current.record != null">
+           active="mainTabs.view.active">
         <div class="container-fluid">
-          <div data-ng-include="'../../catalog/templates/search/sextant/mdview/recordView.html'"></div>
+          <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
         </div>
       </tab>
       <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">

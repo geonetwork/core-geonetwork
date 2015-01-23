@@ -10,9 +10,7 @@
     'gnSearchSettings',
     '$sce',
     'gnMdView',
-    '$location', '$rootScope',
-    function($http, $sanitize, $compile, gnSearchSettings,
-        $sce, gnMdView, $location, $rootScope) {
+    function($http, $sanitize, $compile, gnSearchSettings, $sce, gnMdView) {
       return {
         restrict: 'A',
         scope: {
@@ -36,10 +34,12 @@
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'mdpanel.html',
+        scope: true,
         link: function(scope, element, attrs, controller) {
           scope.dismiss = function() {
             gnMdView.removeLocationUuid();
             element.remove();
+            //TODO: is the scope destroyed ?
           };
 
           scope.$on('closeMdView', function() {

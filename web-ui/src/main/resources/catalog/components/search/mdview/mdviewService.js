@@ -75,13 +75,6 @@
         }
       };
 
-      this.openMdView = function(index, md, records) {
-        if (md && index) {
-          this.feedMd(index, md, records);
-        }
-        this.setUuid(md.getUuid());
-      };
-
       /**
        * Init the mdview behavior linked on $location.
        * At start and $location change, the uuid is extracted

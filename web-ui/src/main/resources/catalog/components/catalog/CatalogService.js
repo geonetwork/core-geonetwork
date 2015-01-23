@@ -69,8 +69,9 @@
            */
         copy: function(id, groupId, withFullPrivileges, 
             isTemplate, isChild) {
-          var url = gnUrlUtils.append('md.create@json',
+          var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
+                _content_type: 'json',
                 group: groupId,
                 id: id,
                 template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
@@ -155,7 +156,7 @@
            */
         create: function(id, groupId, withFullPrivileges, 
             isTemplate, isChild, tab) {
-          this.copy(id, groupId, withFullPrivileges,
+          return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
             var path = '/metadata/' + data.id;
             if (tab) {
@@ -260,7 +261,7 @@
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
-    processXml: 'xml.metadata.processing@json', // TODO: CHANGE
+    processXml: 'xml.metadata.processing',
 
     info: 'info@json',
 

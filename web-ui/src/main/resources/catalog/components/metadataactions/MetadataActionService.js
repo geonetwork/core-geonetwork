@@ -10,15 +10,17 @@
   module.service('gnMetadataActions', [
     '$rootScope',
     '$timeout',
+    '$location',
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
-    'gnSearchSettings',
     '$translate',
-    function($rootScope, $timeout, gnHttp,
+    '$q',
+    '$http',
+    function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnPopup,
-             gnSearchSettings, $translate) {
+             $translate, $q, $http) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -146,6 +148,14 @@
         }, scope, 'PrivilegesUpdated');
       };
 
+      this.openUpdateStatusPanel = function(md, scope) {
+        openModal({
+          title: 'updateStatus',
+          content: '<div data-gn-metadata-status-updater="' +
+              md.getId() + '"></div>'
+        }, scope, 'metadataStatusUpdated');
+      };
+
       this.openPrivilegesBatchPanel = function(scope) {
         openModal({
           title: 'privileges',
@@ -227,15 +237,57 @@
         }
       };
 
+      this.assignGroup = function(metadataId, groupId) {
+        var defer = $q.defer();
+        $http.get('md.group.update?id=' + metadataId +
+            '&groupid=' + groupId)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
+      };
+
+      this.assignCategories = function(metadataId, categories) {
+        var defer = $q.defer(), ids = '';
+        angular.forEach(categories, function(value) {
+          ids += '&_' + value + '=on';
+        });
+        $http.get('md.category.update?id=' + metadataId + ids)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
+      };
+
+      this.startVersioning = function(metadataId) {
+        var defer = $q.defer();
+        $http.get('md.versioning.start?id=' + metadataId)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
+      };
+
       /**
        * Get html formatter link for the given md
        * @param {Object} md
        */
       this.getPermalink = function(md) {
-        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+
+        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
+            md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
-          content: '<a href="' + url + '" target="_blank">' + url + '</a>'
+          content: '<div gn-permalink-input="' + url + '"></div>'
         });
       };
     }]);
