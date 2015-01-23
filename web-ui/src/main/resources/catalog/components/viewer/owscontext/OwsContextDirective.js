@@ -52,8 +52,8 @@
 
           scope.reset = function() {
             gnOwsContextService.loadContextFromUrl(
-              gnViewerSettings.defaultContext,
-              scope.map);
+                gnViewerSettings.defaultContext,
+                scope.map);
           };
 
           var fileInput = element.find('input[type="file"]')[0];
