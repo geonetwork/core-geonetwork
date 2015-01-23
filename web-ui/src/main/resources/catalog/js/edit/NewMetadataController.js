@@ -159,7 +159,7 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
-        gnMetadataManager.create(
+        return gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
             isPublic || false,
