@@ -62,16 +62,17 @@
         </li>
         <li data-ng-show="authenticated">
           <a href="../../j_spring_security_logout"
-             title="{{'signout' | translate}}">
-            <i class="fa fa-sign-out"></i> Logout
+             title="{{'signOut' | translate}}">
+            <i class="fa fa-sign-out"></i> 
+			<span data-translate="">signOut</span>
           </a>
         </li>
         <li data-ng-show="!authenticated">
             <a href="{{pages.signin}}"
-              
+               title="{{'signIn'|translate}}"
                data-ng-keypress="$event">
-                <i class="fa fa-sign-in"/>
-                <span data-translate="">signIn</span>
+               <i class="fa fa-sign-in"/>
+               <span data-translate="">signIn</span>
             </a>
         </li>
     </ul>
