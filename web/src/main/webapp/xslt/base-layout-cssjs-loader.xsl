@@ -22,16 +22,7 @@
     </xsl:if>
 
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
-
-    <xsl:choose>
-      <xsl:when test="$angularApp = 'gn_search'">
-        <link href="{/root/gui/url}/static/{$angularModule}.css{$minimizedParam}" rel="stylesheet" media="screen" />
-        <!--<link href="{/root/gui/url}/catalog/tmp/{$searchView}.css" rel="stylesheet" media="screen" />-->
-    </xsl:when>
-    <xsl:otherwise>
-      <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
-    </xsl:otherwise>
-    </xsl:choose>
+    <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet" media="screen" />
 
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
