@@ -70,6 +70,12 @@
   }
 }
 .gn-search-page {
+  .gn-md-view {
+    padding: 0 20px;
+  }
+  .badge {
+      margin-right: 5px;
+    }
   .nav-pills {
     margin-bottom: 1em;
     text-align: center;
@@ -81,7 +87,7 @@
       }
     }
     .badge {
-      background: @brand-primary;
+      margin-right: 5px;
     }
   }
 }
@@ -310,6 +316,7 @@ ul.gn-resultview {
   right: 0px;
   bottom: 0px;
   margin: 5px;
+  background-color: #ffffff;
 }
 
 [gn-main-viewer] {
@@ -412,10 +419,16 @@ ul.gn-resultview {
 	Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
 */
   .gn-bottom-bar {
-	bottom:0;height:50px;position:absolute;overflow:hidden;width:100%;margin-bottom:0px;
+	bottom:0;
+    height:50px;
+    position:absolute;
+    overflow:hidden;
+    width:100%;
+    margin-bottom:0px;
+    border-radius: 0px;
   }
   .gn-search-page { 
-	margin-bottom:50px;
+	padding-bottom:70px;
   }
   
   .cookie-warning {

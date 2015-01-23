@@ -69,70 +69,6 @@
 
   <div data-ng-show="!usingFormatter" class="gn-metadata-display">
 
-    <div class="col-md-3 gn-md-side">
-
-      <section data-ng-if="mdView.current.record.overviews.length > 0">
-        <h4>
-          <i class="fa fa-image"></i>
-          <span data-translate="">overview</span>
-        </h4>
-        <!-- TODO caroussel on each thumbnails-->
-        <p data-ng-repeat="img in mdView.current.record.overviews">
-        <img class="gn-img-thumbnail img-thumbnail"
-             alt="{{img.label}}"
-             data-ng-src="{{img.url}}"/>
-        </p>
-      </section>
-
-      <section data-ng-if="mdView.current.record.contacts.resource">
-        <h4>
-          <i class="fa fa-envelope"></i>
-          <span data-translate="">contact</span>
-        </h4>
-        <blockquote>
-          {{mdView.current.record.contacts.resource}}
-        </blockquote>
-      </section>
-
-      <section>
-        <h4>
-          <i class="fa fa-map-marker"></i>
-          <span data-translate="">extent</span>
-        </h4>
-        <!-- TODO: use map config -->
-        <img class="gn-img-extent"
-             data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
-      </section>
-
-      <section>
-        <h4>
-          <i class="fa fa-fw"></i>
-          <span data-translate="">sourceCatalog</span>
-        </h4>
-        <img ng-src="../../images/logos/{{mdView.current.record.source}}.gif"
-             class="gn-source-logo"/>
-      </section>
-
-      <section>
-        <h4>
-          <i class="fa fa-share-square"></i>
-          <span data-translate="">shareOn</span>
-        </h4>
-        <a data-ng-href="https://plus.google.com/share?url={{mdView.current.record.encodedUrl}}"
-           class="btn btn-link"><i class="fa fa-google-plus"></i></a>
-        <a data-ng-href="https://twitter.com/share?url={{mdView.current.record.encodedUrl}}"
-           class="btn btn-link"><i class="fa fa-twitter"></i></a>
-        <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
-           class="btn btn-link"><i class="fa fa-facebook"></i></a>
-
-      </section>
-
-      <section>
-        <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
-      </section>
-    </div>
-
-
     <div class="col-md-9 gn-record">
       <h1>
         <span data-ng-if="mdView.current.record.type.indexOf('dataset')>=0"
@@ -157,15 +93,14 @@
 
       </h1>
 
-      <div>
+      <div class="pull-right">
         <i class="fa fa-calendar"></i>
         <span data-translate="">updatedOn</span>
         <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
               data-from-now=""></span>
       </div>
-
-
-
+      <div style="clear:both"></div>
+      
       <div class="well">
         {{mdView.current.record.abstract}}
       </div>
@@ -305,5 +240,69 @@
         </tbody>
       </table>
     </div>
+    
+    <div class="col-md-3 gn-md-side">
+
+      <section data-ng-if="mdView.current.record.overviews.length > 0">
+        <h4>
+          <i class="fa fa-image"></i>
+          <span data-translate="">overview</span>
+        </h4>
+        <!-- TODO caroussel on each thumbnails-->
+        <p data-ng-repeat="img in mdView.current.record.overviews">
+        <img class="gn-img-thumbnail img-thumbnail"
+             alt="{{img.label}}"
+             data-ng-src="{{img.url}}"/>
+        </p>
+      </section>
+
+      <section data-ng-if="mdView.current.record.contacts.resource">
+        <h4>
+          <i class="fa fa-envelope"></i>
+          <span data-translate="">contact</span>
+        </h4>
+        <blockquote>
+          {{mdView.current.record.contacts.resource}}
+        </blockquote>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-map-marker"></i>
+          <span data-translate="">extent</span>
+        </h4>
+        <!-- TODO: use map config -->
+        <img class="gn-img-extent"
+             data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-fw"></i>
+          <span data-translate="">sourceCatalog</span>
+        </h4>
+        <img ng-src="../../images/logos/{{mdView.current.record.source}}.gif"
+             class="gn-source-logo"/>
+      </section>
+
+      <section>
+        <h4>
+          <i class="fa fa-share-square"></i>
+          <span data-translate="">shareOn</span>
+        </h4>
+        <a data-ng-href="https://plus.google.com/share?url={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-google-plus"></i></a>
+        <a data-ng-href="https://twitter.com/share?url={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-twitter"></i></a>
+        <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
+           class="btn btn-link"><i class="fa fa-facebook"></i></a>
+
+      </section>
+
+      <section>
+        <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
+      </section>
+    </div>
+    
   </div>
 </div>
