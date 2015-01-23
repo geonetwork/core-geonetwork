@@ -73,6 +73,7 @@
             layers: [new ol.layer.Tile({
               source: new ol.source.OSM()
             })],
+            controls: [],
             view: new ol.View({
               center: mapsConfig.center,
               zoom: 2

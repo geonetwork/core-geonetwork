@@ -76,6 +76,7 @@
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.location = gnSearchLocation;
 
       hotkeys.bindTo($scope)
         .add({
