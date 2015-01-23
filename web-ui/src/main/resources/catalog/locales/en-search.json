@@ -15,6 +15,7 @@
   "When": "When ?",
   "Where": "Where ?",
   "recordType": "Record type ?",
+  "searchPlaces": "Search a place",
   "bbox": "bbox",
   "backgroundMap": "Background map:",
   "downloadContext": "Download map",

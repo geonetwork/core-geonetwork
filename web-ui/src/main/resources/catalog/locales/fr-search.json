@@ -16,6 +16,7 @@
   "Where": "Où ?",
   "recordType": "Type de fiche ?",
   "bbox": "bbox",
+  "searchPlaces": "Rechercher un lieu",
   "backgroundMap": "Fond de plan :",
   "downloadContext": "Télécharger la carte",
   "uploadContext": "Charger une carte",
