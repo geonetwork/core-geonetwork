@@ -22,13 +22,8 @@
             gnMap.createLayerForType('osm')
           ];
 
-
-          viewerSettings.servicesUrl = {
-            wms: ['http://ids.pigma.org/geoserver/wms',
-                  'http://ids.pigma.org/geoserver/ign/wms',
-                  'http://www.ifremer.fr/services/wms/oceanographie_physique'],
-            wmts: ['http://sdi.georchestra.org/geoserver/gwc/service/wmts']
-          };
+          viewerSettings.servicesUrl =
+            viewerSettings.mapConfig.listOfServices || {};
 
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
