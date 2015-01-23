@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <!-- FIXME : should return JSON -->
-  <xsl:output encoding="UTF-8"/>
+  <xsl:output  indent="yes" method="text" encoding="UTF-8" media-type="application/json"/>
 
   <xsl:include href="base-variables.xsl"/>
 
