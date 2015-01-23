@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:util="java:org.fao.geonet.util.XslUtil">
   <!-- Template to load CSS and Javascript -->
 
 
@@ -126,22 +128,23 @@
             <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
-    <xsl:if test="$owsContext">
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+
+
+    <xsl:variable name="mapConfig"
+                  select="util:getSettingValue('map/config')"/>
+
+    <script type="text/javascript">
+      var module = angular.module('gn_search');
+      module.config(['gnViewerSettings', function(gnViewerSettings) {
+        <xsl:if test="$owsContext">
           gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        }]);
-      </script>
-    </xsl:if>
-    <xsl:if test="$wmsUrl and $layerName">
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+        </xsl:if>
+        <xsl:if test="$wmsUrl and $layerName">
           gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
           gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-        }]);
-      </script>
-    </xsl:if>
+        </xsl:if>
+        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+      }]);
+    </script>
   </xsl:template>
 </xsl:stylesheet>
