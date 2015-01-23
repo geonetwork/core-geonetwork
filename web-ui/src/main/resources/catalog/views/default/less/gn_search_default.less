@@ -327,7 +327,7 @@ ul.gn-resultview {
       z-index: 10;
     }
   }
-
+}
   .gn-row-main {}
 
   .gn-row-info {}
@@ -411,6 +411,7 @@ ul.gn-resultview {
       float:right;
     }
   }
+  
   /*
       Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
   */
@@ -423,15 +424,21 @@ ul.gn-resultview {
     margin-bottom:0px;
     border-radius: 0px;
   }
+  
   .gn-search-page {
     padding-bottom:70px;
   }
+
 
   .cookie-warning {
     .alert;
     .alert-info;
   }
 
+  .cookie-warning span {
+		cursor:pointer
+  }
+  
   .gn-full {
     min-height: 100%;
     position: relative;
@@ -444,4 +451,3 @@ ul.gn-resultview {
   .navbar-form {
     border:none;
   }
-}
