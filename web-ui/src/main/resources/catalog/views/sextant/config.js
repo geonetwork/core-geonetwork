@@ -144,7 +144,7 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/templates/search/sextant/mdview/list.html',
+        tplUrl: '../../catalog/views/sextant/templates/mdview/list.html',
         tooltip: 'Simple',
         icon: 'fa-th-list'
       }, {

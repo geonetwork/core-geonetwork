@@ -252,8 +252,8 @@
           member: '='
         },
         require: '^gnCategorytreeCol',
-        templateUrl: '../../catalog/js/custom/sextant/' +
-            'categorytreeitem.html',
+        templateUrl: '../../catalog/views/sextant/directives/' +
+            'partials/categorytreeitem.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
           if (angular.isArray(scope.member.nodes)) {

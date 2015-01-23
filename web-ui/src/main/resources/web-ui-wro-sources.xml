@@ -1,7 +1,8 @@
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd" >
   <require pathOnDisk="web-ui/src/main/resources" >
-    <jsSource webappPath="catalog/js" />
+      <jsSource webappPath="catalog/js" />
+      <jsSource webappPath="catalog/views" />
     <jsSource webappPath="catalog/components" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
     <cssSource webappPath="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
   </require>
