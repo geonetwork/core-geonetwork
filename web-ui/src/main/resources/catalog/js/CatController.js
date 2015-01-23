@@ -118,12 +118,39 @@
 
 
 
+        // Utility functions for user
+        var userFn = {
+          isAnonymous: function() {
+            return this['@authenticated'] === 'false';
+          },
+          isConnected: function() {
+            return !this.isAnonymous();
+          }
+        };
+        // Build is<ProfileName> and is<ProfileName>OrMore functions
+        angular.forEach($scope.profiles, function(profile) {
+          userFn['is' + profile] = function() {
+            return profile === this.profile;
+          };
+          userFn['is' + profile + 'OrMore'] = function() {
+            var profileIndex = $scope.profiles.indexOf(profile),
+                allowedProfiles = [];
+            angular.copy($scope.profiles, allowedProfiles);
+            allowedProfiles.splice(0, profileIndex);
+            return allowedProfiles.indexOf(this.profile) !== -1;
+          };
+        }
+        );
+
+
         // Retrieve user information if catalog is online
         var userLogin = catInfo.then(function(value) {
           url = $scope.url + 'info?_content_type=json&type=me';
           return $http.get(url).
               success(function(data, status) {
                 $scope.user = data.me;
+                angular.extend($scope.user, userFn);
+
                 $scope.authenticated = data.me['@authenticated'] !== 'false';
                 // TODO : should not be here, redirect to home
                 //                  if ($scope.authenticated) {
