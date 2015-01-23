@@ -21,7 +21,9 @@
         'gnMap',
         'gnOwsCapabilities',
         'gnSearchSettings',
-        function(gnMap, gnOwsCapabilities, gnSearchSettings, $scope) {
+        'ngeoDecorateLayer',
+        function(gnMap, gnOwsCapabilities, gnSearchSettings, 
+            ngeoDecorateLayer, $scope) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -32,8 +34,8 @@
                function(capObj) {
                  var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                  link.name, capObj);
-                 var layer = gnMap.addWmsToMapFromCap(
-                 $scope.searchObj.viewerMap, layerInfo);
+                 gnMap.addWmsToMapFromCap(
+                     gnSearchSettings.viewerMap, layerInfo);
                });
           };
 
