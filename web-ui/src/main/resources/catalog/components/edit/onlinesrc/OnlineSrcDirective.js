@@ -266,7 +266,8 @@
                   scope.processing = true;
                   gnEditor.save(false, true)
                     .then(function(data) {
-                        scope.action = 'md.thumbnail.generate?_content_type=json&';
+                        scope.action =
+                            'md.thumbnail.generate?_content_type=json&';
                         $http.post('md.thumbnail.generate?_content_type=json&',
                             $('#gn-upload-onlinesrc').serialize(), {
                               headers: {'Content-Type':
