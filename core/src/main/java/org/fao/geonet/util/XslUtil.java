@@ -321,7 +321,7 @@ public final class XslUtil
      */
     public static @Nonnull String twoCharLangCode(String iso3LangCode) {
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
-    		return Geonet.DEFAULT_LANGUAGE;
+    		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
     	} else {
             String iso2LangCode = null;
 
