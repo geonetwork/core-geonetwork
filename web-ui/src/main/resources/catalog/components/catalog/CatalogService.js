@@ -261,7 +261,7 @@
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
-    processXml: 'xml.metadata.processing@json', // TODO: CHANGE
+    processXml: 'xml.metadata.processing', 
 
     info: 'info@json',
 
