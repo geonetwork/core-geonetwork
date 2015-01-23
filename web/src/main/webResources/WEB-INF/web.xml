@@ -184,6 +184,11 @@
         <url-pattern>/htmlcache/*</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>resources</filter-name>
+        <url-pattern>/map/*</url-pattern>
+    </filter-mapping>
+
     <!-- Print servlet -->
     <servlet>
         <servlet-name>mapfish.print</servlet-name>

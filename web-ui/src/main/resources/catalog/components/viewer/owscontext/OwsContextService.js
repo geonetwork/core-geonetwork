@@ -87,7 +87,10 @@
         // the application otherwise use the defaults from config
         if (bgLayers.length > 0) {
           // make sure we remove any existing bglayer
-          map.getLayers().removeAt(0);
+          if (map.getLayers().getLength() > 0) {
+            map.getLayers().removeAt(0);
+          }
+
           // first clear settings bgLayers
           gnViewerSettings.bgLayers.length = 0;
 

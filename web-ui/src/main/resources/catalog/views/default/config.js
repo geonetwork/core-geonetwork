@@ -8,26 +8,21 @@
       .run([
         'gnSearchSettings',
         'gnViewerSettings',
+        'gnOwsContextService',
         'gnMap',
+        function(searchSettings, viewerSettings, gnOwsContextService, gnMap) {
+          // Load the context defined in the configuration
+          viewerSettings.defaultContext =
+            viewerSettings.mapConfig.viewerMap ||
+            '../../map/config-viewer.xml';
 
-        function(searchSettings, viewerSettings, gnMap) {
+          // Keep one layer in the background
+          // while the context is not yet loaded.
+          viewerSettings.bgLayers = [
+            gnMap.createLayerForType('osm')
+          ];
 
-          /*******************************************************************
-             * Define mapviewer background layers
-             */
-          viewerSettings.bgLayers = [gnMap.createLayerForType('mapquest'),
-                gnMap.createLayerForType('osm'),
-                gnMap.createLayerForType('bing_aerial')];
 
-          angular.forEach(viewerSettings.bgLayers, function(l) {
-            l.displayInLayerManager = false;
-            l.background = true;
-            l.set('group', 'Background layers');
-          });
-
-          /*******************************************************************
-             * Define OWS services url for Import WMS
-             */
           viewerSettings.servicesUrl = {
             wms: ['http://ids.pigma.org/geoserver/wms',
                   'http://ids.pigma.org/geoserver/ign/wms',
@@ -74,10 +69,12 @@
           };
 
           var viewerMap = new ol.Map({
+            controls: [],
             view: new ol.View(mapsConfig)
           });
 
           var searchMap = new ol.Map({
+            controls:[],
             layers: [new ol.layer.Tile({
               source: new ol.source.OSM()
             })],
@@ -86,6 +83,7 @@
               zoom: 2
             })
           });
+
 
           /** Facets configuration */
           searchSettings.facetsConfig = [{

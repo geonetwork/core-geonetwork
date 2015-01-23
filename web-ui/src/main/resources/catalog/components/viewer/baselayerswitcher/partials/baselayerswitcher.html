@@ -1,6 +1,7 @@
-<div class="btn-group baselayer">
+<div class="btn-group baselayer"
+        data-ng-show="layers.length > 1">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    Fond de plan : {{map.getLayers().item(0).get('title')}} <span class="caret"></span>
+    <span data-translate="">backgroundMap</span>&nbsp;{{map.getLayers().item(0).get('title')}} <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
     <li ng-repeat="layer in layers">
