@@ -202,7 +202,7 @@
             }
           },
 
-          addKml: function(url, map) {
+          addKmlToMap: function(name, url, map) {
             if (!url || url == '') {
               return;
             }
@@ -215,10 +215,10 @@
 
             var vector = new ol.layer.Vector({
               source: kmlSource,
-              label: 'External file : ' + url.split('/').pop()
+              label: name
             });
 
-            ngeoDecorateLayer(layer);
+            ngeoDecorateLayer(vector);
             vector.displayInLayerManager = true;
             map.getLayers().push(vector);
           },
