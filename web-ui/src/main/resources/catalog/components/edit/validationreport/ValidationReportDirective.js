@@ -79,7 +79,7 @@
                   return scope.hasErrors ? 'panel-danger' : 'panel-success';
                 }
                 if (type === 'icon') {
-                  return 'fa-fw';
+                  return 'fa-check';
                 } else {
                   return '';
                 }
