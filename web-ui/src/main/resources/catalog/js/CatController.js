@@ -126,7 +126,7 @@
           isConnected: function() {
             return !this.isAnonymous();
           },
-          canEditRecord: function (md) {
+          canEditRecord: function(md) {
             if (md === null) {
               return false;
             }

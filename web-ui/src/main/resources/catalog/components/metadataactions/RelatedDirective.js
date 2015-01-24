@@ -36,18 +36,17 @@
                 scope.relations = [];
                 if (scope.uuid) {
                   if (!scope.list) {
-                    $http
-                              .get(
+                    $http.get(
                        'md.relations?_content_type=json&uuid=' +
                        scope.uuid + (scope.types ? '&type=' +
-                       scope.types : ''))
+                       scope.types : ''), {cache: true})
                               .success(function(data, status, headers, config) {
                          if (data && data != 'null' && data.relation) {
                            if (!angular.isArray(data.relation))
-                             data.relation = [
+                             scope.relation = [
                                data.relation
                              ];
-                           for (i = 0; i < data.relation.length; i++) {
+                           for (var i = 0; i < data.relation.length; i++) {
                              scope.relations.push(data.relation[i]);
                            }
                          }
@@ -58,8 +57,8 @@
                 }
               };
 
-              scope.getTitle = function(md) {
-                return md.title['#text'] || md.title;
+              scope.getTitle = function(link) {
+                return link.title['#text'] || link.title;
               };
 
               scope.config = gnRelatedResources;
@@ -67,12 +66,9 @@
               scope.$watch('uuid', function() {
                 scope.updateRelations();
               });
-
-              scope.updateRelations();
             }
           };
-        }
-          ]);
+        }]);
 
   module.directive('relatedTooltip', function() {
     return function(scope, element, attrs) {

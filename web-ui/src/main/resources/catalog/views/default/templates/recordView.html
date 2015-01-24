@@ -106,9 +106,10 @@
       </div>
 
       <h2 data-translate="">downloadsAndResources</h2>
-      <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}">
+      <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+           data-types="online|service|dataset|parent|children">
       </div>
-     
+
       <h2 data-translate="">aboutThisResource</h2>
 
       <table class="table table-striped">
@@ -190,26 +191,37 @@
 
       <table class="table table-bordered">
         <tbody>
-        <tr data-ng-if="mdView.current.record.crs">
-          <th data-translate="">crs</th>
-          <td>{{mdView.current.record.crs}}</td>
-        </tr>
-        <tr data-ng-if="mdView.current.record.format">
-          <th data-translate="">format</th>
-          <td>
-            <ul>
-              <li data-ng-repeat="f in mdView.current.record.format">
-                <span class="badge">{{f}}</span>
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr data-ng-if="mdView.current.record.lineage">
-          <th data-translate="">lineage</th>
-          <td>{{mdView.current.record.lineage}}</td>
-        </tr>
+          <tr data-ng-if="mdView.current.record.crs">
+            <th data-translate="">crs</th>
+            <td>{{mdView.current.record.crs}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.format">
+            <th data-translate="">format</th>
+            <td>
+              <ul>
+                <li data-ng-repeat="f in mdView.current.record.format">
+                  <span class="badge">{{f}}</span>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.lineage">
+            <th data-translate="">lineage</th>
+            <td>{{mdView.current.record.lineage}}
+
+
+              <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+                   data-types="source">
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
+
+
+      <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+           data-types="fcat|siblings|associated|related">
+      </div>
 
       <h2 data-translate="">metadataInformation</h2>
 

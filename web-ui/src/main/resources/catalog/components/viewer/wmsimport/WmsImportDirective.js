@@ -56,12 +56,12 @@
           // This event focus on map, display the WMSImport and request
           // a getCapabilities
           //TODO : to be improved
-          var event = 'requestCapLoad'+ scope.format.toUpperCase();
-          scope.$on(event, function(e,url) {
+          var event = 'requestCapLoad' + scope.format.toUpperCase();
+          scope.$on(event, function(e, url) {
             $('#layers').removeClass('force-hide');
             $('[gn-wms-import]').removeClass('collapsed');
             scope.url = url;
-            scope.load(url)
+            scope.load(url);
           });
 
           scope.load = function(url) {

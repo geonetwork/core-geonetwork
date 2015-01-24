@@ -55,7 +55,7 @@
           var openLink = function(link) {
             if (link.url.indexOf('http') == 0 ||
                 link.url.indexOf('ftp') == 0) {
-              return window.location.assign(link.url);
+              return window.open(link.url, '_blank');
             } else {
               return window.location.assign(link.title);
             }
@@ -63,31 +63,58 @@
 
           this.map = {
             'WMS' : {
-              iconClass: 'fa fa-link',
+              iconClass: 'fa-globe',
+              label: 'addToMap',
               action: addWMSToMap
             },
             'WFS' : {
-              iconClass: 'fa fa-link',
+              iconClass: 'fa-link',
+              label: 'webserviceLink',
               action: openLink
             },
             'KML' : {
-              iconClass: 'fa fa-link',
+              iconClass: 'fa-globe',
+              label: 'addToMap',
               action: addKMLToMap
             },
-            'CATALOG' : {
-              iconClass: 'fa fa-table',
-              action: openLink
-            },
-            'MD' : {
-              iconClass: 'fa fa-files-o',
+            'MDFCATS' : {
+              iconClass: 'fa-table',
+              label: 'openRecord',
               action: openMd
             },
+            'MDFAMILY' : {
+              iconClass: 'fa-sitemap',
+              label: 'openRecord',
+              action: openMd
+            },
+            'MDSIBLING' : {
+              iconClass: 'fa-sign-out',
+              label: 'openRecord',
+              action: openMd
+            },
+            'MDSOURCE' : {
+              iconClass: 'fa-sitemap fa-rotate-180',
+              label: 'openRecord',
+              action: openMd
+            },
+            'MD' : {
+              iconClass: 'fa-file',
+              label: 'openRecord',
+              action: openMd
+            },
+            'LINKDOWNLOAD' : {
+              iconClass: 'fa-download',
+              label: 'download',
+              action: openLink
+            },
             'LINK' : {
-              iconClass: 'fa fa-link',
+              iconClass: 'fa-link',
+              label: 'openPage',
               action: openLink
             },
             'DEFAULT' : {
-              iconClass: '',
+              iconClass: 'fa-fw',
+              label: 'openPage',
               action: openLink
             }
           };
@@ -97,6 +124,10 @@
                 this.map['DEFAULT'].iconClass;
           };
 
+          this.getLabel = function(type) {
+            return this.map[type].label ||
+               this.map['DEFAULT'].label;
+          };
           this.getAction = function(type) {
             return this.map[type].action || this.map['DEFAULT'].action;
           };
@@ -122,20 +153,30 @@
                           .contains('KML'))) {
               return 'KML';
             } else if (resource.protocol &&
-                (resource.protocol.contains('DOWNLOAD') ||
-                    resource.protocol.contains('LINK'))) {
+               resource.protocol.contains('DOWNLOAD')) {
+              return 'LINKDOWNLOAD';
+            } else if (resource.protocol &&
+                    resource.protocol.contains('LINK')) {
               return 'LINK';
             } else if (resource['@type'] &&
-                (resource['@type'] === 'sibling' ||
-                    resource['@type'] === 'parent' ||
-                    resource['@type'] === 'associated' ||
-                    resource['@type'] === 'datasets')) {
+                (resource['@type'] === 'parent' ||
+                    resource['@type'] === 'children')) {
+              return 'MDFAMILY';
+            } else if (resource['@type'] &&
+               (resource['@type'] === 'sibling')) {
+              return 'MDSIBLING';
+            } else if (resource['@type'] &&
+               (resource['@type'] === 'sources')) {
+              return 'MDSOURCE';
+            } else if (resource['@type'] &&
+               (resource['@type'] === 'associated' ||
+               resource['@type'] === 'hasfeaturecat' ||
+               resource['@type'] === 'datasets')) {
               return 'MD';
             } else if (resource['@type'] && resource['@type'] === 'fcats') {
-              return 'CATALOG';
+              return 'MDFCATS';
             }
 
-            console.log(resource);
             return 'DEFAULT';
           };
         }
