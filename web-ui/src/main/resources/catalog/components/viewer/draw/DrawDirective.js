@@ -282,7 +282,7 @@
           getType: '&gnStyleType'
         },
         link: function(scope, element, attrs) {
-          scope.colors = ['red', 'orange', 'blue', 'white', 'black', 'gray'
+          scope.colors = ['red', 'orange', 'blue', 'white', 'black', 'gray',
             'yellow', 'green', 'pink', 'purple', 'brown'];
         }
       };
