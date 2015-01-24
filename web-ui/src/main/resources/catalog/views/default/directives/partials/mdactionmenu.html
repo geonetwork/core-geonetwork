@@ -24,7 +24,7 @@
         <span data-translate="">edit</span>
       </a>
     </li>-->
-    <li data-ng-if="user['@authenticated'] == 'true'" >
+    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"
            data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
@@ -33,34 +33,34 @@
       </a>
     </li>
     <li><a data-ng-href=""
-           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
       <i class="fa fa-key"></i>&nbsp;
       <span data-translate="">privileges</span>
     </a></li>
+    <!-- TODO: Some installation only allows status update
+    based on current status. -->
     <li><a data-ng-href=""
-           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-if="user.canEditRecord(md)"
            data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">updateStatus</span>
     </a></li>
-    <li class="divider"></li>
-
-    <!-- TODO: rating, category, status, versionning -->
-
+    <li class="divider" data-ng-if="user.isConnected()"></li>
+    <!-- TODO: rating -->
     <li><a data-ng-href=""
-           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.duplicate(md)">
       <i class="fa fa-copy"></i>&nbsp;
       <span data-translate="">duplicate</span>
     </a></li>
     <li><a data-ng-href=""
-           data-ng-if="user['@authenticated'] == 'true'"
+           data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.createChild(md)">
       <i class="fa fa-sitemap"></i>&nbsp;
       <span data-translate="">createChild</span>
     </a></li>
-    <li class="divider"></li>
+    <li class="divider" data-ng-if="user.isConnected()"></li>
     <li><a data-ng-href=""
            data-ng-click="mdService.getPermalink(md)">
       <i class="fa fa-link"/>&nbsp;

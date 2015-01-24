@@ -8,14 +8,11 @@
 
       <!--Edit button-->
       <a class="gn-md-edit-btn"
-         data-ng-show="canEdit(md)"
+         data-ng-show="user.canEditRecord(md)"
          data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
          title="{{'edit' | translate}}">
         <i class="fa fa-pencil"></i>
       </a>
-
-      <!-- TODO: Add admin button -->
-
 
       <!--Source catalog Logo-->
       <img ng-src="../../images/logos/{{md.source}}.gif"

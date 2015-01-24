@@ -22,9 +22,9 @@
    */
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
-    'gnSearchManagerService', 'gnConfigService',
+    'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService) {
+            gnSearchManagerService, gnConfigService, gnConfig) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -125,6 +125,25 @@
           },
           isConnected: function() {
             return !this.isAnonymous();
+          },
+          canEditRecord: function (md) {
+            if (md === null) {
+              return false;
+            }
+
+            // The md provide the information about
+            // if the current user can edit records or not.
+            var editable = md['geonet:info'].edit == 'true';
+
+
+            // A second filter is for harvested record
+            // if the catalogue admin defined that those
+            // records could be harvested.
+            if (md.isHarvested === 'y') {
+              return gnConfig['system.harvester.enableEditing'] === true &&
+                  editable;
+            }
+            return editable;
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
@@ -152,11 +171,6 @@
                 angular.extend($scope.user, userFn);
 
                 $scope.authenticated = data.me['@authenticated'] !== 'false';
-                // TODO : should not be here, redirect to home
-                //                  if ($scope.authenticated) {
-                //                  // User is logged in
-                //                  } else {
-                //                  }
               }).
               error(function(data, status, headers, config) {
                 // TODO : translate
