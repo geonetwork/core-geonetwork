@@ -1,23 +1,23 @@
 <div gi-btn-group>
   <div class="btn-group flux" >
-    <button gi-btn="active" class="btn btn-default" ng-model="drawPoint.active">Point</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawLine.active">Linestring</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawPolygon.active">Polygon</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawText.active">Text</button>
+    <button gi-btn="active" class="btn btn-default" ng-model="drawPoint.active" data-translate="">Point</button>
+    <button gi-btn="active" class="btn btn-default" ng-model="drawLine.active" data-translate="">Linestring</button>
+    <button gi-btn="active" class="btn btn-default" ng-model="drawPolygon.active" data-translate="">Polygon</button>
+    <button gi-btn="active" class="btn btn-default" ng-model="drawText.active" data-translate="">Text</button>
   </div>
-  <input ng-show="drawText.active" ng-model="text">
+  <input ng-show="drawText.active" ng-model="text" title="{{'tipDrawText'|translate}}">
   <div gn-style-form="featureStyleCfg" gn-style-type="getActiveDrawType()"></div>
 
   <div class="btn-group flux" >
     <button gi-btn="active" class="btn btn-default"
             data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
-            ng-model="modifying">Modify</button>
+            ng-model="modifying" data-translate="">Modify</button>
     <button gi-btn="active" class="btn btn-default"
             data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
-            ng-model="deleteF.active">Effacer</button>
+            ng-model="deleteF.active" data-translate="">Remove</button>
   </div>
   <div class="alert alert-warning" role="alert">
     <span class="fa fa-info-circle"></span>
-    draw_instruction
+	{{'drawInstruction'|translate}}</span>
   </div>
 </div>

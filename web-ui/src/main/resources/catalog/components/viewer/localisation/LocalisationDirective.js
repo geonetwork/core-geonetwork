@@ -67,6 +67,7 @@
                     });
                 return (props.length == 0) ? '' : '—' + props.join(', ');
               };
+			  //todo: move api url and username to config
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {
