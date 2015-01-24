@@ -44,23 +44,24 @@
       $scope.orderProperty = '@position';
       $scope.reverse = false;
       $scope.systemInfo = {
-        "stagingProfile": "production"
+        'stagingProfile': 'production'
       };
-      $scope.stagingProfiles = ["production", "development", "integration"];
+      $scope.stagingProfiles = ['production', 'development', 'integration'];
       $scope.updateProfile = function() {
 
-        $http.get('systeminfo/staging?newProfile=' + $scope.systemInfo.stagingProfile)
+        $http.get('systeminfo/staging?newProfile=' +
+            $scope.systemInfo.stagingProfile)
           .success(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('profileUpdated'),
-              timeout: 2,
-              type: 'success'});
-          }).error(function(data){
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('profileUpdatedFailed'),
-              timeout: 2,
-              type: 'danger'});
-          });
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('profileUpdated'),
+                timeout: 2,
+                type: 'success'});
+            }).error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('profileUpdatedFailed'),
+                timeout: 2,
+                type: 'danger'});
+            });
       };
 
       /**
@@ -75,8 +76,8 @@
 
         $http.get('info?type=systeminfo&_content_type=json')
           .success(function(data) {
-            $scope.systemInfo = data.systemInfo;
-          });
+              $scope.systemInfo = data.systemInfo;
+            });
         $http.get('admin.config.list?asTree=false&_content_type=json')
           .success(function(data) {
 

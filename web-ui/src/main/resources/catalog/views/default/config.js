@@ -8,32 +8,22 @@
       .run([
         'gnSearchSettings',
         'gnViewerSettings',
+        'gnOwsContextService',
         'gnMap',
+        function(searchSettings, viewerSettings, gnOwsContextService, gnMap) {
+          // Load the context defined in the configuration
+          viewerSettings.defaultContext =
+            viewerSettings.mapConfig.viewerMap ||
+            '../../map/config-viewer.xml';
 
-        function(searchSettings, viewerSettings, gnMap) {
+          // Keep one layer in the background
+          // while the context is not yet loaded.
+          viewerSettings.bgLayers = [
+            gnMap.createLayerForType('osm')
+          ];
 
-          /*******************************************************************
-             * Define mapviewer background layers
-             */
-          viewerSettings.bgLayers = [gnMap.createLayerForType('mapquest'),
-                gnMap.createLayerForType('osm'),
-                gnMap.createLayerForType('bing_aerial')];
-
-          angular.forEach(viewerSettings.bgLayers, function(l) {
-            l.displayInLayerManager = false;
-            l.background = true;
-            l.set('group', 'Background layers');
-          });
-
-          /*******************************************************************
-             * Define OWS services url for Import WMS
-             */
-          viewerSettings.servicesUrl = {
-            wms: ['http://ids.pigma.org/geoserver/wms',
-                  'http://ids.pigma.org/geoserver/ign/wms',
-                  'http://www.ifremer.fr/services/wms/oceanographie_physique'],
-            wmts: ['http://sdi.georchestra.org/geoserver/gwc/service/wmts']
-          };
+          viewerSettings.servicesUrl =
+            viewerSettings.mapConfig.listOfServices || {};
 
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
@@ -74,18 +64,22 @@
           };
 
           var viewerMap = new ol.Map({
+            controls: [],
             view: new ol.View(mapsConfig)
           });
 
           var searchMap = new ol.Map({
+            controls:[],
             layers: [new ol.layer.Tile({
               source: new ol.source.OSM()
             })],
+            controls: [],
             view: new ol.View({
               center: mapsConfig.center,
               zoom: 2
             })
           });
+
 
           /** Facets configuration */
           searchSettings.facetsConfig = [{
@@ -187,17 +181,19 @@
           // For the time being metadata rendering is done
           // using Angular template. Formatter could be used
           // to render other layout
+
+          // TODO: formatter should be defined per schema
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
             defaultUrl: 'md.format.xml?xsl=xsl-view&id=',
             list: [{
-              label: 'inspire',
-              url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
-            }, {
+            //  label: 'inspire',
+            //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
+            //}, {
+            //  label: 'full',
+            //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
+            //}, {
               label: 'full',
-              url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
-            }, {
-              label: 'groovy',
               url: 'md.format.xml?xsl=full_view&id='
             }]
             // TODO: maybe formatter config should depends

@@ -41,6 +41,10 @@
         }
       };
 
+      this.setMap = function() {
+        $location.path(this.MAP);
+      };
+
       this.setSearch = function(params) {
         $location.path(this.SEARCH);
         $location.search(params);

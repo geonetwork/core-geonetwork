@@ -26,6 +26,7 @@
 				<sec:filter-chain pattern="/*.css" filters="" />
 				<sec:filter-chain pattern="/images/**" filters="" />
 				<sec:filter-chain pattern="/maps/**" filters="" />
+				<sec:filter-chain pattern="/map/**" filters="" />
 				<sec:filter-chain pattern="/wmc/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />

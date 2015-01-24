@@ -64,16 +64,19 @@
     'gnMdView',
     'gnMdViewObj',
     'gnSearchLocation',
+    'gnOwsContextService',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, gnMdView, mdView, gnSearchLocation, hotkeys) {
+             gnMap, gnMdView, mdView, gnSearchLocation, gnOwsContextService,
+             hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.location = gnSearchLocation;
 
       hotkeys.bindTo($scope)
         .add({
@@ -179,6 +182,12 @@
             searchMap.getSize()) || searchMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             searchMap.updateSize();
+
+            // TODO: load custom context to the search map
+            //gnOwsContextService.loadContextFromUrl(
+            //  gnViewerSettings.defaultContext,
+            //  searchMap);
+
           }, 0);
         }
         if (gnSearchLocation.isMap() && (!angular.isArray(
