@@ -22,7 +22,8 @@
     'gnOwsCapabilities',
     '$http',
     'gnViewerSettings',
-    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings) {
+	'$translate',
+    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings, $translate ) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -64,14 +65,14 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == 'Background layers' && layer.name.match(re)) {
+            if (layer.group == $tranlate('BackgroundLayers')) && ' ' && layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
               var olLayer = gnMap.createLayerForType(type);
               if (olLayer) {
                 bgLayers.push(olLayer);
                 olLayer.displayInLayerManager = false;
                 olLayer.background = true;
-                olLayer.set('group', 'Background layers');
+                olLayer.set('group', $tranlate('BackgroundLayers'));
                 olLayer.setVisible(!layer.hidden);
               }
             } else {

@@ -9,38 +9,38 @@
   <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
     <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
       <span class="fa fa-tasks"></span>
-      <span role="tooltip">Couches</span>
+      <span role="tooltip" data-translate="">Layers</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
       <span class="fa fa-book"></span>
-      <span role="tooltip">Contextes</span>
+      <span role="tooltip" data-translate="">Contexts</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
       <span class="fa fa-print"></span>
-      <span role="tooltip">Impression</span>
+      <span role="tooltip" data-translate="">Print</span>
     </button>
     <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
       <span class="fa fa-expand"></span>
-      <span role="tooltip">Mesure</span>
+      <span role="tooltip" data-translate="">Measure</span>
     </button>
     <button gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
       <span class="fa fa-pencil"></span>
-      <span role="tooltip">Annotations</span>
+      <span role="tooltip" data-translate="">Annotations</span>
     </button>
   </div>
   <!--Bottom right buttons - Navigation-->
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)">
       <span class="fa fa-plus"></span>
-      <span role="tooltip">Zoomer</span>
+      <span role="tooltip" data-translate="">Zoom</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
       <span class="fa fa-minus"></span>
-      <span role="tooltip">Dézoomer</span>
+      <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
       <span class="fa fa-map-marker"></span>
-      <span role="tooltip">Localisation</span>
+      <span role="tooltip" data-translate="">Localisation</span>
     </button>
   </div>
 
@@ -51,7 +51,7 @@
         <button type="button" class="btn btn-default close">
           &times;
         </button>
-        <h5>Couches thématiques</h5>
+        <h5 data-translate="">ThemeLayers</h5>
       </div>
 
       <div gn-layermanager="" gn-layermanager-map="map"></div>
@@ -64,12 +64,12 @@
       <button type="button" class="btn btn-default unfold">
         <span class="fa fa-chevron-down"></span>
       </button>
-      <h5>Ajouter une couche</h5>
+      <h5 data-translate="">AddALayer</h5>
 
       <div class="btn-group flux">
-        <button type="button" class="btn btn-default">Flux WMS</button>
-        <button type="button" class="btn btn-default">Flux WMTS</button>
-        <button type="button" class="btn btn-default">Fichier KML</button>
+        <button type="button" class="btn btn-default" data-translate="">LayerWMS</button>
+        <button type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
+        <button type="button" class="btn btn-default" data-translate="">LayerKML</button>
       </div>
 
       <div class="panel-carousel-window">
@@ -88,7 +88,7 @@
       <button type="button" class="btn btn-default close">
         &times;
       </button>
-      <h5>Contextes de carte</h5>
+      <h5 data-translate="">MapContexts</h5>
       <div gn-ows-context="" map="map"></div>
     </div>
   </div>
@@ -99,7 +99,7 @@
       <button type="button" class="btn btn-default close">
         &times;
       </button>
-      <h5>Mesures</h5>
+      <h5 data-translate="">Measures</h5>
       <div class="gn-measure-text">
         <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
         <dl class="dl-horizontal">
@@ -118,7 +118,7 @@
       <button type="button" class="btn btn-default close">
         &times;
       </button>
-      <h5>Annotations</h5>
+      <h5 data-translate="">Annotations</h5>
       <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
       </div>
     </div>
@@ -130,7 +130,7 @@
       <button type="button" class="btn btn-default close">
         &times;
       </button>
-      <h5>Impression</h5>
+      <h5 data-translate="">Print</h5>
       <div gn-mapprint="" print-active="activeTools.print" map="map"></div>
     </div>
   </div>
