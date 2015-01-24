@@ -105,9 +105,9 @@
         {{mdView.current.record.abstract}}
       </div>
 
-      <h2 data-translate="">downloadsAndResources</h2>
       <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
-           data-types="online|service|dataset|parent|children">
+           data-types="online|service|dataset|parent|children|hasfeaturecat"
+           data-title="{{'downloadsAndResources' | translate}}">
       </div>
 
       <h2 data-translate="">aboutThisResource</h2>
@@ -168,14 +168,6 @@
           <th data-translate="">updateFrequency</th>
           <td>{{mdView.current.record.updateFrequency}}</td>
         </tr>
-        <tr data-ng-if="mdView.current.record.publicationDate">
-          <th data-translate="">publicationDate</th>
-          <td data-gn-humanize-time="">{{mdView.current.record.publicationDate}}</td>
-        </tr>
-        <tr data-ng-if="mdView.current.record.tempExtentBegin">
-          <th data-translate="">tempExtent</th>
-          <td>{{mdView.current.record.tempExtentBegin}} - {{mdView.current.record.tempExtentEnd}}</td>
-        </tr>
         <tr data-ng-if="mdView.current.record.datasetLang">
           <th data-translate="">language</th>
           <td>{{mdView.current.record.datasetLang | translate}}</td>
@@ -211,7 +203,8 @@
 
 
               <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
-                   data-types="source">
+                   data-types="source"
+                   data-title="{{'sourceDatasets' | translate}}">
               </div>
             </td>
           </tr>
@@ -220,7 +213,12 @@
 
 
       <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
-           data-types="fcat|siblings|associated|related">
+           data-types="fcat"
+           data-title="{{'featureCatalog' | translate}}">
+      </div>
+      <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+           data-types="siblings|associated|related"
+           data-title="{{'siblings' | translate}}">
       </div>
 
       <h2 data-translate="">metadataInformation</h2>
@@ -287,6 +285,45 @@
         <img class="gn-img-extent"
              data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
       </section>
+
+      <section data-ng-if="mdView.current.record.creationDate ||
+                           mdView.current.record.publicationDate ||
+                           mdView.current.record.revisionDate ||
+                           mdView.current.record.tempExtentBegin ||
+                           mdView.current.record.tempExtentEnd">
+        <h4>
+          <i class="fa fa-clock-o"></i>
+          <span data-translate="">tempExtent</span>
+        </h4>
+
+        <p>
+          <dl data-ng-show="mdView.current.record.creationDate">
+              <dt data-translate>creationDate</dt>
+              <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
+                  data-format="YYYY-MM-DD"/>
+          </dl>
+          <dl data-ng-show="mdView.current.record.publicationDate">
+            <dt data-translate>publicationDate</dt>
+            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+                data-format="YYYY-MM-DD"/>
+          </dl>
+          <dl data-ng-show="mdView.current.record.revisionDate">
+            <dt data-translate>revisionDate</dt>
+            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+                data-format="YYYY-MM-DD"/>
+          </dl>
+          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+                            mdView.current.record.tempExtentEnd">
+            <dt data-translate>tempExtentBegin</dt>
+            <dd>
+              <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+              &nbsp;<i class="fa fa-forward"></i>&nbsp;
+              <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+            </dd>
+          </dl>
+        </p>
+      </section>
+
 
       <section>
         <h4>

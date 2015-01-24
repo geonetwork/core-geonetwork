@@ -202,7 +202,6 @@
     function() {
       return {
         restrict: 'A',
-        replace: true,
         template: '<span title="{{title}}">{{value}}</span>',
         scope: {
           date: '@gnHumanizeTime',
@@ -213,9 +212,16 @@
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
-              // YYYY-MM-DDTHH:mm:ssZ which are the formats
+              // YYYY-MM-DDTHH:mm:ss which are the formats
               // used in the common metadata standards.
-              var date = moment(originalDate);
+              // By the way check Z
+              var date = null, suffix = 'Z';
+              if (originalDate.indexOf(suffix,
+                  originalDate.length - suffix.length) !== -1) {
+                date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
+              } else {
+                date = moment(originalDate);
+              }
               if (date.isValid()) {
                 var fromNow = date.fromNow();
                 var formattedDate = scope.format ?

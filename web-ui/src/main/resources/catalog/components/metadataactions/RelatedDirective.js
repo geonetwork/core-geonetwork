@@ -28,6 +28,7 @@
               uuid: '@gnRelated',
               template: '@',
               types: '@',
+              title: '@',
               list: '@'
             },
             link: function(scope, element, attrs, controller) {
