@@ -18,8 +18,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
 		<constructor-arg ref="ldapAuthProvider"/>
 	</bean>
-	
-	
+
+  <bean id="ldapUtils" class="org.fao.geonet.kernel.security.ldap.LDAPUtils"/>
+
     <!-- LDAP configuration-->
     <bean id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
