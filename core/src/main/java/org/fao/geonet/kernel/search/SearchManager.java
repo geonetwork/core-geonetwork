@@ -1491,8 +1491,9 @@ public class SearchManager {
                     }
                 } else {
                     f = new Field(name, string, fieldType);
-                    fFacets.addAll(getFacetFieldsFor(name, string));
                 }
+
+                fFacets.addAll(getFacetFieldsFor(name, string));
 
                 // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
                 // because there is no doc.setBoost method anymore.
