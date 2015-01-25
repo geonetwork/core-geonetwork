@@ -468,7 +468,7 @@ public class Set {
 
         @Override
         public InputStream getInputStream() throws IOException {
-            return Files.newInputStream(inFile);
+            return IO.newInputStream(inFile);
         }
 
         @Override

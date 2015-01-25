@@ -25,6 +25,7 @@ package org.fao.geonet.lib;
 
 import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.Util;
+import org.fao.geonet.utils.IO;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -56,7 +57,7 @@ public class TextLib
 
 	public List<String> load(ServletContext servletContext, Path appPath, Path file, String encoding) throws IOException
 	{
-        BufferedReader ir = Files.newBufferedReader(file, Charset.forName(encoding));
+        BufferedReader ir = IO.newBufferedReader(file, Charset.forName(encoding));
 
 		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file.toString(), servletContext, appPath, ir);
 	}

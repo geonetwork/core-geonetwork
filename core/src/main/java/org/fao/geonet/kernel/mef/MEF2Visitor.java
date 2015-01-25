@@ -143,7 +143,7 @@ public class MEF2Visitor implements IVisitor {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(publicFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();
-                    try (InputStream in = Files.newInputStream(path)) {
+                    try (InputStream in = IO.newInputStream(path)) {
                         v.handlePublicFile(fileName,
                                 MEFLib.getChangeDate(pubFiles, fileName),
                                 in, index);
@@ -157,7 +157,7 @@ public class MEF2Visitor implements IVisitor {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(privateFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();
-                    try (InputStream in = Files.newInputStream(path)) {
+                    try (InputStream in = IO.newInputStream(path)) {
                         v.handlePrivateFile(fileName,
                                 MEFLib.getChangeDate(prvFiles, fileName),
                                 in, index);

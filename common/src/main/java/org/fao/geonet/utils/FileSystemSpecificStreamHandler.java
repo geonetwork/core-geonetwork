@@ -31,7 +31,7 @@ class FileSystemSpecificStreamHandler extends URLStreamHandler {
 
                 @Override
                 public InputStream getInputStream() throws IOException {
-                    return Files.newInputStream(path);
+                    return IO.newInputStream(path);
                 }
 
                 @Override

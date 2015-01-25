@@ -25,11 +25,16 @@ package org.fao.geonet.utils;
 
 import org.eclipse.core.runtime.Assert;
 import org.fao.geonet.Logger;
+import org.fao.geonet.utils.debug.DebuggingInputStream;
+import org.fao.geonet.utils.debug.DebuggingReader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
@@ -381,6 +386,14 @@ public final class IO {
             return new URL(null, uri.toString(), new FileSystemSpecificStreamHandler());
         }
         return null;
+    }
+
+    public static InputStream newInputStream(Path file) throws IOException {
+        return new DebuggingInputStream(file.toString(), Files.newInputStream(file));
+    }
+
+    public static BufferedReader newBufferedReader(Path path, Charset cs) throws IOException {
+        return new DebuggingReader(path.toString(), Files.newBufferedReader(path, cs));
     }
 
     private static class CopyAllFiles extends SimpleFileVisitor<Path> {

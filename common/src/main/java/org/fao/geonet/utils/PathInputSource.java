@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -30,7 +29,7 @@ public class PathInputSource extends InputSource {
     @Override
     public InputStream getByteStream() {
         try {
-            return Files.newInputStream(this.path);
+            return IO.newInputStream(this.path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +49,7 @@ public class PathInputSource extends InputSource {
             } else {
                 cs = Constants.CHARSET;
             }
-            return Files.newBufferedReader(this.path, cs);
+            return IO.newBufferedReader(this.path, cs);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

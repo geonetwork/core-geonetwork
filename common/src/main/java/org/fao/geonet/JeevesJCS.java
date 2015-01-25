@@ -28,10 +28,10 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.fao.geonet.utils.IO;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
@@ -108,7 +108,7 @@ public class JeevesJCS extends GroupCacheAccess
 
         Properties props = new Properties();
 
-        try (Reader is = Files.newBufferedReader(configFilename, Constants.CHARSET)) {
+        try (Reader is = IO.newBufferedReader(configFilename, Constants.CHARSET)) {
             props.load( is );
         } catch (IOException e) {
             throw new IllegalStateException( "Unable to load cache configuration from: "+configFilename, e);

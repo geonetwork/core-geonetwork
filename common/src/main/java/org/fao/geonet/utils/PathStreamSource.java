@@ -5,7 +5,6 @@ import org.fao.geonet.Constants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.xml.transform.stream.StreamSource;
 
@@ -27,7 +26,7 @@ public class PathStreamSource extends StreamSource {
     @Override
     public InputStream getInputStream() {
         try {
-            return Files.newInputStream(this.path);
+            return IO.newInputStream(this.path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +40,7 @@ public class PathStreamSource extends StreamSource {
     @Override
     public Reader getReader() {
         try {
-            return Files.newBufferedReader(this.path, Constants.CHARSET);
+            return IO.newBufferedReader(this.path, Constants.CHARSET);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

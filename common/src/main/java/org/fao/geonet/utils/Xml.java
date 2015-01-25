@@ -231,7 +231,7 @@ public final class Xml
 
                 // no charset detection and conversion allowed
             } else {
-                try (InputStream in = Files.newInputStream(file)) {
+                try (InputStream in = IO.newInputStream(file)) {
                     Document jdoc = builder.build(in);
                     return (Element) jdoc.getRootElement().detach();
                 }
@@ -259,7 +259,7 @@ public final class Xml
      */
 
 	public synchronized static byte[] convertFileToUTF8ByteArray(Path file) throws IOException {
-        try (DataInputStream inStream = new DataInputStream(Files.newInputStream(file))) {
+        try (DataInputStream inStream = new DataInputStream(IO.newInputStream(file))) {
             byte[] buf = new byte[(int) Files.size(file)];
             int nrRead = inStream.read(buf);
 
@@ -573,7 +573,7 @@ public final class Xml
 	{
         NioPathHolder.setBase(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-        try (InputStream in = Files.newInputStream(styleSheetPath)) {
+        try (InputStream in = IO.newInputStream(styleSheetPath)) {
             Source srcSheet = new StreamSource(in, styleSheetPath.toUri().toASCIIString());
 
             // Dear old saxon likes to yell loudly about each and every XSLT 1.0

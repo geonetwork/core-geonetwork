@@ -36,13 +36,13 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.IO;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -113,7 +113,7 @@ public class Validate extends NotInReadOnlyModeService {
             Path file = schemaDir.resolve("loc").resolve(context.getLanguage()).resolve(rule + ".xml");
 
             Document document;
-            try (InputStream in = Files.newInputStream(file)) {
+            try (InputStream in = IO.newInputStream(file)) {
                 document = builder.build(in);
             }
             Element element = document.getRootElement();

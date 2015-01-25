@@ -203,7 +203,7 @@ public class LuceneConfig {
     }
 
 	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
-		try (InputStream in = Files.newInputStream(this.configurationFile)) {
+		try (InputStream in = IO.newInputStream(this.configurationFile)) {
 			luceneConfig = Xml.loadStream(in);
 			if (servletContext != null) {
 				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext,

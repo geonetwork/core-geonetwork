@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlElementReader;
 import org.fao.geonet.utils.XmlRequest;
@@ -271,12 +272,12 @@ class Harvester implements IHarvester<HarvestResult>
         namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
 
         XmlElementReader reader;
-        try (InputStream fin = Files.newInputStream(tempFile)) {
+        try (InputStream fin = IO.newInputStream(tempFile)) {
             reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
         }
         if (!reader.hasNext()) {
             namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
-            try (InputStream fin = Files.newInputStream(tempFile)) {
+            try (InputStream fin = IO.newInputStream(tempFile)) {
                 reader = new XmlElementReader(fin, "wfs:FeatureCollection/gml:featureMember", namespaces);
 
             }

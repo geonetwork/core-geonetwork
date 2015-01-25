@@ -390,7 +390,7 @@ public class Resources {
                     if (iter.hasNext()) {
                         Path path = iter.next();
                         try (
-                                InputStream in = java.nio.file.Files.newInputStream(path);
+                                InputStream in = IO.newInputStream(path);
                                 OutputStream out = java.nio.file.Files.newOutputStream(file)
                         ) {
                             try {

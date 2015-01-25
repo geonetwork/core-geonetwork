@@ -2,10 +2,11 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Lists;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.IO;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class ConfigFile {
 
         for (Path file : properties) {
             if (Files.exists(file)) {
-                try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(file), Constants.ENCODING)) {
+                try (Reader reader = IO.newBufferedReader(file, Constants.CHARSET)) {
                     config.load(reader);
                 }
             }
