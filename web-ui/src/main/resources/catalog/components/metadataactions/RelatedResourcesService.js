@@ -132,9 +132,9 @@
             return this.map[type].action || this.map['DEFAULT'].action;
           };
 
-          this.doAction = function(type, parameters) {
+          this.doAction = function(type, parameters, uuid) {
             var f = this.getAction(type);
-            f(parameters);
+            f(parameters, uuid);
           };
 
           this.getType = function(resource) {
