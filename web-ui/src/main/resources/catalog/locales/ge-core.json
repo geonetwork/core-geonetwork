@@ -47,7 +47,7 @@
     "dut": "Nederlands",
     "east": "Orient",
     "editorBoard": "Add new record",
-    "contribute": "Contribute",
+    "contribute": "Beitragen",
     "email": "Email",
     "eng": "English",
     "errorEmailAddressAlreadyRegistered": "Email address already registered.",
@@ -88,6 +88,8 @@
     "notifications": "Benachrichtigungen",
     "orgName": "Metadatenkontakt",
     "orgNames": "Metadatenkontakt",
+    "topicCat": "Thematik",
+    "topicCats": "Thematik",
     "organisation": "Organisation",
     "organization": "Organisation",
     "owner": "Eigentümer",
@@ -128,6 +130,8 @@
     "signout": "Abmelden",
     "somethingWrong": "Something went wrong!",
     "south": "Sud",
+    "siblings": "Other resources",
+    "sourceDatasets": "Source datasets",
     "spa": "Español",
     "spatialRepresentationTypes": "Datentypen",
     "spatialRepresentationType": "Datentypen",
@@ -162,5 +166,6 @@
     "createChild": "Create a child",
     "privileges": "Berechtigungen",
     "whoCanAccess": "Who has access",
-    "actions": "Aktionen"
+    "actions": "Aktionen",
+    "reset": "Reset"
 }

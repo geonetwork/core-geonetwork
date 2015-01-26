@@ -88,6 +88,8 @@
     "notifications": "Notifications",
     "orgName": "Contact for the resource",
     "orgNames": "Contact for the resource",
+    "topicCat": "Categoria",
+    "topicCats": "Categoria",
     "organisation": "Organisation",
     "organization": "Organization",
     "owner": "Owner",
@@ -128,6 +130,8 @@
     "signout": "Sign out",
     "somethingWrong": "Something went wrong!",
     "south": "South",
+    "siblings": "Other resources",
+    "sourceDatasets": "Source datasets",
     "spa": "Español",
     "spatialRepresentationTypes": "Data types",
     "spatialRepresentationType": "Data type",
@@ -162,5 +166,6 @@
     "createChild": "Create a child",
     "privileges": "Privileges",
     "whoCanAccess": "Who has access",
-    "actions": "Azioni"
+    "actions": "Azioni",
+    "reset": "Reset"
 }

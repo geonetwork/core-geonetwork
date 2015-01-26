@@ -239,5 +239,6 @@
   "msgCanDropFileOnMap":"Note that you can also drop a file on the map",
   "UploadKMZfile":"Upoad a KMZ file",
   "or":"or",
-  "KMLfileURL":"URL of a KML file"
+  "KMLfileURL":"URL of a KML file",
+  "refineSearch" : "Refine Search"
 }

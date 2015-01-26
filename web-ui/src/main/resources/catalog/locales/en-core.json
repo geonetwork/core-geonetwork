@@ -88,6 +88,8 @@
     "notifications": "Notifications",
     "orgName": "Contact for the resource",
     "orgNames": "Contact for the resource",
+    "topicCat" : "Topic Category",
+    "topicCats" : "Topic Categories",
     "organisation": "Organisation",
     "organization": "Organization",
     "owner": "Owner",
@@ -164,5 +166,6 @@
     "createChild": "Create a child",
     "privileges": "Privileges",
     "whoCanAccess": "Who has access",
-    "actions" : "Actions"
+    "actions" : "Actions",
+    "reset" : "Reset"
 }
