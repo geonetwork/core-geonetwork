@@ -107,7 +107,7 @@ public abstract class CatalogRequest {
 	 * preserved (and {@link CatalogRequest#excludedParameters} are
 	 * excluded). A complete GetCapabilities URL may be used for initialization.
 	 */
-	public void setUrl(URL url)
+	public void setUrl(ServiceContext context, URL url)
 	{
         client.setUrl(url);
 
@@ -124,6 +124,9 @@ public abstract class CatalogRequest {
 				}
 			}
 		}
+
+        // Setup the proxy if applies, checking the url in the proxy ignore list
+        Lib.net.setupProxy(context, client);
 	}
 
 	//---------------------------------------------------------------------------
