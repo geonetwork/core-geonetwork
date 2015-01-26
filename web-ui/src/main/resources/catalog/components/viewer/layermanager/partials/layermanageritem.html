@@ -1,33 +1,33 @@
  <div>
-   <button class="btn btn-cog" data-ng-click="showInfo(layer)">
+   <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'layerInfo'|translate}}">
      <span class="fa fa-cog"></span>
    </button>
-   <button class="btn btn-cog" data-ng-click="zoomToExtent(layer, map)">
+   <button class="btn btn-cog" data-ng-click="zoomToExtent(layer, map)" title="{{'layerExtentZoom'|translate}}">
      <span class="fa fa-arrows-alt"></span>
    </button>
    <span class="gn-layer-ordering">
-     <a href="" class="fa fa-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)"></a>
-     <a href="" class="fa fa-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"></a>
+     <a href="" class="fa fa-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)" title="{{'layerMoveUp'|translate}}"></a>
+     <a href="" class="fa fa-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"  title="{{'layerMoveDown'|translate}}"></a>
    </span>
    <label>
-     <input type="checkbox" ng-model="layer.visible" />
+     <input type="checkbox" ng-model="layer.visible" title="{{'layerVisible'|translate}}" />
      {{layer.get('label')}}
    </label>
    <div class="details">
-     <button class="metadata" ng-if="layer.get('metadata')" data-ng-click="showMetadata(layer.get('metadata'), layer.get('label'))">
+     <button class="metadata" ng-if="layer.get('metadata')" data-ng-click="showMetadata(layer.get('metadata'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
        <span class="fa fa-file"></span>
-       Voir les métadonnées
+       {{'layerMetadata'|translate}}
      </button>
-     <button class="btn btn-default delete" ng-click="map.removeLayer(layer)">
+     <button class="btn btn-default delete" ng-click="map.removeLayer(layer)" title="{{'layerDelete'|translate}}">
        <span class="fa fa-trash-o"></span>
-       Supprimer
+        {{'layerDelete'|translate}}
      </button>
      <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
-     <h6 ng-if="layer.get('legend')">Légende</h6>
+     <h6 ng-if="layer.get('legend')" data-translate="">Legend</h6>
      <p ng-if="layer.get('legend')">
        <img ng-src="{{layer.get('legend')}}"/>
      </p>
-     <h6 ng-if="layer.get('attribution')">Source</h6>
+     <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
      <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
      <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
    </div>
