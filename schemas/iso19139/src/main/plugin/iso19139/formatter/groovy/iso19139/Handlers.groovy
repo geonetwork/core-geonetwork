@@ -151,7 +151,7 @@ public class Handlers {
     }
 
     def formatEls = { els ->
-        def formats = []
+        def formats = [] as Set
 
         def resolveFormat = { el ->
             def format = el.'gmd:MD_Format'

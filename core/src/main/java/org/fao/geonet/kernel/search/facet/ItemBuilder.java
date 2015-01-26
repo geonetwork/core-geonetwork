@@ -39,6 +39,7 @@ import org.jdom.Element;
 
 public class ItemBuilder {
 
+    private final String langCode;
     private ItemConfig config;
     private Facets facets;
     private Translator translator;
@@ -49,6 +50,7 @@ public class ItemBuilder {
         this.facets = facets;
         this.translator = config.getTranslator(langCode);
         this.formatter = format.getFormatter(config.getDimension());
+        this.langCode = langCode;
     }
 
     public Element build() {
@@ -123,7 +125,11 @@ public class ItemBuilder {
 
     private FacetResult getTopChildren(String... path) {
         try {
-            return facets.getTopChildren(config.getMax(), config.getDimension().getName(), path);
+            if (config.getDimension().isLocalized() && !config.getDimension().getLocales().contains(langCode)) {
+                return new FacetResult(config.getDimension().getName(langCode), path, 0, new LabelAndValue[0], 0);
+            } else {
+                return facets.getTopChildren(config.getMax(), config.getDimension().getName(langCode), path);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -231,4 +237,11 @@ public class ItemBuilder {
         };
     }
 
+    @Override
+    public String toString() {
+        return "ItemBuilder{" +
+               "Item Config =" + config +
+               ", langCode='" + langCode + '\'' +
+               '}';
+    }
 }

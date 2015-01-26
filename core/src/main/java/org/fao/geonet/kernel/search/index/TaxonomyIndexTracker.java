@@ -1,15 +1,5 @@
 package org.fao.geonet.kernel.search.index;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import org.apache.lucene.facet.FacetsConfig;
-import org.apache.lucene.store.Directory;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
@@ -17,10 +7,17 @@ import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.NRTCachingDirectory;
+import org.apache.lucene.store.Directory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.utils.Log;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * For concurrency issues this class should not escape the confines of this package because
@@ -36,12 +33,10 @@ class TaxonomyIndexTracker {
     private final DirectoryFactory taxonomyDir;
     private final LuceneConfig luceneConfig;
     private Directory cachedFSDir;
-    private final FacetsConfig config;
 
     public TaxonomyIndexTracker(DirectoryFactory taxonomyDir, LuceneConfig luceneConfig) throws Exception {
         this.taxonomyDir = taxonomyDir;
         this.luceneConfig = luceneConfig;
-        this.config = luceneConfig.getTaxonomyConfiguration();
         init();
     }
 
@@ -91,7 +86,7 @@ class TaxonomyIndexTracker {
     Document addDocument(Document doc, Collection<CategoryPath> categories) {
         Document docAfterFacetBuild = null;
         try {
-            docAfterFacetBuild = config.build(taxonomyWriter, doc);
+            docAfterFacetBuild = luceneConfig.getTaxonomyConfiguration().build(taxonomyWriter, doc);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
             }

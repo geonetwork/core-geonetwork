@@ -63,10 +63,10 @@ public class ISO19139SchemaPlugin
                     Element sib = (Element) o;
                     Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
                             .getChildren().get(0);
-                    String sibUuid = agId.getChild("code", ISO19139Namespaces.GMD)
+                    String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
                             .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                    String associationType = sib.getChild("associationType", ISO19139Namespaces.GMD)
-                            .getChild("DS_AssociationTypeCode", ISO19139Namespaces.GMD)
+                    final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
+                    String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
                             .getAttributeValue("codeListValue");
 
                     AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
@@ -77,6 +77,14 @@ public class ISO19139SchemaPlugin
             e.printStackTrace();
         }
         return listOfResources;
+    }
+
+    private Element getChild(Element el, String name, Namespace namespace) {
+        final Element child = el.getChild(name, namespace);
+        if (child == null) {
+            return new Element(name, namespace);
+        }
+        return child;
     }
 
     @Override

@@ -707,7 +707,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     break;
                 }
                 requestedItems.add(_summaryConfig.get(item.trim()));
-                }
+            }
 
             _summaryConfig = new SummaryType(_summaryConfig.getName(), requestedItems);
         }
@@ -973,12 +973,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         try {
             results = doSearchAndMakeSummary( endHit, startHit, endHit,
                     _language.presentationLanguage,
-                    _summaryConfig, _luceneConfig.getTaxonomyConfiguration(),
+                    _summaryConfig, _luceneConfig,
                     indexAndTaxonomy.indexReader,
     				_query, _filter, _sort, indexAndTaxonomy.taxonomyReader,
-                    buildSummary, _luceneConfig.isTrackDocScores(),
-    				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
-    		);
+                    buildSummary);
         } finally {
             _sm.releaseIndexReader(indexAndTaxonomy);
         }
@@ -1306,18 +1304,18 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * @param sort	the sort criteria
 	 * @param taxonomyReader	A {@link TaxonomyReader} use to compute facets (ie. summary)
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
-	 * @param trackDocScores	specifies whether document scores should be tracked and set on the results. 
-	 * @param trackMaxScore	specifies whether the query's maxScore should be tracked and set on the resulting TopDocs.
-	 * @param docsScoredInOrder	specifies whether documents are scored in doc Id order or not by the given Scorer
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
 	 * 
 	 * @throws Exception hmm
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
-			SummaryType summaryConfig, FacetsConfig facetConfiguration, IndexReader reader,
-			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
-			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception {
+			SummaryType summaryConfig, LuceneConfig luceneConfig, IndexReader reader,
+			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary) throws Exception {
+        FacetsConfig facetConfiguration = luceneConfig.getTaxonomyConfiguration();
+        boolean trackDocScores = luceneConfig.isTrackDocScores();
+        boolean trackMaxScore = luceneConfig.isTrackMaxScore();
+        boolean docsScoredInOrder = luceneConfig.isDocsScoredInOrder();
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
             Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits " + numHits);
@@ -1381,13 +1379,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             Map<String, ArrayIndexOutOfBoundsException> configurationErrors = Maps.newHashMap();
             for (ItemConfig itemConfig : summaryConfigValues.getItems()) {
                 try {
-                    OrdinalsReader ordsReader = new DocValuesOrdinalsReader(itemConfig.getDimension().getFacetFieldName());
+                    OrdinalsReader ordsReader = new DocValuesOrdinalsReader(itemConfig.getDimension().getFacetFieldName(langCode));
                     Facets facets = new TaxonomyFacetCounts(ordsReader, taxonomyReader, facetConfiguration, facetCollector);
                     ItemBuilder builder = new ItemBuilder(itemConfig, langCode, facets, format);
                     Element facetSummary = builder.build();
                     elSummary.addContent(facetSummary);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    configurationErrors.put(itemConfig.getDimension().getFacetFieldName(), e);
+                    configurationErrors.put(itemConfig.getDimension().getFacetFieldName(langCode), e);
                 }
         }
 

@@ -21,6 +21,7 @@
             <xsd:attribute name="name" use="required" type="xsd:string"/>
             <xsd:attribute name="indexKey" use="required" type="xsd:string"/>
             <xsd:attribute name="label" use="required" type="xsd:string"/>
+            <xsd:attribute name="localized" type="xsd:boolean"/>
             <xsd:attribute name="classifier" type="xsd:string"/>
         </xsd:complexType>
     </xsd:element>

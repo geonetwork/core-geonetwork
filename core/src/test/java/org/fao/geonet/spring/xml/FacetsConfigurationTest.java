@@ -23,6 +23,7 @@ public class FacetsConfigurationTest {
     public void testMandatoryParametersSet() {
         Dimension keyword = facets.getDimensions().get(0);
         assertEquals("keyword", keyword.getName());
+        assertEquals("keyword_eng", keyword.getName("eng"));
         assertEquals("keyword", keyword.getIndexKey());
         assertEquals("Keywords", keyword.getLabel());
     }
@@ -42,6 +43,6 @@ public class FacetsConfigurationTest {
     @Test
     public void testGetFacetFieldName() throws Exception {
         Dimension keywordToken = facets.getDimensions().get(1);
-        assertEquals("keywordToken_facet", keywordToken.getFacetFieldName());
+        assertEquals("keywordToken_facet", keywordToken.getFacetFieldName("eng"));
     }
 }

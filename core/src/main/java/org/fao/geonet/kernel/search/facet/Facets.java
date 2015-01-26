@@ -59,9 +59,19 @@ public class Facets {
         FacetsConfig result = new FacetsConfig();
 
         for (Dimension dimension : dimensions) {
-            result.setIndexFieldName(dimension.getName(), dimension.getFacetFieldName());
-            result.setMultiValued(dimension.getName(), true);
-            result.setHierarchical(dimension.getName(), true);
+            if (dimension.isLocalized()) {
+                for (String langCode : dimension.getLocales()) {
+                    String dimensionName = dimension.getName(langCode);
+                    result.setIndexFieldName(dimensionName, dimension.getFacetFieldName(langCode));
+                    result.setMultiValued(dimensionName, true);
+                    result.setHierarchical(dimensionName, true);
+                }
+            } else {
+                String dimensionName = dimension.getName();
+                result.setIndexFieldName(dimensionName, dimension.getFacetFieldName(null));
+                result.setMultiValued(dimensionName, true);
+                result.setHierarchical(dimensionName, true);
+            }
         }
 
         return result;

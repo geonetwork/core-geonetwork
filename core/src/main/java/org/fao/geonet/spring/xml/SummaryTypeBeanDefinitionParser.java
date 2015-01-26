@@ -22,10 +22,6 @@
 
 package org.fao.geonet.spring.xml;
 
-import static org.fao.geonet.spring.xml.BeanDefinitionParserUtils.addPropertyValueUsingValueOf;
-
-import java.util.List;
-
 import org.fao.geonet.kernel.search.facet.Format;
 import org.fao.geonet.kernel.search.facet.SummaryType;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -36,6 +32,10 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.List;
+
+import static org.fao.geonet.spring.xml.BeanDefinitionParserUtils.addPropertyValueUsingValueOf;
 
 public class SummaryTypeBeanDefinitionParser extends AbstractBeanDefinitionParser {
 

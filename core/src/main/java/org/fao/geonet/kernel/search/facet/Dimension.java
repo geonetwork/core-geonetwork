@@ -25,10 +25,16 @@ package org.fao.geonet.kernel.search.facet;
 
 import org.fao.geonet.kernel.search.classifier.Classifier;
 import org.fao.geonet.kernel.search.classifier.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
+import java.util.Set;
 
 public class Dimension {
+    @Autowired
+    private ApplicationContext context;
 
-    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s}%n";
+    private static final String TEMPLATE = "  * %s: {indexKey=%s, label=%s, classifier=%s, localized=%b}%n";
 
     public static final String FACET_FIELD_SUFFIX = "_facet";
 
@@ -38,12 +44,15 @@ public class Dimension {
 
     private String label;
 
+    private boolean localized;
+
     private Classifier classifier;
 
     public Dimension(String name, String indexKey, String label) {
         this.name = name;
         this.indexKey = indexKey;
         this.label = label;
+        localized = false;
         this.classifier = new Value();
     }
 
@@ -68,11 +77,31 @@ public class Dimension {
     }
 
     public String toString() {
-        return String.format(TEMPLATE, name, indexKey, label, classifier.getClass().getName());
+        return String.format(TEMPLATE, name, indexKey, label, classifier.getClass().getName(), localized);
     }
 
-    public String getFacetFieldName() {
-        return name + FACET_FIELD_SUFFIX;
+    public String getFacetFieldName(String langCode) {
+        return getName(langCode) + FACET_FIELD_SUFFIX;
     }
 
+    public boolean isLocalized() {
+        return this.localized;
+    }
+
+    public void setLocalized(Boolean localized) {
+        this.localized = localized;
+    }
+
+    public String getName(String langCode) {
+        if (this.localized && getLocales().contains(langCode)) {
+            return this.name + "_" + langCode.toLowerCase();
+        } else {
+            return this.name;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<String> getLocales() {
+        return this.context.getBean("languages", Set.class);
+    }
 }

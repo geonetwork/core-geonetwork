@@ -1493,7 +1493,7 @@ public class SearchManager {
                     f = new Field(name, string, fieldType);
                 }
 
-                fFacets.addAll(getFacetFieldsFor(name, string));
+                fFacets.addAll(getFacetFieldsFor(language, name, string));
 
                 // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
                 // because there is no doc.setBoost method anymore.
@@ -1528,23 +1528,25 @@ public class SearchManager {
         return new IndexInformation(language, doc, categories);
     }
 
-    private List<Field> getFacetFieldsFor(String indexKey, String value) {
-        List<Field> result = new ArrayList<Field>();
+    private List<Field>     getFacetFieldsFor(String locale, String indexKey, String value) {
+        List<Field> result = new ArrayList<>();
 
         for (Dimension dimension : _luceneConfig.getDimensionsUsing(indexKey)) {
-            result.addAll(getFacetFieldsFor(dimension, value));
+            result.addAll(getFacetFieldsFor(locale, dimension, value));
         }
 
         return result;
     }
 
-    private List<Field> getFacetFieldsFor(Dimension dimension, String value) {
-        List<Field> result = new ArrayList<Field>();
+    private List<Field> getFacetFieldsFor(String locale, Dimension dimension, String value) {
+        List<Field> result = new ArrayList<>();
 
         Classifier classifier = dimension.getClassifier();
 
         for (CategoryPath categoryPath: classifier.classify(value)) {
-            result.add(new FacetField(dimension.getName(), categoryPath.components));
+            if (!dimension.isLocalized() || dimension.getLocales().contains(locale)) {
+                result.add(new FacetField(dimension.getName(locale), categoryPath.components));
+            }
         }
 
         return result;

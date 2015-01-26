@@ -43,8 +43,14 @@ public class FacetBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
         String classifier = element.getAttribute("classifier");
 
         if (!classifier.isEmpty()) {
-            bean.addPropertyReference("classifier", element.getAttribute("classifier"));
+            bean.addPropertyReference("classifier", classifier);
         }
+
+        String localized = element.getAttribute("localized");
+        if (!localized.isEmpty()) {
+            bean.addPropertyValue("localized", localized);
+        }
+
     }
 
     @Override

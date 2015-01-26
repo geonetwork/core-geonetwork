@@ -22,8 +22,6 @@
 
 package org.fao.geonet.spring.xml;
 
-import java.util.List;
-
 import org.fao.geonet.kernel.search.facet.SummaryTypes;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -34,6 +32,8 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 public class SummaryTypesBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
