@@ -11,10 +11,6 @@
         <div class="hfull" data-ng-controller="gnsSextantSearch">
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
-            <button ng-class="{'collapsed': !collapsed.facet}" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
-              <span ng-show="!collapsed.facet">»</span>
-              <span ng-show="collapsed.facet">«</span>
-            </button>
 
             <div class="row hfull">
 
@@ -37,15 +33,10 @@
                 </div>
               </div>
 
-              <div ng-class="{ 'col-md-7': collapsed.search && !collapsed.facet , 'col-md-9': collapsed.search && collapsed.facet, 'col-md-6': !collapsed.search && collapsed.facet , 'col-md-4': !collapsed.search && !collapsed.facet}" class="maincol hfull sxt-center-panel">
+              <div ng-class="{ 'col-md-9': collapsed.search, 'col-md-6': !collapsed.search}" class="maincol hfull sxt-center-panel">
                 <div class="panel panel-default hfull" ng-show="!initial">
                   <div class="panel-heading">
                     <div class="btn-toolbar">
-
-                      <!--Template switcher-->
-                      <div class="gn-results-switch pull-right"
-                           data-gn-results-tpl-switcher
-                           data-template-url="resultTemplate"></div>
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
@@ -61,23 +52,7 @@
                   </div>
                 </div>
               </div>
-
-              <div ng-class="(!collapsed.facet) ? 'col-md-2' : 'whidden'" class="maincol hfull sxt-right-panel">
-                <div class="panel panel-default hfull">
-                  <div class="panel-heading">
-                    <span data-translate>Refine search</span>
-                  </div>
-                  <div class="panel-body">
-                    <div data-gn-facet-breadcrumb="currentFacets"></div>
-                    <div data-gn-facet-list="searchResults.facet"
-                         data-facet-config="facetsSummaryType"
-                         data-current-facets="currentFacets">
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-
           </form>
         </div>
       </tab>

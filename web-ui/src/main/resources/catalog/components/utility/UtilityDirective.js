@@ -654,4 +654,27 @@
       }
     };
   }]);
+
+  module.directive('gnCollapse', ['$compile', function($compile) {
+    return {
+      restrict: 'A',
+      scope: true,
+      link: function(scope, element, attrs) {
+        scope.collapsed = attrs['gnCollapse'] == 'true';
+        element.on('click', function(e) {
+          var next = element.next();
+          next.collapse('toggle');
+/*
+          if(scope.collapsed) {
+            next.show();
+          }
+          else {
+            next.hide();
+          }
+*/
+        });
+      }
+    };
+  }]);
+
 })();
