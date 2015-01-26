@@ -77,6 +77,7 @@
           extent, position)) {
         valid = true;
       } else {
+		//todo: don't use hardcoded projections
         position = ol.proj.transform(position,
             'EPSG:2056', 'EPSG:3857');
         if (ol.extent.containsCoordinate(
