@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.Log;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,7 +50,9 @@ public class OpenResourceTracker extends RuntimeException {
             printExceptions(out, numExceptionsToPrint);
         }
 
-        System.out.println("Write first " + numExceptionsToPrint + " of " + openResources.size() + " open file stacktraces to: " + log);
+        final String message = "Resource Leak detected: First " + numExceptionsToPrint + " of " + openResources.size() + " open file stacktraces to: " + log;
+        System.out.println(message);
+        Log.error(Log.JEEVES, message);
     }
 
     public static synchronized void printExceptions(PrintWriter out, int numExceptionsToPrint) throws IOException {
