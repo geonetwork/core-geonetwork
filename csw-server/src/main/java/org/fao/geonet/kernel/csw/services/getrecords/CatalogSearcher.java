@@ -89,6 +89,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -770,8 +771,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
-             LuceneIndexField.OWNER,
-             LuceneIndexField.GROUP_OWNER);
+                LuceneIndexField.OWNER,
+                LuceneIndexField.GROUP_OWNER);
         
         BooleanQuery bq;
         if (q instanceof BooleanQuery) {

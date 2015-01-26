@@ -7,7 +7,6 @@ import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
@@ -59,22 +58,26 @@ public class ISO19139SchemaPlugin
 
 
             for (Object o : sibs) {
-                if (o instanceof Element) {
-                    Element sib = (Element) o;
-                    Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
-                            .getChildren().get(0);
-                    String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
-                            .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                    final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
-                    String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
-                            .getAttributeValue("codeListValue");
+                try {
+                    if (o instanceof Element) {
+                        Element sib = (Element) o;
+                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
+                                .getChildren().get(0);
+                        String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
+                                .getChildText("CharacterString", ISO19139Namespaces.GCO);
+                        final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
+                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
+                                .getAttributeValue("codeListValue");
 
-                    AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
-                    listOfResources.add(resource);
+                        AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
+                        listOfResources.add(resource);
+                    }
+                } catch (Exception e) {
+                    Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
         }
         return listOfResources;
     }
