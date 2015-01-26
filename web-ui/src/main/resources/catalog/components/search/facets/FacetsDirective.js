@@ -39,7 +39,8 @@
       };
     }]);
   module.directive('gnFacetList', [
-    function() {
+    'gnFacetConfigService',
+    function(gnFacetConfigService) {
       return {
         restrict: 'A',
         replace: true,
@@ -47,8 +48,14 @@
             'partials/facet-list.html',
         scope: {
           facets: '=gnFacetList',
-          facetConfig: '=',
+          summaryType: '=facetConfig',
           currentFacets: '='
+        },
+        link: function(scope) {
+          scope.facetConfig = [];
+          gnFacetConfigService.loadConfig(scope.summaryType).then(function(data) {
+            scope.facetConfig = data;
+          });
         }
       };
     }]);

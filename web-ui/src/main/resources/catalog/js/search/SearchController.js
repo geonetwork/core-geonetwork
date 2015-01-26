@@ -34,7 +34,7 @@
       };
 
       /** Facets configuration */
-      $scope.facetsConfig = gnSearchSettings.facetsConfig;
+      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
 
       /* Pagination configuration */
       $scope.paginationInfo = gnSearchSettings.paginationInfo;

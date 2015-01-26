@@ -91,28 +91,7 @@
       });
 
       /** Facets configuration */
-      searchSettings.facetsConfig = [{
-        key: 'topicCat',
-        value: 'topicCats'
-      },{
-        key: 'spatialRepresentationType',
-        value: 'spatialRepresentationTypes'
-      },{
-        key: 'keyword',
-        value: 'keywords'
-      },{
-        key: 'denominator',
-        value: 'denominators'
-      },{
-        key: 'serviceType',
-        value: 'serviceTypes'
-      },{
-        key: 'type',
-        value: 'types'
-      },{
-        key: 'orgName',
-        value: 'orgNames'
-      }];
+      searchSettings.facetsSummaryType = 'hits';
 
 
 

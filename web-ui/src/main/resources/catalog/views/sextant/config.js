@@ -125,22 +125,7 @@
         }};
 
       /** Facets configuration */
-      searchSettings.facetsConfig = [{
-        key: 'keyword',
-        value: 'keywords'
-      },{
-        key: 'orgName',
-        value: 'orgNames'
-      },{
-        key: 'denominator',
-        value: 'denominators'
-      },{
-        key: 'format',
-        value: 'formats'
-      },{
-        key: 'createDateYear',
-        value: 'createDateYears'
-      }];
+      searchSettings.facetsSummaryType = 'hits';
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{

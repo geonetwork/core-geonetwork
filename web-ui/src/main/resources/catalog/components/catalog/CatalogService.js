@@ -280,8 +280,8 @@
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
-    suggest: 'suggest'
-
+    suggest: 'suggest',
+    facetConfig: 'search/facet/config'
   });
 
   /**

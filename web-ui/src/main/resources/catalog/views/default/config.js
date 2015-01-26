@@ -82,37 +82,7 @@
 
 
           /** Facets configuration */
-          searchSettings.facetsConfig = [{
-            key: 'type',
-            value: 'types'
-          }, {
-            key: 'keyword',
-            value: 'keywords'
-          }, {
-            key: 'category',
-            value: 'categories'
-          }, {
-            key: 'orgName',
-            value: 'orgNames'
-          }, {
-            key: 'format',
-            value: 'formats'
-          }, {
-            key: 'spatialRepresentationType',
-            value: 'spatialRepresentationTypes'
-          }, {
-            key: 'denominator',
-            value: 'denominators'
-          }, {
-            key: 'createDateYear',
-            value: 'createDateYears'
-          }, {
-            key: 'metadataPOC',
-            value: 'metadataPOCs'
-          }, {
-            key: 'serviceType',
-            value: 'serviceTypes'
-          }];
+          searchSettings.facetsSummaryType = 'hits';
 
           /*
              * Hits per page combo values configuration. The first one is the
