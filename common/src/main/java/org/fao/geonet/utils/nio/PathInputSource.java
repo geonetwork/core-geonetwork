@@ -1,9 +1,8 @@
-package org.fao.geonet.utils;
+package org.fao.geonet.utils.nio;
 
 import org.fao.geonet.Constants;
 import org.xml.sax.InputSource;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -15,10 +14,10 @@ import java.nio.file.Path;
  * @author Jesse on 1/20/2015.
  */
 public class PathInputSource extends InputSource {
-    private final Path path;
+    private final PathSourceMixin pathSourceMixin;
 
     public PathInputSource(Path resource) {
-        this.path = resource;
+        this.pathSourceMixin = new PathSourceMixin(resource);
     }
 
     @Override
@@ -28,11 +27,7 @@ public class PathInputSource extends InputSource {
 
     @Override
     public InputStream getByteStream() {
-        try {
-            return IO.newInputStream(this.path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return this.pathSourceMixin.getInputStream();
     }
 
     @Override
@@ -42,16 +37,12 @@ public class PathInputSource extends InputSource {
 
     @Override
     public Reader getCharacterStream() {
-        try {
             final Charset cs;
             if (getEncoding() != null) {
                 cs = Charset.forName(getEncoding());
             } else {
                 cs = Constants.CHARSET;
             }
-            return IO.newBufferedReader(this.path, cs);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            return this.pathSourceMixin.getReader(cs);
     }
 }

@@ -32,6 +32,9 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
+import org.fao.geonet.utils.nio.NioPathHolder;
+import org.fao.geonet.utils.nio.PathStreamSource;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.DocType;
@@ -110,7 +113,7 @@ public final class Xml
 {
 
 	public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-    static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
+    public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
 
     //--------------------------------------------------------------------------
 

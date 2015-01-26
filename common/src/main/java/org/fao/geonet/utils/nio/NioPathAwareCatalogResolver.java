@@ -1,8 +1,11 @@
-package org.fao.geonet.utils;
+package org.fao.geonet.utils.nio;
 
 import com.google.common.collect.Maps;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.ResolverRewriteDirective;
+import org.fao.geonet.utils.Xml;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

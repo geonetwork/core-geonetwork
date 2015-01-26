@@ -1,4 +1,4 @@
-package org.fao.geonet.utils;
+package org.fao.geonet.utils.nio;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;

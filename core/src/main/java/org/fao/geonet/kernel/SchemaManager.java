@@ -48,7 +48,7 @@ import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.NioPathAwareCatalogResolver;
+import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;

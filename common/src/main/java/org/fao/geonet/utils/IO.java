@@ -24,7 +24,9 @@
 package org.fao.geonet.utils;
 
 import org.eclipse.core.runtime.Assert;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.utils.debug.DebuggingInputStream;
 import org.fao.geonet.utils.debug.DebuggingReader;
 
@@ -389,11 +391,19 @@ public final class IO {
     }
 
     public static InputStream newInputStream(Path file) throws IOException {
-        return new DebuggingInputStream(file.toString(), Files.newInputStream(file));
+        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
+            return new DebuggingInputStream(file.toString(), Files.newInputStream(file));
+        } else {
+            return Files.newInputStream(file);
+        }
     }
 
     public static BufferedReader newBufferedReader(Path path, Charset cs) throws IOException {
-        return new DebuggingReader(path.toString(), Files.newBufferedReader(path, cs));
+        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
+            return new DebuggingReader(path.toString(), Files.newBufferedReader(path, cs));
+        } else {
+            return Files.newBufferedReader(path, cs);
+        }
     }
 
     private static class CopyAllFiles extends SimpleFileVisitor<Path> {

@@ -1,4 +1,4 @@
-package org.fao.geonet.utils;
+package org.fao.geonet.utils.nio;
 
 import org.xml.sax.InputSource;
 
@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Holder the information required by {@link org.fao.geonet.utils.NioPathAwareCatalogResolver}
- * and {@link org.fao.geonet.utils.NioPathAwareEntityResolver} for resolving paths.
+ * Holder the information required by {@link NioPathAwareCatalogResolver}
+ * and {@link NioPathAwareEntityResolver} for resolving paths.
  *
  * @author Jesse on 11/4/2014.
  */
@@ -20,7 +20,7 @@ public class NioPathHolder {
     private static final ThreadLocal<Path> ACTUAL_RELATIVE_TO = new InheritableThreadLocal<>();
     private static final ThreadLocal<Path> SYS_ID_RELATIVE_TO = new InheritableThreadLocal<>();
 
-    static void setBase(Path base) {
+    public static void setBase(Path base) {
         if (base != null) {
             ACTUAL_RELATIVE_TO.set(base.getParent());
             SYS_ID_RELATIVE_TO.set(new File(".").getAbsoluteFile().toPath().getParent());

@@ -26,6 +26,7 @@ package org.fao.geonet.utils;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 
 import java.util.Vector;
 
