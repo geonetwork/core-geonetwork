@@ -11,6 +11,7 @@
       this.SEARCH = '/search';
       this.MAP = '/map';
       this.METADATA = '/metadata/';
+      this.HOME = '/home';
 
       this.absUrl = $location.absUrl;
 
@@ -24,6 +25,15 @@
 
       this.isMap = function() {
         return $location.path() == this.MAP;
+      };
+
+      this.isHome = function() {
+        return $location.path() == this.HOME;
+      };
+
+      this.isUndefined = function() {
+        return angular.isUndefined($location.path()) ||
+            $location.path() == '';
       };
 
       this.saveLastUrl = function() {
@@ -54,6 +64,11 @@
       };
       this.getParams = function() {
         return $location.search();
+      };
+
+      this.setHome = function() {
+        $location.path(this.HOME);
+        $location.search({});
       };
 
       this.initTabRouting = function(tabs) {
