@@ -29,18 +29,26 @@
       <button type="submit" class="btn btn-default" translate>Signin</button>
     </form>
 
-    <div ng-if="user['@authenticated'] == 'true'" class="navbar-text navbar-right">
+    <div ng-if="authenticated" class="navbar-text navbar-right">
       <span translate>Signed in as </span> {{user['username']}}
-      <a ng-show="authenticated" href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
+      <a href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
         <i class="fa fa-sign-out"></i>
       </a>
-      <a class="navbar-link" href="{{pages.admin}}"
-         data-ng-show="authenticated"
-         title="{{'adminConsole' | translate}}">
-          | <span translate="">adminConsole</span>
-      </a>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-link dropdown-toggle navbar-link" data-toggle="dropdown">
+          <span translate>adminConsole</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="{{pages.admin}}">
+            <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
+          <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
+            <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+          <li><a href="catalog.edit#/import" target="_blank">
+            <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+        </ul>
+      </div>
     </div>
-
   </div>
-
 </div>
