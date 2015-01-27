@@ -86,7 +86,7 @@
 
   <!-- Medsea-->
   <medsea>MedSea</medsea>
-  <medsea-metadata>Other information</medsea-metadata>
+  <medsea-metadata>Identification</medsea-metadata>
   <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
   <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
