@@ -112,6 +112,66 @@
                           ng-selected="'only_ui_docLocale' == s['#text']">{{'system/requestedLanguage/only-value9' | translate}}</option>
                 </select>
 
+                <select data-ng-switch-when="system/inspire/atom" class="form-control"
+                        name="{{s.formName}}" data-ng-model="atomFeedType">
+                  <option value="disabled"
+                          ng-selected="'disabled' == s['#text']">{{'system/inspire/atomDisabled' | translate}}</option>
+                  <option value="local" disabled="disabled"
+                          ng-selected="'local' == s['#text']">{{'system/inspire/atomLocal' | translate}}</option>
+                  <option value="remote"
+                          ng-selected="'remote' == s['#text']">{{'system/inspire/atomRemote' | translate}}</option>
+                </select>
+
+                <button class="btn btn-primary pull-right fa fa-refresh ng-scope"
+                        data-ng-switch-when="system/inspire/atom"
+                        data-ng-click="executeAtomHarvester()">
+                  {{'system/inspire/atomExecute' | translate}}
+                </button>
+
+                <div class="modal fade" id="atomHarvesterModal" tabindex="-1" role="dialog"
+                     aria-labelledby="{{'loadAtomHarvesterReport' | translate}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                          >&times;</button>
+                        <h4 class="modal-title" data-translate="">
+                          inspireatom-loadAtomHarvesterReport</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div data-ng-show="loadTplReport">
+                          <p data-ng-show="loadTplReport['error']">
+                            <strong>{{loadTplReport['error']}}</strong>
+                          </p>
+
+                          <p><span data-translate="">inspireatom-totalprocessed</span>  {{loadTplReport.length}}</p>
+
+                          <p data-translate="">inspireatom-harvestedfeeds</p>
+
+                          <ul class="icons-ul">
+                              <li data-ng-repeat="record in loadTplReport" ng-if="record['@status'] == 'ok'">
+                                {{record['@uuid']}} - {{record['@feed']}}</li>
+                          </ul>
+
+                          <p data-translate="">inspireatom-errors</p>
+
+                          <ul class="icons-ul">
+                            <li data-ng-repeat="record in loadTplReport" ng-if="record['@status'] == 'error'">
+                              {{record['@uuid']}} - {{record['@error']}}</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal">
+                          <i class="fa fa-ban-circle"></i>&nbsp;
+            <span data-translate=""
+              >close</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
                 <!-- Read only fields -->
                 <input data-ng-switch-when="system/platform/version" type="text" class="form-control"
                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>

@@ -583,6 +583,8 @@ public final class Geonet {
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
+    // key for inspire atom log
+    public static final String ATOM    = GEONETWORK + ".atom";
     public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
     public static final String CLASSIFIER = GEONETWORK + ".classifier";
     /**

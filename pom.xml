@@ -1141,6 +1141,7 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>wro4j</module>
+    <module>inspire-atom</module>
   </modules>
 
   <profiles>

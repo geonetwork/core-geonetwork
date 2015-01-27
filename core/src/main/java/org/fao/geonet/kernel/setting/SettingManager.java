@@ -72,6 +72,9 @@ public class SettingManager {
     public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
 
+    public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
+    public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
+    public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
 
     @Autowired
     private SettingRepository _repo;
