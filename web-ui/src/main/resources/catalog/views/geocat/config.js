@@ -93,8 +93,6 @@
       /** Facets configuration */
       searchSettings.facetsSummaryType = 'hits';
 
-
-
       /* Hits per page combo values configuration */
       searchSettings.hitsperpageValues = [3, 10, 20, 50, 100];
 
@@ -111,17 +109,8 @@
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       /* Custom templates for search result views */
-      searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/geocat.html',
-        tooltip: 'Geocat',
-        icon: 'fa-th-list'
-      }, {
-        tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/title.html',
-        tooltip: 'Simple',
-        icon: 'fa-list'
-      }];
+      searchSettings.resultTemplate = '../../catalog/components/search/' +
+          'resultsview/partials/viewtemplates/geocat.html';
 
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id='
