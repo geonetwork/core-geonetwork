@@ -68,11 +68,10 @@ public class LDAPUtils {
     /**
      * Save or update an LDAP user to the local GeoNetwork database.
      * 
-     * 
      * @param user
      * @throws Exception
      */
-    
+
     @Transactional
     public synchronized void saveUser(LDAPUser user,
             boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup)
