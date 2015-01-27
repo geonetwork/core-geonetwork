@@ -563,7 +563,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING,      rating,      true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder, true, false));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       true, false));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       false, true));
 
             // If the metadata has an atom document, index related information
             InspireAtomFeedRepository inspireAtomFeedRepository = _applicationContext.getBean(InspireAtomFeedRepository.class);
