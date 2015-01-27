@@ -475,8 +475,14 @@
                 'NVS.P02')]/gmd:keyword/*, ' - ')"/>
 
 
-    <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+   <!-- <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+    							gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/
+                 gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+-->
+		<xsl:variable name="edmoProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+									gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']/
+                 gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+
 
     <xsl:variable name="dataSetName" select="ancestor::gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
@@ -484,7 +490,7 @@
                   gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
 
     <xsl:copy>
-      <xsl:value-of select="concat($p02, ' - ', $dataProvider, ' - ', $dataSetName)"/>
+      <xsl:value-of select="concat($p02, ' - ', $edmoProvider, ' - ', $dataSetName)"/>
     </xsl:copy>
   </xsl:template>
 
