@@ -12,12 +12,15 @@
     function(gnHttp) {
 
       var loadConfig = function(summaryType) {
-        return gnHttp.callService("facetConfig").then(function(data) {
+        return gnHttp.callService("facetConfig", {}, {
+          cache: true
+        }).then(function(data) {
           if (data.status != 200) {
             return;
           }
           if (!data.data.hasOwnProperty(summaryType)) {
-            alert("ERROR: The config-summary.xml file does not declare a summary type of: '" + summaryType + "'");
+            alert("ERROR: The config-summary.xml file does " +
+                "not declare a summary type of: '" + summaryType + "'");
           }
           return data.data[summaryType];
         })

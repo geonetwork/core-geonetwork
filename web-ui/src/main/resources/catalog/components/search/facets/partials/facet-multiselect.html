@@ -1,15 +1,13 @@
 <div class="gn-facet" data-ng-show="facetObj">
-  <h4>{{field | translate}}</h4>
+  <h5 gn-collapse="" >{{facetConfig.label | translate}}</h5>
   <div class="list-group">
 
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj"
-            data-ng-click="updateSearch(f['@name'])">
+            data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
       <label>
         <input data-ng-checked="isInSearch(f['@name'])" type="checkbox">
-        <a data-ng-click="add(f)" href="" >
-          <span class="badge">{{f['@count']}}</span>
-          <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
-        </a>
+        <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
+        <span class="count">({{f['@count']}})</span>
       </label>
     </div>
   </div>

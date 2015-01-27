@@ -33,6 +33,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +64,7 @@ class WebDavRetriever implements RemoteRetriever {
     public List<RemoteFile> retrieve() throws Exception {
 
         final HttpClientBuilder clientBuilder = context.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
-        Lib.net.setupProxy(context, clientBuilder);
+        Lib.net.setupProxy(context, clientBuilder, new URL(params.url).getHost());
 
         if (params.useAccount) {
             this.sardine = new SardineImpl(clientBuilder, params.username, params.password);

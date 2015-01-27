@@ -845,12 +845,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		try {
 		    // Connect
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+            final String requestHost = req.getURI().getHost();
             final ClientHttpResponse httpResponse = requestFactory.execute(req, new Function<HttpClientBuilder, Void>() {
                 @Nullable
                 @Override
                 public Void apply(@Nullable HttpClientBuilder input) {
                     // set proxy from settings manager
-                    Lib.net.setupProxy(context, input);
+                    Lib.net.setupProxy(context, input, requestHost);
                     return null;  //To change body of implemented methods use File | Settings | File Templates.
                 }
             });

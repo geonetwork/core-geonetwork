@@ -88,13 +88,15 @@
       };
 
       var viewerMap = new ol.Map({
-        view: new ol.View(mapsConfig)
+        view: new ol.View(mapsConfig),
+        controls: []
       });
 
       var searchMap = new ol.Map({
         layers: [
           gnMap.createLayerForType('wmts')
         ],
+        controls: [],
         view: new ol.View({
           center: mapsConfig.center,
           zoom: 0
@@ -128,16 +130,8 @@
       searchSettings.facetsSummaryType = 'hits';
 
       /* Custom templates for search result views */
-      searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/views/sextant/templates/mdview/list.html',
-        tooltip: 'Simple',
-        icon: 'fa-th-list'
-      }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/' +
-            'viewtemplates/grid.html',
-        tooltip: 'Grid',
-        icon: 'fa-th'
-      }];
+      searchSettings.resultTemplate = '../../catalog/components/search/' +
+          'resultsview/partials/viewtemplates/grid.html';
 
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',

@@ -50,7 +50,7 @@
   "homeTitle": "Rechercher données, cartes et géoservices",
   "download": "Télécharger",
   "visualize": "Visualiser",
-  "welcomeTitle": "Accèder aux informations de {{orgName}}",
+  "welcomeTitle": "Accéder aux informations de {{orgName}}",
   "welcomeText": "Vous trouverez ici des données, des services et des cartes et plus encore ...",
   "getstarted": "",
   "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",

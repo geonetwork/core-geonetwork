@@ -92,17 +92,17 @@ public class Aligner extends BaseAligner
 
 		// Use the preferred HTTP method and check one exist.
 		if (oper.getGetUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
-			request.setUrl(oper.getGetUrl());
+			request.setUrl(context, oper.getGetUrl());
 			request.setMethod(GET);
 		} else if (oper.getPostUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
-			request.setUrl(oper.getPostUrl());
+			request.setUrl(context, oper.getPostUrl());
 			request.setMethod(POST);
 		} else {
 			if (oper.getGetUrl() != null) {
-				request.setUrl(oper.getGetUrl());
+				request.setUrl(context, oper.getGetUrl());
 				request.setMethod(GET);
 			} else if (oper.getPostUrl() != null) {
-				request.setUrl(oper.getPostUrl());
+				request.setUrl(context, oper.getPostUrl());
 				request.setMethod(POST);
 			} else {
 				throw new OperationAbortedEx("No GET or POST DCP available in this service.");

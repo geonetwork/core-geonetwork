@@ -124,17 +124,53 @@
     margin-left: 0;
     margin-right: 10px;
   }
+  .gn-search-input input[type='text'] {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
   [gn-map-field] {
     width: ~"calc(100% + 30px)";
     margin-left: -15px;
+    margin-top: 25px;
     border-radius: 0;
     background: #fff;
     border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     .btn {
       .btn-sm;
       opacity: .80;
     }
   }
+  [gn-facet-multiselect] {
+    &>div {
+      overflow: auto;
+      max-height: 140px;
+    }
+    .list-group-item {
+      padding: 0.15em;
+      min-height:20px;
+      color: @brand-primary;
+      border: none;
+      &:hover {
+        cursor: pointer;
+        color: white;
+        background-color: @brand-primary;
+      }
+      &.selected {
+        background-color: #55af32;
+        color: white;
+        &:hover {
+          background-color: #e52923;
+        }
+      }
+
+    }
+
+  }
+
   .inner-spinner {
     position: absolute;
     top: 1.3em;
@@ -337,7 +373,49 @@ ul.gn-resultview {
       background: none;
     }
   }
+}
 
+/* Pagination */
+.gn-pager {
+  /* Hide the first/last page button */
+  .gn-pager-start {
+    li:nth-child(1) {
+      display: none;
+    }
+  }
+  .gn-pager-end {
+    li:nth-child(2) {
+      display: none;
+    }
+  }
+
+  ul.pager  > li > a {
+    font-size: 100%;
+    display: inline;
+    background-color: transparent;
+    border: none;
+  }
+
+  /* Button on the right, current page info on the left */
+  .btn-group {
+    float: left;
+
+    /* Drop down to select hits is a simple link */
+    button {
+      .btn-link();
+    }
+
+    /* Inline hits options */
+    li {
+      a {
+        padding: 2px 10px;
+      }
+      display: inline-block;
+    }
+    li.dropdown-header {
+      display: block;
+    }
+  }
 }
 
 [gn-main-viewer] {

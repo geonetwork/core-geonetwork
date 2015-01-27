@@ -315,7 +315,7 @@ class Harvester implements IHarvester<HarvestResult>
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
-        request.setUrl(url);
+        request.setUrl(context, url);
         request.setServerVersion(server.getPreferredServerVersion());
         String preferredOutputSchema = oper.getPreferredOutputSchema();
         if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {

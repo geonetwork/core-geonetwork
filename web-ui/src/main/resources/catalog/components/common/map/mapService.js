@@ -490,7 +490,7 @@
                   source: new ol.source.WMTS({
                     url: 'http://visi-sextant.ifremer.fr:8080/' +
                         'geowebcache/service/wmts?',
-                    layer: 'Sextant',
+                    layer: 'sextant',
                     matrixSet: 'EPSG:3857',
                     format: 'image/png',
                     projection: projection,

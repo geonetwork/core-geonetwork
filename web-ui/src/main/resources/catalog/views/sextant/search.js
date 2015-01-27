@@ -46,19 +46,18 @@
       var localStorage = $window.localStorage || {};
 
       // Manage routing
+      if (!$location.path()) {
+        $location.path('/search');
+      }
       gnSearchLocation.initTabRouting($scope.mainTabs);
 
-      // Manage the collapsed search and facet panels
+      // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) :
-          { search: true,
-            facet: false };
+          { search: true};
 
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
-        if (!$scope.collapsed.search) {
-          $scope.collapsed.facet = true;
-        }
         $timeout(function() {
           gnSearchSettings.searchMap.updateSize();
         }, 300);
@@ -68,7 +67,6 @@
         localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
       };
       $scope.$watch('collapsed.search', storeCollapsed);
-      $scope.$watch('collapsed.facet', storeCollapsed);
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);

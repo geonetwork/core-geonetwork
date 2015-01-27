@@ -83,31 +83,44 @@
 
   module.directive('gnFacetMultiselect', [
     'gnFacetService',
-    function(gnFacetService) {
+    'gnFacetConfigService',
+    function(gnFacetService, gnFacetConfigService) {
+
 
       return {
         restrict: 'A',
         replace: true,
-        require: '^ngSearchForm',
         templateUrl: '../../catalog/components/search/facets/' +
             'partials/facet-multiselect.html',
         scope: true,
-        link: function(scope, element, attrs, controller) {
+        link: function(scope, element, attrs) {
 
           var delimiter = ' or ';
           var oldParams;
 
-          scope.field = attrs.gnFacetMultiselect;
-          scope.index = scope.field.substring(0, scope.field.length - 1);
+          scope.name = attrs.gnFacetMultiselect;
 
-          scope.$watch('searchResults.facet', function(v) {
-            if (oldParams && oldParams != scope.searchObj.params[scope.index]) {
+          gnFacetConfigService.loadConfig('hits').then(function(data) {
+            if(angular.isArray(data)) {
+              for(var i = 0;i<data.length;i++) {
+                if (data[i].name == scope.name) {
+                  scope.facetConfig = data[i];
+                  break;
+                }
+              }
             }
-            else if (v) {
-              oldParams = scope.searchObj.params[scope.index];
-              scope.facetObj = v[scope.field];
-            }
+          }).then(function() {
+            scope.$watch('searchResults.facet', function(v) {
+              if (oldParams &&
+                  oldParams != scope.searchObj.params[scope.facetConfig.key]) {
+              }
+              else if (v) {
+                oldParams = scope.searchObj.params[scope.facetConfig.key];
+                scope.facetObj = v[scope.facetConfig.label];
+              }
+            });
           });
+
 
           /**
            * Check if the facet item is checked or not, depending if the
@@ -116,42 +129,37 @@
            * @return {*|boolean}
            */
           scope.isInSearch = function(value) {
-            return scope.searchObj.params[scope.index] &&
-                scope.searchObj.params[scope.index].split(delimiter).
+            return scope.searchObj.params[scope.facetConfig.key] &&
+                scope.searchObj.params[scope.facetConfig.key].split(delimiter).
                     indexOf(value) >= 0;
           };
 
           //TODO improve performance here, maybe to complex $watchers
           // add subdirective to watch a boolean and make only one
           // watcher on searchObj.params
-          scope.updateSearch = function(value) {
-            var search = scope.searchObj.params[scope.index];
+          scope.updateSearch = function(value, e) {
+            var search = scope.searchObj.params[scope.facetConfig.key];
             if (angular.isUndefined(search)) {
-              scope.searchObj.params[scope.index] = value;
+              scope.searchObj.params[scope.facetConfig.key] = value;
             }
             else {
               if (search == '') {
-                scope.searchObj.params[scope.index] = value;
+                scope.searchObj.params[scope.facetConfig.key] = value;
               }
               else {
                 var s = search.split(delimiter);
                 var idx = s.indexOf(value);
                 if (idx < 0) {
-                  scope.searchObj.params[scope.index] += delimiter + value;
+                  scope.searchObj.params[scope.facetConfig.key] += delimiter + value;
                 }
                 else {
                   s.splice(idx, 1);
-                  scope.searchObj.params[scope.index] = s.join(delimiter);
+                  scope.searchObj.params[scope.facetConfig.key] = s.join(delimiter);
                 }
               }
             }
             scope.$emit('resetSearch', scope.searchObj.params);
-          };
-
-          scope.remove = function(f) {
-            gnFacetService.remove(scope.currentFacets, f);
-            controller.resetPagination();
-            controller.triggerSearch();
+            e.preventDefault();
           };
         }
       };
