@@ -225,7 +225,7 @@ public class Update {
                     "You don't have rights to do this");
         }
 
-        return Jeeves.Elem.RESPONSE;
+        return "\"" + Jeeves.Elem.RESPONSE + "\"";
     }
 
     private User getUser(final UserRepository repo, final String operation,

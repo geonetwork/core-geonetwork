@@ -58,67 +58,74 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ReadWriteController
 public class Remove {
 
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private DataManager dataMan;
 
-	@Autowired
-	private UserGroupRepository userGroupRepository;
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired 
-	private ApplicationContext applicationContext;
-	@Autowired
-	private DataManager dataMan;
-	
-	@RequestMapping(value = "/{lang}/admin.user.remove", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody String run(
-			HttpSession session,
-			@RequestParam(value=Params.ID, required=false) String id) throws Exception
-	{
-
+    @RequestMapping(value = "/{lang}/admin.user.remove", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody String run(HttpSession session,
+            @RequestParam(value = Params.ID, required = false) String id)
+            throws Exception {
 
         Profile myProfile = Profile.Guest;
-        String      myUserId  = null;
-		Object tmp = session.getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
-		if (tmp instanceof UserSession) {
-			UserSession usrSess = (UserSession) tmp;
-	        myProfile = usrSess.getProfile();
-	        myUserId  = usrSess.getUserId();
-		}
+        String myUserId = null;
+        Object tmp = session
+                .getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
+        if (tmp instanceof UserSession) {
+            UserSession usrSess = (UserSession) tmp;
+            myProfile = usrSess.getProfile();
+            myUserId = usrSess.getUserId();
+        }
 
-		if (myUserId.equals(id)) {
-			throw new IllegalArgumentException("You cannot delete yourself from the user database");
-		}
-		
+        if (myUserId.equals(id)) {
+            throw new IllegalArgumentException(
+                    "You cannot delete yourself from the user database");
+        }
+
         int iId = Integer.parseInt(id);
 
-		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin)  {
+        if (myProfile == Profile.Administrator
+                || myProfile == Profile.UserAdmin) {
 
-			if (myProfile ==  Profile.UserAdmin) {
+            if (myProfile == Profile.UserAdmin) {
                 final Integer iMyUserId = Integer.valueOf(myUserId);
-                final List<Integer> groupIds = userGroupRepository.findGroupIds(where(hasUserId(iMyUserId)).or(hasUserId(iId)));
+                final List<Integer> groupIds = userGroupRepository
+                        .findGroupIds(where(hasUserId(iMyUserId)).or(
+                                hasUserId(iId)));
                 if (groupIds.isEmpty()) {
-				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
-				}
-			}
+                    throw new IllegalArgumentException(
+                            "You don't have rights to delete this user because the user is not part of your group");
+                }
+            }
 
-			// Before processing DELETE check that the user is not referenced 
-			// elsewhere in the GeoNetwork database - an exception is thrown if
-			// this is the case
-			if (dataMan.isUserMetadataOwner(iId)) {
-				throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
-			}
+            // Before processing DELETE check that the user is not referenced
+            // elsewhere in the GeoNetwork database - an exception is thrown if
+            // this is the case
+            if (dataMan.isUserMetadataOwner(iId)) {
+                throw new IllegalArgumentException(
+                        "Cannot delete a user that is also a metadata owner");
+            }
 
-			if (dataMan.isUserMetadataStatus(iId)) {
-				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
-			}
+            if (dataMan.isUserMetadataStatus(iId)) {
+                throw new IllegalArgumentException(
+                        "Cannot delete a user that has set a metadata status");
+            }
 
-            userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(iId));
+            userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
+                    Arrays.asList(iId));
             userRepository.delete(iId);
-            
-		} else {
-			throw new IllegalArgumentException("You don't have rights to delete this user");
-		}
 
-		return Jeeves.Elem.RESPONSE;
-	}
+        } else {
+            throw new IllegalArgumentException(
+                    "You don't have rights to delete this user");
+        }
+
+        return "\"" + Jeeves.Elem.RESPONSE + "\"";
+    }
 }
