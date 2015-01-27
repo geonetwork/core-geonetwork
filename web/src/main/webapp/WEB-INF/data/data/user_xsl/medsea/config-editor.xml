@@ -76,7 +76,7 @@
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
+    <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
               data-template-type="contact"
@@ -1469,10 +1469,6 @@
       </thesaurusList>
       <tab id="characteristics" mode="flat" default="true">
         <section>
-          <field
-              name="uniqueIdentifier"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
 
           <!-- MedSea env matrix
                   TODO: Can't define to use Anchor mode by default
@@ -1486,10 +1482,11 @@
                 'Environmental matrix')]"/>
 
           <field
+              name="p03"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'parameter.NVS.P03')]"/>
+                'NVS.P03')]"/>
 
           <field
                   name="sdn-parameter-discovery"
@@ -1499,6 +1496,7 @@
                 'NVS.P02')]"/>
 
           <field
+                  name="p01"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
@@ -1559,9 +1557,7 @@
                 gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue = 'project']/
                 gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
 -->
-          <field
-                  name="programName"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+
          <!--
 
          Do not store EDMERP in keyword anymore. Use a contact with a specific role.
@@ -1621,48 +1617,10 @@
 
           <text ref="edmerp-help"/>
 
+          <field
+                  name="programName"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
 
-          <field name="dataProvider" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']">
-            <template>
-              <values readonlyIf="count(@xlink:href) > 0">
-                <key label="organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-              </values>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gn:copy select="gmd:individualName"/>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gn:copy select="gmd:positionName"/>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gn:copy select="gmd:phone"/>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gn:copy select="gmd:deliveryPoint"/>
-                            <gn:copy select="gmd:city"/>
-                            <gn:copy select="gmd:administrativeArea"/>
-                            <gn:copy select="gmd:postalCode"/>
-                            <gn:copy select="gmd:country"/>
-                            <gn:copy select="gmd:electronicMailAddress"/>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                        <gn:copy select="gmd:onlineResource"/>
-                        <gn:copy select="gmd:hoursOfService"/>
-                        <gn:copy select="gmd:contactInstructions"/>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gn:copy select="gmd:role"/>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
-          </field>
-          <text ref="dataProvider-help"/>
 
           <!--<field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
@@ -1710,10 +1668,52 @@
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"/>
           </action>
 
+
+
+          <field name="dataProvider" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gn:copy select="gmd:electronicMailAddress"/>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+          <text ref="dataProvider-help"/>
+
+
           <text ref="dataCollection-help"/>
-
-
-
 
           <field
               name="medseaTitle"
@@ -1960,11 +1960,27 @@
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
+          <field
+                  name="uniqueIdentifier"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+
           <field name="additionalInfo"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
+
+
+
+          <action type="add" name="metadataPointOfContact"
+                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
+
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{{role}}"/>
+          </action>
 
           <field name="metadataPointOfContact"
                  templateModeOnly="true"
@@ -2023,14 +2039,6 @@
             </template>
           </field>
 
-          <action type="add" name="metadataPointOfContact"
-                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
-
-          <directiveAttributes
-                  data-template-add-action="false"
-                  data-template-type="contact"
-                  data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{{role}}"/>
-          </action>
 
           <!-- MedSea challenges
           TODO: Can't define to use Anchor mode by default
