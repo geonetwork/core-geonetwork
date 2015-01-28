@@ -100,11 +100,13 @@
   <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
-  <environmental-matrix>Environmental matrix*</environmental-matrix>
+  <useByChallenges>Used by challenges</useByChallenges>
+  <environmental-matrix>Environmental matrix</environmental-matrix>
   <sdn-parameter-discovery>Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
   <p03>Agreed Parameter Groups (P03)</p03>
   <p01>Parameter Usage Vocabulary (P01)</p01>
-  <level-of-characteristics>Level of characteristics</level-of-characteristics>
+  <production-mode>Production mode</production-mode>
+  <level-of-characteristics>Processing level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of production*</providerSpecification>
   <processStepReference>Production specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>

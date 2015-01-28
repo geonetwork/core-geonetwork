@@ -1524,7 +1524,7 @@
                 'Processing level of characteristics')]"/>
 
           <field
-                  name="environmental-matrix"
+                  name="production-mode"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
@@ -1764,7 +1764,7 @@
                 gmd:authority//gmd:CI_Citation/gmd:title"/>
 
 
-          <field
+          <field name="useByChallenges"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
@@ -1875,7 +1875,8 @@
         <section>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+          <field name="dataDelivery"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Data delivery mechanism')]"/>
@@ -1960,10 +1961,10 @@
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
-          <field
+          <!--<field
                   name="uniqueIdentifier"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>-->
 
           <field name="additionalInfo"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
