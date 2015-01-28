@@ -1575,7 +1575,7 @@
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
-              <values readonlyIf="count(@xlink:href) > 0">
+              <values readonlyIf="true()">
                 <key label="projectTitle"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="acronym"
@@ -1633,7 +1633,7 @@
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
-              <values readonlyIf="count(@xlink:href) > 0">
+              <values readonlyIf="true()">
                 <key label="organisationName"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="edmoId"
