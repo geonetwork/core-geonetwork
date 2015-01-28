@@ -418,7 +418,7 @@
 
 
   <!-- MedSea specific templates -->
-  <xsl:template
+  <!--<xsl:template
           match="gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
@@ -433,10 +433,10 @@
                           gmd:distributionInfo/gmd:MD_Distribution/
                           gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
                           gmd:onLine[2]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
-    <!-- Compute resource identifier based on the following rules:
+    &lt;!&ndash; Compute resource identifier based on the following rules:
     if online resource available, concatenate the MEDSEA_<Online resource name>
     if not the identifier starts with MEDSEA_<whatever>
-    -->
+    &ndash;&gt;
     <xsl:copy>
       <xsl:choose>
         <xsl:when test="$hasLinkage">
@@ -456,16 +456,20 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:copy>
-  </xsl:template>
+  </xsl:template>-->
 
 
 
-  <!-- Compute title P02 - Dataprovider - Datasetname -->
+  <!-- Compute title and identifier as "P02 - P01 - Dataprovider - Datasetname" -->
   <xsl:template
           match="gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
+                  gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
+                  gmd:code/gco:CharacterString"
           priority="200">
 
     <!-- String join in case of multiple but this should not happen -->
