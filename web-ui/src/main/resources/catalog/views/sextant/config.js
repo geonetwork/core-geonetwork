@@ -130,8 +130,8 @@
       searchSettings.facetsSummaryType = 'hits';
 
       /* Custom templates for search result views */
-      searchSettings.resultTemplate = '../../catalog/components/search/' +
-          'resultsview/partials/viewtemplates/grid.html';
+      searchSettings.resultTemplate = '../../catalog/views/sextant/' +
+          'templates/mdview/grid.html';
 
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',
