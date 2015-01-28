@@ -149,9 +149,8 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	public void doHarvest(Logger log) throws Exception
-	{
-		Harvester h = new Harvester(log, context, params);
+	public void doHarvest(Logger log) throws Exception {
+		Harvester h = new Harvester(cancelMonitor, log, context, params);
 		result = h.harvest(log);
 	}
 

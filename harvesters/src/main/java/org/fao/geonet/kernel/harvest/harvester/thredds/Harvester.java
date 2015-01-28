@@ -94,6 +94,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLHandshakeException;
 
 //=============================================================================
@@ -181,14 +182,17 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	/** 
 	 * Constructor
 	 *  
-	 * @param log		
-	 * @param context		Jeeves context
-	 * @param params	Information about harvesting configuration for the node
-	 * 
-	 * @return null
+	 *
+     * @param cancelMonitor
+     * @param log
+     * @param context        Jeeves context
+     * @param params    Information about harvesting configuration for the node
+     *
+     * @return null
      **/
 	
-	public Harvester(Logger log, ServiceContext context, ThreddsParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, ThreddsParams params) {
+        super(cancelMonitor);
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -206,12 +210,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		
 		//--- Create fragment harvester for atomic datasets if required
 		if (params.createAtomicDatasetMd && params.atomicMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			atomicFragmentHarvester = new FragmentHarvester(log, context, getAtomicFragmentParams());
+			atomicFragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getAtomicFragmentParams());
 		}
 		
 		//--- Create fragment harvester for collection datasets if required
 		if (params.createCollectionDatasetMd && params.collectionMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			collectionFragmentHarvester = new FragmentHarvester(log, context, getCollectionFragmentParams());
+			collectionFragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getCollectionFragmentParams());
 		}
 	}
 
@@ -226,59 +230,67 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
      **/
 	
 	public HarvestResult harvest(Logger log) throws Exception {
-		this.log = log;
-		
-		Element xml = null;
-		log.info("Retrieving remote metadata information for : " + params.name);
-        
-		//--- Get uuid's and change dates of metadata records previously 
-		//--- harvested by this harvester grouping by harvest uri
-		localUris = new UriMapper(context, params.uuid);
+        this.log = log;
 
-		//--- Try to load thredds catalog document
-		String url = params.url;
-		try {
-			XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
-			req.setUrl(new URL(url));
-			req.setMethod(XmlRequest.Method.GET);
-			Lib.net.setupProxy(context, req);
+        Element xml = null;
+        log.info("Retrieving remote metadata information for : " + params.name);
 
-			xml = req.execute();
-		} catch (SSLHandshakeException e) {
-			throw new BadServerCertificateEx(
-				"Most likely cause: The thredds catalog "+url+" does not have a "+
-				"valid certificate. If you feel this is because the server may be "+
-				"using a test certificate rather than a certificate from a well "+
-				"known certification authority, then you can add this certificate "+
-				"to the GeoNetwork keystore using bin/installCert");
-		}
-		
-	    //--- Traverse catalog to create services and dataset metadata as required
-	    harvestCatalog(xml);
-	        
-		//--- Remove previously harvested metadata for uris that no longer exist on the remote site
-		for (String localUri : localUris.getUris()) {
-			if (!harvestUris.contains(localUri)) {
-				for (RecordInfo record: localUris.getRecords(localUri)) {
-                    if(log.isDebugEnabled()) log.debug ("  - Removing deleted metadata with id: " + record.id);
-					dataMan.deleteMetadata (context, record.id);
-		
-					if (record.isTemplate.equals("s")) {
-						//--- Uncache xlinks if a subtemplate
-						Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + record.uuid);
-						result.subtemplatesRemoved++;
-					} else {
-						result.locallyRemoved++;
-					}
-				}
-			}
-		}
+        //--- Get uuid's and change dates of metadata records previously
+        //--- harvested by this harvester grouping by harvest uri
+        localUris = new UriMapper(context, params.uuid);
+
+        //--- Try to load thredds catalog document
+        String url = params.url;
+        try {
+            XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
+            req.setUrl(new URL(url));
+            req.setMethod(XmlRequest.Method.GET);
+            Lib.net.setupProxy(context, req);
+
+            xml = req.execute();
+        } catch (SSLHandshakeException e) {
+            throw new BadServerCertificateEx(
+                    "Most likely cause: The thredds catalog " + url + " does not have a " +
+                    "valid certificate. If you feel this is because the server may be " +
+                    "using a test certificate rather than a certificate from a well " +
+                    "known certification authority, then you can add this certificate " +
+                    "to the GeoNetwork keystore using bin/installCert");
+        }
+
+        //--- Traverse catalog to create services and dataset metadata as required
+        harvestCatalog(xml);
+
+        //--- Remove previously harvested metadata for uris that no longer exist on the remote site
+        for (String localUri : localUris.getUris()) {
+            if (cancelMonitor.get()) {
+                return this.result;
+            }
+
+            if (!harvestUris.contains(localUri)) {
+                for (RecordInfo record : localUris.getRecords(localUri)) {
+                    if (cancelMonitor.get()) {
+                        return this.result;
+                    }
+
+                    if (log.isDebugEnabled()) log.debug("  - Removing deleted metadata with id: " + record.id);
+                    dataMan.deleteMetadata(context, record.id);
+
+                    if (record.isTemplate.equals("s")) {
+                        //--- Uncache xlinks if a subtemplate
+                        Processor.uncacheXLinkUri(metadataGetService + "?uuid=" + record.uuid);
+                        result.subtemplatesRemoved++;
+                    } else {
+                        result.locallyRemoved++;
+                    }
+                }
+            }
+        }
 
         dataMan.flush();
 
         result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
-		return result;
-	}
+        return result;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -339,7 +351,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		log.info("Crawling the datasets in the catalog....");
 		List<InvDataset> dsets = catalog.getDatasets();
 		for (InvDataset ds : dsets) {
-			crawlDatasets(ds);
+            if (cancelMonitor.get()) {
+                return ;
+            }
+
+            crawlDatasets(ds);
 		}
 
 		//--- show how many datasets have been processed

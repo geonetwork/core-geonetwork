@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +27,7 @@ public class WebDavRetrieverTest {
         resources.add(baseResource);
         resources.add(otherResource);
 
-        final String baseURL = WebDavRetriever.calculateBaseURL("http://geonetwork.net/webdav/", resources);
+        final String baseURL = WebDavRetriever.calculateBaseURL(new AtomicBoolean(), "http://geonetwork.net/webdav/", resources);
 
         assertEquals("http://geonetwork.net", baseURL);
         assertEquals(1, resources.size());

@@ -51,6 +51,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -62,7 +63,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
+	public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
+        super(cancelMonitor);
 		this.log        = log;
 		this.context    = sc;
 		this.params     = params;
@@ -100,7 +102,11 @@ public class Aligner extends BaseAligner
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs()) {
-			if (!exists(records, uuid)) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            if (!exists(records, uuid)) {
 				String id = localUuids.getID(uuid);
 
 				if(log.isDebugEnabled())
@@ -117,7 +123,11 @@ public class Aligner extends BaseAligner
 		//--- insert/update new metadata
 
 		for (RecordInfo ri : records) {
-		    try {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            try {
     			String id = dataMan.getMetadataId(ri.uuid);
     
     			if (id == null)	addMetadata(ri);

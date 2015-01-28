@@ -82,10 +82,16 @@
 
       <div class="btn-toolbar">
         <button type="button" class="btn btn-primary pull-right fa fa-play"
-                data-ng-hide="harvesterSelected['@id'] == ''"
-                data-ng-click="runHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true">
+                data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
+                data-ng-click="runHarvester(harvesterSelected['@id'])">
           <span data-translate="">runHarvester</span>
+        </button>
+        <button type="button" class="btn btn-primary pull-right fa fa-stop"
+                data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === false"
+                data-ng-click="stopHarvester(harvesterSelected['@id'])"
+                data-ng-disabled="stopping">
+            <span data-translate="">stop</span>
+            <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
         </button>
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-click="saveHarvester('#gn-harvester-edit')">

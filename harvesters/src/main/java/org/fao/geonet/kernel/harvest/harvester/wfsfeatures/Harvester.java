@@ -64,6 +64,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.xml.stream.FactoryConfigurationError;
 
 //=============================================================================
@@ -122,19 +123,23 @@ import javax.xml.stream.FactoryConfigurationError;
  */
 class Harvester implements IHarvester<HarvestResult>
 {
-	
-	
-	//---------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+
+
+    //---------------------------------------------------------------------------
 	/** 
      * Constructor
      *  
-     * @param log		
-     * @param context									Jeeves context
-     * @param params	harvesting configuration for the node
-     * 
+     *
+     * @param cancelMonitor
+     * @param log
+     * @param context                                    Jeeves context
+     * @param params    harvesting configuration for the node
+     *
      * @return null
      */
-	public Harvester(Logger log, ServiceContext context, WfsFeaturesParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -213,7 +218,7 @@ class Harvester implements IHarvester<HarvestResult>
 		}
 
 		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
-		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, getFragmentHarvesterParams());
+		FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams());
 
 		if (params.streamFeatures) {
 			harvestFeatures(wfsQuery, fragmentHarvester);
@@ -275,6 +280,11 @@ class Harvester implements IHarvester<HarvestResult>
         try (InputStream fin = IO.newInputStream(tempFile)) {
             reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
         }
+
+        if (cancelMonitor.get()) {
+            return;
+        }
+
         if (!reader.hasNext()) {
             namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
             try (InputStream fin = IO.newInputStream(tempFile)) {
@@ -284,6 +294,10 @@ class Harvester implements IHarvester<HarvestResult>
         }
 
         while (reader.hasNext()) {
+            if (cancelMonitor.get()) {
+                return;
+            }
+
             stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
             Element records = Xml.transform(reader.next(), stylesheetDirectory.resolve(params.stylesheet), ssParams);
 
@@ -297,21 +311,21 @@ class Harvester implements IHarvester<HarvestResult>
 	
 	private void harvest(Element xml, FragmentHarvester fragmentHarvester)
             throws Exception {
-		
-	    HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
 
-			deleteOrphanedMetadata(fragmentResult.updatedMetadata);
-	    	
-	    result.fragmentsReturned += fragmentResult.fragmentsReturned;
-	    result.fragmentsUnknownSchema += fragmentResult.fragmentsUnknownSchema;
-	    result.subtemplatesAdded += fragmentResult.fragmentsAdded;
-	    result.fragmentsMatched += fragmentResult.fragmentsMatched;
-	    result.recordsBuilt += fragmentResult.recordsBuilt;
-	    result.recordsUpdated += fragmentResult.recordsUpdated;
-	    result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
+        HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
 
-	    result.totalMetadata = result.subtemplatesAdded + result.addedMetadata;
-	    result.originalMetadata = result.fragmentsReturned;
+        deleteOrphanedMetadata(fragmentResult.updatedMetadata);
+
+        result.fragmentsReturned += fragmentResult.fragmentsReturned;
+        result.fragmentsUnknownSchema += fragmentResult.fragmentsUnknownSchema;
+        result.subtemplatesAdded += fragmentResult.fragmentsAdded;
+        result.fragmentsMatched += fragmentResult.fragmentsMatched;
+        result.recordsBuilt += fragmentResult.recordsBuilt;
+        result.recordsUpdated += fragmentResult.recordsUpdated;
+        result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
+
+        result.totalMetadata = result.subtemplatesAdded + result.addedMetadata;
+        result.originalMetadata = result.fragmentsReturned;
     }
 
 	/** 

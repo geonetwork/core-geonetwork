@@ -52,24 +52,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, GeonetParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -133,6 +137,10 @@ class Harvester implements IHarvester<HarvestResult> {
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         for (Search s : params.getSearches()) {
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
             try {
                 records.addAll(search(req, s));
             } catch (Exception t) {
@@ -169,7 +177,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		//--- align local node
 
-		Aligner      aligner = new Aligner(log, context, req, params, remoteInfo);
+		Aligner      aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
 		HarvestResult result  = aligner.align(records, errors);
 
 		Map<String, String> sources = buildSources(remoteInfo);
@@ -200,6 +208,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		for (Object o : doSearch(request, s).getChildren("metadata"))
 		{
+
+            if (cancelMonitor.get()) {
+                return Collections.emptySet();
+            }
+
             try {
                 Element md = (Element) o;
                 Element info = md.getChild("info", Edit.NAMESPACE);
