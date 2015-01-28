@@ -75,6 +75,7 @@ public class SettingManager {
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
+    public static final java.lang.String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
 
     @Autowired
     private SettingRepository _repo;
@@ -227,7 +228,11 @@ public class SettingManager {
      */
     public boolean getValueAsBool(String key, boolean defaultValue) {
         String value = getValue(key);
-        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
+        if (value != null) {
+            return "y".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) || Boolean.parseBoolean(value);
+        } else {
+            return defaultValue;
+        }
     }
 
     /**

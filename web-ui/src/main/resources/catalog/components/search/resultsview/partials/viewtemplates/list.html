@@ -16,9 +16,12 @@
       </div>
 
       <!--Catalog Logo-->
-      <a class="pull-left">
-        <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
-      </a>
+        <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+            <img ng-src="../..{{md.logo}}" class="media-object"/>
+        </a>
+        <a class="pull-left" ng-if="!md.groupWebsite">
+            <img ng-src="../..{{md.logo}}" class="media-object"/>
+        </a>
 
       <div class="media-body">
         <h4>

@@ -735,6 +735,7 @@
     "system/localrating/enable": "Local rating",
     "system/localrating/enable-help": "If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).",
     "system/metadata": "Metadata views",
+    "system/metadata/prefergrouplogo": "Prefer Group Logo",
     "system/metadata/defaultView": "Default view",
     "system/metadata/enableInspireView": "INSPIRE view",
     "system/metadata/enableIsoView": "ISO view",
