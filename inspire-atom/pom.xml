@@ -14,19 +14,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.geonetwork-opensource</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.geonetwork-opensource</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.geonetwork-opensource</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>services</artifactId>
             <version>${project.version}</version>
         </dependency>
