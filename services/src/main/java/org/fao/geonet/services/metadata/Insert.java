@@ -24,44 +24,44 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 /**
  * Inserts a new metadata to the system (data is validated).
  */
 public class Insert extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
     private Path stylePath;
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
     }
 
@@ -71,22 +71,21 @@ public class Insert extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
+    public Element serviceSpecificExec(Element params, final ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		String data       = Util.getParam(params, Params.DATA);
-		String group      = Util.getParam(params, Params.GROUP);
+        String data = Util.getParam(params, Params.DATA);
+        String group = Util.getParam(params, Params.GROUP);
         MetadataType metadataType = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
-		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
+        String style = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
-//		Sub template does not need a title.
-//		 if (isTemplate.equals("s") && title.length() == 0)
-//			 throw new MissingParameterEx("title");
+//      Sub template does not need a title.
+//      if (isTemplate.equals("s") && title.length() == 0)
+//          throw new MissingParameterEx("title");
 
 		//-----------------------------------------------------------------------
 		//--- add the DTD to the input xml to perform validation
@@ -107,12 +106,10 @@ public class Insert extends NotInReadOnlyModeService {
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;
-		if (metadataType == MetadataType.TEMPLATE)
-		{
+        if (metadataType == MetadataType.TEMPLATE) {
 			uuid = dataMan.extractUUID(schema, xml);
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
-		}
-		else uuid = UUID.randomUUID().toString();
+        } else uuid = UUID.randomUUID().toString();
 
 		String uuidAction = Util.getParam(params, Params.UUID_ACTION,
 				Params.NOTHING);
@@ -139,16 +136,29 @@ public class Insert extends NotInReadOnlyModeService {
 
 		
 		// Import category
-		String category   = Util.getParam(params, Params.CATEGORY, "");
+        final String category = Util.getParam(params, Params.CATEGORY, "");
 
-		if (!category.equals("_none_") || !category.equals("")) {
+        final String extra = Util.getParam(params, "extra", null);
+        final boolean hasCategory = !category.equals("_none_") || !category.equals("");
+
+        if (hasCategory || extra != null) {
+            context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata metadata) {
+                    if (hasCategory) {
 			Element categs = new Element("categories");
 			categs.addContent((new Element("category")).setAttribute(
 					"name", category));
 
-            final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id.get(0));
-            Importer.addCategoriesToMetadata(metadata , categs, context);
+                        Importer.addCategoriesToMetadata(metadata, categs, context);
 		} 
+
+                    if (extra != null) {
+                        metadata.getDataInfo().setExtra(extra);
+                    }
+                }
+            });
+        }
 
 		// Index
         dm.indexMetadata(id.get(0), true);
@@ -159,6 +169,7 @@ public class Insert extends NotInReadOnlyModeService {
 	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(id.get(0)))));
 
 		return response;
-	};
+	}
+    ;
 
 }
