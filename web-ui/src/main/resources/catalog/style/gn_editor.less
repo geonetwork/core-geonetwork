@@ -319,9 +319,16 @@ form.gn-tab-datasources {
   /* Display remove action for the third and fifth
   form field in this tab. It should select EDMERP
   and EDMO field if the record follow the guideline. */
-  .gn-field:nth-of-type(3) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(2) .btn.fa.fa-times.text-danger,
   .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
     display: block;
+  }
+  .gn-projectTitle, .gn-field:nth-of-type(5) {
+    input {
+//      .disabled();
+      cursor: not-allowed;
+      background-color: @input-bg-disabled;
+    }
   }
 }
 

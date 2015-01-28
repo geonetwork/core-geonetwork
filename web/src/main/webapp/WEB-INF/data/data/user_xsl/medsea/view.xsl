@@ -187,10 +187,13 @@
                       </saxon:call-template>
                     </xsl:variable>
 
-                    <xsl:message>#<xsl:copy-of select="$nodes"/></xsl:message>
-                    <!-- ... and then display values -->
+                    <!--<xsl:message>#<xsl:copy-of select="$nodes"/></xsl:message>-->
+                    <!-- ... and then display values
+                    Display only non empty fields.
+                    -->
                     <xsl:choose>
-                      <xsl:when test="$nodes/*">
+                      <xsl:when test="$nodes/*[count(gmd:MD_Keywords/gmd:keyword[* != '']) > 0 or
+                                              (not(gmd:MD_Keywords) and normalize-space() != '')]">
                         <xsl:variable name="label"
                                       select="if (normalize-space($overrideLabel) != '')
                                   then $overrideLabel
