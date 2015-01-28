@@ -590,8 +590,11 @@ public class DataManager {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
-                    if (group.getLogo() != null && settingMan.getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true)) {
+                    final boolean preferGroup = settingMan.getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
+                    if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
+                    }
+                    if (group.getLogo() != null && preferGroup) {
                         logoUUID = group.getLogo();
                     }
                 }

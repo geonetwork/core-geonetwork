@@ -145,6 +145,7 @@
       <field name="_op0" tagName="publishedForGroup"/>
       <field name="_groupOwner" tagName="groupOwner"/>
       <field name="_logo" tagName="logo"/>
+      <field name="_groupWebsite" tagName="groupWebsite"/>
     </dumpFields>
   </search>
 
