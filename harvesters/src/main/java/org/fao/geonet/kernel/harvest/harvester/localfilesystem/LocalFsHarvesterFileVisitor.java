@@ -7,6 +7,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -23,6 +24,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
 * @author Jesse on 11/6/2014.
@@ -36,6 +38,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private final HarvestResult result = new HarvestResult();
     private final MetadataRepository repo;
     private final ServiceContext context;
+    private final AtomicBoolean cancelMonitor;
+    private final BaseAligner aligner;
 
     private boolean transformIt = false;
     private Path thisXslt;
@@ -43,8 +47,11 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private final GroupMapper localGroups;
     private final List<String> idsForHarvestingResult = Lists.newArrayList();
 
-    public LocalFsHarvesterFileVisitor(ServiceContext context, LocalFilesystemParams params, Logger log,
+    public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log,
                                        LocalFilesystemHarvester harvester) throws Exception {
+        this.aligner = new BaseAligner(cancelMonitor) {};
+
+        this.cancelMonitor = cancelMonitor;
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
         if (!params.importXslt.equals("none")) {
@@ -62,6 +69,10 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        if (cancelMonitor.get()) {
+            return FileVisitResult.TERMINATE;
+        }
+
         try {
             if (file.getFileName().toString().endsWith(".xml")) {
                 result.totalMetadata++;
@@ -130,7 +141,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             }
 
                             log.debug("adding new metadata");
-                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate);
+                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner);
                             result.addedMetadata++;
                         } else {
                             // Check last modified date of the file with the record change date
@@ -153,7 +164,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
                                 if (recordDate.before(fileDate)) {
                                     log.debug("  Db record is older than file. Updating record with id: " + id);
-                                    harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate);
+                                    harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
                                     result.updatedMetadata++;
                                 } else {
                                     log.debug("  Db record is not older than last modified date of file. No need for update.");
@@ -173,7 +184,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                     changeDate = new ISODate().toString();
                                 }
 
-                                harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate);
+                                harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
                                 result.updatedMetadata++;
                             }
                         }

@@ -62,10 +62,12 @@ import org.jdom.JDOMException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -78,8 +80,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, OaiPmhParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, OaiPmhParams params)
 	{
+        super(cancelMonitor);
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -125,6 +128,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         for (Search s : params.getSearches()) {
+
+            if (cancelMonitor.get()) {
+                return this.result;
+            }
+
             try {
                 records.addAll(search(req, s));
             } catch (Exception e) {
@@ -175,56 +183,53 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Set<RecordInfo> search(ListIdentifiersRequest req, Search s) throws OperationAbortedEx
 	{
-		//--- setup search parameters
+        //--- setup search parameters
 
-		if (s.from.length() != 0)	req.setFrom(new ISODate(s.from));
-			else							req.setFrom(null);
+        if (s.from.length() != 0) req.setFrom(new ISODate(s.from));
+        else req.setFrom(null);
 
-		if (s.until.length() != 0)	req.setUntil(new ISODate(s.until));
-			else 							req.setUntil(null);
+        if (s.until.length() != 0) req.setUntil(new ISODate(s.until));
+        else req.setUntil(null);
 
-		if (s.set.length() != 0) 	req.setSet(s.set);
-			else 							req.setSet(null);
+        if (s.set.length() != 0) req.setSet(s.set);
+        else req.setSet(null);
 
-		req.setMetadataPrefix(s.prefix);
+        req.setMetadataPrefix(s.prefix);
 
-		//--- execute request and loop on response
+        //--- execute request and loop on response
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		log.info("Searching on : "+ params.name);
+        log.info("Searching on : " + params.name);
 
-		try
-		{
-			ListIdentifiersResponse response = req.execute();
+        try {
+            ListIdentifiersResponse response = req.execute();
 
-			while (response.hasNext())
-			{
-				Header h = response.next();
+            while (response.hasNext()) {
+                if (cancelMonitor.get()) {
+                    return Collections.emptySet();
+                }
 
-				if (!h.isDeleted())
-					records.add(new RecordInfo(h, s.prefix));
-			}
+                Header h = response.next();
 
-			log.info("Records added to result list : "+ records.size());
+                if (!h.isDeleted())
+                    records.add(new RecordInfo(h, s.prefix));
+            }
 
-			return records;
-		}
-		catch(NoRecordsMatchException e)
-		{
-			log.warning("No records were matched: " + e.getMessage());
-			this.errors.add(new HarvestError(e, log));
-			return records;
-		}
+            log.info("Records added to result list : " + records.size());
 
-		catch(Exception e)
-		{
-			log.warning("Raised exception when searching : "+ e);
-			log.warning(Util.getStackTrace(e));
+            return records;
+        } catch (NoRecordsMatchException e) {
+            log.warning("No records were matched: " + e.getMessage());
             this.errors.add(new HarvestError(e, log));
-			throw new OperationAbortedEx("Raised exception when searching", e);
-		}
-	}
+            return records;
+        } catch (Exception e) {
+            log.warning("Raised exception when searching : " + e);
+            log.warning(Util.getStackTrace(e));
+            this.errors.add(new HarvestError(e, log));
+            throw new OperationAbortedEx("Raised exception when searching", e);
+        }
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -245,25 +250,33 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         //-----------------------------------------------------------------------
 		//--- remove old metadata
 
-		for (String uuid : localUuids.getUUIDs())
-			if (!exists(records, uuid))
-			{
-				String id = localUuids.getID(uuid);
+		for (String uuid : localUuids.getUUIDs()) {
 
-                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context, id);
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            if (!exists(records, uuid)) {
+                String id = localUuids.getID(uuid);
+
+                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:" + id);
+                dataMan.deleteMetadataGroup(context, id);
 
                 dataMan.flush();
 
                 result.locallyRemoved++;
-			}
-
+            }
+        }
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		for(RecordInfo ri : records)
-		{
-			result.totalMetadata++;
+		for(RecordInfo ri : records) {
+
+            if (cancelMonitor.get()) {
+                return ;
+            }
+
+            result.totalMetadata++;
 
 			String id = localUuids.getID(ri.id);
 
@@ -431,23 +444,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             this.errors.add(harvestError);
             harvestError.printLog(log);
 			return null;
-		}
-	}
-
-	//--------------------------------------------------------------------------
-
-	private boolean validates(String schema, Element md)
-	{
-		try
-		{
-			dataMan.validate(schema, md);
-			return true;
-		}
-		catch (Exception e)
-		{
-            HarvestError harvestError = new HarvestError(e, log);
-            this.errors.add(harvestError);
-			return false;
 		}
 	}
 

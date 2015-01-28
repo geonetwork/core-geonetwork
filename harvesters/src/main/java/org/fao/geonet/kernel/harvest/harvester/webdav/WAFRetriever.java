@@ -34,15 +34,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class WAFRetriever implements RemoteRetriever {
-	//--------------------------------------------------------------------------
+    private AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- RemoteRetriever interface
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(Logger log, ServiceContext context, WebDavParams params) {
+	public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.params = params;
 	}
@@ -71,6 +74,11 @@ class WAFRetriever implements RemoteRetriever {
         Document doc = Jsoup.parse(new URL(wafurl),3000);
         Elements links = doc.select("a[href]");
         for (Element link : links) {
+            if (cancelMonitor.get()) {
+                files.clear();
+                return ;
+            }
+
             String url = link.attr("abs:href");
 
 

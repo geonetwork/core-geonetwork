@@ -51,6 +51,7 @@ import org.jdom.JDOMException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -61,7 +62,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, WebDavParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+        super(cancelMonitor);
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -92,7 +94,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
         try {
             Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
-            rr.init(log, context, params);
+            rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
             if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
             align(files);
@@ -119,6 +121,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
 		for (final String uri : localUris.getUris()) {
+            if (cancelMonitor.get()) {
+                return;
+            }
+
             if (!exists(files, uri)) {
                 // only one metadata record created per uri by this harvester
                 String id = localUris.getRecords(uri).get(0).id;
@@ -139,7 +145,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//--- insert/update new metadata
 
 		for(RemoteFile rf : files) {
-			result.totalMetadata++;
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
 			if (records == null) {
 				addMetadata(rf);
@@ -418,7 +428,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 //=============================================================================
 
 interface RemoteRetriever {
-	public void init(Logger log, ServiceContext context, WebDavParams params);
+	public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
 	public List<RemoteFile> retrieve() throws Exception;
 	public void destroy();
 }

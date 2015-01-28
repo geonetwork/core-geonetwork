@@ -254,7 +254,14 @@
       };
 
       $scope.refreshHarvester = function() {
-        loadHarvesters();
+        loadHarvesters().then(function() {
+          // Select the clone
+          angular.forEach($scope.harvesters, function (h) {
+            if (h['@id'] === $scope.harvesterSelected['@id']) {
+              $scope.selectHarvester(h);
+            }
+          });
+        });
       };
       $scope.deleteHarvester = function() {
         $http.get('admin.harvester.remove?_content_type=json&id=' +
@@ -291,11 +298,37 @@
             });
       };
       $scope.runHarvester = function() {
-        $http.get('admin.harvester.run@json?_content_type=json&id=' +
+        $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
-              loadHarvesters();
+              loadHarvesters().then(function() {
+                // Refesh the harvester
+                angular.forEach($scope.harvesters, function (h) {
+                  if (h['@id'] === $scope.harvesterSelected['@id']) {
+                    $scope.selectHarvester(h);
+                  }
+                });
+              });
             });
+      };
+      $scope.stopping = false;
+      $scope.stopHarvester = function() {
+        var status =  $scope.harvesterSelected.options.status;
+        var id = $scope.harvesterSelected['@id'];
+        $scope.stopping = true;
+        $http.get('admin.harvester.stop?_content_type=json&id=' + id + '&status=' + status)
+          .success(function(data) {
+              loadHarvesters().then(function() {
+                // Refresh the harvester
+                angular.forEach($scope.harvesters, function (h) {
+                  if (h['@id'] === $scope.harvesterSelected['@id']) {
+                    $scope.selectHarvester(h);
+                  }
+                });
+              });
+            }).then(function() {
+              $scope.stopping = false;
+          });
       };
 
       $scope.setHarvesterSchedule = function() {

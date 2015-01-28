@@ -167,5 +167,6 @@
     "privileges": "Privileges",
     "whoCanAccess": "Who has access",
     "actions" : "Actions",
-    "reset" : "Reset"
+    "reset" : "Reset",
+    "stop": "Stop"
 }

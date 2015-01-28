@@ -14,6 +14,7 @@ import org.fao.geonet.repository.MetadataRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 
@@ -27,6 +28,13 @@ import java.util.Map;
  * @author heikki doeleman
  */
 public abstract class BaseAligner {
+
+    public final AtomicBoolean cancelMonitor;
+
+    public BaseAligner(AtomicBoolean cancelMonitor) {
+        this.cancelMonitor = cancelMonitor;
+    }
+
 
     /**
      * TODO Javadoc.

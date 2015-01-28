@@ -244,17 +244,24 @@ public class Geonet20Harvester extends AbstractHarvester
 			if (!response.getName().equals("ok"))
 				throw new UserNotFoundEx(params.username);
 		}
+        if (cancelMonitor.get()) {
+            return ;
+        }
 
-		//--- search
+        //--- search
 
 		result = new GeonetResult();
 
-		Aligner aligner = new Aligner(log, req, params, dataMan, context,
+		Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
 												localCateg);
 
 		for(Search s : params.getSearches())
 		{
-			log.info("Searching on : "+ name +"/"+ s.siteId);
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            log.info("Searching on : "+ name +"/"+ s.siteId);
 
 			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
