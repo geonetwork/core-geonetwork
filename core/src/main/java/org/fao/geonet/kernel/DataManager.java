@@ -591,7 +591,7 @@ public class DataManager {
                 if (group != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
-                    if (group.getLogo() != null) {
+                    if (group.getLogo() != null && settingMan.getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true)) {
                         logoUUID = group.getLogo();
                     }
                 }
