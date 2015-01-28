@@ -211,5 +211,39 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             <map/>
         </property>
     </bean> -->
+    
+    <!-- Uncomment if you want to sync additions in user group relations with LDAP -->
+    <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroups">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
+       
+    <!-- Uncomment if you want to sync removal in user group relations with LDAP -->
+        <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroupsOnRemove">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
 
 </beans>
