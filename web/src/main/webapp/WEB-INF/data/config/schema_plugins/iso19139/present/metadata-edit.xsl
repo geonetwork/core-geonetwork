@@ -1311,18 +1311,14 @@
     <!-- Define the list of transformation mode available.
     -->
     <xsl:variable name="parentName" select="name(..)"/>
-    
-    <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
-    
-    <!-- Create custom widget: 
-      * '' for item selector, 
-      * 'combo' for simple combo, 
-      * 'list' for selection list, 
-      * 'multiplelist' for multiple selection list
-      -->
-    <xsl:variable name="widgetMode" select="''"/>
-    
-    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    <xsl:variable name="elementTransformations"
+                  select="/root/gui/schemalist/*[text()=$schema]/
+                    associations/registerTransformation[@element = $parentName]"/>
+
+
+
+
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus
     identifier should be defined in the citation identifier. By default, GeoNetwork
     define it in a gmx:Anchor. Retrieve the first child of the code which might be a
     gco:CharacterString. 
@@ -1331,8 +1327,25 @@
     <xsl:variable name="thesaurusId" select="if (gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+
+    <!-- Create custom widget:
+      * '' for item selector,
+      * 'combo' for simple combo,
+      * 'list' for selection list,
+      * 'multiplelist' for multiple selection list
+      -->
+    <!--<xsl:variable name="widgetMode" select="''"/>-->
+
+    <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')
+                                            then 'combo'
+                                            else ''"/>
     
-    
+    <!--<xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>-->
+    <xsl:variable name="listOfTransformations"
+                  select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')
+                    then '''to-iso19139-keyword-as-xlink'''
+                    else '''to-iso19139-keyword'''"/>
+
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
     
