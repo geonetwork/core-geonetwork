@@ -505,7 +505,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 if (response.responseText === '<?xml version="1.0" encoding="UTF-8"?>') {
                     console.log('Empty response returned from ' + url);
                 } else {
-                    document.getElementById(this.xmlField).value = response.responseText;
+                    document.getElementById(this.xmlField).value =
+                      response.responseText.
+                        replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
                 }
 //                this.loadingMask.hide();
             }

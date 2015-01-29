@@ -18,29 +18,29 @@
 	<xsl:template name="to-iso19139.myocean-feature-type">
 		<!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
 		<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
-		
-		<gmd:MD_FeatureCatalogueDescription>
-			<gmd:includedWithDataset>
-				<gco:Boolean>false</gco:Boolean>
-			</gmd:includedWithDataset>
-			<!-- An empty snippet is always returned in order to keep the element -->
-			<xsl:choose>
-				<xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
-					<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+		<gmd:contentInfo>
+			<gmd:MD_FeatureCatalogueDescription>
+				<gmd:includedWithDataset>
+					<gco:Boolean>false</gco:Boolean>
+				</gmd:includedWithDataset>
+				<!-- An empty snippet is always returned in order to keep the element -->
+				<xsl:choose>
+					<xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
+						<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+							<gmd:featureTypes>
+								<gco:LocalName codeSpace="{uri}"><xsl:value-of select="value"/></gco:LocalName>
+							</gmd:featureTypes>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
 						<gmd:featureTypes>
-							<gco:LocalName codeSpace="{uri}"><xsl:value-of select="value"/></gco:LocalName>
+							<gco:LocalName></gco:LocalName>
 						</gmd:featureTypes>
-					</xsl:for-each>
-				</xsl:when>
-				<xsl:otherwise>
-					<gmd:featureTypes>
-						<gco:LocalName></gco:LocalName>
-					</gmd:featureTypes>
-				</xsl:otherwise>
-			</xsl:choose>
-			<gmd:featureCatalogueCitation/>
-		</gmd:MD_FeatureCatalogueDescription>
-		
+					</xsl:otherwise>
+				</xsl:choose>
+				<gmd:featureCatalogueCitation/>
+			</gmd:MD_FeatureCatalogueDescription>
+		</gmd:contentInfo>
 	</xsl:template>
 	
 	

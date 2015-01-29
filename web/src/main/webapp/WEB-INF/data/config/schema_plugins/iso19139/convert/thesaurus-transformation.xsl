@@ -25,8 +25,22 @@
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
-	
+
+
+	<xsl:template name="to-iso19139.sdn-use-limitation">
+		<gmd:MD_Constraints>
+			<xsl:for-each select="//descKeys/keyword">
+				<gmd:useLimitation>
+					<gmx:Anchor
+									xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
+						<xsl:value-of select="value"/>
+					</gmx:Anchor>
+				</gmd:useLimitation>
+			</xsl:for-each>
+		</gmd:MD_Constraints>
+	</xsl:template>
+
+
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
     will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">
