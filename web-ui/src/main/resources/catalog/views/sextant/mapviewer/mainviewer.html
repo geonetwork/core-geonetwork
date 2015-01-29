@@ -10,6 +10,10 @@
       <span class="fa fa-tasks"></span>
       <span role="tooltip" data-translate="">Layers</span>
     </button>
+    <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#importLayersPanel" gi-btn gnv-tools-btn>
+      <span class="fa fa-download"></span>
+      <span role="tooltip" data-translate="">importLayers</span>
+    </button>
     <button sxt-tool class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
       <span class="fa fa-book"></span>
       <span role="tooltip" data-translate="">Contexts</span>
@@ -31,9 +35,7 @@
 
   <!--Top right buttons - Navigation-->
   <div class="btn-group sx-toolbar tools">
-    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)">
-      <span class="fa fa-th-large"></span>
-      <span role="tooltip" data-translate="">Graticule</span>
+    <button gn-graticule-btn="map" class="btn btn-default" type="submit">
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
       <span class="fa fa-pencil"></span>
@@ -58,6 +60,10 @@
     <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
       <span class="fa fa-shopping-cart"></span>
       <span role="tooltip" data-translate="">Basket</span>
+    </button>
+    <button class="btn btn-default" type="submit" data-ng-click="locService.setSearch()">
+      <span class="fa fa-search"></span>
+      <span role="tooltip" data-translate="">backToSearch</span>
     </button>
     <div gn-localisation-input map="map"></div>
   </div>
@@ -89,13 +95,12 @@
         </button>
         <h5 data-translate="">ThemeLayers</h5>
       </div>
-
-      <div gn-layermanager="" gn-layermanager-map="map"></div>
-
       <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-
+      <div gn-layermanager="" gn-layermanager-map="map"></div>
     </div>
+  </div>
 
+  <div class="panel panel-default force-hide panel-tools" id="importLayersPanel" gnv-layermanager-btn>
     <div class="panel-body">
       <button type="button" class="btn btn-default unfold">
         <span class="fa fa-chevron-down"></span>
@@ -118,7 +123,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="contexts">
+    <div class="panel panel-default force-hide panel-tools" id="contexts">
 
     <div class="panel-body">
       <button type="button" class="btn btn-default close" sxt-close-tool>
