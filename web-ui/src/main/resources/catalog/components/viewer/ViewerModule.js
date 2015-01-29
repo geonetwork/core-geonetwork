@@ -29,6 +29,7 @@
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
+  goog.require('gn_graticule');
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
@@ -44,7 +45,8 @@
     'gn_localisation',
     'gn_popup',
     'gn_print',
-    'gn_module'
+    'gn_module',
+    'gn_graticule'
   ]);
 
   module.controller('gnViewerController', [
