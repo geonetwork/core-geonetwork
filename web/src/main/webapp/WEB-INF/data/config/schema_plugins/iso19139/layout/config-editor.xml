@@ -1962,6 +1962,12 @@
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Reliability']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
+          <field
+                  name="reliability"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.reliability')]"/>
         </section>
       </tab>
       <tab id="medsea-metadata" mode="flat">
