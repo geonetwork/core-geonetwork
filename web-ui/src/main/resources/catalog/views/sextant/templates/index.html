@@ -67,7 +67,7 @@
           {{mainTabs.map.title}}
           <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
         </tab-heading>
-        <div sxt-main-viewer="" map="searchObj.viewerMap">
+        <div sxt-main-viewer="" map="searchObj.viewerMap" class="gn-main-viewer">
         </div>
       </tab>
       <tab ng-if="mainTabs.panier" select="displayPanierTab()" active="mainTabs.panier.active">
