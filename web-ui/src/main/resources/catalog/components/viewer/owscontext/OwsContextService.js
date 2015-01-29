@@ -22,8 +22,10 @@
     'gnOwsCapabilities',
     '$http',
     'gnViewerSettings',
-	'$translate',
-    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings, $translate ) {
+	  '$translate',
+    '$q',
+    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
+             $translate, $q ) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -62,18 +64,34 @@
         var i, j, olLayer, bgLayers = [];
         var self = this;
         var re = /type\s*=\s*([^,|^}|^\s]*)/;
+        var promises = [];
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == $translate('BackgroundLayers') && layer.name.match(re)) {
+            if (layer.group == $translate('BackgroundLayers')
+                && layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
-              var olLayer = gnMap.createLayerForType(type);
-              if (olLayer) {
-                bgLayers.push(olLayer);
-                olLayer.displayInLayerManager = false;
-                olLayer.background = true;
-                olLayer.set('group', $translate('BackgroundLayers'));
-                olLayer.setVisible(!layer.hidden);
+              if(type != 'wmts') {
+                var olLayer = gnMap.createLayerForType(type);
+                if (olLayer) {
+                  bgLayers.push(olLayer);
+                  olLayer.displayInLayerManager = false;
+                  olLayer.background = true;
+                  olLayer.set('group', $translate('BackgroundLayers'));
+                  olLayer.setVisible(!layer.hidden);
+                }
+              }
+              else {
+                promises.push(this.createLayer(layer, map).then(
+                    function(o) {
+                  var olLayer = o.ol;
+                  var ctxLayer = o.ctx;
+                  bgLayers.push(olLayer);
+                  olLayer.displayInLayerManager = false;
+                  olLayer.background = true;
+                  olLayer.set('group', $translate('BackgroundLayers'));
+                  olLayer.setVisible(!ctxLayer.hidden);
+                }));
               }
             } else {
               var server = layer.server[0];
@@ -86,25 +104,27 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        if (bgLayers.length > 0) {
-          // make sure we remove any existing bglayer
-          if (map.getLayers().getLength() > 0) {
-            map.getLayers().removeAt(0);
-          }
-
-          // first clear settings bgLayers
-          gnViewerSettings.bgLayers.length = 0;
-
-          var firstVisibleBgLayer = true;
-          $.each(bgLayers, function(index, item) {
-            gnViewerSettings.bgLayers.push(item);
-            // the first visible bg layer wins and get displayed in the map
-            if (item.getVisible() && firstVisibleBgLayer) {
-              map.getLayers().insertAt(0, item);
-              firstVisibleBgLayer = false;
+        $q.all(promises).then(function() {
+          if (bgLayers.length > 0) {
+            // make sure we remove any existing bglayer
+            if (map.getLayers().getLength() > 0) {
+              map.getLayers().removeAt(0);
             }
-          });
-        }
+
+            // first clear settings bgLayers
+            gnViewerSettings.bgLayers.length = 0;
+
+            var firstVisibleBgLayer = true;
+            $.each(bgLayers, function(index, item) {
+              gnViewerSettings.bgLayers.push(item);
+              // the first visible bg layer wins and get displayed in the map
+              if (item.getVisible() && firstVisibleBgLayer) {
+                map.getLayers().insertAt(0, item);
+                firstVisibleBgLayer = false;
+              }
+            });
+          }
+        });
       };
 
       /**
@@ -154,6 +174,13 @@
         angular.forEach(gnViewerSettings.bgLayers, function(layer) {
           var source = layer.getSource();
           var name;
+          var params = {
+            hidden: map.getLayers().getArray().indexOf(layer) < 0,
+            opacity: layer.getOpacity(),
+            title: layer.get('title'),
+            group: layer.get('group')
+          };
+
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
           } else if (source instanceof ol.source.MapQuest) {
@@ -161,17 +188,18 @@
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.WMTS) {
-            name = '{type=wmts}';
+            name = '{type=wmts,name='+layer.get('name')+'}';
+            params.server = [{
+              onlineResource: [{
+                href: layer.get('urlCap')
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }];
           } else {
             return;
           }
-          resourceList.layer.push({
-            hidden: map.getLayers().getArray().indexOf(layer) < 0,
-            opacity: layer.getOpacity(),
-            name: name,
-            title: layer.get('title'),
-            group: layer.get('group')
-          });
+          params.name = name;
+          resourceList.layer.push(params);
         });
 
         map.getLayers().forEach(function(layer) {
@@ -191,8 +219,8 @@
             name = source.getParams().LAYERS;
             url = source.getUrls()[0];
           } else if (source instanceof ol.source.WMTS) {
-            name = '{type=wmts,name=' + layer.get('title') + '}';
-            url = layer.get('url');
+            name = '{type=wmts,name=' + layer.get('name') + '}';
+            url = layer.get('urlCap');
           }
           resourceList.layer.push({
             hidden: !layer.getVisible(),
@@ -242,11 +270,14 @@
       };
 
       /**
-       * Adds a WMS layer to map
-       * @param {ol.layer} layer layer
+       * Create a WMS ol.Layer from context object
+       * @param {Object} layer layer
        * @param {ol.map} map map
        */
-      this.addLayer = function(layer, map) {
+      this.createLayer = function(layer, map) {
+
+        var defer = $q.defer();
+
         var server = layer.server[0];
         var res = server.onlineResource[0];
         var reT = /type\s*=\s*([^,|^}|^\s]*)/;
@@ -262,9 +293,10 @@
                   var info = gnOwsCapabilities.getLayerInfoFromCap(
                       name, capObj);
                   info.group = layer.group;
-                  var l = gnMap.addWmtsToMapFromCap(map, info, capObj);
+                  var l = gnMap.createOlWMTSFromCap(map, info, capObj);
                   l.setOpacity(layer.opacity);
                   l.setVisible(!layer.hidden);
+                  defer.resolve({ol:l, ctx:layer});
                 });
           }
         }
@@ -273,11 +305,23 @@
             var info = gnOwsCapabilities.getLayerInfoFromCap(
                 layer.name, capObj);
             info.group = layer.group;
-            var l = gnMap.addWmsToMapFromCap(map, info);
+            var l = gnMap.createOlWMSFromCap(map, info);
             l.setOpacity(layer.opacity);
             l.setVisible(!layer.hidden);
+            defer.resolve({ol:l, ctx:layer});
           });
         }
+        return defer.promise;
+      };
+      /**
+       * Adds a WMS layer to map
+       * @param {Object} layer layer
+       * @param {ol.map} map map
+       */
+      this.addLayer = function(layer, map) {
+        this.createLayer(layer, map).then(function(l) {
+          map.addLayer(l.ol);
+        });
       };
     }
   ]);
