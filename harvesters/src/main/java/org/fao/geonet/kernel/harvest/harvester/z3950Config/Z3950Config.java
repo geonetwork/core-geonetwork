@@ -39,19 +39,22 @@ import org.jdom.Element;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 public class Z3950Config
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Z3950Config(Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params)
+	public Z3950Config(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log     = log;
 		this.context = context;
 		this.request = req;
@@ -79,7 +82,11 @@ public class Z3950Config
 		//--- JZKitConfig.xml.tem
 
 		for(RecordInfo ri : records) {
-			result.totalMetadata++;
+            if (cancelMonitor.get()) {
+                return this.result;
+            }
+
+            result.totalMetadata++;
 
 			// get metadata from remote geonetwork machine (assume local for now)
 			addServerToZ3950Config(ri.uuid);

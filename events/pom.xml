@@ -18,7 +18,7 @@
         <artifactId>spring-context</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.geonetwork-opensource</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>domain</artifactId>
         <version>${project.version}</version>
     </dependency>

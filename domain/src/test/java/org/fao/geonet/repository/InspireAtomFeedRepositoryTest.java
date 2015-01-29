@@ -1,7 +1,6 @@
 package org.fao.geonet.repository;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.InspireAtomFeedEntry;
 import org.fao.geonet.domain.Metadata;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @Transactional
@@ -133,6 +131,7 @@ public class InspireAtomFeedRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata = new Metadata().setUuid("uuid" + val).setData("metadata" + val);
         metadata.getDataInfo().setSchemaId("customSchema" + val);
         metadata.getSourceInfo().setSourceId("source" + val);
+        metadata.getSourceInfo().setOwner(1);
         metadata.getHarvestInfo().setUuid("huuid" + val);
         metadata.getHarvestInfo().setHarvested(val % 2 == 0);
 

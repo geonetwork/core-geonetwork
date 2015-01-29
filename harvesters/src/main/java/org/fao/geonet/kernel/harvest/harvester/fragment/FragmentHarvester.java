@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 /** 
@@ -72,14 +73,16 @@ public class FragmentHarvester extends BaseAligner {
 	//---------------------------------------------------------------------------
 	/** 
      * Constructor
-     *  
-     * @param log		
-     * @param context		Jeeves context
-     * @param params		Fragment harvesting configuration parameters
+     *
+     * @param cancelMonitor
+     * @param log
+     * @param context        Jeeves context
+     * @param params        Fragment harvesting configuration parameters
      * 
      */
-	public FragmentHarvester(Logger log, ServiceContext context, FragmentParams params) {
-		this.log    = log;
+	public FragmentHarvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, FragmentParams params) {
+        super(cancelMonitor);
+        this.log    = log;
 		this.context= context;
 		this.params = params;
 
@@ -143,7 +146,11 @@ public class FragmentHarvester extends BaseAligner {
         List<Element> recs = fragments.getChildren();
 		
 		for (Element rec : recs) {
-			addRecord(rec);
+            if (cancelMonitor.get()) {
+                break;
+            }
+
+            addRecord(rec);
 		}
 		
 		return harvestSummary;

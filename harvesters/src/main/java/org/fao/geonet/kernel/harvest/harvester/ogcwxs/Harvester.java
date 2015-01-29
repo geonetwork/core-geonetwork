@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 
@@ -153,15 +154,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	/** 
      * Constructor
      *  
-     * @param log		
-     * @param context		Jeeves context
-     * @param params	Information about harvesting configuration for the node
-     * 
+     *
+     * @param cancelMonitor
+     * @param log
+     * @param context        Jeeves context
+     * @param params    Information about harvesting configuration for the node
+     *
      * @return null
      */
-	public Harvester(Logger log, 
-						ServiceContext context, 
-						OgcWxSParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log,
+                     ServiceContext context,
+                     OgcWxSParams params) {
+        super(cancelMonitor);
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -219,9 +223,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
-		for (String uuid : localUuids.getUUIDs())
-		{
-			String id = localUuids.getID (uuid);
+		for (String uuid : localUuids.getUUIDs()) {
+            if (cancelMonitor.get()) {
+                return this.result;
+            }
+
+            String id = localUuids.getID (uuid);
 
             if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
 

@@ -114,7 +114,7 @@ public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
 	//---------------------------------------------------------------------------
     public void doHarvest(Logger log) throws Exception {
 		log.info("WebDav doHarvest start");
-		Harvester h = new Harvester(log, context, params);
+		Harvester h = new Harvester(cancelMonitor, log, context, params);
 		result = h.harvest(log);
 		log.info("WebDav doHarvest end");
 	}

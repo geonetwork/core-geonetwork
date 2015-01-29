@@ -435,12 +435,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * TODO Javadoc.
      *
      * @param id
+     * @param status
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
 	@Override
-    public OperResult stop(String id) throws SQLException, SchedulerException {
+    public OperResult stop(String id, Common.Status status) throws SQLException, SchedulerException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
         }
@@ -449,7 +450,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		if (ah == null){
 			return OperResult.NOT_FOUND;
         }
-		return ah.stop();
+		return ah.stop(status);
 	}
 
     /**

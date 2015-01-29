@@ -7,9 +7,9 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 
+import java.sql.SQLException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.SQLException;
 
 /**
  * API for adding/removing/running harvesters.
@@ -102,13 +102,13 @@ public interface HarvestManager {
     Common.OperResult start(String id) throws SQLException, SchedulerException;
 
     /**
-     * Set the harvester status to {@link org.fao.geonet.kernel.harvest.Common.Status#ACTIVE} and unschedule any scheduled jobs.
+     * Set the harvester status to the provided status and unschedule any scheduled jobs.
      *
      * @return {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK}
      * @throws SQLException
      * @throws SchedulerException
      */
-    Common.OperResult stop(String id) throws SQLException, SchedulerException;
+    Common.OperResult stop(String id, Common.Status status) throws SQLException, SchedulerException;
 
     /**
      * Call {@link AbstractHarvester#start()} if status is currently {@link org.fao.geonet.kernel.harvest.Common.Status#INACTIVE}.  Trigger a harvester job to run immediately.

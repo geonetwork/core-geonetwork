@@ -15,8 +15,10 @@
       </a>
 
       <!--Source catalog Logo-->
-      <img ng-src="../../images/logos/{{md.source}}.gif"
-             class="gn-source-logo"/>
+        <a ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+            <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        </a>
+        <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
 
       <!-- Thumbnail -->
       <div class="gn-md-thumbnail">

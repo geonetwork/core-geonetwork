@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
@@ -73,8 +74,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, CswServer server, CswParams params) throws OperationAbortedEx
-	{
+	public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, CswServer server, CswParams params) throws OperationAbortedEx
+	{   super(cancelMonitor);
 		this.log        = log;
 		this.context    = sc;
 		this.params     = params;
@@ -133,7 +134,11 @@ public class Aligner extends BaseAligner
 
 	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
-		log.info("Start of alignment for : "+ params.name);
+        if (cancelMonitor.get()) {
+            return result;
+        }
+
+        log.info("Start of alignment for : "+ params.name);
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -153,26 +158,33 @@ public class Aligner extends BaseAligner
         //-----------------------------------------------------------------------
 		//--- remove old metadata
 
-		for (String uuid : localUuids.getUUIDs())
-			if (!exists(records, uuid))
-			{
-				String id = localUuids.getID(uuid);
+		for (String uuid : localUuids.getUUIDs()) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
 
-                if(log.isDebugEnabled())
-                    log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(context, id);
+            if (!exists(records, uuid)) {
+                String id = localUuids.getID(uuid);
+
+                if (log.isDebugEnabled())
+                    log.debug("  - Removing old metadata with local id:" + id);
+                dataMan.deleteMetadata(context, id);
 
                 dataMan.flush();
 
                 result.locallyRemoved++;
-			}
+            }
+        }
 
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		for(RecordInfo ri : records)
-		{
-		    try{
+		for(RecordInfo ri : records) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            try{
     
     			String id = dataMan.getMetadataId(ri.uuid);
     
@@ -201,7 +213,11 @@ public class Aligner extends BaseAligner
 
 	private void addMetadata(RecordInfo ri) throws Exception
 	{
-		Element md = retrieveMetadata(ri.uuid);
+        if (cancelMonitor.get()) {
+            return;
+        }
+
+        Element md = retrieveMetadata(ri.uuid);
 
 		if (md == null) {
             return;

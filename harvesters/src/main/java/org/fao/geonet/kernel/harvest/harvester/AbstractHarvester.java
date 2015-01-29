@@ -23,19 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobKey.jobKey;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -80,9 +67,22 @@ import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.quartz.JobKey.jobKey;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
@@ -314,15 +314,28 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return {@link OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link OperResult#OK}
      * @throws SQLException
      * @throws SchedulerException
+     * @param newStatus
      */
-    public synchronized OperResult stop() throws SQLException, SchedulerException {
-        if (status != Status.ACTIVE) {
-            return OperResult.ALREADY_INACTIVE;
+    public OperResult stop(Status newStatus) throws SQLException, SchedulerException {
+        this.cancelMonitor.set(true);
+        getScheduler().interrupt(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+
+        synchronized (this) {
+            if (this.running) {
+                this.running = false;
+            }
+
+            settingMan.setValue("harvesting/id:" + id + "/options/status", newStatus);
+            if (newStatus == Status.INACTIVE) {
+                if (this.status != Status.ACTIVE) {
+                    return OperResult.ALREADY_INACTIVE;
+                }
+                doUnschedule();
+            }
+
+            this.status = newStatus;
+            return OperResult.OK;
         }
-        settingMan.setValue("harvesting/id:" + id + "/options/status", Status.INACTIVE);
-        doUnschedule();
-        status = Status.INACTIVE;
-        return OperResult.OK;
     }
 
     /**
@@ -495,6 +508,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected synchronized OperResult harvest() {
         OperResult operResult = OperResult.OK;
         running = true;
+        cancelMonitor.set(false);
         try {
             long startTime = System.currentTimeMillis();
 
@@ -519,7 +533,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 logger.info("Ended harvesting from node : " + nodeName);
 
                 if (getParams().oneRunOnly) {
-                    stop();
+                    stop(Status.INACTIVE);
                 }
             } catch (InvalidParameterValueEx e) {
                 logger.error("The harvester " + this.getParams().name + "["
@@ -548,6 +562,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
             logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
         } finally {
+            cancelMonitor.set(false);
             running = false;
         }
 
@@ -939,6 +954,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private List<HarvestError> errors = new LinkedList<HarvestError>();
     private volatile boolean running = false;
+    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
 
 
     protected ServiceContext context;

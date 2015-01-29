@@ -52,9 +52,13 @@
           <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
 
-        <a class="pull-left">
-          <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
+        <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+          <img ng-src="../..{{md.logo}}" class="media-object"/>
         </a>
+        <a class="pull-left" ng-if="!md.groupWebsite">
+          <img ng-src="../..{{md.logo}}" class="media-object"/>
+        </a>
+
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
         <p class="md-date" ng-if="showDate.date">(<i translate>{{showDate.type}}</i> : {{showDate.date}})</p>
         <p class="md-owner">

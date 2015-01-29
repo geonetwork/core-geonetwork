@@ -59,6 +59,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -74,7 +75,8 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Z3950Params params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, Z3950Params params) {
+        super(cancelMonitor);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
@@ -106,7 +108,11 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
-			String id = localUuids.getID(uuid);
+            if (cancelMonitor.get()) {
+                return serverResults;
+            }
+
+            String id = localUuids.getID(uuid);
             if(this.log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
 			dataMan.deleteMetadataGroup(context, id);
 			serverResults.locallyRemoved++;
@@ -176,7 +182,11 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
         // -- add new category for each repository
 		boolean addcateg = false;
 		for (String repo : params.getRepositories()) {
-			Element repoElem = Xml.selectElement(repositories, "record[id='"+repo+"']");
+            if (cancelMonitor.get()) {
+                return serverResults;
+            }
+
+            Element repoElem = Xml.selectElement(repositories, "record[id='"+repo+"']");
 			if (repoElem != null) {
 				Element repoId  = repoElem.getChild("id");
 				String repoName = repoElem.getChildText("name");
@@ -205,7 +215,11 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		// --- return only maximum hits as directed by the harvest params
 		int nrGroups = (numberOfHits / groupSize) + 1;
 		for (int i = 1; i <= nrGroups; i++) {
-			int lower = ((i-1)*groupSize)+1;	
+            if (cancelMonitor.get()) {
+                return serverResults;
+            }
+
+            int lower = ((i-1)*groupSize)+1;
 			int upper = Math.min((i*groupSize),numberOfHits);
 			request.getChild("from").setText(""+lower);  
 			request.getChild("to").setText(""+upper);  
@@ -229,7 +243,11 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 			// --- For each record....
 			for (Document doc : list) {
-				Element md = doc.getRootElement();
+                if (cancelMonitor.get()) {
+                    return serverResults;
+                }
+
+                Element md = doc.getRootElement();
 				String eName = md.getQualifiedName();
 				if (eName.equals("summary")) continue;
 
