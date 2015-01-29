@@ -76,3 +76,45 @@ UPDATE metadata SET data = replace(data,
 'external.theme.medsea.environmental.matrix',
 'local.theme.medsea.environmental.matrix')
 WHERE data like '%external.theme.medsea.environmental.matrix%';
+
+
+-- Updates for thesaurus not in github
+UPDATE metadata SET data = replace(data,
+'Portail-donnees-facette-discipline',
+'portail-donnees-facette-delai')
+WHERE data like '%Portail-donnees-facette-discipline%';
+
+UPDATE metadata SET data = replace(data,
+'Portail-donnees-facette-delai',
+'portail-donnees-facette-discipline')
+WHERE data like '%Portail-donnees-facette-delai%';
+
+UPDATE metadata SET data = replace(data,
+'Portail-donnees-facette-comment',
+'portail-donnees-facette-comment')
+WHERE data like '%Portail-donnees-facette-comment%';
+
+UPDATE metadata SET data = replace(data,
+'Portail-donnees-facette-type',
+'portail-donnees-facette-type')
+WHERE data like '%Portail-donnees-facette-type%';
+
+
+
+
+
+UPDATE metadata SET data = replace(data,
+'external.theme.dcsmm-type-espace',
+'local.theme.dcsmm-type-espace')
+WHERE data like '%external.theme.dcsmm-type-espace%';
+
+UPDATE metadata SET data = replace(data,
+'external.theme.dcsmm-descripteur',
+'local.theme.dcsmm-descripteur')
+WHERE data like '%external.theme.dcsmm-descripteur%';
+
+UPDATE metadata SET data = replace(data,
+'external.theme.dcsmm-methode',
+'local.theme.dcsmm-methode')
+WHERE data like '%external.theme.dcsmm-methode%';
+
