@@ -1728,6 +1728,14 @@
               xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                   gmd:transferOptions/gmd:MD_DigitalTransferOptions/
                     gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
+
+          <field
+                  name="serviceExtent"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.service.extent')]"/>
+
           <field
                   name="medseaDataSourceIdentifier"
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/

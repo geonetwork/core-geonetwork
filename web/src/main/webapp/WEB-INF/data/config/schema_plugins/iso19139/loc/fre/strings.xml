@@ -103,6 +103,7 @@
   <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
+  <serviceExtent>Service extent</serviceExtent>
   <useByChallenges>Used by challenges</useByChallenges>
   <environmental-matrix>Environmental matrix</environmental-matrix>
   <sdn-parameter-discovery>Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
