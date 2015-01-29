@@ -297,7 +297,11 @@
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:Date|gco:DateTime|
        gco:LocalName|gmd:PT_FreeText|gml:beginPosition|gml:endPosition|gco:Date|gco:DateTime|
         gml:beginPosition|gml:endPosition">
-    <p><xsl:value-of select="."/></p>
+    <p><xsl:value-of select="."/>
+    <xsl:if test="@uom">
+      <xsl:text> </xsl:text><xsl:value-of select="@uom"/>
+    </xsl:if>
+    </p>
   </xsl:template>
 
 
