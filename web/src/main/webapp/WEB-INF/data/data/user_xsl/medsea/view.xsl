@@ -200,6 +200,7 @@
                     -->
                     <xsl:choose>
                       <xsl:when test="$nodes/*[count(gmd:MD_Keywords/gmd:keyword[* != '']) > 0 or
+                                              */@codeListValue != '' or
                                               (not(gmd:MD_Keywords) and normalize-space() != '')]">
                         <xsl:variable name="label"
                                       select="if (normalize-space($overrideLabel) != '')
@@ -296,7 +297,13 @@
 
   <xsl:template mode="render-value" match="@codeListValue">
     <xsl:variable name="id" select="."/>
-    <xsl:value-of select="$schemaCodelists//entry[code = $id]/label"/>
+
+    <xsl:for-each select="$schemaCodelists//entry[code = $id]/label">
+      <!-- Hack : position filter [1] does not work on above xpath for obscur reason -->
+      <xsl:if test="position() = 1">
+        <xsl:copy-of select="."/>
+      </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template mode="render-value" match="gco:CharacterString|gco:Integer|gco:Decimal|
@@ -354,8 +361,10 @@
   <!-- Display characterString -->
   <xsl:template mode="iso19139"
                 match="gmd:*[gco:CharacterString or gmd:PT_FreeText]|
-        srv:*[gco:CharacterString or gmd:PT_FreeText]|
-        gco:aName[gco:CharacterString]|gmd:*[gmd:URL]|gmd:*[gco:Integer]"
+                      srv:*[gco:CharacterString or gmd:PT_FreeText]|
+                      gco:aName[gco:CharacterString]|
+                      gmd:*[gmd:URL]|
+                      gmd:*[gco:Integer]"
                 priority="2">
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="title">
