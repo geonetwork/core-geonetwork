@@ -7,13 +7,15 @@
   goog.require('gn_thesaurus');
   goog.require('sxt_categorytree');
   goog.require('sxt_panier_directive');
+  goog.require('sxt_viewer_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
     'sxt_panier_directive',
     'gn_thesaurus',
-    'sxt_categorytree'
+    'sxt_categorytree',
+    'sxt_viewer_directive'
   ]);
 
   module.value('sxtGlobals', {});
