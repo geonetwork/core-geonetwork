@@ -1339,7 +1339,7 @@
     <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')
                                             then 'combo'
                                             else ''"/>
-    
+
     <!--<xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>-->
     <xsl:variable name="listOfTransformations"
                   select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')

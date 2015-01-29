@@ -19,7 +19,7 @@
     <xsl:template match="gmd:descriptiveKeywords[gmd:MD_Keywords/@xlink:href]" priority="2">
         <!-- ... and relocate XLink from the child to the current one
         forgetting all children (which are resolved). -->
-      <xsl:message>#<xsl:value-of select="normalize-space(//gmd:fileIdentifier)"/> </xsl:message>
+      <xsl:message>## XLink fixed in <xsl:value-of select="normalize-space(//gmd:fileIdentifier)"/> </xsl:message>
         <xsl:copy>
             <xsl:copy-of select="gmd:MD_Keywords/@xlink:*"/>
         </xsl:copy>
@@ -30,7 +30,7 @@
     when the JS cache is not cleared or the first case
     not yet fixed. -->
     <xsl:template match="gmd:descriptiveKeywords[gmd:descriptiveKeywords]" priority="2">
-      <xsl:message>##<xsl:value-of select="normalize-space(//gmd:fileIdentifier)"/> </xsl:message>
+      <xsl:message>## XLink fixed in <xsl:value-of select="normalize-space(//gmd:fileIdentifier)"/>.</xsl:message>
       <xsl:copy-of select="gmd:descriptiveKeywords"/>
     </xsl:template>
 
