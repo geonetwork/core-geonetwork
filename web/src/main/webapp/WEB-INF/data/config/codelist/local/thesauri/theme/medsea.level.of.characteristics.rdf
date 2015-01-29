@@ -12,7 +12,7 @@
     <dcterms:modified>2014-08-11</dcterms:modified>
   </skos:ConceptScheme>
   <skos:Concept
-      rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/level-of-characteristics#observation-(raw,-qc)">
+      rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/level-of-characteristics#observation-raw-qc">
     <skos:prefLabel xml:lang="en">Observation (raw, QC)</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
     <skos:prefLabel xml:lang="fr">Observation (raw, QC)</skos:prefLabel>
