@@ -12,7 +12,8 @@
    */
   module.directive('sxtMainViewer', [
     'gnMap',
-    function(gnMap) {
+    'gnSearchLocation',
+    function(gnMap, gnSearchLocation) {
       return {
         restrict: 'A',
         replace: true,
@@ -48,6 +49,7 @@
               scope.map.addOverlay(overlay);
 
               scope.active = { tool: false };
+              scope.locService = gnSearchLocation;
 
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
