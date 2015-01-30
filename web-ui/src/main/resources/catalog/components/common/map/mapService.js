@@ -223,7 +223,7 @@
             map.getLayers().push(vector);
           },
 
-          addWmsToMap: function(map, layerParams, layerOptions, index) {
+          createOlWMS: function(map, layerParams, layerOptions, index) {
 
             var options = layerOptions || {};
 
@@ -249,11 +249,6 @@
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
-            if (index) {
-              map.getLayers().insertAt(index, olLayer);
-            } else {
-              map.addLayer(olLayer);
-            }
             return olLayer;
           },
 
@@ -267,7 +262,7 @@
            * @param {Object} getCapLayer
            * @return {*}
            */
-          addWmsToMapFromCap: function(map, getCapLayer) {
+          createOlWMSFromCap: function(map, getCapLayer) {
 
             var legend, attribution, metadata;
             if (getCapLayer) {
@@ -298,7 +293,7 @@
                 }
               }
 
-              return this.addWmsToMap(map, {
+              return this.createOlWMS(map, {
                 LAYERS: layer.Name
               }, {
                 url: layer.url,
@@ -314,44 +309,8 @@
             }
           },
 
-          /**
-           * Add a WMTS layer to the map.
-           *
-           * @param {ol.map} map
-           * @param {Object} srcParams
-           * @param {Object} layerParams
-           * @return {ol.layer.Tile}
-           */
-          addWMTSToMap: function(map, srcParams, layerParams) {
-
-            var source = new ol.source.WMTS({
-              url: srcParams.url,
-              layer: srcParams.layerId,
-              matrixSet: srcParams.matrixId,
-              format: srcParams.format || 'image/png',
-              projection: srcParams.projection,
-              tileGrid: new ol.tilegrid.WMTS({
-                origin: ol.extent.getTopLeft(srcParams.projection.getExtent()),
-                resolutions: srcParams.resolutions,
-                matrixIds: srcParams.matrixIds
-              }),
-              style: srcParams.style || 'default'
-            });
-
-            var olLayer = new ol.layer.Tile({
-              extent: srcParams.projection.getExtent(),
-              label: layerParams.title,
-              opacity: layerParams.opacity,
-              visible: layerParams.visible,
-              source: source,
-              title: srcParams.layerId,
-              url: srcParams.url
-            });
-            ngeoDecorateLayer(olLayer);
-            olLayer.displayInLayerManager = true;
-
-            map.addLayer(olLayer);
-            return olLayer;
+          addWmsToMapFromCap: function(map, getCapLayer) {
+            map.addLayer(this.createOlWMSFromCap(map, getCapLayer));
           },
 
           /**
@@ -364,13 +323,16 @@
            * @param {Object} getCapLayer
            * @return {*}
            */
-          addWmtsToMapFromCap: function(map, getCapLayer, capabilities) {
+          createOlWMTSFromCap: function(map, getCapLayer, capabilities) {
 
             var legend, attribution, metadata;
             if (getCapLayer) {
               var layer = getCapLayer;
 
               var url = capabilities.operationsMetadata.GetTile.
+                  dcp.http.get[0].url;
+
+              var urlCap = capabilities.operationsMetadata.GetCapabilities.
                   dcp.http.get[0].url;
 
               var projection = map.getView().getProjection();
@@ -408,19 +370,39 @@
                 matrixIds[z] = matrix.Identifier;
               }
 
-              return this.addWMTSToMap(map, {
+              var source = new ol.source.WMTS({
                 url: url,
-                layerId: layer.Identifier,
-                matrixId: matrixSet.Identifier,
+                layer: layer.Identifier,
+                matrixSet: matrixSet.Identifier,
+                format: layer.Format[0] || 'image/png',
                 projection: projection,
-                matrixIds: matrixIds,
-                resolutions: resolutions,
-                style: 'default',
-                format: layer.Format[0]
-              }, {
-                title: layer.Title
+                tileGrid: new ol.tilegrid.WMTS({
+                  origin: ol.extent.getTopLeft(projection.getExtent()),
+                  resolutions: resolutions,
+                  matrixIds: matrixIds
+                }),
+                style: 'default'
               });
+
+              var olLayer = new ol.layer.Tile({
+                extent: projection.getExtent(),
+                name: layer.Identifier,
+                title: layer.Title,
+                label: layer.Title,
+                source: source,
+                url: url,
+                urlCap: urlCap
+              });
+              ngeoDecorateLayer(olLayer);
+              olLayer.displayInLayerManager = true;
+
+              return olLayer;
             }
+          },
+
+          addWmtsToMapFromCap: function(map, getCapLayer, capabilities) {
+            map.addLayer(this.createOlWMTSFromCap(map,
+                getCapLayer, capabilities));
           },
 
           /**
@@ -446,9 +428,10 @@
           /**
            * Creates an ol.layer for a given type. Useful for contexts
            * @param {string} type
+           * @param {Object} opt for url or layer name
            * @return {ol.layer}
            */
-          createLayerForType: function(type) {
+          createLayerForType: function(type, opt) {
             switch (type) {
               case 'mapquest':
                 return new ol.layer.Tile({
@@ -472,36 +455,23 @@
                   title: 'Bing Aerial'
                 });
               case 'wmts':
-                var projection = ol.proj.get('EPSG:3857');
-                var projectionExtent = projection.getExtent();
-                var size = ol.extent.getWidth(projectionExtent) / 256;
-                var resolutions = new Array(16);
-                var matrixIds = new Array(16);
-                for (var z = 0; z < 16; ++z) {
-                  // generate resolutions and matrixIds arrays for this WMTS
-                  resolutions[z] = size / Math.pow(2, z);
-                  matrixIds[z] = 'EPSG:3857:' + z;
-                }
-
-                return new ol.layer.Tile({
-                  opacity: 0.7,
-                  extent: projectionExtent,
-                  title: 'Sextant',
-                  source: new ol.source.WMTS({
-                    url: 'http://visi-sextant.ifremer.fr:8080/' +
-                        'geowebcache/service/wmts?',
-                    layer: 'sextant',
-                    matrixSet: 'EPSG:3857',
-                    format: 'image/png',
-                    projection: projection,
-                    tileGrid: new ol.tilegrid.WMTS({
-                      origin: ol.extent.getTopLeft(projectionExtent),
-                      resolutions: resolutions,
-                      matrixIds: matrixIds
-                    }),
-                    style: 'default'
-                  })
-                });
+                var that = this;
+                  if(opt.name && opt.url) {
+                    gnOwsCapabilities.getWMTSCapabilities(opt.url).
+                        then(function(capObj) {
+                          var info = gnOwsCapabilities.getLayerInfoFromCap(
+                              opt.name, capObj);
+                          //info.group = layer.group;
+                          return that.addWmtsToMapFromCap(undefined, info, capObj);
+/*
+                          l.setOpacity(layer.opacity);
+                          l.setVisible(!layer.hidden);
+*/
+                        });
+                  }
+                else {
+                    console.warn('cant load wmts, url or name not provided');
+                  }
             }
             $log.warn('Unsupported layer type: ', type);
           }

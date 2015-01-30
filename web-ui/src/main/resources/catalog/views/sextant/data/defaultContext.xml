@@ -1,0 +1,33 @@
+<ows-context:OWSContext xmlns:ows-context="http://www.opengis.net/ows-context" version="0.3.1" id="ows-context-ex-1-v3">
+    <ows-context:General>
+        <ows:BoundingBox xmlns:ows="http://www.opengis.net/ows" crs="EPSG:3857">
+            <ows:LowerCorner>-682221.0277610825 6053403.188560574</ows:LowerCorner>
+            <ows:UpperCorner>210563.46260977618 6367712.248869219</ows:UpperCorner>
+        </ows:BoundingBox>
+    </ows-context:General>
+    <ows-context:ResourceList>
+      <ows-context:Layer queryable="false" name="{type=wmts,name=sextant}" hidden="false" opacity="1" group="Background layers">
+        <ows:Title xmlns:ows="http://www.opengis.net/ows">Sextant</ows:Title>
+        <ows-context:Server service="urn:ogc:serviceType:WMS">
+          <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?"/>
+        </ows-context:Server>
+        <ows-context:StyleList/>
+      </ows-context:Layer>
+      <ows-context:Layer queryable="false" name="{type=wmts,name=Ocean_Basemap}" hidden="true" opacity="1" group="Background layers">
+        <ows:Title xmlns:ows="http://www.opengis.net/ows">Base Map</ows:Title>
+        <ows-context:Server service="urn:ogc:serviceType:WMS">
+          <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://server.arcgisonline.com/arcgis/rest/services/Ocean_Basemap/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+        </ows-context:Server>
+        <ows-context:StyleList/>
+      </ows-context:Layer>
+      <ows-context:Layer name="{type=bing_aerial}" group="Background layers" hidden="true" opacity="1">
+        <ows:Title xmlns:ows="http://www.opengis.net/ows">Bing Aerial</ows:Title>
+      </ows-context:Layer>
+      <ows-context:Layer name="{type=osm}" group="Background layers" hidden="true" opacity="1">
+        <ows:Title xmlns:ows="http://www.opengis.net/ows">OpenStreetMap</ows:Title>
+      </ows-context:Layer>
+      <ows-context:Layer name="{type=mapquest}" group="Background layers" hidden="true" opacity="1">
+        <ows:Title xmlns:ows="http://www.opengis.net/ows">MapQuest</ows:Title>
+      </ows-context:Layer>
+    </ows-context:ResourceList>
+</ows-context:OWSContext>

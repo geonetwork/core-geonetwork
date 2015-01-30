@@ -131,7 +131,6 @@
         link: function(scope, element, attr) {
 
           var conf = scope.$eval(attr['sxtCategoryTreeConf']);
-          sxtGlobals.sextantTheme = sxtGlobals.sextantTheme || sextantThemes;
 
           /**
          * Find thesaurus translation from its id

@@ -12,7 +12,8 @@
    */
   module.directive('sxtMainViewer', [
     'gnMap',
-    function(gnMap) {
+    'gnSearchLocation',
+    function(gnMap, gnSearchLocation) {
       return {
         restrict: 'A',
         replace: true,
@@ -47,15 +48,75 @@
               });
               scope.map.addOverlay(overlay);
 
+              scope.active = { tool: false };
+              scope.locService = gnSearchLocation;
+
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
+
+              iElement.find('.panel-tools .btn-default.close').click(function() {
+                scope.active.tool = false;
+              });
+
               //TODO: find another solution to render the map
               setTimeout(function() {
                 scope.map.updateSize();
               }, 100);
+
+              scope.map.addControl(new ol.control.ScaleLine({
+                target: document.querySelector('footer')
+              }));
+
             }
           };
         }
       };
     }]);
+
+  module.directive('sxtTool', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element) {
+        element.on('click', function() {
+          scope.active.tool = !$(this).hasClass('active');
+        });
+      }
+    }
+  }]);
+
+  module.directive('sxtCloseTool', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element) {
+        element.on('click', function() {
+          scope.$apply(function() {
+            scope.active.tool = false;
+          });
+        });
+      }
+    }
+  }]);
+
+  module.directive('sxtMousePosition', [ function() {
+    return {
+      restrict: 'A',
+      templateUrl: '../../catalog/views/sextant/templates/mouseposition/mouseposition.html',
+      link: function (scope, element) {
+        scope.projection = 'EPSG:4326';
+
+        var control = new ol.control.MousePosition({
+          projection: 'EPSG:4326',
+          coordinateFormat: function(c) {
+            return c.map(function(i) { return i.toFixed(3) });
+          },
+          target: element[0]
+        });
+        scope.map.addControl(control);
+        scope.setProjection = function() {
+          control.setProjection(ol.proj.get(scope.projection));
+        }
+      }
+    }
+  }]);
+
 })();

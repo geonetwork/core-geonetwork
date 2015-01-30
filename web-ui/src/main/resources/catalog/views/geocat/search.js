@@ -71,11 +71,11 @@
 
       $scope.resultviewFns = {
         addMdLayerToMap: function(link) {
-          gnMap.addWmsToMap(gnSearchSettings.searchMap, {
+          map.addLayer(gnMap.createOlWMS(gnSearchSettings.searchMap, {
             LAYERS: link.name
           },{
             url: link.url
-          });
+          }));
         }
       };
 
