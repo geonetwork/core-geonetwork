@@ -36,39 +36,14 @@
         <langpack iso3="fra"/>
         <langpack iso3="spa"/>        
 	</locale>
-	
-	<!-- =================================================================================== -->
-		
-	<conditions>
-		<condition type="variable" id="guidefault">
-			<name>gui.radio</name>
-			<value>default</value>
-		</condition>
-		<condition type="variable" id="guihtml5widget">
-			<name>gui.radio</name>
-			<value>html5widget</value>
-		</condition>
-	</conditions>
-	
-	<dynamicvariables>
-		<variable name="defaultGUI" condition="guidefault">
-			<value><![CDATA[<client type="redirect" widget="false" url="main.home" />]]></value>
-		</variable>
-		<variable name="defaultGUI" condition="guihtml5widget">
-			<value><![CDATA[<client type="redirect" widget="true" url="search" createParameter="#create" stateId="s"/>]]></value>
-		</variable>
-	</dynamicvariables>
-	
-	<!-- =================================================================================== -->
-	
+
 	<resources>
 		<res id="HTMLLicencePanel.licence"     src="../docs/license.html"/>
 		<res id="HTMLLicencePanel.licence_fra" src="../docs/license_fra.html"/>
-        <res id="HTMLLicencePanel.licence_spa" src="../docs/license_spa.html"/>
+		<res id="HTMLLicencePanel.licence_spa" src="../docs/license_spa.html"/>
 		<res id="HTMLInfoPanel.info"           src="../.props/readme.html"/>
 		<res id="HTMLInfoPanel.info_fra"       src="../.props/readme_fra.html"/>
-        <res id="HTMLInfoPanel.info_spa"       src="../.props/readme_spa.html"/>
-		<res id="userInputSpec.xml"            src="userInputSpec.xml"/>
+		<res id="HTMLInfoPanel.info_spa"       src="../.props/readme_spa.html"/>
 		<res id="userInputLang.xml"            src="userInputLang.xml"/>
 		<res id="userInputLang.xml_fra"        src="userInputLang.xml_fra.xml"/>
 	 	<res id="userInputLang.xml_spa"        src="userInputLang.xml_spa.xml"/>
@@ -76,9 +51,9 @@
 		<res id="shortcutSpec.xml"         	   src="windows-shortcuts.xml"/>
 		<res id="Unix_shortcutSpec.xml"        src="unix-shortcuts.xml"/>
 		<res id="Win_shortcutSpec.xml"         src="windows-shortcuts.xml"/>
-        <res id="packsLang.xml"                src="packsLang.xml"/>
-        <res id="packsLang.xml_fra"            src="packsLang.xml_fra"/>
-        <res id="packsLang.xml_spa"            src="packsLang.xml_spa"/>
+		<res id="packsLang.xml"                src="packsLang.xml"/>
+		<res id="packsLang.xml_fra"            src="packsLang.xml_fra"/>
+		<res id="packsLang.xml_spa"            src="packsLang.xml_spa"/>
 	</resources>
 	
 	<!-- =================================================================================== -->
@@ -88,7 +63,6 @@
 		<panel classname="HTMLLicencePanel" id="htmlLicensePanel"/>
 		<panel classname="TargetPanel" id="targetPanel"/>
 		<panel classname="PacksPanel" id="packsPanel"/>
-		<panel classname="UserInputPanel" id="userInputPanel"/>
 		<panel classname="InstallPanel" id="installPanel"/>
 		<panel classname="ShortcutPanel" id="shortcutPanel"/>
 		<panel classname="HTMLInfoPanel" id="htmlInfoPanel"/>

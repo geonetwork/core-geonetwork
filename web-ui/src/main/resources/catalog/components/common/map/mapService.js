@@ -53,7 +53,7 @@
               return extent;
             }
             else {
-              return ol.proj.transform(extent,
+              return ol.proj.transformExtent(extent,
                   src, dest);
             }
           },
@@ -200,6 +200,27 @@
             } else {
               return '';
             }
+          },
+
+          addKmlToMap: function(name, url, map) {
+            if (!url || url == '') {
+              return;
+            }
+
+            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+            var kmlSource = new ol.source.KML({
+              projection: map.getView().getProjection(),
+              url: proxyUrl
+            });
+
+            var vector = new ol.layer.Vector({
+              source: kmlSource,
+              label: name
+            });
+
+            ngeoDecorateLayer(vector);
+            vector.displayInLayerManager = true;
+            map.getLayers().push(vector);
           },
 
           addWmsToMap: function(map, layerParams, layerOptions, index) {
@@ -369,7 +390,7 @@
 
               var matrixSet;
               for (var i = 0; i < capabilities.TileMatrixSet.length; i++) {
-                if(capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
+                if (capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
                   matrixSet = capabilities.TileMatrixSet[i];
                 }
               }
@@ -469,7 +490,7 @@
                   source: new ol.source.WMTS({
                     url: 'http://visi-sextant.ifremer.fr:8080/' +
                         'geowebcache/service/wmts?',
-                    layer: 'Sextant',
+                    layer: 'sextant',
                     matrixSet: 'EPSG:3857',
                     format: 'image/png',
                     projection: projection,

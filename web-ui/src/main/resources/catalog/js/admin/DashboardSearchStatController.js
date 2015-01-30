@@ -38,7 +38,7 @@
 
       function getMainSearchStat() {
         // Get core statistics for q service
-        $http.get('statistics-search@json?service=q')
+        $http.get('statistics-search?_content_type=json&service=q')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.q =
                   (data === 'null' ? null : data);
@@ -47,7 +47,7 @@
             });
 
         // Get core statistics for csw service
-        $http.get('statistics-search@json?service=csw')
+        $http.get('statistics-search?_content_type=json&service=csw')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.csw =
                   (data === 'null' ? null : data);
@@ -55,7 +55,7 @@
               // TODO
             });
 
-        $http.get('statistics-search-ip@json')
+        $http.get('statistics-search-ip?_content_type=json')
         .success(function(data) {
               $scope.statistics.search.ip = data;
             }).error(function(data) {
@@ -68,9 +68,13 @@
 
         // Search by date statistics
         $http.get($scope.url +
-                  'statistics-search-by-date@json?' +
-                  'dateFrom=' + $scope.dateFrom +
-                  '&dateTo=' + $scope.dateTo +
+                  'statistics-search-by-date?_content_type=json&' +
+                  'dateFrom=' +
+                    ($scope.dateFrom === null ? 'NULL' :
+                      moment($scope.dateFrom).format('YYYY-MM-DD')) +
+                  '&dateTo=' +
+                    ($scope.dateTo === null ? 'NULL' :
+                      moment($scope.dateTo).format('YYYY-MM-DD')) +
                   '&graphicType=' + $scope.graphicType +
                   '&byType=' + byType).success(function(data) {
           // Get min/max range
@@ -180,7 +184,7 @@
 
       function getSearchStatByService() {
         // Search by service type statistics
-        $http.get('statistics-search-by-service-type@json')
+        $http.get('statistics-search-by-service-type?_content_type=json')
         .success(function(data) {
               var total = 0;
               for (var i in data) {
@@ -217,7 +221,7 @@
       };
 
       function getSearchStatForFieldsAndTerms() {
-        $http.get('statistics-search-fields@json')
+        $http.get('statistics-search-fields?_content_type=json&')
         .success(function(data) {
               $scope.statistics.search.fields = data;
 
@@ -235,7 +239,7 @@
 
         $scope.viewTermsForField = function(field, service) {
           $scope.currentField = field;
-          $http.get('statistics-search-terms@json?' +
+          $http.get('statistics-search-terms?_content_type=json&' +
                   'field=' + field +
                   '&service=' + service)
                   .success(function(data) {

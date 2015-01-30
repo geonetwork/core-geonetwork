@@ -177,4 +177,8 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template match="systemInfo">
+		<xsl:copy-of select="." />
+	</xsl:template>
+
 </xsl:stylesheet>

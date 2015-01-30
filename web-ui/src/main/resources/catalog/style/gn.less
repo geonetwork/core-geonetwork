@@ -2,6 +2,7 @@
 @import "../lib/style/font-awesome/less/font-awesome.less";
 @import "gn_bootstrap.less";
 
+@import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 // import the css files as less files so they are included in the final output of wro4j
@@ -13,6 +14,21 @@
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
 
 
+.gn-pager {
+  .pager {
+    margin: 0;
+    text-align: left;
+    display: inline-block;
+    li > a {
+      padding: 2px 5px;
+      border-radius: 6px;
+      font-size: 120%;
+    }
+    em {
+      font-style: normal;
+    }
+  }
+}
 
 .btn-circle {
   width: 30px;
@@ -49,6 +65,11 @@
   Display button label in top tool bar using inline mode.
  */
 .gn-top-bar {
+    border-radius: 0px;
+    padding: 0 20px;
+    .navbar-collapse {
+ //       padding-right: 5px;
+    }
   .visible-lg {
     display: none !important;
   }
@@ -307,6 +328,10 @@ font-size: small;
 
 span.twitter-typeahead {
   display: block !important;
+}
+
+.row {
+    margin: auto 0px;
 }
 
 @gn-popup-max-height: 400px;

@@ -22,7 +22,8 @@
     'gnOwsCapabilities',
     '$http',
     'gnViewerSettings',
-    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings) {
+	'$translate',
+    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings, $translate ) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -64,14 +65,14 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == 'Background layers' && layer.name.match(re)) {
+            if (layer.group == $translate('BackgroundLayers') && layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
               var olLayer = gnMap.createLayerForType(type);
               if (olLayer) {
                 bgLayers.push(olLayer);
                 olLayer.displayInLayerManager = false;
                 olLayer.background = true;
-                olLayer.set('group', 'Background layers');
+                olLayer.set('group', $translate('BackgroundLayers'));
                 olLayer.setVisible(!layer.hidden);
               }
             } else {
@@ -87,7 +88,10 @@
         // the application otherwise use the defaults from config
         if (bgLayers.length > 0) {
           // make sure we remove any existing bglayer
-          map.getLayers().removeAt(0);
+          if (map.getLayers().getLength() > 0) {
+            map.getLayers().removeAt(0);
+          }
+
           // first clear settings bgLayers
           gnViewerSettings.bgLayers.length = 0;
 
@@ -146,6 +150,7 @@
         };
 
         // add the background layers
+		//todo: grab this from config
         angular.forEach(gnViewerSettings.bgLayers, function(layer) {
           var source = layer.getSource();
           var name;

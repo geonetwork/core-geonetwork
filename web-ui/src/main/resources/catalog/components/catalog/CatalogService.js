@@ -69,8 +69,9 @@
            */
         copy: function(id, groupId, withFullPrivileges, 
             isTemplate, isChild) {
-          var url = gnUrlUtils.append('md.create@json',
+          var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
+                _content_type: 'json',
                 group: groupId,
                 id: id,
                 template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
@@ -155,7 +156,7 @@
            */
         create: function(id, groupId, withFullPrivileges, 
             isTemplate, isChild, tab) {
-          this.copy(id, groupId, withFullPrivileges,
+          return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
             var path = '/metadata/' + data.id;
             if (tab) {
@@ -254,11 +255,13 @@
 
     mdPrivileges: 'md.privileges.update@json',
     mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    publish: 'md.publish',
+    unpublish: 'md.unpublish',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
-    processXml: 'xml.metadata.processing@json', // TODO: CHANGE
+    processXml: 'xml.metadata.processing',
 
     info: 'info@json',
 
@@ -277,8 +280,8 @@
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
-    suggest: 'suggest'
-
+    suggest: 'suggest',
+    facetConfig: 'search/facet/config'
   });
 
   /**
@@ -402,6 +405,7 @@
   module.value('gnConfig', {
     key: {
       isXLinkEnabled: 'system.xlinkResolver.enable',
+      isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',

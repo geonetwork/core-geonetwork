@@ -2,16 +2,22 @@ package org.fao.geonet.utils;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
+import org.fao.geonet.utils.debug.OpenResourceTracker;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.context.support.GenericApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,6 +99,10 @@ public class XmlTest {
     }
 
     protected void doTestTransform() throws Exception {
+        final GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.getBeanFactory().registerSingleton("systemInfo", SystemInfo.createForTesting(SystemInfo.STAGE_DEVELOPMENT));
+        ApplicationContextHolder.set(applicationContext);
+
         Path path = Paths.get(XmlTest.class.getResource("xmltest/xsl/test.xsl").toURI());
         Element result = Xml.transform(new Element("el"), path);
         assertTransformedXml(result);
@@ -100,6 +110,10 @@ public class XmlTest {
         final Path test = setupMemoryFs(path.getParent());
         result = Xml.transform(new Element("el"), test.resolve("xsl/test.xsl"));
         assertTransformedXml(result);
+        final StringWriter openResources = new StringWriter();
+        PrintWriter writer = new PrintWriter(openResources);
+        OpenResourceTracker.printExceptions(writer, 100);
+        assertEquals(openResources.toString(), 0, OpenResourceTracker.numberOfOpenResources());
     }
 
     @Test

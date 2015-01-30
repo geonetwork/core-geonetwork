@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.mef;
 
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.exceptions.BadFormatEx;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -117,7 +118,7 @@ public class MEFVisitor implements IVisitor {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(pubPath)) {
                     for (Path path : paths) {
                         String simpleName = path.getFileName().toString();
-                        try (InputStream isb = Files.newInputStream(path)) {
+                        try (InputStream isb = IO.newInputStream(path)) {
                             v.handlePublicFile(simpleName, MEFLib.getChangeDate(pubFiles, simpleName), isb, 0);
                         }
                     }
@@ -128,7 +129,7 @@ public class MEFVisitor implements IVisitor {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(priPath)) {
                     for (Path path : paths) {
                         String simpleName = path.getFileName().toString();
-                        try (InputStream isb = Files.newInputStream(path)) {
+                        try (InputStream isb = IO.newInputStream(path)) {
                             v.handlePrivateFile(simpleName, MEFLib.getChangeDate(prvFiles, simpleName), isb, 0);
                         }
                     }

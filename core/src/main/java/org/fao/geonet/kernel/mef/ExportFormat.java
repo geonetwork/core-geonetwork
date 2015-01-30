@@ -42,9 +42,6 @@ public abstract class ExportFormat implements GeonetworkExtension {
 
         Element md = Xml.loadString(xmlData, false);
 
-        // Resolving Xlinks before export
-        // md = Processor.processXLink(md);
-
         // Apply a stylesheet transformation when schema is ISO profil
         if (transform) {
             md = Xml.transform(md, stylePath);

@@ -1,0 +1,62 @@
+<div class="container-fluid"
+     data-ng-search-form=""
+     data-runSearch="true">
+  <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
+
+  <div class="row"
+       data-ng-show="searchResults.records.length > 0">
+    <div class="col-md-offset-3 col-md-2 relative">
+      <div data-gn-selection-widget=""
+           data-results="searchResults"></div>
+      <!-- TODO: Add action on selection -->
+    </div>
+    <div class="col-md-7">
+      <div class="pull-right"
+           data-gn-pagination="paginationInfo"
+           data-hits-values="searchObj.hitsperpageValues"></div>
+
+      <div class="gn-results-switch pull-right"
+           data-gn-results-tpl-switcher
+           data-template-url="resultTemplate"></div>
+
+      <div class="pull-right"
+           data-sortby-combo=""
+           data-params="searchObj.params"
+           data-gn-sortby-values="searchObj.sortbyValues"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 gn-search-facet">
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-facet-list="searchResults.facet"
+           data-facet-config="facetsSummaryType"
+           data-current-facets="currentFacets">
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="gn-results-heading">
+        <div data-gn-facet-breadcrumb="currentFacets"></div>
+      </div>
+      <span class="loading fa fa-spinner fa-spin"
+            data-ng-show="searching"></span>
+
+      <div class="alert alert-warning" role="alert"
+           ng-if="!searching && searchResults.count == 0">
+        <i class="fa fa-frown-o"></i>
+        <span data-translate="">zarooResult</span>
+      </div>
+
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-results-container=""
+           data-search-results="searchResults"
+           data-template-url="resultTemplate"
+           data-map="searchObj.searchMap"></div>
+
+    </div>
+  </div>
+
+  <div ngeo-map="searchObj.searchMap" class="gn-search-map">
+    <button data-ng-click="location.setMap()" class="btn btn-default"><i class="fa fa-globe"></i></button>
+  </div>
+</div>

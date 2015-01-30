@@ -1,10 +1,30 @@
 package org.fao.geonet;
 
-import com.google.common.collect.Lists;
+import static java.lang.Math.round;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import jeeves.constants.ConfigFile;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -28,26 +48,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static java.lang.Math.round;
-import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Lists;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -57,10 +63,13 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/12/13
  * Time: 8:31 PM
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
-public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
-    @Autowired
-    protected ConfigurableApplicationContext _applicationContext;
+@ContextConfiguration(
+    inheritLocations = true,
+    locations = {"classpath:core-repository-test-context.xml", "classpath:web-test-context.xml"}
+    )
+    public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
+        @Autowired
+        protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
     protected EntityManager _entityManager;
     @Autowired
@@ -209,6 +218,29 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return admin;
     }
 
+    public MockHttpSession loginAsAdmin() {
+        final User user = _userRepo.findAllByProfile(Profile.Administrator)
+                .get(0);
+        MockHttpSession session = new MockHttpSession();
+
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities());
+        auth.setDetails(user);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+          
+        return session;
+    }
+
+    public MockHttpSession loginAs(User user) {
+        MockHttpSession session = new MockHttpSession();
+
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities());
+        auth.setDetails(user);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+          
+        return session;
+    }
     public Element getSampleMetadataXml() throws IOException, JDOMException {
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());

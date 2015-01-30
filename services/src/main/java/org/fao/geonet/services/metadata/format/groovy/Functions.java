@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.io.Closer;
 import groovy.lang.Closure;
 import groovy.util.IndentPrinter;
+import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -159,5 +160,30 @@ public class Functions extends SchemaLocalizations {
 
     private Element getFormatterTranslations(Path dir) throws Exception {
        return fparams.format.getPluginLocResources(fparams.context, dir);
+    }
+
+    public String getXPathFrom(GPathResult path) {
+        if (path == null) {
+            return "";
+        }
+
+        final GPathResult parent = path.parent();
+        if (parent == path) {
+            return "";
+        }
+
+        StringBuilder currPath = new StringBuilder(getXPathFrom(parent));
+        if (currPath.length() > 0) {
+            currPath.append("/");
+        }
+        currPath.append(path.name());
+
+        final GPathResult singlingsAndSelf = (GPathResult) parent.getProperty(path.name());
+        if (singlingsAndSelf.size() > 1) {
+            final int i = singlingsAndSelf.list().indexOf(path);
+            currPath.append('[').append(i + 1).append(']');
+        }
+
+        return currPath.toString();
     }
 }

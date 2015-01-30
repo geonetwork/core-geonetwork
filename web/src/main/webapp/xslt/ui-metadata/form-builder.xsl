@@ -238,7 +238,7 @@
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
       class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-toggle="tooltip" data-placement="top" title="Toggle expand / collapse">
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -284,7 +284,8 @@
     <i class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-      data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
+      data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
+      data-toggle="tooltip" data-placement="top" title="{{{{'deleteFieldSet' | translate}}}}"/>
 
   </xsl:template>
   
@@ -596,7 +597,7 @@
                   <xsl:for-each select="$childEditInfo/gn:choose">
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
                     
-                    <i type="button" class="btn fa fa-plus gn-add" 
+                    <i type="button" class="btn btn-default fa fa-plus gn-add" 
                     title="{$label/description}"
                     data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
                     </i>
@@ -606,7 +607,7 @@
                   If many choices, make a dropdown button -->
             <xsl:when test="count($childEditInfo/gn:choose) > 1">
               <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
                   <span/>
                   <span class="caret"/>
                 </button>
@@ -644,7 +645,7 @@
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
-                  <i class="btn fa fa-plus gn-add"
+                  <i class="btn btn-default fa fa-plus gn-add"
                     data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
                   />
                 </xsl:otherwise>
@@ -937,7 +938,8 @@
       <i class="btn fa fa-times text-danger gn-control pull-right"
         data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-        data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
+        data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
+        data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
     </xsl:if>
   </xsl:template>
 
@@ -951,7 +953,7 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <i class="btn fa fa-plus gn-add"
+      <i class="btn btn-default fa fa-plus gn-add"
         data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
     </xsl:if>
   </xsl:template>
@@ -1035,7 +1037,7 @@
         </xsl:choose>
       </div>
       <div class="col-sm-1">
-        <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')"/>
+          <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
       </div>
     </div>
   </xsl:template>

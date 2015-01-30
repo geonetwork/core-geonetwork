@@ -26,13 +26,22 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -42,6 +51,7 @@ import org.jdom.JDOMException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -52,7 +62,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, WebDavParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+        super(cancelMonitor);
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -83,7 +94,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
         try {
             Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
-            rr.init(log, context, params);
+            rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
             if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
             align(files);
@@ -110,6 +121,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
 		for (final String uri : localUris.getUris()) {
+            if (cancelMonitor.get()) {
+                return;
+            }
+
             if (!exists(files, uri)) {
                 // only one metadata record created per uri by this harvester
                 String id = localUris.getRecords(uri).get(0).id;
@@ -130,7 +145,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//--- insert/update new metadata
 
 		for(RemoteFile rf : files) {
-			result.totalMetadata++;
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
 			if (records == null) {
 				addMetadata(rf);
@@ -257,7 +276,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 		result.addedMetadata++;
 	}
 	
@@ -379,7 +398,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id, false);
+            dataMan.indexMetadata(record.id, true);
 			result.updatedMetadata++;
 		}
 	}
@@ -409,7 +428,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 //=============================================================================
 
 interface RemoteRetriever {
-	public void init(Logger log, ServiceContext context, WebDavParams params);
+	public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params);
 	public List<RemoteFile> retrieve() throws Exception;
 	public void destroy();
 }

@@ -1,0 +1,10 @@
+<summary count="1" type="local">
+  <dimension name="regionKeyword" label="Region">
+    <category value="http://geonetwork-opensource.org/regions#country" label="country" count="1">
+      <category value="http://geonetwork-opensource.org/regions#1220" label="All fishing areas" count="1" />
+    </category>
+    <category value="http://geonetwork-opensource.org/regions#ocean" label="ocean" count="1">
+      <category value="http://geonetwork-opensource.org/regions#1220" label="All fishing areas" count="1" />
+    </category>
+  </dimension>
+</summary>

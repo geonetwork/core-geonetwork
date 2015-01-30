@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
@@ -242,7 +243,8 @@ public class Upload implements Service {
             }
 
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, path, siteURL);
+            final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
+            Thesaurus gst = new Thesaurus(isoLanguageMapper, fname, type, dir, path, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.deleteFile(rdfFile, false, Geonet.THESAURUS);

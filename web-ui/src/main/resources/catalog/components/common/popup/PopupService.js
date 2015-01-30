@@ -85,12 +85,14 @@
             '      <button type="button" class="close" data-dismiss="modal">' +
             '        &times;</button>' +
             '      <h5 class="modal-title" translate>' +
-            '        <span>'+ options.title +'</span></h5>' +
+            '        <span>' + options.title + '</span></h5>' +
             '      </div>' +
-            '    <div class="modal-body">'+ options.content +'</div>' +
+            '    <div class="modal-body">' + options.content + '</div>' +
             '  </div>' +
             '</div>' +
             '</div>');
+
+        element = $compile(element)($rootScope.$new());
 
         $(document.body).append(element);
         element.modal();

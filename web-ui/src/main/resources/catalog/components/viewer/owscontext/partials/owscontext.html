@@ -1,16 +1,26 @@
 <div class="btn-group context">
   <a class="btn btn-default" data-ng-click="save($event)"
-     download="context.xml">
-    <span class="fa fa-save"></span>
-    Sauvegarder
+     title="{{'downloadContext'|translate}}" download="context.xml">
+    <i class="fa fa-save"></i>&nbsp;
+    <span data-translate="">downloadContext</span>
   </a>
-  <button type="button" class="btn btn-default import">
-    <span class="fa fa-upload"></span>
-    Restaurer
-  </button>
+  <!--
+  TODO: KML Export ?
+  <a class="btn btn-default">
+    <i class="fa fa-save"></i>&nbsp;
+    <span data-translate="">kmlContext</span>
+  </a>-->
 </div>
+<div class="btn-group context">
+  <button type="button" class="btn btn-default import" title="{{'uploadContext'|translate}}">
+    <i class="fa fa-upload"></i>&nbsp;
+    <span data-translate="">uploadContext</span>
+  </button>
+  <a class="btn btn-default" data-ng-click="reset($event)" title="{{'resetContext'|translate}}">
+    <i class="fa fa-reset"></i>&nbsp;
+    <span data-translate="">resetContext</span>
+  </a>
+</div>
+
 <input class="hidden" type="file"
        accept="text/xml" id="owc-file-input"/>
-<p>
-  ou <a href="">exporter au Format KML</a>
-</p>

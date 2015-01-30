@@ -23,20 +23,9 @@
 
 package org.fao.geonet.component.csw;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import bak.pcj.map.ObjectKeyIntMapIterator;
+import bak.pcj.map.ObjectKeyIntOpenHashMap;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DocumentStoredFieldVisitor;
@@ -54,6 +43,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
@@ -67,14 +57,22 @@ import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import bak.pcj.map.ObjectKeyIntMapIterator;
-import bak.pcj.map.ObjectKeyIntOpenHashMap;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 //=============================================================================
 @Component(CatalogService.BEAN_PREFIX+GetDomain.NAME)
@@ -178,7 +176,9 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	public static List<Element> handlePropertyName(CatalogConfiguration catalogConfig, String[] propertyNames,
-                                                   ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
+                                                   ServiceContext context, boolean freq, int maxRecords,
+                                                   String cswServiceSpecificConstraint,
+                                                   LuceneConfig luceneConfig) throws Exception {
 
 		List<Element> domainValuesList = new ArrayList<Element>();
 
@@ -235,9 +235,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( 
 						maxRecords, 0, maxRecords, context.getLanguage(), 
-						null, luceneConfig.getTaxonomyConfiguration(), reader,
-						query, filter, sort, null, false, false,
-						false, false	// Scoring is useless for GetDomain operation
+						null, luceneConfig, reader,
+						query, filter, sort, null, false
 				);
 				TopDocs hits = searchResults.one();
 			

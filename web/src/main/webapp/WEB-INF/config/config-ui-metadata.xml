@@ -322,5 +322,61 @@
       <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
+    <service name="md.category.update">
+      <documentation><![CDATA[
+        Update metadata category by first removing all existing
+        and then setting the one provided in parameters.
+
+        Parameters:
+        * id: The metadata id
+        * _<category_id>=on : The category ids
+
+        ]]></documentation>
+      <class name=".services.metadata.UpdateCategories" />
+    </service>
+
+    <service name="md.category.batch.update">
+      <class name=".services.metadata.BatchUpdateCategories" />
+    </service>
+
+    <service name="md.versioning.start">
+      <documentation><![CDATA[
+        Start versioning of a metadata record
+
+        Parameters:
+        * id: The metadata id
+        ]]></documentation>
+      <class name=".services.metadata.Version" />
+    </service>
+
+    <service name="md.batch.versioning">
+      <documentation><![CDATA[
+        Start versioning of the selected records
+
+        ]]></documentation>
+      <class name=".services.metadata.BatchVersion" />
+    </service>
+
+
+    <service name="md.status.list">
+      <documentation><![CDATA[
+        Get the list of all possible status.
+        ]]></documentation>
+      <class name=".services.metadata.GetStatus" />
+    </service>
+
+
+    <service name="md.status.update">
+
+      <documentation><![CDATA[
+        Update metadata status.
+
+        Parameters:
+        * id: The metadata id
+        * status: The new status
+        * changeMessage: The log message
+        ]]></documentation>
+      <class name=".services.metadata.UpdateStatus" />
+    </service>
   </services>
 </geonet>

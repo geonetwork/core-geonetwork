@@ -187,21 +187,21 @@ public class GeonetworkDataDirectory {
             // System property defined according to webapp name
             this.systemDataDir = lookupProperty(jeevesServlet, handlerConfig, webappName + KEY_SUFFIX);
         }
-		// GEONETWORK.dir is default
+        // GEONETWORK.dir is default
         if (this.systemDataDir == null) {
             this.systemDataDir = lookupProperty(jeevesServlet, handlerConfig, GEONETWORK_DIR_KEY);
-		}
+        }
 
-		boolean useDefaultDataDir = false;
+        boolean useDefaultDataDir = false;
         Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization: " + this.systemDataDir);
-		
+
         if (this.systemDataDir == null) {
-			Log.warning(Geonet.DATA_DIRECTORY,
-					"    - Data directory properties is not set. Use "
-							+ webappName + KEY_SUFFIX + " or " + GEONETWORK_DIR_KEY
-							+ " properties.");
-			useDefaultDataDir = true;
-		} else {
+            Log.warning(Geonet.DATA_DIRECTORY,
+                    "    - Data directory properties is not set. Use "
+                    + webappName + KEY_SUFFIX + " or " + GEONETWORK_DIR_KEY
+                    + " properties.");
+            useDefaultDataDir = true;
+        } else {
             updateSystemDataDirWithNodeSuffix();
             try {
                 Files.createDirectories(this.systemDataDir);
@@ -211,50 +211,54 @@ public class GeonetworkDataDirectory {
             }
 
             if (!Files.exists(this.systemDataDir)) {
-				Log.warning(Geonet.DATA_DIRECTORY,
-						"    - Data directory does not exist. Create it first.");
-				useDefaultDataDir = true;
-			}
-	
-            if (!Files.isWritable(this.systemDataDir)) {
-				Log.warning(
-						Geonet.DATA_DIRECTORY,
-						"    - Data directory is not writable. Set read/write privileges to user starting the catalogue (ie. "
-								+ System.getProperty("user.name") + ").");
-				useDefaultDataDir = true;
-			}
-	
+                Log.warning(Geonet.DATA_DIRECTORY,
+                        "    - Data directory does not exist. Create it first.");
+                useDefaultDataDir = true;
+            }
+
+            try {
+                final Path testFile = this.systemDataDir.resolve("testDD.txt");
+                IO.touch(testFile);
+                Files.delete(testFile);
+            } catch (IOException e) {
+                Log.warning(
+                        Geonet.DATA_DIRECTORY,
+                        "    - Data directory is not writable. Set read/write privileges to user starting the catalogue (ie. "
+                        + System.getProperty("user.name") + ").");
+                useDefaultDataDir = true;
+            }
+
             if (!this.systemDataDir.isAbsolute()) {
-				Log.warning(
-						Geonet.DATA_DIRECTORY,
-						"    - Data directory is not an absolute path. Relative path is not recommended.\n"
-								+ "Update "
-								+ webappName
-								+ KEY_SUFFIX + " or geonetwork.dir environment variable.");
-			}
-		}
-		
-		if (useDefaultDataDir) {
+                Log.warning(
+                        Geonet.DATA_DIRECTORY,
+                        "    - Data directory is not an absolute path. Relative path is not recommended.\n"
+                        + "Update "
+                        + webappName
+                        + KEY_SUFFIX + " or geonetwork.dir environment variable.");
+            }
+        }
+
+        if (useDefaultDataDir) {
             systemDataDir = getDefaultDataDir(webappDir);
             updateSystemDataDirWithNodeSuffix();
             Log.warning(Geonet.DATA_DIRECTORY,
-					"    - Data directory provided could not be used. Using default location: "
-							+ systemDataDir);
-		}
+                    "    - Data directory provided could not be used. Using default location: "
+                    + systemDataDir);
+        }
 
 
         try {
             this.systemDataDir = this.systemDataDir.toRealPath();
             if (!Files.exists(this.systemDataDir)) {
-                 Log.error(Geonet.DATA_DIRECTORY, "System Data Directory does not exist");
+                Log.error(Geonet.DATA_DIRECTORY, "System Data Directory does not exist");
             }
         } catch (IOException e) {
             Log.warning(Geonet.DATA_DIRECTORY, "Unable to make a canonical path from: " + systemDataDir);
         }
-		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory is: "
-				+ systemDataDir);
+        Log.info(Geonet.DATA_DIRECTORY, "   - Data directory is: "
+                                        + systemDataDir);
 
-		// Set subfolder data directory
+        // Set subfolder data directory
         luceneDir = setDir(jeevesServlet, webappName, handlerConfig, ".lucene" + KEY_SUFFIX,
                 Geonet.Config.LUCENE_DIR, "index");
         spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, "spatial" + KEY_SUFFIX,
@@ -282,20 +286,17 @@ public class GeonetworkDataDirectory {
         );
 		formatterDir = setDir(jeevesServlet, webappName, handlerConfig,
                 ".formatter" + KEY_SUFFIX, Geonet.Config.FORMATTER_PATH, "data", "formatter");
-        htmlCacheDir = IO.toPath(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
-        handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.toAbsolutePath().toString());
-        try {
-            Files.createDirectories(htmlCacheDir);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig,
+                ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
 
         initDataDirectory();
 
         return this.systemDataDir;
-	}
+    }
 
     private void updateSystemDataDirWithNodeSuffix() {
         if (!isDefaultNode) {

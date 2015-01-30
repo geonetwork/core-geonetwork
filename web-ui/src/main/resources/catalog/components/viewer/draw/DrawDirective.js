@@ -282,8 +282,8 @@
           getType: '&gnStyleType'
         },
         link: function(scope, element, attrs) {
-          scope.colors = ['red', 'orange', 'blue', 'white', 'black',
-            'yellow', 'green', 'pink', 'brown'];
+          scope.colors = ['red', 'orange', 'blue', 'white', 'black', 'gray',
+            'yellow', 'green', 'pink', 'purple', 'brown'];
         }
       };
     }]);

@@ -34,6 +34,14 @@ public class CswVirtualServiceResponse implements Serializable {
     private String name;
     private String description;
 
+    public List<ServiceParameter> getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(List<ServiceParameter> parameter) {
+        this.parameter = parameter;
+    }
+
     @XmlElementWrapper(name = "serviceParameters")
     private List<ServiceParameter> parameter;
 

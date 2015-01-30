@@ -1,0 +1,54 @@
+<div ng-controller="gnsGeocatToolbar">
+
+  <div class="navbar-header">
+
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#geocat-toolbar">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+
+  <div class="collapse navbar-collapse geocat-toolbar" id="geocat-toolbar">
+
+    <ul class="nav navbar-nav">
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/news.html" translate>News</a></li>
+      <li class="active"><a href="" data-ng-click="goToHomepage()" translate>Discovery service</a></li>
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/documentation.html" translate>Documentation</a></li>
+      <li class=""><a href="http://www.geocat.ch/internet/geocat/en/home/about.html" translate>About geocat.ch</a></li>
+    </ul>
+
+    <div class="form-group navbar-right navbar-btn" gn-language-switcher="lang" data-langs="langs"></div>
+
+    <form class="navbar-form navbar-right" role="login" action="../../j_spring_security_check" method="post" ng-if="user['@authenticated'] != 'true'">
+      <div class="form-group">
+        <input type="text" name="username" class="form-control" placeholder="{{ 'username' | translate }}">
+        <input type="password" name="password" class="form-control" placeholder="{{ 'password' | translate }}">
+      </div>
+      <button type="submit" class="btn btn-default" translate>Signin</button>
+    </form>
+
+    <div ng-if="authenticated" class="navbar-text navbar-right">
+      <span translate>Signed in as </span> {{user['username']}}
+      <a href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
+        <i class="fa fa-sign-out"></i>
+      </a>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-link dropdown-toggle navbar-link" data-toggle="dropdown">
+          <span translate>adminConsole</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="{{pages.admin}}">
+            <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
+          <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
+            <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+          <li><a href="catalog.edit#/import" target="_blank">
+            <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

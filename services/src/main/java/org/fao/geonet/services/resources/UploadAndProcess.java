@@ -69,7 +69,7 @@ public class UploadAndProcess {
     @ResponseBody
     public IdResponse exec(HttpServletRequest request,
                            @PathVariable String lang,
-                           @RequestParam("file") MultipartFile file,
+                           @RequestParam(value="filename") MultipartFile file,
                            @RequestParam(value = Params.TITLE, defaultValue = "") String description,
                            @RequestParam(defaultValue = "") String id,
                            @RequestParam(defaultValue = "") String uuid,
@@ -91,10 +91,10 @@ public class UploadAndProcess {
         if (username == null)
             username = "unknown (this shouldn't happen?)";
 
-        String fname = file.getName();
+        String fname = file.getOriginalFilename();
         String fsize = Long.toString(file.getSize());
         IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
-        uploadHook.onUpload(context, access, overwrite, Integer.parseInt(id), fname, Double.parseDouble(fsize));
+        uploadHook.onUpload(file.getInputStream(), context, access, overwrite, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
 
         context.info("UPLOADED:" + fname + "," + id + "," + context.getIpAddress() + "," + username);
@@ -102,7 +102,7 @@ public class UploadAndProcess {
         Map<String, String[]> allParams = Maps.newHashMap(request.getParameterMap());
         // Set parameter and process metadata to reference the uploaded file
         allParams.put("url", new String[]{file.getName()});
-        allParams.put("name", new String[]{file.getName()});
+        allParams.put("name", new String[]{file.getOriginalFilename()});
         allParams.put("desc", new String[]{description});
         allParams.put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 

@@ -41,7 +41,7 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
 
         try {
             Files.createDirectories(outDir);
-            try (InputStream is = Files.newInputStream(file);
+            try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {
 
                 BinaryFile.copy(is, os);

@@ -50,6 +50,12 @@
             $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
 
+          scope.reset = function() {
+            gnOwsContextService.loadContextFromUrl(
+                gnViewerSettings.defaultContext,
+                scope.map);
+          };
+
           var fileInput = element.find('input[type="file"]')[0];
           element.find('.import').click(function() {
             fileInput.click();

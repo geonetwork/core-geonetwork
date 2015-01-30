@@ -74,7 +74,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.version">
+        <service name="metadata.version" deprecated="true">
             <class name=".services.metadata.Version" />
 
             <output sheet="infomodal.xsl">
@@ -84,7 +84,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.version">
+        <service name="metadata.batch.version" deprecated="true">
             <class name=".services.metadata.BatchVersion" />
 
             <output sheet="metadata-batch-results.xsl">
@@ -225,7 +225,7 @@
             </output>
         </service>
 
-        <service name="metadata.status.form">
+        <service name="metadata.status.form" deprecated="false">
             <class name=".services.metadata.GetStatus" />
 
             <output sheet="metadata-status.xsl" />
@@ -233,14 +233,14 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.status">
+        <service name="metadata.status" deprecated="">
             <class name=".services.metadata.UpdateStatus" />
 
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.category.form">
+        <service name="metadata.category.form" deprecated="true">
             <class name=".services.metadata.GetCategories" />
 
             <output sheet="metadata-category.xsl" />
@@ -248,12 +248,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-
-		<service name="xml.metadata.category">
-			<class name=".services.metadata.GetCategories"/>
-		</service>
-		
-        <service name="metadata.category">
+        <service name="metadata.category" deprecated="true">
             <class name=".services.metadata.UpdateCategories" />
 
         </service>

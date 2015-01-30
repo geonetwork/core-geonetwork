@@ -11,14 +11,17 @@
           <button type="button" class="btn btn-default"
             data-ng-class="{'btn-primary': mode == 'url'}"
             data-ng-click="mode = 'url'">
+            <i class="fa fa-upload"></i>&nbsp;
             {{'url' | translate}}</button>
           <button type="button" class="btn btn-default"
             data-ng-class="{'btn-primary': mode == 'upload'}"
             data-ng-click="mode = 'upload'">
+            <i class="fa fa-globe"></i>&nbsp;
             {{'upload' | translate}}</button>
           <button type="button" class="btn btn-default"
             data-ng-class="{'btn-primary': mode == 'thumbnailMaker'}"
             data-ng-click="mode = 'thumbnailMaker'">
+            <i class="fa fa-print"></i>&nbsp;
             {{'thumbnailMaker' | translate}}</button>
         </div>
       </div>
@@ -130,7 +133,8 @@
     <button type="button" class="btn navbar-btn btn-success"
       data-ng-click="addThumbnail()"
       data-ng-disabled="processing">
-      <i class="fa fa-picture-o" /> <span data-translate="">addThumbnail</span>
+      <i class="fa fa-picture-o" />&nbsp;
+      <span data-translate="">addThumbnail</span>
       <i data-ng-if="processing" class="fa fa-spinner fa-spin"/>
     </button>
   </div>

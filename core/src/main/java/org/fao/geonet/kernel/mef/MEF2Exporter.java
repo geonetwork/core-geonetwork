@@ -105,7 +105,10 @@ class MEF2Exporter {
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
-		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		Pair<Metadata, String> recordAndMetadataForExport =
+				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		Metadata record = recordAndMetadataForExport.one();
+		String xmlDocumentAsString = recordAndMetadataForExport.two();
 
 		String id = "" + record.getId();
 		String isTemp = record.getDataInfo().getType().codeString;
@@ -127,18 +130,18 @@ class MEF2Exporter {
         }
 
 		// --- save native metadata
-		String data = ExportFormat.formatData(record, false, null);
-        Files.write(metadataXmlDir.resolve(FILE_METADATA), data.getBytes(CHARSET));
+        Files.write(metadataXmlDir.resolve(FILE_METADATA), xmlDocumentAsString.getBytes(CHARSET));
+
 
 		// --- save Feature Catalog
 		String ftUUID = getFeatureCatalogID(context, record.getId());
 		if (!ftUUID.equals("")) {
-			Metadata ft = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
-			String ftData = ExportFormat.formatData(ft, false, null);
+			Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
-            Files.write(featureMdDir.resolve(FILE_METADATA), ftData.getBytes(CHARSET));
+            Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
+
 
 		// --- save info file
 		byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,

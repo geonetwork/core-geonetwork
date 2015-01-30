@@ -10,13 +10,14 @@
 
 	<import resource="config-spring-env.xml" />
 	<import resource="config-security/config-security.xml" />
+	<import resource="config-summary.xml" />
 	<import resource="classpath:JZkitApplicationContext.xml" />
 
 	<import resource="config-db/initial_data.xml" />
 	<import resource="config-print/config-spring-print.xml" />
 
 
-	<!-- Uncomment if you want to use a non-shapefile datastore -->
+    <!-- Uncomment if you want to use a non-shapefile datastore -->
 	<!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
 	<!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
 
@@ -32,35 +33,35 @@
 	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
 		lazy-init="true" />
 
-	<bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
-		<property name="numberOfConcurrentRequests" value="30" />
-	</bean>
+    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+        <property name="numberOfConcurrentRequests" value="30" />
+    </bean>
 
-	<bean id="defaultLanguage" class="java.lang.String">
-		<constructor-arg index="0" value="eng" />
-	</bean>
+    <bean id="defaultLanguage" class="java.lang.String">
+        <constructor-arg index="0" value="eng" />
+    </bean>
 	<!-- Define the languages in the UI. Seems like these should come from database 
 		at some point but at the moment they are needed here. -->
-	<util:set id="languages">
+    <util:set id="languages" value-type="java.lang.String">
 		<value>ara</value>
 		<value>cat</value>
 		<value>chi</value>
 		<value>dut</value>
-		<value>eng</value>
+        <value>eng</value>
 		<value>fin</value>
-		<value>fre</value>
-		<value>ger</value>
-		<value>ita</value>
+        <value>fre</value>
+        <value>ger</value>
+        <value>ita</value>
 		<value>nor</value>
 		<value>pol</value>
 		<value>por</value>
 		<value>rus</value>
 		<value>spa</value>
 		<value>tur</value>
-	</util:set>
+    </util:set>
 
 
-	<util:map id="jpaPropertyMap">
+    <util:map id="jpaPropertyMap">
 		<entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
 		<entry key="javax.persistence.lock.timeout" value="30000" />
 		<entry key="org.hibernate.flushMode" value="AUTO" />
@@ -78,6 +79,8 @@
     Note: If using more than one catalog in different schema
     hibernate may failed to create sequence
     (https://hibernate.atlassian.net/browse/HHH-5538).
+    In that case you may want to use a custom dialect
+    <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
     -->
 	</util:map>
 

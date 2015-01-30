@@ -24,9 +24,11 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
@@ -42,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -97,23 +100,26 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 		final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 		Log.info("org.fao.geonet.services.metadata", "Get selected metadata");
         ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext != null) {
-            SelectionManager selectionManager =
-                    SelectionManager.getManager(serviceContext.getUserSession());
 
-            final HashSet<String> metadata;
-            synchronized (selectionManager.getSelection("metadata")) {
-                final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
-                xslProcessingReport.setTotalRecords(selection.size());
-                metadata = Sets.newHashSet(selection);
-            }
-
-            ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
-            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(context,
-                    dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
-                    xslProcessingReport, request);
-            m.process();
+        if (serviceContext == null) {
+            throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");
         }
+
+        SelectionManager selectionManager =
+                            SelectionManager.getManager(serviceContext.getUserSession());
+
+        final HashSet<String> metadata;
+        synchronized (selectionManager.getSelection("metadata")) {
+            final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+            xslProcessingReport.setTotalRecords(selection.size());
+            metadata = Sets.newHashSet(selection);
+        }
+
+        ServiceContext context = serviceManager.createServiceContext("md.processing.batch", lang, request);
+            BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(context,
+                dataMan, metadata.iterator(), process, xslProcessing, session, siteURL,
+                xslProcessingReport, request);
+        m.process();
 
         return xslProcessingReport;
 	}

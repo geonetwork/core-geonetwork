@@ -35,6 +35,7 @@ import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -128,7 +129,7 @@ public class Update extends NotInReadOnlyModeService {
             logoFile = stripPath(logoFile);
 
             Path input = context.getUploadDir().resolve(logoFile);
-            try (InputStream in = Files.newInputStream(input)) {
+            try (InputStream in = IO.newInputStream(input)) {
                 ImageIO.read(in); // check it parses
             }
             Path logoDir = Resources.locateLogosDir(context);

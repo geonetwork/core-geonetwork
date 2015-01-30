@@ -67,6 +67,7 @@
                     });
                 return (props.length == 0) ? '' : '—' + props.join(', ');
               };
+			  //todo: move api url and username to config
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {
@@ -87,7 +88,7 @@
                         $scope.results.push({
                           name: loc.name,
                           formattedName: formatter(loc),
-                          extent: ol.proj.transform([loc.bbox.west,
+                          extent: ol.proj.transformExtent([loc.bbox.west,
                             loc.bbox.south, loc.bbox.east, loc.bbox.north],
                           'EPSG:4326', 'EPSG:3857')
                         });

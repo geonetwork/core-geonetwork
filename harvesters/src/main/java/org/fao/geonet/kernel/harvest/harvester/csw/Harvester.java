@@ -49,19 +49,22 @@ import org.jdom.Element;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult>
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, CswParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -79,15 +82,22 @@ class Harvester implements IHarvester<HarvestResult>
 		log.info("Retrieving capabilities file for : "+ params.name);
 
 		CswServer server = retrieveCapabilities(log);
+        if (cancelMonitor.get()) {
+            return new HarvestResult();
+        }
 
-		//--- perform all searches
+        //--- perform all searches
 		
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 		
 		Search s = new Search();
 		
 		for (Element element : params.eltSearches) {
-			if (element.getChildText("value")!=null){
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
+            if (element.getChildText("value")!=null){
 				if (!element.getChildText("value").trim().equals("")){
 					s.addAttribute(element.getName(), element.getChildText("value").trim());
 				}
@@ -113,7 +123,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, server, params);
+		Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
 
 		return aligner.align(records, errors);
 	}
@@ -315,7 +325,7 @@ class Harvester implements IHarvester<HarvestResult>
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
-        request.setUrl(url);
+        request.setUrl(context, url);
         request.setServerVersion(server.getPreferredServerVersion());
         String preferredOutputSchema = oper.getPreferredOutputSchema();
         if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
@@ -382,8 +392,15 @@ class Harvester implements IHarvester<HarvestResult>
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
-                    buildFilterQueryable(queriables, "csw:" + entry.getKey(), entry.getValue());
-                }
+					// If the queriable has the namespace, use it
+					String queryableName = entry.getKey();
+					if (queryableName.contains("__")) {
+						queryableName = queryableName.replace("__", ":");
+					} else if (!queryableName.contains(":")) {
+						queryableName = "csw:" + queryableName;
+					}
+					buildFilterQueryable(queriables, queryableName, entry.getValue());
+				}
             }
         } else {
             log.debug("no search criterion specified, harvesting all ... ");

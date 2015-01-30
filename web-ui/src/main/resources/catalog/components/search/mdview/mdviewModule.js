@@ -12,11 +12,31 @@
 
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings',
-    function($scope, $http, $compile, gnSearchSettings) {
+    'gnMetadataActions', 'gnAlertService', '$translate',
+    function($scope, $http, $compile, gnSearchSettings,
+             gnMetadataActions, gnAlertService, $translate) {
       $scope.formatter = gnSearchSettings.formatter;
+      $scope.gnMetadataActions = gnMetadataActions;
       $scope.usingFormatter = false;
       $scope.compileScope = $scope.$new();
 
+      $scope.deleteRecord = function(md) {
+        gnMetadataActions.deleteMd(md).then(function(data) {
+          gnAlertService.addAlert({
+            msg: $translate('metadataRemoved',
+                {title: md.title || md.defaultTitle}),
+            type: 'success'
+          });
+          $scope.closeRecord(md);
+        }, function(reason) {
+          // Data needs improvements
+          // See https://github.com/geonetwork/core-geonetwork/issues/723
+          gnAlertService.addAlert({
+            msg: reason.data,
+            type: 'danger'
+          });
+        });
+      };
       $scope.format = function(f) {
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;

@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>geonetwork</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>3.0.0-SNAPSHOT</version>
+  </parent>
+
+  <name>GeoNetwork Events</name>
+  <packaging>jar</packaging>
+  <artifactId>events</artifactId>
+  <description>Contains all types of events geoNetwork specific you can listen to.</description>
+  <url>http://geonetwork-opensource.org</url>
+  <dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>domain</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

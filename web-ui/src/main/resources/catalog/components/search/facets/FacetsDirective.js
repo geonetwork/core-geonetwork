@@ -39,7 +39,8 @@
       };
     }]);
   module.directive('gnFacetList', [
-    function() {
+    'gnFacetConfigService',
+    function(gnFacetConfigService) {
       return {
         restrict: 'A',
         replace: true,
@@ -47,8 +48,14 @@
             'partials/facet-list.html',
         scope: {
           facets: '=gnFacetList',
-          facetConfig: '=',
+          summaryType: '=facetConfig',
           currentFacets: '='
+        },
+        link: function(scope) {
+          scope.facetConfig = [];
+          gnFacetConfigService.loadConfig(scope.summaryType).then(function(data) {
+            scope.facetConfig = data;
+          });
         }
       };
     }]);
@@ -76,77 +83,83 @@
 
   module.directive('gnFacetMultiselect', [
     'gnFacetService',
-    function(gnFacetService) {
+    'gnFacetConfigService',
+    function(gnFacetService, gnFacetConfigService) {
+
 
       return {
         restrict: 'A',
         replace: true,
-        require: '^ngSearchForm',
         templateUrl: '../../catalog/components/search/facets/' +
             'partials/facet-multiselect.html',
         scope: true,
-        link: function(scope, element, attrs, controller) {
+        link: function(scope, element, attrs) {
 
           var delimiter = ' or ';
-          scope.field = attrs.gnFacetMultiselect;
-          scope.index = scope.field.substring(0, scope.field.length-1);
+          var oldParams;
 
-          scope.$watch('searchResults.facet', function(v) {
-            scope.facetObj = v[scope.field];
+          scope.name = attrs.gnFacetMultiselect;
+
+          gnFacetConfigService.loadConfig('hits').then(function(data) {
+            if(angular.isArray(data)) {
+              for(var i = 0;i<data.length;i++) {
+                if (data[i].name == scope.name) {
+                  scope.facetConfig = data[i];
+                  break;
+                }
+              }
+            }
+          }).then(function() {
+            scope.$watch('searchResults.facet', function(v) {
+              if (oldParams &&
+                  oldParams != scope.searchObj.params[scope.facetConfig.key]) {
+              }
+              else if (v) {
+                oldParams = scope.searchObj.params[scope.facetConfig.key];
+                scope.facetObj = v[scope.facetConfig.label];
+              }
+            });
           });
 
-          // Manage elements displayed
-          var initialMaxItems = 5;
-          scope.initialMaxItems = initialMaxItems;
-          scope.maxItems = initialMaxItems;
-          scope.toggle = function() {
-            scope.maxItems = (scope.maxItems == Infinity) ?
-                initialMaxItems : Infinity;
-          };
 
           /**
            * Check if the facet item is checked or not, depending if the
            * value is in the search params.
            * @param {string} value
-           * @returns {*|boolean}
+           * @return {*|boolean}
            */
           scope.isInSearch = function(value) {
-            return scope.searchObj.params[scope.index] &&
-                scope.searchObj.params[scope.index].split(delimiter).
+            return scope.searchObj.params[scope.facetConfig.key] &&
+                scope.searchObj.params[scope.facetConfig.key].split(delimiter).
                     indexOf(value) >= 0;
           };
 
           //TODO improve performance here, maybe to complex $watchers
           // add subdirective to watch a boolean and make only one
           // watcher on searchObj.params
-          scope.updateSearch = function(value) {
-            var search = scope.searchObj.params[scope.index];
-            if(angular.isUndefined(search)) {
-              scope.searchObj.params[scope.index] = value;
+          scope.updateSearch = function(value, e) {
+            var search = scope.searchObj.params[scope.facetConfig.key];
+            if (angular.isUndefined(search)) {
+              scope.searchObj.params[scope.facetConfig.key] = value;
             }
             else {
-              if(search == '') {
-                scope.searchObj.params[scope.index] = value;
+              if (search == '') {
+                scope.searchObj.params[scope.facetConfig.key] = value;
               }
               else {
                 var s = search.split(delimiter);
                 var idx = s.indexOf(value);
-                if(idx < 0 ){
-                  scope.searchObj.params[scope.index] += delimiter + value;
+                if (idx < 0) {
+                  scope.searchObj.params[scope.facetConfig.key] += delimiter + value;
                 }
                 else {
-                  s.splice(idx,1);
-                  scope.searchObj.params[scope.index] = s.join(delimiter);
+                  s.splice(idx, 1);
+                  scope.searchObj.params[scope.facetConfig.key] = s.join(delimiter);
                 }
               }
             }
             scope.$emit('resetSearch', scope.searchObj.params);
-          };
-
-          scope.remove = function(f) {
-            gnFacetService.remove(scope.currentFacets, f);
-            controller.resetPagination();
-            controller.triggerSearch();
+            e.preventDefault();
           };
         }
       };

@@ -27,6 +27,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 import lizard.tiff.Tiff;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -56,6 +58,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -110,7 +113,7 @@ public class Set {
 
 		//--- check if the metadata has been modified from last time
 
-		if (version != null && !dataMan.getVersion(id).equals(version))
+		if (version != null && !StringUtils.isEmpty(version) && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
         //-----------------------------------------------------------------------
@@ -155,7 +158,7 @@ public class Set {
 			dataMan.setThumbnail(context, id, type.equals("small"), file.getName(), false);
 		}
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 
 		return new Response(id, dataMan.getNewVersion(id));
 	}
@@ -214,7 +217,7 @@ public class Set {
         saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
 		//-----------------------------------------------------------------------
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
         Element response = new Element("Response");
 		response.addContent(new Element("id").setText(id));
 
@@ -465,7 +468,7 @@ public class Set {
 
         @Override
         public InputStream getInputStream() throws IOException {
-            return Files.newInputStream(inFile);
+            return IO.newInputStream(inFile);
         }
 
         @Override

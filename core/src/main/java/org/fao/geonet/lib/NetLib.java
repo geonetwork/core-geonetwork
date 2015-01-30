@@ -24,6 +24,7 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -39,6 +40,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.regex.PatternSyntaxException;
 
 //=============================================================================
 
@@ -49,6 +51,7 @@ public class NetLib
 	public static final String PORT     = "system/proxy/port";
 	public static final String USERNAME = "system/proxy/username";
 	public static final String PASSWORD = "system/proxy/password";
+    public static final String IGNOREHOSTLIST = "system/proxy/ignorehostlist";
 
 	//---------------------------------------------------------------------------
 	//---
@@ -75,58 +78,71 @@ public class NetLib
 		String  port    = sm.getValue(PORT);
 		String  username= sm.getValue(USERNAME);
 		String  password= sm.getValue(PASSWORD);
+        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
 
-		if (!enabled) {
+        if (!enabled) {
 			req.setUseProxy(false);
 		} else {
 			if (!Lib.type.isInteger(port))
 				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
 			else
 			{
-				req.setUseProxy(true);
-				req.setProxyHost(host);
-				req.setProxyPort(Integer.parseInt(port));
-				if (username.trim().length()!=0) {
-					req.setProxyCredentials(username, password);
-				} 
+                if (!isProxyHostException(req.getHost(), ignoreHostList)) {
+                    req.setUseProxy(true);
+                    req.setProxyHost(host);
+                    req.setProxyPort(Integer.parseInt(port));
+                    if (username.trim().length()!=0) {
+                        req.setProxyCredentials(username, password);
+                    }
+                } else {
+                    Log.info(Geonet.GEONETWORK, "Proxy configuration ignored, host: "+ req.getHost() + " is in proxy ignore list");
+                    req.setUseProxy(false);
+                }
+
 			}
 		}
 	}
 
 	//---------------------------------------------------------------------------
 
-	public CredentialsProvider setupProxy(ServiceContext context, HttpClientBuilder client)
+	public CredentialsProvider setupProxy(ServiceContext context, HttpClientBuilder client, String requestHost)
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		return setupProxy(sm, client);
+		return setupProxy(sm, client, requestHost);
 	}
 
 	//---------------------------------------------------------------------------
 
 	/** Setup proxy for http client
 	  */
-	public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client)
+	public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost)
 	{
 		boolean enabled = sm.getValueAsBool(ENABLED, false);
 		String  host    = sm.getValue(HOST);
 		String  port    = sm.getValue(PORT);
 		String  username= sm.getValue(USERNAME);
 		String  password= sm.getValue(PASSWORD);
+        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
 
         CredentialsProvider provider = new BasicCredentialsProvider();
         if (enabled) {
             if (!Lib.type.isInteger(port)) {
                 Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
             } else {
-                final HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
-                client.setProxy(proxy);
+                if (!isProxyHostException(requestHost, ignoreHostList)) {
+                    final HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
+                    client.setProxy(proxy);
 
-                client.setDefaultCredentialsProvider(provider);
-				if (username.trim().length() != 0) {
-                    provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(username, password));
-				}
+                    if (username.trim().length() != 0) {
+                        provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(username, password));
+                        client.setDefaultCredentialsProvider(provider);
+                    }
+                } else {
+                    client.setProxy(null);
+                }
+
 			}
 		}
 
@@ -152,11 +168,14 @@ public class NetLib
 		String  host    = sm.getValue(HOST);
 		String  port    = sm.getValue(PORT);
 		String  username= sm.getValue(USERNAME);
+        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
 
-		Properties props = System.getProperties();
+        Properties props = System.getProperties();
 		props.put("http.proxyHost", host);
 		props.put("http.proxyPort", port);
-		if (username.trim().length() > 0) {
+        props.put("http.nonProxyHosts", ignoreHostList);
+
+        if (username.trim().length() > 0) {
 			Log.error(Geonet.GEONETWORK, "Proxy credentials cannot be used");
 		}
 
@@ -173,6 +192,30 @@ public class NetLib
 			return false;
 		}
 	}
+
+    //---------------------------------------------------------------------------
+
+    /**
+     * Checks if a host matches a ignore host list.
+     *
+     * Ignore host list format should be: string with host names or ip's separated by | that allows wildcards.
+     *
+     * @param requestHost
+     * @param ignoreHostList
+     * @return
+     */
+    public boolean isProxyHostException(String requestHost, String ignoreHostList) {
+        if (StringUtils.isEmpty(requestHost)) return false;
+        if (StringUtils.isEmpty(ignoreHostList)) return false;
+
+        try {
+            return (requestHost.matches(ignoreHostList));
+        } catch (PatternSyntaxException ex) {
+            Log.error(Geonet.GEONETWORK + ".httpproxy", "Proxy ignore host list expression is not valid: " + ex.getMessage());
+        }
+
+        return false;
+    }
 }
 
 //=============================================================================

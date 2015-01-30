@@ -10,13 +10,17 @@
   module.service('gnMetadataActions', [
     '$rootScope',
     '$timeout',
+    '$location',
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
     'gnPopup',
-    'gnSearchSettings',
-    function($rootScope, $timeout, gnHttp,
-             gnMetadataManager, gnAlertService, gnPopup, gnSearchSettings) {
+    '$translate',
+    '$q',
+    '$http',
+    function($rootScope, $timeout, $location, gnHttp,
+             gnMetadataManager, gnAlertService, gnPopup,
+             $translate, $q, $http) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -38,7 +42,7 @@
       var openModal = function(o, scope, eventName) {
         var popup = gnPopup.create(o, scope);
         var myListener = $rootScope.$on(eventName,
-            function(e,o) {
+            function(e, o) {
               $timeout(function() {
                 popup.close();
               }, 0);
@@ -124,13 +128,13 @@
 
       this.deleteMd = function(md) {
         if (md) {
-          gnMetadataManager.remove(md.getId()).then(function() {
+          return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('resetSearch');
           });
         }
         else {
-          callBatch('mdDeleteBatch').then(function() {
+          return callBatch('mdDeleteBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('resetSearch');
           });
@@ -142,6 +146,14 @@
           title: 'privileges',
           content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope, 'PrivilegesUpdated');
+      };
+
+      this.openUpdateStatusPanel = function(md, scope) {
+        openModal({
+          title: 'updateStatus',
+          content: '<div data-gn-metadata-status-updater="' +
+              md.getId() + '"></div>'
+        }, scope, 'metadataStatusUpdated');
       };
 
       this.openPrivilegesBatchPanel = function(scope) {
@@ -181,25 +193,88 @@
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
-        var publishFlag = {
-          _1_0: flag,
-          _1_1: flag,
-          _1_5: flag,
-          _1_6: flag
-        };
+        var service = flag === 'on' ? 'publish' : 'unpublish';
 
-        if (angular.isDefined(md)) {
-          return gnHttp.callService('mdPrivileges', angular.extend(
-              publishFlag, {
-                update: true,
-                id: md.getId()
-              })).then(function(data) {
-            alertResult('publish');
-            md.publish();
+        var publishNotification = function(data) {
+          var message = '<h4>' + $translate(service + 'Completed') +
+              '</h4><dl class="dl-horizontal"><dt>' +
+              $translate('mdPublished') + '</dt><dd>' +
+              data.data.published + '</dd><dt>' +
+              $translate('mdUnpublished') + '</dt><dd>' +
+              data.data.unpublished + '</dd><dt>' +
+              $translate('mdUnmodified') + '</dt><dd>' +
+              data.data.unmodified + '</dd><dt>' +
+              $translate('mdDisallowed') + '</dt><dd>' +
+              data.data.disallowed + '</dd></dl>';
+
+          var success = 'success';
+          if (md) {
+            if ((flag === 'on' && data.data.published === 0) ||
+                (flag !== 'on' && data.data.unpublished === 0)) {
+              if (data.data.unmodified > 0) {
+                message = $translate('metadataUnchanged');
+              } else if (data.data.disallowed > 0) {
+                message = $translate('accessRestricted');
+              }
+              success = 'danger';
+            }
+          }
+          gnAlertService.addAlert({
+            msg: message,
+            type: success
           });
+
+          if (md && success === 'success') {
+            md.publish();
+          }
+        };
+        if (angular.isDefined(md)) {
+          return gnHttp.callService(service, {
+            ids: md.getId()
+          }).then(publishNotification);
         } else {
-          return gnHttp.callService('mdPrivilegesBatch', publishFlag);
+          return gnHttp.callService(service, {}).then(publishNotification);
         }
+      };
+
+      this.assignGroup = function(metadataId, groupId) {
+        var defer = $q.defer();
+        $http.get('md.group.update?id=' + metadataId +
+            '&groupid=' + groupId)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
+      };
+
+      this.assignCategories = function(metadataId, categories) {
+        var defer = $q.defer(), ids = '';
+        angular.forEach(categories, function(value) {
+          ids += '&_' + value + '=on';
+        });
+        $http.get('md.category.update?id=' + metadataId + ids)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
+      };
+
+      this.startVersioning = function(metadataId) {
+        var defer = $q.defer();
+        $http.get('md.versioning.start?id=' + metadataId)
+          .success(function(data) {
+              defer.resolve(data);
+            })
+          .error(function(data) {
+              defer.reject(data);
+            });
+        return defer.promise;
       };
 
       /**
@@ -207,11 +282,13 @@
        * @param {Object} md
        */
       this.getPermalink = function(md) {
-        var url = gnSearchSettings.formatter.defaultUrl + md.getId();
+
+        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
+            md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
-          content: '<a href="'+url+'" target="_blank">'+url+'</a>'
+          content: '<div gn-permalink-input="' + url + '"></div>'
         });
-      }
+      };
     }]);
 })();

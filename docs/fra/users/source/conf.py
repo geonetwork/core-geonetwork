@@ -45,9 +45,9 @@ copyright = u'2012 Open Source Geospatial Foundation'
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '2.11.0-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 # The full version, including alpha/beta/rc tags.
-release = '2.11.0-SNAPSHOT'
+release = '3.0.0-SNAPSHOT'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

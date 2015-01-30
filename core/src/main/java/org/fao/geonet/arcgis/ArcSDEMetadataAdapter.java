@@ -27,12 +27,13 @@ import com.esri.sde.sdk.client.SeException;
 import com.esri.sde.sdk.client.SeQuery;
 import com.esri.sde.sdk.client.SeRow;
 import com.esri.sde.sdk.client.SeSqlConstruct;
+import org.fao.geonet.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import org.fao.geonet.Constants;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Adapter to retrieve ISO metadata from an ArcSDE server. The metadata in ArcSDE is scanned for
@@ -52,7 +53,7 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 	private static final String METADATA_COLUMN = "SDE.GDB_USERMETADATA.XML";
 	private static final String ISO_METADATA_IDENTIFIER = "MD_Metadata";
 	
-	public List<String> retrieveMetadata() throws Exception {
+	public List<String> retrieveMetadata(AtomicBoolean cancelMonitor) throws Exception {
 		System.out.println("start retrieve metadata");
 		List<String> results = new ArrayList<String>();
 		try {	
@@ -69,6 +70,9 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 			// I'm assuming: query.fetch returns null (empiric tests indicate this assumption is correct).
 			boolean allRowsFetched = false;
 			while(! allRowsFetched) {
+                if (cancelMonitor.get()) {
+                    return Collections.emptyList();
+                }
 				SeRow row = query.fetch();
 				if(row != null) {
 					ByteArrayInputStream bytes = row.getBlob(0);

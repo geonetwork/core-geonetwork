@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group_;
@@ -78,6 +79,28 @@ import java.util.Set;
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
     private static final String INDEX = "index";
+    private static final String SCHEMAS = "schemas";
+    public static final String SYSTEMINFO = "systeminfo";
+    public static final String STATUS = "status";
+    public static final String AUTH = "auth";
+    public static final String ME = "me";
+    public static final String Z_3950_REPOSITORIES = "z3950repositories";
+    public static final String TEMPLATES = "templates";
+    public static final String USERS = "users";
+    public static final String SOURCES = "sources";
+    public static final String ISOLANGUAGES = "isolanguages";
+    public static final String REGIONS = "regions";
+    public static final String OPERATIONS = "operations";
+    public static final String GROUPS_INCLUDING_SYSTEM_GROUPS = "groupsIncludingSystemGroups";
+    public static final String GROUPS = "groups";
+    public static final String CATEGORIES = "categories";
+    public static final String USER_GROUP_ONLY = "userGroupOnly";
+    public static final String HARVESTER = "harvester";
+    public static final String INSPIRE = "inspire";
+    public static final String CONFIG = "config";
+    public static final String SITE = "site";
+    private static final String STAGING_PROFILE = "stagingProfile";
+
     private Path xslPath;
 	private Path otherSheets;
 	private ServiceConfig _config;
@@ -136,16 +159,16 @@ public class Info implements Service {
 		for (Element el : types) {
 			String type = el.getText();
 
-			if (type.equals("site")) {
+			if (type.equals(SITE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{
                                 SettingManager.SYSTEM_SITE_NAME_PATH,
                                 "system/site/organization", 
                                 SettingManager.SYSTEM_SITE_SITE_ID_PATH,
-                                "system/platform/version", 
+                                "system/platform/version",
                                 "system/platform/subVersion"
                                 }));
-			} else if (type.equals("config")) {
+			} else if (type.equals(CONFIG)) {
 			  // Return a set of properties which define what
 			  // to display or not in the user interface
               final List<Setting> publicSettings = context.getBean(SettingRepository.class).findAllByInternal(false);
@@ -155,70 +178,73 @@ public class Info implements Service {
               }
               result.addContent(new Element("config").addContent(gc.getBean(SettingManager.class).getValues(
                   publicSettingsKey.toArray(new String[0]))));
-            } else if (type.equals("inspire")) {
+            } else if (type.equals(INSPIRE)) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
 				                         "system/inspire/enableSearchPanel", 
 				                         "system/inspire/enable"
 				                         }));
-            } else if (type.equals("harvester")) {
+            } else if (type.equals(HARVESTER)) {
 			    result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{ "system/harvester/enableEditing"}));
 			
-			} else if (type.equals("userGroupOnly")) {
+			} else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{"system/metadataprivs/usergrouponly"}));
 
-            } else if (type.equals("categories")) {
+            } else if (type.equals(CATEGORIES)) {
 				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
 
-            } else if (type.equals("groups"))   {
+            } else if (type.equals(GROUPS))   {
                 String profile = params.getChildText("profile");
                 Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false);
 				result.addContent(r);
 
-            } else if (type.equals("groupsIncludingSystemGroups")) {
+            } else if (type.equals(GROUPS_INCLUDING_SYSTEM_GROUPS)) {
                 Element r = getGroups(context, null, true);
                 result.addContent(r);
 
-            } else if (type.equals("operations")) {
+            } else if (type.equals(OPERATIONS)) {
 				result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
 
-            } else if (type.equals("regions")) {
+            } else if (type.equals(REGIONS)) {
 		        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
 		        Element regions = dao.createSearchRequest(context).xmlResult();
 				result.addContent(regions);
-			} else if (type.equals("isolanguages")) {
+			} else if (type.equals(ISOLANGUAGES)) {
                 result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
 
-            } else if (type.equals("sources")) {
+            } else if (type.equals(SOURCES)) {
 				result.addContent(getSources(context, sm));
 
-            } else if (type.equals("users")) {
+            } else if (type.equals(USERS)) {
 				result.addContent(getUsers(context));
 
-            } else if (type.equals("templates"))   {
+            } else if (type.equals(TEMPLATES))   {
 				result.addContent(getTemplates(context));
 
-            } else if (type.equals("z3950repositories")) {
+            } else if (type.equals(Z_3950_REPOSITORIES)) {
 				result.addContent(getZRepositories(context, sm));
 
-            } else if (type.equals("me")) {
+            } else if (type.equals(ME)) {
 				result.addContent(getMyInfo(context));
 			
-            } else if (type.equals("auth")) {
+            } else if (type.equals(AUTH)) {
 				result.addContent(getAuth(context));
 
             } else if (type.equals(READ_ONLY)) {
                 result.addContent(getReadOnly(gc));
             } else if (type.equals(INDEX)) {
                 result.addContent(getIndex(gc));
-            } else if (type.equals("schemas")) {
+            } else if (type.equals(SCHEMAS)) {
 				result.addContent(getSchemas(gc.getBean(SchemaManager.class)));
 
-            } else if (type.equals("status")) {
+            } else if (type.equals(STATUS)) {
 				result.addContent(context.getBean(StatusValueRepository.class).findAllAsXml());
-
+            } else if (type.equals(SYSTEMINFO)) {
+				result.addContent(context.getBean(SystemInfo.class).toXml());
+            } else if (type.equals(STAGING_PROFILE)) {
+				result.addContent(new Element(STAGING_PROFILE).setText(context.getBean(SystemInfo.class).getStagingProfile()));
             } else {
 				throw new BadParameterEx("Unknown type parameter value.", type);
             }
@@ -304,7 +330,7 @@ public class Info implements Service {
 
 	private Element getSchemas(SchemaManager schemaMan) throws Exception {
 
-    Element response = new Element("schemas");
+    Element response = new Element(SCHEMAS);
 
     for (String schema : schemaMan.getSchemas()) {
       Element elem = new Element("schema")
@@ -543,7 +569,7 @@ public class Info implements Service {
 		UserSession us   = context.getUserSession();
 		List<Element> list = getUsers(context, us);
 
-		Element users = new Element("users");
+		Element users = new Element(USERS);
 
 		for (Element user : list) {
 			user = (Element) user.clone();

@@ -1,82 +1,125 @@
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">chooseRecordsToUpdate</div>
       <!-- Add criteria - this should be in a custom search form directive ? -->
       <div class="panel-body">
-        <form data-ng-search-form="">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
-                data-ng-model="batchSearchTemplateN" id="batchSearchTemplateN"/>
-              <span data-translate="">METADATA</span>
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
-                data-ng-model="batchSearchTemplateY" id="batchSearchTemplateY"/>
-              <span data-translate="">TEMPLATE</span>
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
-                data-ng-model="batchSearchTemplateS" id="batchSearchTemplateS"/>
-              <span data-translate="">SUB_TEMPLATE</span>
-            </label>
-            <input class="form-control" type="hidden" 
-              data-ng-model="params._isTemplate" data-ng-init="params._isTemplate = 'y or n'"/>
+
+        <form data-ng-search-form=""
+              data-runSearch="false">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="checkbox-inline">
+                  <input type="checkbox" data-ng-change="setTemplate(params)"
+                         data-ng-model="batchSearchTemplateN" id="batchSearchTemplateN"/>
+                  <span data-translate="">METADATA</span>
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" data-ng-change="setTemplate(params)"
+                         data-ng-model="batchSearchTemplateY" id="batchSearchTemplateY"/>
+                  <span data-translate="">TEMPLATE</span>
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" data-ng-change="setTemplate(params)"
+                         data-ng-model="batchSearchTemplateS" id="batchSearchTemplateS"/>
+                  <span data-translate="">SUB_TEMPLATE</span>
+                </label>
+              </div>
+
+              <div class="input-group gn-form-any">
+                <input type="text"
+                       class="form-control input-lg"
+                       id="gn-any-field"
+                       data-ng-model="searchObj.params.any"
+                       placeholder="{{'anyPlaceHolder' | translate}}"
+                       data-typeahead="address for address in getAnySuggestions($viewValue)"
+                       data-typeahead-loading="anyLoading" class="form-control"
+                       data-typeahead-min-length="1">
+
+                <button type="button"
+                        data-ng-click="triggerSearch()"
+                        class="btn btn-primary btn-lg">
+                  &nbsp;&nbsp;
+                  <i class="fa fa-search"></i>
+                  &nbsp;&nbsp;
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+
+
+              <fieldset class="form-horizontal">
+                <div class="form-group">
+                  <label data-translate="" class="col-md-4 control-label">_groupOwner</label>
+                  <div class="col-md-8">
+                    <select class="form-control" id="gn-batchSearchGroupOwner"
+                            data-ng-model="searchObj.params.group">
+                      <option></option>
+                      <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
+                              >{{g.label[lang]}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label data-translate="" class="col-md-4 control-label">owner</label>
+                  <div class="col-md-8">
+                    <select class="form-control" id="gn-batchSearchOwner"
+                            data-ng-model="searchObj.params._owner">
+                      <option></option>
+                      <option data-ng-repeat="u in batchSearchUsers" value="{{u.id}}">{{u.name}}
+                        {{u.surname}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label data-translate="" class="col-md-4 control-label">_cat</label>
+                  <div class="col-md-8">
+                    <select class="form-control" id="gn-batchSearchCategory"
+                            data-ng-model="searchObj.params._cat">
+                      <option></option>
+                      <option data-ng-repeat="c in batchSearchCategories" value="{{c.name}}"
+                              >{{c.label[lang]}}</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
           </div>
 
-          <div class="form-group">
-            <input class="form-control" type="text" 
-              data-ng-change="triggerSearch()"
-              placeholder="{{'search' | translate}}" autofocus=""
-              data-ng-model="params.any"/>
+
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6 relative">
+                <div data-gn-selection-widget=""
+                     data-without-action-menu=""
+                     data-results="searchResults"></div>
+              </div>
+              <div class="pull-right"
+                   data-gn-pagination="paginationInfo"
+                   data-hits-values="searchObj.hitsperpageValues"></div>
+            </div>
           </div>
 
-          <fieldset class="form-horizontal">
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4 control-label">_groupOwner</label>
-              <div class="col-lg-8">
-                <select class="form-control" id="gn-batchSearchGroupOwner"
-                  data-ng-change="triggerSearch()"
-                  data-ng-model="params.group">
-                    <option></option>
-                  <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
-                    >{{g.label[lang]}}</option>
-                </select>
+          <div class="row">
+            <div class="col-md-12">
+              <span class="loading fa fa-spinner fa-spin"
+                    data-ng-show="searching"></span>
+
+              <div class="alert alert-warning" role="alert"
+                   ng-if="!searching && searchResults.records.length == 0">
+                <i class="fa fa-frown-o"></i>
+                <span data-translate="">zarooResult</span>
               </div>
+              <div data-ng-show="searchResults.records.length > 0"
+                   data-gn-results-container=""
+                   data-search-results="searchResults"
+                   data-template-url="resultTemplate"
+                   data-map="searchObj.searchMap"></div>
             </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4 control-label">owner</label>
-              <div class="col-lg-8">
-                <select class="form-control" id="gn-batchSearchOwner"
-                  data-ng-change="triggerSearch()"
-                  data-ng-model="params._owner">
-                  <option></option>
-                  <option data-ng-repeat="u in batchSearchUsers" value="{{u.id}}">{{u.name}}
-                    {{u.surname}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4 control-label">_cat</label>
-              <div class="col-lg-8">
-                <select class="form-control" id="gn-batchSearchCategory"
-                  data-ng-change="triggerSearch()"
-                  data-ng-model="params.category">
-                    <option></option>
-                  <option data-ng-repeat="c in batchSearchCategories" value="{{c.name}}"
-                    >{{c.label[lang]}}</option>
-                </select>
-              </div>
-            </div>
-          </fieldset>
-          
-          <div data-gn-search-form-results=""
-            data-gn-search-form-results-mode="title"
-            data-gn-search-form-results-selection-mode="multiple"
-            data-search-results="searchResults"
-            data-select-records="selectRecords"
-            data-pagination-info="paginationInfo">
           </div>
         </form>
       </div>
@@ -85,7 +128,7 @@
 
 
 
-  <div class="col-lg-12">
+  <div class="col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">configureProcess</div>
       <div class="panel-body">
@@ -107,9 +150,9 @@
               <div data-ng-switch-when="fixed-params">
                 <div data-ng-repeat="p in selectedProcess.params track by $index" data-ng-switch=""
                   data-on="p.type" class="form-group">
-                  <label for="batch_param_{{p.name}}" class="col-lg-4 control-label">{{p.name |
+                  <label for="batch_param_{{p.name}}" class="col-md-4 control-label">{{p.name |
                     translate}}</label>
-                  <div class="col-lg-8">
+                  <div class="col-md-8">
                     <textarea data-ng-switch-when="textarea" class="form-control"
                       id="batch_param_{{p.name}}" name="{{p.name}}">{{p.value}}</textarea>
                     <input data-ng-switch-default="" id="batch_param_{{p.name}}" name="{{p.name}}"
@@ -149,7 +192,7 @@
 
   <!-- Report -->
   <div id="gn-batch-process-report" data-ng-switch="selectedProcess.type">
-    <div class="col-lg-12" data-ng-hide="!processing && !processReport"  data-ng-switch-when="fixed-params">
+    <div class="col-md-12" data-ng-hide="!processing && !processReport"  data-ng-switch-when="fixed-params">
       <div class="panel panel-default"
         data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
         <div class="panel-heading">

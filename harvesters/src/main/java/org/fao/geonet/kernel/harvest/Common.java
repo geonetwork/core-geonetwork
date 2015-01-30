@@ -49,8 +49,12 @@ public class Common {
 
 		public static Status parse(String status) throws BadParameterEx
 		{
-			if ("active"  .equals(status))	return ACTIVE;
-			if ("inactive".equals(status))	return INACTIVE;
+
+            for (Status next : values()) {
+                if (next.name().equalsIgnoreCase(status)) {
+                    return next;
+                }
+            }
 
 			throw new BadParameterEx("type", status);
 		}

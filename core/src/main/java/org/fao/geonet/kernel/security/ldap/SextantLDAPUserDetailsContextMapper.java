@@ -73,7 +73,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 		}
 		String defaultGroup = mapping.get("privilege")[1];
 
-		Map<String, ArrayList<String>> userInfo = LDAPUtils
+		Map<String, ArrayList<String>> userInfo = ldapUtils
 				.convertAttributes(userCtx.getAttributes().getAll());
 
 		LDAPUser userDetails = new LDAPUser(username);

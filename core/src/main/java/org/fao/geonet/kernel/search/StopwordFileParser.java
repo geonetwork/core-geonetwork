@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.search;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class StopwordFileParser {
             Path file = filepath;
             if (Files.isRegularFile(file)) {
                 try (
-                        InputStream fin = Files.newInputStream(file);
+                        InputStream fin = IO.newInputStream(file);
                         Reader reader = new BufferedReader(new InputStreamReader(fin, Constants.ENCODING));
                         Scanner scanner = new Scanner(reader)){
 

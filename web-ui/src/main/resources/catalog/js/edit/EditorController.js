@@ -29,10 +29,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
   goog.require('gn_import_controller');
+  goog.require('gn_mdactions_service');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_share');
@@ -45,7 +56,7 @@
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
-       'ngRoute']);
+       'ngRoute', 'gn_mdactions_service']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -160,6 +171,16 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.mdCategories = [];
+            var categories = data.metadata[0].category;
+            if (categories) {
+              if (angular.isArray(categories)) {
+                $scope.mdCategories = categories;
+              } else {
+                $scope.mdCategories.push(categories);
+              }
+            }
+
             $scope.groupOwner = data.metadata[0].groupOwner;
             $scope.mdTitle = data.metadata[0].title ||
                 data.metadata[0].defaultTitle;
@@ -234,13 +255,18 @@
        */
       $scope.onFormLoad = function() {
         gnEditor.onFormLoad();
+
         $scope.$watch('tocIndex', function(newValue, oldValue) {
-          $timeout(function() {
-            if (angular.isDefined($scope.tocIndex) && $scope.tocIndex != '') {
+          if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
+            $timeout(function() {
               $scope.switchToTab(gnCurrentEdit.tab);
-            }
-          });
+            });
+          }
         });
+      };
+
+      $scope.startVersioning = function() {
+        return gnEditor.startVersioning();
       };
 
       /**
@@ -283,6 +309,47 @@
           gnCurrentEdit.displayAttributes =
               gnCurrentEdit.displayAttributes === false;
         }
+        $(function() {
+          $('fieldset, .gn-field').on('mouseover', function(e) {
+            e.stopPropagation();
+            $(this).addClass('field-bg');
+            $(this).find('i.btn.fa-times.text-danger')
+              .css('visibility', 'visible');
+          }).on('mouseout', function(e) {
+            $(this).removeClass('field-bg');
+            $(this).find('i.btn.fa-times.text-danger')
+              .css('visibility', 'hidden');
+          });
+        });
+
+        $timeout(function() {
+          /**
+          * Toggle collapse-expand fieldsets
+          */
+          $('legend').click(function() {
+            var legend = $(this);
+            //getting the next element
+            var content = legend.nextAll();
+            //open up the content needed - toggle the slide-
+            //if visible, slide up, if not slidedown.
+            content.slideToggle(500, function() {
+              //execute this after slideToggle is done
+              //change the icon of the legend based on
+              // visibility of content div
+              if (content.is(':visible')) {
+                legend.removeClass('collapsed');
+              }
+              else { legend.addClass('collapsed'); }
+            });
+
+          });
+          /**
+          * initialize tooltip
+          */
+          $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+          });
+        });
 
         // Update the form to propagate info when saved
         // or tab switch - Needs to be propagated in Update service
@@ -341,10 +408,13 @@
         gnEditor.removeAttribute(gnCurrentEdit.id, ref);
         return false;
       };
+      $scope.switchTypeAndSave = function(refreshForm) {
+        $scope.setTemplate(!$scope.isTemplate());
+        return $scope.save(refreshForm);
+      };
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
-
-        gnEditor.save(refreshForm)
+        var promise = gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = false;
@@ -359,7 +429,7 @@
                 type: 'danger'});
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
+        return promise;
       };
       var closeEditor = function() {
         $scope.layout.hideTopToolBar = false;
@@ -375,7 +445,8 @@
       };
 
       $scope.cancel = function(refreshForm) {
-        gnEditor.cancel(refreshForm)
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return gnEditor.cancel(refreshForm)
           .then(function(form) {
               // Refresh editor form after cancel
               //  $scope.savedStatus = gnCurrentEdit.savedStatus;
@@ -392,12 +463,10 @@
                 timeout: 0,
                 type: 'danger'});
             });
-        $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
       };
 
       $scope.close = function() {
-        gnEditor.save(false)
+        var promise = gnEditor.save(false)
           .then(function(form) {
               closeEditor();
             }, function(error) {
@@ -407,8 +476,8 @@
                 timeout: 0,
                 type: 'danger'});
             });
-
-        return false;
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return promise;
       };
       $scope.getSaveStatus = function() {
         if (gnCurrentEdit.savedTime) {
@@ -425,7 +494,7 @@
         }
       };
 
-      $scope.$on('AddElement', function(event, ref, name, 
+      $scope.$on('AddElement', function(event, ref, name,
           insertRef, position, attribute) {
             $scope.add(ref, name, insertRef, position, attribute);
           });
@@ -434,7 +503,7 @@
 
       $scope.validate = function() {
         $('#showvalidationerrors')[0].value = 'true';
-        $scope.save(true);
+        return $scope.save(true);
       };
 
 

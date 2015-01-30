@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all">
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:java="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
 
@@ -318,14 +319,28 @@
 
 	</xsl:template>
 
+	<!-- Thumbnail may not contains full URL for the one updated to the catalog -->
+	<xsl:template match="gmd:MD_BrowseGraphic[
+					gmd:fileDescription/gco:CharacterString = 'thumbnail' or
+					gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/
+						gmd:fileName[gco:CharacterString != '' and not(starts-with(gco:CharacterString, 'http'))]">
+			<gmd:fileName>
+				<gco:CharacterString>
+					<xsl:value-of select="concat(
+					    /root/env/siteURL, 'resources.get?',
+					    'uuid=', /root/env/uuid,
+					    '&amp;fname=', gco:CharacterString)"/>
+				</gco:CharacterString>
+			</gmd:fileName>
+	</xsl:template>
+
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
 		<xsl:element name="gmd:{local-name()}">
-			<xsl:variable name="id" select="upper-case(
-				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+			<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 
 			<xsl:apply-templates select="@*"/>
 			
@@ -344,7 +359,7 @@
 		<xsl:element name="gmd:{local-name()}">
 			<xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
 			<xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+			<xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 			<xsl:apply-templates select="@*"/>
 			<xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
 				<xsl:attribute name="locale">

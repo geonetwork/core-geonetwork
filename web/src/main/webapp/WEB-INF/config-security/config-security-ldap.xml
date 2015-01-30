@@ -18,8 +18,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
 		<constructor-arg ref="ldapAuthProvider"/>
 	</bean>
-	
-	
+
+  <bean id="ldapUtils" class="org.fao.geonet.kernel.security.ldap.LDAPUtils"/>
+
     <!-- LDAP configuration-->
     <bean id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
@@ -27,6 +28,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <!-- For non anonymous binding -->
         <property name="userDn" value="${ldap.security.principal}"/>
         <property name="password" value="${ldap.security.credentials}"/>
+    </bean>
+
+    <bean class="org.fao.geonet.kernel.security.ldap.LDAPUtils">
     </bean>
     
     <bean id="ldapAuthProvider"
@@ -189,5 +193,58 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		<constructor-arg index="1" type="java.lang.String"
 			name="usernameAttribute" value="${ldap.sync.user.search.attribute}" />
 	</bean>
+
+
+    <!-- Uncomment if you want to automatically create groups in LDAP 
+    when creating groups on geoNetwork. -->
+    <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoCreateGroups">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
+    
+    <!-- Uncomment if you want to sync additions in user group relations with LDAP -->
+    <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroups">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
+       
+    <!-- Uncomment if you want to sync removal in user group relations with LDAP -->
+        <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroupsOnRemove">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
 
 </beans>

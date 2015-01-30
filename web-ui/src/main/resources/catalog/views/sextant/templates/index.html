@@ -1,0 +1,83 @@
+<div class="navbar navbar-default gn-top-bar" role="navigation"
+     data-ng-include="'../../catalog/templates/top-toolbar.html'">
+</div>
+
+<div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
+  <div class="hfull" data-ng-controller="gnsSextant">
+
+    <tabset class="hfull" id="main-tabset" type="pills">
+      <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
+
+        <div class="hfull" data-ng-controller="gnsSextantSearch">
+
+          <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
+
+            <div class="row hfull">
+
+              <div class="maincol hfull sxt-left-panel" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
+                <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
+                  <span ng-show="collapsed.search">»</span>
+                  <span ng-show="!collapsed.search">«</span>
+                </button>
+                <div class="panel panel-default hfull">
+                  <div class="panel-body gn-searchform">
+                    <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
+                  </div>
+                  <div class="panel-footer">
+                    <div class="submit">
+                      <button type="button" data-ng-click="resetSearch()" class="btn btn-link" data-translate>Reset</button>
+                      <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
+                        <i class="fa fa-search"></i> <span data-translate>Search</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-class="{ 'col-md-9': collapsed.search, 'col-md-6': !collapsed.search}" class="maincol hfull sxt-center-panel">
+                <div class="panel panel-default hfull">
+                  <div class="panel-heading">
+                    <div class="btn-toolbar">
+
+                      <!--sort by combo-->
+                      <div sortby-combo params="searchObj.params"
+                           gn-sortby-values="searchObj.sortbyValues"
+                           class="pull-right"></div>
+
+                      <div data-gn-pagination="paginationInfo"
+                           data-hits-values="searchObj.hitsperpageValues"></div>
+                    </div>
+                  </div>
+                  <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
+                  <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </tab>
+      <tab heading="{{mainTabs.view.title}}"
+           active="mainTabs.view.active">
+        <div class="container-fluid">
+          <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
+        </div>
+      </tab>
+      <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
+        <tab-heading>
+          {{mainTabs.map.title}}
+          <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
+        </tab-heading>
+        <div sxt-main-viewer="" map="searchObj.viewerMap">
+        </div>
+      </tab>
+      <tab ng-if="mainTabs.panier" select="displayPanierTab()" active="mainTabs.panier.active">
+        <tab-heading>
+          {{mainTabs.panier.title}}
+          <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
+        </tab-heading>
+
+        <div sxt-panier="searchObj.panier"></div>
+      </tab>
+    </tabset>
+  </div>
+</div>

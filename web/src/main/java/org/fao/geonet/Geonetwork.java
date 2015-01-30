@@ -32,6 +32,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
@@ -43,6 +44,8 @@ import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerSvn;
+import org.fao.geonet.inspireatom.InspireAtomType;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
@@ -131,6 +134,7 @@ public class Geonetwork implements ApplicationHandler {
      * Inits the engine, loading all needed data.
      */
     public Object start(Element config, ServiceContext context) throws Exception {
+        context.setAsThreadLocal();
         logger = context.getLogger();
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
@@ -342,7 +346,7 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Thesaurus...");
 
-        _applicationContext.getBean(ThesaurusManager.class).init(context, thesauriDir);
+        _applicationContext.getBean(ThesaurusManager.class).init(false, context, thesauriDir);
 
 
         //------------------------------------------------------------------------
@@ -392,6 +396,24 @@ public class Geonetwork implements ApplicationHandler {
             String password = settingMan.getValue("system/proxy/password");
             pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
         }
+
+
+        boolean inspireEnable = settingMan.getValueAsBool("system/inspire/enable", false);
+
+        if (inspireEnable) {
+
+            String atomType = settingMan.getValue("system/inspire/atom");
+            String atomSchedule = settingMan.getValue("system/inspire/atomSchedule");
+
+
+            if (StringUtils.isNotEmpty(atomType) && StringUtils.isNotEmpty(atomSchedule)
+                    && atomType.equalsIgnoreCase(InspireAtomType.ATOM_REMOTE)) {
+                logger.info("  - INSPIRE ATOM feed harvester ...");
+
+                InspireAtomHarvesterScheduler.schedule(atomSchedule, context, gnContext);
+            }
+        }
+
 
         //
         // db heartbeat configuration -- for failover to readonly database

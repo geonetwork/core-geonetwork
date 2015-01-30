@@ -71,7 +71,7 @@
           scope.checkAll = function(group) {
             angular.forEach(group.privileges, function(p) {
               if (!p.disabled) {
-                p.value = group.isCheckedAll === false;
+                p.value = group.isCheckedAll === true;
               }
             });
           };

@@ -1,7 +1,9 @@
 package org.fao.geonet.component.csw;
 
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -16,6 +18,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,6 +41,7 @@ import static org.junit.Assert.assertNull;
  * Date: 10/17/13
  * Time: 7:56 PM
  */
+@ContextConfiguration(inheritLocations = true, locations = "classpath:csw-integration-test-context.xml")
 public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String PHOTOGRAPHIC_UUID = "46E7F9B1-99F6-3241-9039-EAE7201534F4";
     public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/*";

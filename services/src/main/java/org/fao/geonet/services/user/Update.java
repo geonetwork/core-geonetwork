@@ -23,85 +23,118 @@
 
 package org.fao.geonet.services.user;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
+import jeeves.server.sources.http.JeevesServlet;
+import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.*;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Update the information of a user.
  */
-public class Update extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+@Controller("admin.user.update")
+@ReadWriteController
+public class Update {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String operation = Util.getParam(params, Params.OPERATION);
-		String id;
-        if (operation.equalsIgnoreCase(Params.Operation.NEWUSER)) {
-            id = Util.getParam(params, Params.ID, "");
-        } else {
-            id = Util.getParam(params, Params.ID);
+    @RequestMapping(value = "/{lang}/admin.user.update", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody String run(
+            HttpSession session,
+            HttpServletRequest request,
+            @RequestParam(value = Params.OPERATION) String operation,
+            @RequestParam(value = Params.ID, required = false) String id,
+            @RequestParam(value = Params.USERNAME) String username,
+            @RequestParam(value = Params.PASSWORD, required = false) String password,
+            @RequestParam(value = Params.PROFILE, required = false) String profile_,
+            @RequestParam(value = Params.SURNAME) String surname,
+            @RequestParam(value = Params.NAME) String name,
+            @RequestParam(value = Params.ADDRESS, required = false) String address,
+            @RequestParam(value = Params.CITY, required = false) String city,
+            @RequestParam(value = Params.STATE, required = false) String state,
+            @RequestParam(value = Params.ZIP, required = false) String zip,
+            @RequestParam(value = Params.COUNTRY, required = false) String country,
+            @RequestParam(value = Params.EMAIL) String email,
+            @RequestParam(value = Params.ORG, required = false) String organ,
+            @RequestParam(value = Params.KIND, required = false) String kind)
+            throws Exception {
+        if (id == null && operation.equalsIgnoreCase(Params.Operation.NEWUSER)) {
+            id = "";
         }
-        String username = Util.getParam(params, Params.USERNAME, null);
-        String password = Util.getParam(params, Params.PASSWORD, null);
 
-        String surname  = Util.getParam(params, Params.SURNAME, null);
-		String name     = Util.getParam(params, Params.NAME,    null);
-		Profile profile = Profile.findProfileIgnoreCase(Util.getParam(params, Params.PROFILE, null));
-		String address  = Util.getParam(params, Params.ADDRESS, null);
-		String city     = Util.getParam(params, Params.CITY,    null);
-		String state    = Util.getParam(params, Params.STATE,   null);
-		String zip      = Util.getParam(params, Params.ZIP,     null);
-		String country  = Util.getParam(params, Params.COUNTRY, null);
-		String email    = Util.getParam(params, Params.EMAIL,   null);
-		String organ    = Util.getParam(params, Params.ORG,     null);
-        String kind     = Util.getParam(params, Params.KIND, null);
+        Profile profile = Profile.findProfileIgnoreCase(profile_);
 
-        UserSession usrSess = context.getUserSession();
-        Profile myProfile = usrSess.getProfile();
-        String      myUserId  = usrSess.getUserId();
+        Profile myProfile = Profile.Guest;
+        String myUserId = null;
+        Object tmp = session
+                .getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
+        if (tmp instanceof UserSession) {
+            UserSession usrSess = (UserSession) tmp;
+            myProfile = usrSess.getProfile();
+            myUserId = usrSess.getUserId();
+        }
 
-        final UserGroupRepository groupRepository = context.getBean(UserGroupRepository.class);
-        final UserRepository userRepository = context.getBean(UserRepository.class);
-        @SuppressWarnings("unchecked")
-        java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
+        List<GroupElem> groups = new LinkedList<GroupElem>();
+
+        Map<String, String[]> params = request.getParameterMap();
+
+        for (String key : params.keySet()) {
+            if (key.startsWith("groups_")) {
+                for (String s : params.get(key)) {
+                    groups.add(new GroupElem(key.substring(7), Integer
+                            .valueOf(s)));
+                }
+            }
+        }
 
         if (profile == Profile.Administrator) {
-            userGroups = new ArrayList<Element>();
+            groups.clear();
         }
 
-        if (myProfile == Profile.Administrator ||
-				myProfile == Profile.UserAdmin ||
-				myUserId.equals(id)) {
-            checkAccessRights(operation, id, username, myProfile, myUserId, userGroups, groupRepository);
-
+        if (myProfile == Profile.Administrator
+                || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
+            checkAccessRights(operation, id, username, myProfile, myUserId,
+                    groups, userGroupRepository);
 
             User user = getUser(userRepository, operation, id, username);
             if (username != null) {
@@ -117,7 +150,9 @@ public class Update extends NotInReadOnlyModeService {
 
             if (profile != null) {
                 if (!myProfile.getAll().contains(profile)) {
-                    throw new IllegalArgumentException("Trying to set profile to "+profile+" max profile permitted is: "+myProfile);
+                    throw new IllegalArgumentException(
+                            "Trying to set profile to " + profile
+                                    + " max profile permitted is: " + myProfile);
                 }
                 user.setProfile(profile);
             }
@@ -160,130 +195,197 @@ public class Update extends NotInReadOnlyModeService {
                 user.getEmailAddresses().add(email);
             }
 
-
             if (password != null) {
-                user.getSecurity().setPassword(PasswordUtil.encode(context, password));
-            } else if (operation.equals(Params.Operation.RESETPW)) {
-                throw new IllegalArgumentException("password is a required parameter for operation: " + Params.Operation.RESETPW);
+                user.getSecurity().setPassword(
+                        PasswordUtil.encoder(applicationContext).encode(
+                                password));
+            } else if (operation.equals(Params.Operation.RESETPW)
+                    || operation.equals(Params.Operation.NEWUSER)) {
+                throw new IllegalArgumentException(
+                        "password is a required parameter for operation: "
+                                + Params.Operation.RESETPW);
             }
 
             // -- For adding new user
-            if (operation.equals(Params.Operation.NEWUSER)) {
+            if (operation.equals(Params.Operation.NEWUSER)
+                    || operation.equals(Params.Operation.FULLUPDATE)
+                    || operation.equals(Params.Operation.EDITINFO)) {
+                user = userRepository.save(user);
+                setUserGroups(user, groups);
+
+            } else if (operation.equals(Params.Operation.RESETPW)) {
                 user = userRepository.save(user);
 
-				setUserGroups(user, params, context);
-			} else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO)) {
-                user = userRepository.save(user);
-
-                //--- add groups
-                groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
-
-                setUserGroups(user, params, context);
-			} else if (operation.equals(Params.Operation.RESETPW)) {
-             user = userRepository.save(user);
-			} else {
-                throw new IllegalArgumentException("unknown user update operation " + operation);
+            } else {
+                throw new IllegalArgumentException(
+                        "unknown user update operation " + operation);
             }
-		} else {
-			throw new IllegalArgumentException("You don't have rights to do this");
-		}
+        } else {
+            throw new IllegalArgumentException(
+                    "You don't have rights to do this");
+        }
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
+        return "\"" + Jeeves.Elem.RESPONSE + "\"";
+    }
 
-    private User getUser(final UserRepository repo, final String operation, final String id, final String username) {
+    private User getUser(final UserRepository repo, final String operation,
+            final String id, final String username) {
         if (Params.Operation.NEWUSER.equalsIgnoreCase(operation)) {
             if (username == null) {
-                throw new IllegalArgumentException(Params.USERNAME + " is a required parameter for " + Params.Operation.NEWUSER + " " +
-                                                   "operation");
+                throw new IllegalArgumentException(Params.USERNAME
+                        + " is a required parameter for "
+                        + Params.Operation.NEWUSER + " " + "operation");
             }
             User user = repo.findOneByUsername(username);
 
             if (user != null) {
-                throw new IllegalArgumentException("User with username " + username + " already exists");
+                throw new IllegalArgumentException("User with username "
+                        + username + " already exists");
             }
             return new User();
         } else {
             User user = repo.findOne(id);
             if (user == null) {
-                throw new IllegalArgumentException("No user found with id: " + id);
+                throw new IllegalArgumentException("No user found with id: "
+                        + id);
             }
             return user;
         }
     }
 
-    private void checkAccessRights(final String operation, final String id, final String username, final Profile myProfile,
-                                   final String myUserId, final List<Element> userGroups, final UserGroupRepository groupRepository) {
+    private void checkAccessRights(final String operation, final String id,
+            final String username, final Profile myProfile,
+            final String myUserId, final List<GroupElem> userGroups,
+            final UserGroupRepository groupRepository) {
         // Before we do anything check (for UserAdmin) that they are not trying
         // to add a user to any group outside of their own - if they are then
         // raise an exception - this shouldn't happen unless someone has
         // constructed their own malicious URL!
         //
-        if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO) ||
-            operation.equals(Params.Operation.FULLUPDATE)) {
+        if (operation.equals(Params.Operation.NEWUSER)
+                || operation.equals(Params.Operation.EDITINFO)
+                || operation.equals(Params.Operation.FULLUPDATE)) {
             if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
-                final List<Integer> groupIds = groupRepository.findGroupIds(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)));
-                for (Element userGroup : userGroups) {
-                    String group = userGroup.getText();
+                final List<Integer> groupIds = groupRepository
+                        .findGroupIds(UserGroupSpecs.hasUserId(Integer
+                                .valueOf(myUserId)));
+                for (GroupElem userGroup : userGroups) {
                     boolean found = false;
                     for (int myGroup : groupIds) {
-                        if (Integer.valueOf(group) == myGroup) {
+                        if (userGroup.getId() == myGroup) {
                             found = true;
                         }
                     }
                     if (!found) {
-                        throw new IllegalArgumentException("Tried to add group id " + group + " to user " + username + " - not allowed " +
-                                                           "because you are not a member of that group!");
+                        throw new IllegalArgumentException(
+                                "Tried to add group id "
+                                        + userGroup.getId()
+                                        + " to user "
+                                        + username
+                                        + " - not allowed "
+                                        + "because you are not a member of that group!");
                     }
                 }
             }
         }
     }
 
-    private void setUserGroups(final User user, final Element params, final ServiceContext context) throws Exception {
-		String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
-        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
+    private void setUserGroups(final User user, List<GroupElem> userGroups)
+            throws Exception {
+
+        Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
+                .hasUserId(user.getId()));
+
+        // Have a quick reference of existing groups and profiles for this user
         Set<String> listOfAddedProfiles = new HashSet<String>();
-        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        for (UserGroup ug : all) {
+            String key = ug.getProfile().name() + ug.getGroup().getId();
+            if (!listOfAddedProfiles.contains(key)) {
+                listOfAddedProfiles.add(key);
+            }
+        }
 
-        for (String profile : profiles) {
-		    
-			@SuppressWarnings("unchecked")
-            java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
-			for (Element element : userGroups) {
-				String groupEl = element.getText();
-				if (!groupEl.equals("")) {
-					int groupId = Integer.valueOf(groupEl);
-                    Group group = groupRepository.findOne(groupId);
+        // We start removing all old usergroup objects. We will remove the
+        // explicitly defined for this call
+        Collection<UserGroup> toRemove = new ArrayList<UserGroup>();
+        toRemove.addAll(all);
 
-                    // Combine all groups editor and reviewer groups
-                    if (profile.equals(Profile.Reviewer.name())) {
-                        final UserGroup userGroup = new UserGroup()
-                                .setGroup(group)
-                                .setProfile(Profile.Editor)
-                                .setUser(user);
-                        String key = Profile.Editor.toString() + group.getId();
-                        if (!listOfAddedProfiles.contains(key)) {
-                            toAdd.add(userGroup);
-                            listOfAddedProfiles.add(key);
-                        }
-					}
+        // New pairs of group-profile we need to add
+        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
 
-                    final UserGroup userGroup = new UserGroup()
-                            .setGroup(group)
-                            .setProfile(Profile.findProfileIgnoreCase(profile))
-                            .setUser(user);
-                    String key = profile + group.getId();
-                    if (!listOfAddedProfiles.contains(key)) {
-                        toAdd.add(userGroup);
-                        listOfAddedProfiles.add(key);
+        // For each of the parameters on the request, make sure the group is
+        // updated.
+        for (GroupElem element : userGroups) {
+            Integer groupId = element.getId();
+            Group group = groupRepository.findOne(groupId);
+            String profile = element.getProfile();
+            // The user has a new group and profile
+
+            // Combine all groups editor and reviewer groups
+            if (profile.equals(Profile.Reviewer.name())) {
+                final UserGroup userGroup = new UserGroup().setGroup(group)
+                        .setProfile(Profile.Editor).setUser(user);
+                String key = Profile.Editor.toString() + group.getId();
+                if (!listOfAddedProfiles.contains(key)) {
+                    toAdd.add(userGroup);
+                    listOfAddedProfiles.add(key);
+                }
+
+                // If the user is already part of this group with this profile,
+                // leave it alone:
+                for (UserGroup g : all) {
+                    if (g.getGroup().getId() == groupId
+                            && g.getProfile().equals(Profile.Editor)) {
+                        toRemove.remove(g);
                     }
-				}
-			}
-		}
+                }
+            }
 
+            final UserGroup userGroup = new UserGroup().setGroup(group)
+                    .setProfile(Profile.findProfileIgnoreCase(profile))
+                    .setUser(user);
+            String key = profile + group.getId();
+            if (!listOfAddedProfiles.contains(key)) {
+                toAdd.add(userGroup);
+                listOfAddedProfiles.add(key);
+
+            }
+
+            // If the user is already part of this group with this profile,
+            // leave it alone:
+            for (UserGroup g : all) {
+                if (g.getGroup().getId() == groupId
+                        && g.getProfile().name().equalsIgnoreCase(profile)) {
+                    toRemove.remove(g);
+                }
+            }
+        }
+
+        // Remove deprecated usergroups (if any)
+        userGroupRepository.delete(toRemove);
+
+        // Add only new usergroups (if any)
         userGroupRepository.save(toAdd);
 
-	}
+    }
+}
+
+class GroupElem {
+
+    public GroupElem(String profile, Integer id) {
+        this.id = id;
+        this.profile = profile;
+    }
+
+    private String profile;
+    private Integer id;
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
 }

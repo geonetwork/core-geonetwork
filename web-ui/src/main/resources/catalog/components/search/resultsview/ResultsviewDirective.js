@@ -65,7 +65,8 @@
           scope.map = scope.$eval(attrs.map);
           //scope.searchResults = scope.$eval(attrs.searchResults);
 
-          /** Display fa icons for categories */
+          /** Display fa icons for categories
+           * TODO: Move to configuration */
           scope.catIcons = {
             featureCatalogs: 'fa-table',
             services: 'fa-cog',
@@ -75,17 +76,19 @@
             interactiveResources: 'fa-rss'
           };
 
-          scope.hoverOL = new ol.FeatureOverlay({
-            style: gnSearchSettings.olStyles.mdExtentHighlight
-          });
+          if (scope.map) {
+            scope.hoverOL = new ol.FeatureOverlay({
+              style: gnSearchSettings.olStyles.mdExtentHighlight
+            });
 
-          /**
-           * Draw md bbox on search
-           */
-          var fo = new ol.FeatureOverlay({
-            style: gnSearchSettings.olStyles.mdExtent
-          });
-          fo.setMap(scope.map);
+            /**
+             * Draw md bbox on search
+             */
+            var fo = new ol.FeatureOverlay({
+              style: gnSearchSettings.olStyles.mdExtent
+            });
+            fo.setMap(scope.map);
+          }
 
           scope.$watchCollection('searchResults.records', function(rec) {
 
@@ -93,31 +96,34 @@
             element.animate({scrollTop: top});
 
             // get md extent boxes
-            fo.getFeatures().clear();
-            if (!angular.isArray(rec) ||
-                angular.isUndefined(scope.map.getTarget())) {
-              return;
-            }
-            for (var i = 0; i < rec.length; i++) {
-              var feat = new ol.Feature();
-              var extent = gnMap.getBboxFromMd(rec[i]);
-              if (extent) {
-                var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(),
-                    extent) ?
-                    ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                    proj.getExtent();
-                var coords = gnMap.getPolygonFromExtent(extent);
-                feat.setGeometry(new ol.geom.Polygon(coords));
-                fo.addFeature(feat);
+            if (scope.map) {
+              fo.getFeatures().clear();
+
+              if (!angular.isArray(rec) ||
+                  angular.isUndefined(scope.map.getTarget())) {
+                return;
               }
-            }
-            var extent = ol.extent.createEmpty();
-            fo.getFeatures().forEach(function(f) {
-              ol.extent.extend(extent, f.getGeometry().getExtent());
-            });
-            if (!ol.extent.isEmpty(extent)) {
-              scope.map.getView().fitExtent(extent, scope.map.getSize());
+              for (var i = 0; i < rec.length; i++) {
+                var feat = new ol.Feature();
+                var extent = gnMap.getBboxFromMd(rec[i]);
+                if (extent) {
+                  var proj = scope.map.getView().getProjection();
+                  extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                      extent) ?
+                      ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                      proj.getExtent();
+                  var coords = gnMap.getPolygonFromExtent(extent);
+                  feat.setGeometry(new ol.geom.Polygon(coords));
+                  fo.addFeature(feat);
+                }
+              }
+              var extent = ol.extent.createEmpty();
+              fo.getFeatures().forEach(function(f) {
+                ol.extent.extend(extent, f.getGeometry().getExtent());
+              });
+              if (!ol.extent.isEmpty(extent)) {
+                scope.map.getView().fitExtent(extent, scope.map.getSize());
+              }
             }
           });
 
@@ -158,7 +164,9 @@
           };
 
 
-          scope.hoverOL.setMap(scope.map);
+          if (scope.map) {
+            scope.hoverOL.setMap(scope.map);
+          }
         }
       };
     }]);

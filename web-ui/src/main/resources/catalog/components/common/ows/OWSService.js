@@ -147,7 +147,7 @@
             // TODO fix using layer.BoundingBox[0].extent
             // when sextant fix his capabilities
             if (angular.isArray(layer.BoundingBox)) {
-              extent = ol.proj.transform(layer.EX_GeographicBoundingBox,
+              extent = ol.proj.transformExtent(layer.EX_GeographicBoundingBox,
                   //layer.BoundingBox[0].crs,
                   'EPSG:4326',
                   srsCode);
@@ -156,7 +156,7 @@
           },
 
           getLayerInfoFromCap: function(name, capObj) {
-            var layers = capObj.layers || capObj.Layer ;
+            var layers = capObj.layers || capObj.Layer;
             for (var i = 0, len = layers.length;
                  i < len; i++) {
               if (name == layers[i].Name ||

@@ -1,0 +1,5 @@
+<dimension name="keywordToken" label="Keyword Tokens">
+  <category value="test1" label="test1" count="2" />
+  <category value="test2" label="test2" count="1" />
+  <category value="test3" label="test3" count="5" />
+</dimension>

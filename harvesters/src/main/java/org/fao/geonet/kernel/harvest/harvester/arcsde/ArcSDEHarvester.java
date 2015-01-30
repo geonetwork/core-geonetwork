@@ -67,8 +67,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
 	private ArcSDEParams params;
     //FIXME use custom class?
-    private BaseAligner aligner = new BaseAligner() {};
-	
+
 	static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
 	private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
 	private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
@@ -144,7 +143,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
     public void doHarvest(Logger l) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
-		List<String> metadataList = adapter.retrieveMetadata();
+		List<String> metadataList = adapter.retrieveMetadata(cancelMonitor);
 		align(metadataList);
 		Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
 	}
@@ -164,6 +163,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		//-----------------------------------------------------------------------
 		//--- insert/update metadata		
 		for(String metadata : metadataList) {
+            if (cancelMonitor.get()) {
+                return;
+            }
 			result.totalMetadata++;
 			// create JDOM element from String-XML
 			Element metadataElement = Xml.loadString(metadata, false);
@@ -192,17 +194,18 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         continue;
                     }
 
+                    BaseAligner aligner = new BaseAligner(cancelMonitor){};
 					//
 					// add / update the metadata from this harvesting result
 					//
 					String id = dataMan.getMetadataId(uuid);
 					if (id == null)	{
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
-						id = addMetadata(iso19139, uuid, schema, localGroups, localCateg);
+						id = addMetadata(iso19139, uuid, schema, localGroups, localCateg, aligner);
 						result.addedMetadata++;
 					} else {
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
-						updateMetadata(iso19139, id, localGroups, localCateg);
+						updateMetadata(iso19139, id, localGroups, localCateg, aligner);
 						result.updatedMetadata++;
 					}
 					idsForHarvestingResult.add(id);
@@ -215,6 +218,10 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		//	
         List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
         for(Metadata existingId : existingMetadata) {
+            if (cancelMonitor.get()) {
+                return;
+            }
+
             String ex$ = String.valueOf(existingId.getId());
 			if(!idsForHarvestingResult.contains(ex$)) {
 				dataMan.deleteMetadataGroup(context, ex$);
@@ -223,7 +230,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		}			
 	}
 
-	private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg, BaseAligner aligner) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Updating metadata with id: "+ id);
         //
         // update metadata
@@ -255,7 +262,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -264,9 +271,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param schema
 	 * @param localGroups
 	 * @param localCateg
-	 * @throws Exception
+	 * @param aligner
+     * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
+	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
+                               BaseAligner aligner) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Adding metadata with remote uuid: "+ uuid);
 
         //
@@ -303,7 +312,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 
         return id;
     }

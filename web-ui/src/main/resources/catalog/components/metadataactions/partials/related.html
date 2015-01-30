@@ -1,0 +1,59 @@
+<div class="gn-related-resources"
+		 data-ng-show="relations.length > 0">
+	<h2>{{title}}</h2>
+	<div class="row list-group-item gn-related-item"
+				data-ng-repeat="r in relations track by $index"
+				data-ng-init="mainType = config.getType(r);type = r['@type'];"
+				data-ng-if="r['@type'] !== 'thumbnail'">
+
+		<div class="col-xs-1">
+			<strong>
+				<i class="fa fa-2x"
+					 data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+			</strong>
+		</div>
+		<div class="col-xs-7">
+			<!-- WMS & WFS contains layer name in title -->
+			<h4 data-ng-if="mainType !== 'WMS' &&
+											mainType !== 'LINKDOWNLOAD' &&
+											mainType !== 'LINK' &&
+											r.protocol !== 'OGC:WFS' ">
+				{{getTitle(r)}}
+			</h4>
+			<!-- Display description if available -->
+			<h4 data-ng-if="(mainType === 'WMS' ||
+											 mainType.indexOf('LINK') === 0 ||
+											 r.protocol === 'OGC:WFS') &&
+											 r['abstract'] && r['abstract'].length > 0">
+				{{r['abstract']}}
+			</h4>
+
+			<p class="text-muted"
+				 data-ng-if="mainType.indexOf('MD') == 0">
+				{{r['abstract']}}
+			</p>
+			<p class="text-muted"
+				 data-ng-if="mainType === 'WMS'">
+				<span data-translate=""
+							data-translate-values="{url:'{{r.url}}', layer:'{{r.name}}'}">
+					wmsLinkDetails</span>
+			</p>
+			<p class="text-muted"
+				 data-ng-if="r.protocol === 'OGC:WFS'">
+				<span data-translate=""
+							data-translate-values="{url:'{{r.url}}', layer:'{{r.name}}'}">
+					wfsLinkDetails</span>
+			</p>
+		</div>
+		<div class="col-xs-4">
+			<button type="button"
+							class="btn btn-default btn-lg btn-block"
+							data-ng-click="config.doAction(mainType, r)">
+
+				<span class="visible-lg-*">
+					{{(config.getLabel(mainType) + type) | translate}}
+				</span>
+			</button>
+		</div>
+	</div>
+</div>

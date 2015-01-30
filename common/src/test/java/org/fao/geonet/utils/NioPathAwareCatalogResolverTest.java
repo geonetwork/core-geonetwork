@@ -1,6 +1,7 @@
 package org.fao.geonet.utils;
 
 import org.apache.xml.resolver.CatalogManager;
+import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -86,6 +86,7 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -113,6 +114,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataStatusSpecs;
@@ -473,6 +475,8 @@ public class DataManager {
         for (String metadataId : metadataIds) {
             indexMetadata(metadataId, false);
         }
+
+        searchMan.forceIndexChanges();
     }
     /**
      * TODO javadoc.
@@ -559,7 +563,16 @@ public class DataManager {
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY,  popularity,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING,      rating,      true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER,displayOrder, true, false));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       true, false));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA,       extra,       false, true));
+
+            // If the metadata has an atom document, index related information
+            InspireAtomFeedRepository inspireAtomFeedRepository = _applicationContext.getBean(InspireAtomFeedRepository.class);
+            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
+
+            if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
+                moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
+                moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
+            }
 
             if (owner != null) {
                 User user = _applicationContext.getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
@@ -577,8 +590,11 @@ public class DataManager {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
-                    if (group.getLogo() != null) {
+                    final boolean preferGroup = settingMan.getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
+                    if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
+                    }
+                    if (group.getLogo() != null && preferGroup) {
                         logoUUID = group.getLogo();
                     }
                 }
@@ -1335,7 +1351,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id), false);
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -1483,7 +1499,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), false);
+        indexMetadata(Integer.toString(metadataId), true);
 
         return rating;
     }
@@ -1835,7 +1851,7 @@ public class DataManager {
         }
 
         //--- force namespace prefix for iso19139 metadata
-        setNamespacePrefixUsingSchemas(schema, md);
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
@@ -1861,7 +1877,7 @@ public class DataManager {
         } finally {
             if(index) {
                 //--- update search criteria
-                indexMetadata(metadataId, false);
+                indexMetadata(metadataId, true);
             }
         }
         // Return an up to date metadata record
@@ -2605,9 +2621,10 @@ public class DataManager {
      * @param grpId The group identifier
      * @param opId The operation identifier
      *
+     * @return true if the operation was set.
      * @throws Exception
      */
-    public void setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
+    public boolean setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
         OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
         Optional<OperationAllowed> opAllowed = getOperationAllowedToAdd(context, mdId, grpId, opId);
 
@@ -2615,7 +2632,10 @@ public class DataManager {
         if (opAllowed.isPresent()) {
             opAllowedRepo.save(opAllowed.get());
             svnManager.setHistory(mdId + "", context);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -2645,41 +2665,48 @@ public class DataManager {
                 .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
         if (operationAllowed == null) {
-            // Check user privileges
-            // Session may not be defined when a harvester is running
-            if (context.getUserSession() != null) {
-                Profile userProfile = context.getUserSession().getProfile();
-                if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
-                    int userId = Integer.parseInt(context.getUserSession().getUserId());
-                    // Reserved groups
-                    if (ReservedGroup.isReserved(grpId)) {
+            checkOperationPermission(context, grpId, userGroupRepo);
+        }
 
-                        Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
-                                .and(UserGroupSpecs.hasUserId(userId));
-                        List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
+        if (operationAllowed == null) {
+            return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
+        } else {
+            return Optional.absent();
+        }
+    }
 
-                        if (groupIds.isEmpty()) {
-                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
-                                                          + "Reviewer of any group.");
+    public void checkOperationPermission(ServiceContext context, int grpId, UserGroupRepository userGroupRepo) {
+        // Check user privileges
+        // Session may not be defined when a harvester is running
+        if (context.getUserSession() != null) {
+            Profile userProfile = context.getUserSession().getProfile();
+            if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
+                int userId = context.getUserSession().getUserIdAsInt();
+                // Reserved groups
+                if (ReservedGroup.isReserved(grpId)) {
+
+                    Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                            .and(UserGroupSpecs.hasUserId(userId));
+                    List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
+
+                    if (groupIds.isEmpty()) {
+                        throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
+                                                      + "Reviewer of any group.");
+                    }
+                } else {
+                    String userGroupsOnly = settingMan.getValue("system/metadataprivs/usergrouponly");
+                    if (userGroupsOnly.equals("true")) {
+                        // If user is member of the group, user can set operation
+
+                        if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
+                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
+                                                          + " member of this group.");
                         }
-                    } else {
-                        String userGroupsOnly = settingMan.getValue("system/metadataprivs/usergrouponly");
-                        if (userGroupsOnly.equals("true")) {
-                            // If user is member of the group, user can set operation
-
-                            if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
-                                throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
-                                                              + " member of this group.");
-							}
-						}
-					}
-				}
-			}
-			return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId)
-					.setOperationId(opId)));
-		}
-		return Optional.absent();
-	}
+                    }
+                }
+            }
+        }
+    }
 
     /**
      *
@@ -2711,9 +2738,10 @@ public class DataManager {
      * @param mdId metadata id
      * @param groupId group id
      * @param operId operation id
-     * @throws Exception hmm
      */
     public void unsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
+        checkOperationPermission(context, groupId, context.getBean(UserGroupRepository.class));
+
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
         final OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         if (repository.exists(id)) {

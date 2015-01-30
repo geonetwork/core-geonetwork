@@ -14,16 +14,16 @@
            data-translate="">print_scale</label>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="auto"> Auto
+        <input type="checkbox" ng-model="auto"> {{'Auto'|translate}}
       </label>
     </div>
 
-    <div class="">
+    <div class="" ng-hide="auto">
       <select class="form-control"
               data-ng-model="config.scale"
               data-ng-change="refreshComp()"
               data-ng-options="l.name for l in config.scales"></select>
     </div>
   </div>
-  <button class="btn btn-default" data-ng-click="submit()"><i class="fa fa-print"></i></button>
+  <button class="btn btn-default" data-ng-click="submit()"><i class="fa fa-print"></i> {{'Print'|translate}} </button>
 </form>

@@ -48,8 +48,10 @@
           <li class="list-group-item gn-record"
             data-ng-repeat="obj in selection">
               {{obj.md.title || obj.md.defaultTitle}}
-              <span class="pull-right"><i>{{obj.associationType}} / {{obj.initiativeType}}</i></span>
-              <a ng-click="removeFromSelection(obj)" href="">
+              <span><i>({{obj.associationType}}
+                <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
+              </i></span>
+              <a data-ng-click="removeFromSelection(obj)" href="">
                 <i class="btn fa fa-times text-danger"></i>
               </a>
           </li>
@@ -59,8 +61,8 @@
         <button type="button" class="btn navbar-btn btn-success"
           data-ng-click="linkToResource()"
           data-ng-class="{'disabled': (selection.length < 1)}">
-          <i class="fa fa-sign-out" /> <span
-            data-translate="">linkToSibling</span>
+          <i class="fa fa-sign-out" />&nbsp;
+          <span data-translate="">linkToSibling</span>
         </button>
       </div>
     </div>

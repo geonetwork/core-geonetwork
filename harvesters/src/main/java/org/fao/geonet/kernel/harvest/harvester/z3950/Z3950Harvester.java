@@ -194,7 +194,7 @@ public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 	}
 
 	public void doHarvest(Logger log) throws Exception {
-		Harvester h = new Harvester(log, context, params);
+		Harvester h = new Harvester(cancelMonitor, log, context, params);
 		serverResults = h.harvest(log);
 	}
 

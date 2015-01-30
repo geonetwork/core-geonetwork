@@ -14,6 +14,7 @@ public class Handlers {
 
     common.Matchers matchers
     common.Functions func
+    boolean requireValidMetadataForPublish = false;
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -133,8 +134,8 @@ public class Handlers {
         if (env.canEdit()) {
             summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
             def publishUrl = {
-                def on = it ? "on" : "off"
-                "md.privileges.update?update=true&id=${env.metadataId}&_1_0=$on&_1_1=$on&_1_5=$on&_1_6=$on"
+                def service = it ? "publish" : "unpublish"
+                "md.$service?ids=${env.metadataId}"
             }
 
             def basicPublicJs = { isPublish ->
@@ -156,7 +157,7 @@ public class Handlers {
             if (isValid == null) {
                 isValid = '-1';
             }
-            if (!published && isValid.contains("1")) {
+            if (!published && (!requireValidMetadataForPublish || isValid.contains("1"))) {
                 publishAction.liClasses = ""
             }
             def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")

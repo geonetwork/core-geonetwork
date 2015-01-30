@@ -319,4 +319,6 @@
   <include>config/config-service-monitoring.xml</include>
 
   <include>config/config-service-reports.xml</include>
+
+  <include>config/config-service-inspireatom.xml</include>
 </geonet>

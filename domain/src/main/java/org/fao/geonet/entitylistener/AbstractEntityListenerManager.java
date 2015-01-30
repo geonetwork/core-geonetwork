@@ -27,9 +27,9 @@ public class AbstractEntityListenerManager<T> {
                 }
             }
         } else {
-            Log.info(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
-                                                  ApplicationContextHolder.class.getName() +
-                                                  " has not been set in this thread");
+            Log.warning(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
+                                                     ApplicationContextHolder.class.getName() +
+                                                     " has not been set in this thread");
         }
     }
 }

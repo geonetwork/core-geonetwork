@@ -112,6 +112,9 @@
       <field name="_defaultTitle" tagName="defaultTitle"/>
       <field name="abstract" tagName="abstract" markup="true"/>
       <field name="_defaultAbstract" tagName="defaultAbstract" markup="true"/>
+      <field name="createDate" tagName="creationDate"/>
+      <field name="revisionDate" tagName="revisionDate"/>
+      <field name="publicationDate" tagName="publicationDate"/>
       <field name="keyword" tagName="keyword"/>
       <field name="parentUuid" tagName="parentId"/>
       <field name="type" tagName="type"/>
@@ -146,6 +149,8 @@
       <!-- Sextant -->
       <field name="standardName" tagName="standardName"/>
       <field name="sextantTheme" tagName="sextantTheme"/>
+      <field name="_logo" tagName="logo"/>
+      <field name="_groupWebsite" tagName="groupWebsite"/>
     </dumpFields>
   </search>
 

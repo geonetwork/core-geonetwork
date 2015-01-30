@@ -6,6 +6,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.services.region.metadata.MetadataRegionSearchRequest;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;

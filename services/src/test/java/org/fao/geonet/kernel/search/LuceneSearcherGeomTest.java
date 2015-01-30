@@ -73,7 +73,7 @@ public class LuceneSearcherGeomTest extends AbstractCoreIntegrationTest {
 //        final ThesaurusBasedRegionsDAO thesaurusBasedRegionsDAO = new ThesaurusBasedRegionsDAO(languages);
         Object languages = Sets.newHashSet("eng");
         this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("languages", languages);
-        this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("thesRegsions", regionDAO);
+        this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("thesRegions", regionDAO);
         final Element element = doGeomSearch("region:testRegion");
 
         assertNotNull(element);

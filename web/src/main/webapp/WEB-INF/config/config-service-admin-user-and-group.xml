@@ -27,7 +27,7 @@
             <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
-        
+       <!-- Moved to SMVC
         <service name="admin.user.update">
             <documentation>The service can be used to create or update 
                 a user.</documentation>
@@ -39,7 +39,7 @@
             <documentation>Remove a user.</documentation>
             <class name=".services.user.Remove" />
             <error sheet="../xslt/error/error-json.xsl"/>
-        </service>
+        </service>-->
         <service name="admin.user">
           <documentation>Get the user information.</documentation>
           <class name=".services.user.Get" />

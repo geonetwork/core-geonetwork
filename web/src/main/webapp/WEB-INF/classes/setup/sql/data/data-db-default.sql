@@ -570,6 +570,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/port', NULL, 1, 530, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/username', NULL, 0, 540, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/password', NULL, 0, 550, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/email', 'root@localhost', 0, 610, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/host', '', 0, 630, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/port', '25', 1, 640, 'y');
@@ -596,6 +597,8 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/downloadservice/simple', 'true', 0, 2220, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/downloadservice/withdisclaimer', 'false', 0, 2230, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/enable', 'false', 2, 2310, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/localXlinkEnable', 'true', 2, 2311, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'false', 2, 2320, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/autofixing/enable', 'true', 2, 2410, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/searchStats/enable', 'true', 2, 2510, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/indexoptimizer/enable', 'true', 2, 6010, 'y');
@@ -611,6 +614,9 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '60', 1, 7030, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'true', 2, 7210, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enableSearchPanel', 'false', 2, 7220, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', 'disabled', 0, 7230, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '0 0 0/24 ? * *', 0, 7240, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomProtocol', 'INSPIRE-ATOM', 0, 7250, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enableEditing', 'false', 2, 9010, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/template', '', 0, 9021, 'y');
@@ -621,6 +627,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/prefergrouplogo', 'y', 0, 9111, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/enableSimpleView', 'true', 2, 9110, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/enableIsoView', 'false', 2, 9120, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/enableInspireView', 'true', 2, 9130, 'y');
@@ -638,7 +645,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 -- INSERT INTO Settings (name, value, datatype, position, internal) VALUES 
 --  ('map/backgroundChoices', '{"contextList": []}', 0, 9590, false);
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES 
-  ('map/config', '{"useOSM":true,"context":"","layer":{"url":"http://www2.demis.nl/mapserver/wms.asp?","layers":"Countries","version":"1.1.1"},"projection":"EPSG:3857","projectionList":[{"code":"EPSG:4326","label":"WGS84 (EPSG:4326)"},{"code":"EPSG:3857","label":"Google mercator (EPSG:3857)"}]}', 0, 9590, 'n');
+  ('map/config', '{"viewerMap": "../../map/config-viewer.xml", "listOfServices": {wms: [], wmts: []}, "useOSM":true,"context":"","layer":{"url":"http://www2.demis.nl/mapserver/wms.asp?","layers":"Countries","version":"1.1.1"},"projection":"EPSG:3857","projectionList":[{"code":"EPSG:4326","label":"WGS84 (EPSG:4326)"},{"code":"EPSG:3857","label":"Google mercator (EPSG:3857)"}]}', 0, 9590, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', 'osm', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');

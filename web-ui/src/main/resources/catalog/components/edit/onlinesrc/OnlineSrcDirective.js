@@ -266,8 +266,9 @@
                   scope.processing = true;
                   gnEditor.save(false, true)
                     .then(function(data) {
-                        scope.action = 'md.thumbnail.generate@json';
-                        $http.post('md.thumbnail.generate@json',
+                        scope.action =
+                            'md.thumbnail.generate?_content_type=json&';
+                        $http.post('md.thumbnail.generate?_content_type=json&',
                             $('#gn-upload-onlinesrc').serialize(), {
                               headers: {'Content-Type':
                                     'application/x-www-form-urlencoded'}
@@ -289,7 +290,7 @@
                         });
                       });
                 } else {
-                  gnOnlinesrc.addThumbnailByURL(scope.searchObj.params,
+                  gnOnlinesrc.addThumbnailByURL(scope.params,
                       scope.popupid);
                 }
               };
@@ -714,19 +715,19 @@
                    */
                   scope.addToSelection =
                       function(md, associationType, initiativeType) {
-                        if (associationType && initiativeType) {
+                        if (associationType) {
                           var idx = findObj(md);
                           if (idx < 0) {
                             scope.selection.push({
                               md: md,
                               associationType: associationType,
-                              initiativeType: initiativeType
+                              initiativeType: initiativeType || ''
                             });
                           }
                           else {
                             angular.extend(scope.selection[idx], {
                               associationType: associationType,
-                              initiativeType: initiativeType
+                              initiativeType: initiativeType || ''
                             });
                           }
                         }

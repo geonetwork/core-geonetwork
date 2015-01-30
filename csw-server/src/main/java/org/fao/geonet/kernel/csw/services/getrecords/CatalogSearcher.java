@@ -247,9 +247,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
-                    luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), luceneConfig.getTaxonomyConfiguration(),
-                    _reader, _query, wrapSpatialFilter(), _sort, null, false,
-                    luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(), luceneConfig.isDocsScoredInOrder());
+                    luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig,
+                    _reader, _query, wrapSpatialFilter(), _sort, null, false);
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
 
@@ -536,10 +535,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
                 maxRecords, _lang.presentationLanguage,
-                luceneConfig.getTaxonomy().get(resultType.toString()), luceneConfig.getTaxonomyConfiguration(),
+                luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
                 reader, _query, wrapSpatialFilter(),
-                _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
-                luceneConfig.isDocsScoredInOrder()
+                _sort, taxonomyReader, buildSummary
 		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();
@@ -773,8 +771,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
-             LuceneIndexField.OWNER,
-             LuceneIndexField.GROUP_OWNER);
+                LuceneIndexField.OWNER,
+                LuceneIndexField.GROUP_OWNER);
         
         BooleanQuery bq;
         if (q instanceof BooleanQuery) {
