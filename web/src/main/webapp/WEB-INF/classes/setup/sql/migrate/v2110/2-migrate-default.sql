@@ -1,9 +1,9 @@
 --Inserts new data and modifies data
 
 ALTER TABLE operations DROP COLUMN reserved;
-ALTER TABLE ServiceParameters DROP CONSTRAINT serviceparameters_service_fkey;
-ALTER TABLE ServiceParameters DROP COLUMN id;
-ALTER TABLE services DROP COLUMN id;
+ALTER TABLE ServiceParameters DROP CONSTRAINT IF EXISTS serviceparameters_service_fkey;
+ALTER TABLE ServiceParameters DROP COLUMN IF EXISTS id;
+ALTER TABLE services DROP COLUMN IF EXISTS id;
 
 
 ALTER TABLE Settings ALTER name TYPE varchar(512);
