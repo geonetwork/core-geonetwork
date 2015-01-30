@@ -11,7 +11,7 @@ var gnHarvestergeoPREST = {
               "name": "",
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
@@ -23,7 +23,7 @@ var gnHarvestergeoPREST = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "searches": [{
@@ -39,7 +39,7 @@ var gnHarvestergeoPREST = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },

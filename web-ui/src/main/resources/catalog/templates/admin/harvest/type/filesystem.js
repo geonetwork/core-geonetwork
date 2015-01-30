@@ -11,9 +11,9 @@ var gnHarvesterfilesystem = {
                 "name" : "",
                 "uuid" : "",
                 "directory" : "/filesystem/path",
-                "recurse" : "true",
-                "nodelete" : "true",
-                "checkFileLastModifiedForUpdate" : "true",
+                "recurse" : true,
+                "nodelete" : true,
+                "checkFileLastModifiedForUpdate" : true,
                 "icon" : "blank.gif"
             },
             "content" : {
@@ -22,7 +22,7 @@ var gnHarvesterfilesystem = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active"
             },
             "privileges" : [ {
@@ -36,7 +36,7 @@ var gnHarvesterfilesystem = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },

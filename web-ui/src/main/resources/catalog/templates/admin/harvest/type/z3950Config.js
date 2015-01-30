@@ -11,7 +11,7 @@ var gnHarvesterz3950Config = {
               "name": "",
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
@@ -22,9 +22,9 @@ var gnHarvesterz3950Config = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": "",
-              "clearConfig": "false"
+              "clearConfig": false
             },
             "searches": [{
                 "freeText": "",
@@ -43,7 +43,7 @@ var gnHarvesterz3950Config = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },

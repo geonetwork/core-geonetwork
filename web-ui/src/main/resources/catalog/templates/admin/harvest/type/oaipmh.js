@@ -11,7 +11,7 @@ var gnHarvesteroaipmh = {
               "name": "",
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
@@ -20,7 +20,7 @@ var gnHarvesteroaipmh = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "searches": [{
@@ -39,7 +39,7 @@ var gnHarvesteroaipmh = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
