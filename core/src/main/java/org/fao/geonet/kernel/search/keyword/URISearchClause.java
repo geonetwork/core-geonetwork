@@ -13,20 +13,37 @@ import org.jdom.Element;
  */
 public class URISearchClause implements SearchClause {
 
+    KeywordSearchType searchType;
     private String uri;
+    boolean ignoreCase;
 
     public URISearchClause(String uri) {
         this.uri = uri;
     }
 
+    public URISearchClause(KeywordSearchType searchType, String keywordURI, boolean ignoreCase) {
+        this.searchType = searchType;
+        this.uri = keywordURI;
+        this.ignoreCase = ignoreCase;
+    }
+
     @Override
     public Where toWhere(Set<String> langs) {
-        return Wheres.ID(this.uri);
+        if (this.searchType != null) {
+            return searchType.toWhere("id", this.uri, this.ignoreCase);
+        } else {
+            return Wheres.ID(this.uri);
+        }
     }
 
     @Override
     public void addXmlParams(Element params) {
         params.addContent(new Element(XmlParams.pUri).setText(this.uri));
+        KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pUri, this.uri);
+        if (this.searchType != null) {
+            KeywordSearchParamsBuilder.addXmlParam(params,
+                    XmlParams.pTypeSearch, "" + searchType.ordinal());
+        }
     }
 
 }

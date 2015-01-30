@@ -119,7 +119,7 @@
                  bboxLayer
                ],
                renderer: 'canvas',
-               view: new ol.View2D({
+               view: new ol.View({
                  center: [0, 0],
                  projection: scope.projs.map,
                  zoom: 2
@@ -173,6 +173,7 @@
                }
                feature.setGeometry(geom);
                feature.getGeometry().setCoordinates(coordinates);
+               scope.extent.map = geom.getExtent();
              };
 
              /**
@@ -221,7 +222,7 @@
                    parseFloat(region.south),
                    parseFloat(region.east),
                    parseFloat(region.north)];
-
+                 scope.location = region.name;
                  reprojExtent('md', 'map');
                  reprojExtent('md', 'form');
                  setDcOutput();

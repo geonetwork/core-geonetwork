@@ -6,14 +6,19 @@
       <i class="fa fa-times"></i>&nbsp;<span data-translate="">resetKeywordsAnyway</span>
     </button>
   </div>
+
   <span data-ng-show="!invalidKeywordMatch" ng-switch="mode">
     <div class="row" data-ng-switch-when="tagsinput">
-      <div class="col-sm-9 col-sm-offset-2">
-        <input type="text" id="tagsinput_{{elementRef}}" class="form-control"></input>
+      <div class="col-sm-9 col-sm-offset-2"
+           data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
+           title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
+        <input type="text" id="tagsinput_{{elementRef}}"
+               class="form-control"></input>
       </div>
       <div class="col-sm-1">
         <!-- TODO: improve transformation drop down is duplicated -->
-        <div class="btn-group pull-right">
+        <div class="btn-group pull-right"
+             data-ng-show="transformationLists.length > 1">
           <button type="button" class="btn btn-link dropdown-toggle pull-right"
                   data-toggle="dropdown">
             <i class="fa fa-cog"/>
@@ -30,6 +35,7 @@
         </div>
       </div>
     </div>
+    <!-- TODO: Deprecate this mode ? - only tagsinput is used. -->
     <div class="row" data-ng-switch-default="">
       <div class="col-md-4 col-md-offset-2">
         <input type="text" class="form-control" placeholder="{{'keywordFilter' | translate}}"

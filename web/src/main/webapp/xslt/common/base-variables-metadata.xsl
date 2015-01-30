@@ -78,6 +78,7 @@
   
   <xsl:variable name="viewConfig" select="$editorConfig/editor/views/view[tab/@id = $tab]"/>
   <xsl:variable name="tabConfig" select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
+  <xsl:variable name="thesaurusList" select="$editorConfig/editor/views/view[tab/@id = $tab]/thesaurusList"/>
   
   <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'
     else $tabConfig/@mode = 'flat'"/>

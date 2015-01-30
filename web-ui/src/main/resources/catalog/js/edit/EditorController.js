@@ -68,6 +68,9 @@
           when('/create/from/:id/in/:group', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/tab/:tab', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group/template/:template', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
@@ -338,9 +341,6 @@
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = false;
               $scope.toggleAttributes();
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataSuccess')
-              });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = true;

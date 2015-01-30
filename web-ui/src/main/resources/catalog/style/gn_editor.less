@@ -215,6 +215,30 @@ form.gn-editor {
    *[data-gn-keyword-selector] {
        margin-bottom: 10px;
    }
+
+  .bootstrap-tagsinput {
+    min-height: 34px;
+    .tag {
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: inline-flex;
+      margin-top: 2px;
+    }
+
+    .twitter-typeahead {
+      margin-top: 4px;
+    }
+    .tt-input {
+      border: none;
+      box-shadow: none;
+      background-color: #FFFFFF !important;
+    }
+  }
+  .gn-maxtags .bootstrap-tagsinput {
+    .twitter-typeahead, .twitter-typeahead > input {
+      display: none !important;
+    }
+  }
 }
 
 form.gn-tab-inspire {
@@ -239,6 +263,11 @@ form.gn-tab-medsea-metadata {
   .btn.fa.fa-times.text-danger {
     display: none;
   }
+  /* ... but keep it for format and contact */
+  .gn-format .btn.fa.fa-times.text-danger,
+  .gn-organisationName .btn.fa.fa-times.text-danger{
+    display: block;
+  }
 
 
     /* Do not display thesaurus transformation selector */
@@ -250,11 +279,38 @@ form.gn-tab-medsea-metadata {
     font-size: 14px;
     font-weight: bold;
   }
+  /* Hide legend label for extent */
+  legend.EX_GeographicBoundingBox {
+    display: none;
+  }
+
   .control-label {
     text-align: left !important;
   }
 }
 
+/* Add mandatory flag to keyword selector */
+form.gn-tab-characteristics {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(2) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(3) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(5) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(6) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(7) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+form.gn-tab-overview {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+
+form.gn-tab-accessibility {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
 /* ... except for EDMERP and EDMO fields */
 form.gn-tab-datasources {
   div.gn-extra-field > label {
@@ -263,16 +319,27 @@ form.gn-tab-datasources {
   /* Display remove action for the third and fifth
   form field in this tab. It should select EDMERP
   and EDMO field if the record follow the guideline. */
-  .gn-field:nth-of-type(3) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(2) .btn.fa.fa-times.text-danger,
   .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
     display: block;
   }
 }
 
-form.gn-tab-timeCoverage {
-  div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well {
-    display: block !important;
-    visibility: visible !important;
+form.gn-tab-timeCoverage div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well,
+form.gn-tab-spatialCoverage div[data-tooltip='iso19139|gmd:distance||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance'] + .well {
+  display: block !important;
+  visibility: visible !important;
+
+  button {
+    display: none;
+  }
+}
+
+form.gn-tab-accessibility {
+  /* Hide the last option of helper
+  which is the other for free text input. */
+  .helper > div > div.radio:last-of-type {
+      display: none;
   }
 }
 

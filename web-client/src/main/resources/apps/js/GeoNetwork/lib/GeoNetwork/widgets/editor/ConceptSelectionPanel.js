@@ -505,7 +505,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 if (response.responseText === '<?xml version="1.0" encoding="UTF-8"?>') {
                     console.log('Empty response returned from ' + url);
                 } else {
-                    document.getElementById(this.xmlField).value = response.responseText;
+                    document.getElementById(this.xmlField).value =
+                      response.responseText.
+                        replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
                 }
 //                this.loadingMask.hide();
             }
@@ -869,8 +871,9 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                 scope: this,
                                 success: function (response) {
                                     // Add the fragment and save the metadata
-                                    var keywords = ["<" + tagName + " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
-                                                     response.responseText + "</" + tagName + ">"];
+                                    var keywords = [response.responseText];
+                                        //"<" + tagName + " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
+                                        //             response.responseText + "</" + tagName + ">"];
                                     GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, editorPanel);
                                 }
                             });

@@ -19,6 +19,8 @@
     </appender>
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="ALL" />
+        <param name="MaxFileSize" value="102400KB" />
+        <param name="MaxBackupIndex" value="10" />
         <param name="File" value="logs/geonetwork.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
@@ -31,10 +33,13 @@
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="geonetwork.search" additivity="false">
+    <logger name="geonetwork.search" additivity="true">
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.editor" additivity="false">
+        <level value="WARN" />
+    </logger>
+    <logger name="geonetwork.datamanager" additivity="true">
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.schemamanager" additivity="false">
@@ -108,9 +113,12 @@
 
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="jeeves.request" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="jeeves.dbms" additivity="false">
         <level value="WARN" />

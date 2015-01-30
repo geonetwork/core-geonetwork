@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
-  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-  xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                exclude-result-prefixes="#all">
 
   <!-- Custom rendering of keyword section 
     * gmd:descriptiveKeywords is boxed element and the title 
@@ -95,19 +95,26 @@
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
 
+        <xsl:variable name="thesaurusConfig"
+                      as="element()?"
+                      select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
         <!-- Single quote are escaped inside keyword. 
           TODO: support multilingual editing of keywords
           -->
         <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], '|')"/>
 
         <!-- Define the list of transformation mode available. -->
-        <xsl:variable name="transformations">to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink</xsl:variable>
+        <xsl:variable name="transformations"
+                      as="xs:string"
+                      select="if ($thesaurusConfig/@transformations != '')
+                              then $thesaurusConfig/@transformations
+                              else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'"/>
 
-        <!-- Get current transformation mode based on XML fragement analysis -->
+        <!-- Get current transformation mode based on XML fragment analysis -->
         <xsl:variable name="transformation"
-          select="if (count(gmd:keyword/gmx:Anchor) > 0) 
+          select="if (parent::node()/@xlink:href) then 'to-iso19139-keyword-as-xlink'
+          else if (count(gmd:keyword/gmx:Anchor) > 0)
           then 'to-iso19139-keyword-with-anchor' 
-          else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
           else 'to-iso19139-keyword'"/>
 
         <xsl:variable name="parentName" select="name(..)"/>
@@ -119,14 +126,17 @@
               * 'multiplelist' for multiple selection list
         -->
         <xsl:variable name="widgetMode" select="'tagsinput'"/>
-        <xsl:variable name="maxTags" select="''"/>
+        <xsl:variable name="maxTags"
+                      as="xs:string"
+                      select="if ($thesaurusConfig/@maxtags)
+                              then $thesaurusConfig/@maxtags
+                              else ''"/>
         <!--
           Example: to restrict number of keyword to 1 for INSPIRE
           <xsl:variable name="maxTags" 
           select="if ($thesaurusKey = 'external.theme.inspire-theme') then '1' else ''"/>
         -->
         <!-- Create a div with the directive configuration
-            * widgetMod: the layout to use
             * elementRef: the element ref to edit
             * elementName: the element name
             * thesaurusName: the thesaurus title to use
@@ -137,7 +147,7 @@
           -->
         <div data-gn-keyword-selector="{$widgetMode}"
           data-metadata-id="{$metadataId}"
-          data-element-ref="{concat('_X', ../gn:element/@ref)}"
+          data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
           data-thesaurus-title="{$thesaurusTitle}"
           data-thesaurus-key="{$thesaurusKey}"
           data-keywords="{$keywords}" data-transformations="{$transformations}"

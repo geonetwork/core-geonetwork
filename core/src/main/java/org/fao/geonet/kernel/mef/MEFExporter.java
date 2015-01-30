@@ -28,6 +28,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
@@ -67,7 +68,10 @@ class MEFExporter {
 	 */
 	public static String doExport(ServiceContext context, String uuid,
 			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		Pair<Metadata, String> recordAndMetadata =
+				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		Metadata record = recordAndMetadata.one();
+		String xmlDocumentAsString = recordAndMetadata.two();
 
 		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
 			throw new Exception("Cannot export sub template");
@@ -87,11 +91,7 @@ class MEFExporter {
 
 		// --- save metadata
 
-		if (!record.getData().startsWith("<?xml")) {
-			record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
-        }
-
-		byte[] binData = record.getData().getBytes(Constants.ENCODING);
+		byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
 
 		MEFLib.addFile(zos, FILE_METADATA, new ByteArrayInputStream(binData));
 

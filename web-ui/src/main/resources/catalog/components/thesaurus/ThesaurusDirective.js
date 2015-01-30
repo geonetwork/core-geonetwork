@@ -35,7 +35,9 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
-             selectorOnly: '@'
+             selectorOnly: '@',
+             // Comma separated values of thesaurus keys
+             include: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
@@ -44,13 +46,27 @@
              scope.thesaurusKey = null;
              scope.snippet = null;
              scope.snippetRef = null;
+             var restrictTo =
+                 scope.include ? (
+                     scope.include.indexOf(',') !== -1 ?
+                      scope.include.split(',') : [scope.include]) : [];
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
              gnThesaurusService.getAll().then(
              function(listOfThesaurus) {
                // TODO: Sort them
-               scope.thesaurus = listOfThesaurus;
+               if (restrictTo.length > 0) {
+                 var filteredList = [];
+                 angular.forEach(listOfThesaurus, function(thesaurus) {
+                   if ($.inArray(thesaurus.getKey(), restrictTo) !== -1) {
+                     filteredList.push(thesaurus);
+                   }
+                 });
+                 scope.thesaurus = filteredList;
+               } else {
+                 scope.thesaurus = listOfThesaurus;
+               }
              });
 
              scope.add = function() {
@@ -67,8 +83,7 @@
                          .getXML(thesaurusIdentifier).then(
                          function(data) {
                    // Add the fragment to the form
-                   scope.snippet = gnEditorXMLService.
-                                 buildXML(scope.elementName, data);
+                   scope.snippet = data;
                    scope.snippetRef = gnEditor.
                                  buildXMLFieldName(
                                    scope.elementRef,
@@ -142,8 +157,7 @@
              scope.transformationLists =
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
-
-
+             scope.maxTagsLabel = scope.maxTags || '∞';
 
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
@@ -166,12 +180,22 @@
 
 
              var init = function() {
+
                // Nothing to load - init done
                scope.isInitialized = scope.initialKeywords.length === 0;
 
+               // If no keyword, set the default transformation
+               if (
+               $.inArray(scope.currentTransformation,
+                   scope.transformationLists) === -1 &&
+               scope.initialKeywords.length === 0) {
+
+                 scope.setTransformation(scope.transformationLists[0]);
+               }
                if (scope.isInitialized) {
                  checkState();
                } else {
+
                  // Check that all initial keywords are in the thesaurus
                  var counter = 0;
                  angular.forEach(scope.initialKeywords, function(keyword) {
@@ -264,11 +288,16 @@
 
                    // When clicking the element trigger input
                    // to show autocompletion list.
-                   field.on('click', function() {
-                     if (field.val() == '') {
-                       field.val('*').trigger('input');
+                   // https://github.com/twitter/typeahead.js/issues/798
+                   field.on('typeahead:opened', function() {
+                     var initial = field.val(),
+                     ev = $.Event('keydown');
+                     ev.keyCode = ev.which = 40;
+                     field.trigger(ev);
+                     if (field.val() != initial) {
                        field.val('');
                      }
+                     return true;
                    });
                  });
                });
@@ -310,8 +339,10 @@
                });
              };
              scope.setTransformation = function(t) {
-               scope.currentTransformation = t;
-               getSnippet();
+               $timeout(function() {
+                 scope.currentTransformation = t;
+                 getSnippet();
+               });
                return false;
              };
              scope.isCurrent = function(t) {
@@ -414,12 +445,16 @@
 
             // When clicking the element trigger input
             // to show autocompletion list.
-            element.on('click', function() {
-              if (element.val() == '') {
-                element.val('*').trigger('input');
-                // FIXME : does not properly reset value
+            // https://github.com/twitter/typeahead.js/issues/798
+            element.on('typeahead:opened', function() {
+              var initial = element.val(),
+                  ev = $.Event('keydown');
+              ev.keyCode = ev.which = 40;
+              element.trigger(ev);
+              if (element.val() != initial) {
                 element.val('');
               }
+              return true;
             });
             initialized = true;
           };

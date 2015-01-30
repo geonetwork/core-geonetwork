@@ -68,7 +68,7 @@
 		</results_with_summary>
 		<suggestions>
 			<item name="keyword" plural="keywords" indexKey="keyword"/>
-            <item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"/>
+			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"/>
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspireTheme" sortBy="value" sortOrder="asc"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -83,8 +83,14 @@
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
       <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>
-      <item name="p02" plural="p02" indexKey="thesaurus-parameter.seadatanet-ocean-discovery-parameter.rdf" max="300"/>
-      <item name="p35" plural="p35" indexKey="thesaurus-parameter.seadatanet-ocean-chemistry-variable.rdf" max="300"/>	  
+      <item name="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
+						plural="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
+						indexKey="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
+						max="300"/>
+      <item name="p35"
+						plural="p35"
+						indexKey="thesaurus-parameter.seadatanet-ocean-chemistry-variable"
+						max="300"/>
 		</suggestions>
 	</def>
 </summary>

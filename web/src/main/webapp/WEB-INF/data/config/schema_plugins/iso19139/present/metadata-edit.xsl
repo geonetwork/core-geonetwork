@@ -14,10 +14,10 @@
   exclude-result-prefixes="#all">
 
   <xsl:include href="metadata-utils.xsl"/>
-  <xsl:include href="metadata-markup.xsl"/>
   <xsl:include href="metadata-geo.xsl"/>
   <xsl:include href="metadata-inspire.xsl"/>
   <xsl:include href="metadata-view.xsl"/>
+  <xsl:include href="metadata-markup.xsl"/>
 
   <!-- Use this mode on the root element to add hidden fields to the editor -->
   <xsl:template mode="schema-hidden-fields" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
@@ -123,7 +123,7 @@
   <!-- some gco: elements and gmx:MimeFileType are swallowed -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL]|
+  <xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]|
                   srv:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
@@ -417,16 +417,6 @@
       <xsl:param name="edit" select="false()"/>
       <xsl:param name="validator" />
           <xsl:choose>
-              <xsl:when test="gmd:URL">
-                <xsl:for-each select="gmd:URL">
-                  <xsl:call-template name="getElementText">
-                    <xsl:with-param name="edit" select="$edit" />
-                    <xsl:with-param name="schema" select="$schema" />
-                    <xsl:with-param name="langId" select="$langId" />
-                    <xsl:with-param name="validator" select="$validator" />
-                  </xsl:call-template>
-                </xsl:for-each>
-              </xsl:when>
               <xsl:when test="not(gco:*)">
                   <xsl:for-each select="gmd:PT_FreeText">
                       <xsl:call-template name="getElementText">
@@ -1263,21 +1253,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-  <xsl:template mode="iso19139" match="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:tditle|
-  gmd:identificatidonInfo/*/gmd:abstract" priority="2">
-    <xsl:param name="schema"/>
-    <xsl:param name="edit"/>
-    <xsl:apply-templates mode="simpleElement" select=".">
-      <xsl:with-param name="schema"  select="$schema"/>
-      <xsl:with-param name="text">
-        <xsl:apply-templates mode="localised" select=".">
-          <xsl:with-param name="langId" select="$langId"/>
-        </xsl:apply-templates>
-      </xsl:with-param>
-    </xsl:apply-templates>
-  </xsl:template>
-
+  
   <!--
   Keyword editing using classic mode (ie. one field per XML tag)
   based on geonet:element/@ref.
@@ -1327,26 +1303,22 @@
     <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
     
     <!-- Get current transformation mode based on XML fragement analysis -->
-    <xsl:variable name="transformation" 
-      select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
-      else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+    <xsl:variable name="transformation"
+                  select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor'
+      else if (../@xlink:href) then 'to-iso19139-keyword-as-xlink'
       else 'to-iso19139-keyword'"/>
     
     <!-- Define the list of transformation mode available.
     -->
     <xsl:variable name="parentName" select="name(..)"/>
-    <xsl:variable name="elementTransformations" select="/root/gui/schemalist/*[text()=$schema]/
-      associations/registerTransformation[@element = $parentName]"/>
-   <!-- <xsl:variable name="listOfTransformations" select="if ($elementTransformations) 
-      then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
-      else '''to-iso19139-keyword'',''to-iso19139-keyword-as-xlink'''"/>
-    <xsl:variable name="listOfTransformations" select="'''to-iso19139-keyword'',''to-iso19139-keyword-as-xlink'''"></xsl:variable>
-    
-    <xsl:variable name="listOfTransformations">'to-iso19139-keyword','to-iso19139-keyword-as-xlink'</xsl:variable>
-   -->
-    
-    
-    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    <xsl:variable name="elementTransformations"
+                  select="/root/gui/schemalist/*[text()=$schema]/
+                    associations/registerTransformation[@element = $parentName]"/>
+
+
+
+
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus
     identifier should be defined in the citation identifier. By default, GeoNetwork
     define it in a gmx:Anchor. Retrieve the first child of the code which might be a
     gco:CharacterString. 
@@ -1355,21 +1327,25 @@
     <xsl:variable name="thesaurusId" select="if (gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
-    
-    <!-- Create custom widget: 
-      * '' for item selector, 
-      * 'combo' for simple combo, 
-      * 'list' for selection list, 
+
+    <!-- Create custom widget:
+      * '' for item selector,
+      * 'combo' for simple combo,
+      * 'list' for selection list,
       * 'multiplelist' for multiple selection list
       -->
-    <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme') 
-                                            then 'combo' 
+    <!--<xsl:variable name="widgetMode" select="''"/>-->
+
+    <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')
+                                            then 'combo'
                                             else ''"/>
-    
-    <xsl:variable name="listOfTransformations" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme') 
-      then '''to-iso19139-keyword-as-xlink''' 
-      else '''to-iso19139-keyword'''"/>
-    
+
+    <!--<xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>-->
+    <xsl:variable name="listOfTransformations"
+                  select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme')
+                    then '''to-iso19139-keyword-as-xlink'''
+                    else '''to-iso19139-keyword'''"/>
+
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
     
@@ -1391,8 +1367,8 @@
     <xsl:param name="thesaurusId"/>
     <xsl:param name="listOfKeywords"/>
     <xsl:param name="listOfTransformations"/>
-    <xsl:param name="transformation"/>
-    <xsl:param name="maxKeywords" select="'200'"/>
+    <xsl:param name="transformation"/> 
+    <xsl:param name="maxKeywords" select="'100'"/>
     <xsl:param name="searchOnLoad" select="'true'"/>
     <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
     <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
@@ -1412,8 +1388,8 @@
     <!-- Create a textarea which contains the XML snippet for updates.
     The name of the element starts with _X which means XML snippet update mode.
     -->
-    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}" rows="" cols="" class="debug">
-      <xsl:apply-templates mode="geonet-cleaner" select="."/>
+    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}_replace" rows="" cols="" class="debug">
+      <xsl:apply-templates mode="geonet-cleaner" select="parent::node()"/>
     </textarea>
     
   </xsl:template>

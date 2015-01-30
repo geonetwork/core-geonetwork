@@ -18,7 +18,9 @@
           <textarea class="md xml" name="data">
             <xsl:value-of select="$xmlHeader"/>
             <xsl:text>&#10;</xsl:text>
-            <xsl:apply-templates mode="editXMLElement" select="."/>
+            <xsl:apply-templates mode="editXMLElement" select=".">
+              <xsl:with-param name="createNamespaceDeclaration" select="true()"/>
+            </xsl:apply-templates>
           </textarea>
       </xsl:when>
       <xsl:otherwise>
@@ -35,13 +37,16 @@
   -->
   <xsl:template mode="editXMLElement" match="*">
     <xsl:param name="indent"/>
+    <xsl:param name="createNamespaceDeclaration" select="false()"/>
+
     <xsl:choose>
-      
       <!-- has children -->
       <xsl:when test="*[not(starts-with(name(),'geonet:'))]">
         <xsl:if test="not(contains(name(.),'_ELEMENT'))">
           <xsl:call-template name="editXMLStartTag">
             <xsl:with-param name="indent" select="$indent"/>
+            <xsl:with-param name="createNamespaceDeclaration"
+                            select="$createNamespaceDeclaration"/>
           </xsl:call-template>
           <xsl:text>&#10;</xsl:text>
         </xsl:if>
@@ -90,11 +95,14 @@
   -->
   <xsl:template name="editXMLStartTag">
     <xsl:param name="indent"/>
-    
+    <xsl:param name="createNamespaceDeclaration" select="false()"/>
+
     <xsl:value-of select="$indent"/>
     <xsl:text>&lt;</xsl:text>
     <xsl:value-of select="name(.)"/>
-    <xsl:call-template name="editXMLNamespaces"/>
+    <xsl:if test="$createNamespaceDeclaration = true()">
+      <xsl:call-template name="editXMLNamespaces"/>
+    </xsl:if>
     <xsl:call-template name="editXMLAttributes"/>
     <xsl:text>&gt;</xsl:text>
   </xsl:template>
@@ -120,7 +128,7 @@
     <xsl:value-of select="$indent"/>
     <xsl:text>&lt;</xsl:text>
     <xsl:value-of select="name(.)"/>
-    <xsl:call-template name="editXMLNamespaces"/>
+    <!--<xsl:call-template name="editXMLNamespaces"/>-->
     <xsl:call-template name="editXMLAttributes"/>
     <xsl:text>/&gt;</xsl:text>
   </xsl:template>
@@ -147,24 +155,29 @@
   
   <!--
     draws namespaces of an editable element
+
   -->
   <xsl:template name="editXMLNamespaces">
-    <xsl:variable name="parent" select=".."/>
-    <xsl:for-each select="namespace::*">
-      <xsl:if test="not(.=$parent/namespace::*) and name()!='geonet'">
-        <xsl:text> xmlns</xsl:text>
-        <xsl:if test="name()">
-          <xsl:text>:</xsl:text>
-          <xsl:value-of select="name()"/>
-        </xsl:if>
-        <xsl:text>=</xsl:text>
-        <xsl:text>"</xsl:text>
-        <xsl:value-of select="string()"/>
-        <xsl:text>"</xsl:text>
+    <xsl:variable name="namespaces" select="node()//namespace::*[name() != 'geonet']"/>
+    <xsl:variable name="namespacesPrefix"
+                  select="distinct-values($namespaces/name())"/>
+    <xsl:variable name="namespacesURI"
+                  select="distinct-values($namespaces/string())"/>
+    <xsl:for-each select="$namespacesPrefix">
+      <xsl:variable name="index" select="position()"/>
+      <xsl:text> xmlns</xsl:text>
+      <xsl:if test=". != ''">
+        <xsl:text>:</xsl:text>
+        <xsl:value-of select="."/>
       </xsl:if>
+      <xsl:text>=</xsl:text>
+      <xsl:text>"</xsl:text>
+      <xsl:value-of select="$namespacesURI[$index]"/>
+      <xsl:text>"</xsl:text>
     </xsl:for-each>
   </xsl:template>
-  
+
+
   <!--
     draws an element in xml
   -->

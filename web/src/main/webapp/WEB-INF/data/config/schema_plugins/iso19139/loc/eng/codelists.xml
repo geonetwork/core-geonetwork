@@ -253,6 +253,7 @@
 			<label>Author</label>
 			<description>Party who authored the resource</description>
 		</entry>
+
 		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>editor</code>

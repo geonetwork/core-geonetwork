@@ -173,6 +173,8 @@
     "importFromDirReport": "{{success}}/{{records}} fiches(s) importée(s) en {{time}} secondes.",
     "setMetadataGroup": "Changer le groupe de la fiche",
     "current": "actuel",
-    "searchKeyword": "Rechercher un mot clé ...",
-    "searchOrTypeKeyword": "Saisir ou rechercher un mot clé ..."
+    "searchKeyword": "Rechercher ...",
+    "searchOrTypeKeyword": "Saisir ou rechercher ...",
+    "tagsAllowed": " mot(s) clé(s) autorisé(s)",
+    "suggestionListError": "Oops, il y a eu un problème lors de l'analyse des suggestions !"
 }

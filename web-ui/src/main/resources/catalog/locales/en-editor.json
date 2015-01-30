@@ -169,6 +169,8 @@
     "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds.",
     "setMetadataGroup": "Change metadata group",
     "current": "current",
-    "searchKeyword": "Search keyword ...",
-    "searchOrTypeKeyword": "Type or search keyword ..."
+    "searchKeyword": "Search ...",
+    "searchOrTypeKeyword": "Type or search ...",
+    "tagsAllowed": " tag(s) allowed",
+    "suggestionListError": "Oops, something went wrong when retrieving suggestions!"
 }

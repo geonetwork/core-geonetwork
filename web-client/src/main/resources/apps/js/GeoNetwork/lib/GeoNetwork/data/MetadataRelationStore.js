@@ -43,6 +43,9 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
         name: 'title'
     }, {
+        name: 'sibling',
+        type: 'bool'
+    }, {
         name: 'parentName'
     }, {
         name: 'abstract'
