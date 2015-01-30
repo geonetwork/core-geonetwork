@@ -1,4 +1,5 @@
 @import "../../../style/gn_search";
+@import "gn_mapviewer_sextant.less";
 
 @sxt-orange: #F28033;
 
@@ -243,6 +244,10 @@ ul.gn-resultview {
 
   @thumbnail-width: 170px;
 
+  .caret {
+    color: @sxt-orange;
+  }
+
   .sx-md-footer {
     position: absolute;
     bottom: 0;
@@ -319,10 +324,24 @@ ul.gn-resultview {
           .text-overflow();
         }
       }
-      button {
+      .btn-group, button {
+        width: 46px;
         margin: 0 3px 0 0;
       }
     }
+    .md-actions {
+      margin-top: -.35em;
+      .dropdown-menu {
+        .dropdown-menu {
+          left: -100%;
+          border-radius: 4px 0 4px 4px;
+        }
+        .fa {
+          margin-right: .4em;
+        }
+      }
+    }
+
   }
 
   li.gn-grid {
@@ -372,11 +391,6 @@ ul.gn-resultview {
         max-width: 100%;
       }
     }
-    .gn-md-links {
-      position: absolute;
-      bottom: @grid-bottom-margin;
-      background: none;
-    }
   }
 }
 
@@ -423,7 +437,7 @@ ul.gn-resultview {
   }
 }
 
-[gn-main-viewer] {
+[sxt-main-viewer] {
   position: absolute;
   left: 0;
   right: 0;
@@ -451,4 +465,5 @@ ul.gn-resultview {
       width: 200%;
     }
   }
+
 }

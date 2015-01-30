@@ -6,7 +6,8 @@
 
       .directive('gnMapField', [
         'gnMap',
-        function(gnMap) {
+        'gnSearchLocation',
+        function(gnMap, gnSearchLocation) {
           return {
             restrict: 'A',
             scope: true,
@@ -25,6 +26,7 @@
                     scope.map.getView().fitExtent(scope.map.getView().
                             getProjection().getExtent(), scope.map.getSize());
                   };
+                  scope.locService = gnSearchLocation;
                 }
               };
             }

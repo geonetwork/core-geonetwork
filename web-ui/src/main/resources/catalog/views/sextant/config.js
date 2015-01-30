@@ -15,7 +15,6 @@
        * Define mapviewer background layers
        */
       viewerSettings.bgLayers = [
-        gnMap.createLayerForType('wmts'),
         gnMap.createLayerForType('mapquest'),
         gnMap.createLayerForType('osm'),
         gnMap.createLayerForType('bing_aerial')
@@ -26,7 +25,8 @@
         l.set('group', 'Background layers');
       });
 
-      viewerSettings.defaultContext = '../../catalog/data/defaultContext.xml';
+      viewerSettings.defaultContext = '../../catalog/views/sextant/data/' +
+          'defaultContext.xml';
 
       /** *************************************
        * Define OWS services url for Import WMS
@@ -92,9 +92,38 @@
         controls: []
       });
 
+      var projection = ol.proj.get('EPSG:3857');
+      var projectionExtent = projection.getExtent();
+      var size = ol.extent.getWidth(projectionExtent) / 256;
+      var resolutions = new Array(16);
+      var matrixIds = new Array(16);
+      for (var z = 0; z < 16; ++z) {
+        resolutions[z] = size / Math.pow(2, z);
+        matrixIds[z] = 'EPSG:3857:' + z;
+      }
+      var searchLayer = new ol.layer.Tile({
+        opacity: 0.7,
+        extent: projectionExtent,
+        title: 'Sextant',
+        source: new ol.source.WMTS({
+          url: 'http://visi-sextant.ifremer.fr:8080/' +
+              'geowebcache/service/wmts?',
+          layer: 'sextant',
+          matrixSet: 'EPSG:3857',
+          format: 'image/png',
+          projection: projection,
+          tileGrid: new ol.tilegrid.WMTS({
+            origin: ol.extent.getTopLeft(projectionExtent),
+            resolutions: resolutions,
+            matrixIds: matrixIds
+          }),
+          style: 'default'
+        })
+      });
+
       var searchMap = new ol.Map({
         layers: [
-          gnMap.createLayerForType('wmts')
+          searchLayer
         ],
         controls: [],
         view: new ol.View({

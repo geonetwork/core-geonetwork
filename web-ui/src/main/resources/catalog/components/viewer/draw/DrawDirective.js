@@ -178,7 +178,9 @@
           }));
           drawPolygon.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawPolygon, map);
+          drawPolygon.active = false;
           scope.drawPolygon = drawPolygon;
+          map.addInteraction(drawPolygon);
 
           var drawPoint = new ol.interaction.Draw(({
             type: 'Point',
@@ -186,7 +188,9 @@
           }));
           drawPoint.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawPoint, map);
+          drawPoint.active = false;
           scope.drawPoint = drawPoint;
+          map.addInteraction(drawPoint);
 
           var drawLine = new ol.interaction.Draw(({
             type: 'LineString',
@@ -194,7 +198,9 @@
           }));
           drawLine.on('drawend', onDrawend);
           ngeoDecorateInteraction(drawLine, map);
+          drawLine.active = false;
           scope.drawLine = drawLine;
+          map.addInteraction(drawLine);
 
           var drawText = new ol.interaction.Draw(({
             type: 'Point',
@@ -207,7 +213,9 @@
             onDrawend();
           });
           ngeoDecorateInteraction(drawText, map);
+          drawText.active = false;
           scope.drawText = drawText;
+          map.addInteraction(drawText);
 
           var select = new ol.interaction.Select();
           var modify = new ol.interaction.Modify({
@@ -222,7 +230,9 @@
                 scope.$apply();
               });
           ngeoDecorateInteraction(deleteF, map);
+          deleteF.active = false;
           scope.deleteF = deleteF;
+          map.addInteraction(deleteF);
 
           Object.defineProperty(scope, 'modifying', {
             get: function() {

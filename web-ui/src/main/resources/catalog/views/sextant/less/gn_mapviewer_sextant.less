@@ -1,0 +1,147 @@
+[sxt-main-viewer] {
+
+  .main-tools {
+    right: auto;
+    left: 0;
+    transition: left @transition-params;
+    button {
+      border-radius: 0 4px 4px 0;
+      border-right-width: 1px;
+      border-left-width: 0;
+      &.active {
+        width: 2.8em;
+        margin-left: 0;
+        border-radius: 0 4px 4px 0;
+      }
+    }
+    button:focus [role=tooltip],
+    button:hover [role=tooltip] {
+      right: auto;
+      left: 2.8em;
+      border-radius: 0 .2em .2em 0;
+    }
+    &.activeTool {
+      left: 26em;
+    }
+  }
+  .tools:first-of-type {
+    top: @viewport-padding + .5em;
+  }
+
+  .control-tools {
+    top: @viewport-padding;
+    right: 0;
+    left: auto;
+  }
+
+  .panel-tools-container {
+    position: absolute;
+    top: 0;
+    left: -26em;
+    bottom: 0;
+    width: 26em;
+    box-shadow: 6px 0 5px -5px rgba(0,0,0,0.5);
+    transition: left @transition-params;
+    &.open {
+      left: 0;
+    }
+  }
+
+  .panel-tools {
+    right: auto;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin-bottom: 0;
+    border-width: 0 1px 0 0;
+    border-radius: 0;
+    max-height: none;
+    z-index: 10;
+    max-width: none;
+  }
+
+  .sx-toolbar {
+    position: absolute;
+    top: @viewport-padding;
+    right: 3.4em;
+    width: auto;
+    width: 31.25em;
+    button:focus [role=tooltip],
+    button:hover [role=tooltip] {
+      right: auto;
+      left: 0;
+      top: 2.9em;
+      border-radius: .2em;
+      &:after {
+        content: ' ';
+        height: 0;
+        position: absolute;
+        width: 0;
+        border: 5px solid transparent;
+        border-bottom-color: rgba(0,0,0,.6);
+        left: .9em;
+        top: -10px;
+      }
+    }
+  }
+
+  .search-container {
+    position: static;
+    left: auto;
+    margin-left: 0;
+    width: 12em;
+    input {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+
+  .results {
+    left: auto;
+    right: 0;
+    .panel-heading {
+      height: auto;
+    }
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: rgba(0,0,0,.4);
+    transition: left @transition-params;
+    &.small {
+      left: 364px;
+    }
+  }
+  .ol-scale-line {
+    background: none;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    .ol-scale-line-inner {
+      height: 22px;
+      font-size: 13px;
+      text-shadow: 0px 0px 1px rgb(0, 0, 0);
+    }
+  }
+
+  [sxt-mouse-position] {
+    select {
+      width: 10em;
+      margin: 1px 4px;
+    }
+    .ol-mouse-position {
+      left: 11em;
+      top: 0;
+      right: auto;
+      height: 32px;
+      line-height: 32px;
+      color: rgb(255, 255, 255);
+      text-shadow: 0px 0px 1px rgb(0, 0, 0);
+      font-size: 13px;
+    }
+  }
+
+}
