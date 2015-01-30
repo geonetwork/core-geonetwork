@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/reliability">
+    <dc:title>Reliability</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2015-01-29</dcterms:issued>
+    <dcterms:modified>2015-01-29</dcterms:modified>
+  </skos:ConceptScheme>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/reliability#highly-reliable">
+    <skos:prefLabel xml:lang="en">Highly reliable (eg Service Leval Agreement)</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Highly reliable (eg Service Leval Agreement)</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/reliability#service-desk">
+    <skos:prefLabel xml:lang="en">Service desk</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Service desk</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/reliability#reputation">
+    <skos:prefLabel xml:lang="en">Believed reliable (reputation)</skos:prefLabel>
+    <skos:definition xml:lang="en">According to past experience, external communication and words of mouth</skos:definition>
+    <skos:prefLabel xml:lang="fr">Believed reliable (reputation)</skos:prefLabel>
+    <skos:definition xml:lang="fr">According to past experience, external communication and words of mouth</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/reliability#unknown">
+    <skos:prefLabel xml:lang="en">Unknown</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Unknown</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+
+</rdf:RDF>

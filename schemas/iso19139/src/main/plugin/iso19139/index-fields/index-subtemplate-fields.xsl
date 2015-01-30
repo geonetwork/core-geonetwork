@@ -20,6 +20,7 @@
       string="{if ($name != '') then concat($org, ' (', $name, ')') else $org}"
       store="true" index="true"/>
     <Field name="orgName" string="{$org}" store="true" index="true"/>
+    <Field name="id" string="{@id}" store="true" index="true"/>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
@@ -52,7 +53,7 @@
   </xsl:template>
 
   <xsl:template name="subtemplate-common-fields">
-    <Field name="any" string="{normalize-space(string(.))}" store="false" index="true"/>
+    <Field name="any" string="{@id} {normalize-space(string(.))}" store="false" index="true"/>
     <Field name="_root" string="{name(.)}" store="true" index="true"/>
   </xsl:template>
 

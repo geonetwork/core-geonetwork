@@ -29,6 +29,7 @@
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
     <for name="gmd:environmentDescription" use="textarea"/>
+    <for name="gmd:value" use="textarea"/>
 
 
     <for name="gco:Distance" use="number"/>
@@ -65,9 +66,9 @@
 
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+            data-template-add-action="true"
+            data-template-type="contact"
+            data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -75,7 +76,7 @@
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
+    <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
               data-template-type="contact"
@@ -105,9 +106,6 @@
     -->
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
       <!--
-      Example of configuration to disable free text keywords in the thesaurus selector
-      <directiveAttributes data-allow-free-text-keywords="false" />
-
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive.
       <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
@@ -1418,7 +1416,7 @@
                  in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="metadata">
-        <section name="metadata">
+        <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
@@ -1460,19 +1458,17 @@
           displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.medsea.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
-        <thesaurus key="external.theme.medsea.data.delivery.mechanism" maxtags="1"/>
-        <thesaurus key="external.theme.seadatanet.parameter.groups.P03" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.data.delivery.mechanism" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P03" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P01" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P02" maxtags="1"/>
       </thesaurusList>
       <tab id="characteristics" mode="flat" default="true">
         <section>
-          <field
-              name="uniqueIdentifier"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
 
           <!-- MedSea env matrix
                   TODO: Can't define to use Anchor mode by default
@@ -1486,23 +1482,31 @@
                 'Environmental matrix')]"/>
 
           <field
+              name="p03"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet.parameter.groups.P03')]"/>
+                'NVS.P03')]"/>
 
           <field
                   name="sdn-parameter-discovery"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet-ocean-discovery-parameter')]"/>
+                'NVS.P02')]"/>
 
           <field
+                  name="p01"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet.parameter.usage.P01')]"/>
+                'parameter.NVS.P01')]"/>
+          <field
+                  name="otherP01"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords/gmd:MD_Keywords
+                [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:title/*/text(),
+                'Parameter Usage Vocabulary (other)')]/gmd:keyword"/>
 
           <field
               name="inspireTheme"
@@ -1520,7 +1524,7 @@
                 'Processing level of characteristics')]"/>
 
           <field
-                  name="environmental-matrix"
+                  name="production-mode"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
@@ -1553,9 +1557,7 @@
                 gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue = 'project']/
                 gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
 -->
-          <field
-                  name="programName"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+
          <!--
 
          Do not store EDMERP in keyword anymore. Use a contact with a specific role.
@@ -1573,16 +1575,22 @@
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
-              <values readonlyIf="count(@xlink:href) > 0">
-                <key label="organisationName"
+              <values readonlyIf="true()">
+                <key label="projectTitle"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="acronym"
+                     xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
+                <key label="edmerpId"
+                      xpath="gmd:CI_ResponsibleParty/@id"/>
               </values>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gn:copy select="gmd:individualName"/>
+                  <gmd:CI_ResponsibleParty id="{{edmerpId}}">
+                    <gmd:individualName>
+                      <gco:CharacterString>{{acronym}}</gco:CharacterString>
+                    </gmd:individualName>
                     <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      <gco:CharacterString>{{projectTitle}}</gco:CharacterString>
                     </gmd:organisationName>
                     <gn:copy select="gmd:positionName"/>
                     <gn:copy select="gmd:contactInfo"/>
@@ -1608,6 +1616,58 @@
           </action>
 
           <text ref="edmerp-help"/>
+
+          <field
+                  name="programName"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+
+
+          <!--<field
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'SDN EDMO Identifier')]"/>-->
+
+          <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values readonlyIf="true()">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="edmoId"
+                     xpath="gmd:CI_ResponsibleParty/@id"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty id="{{edmoId}}">
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gn:copy select="gmd:contactInfo"/>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+          <action type="add"
+                  name="edmoName"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']) = 0">
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"/>
+          </action>
+
 
 
           <field name="dataProvider" templateModeOnly="true"
@@ -1652,58 +1712,12 @@
           </field>
           <text ref="dataProvider-help"/>
 
-          <!--<field
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'SDN EDMO Identifier')]"/>-->
-
-          <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']"
-                 del="."
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
-            <template>
-              <values readonlyIf="count(@xlink:href) > 0">
-                <key label="organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-              </values>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gn:copy select="gmd:individualName"/>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gn:copy select="gmd:positionName"/>
-                    <gn:copy select="gmd:contactInfo"/>
-                    <gn:copy select="gmd:role"/>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
-          </field>
-          <action type="add"
-                  name="edmoName"
-                  forceLabel="true"
-                  addDirective="data-gn-directory-entry-selector"
-                  or="pointOfContact"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']) = 0">
-            <directiveAttributes
-                    data-template-add-action="false"
-                    data-template-type="contact"
-                    data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"/>
-          </action>
 
           <text ref="dataCollection-help"/>
 
-
-
-
           <field
               name="medseaTitle"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle"/>
           <field
               name="medseaDataSourceCatalogueName"
               xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
@@ -1714,6 +1728,14 @@
               xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                   gmd:transferOptions/gmd:MD_DigitalTransferOptions/
                     gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
+
+          <field
+                  name="serviceExtent"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.service.extent')]"/>
+
           <field
                   name="medseaDataSourceIdentifier"
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
@@ -1741,7 +1763,7 @@
           <field
               name="processStepReference"
               xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
-                gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description"/>
+                gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
           <field
               name="useOfTheCharacteristics"
@@ -1749,25 +1771,26 @@
                 gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/
                 gmd:authority//gmd:CI_Citation/gmd:title"/>
 
+
+          <field name="useByChallenges"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'Used by challenges')]"/>
+
           <field
               name="intendedUse"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                   gmd:environmentDescription"/>
 
-
-          <field
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'Challenges')]"/>
         </section>
       </tab>
       <tab id="spatialCoverage" mode="flat">
         <section>
-          <field
+          <!--<field
               name="geographicalAreaCode"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-              gmd:extent/gmd:EX_Extent/gmd:description"/>
+              gmd:extent/gmd:EX_Extent/gmd:description"/>-->
           <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
               gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
@@ -1797,6 +1820,12 @@
               name="verticalResolution"
               xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
                 gmd:MD_Georectified/gmd:numberOfDimensions"/>
+
+
+          <field name="listOfObservationLevel"
+                 xpath="/gmd:MD_Metadata/gmd:contentInfo/
+                      gmd:MD_CoverageDescription/gmd:dimension/
+                      gmd:MD_RangeDimension/gmd:descriptor"/>
         </section>
       </tab>
       <tab id="timeCoverage">
@@ -1845,6 +1874,8 @@
               name="timeResolution"
               xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
                 gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"/>
 
         </section>
       </tab>
@@ -1852,7 +1883,8 @@
         <section>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+          <field name="dataDelivery"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Data delivery mechanism')]"/>
@@ -1902,6 +1934,24 @@
             </template>
           </field>
 
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+            <template>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:version>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+
           <field name="responsiveness"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
@@ -1912,12 +1962,40 @@
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Reliability']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
+          <field
+                  name="reliability"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.reliability')]"/>
         </section>
       </tab>
       <tab id="medsea-metadata" mode="flat">
         <section>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+
+          <!--<field
+                  name="uniqueIdentifier"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>-->
+
+          <field name="additionalInfo"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
+
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
+
+
+
+          <action type="add" name="metadataPointOfContact"
+                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
+
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{{role}}"/>
+          </action>
 
           <field name="metadataPointOfContact"
                  templateModeOnly="true"
@@ -1976,14 +2054,6 @@
             </template>
           </field>
 
-          <action type="add" name="metadataPointOfContact"
-                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
-
-          <directiveAttributes
-                  data-template-add-action="false"
-                  data-template-type="contact"
-                  data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{{role}}"/>
-          </action>
 
           <!-- MedSea challenges
           TODO: Can't define to use Anchor mode by default

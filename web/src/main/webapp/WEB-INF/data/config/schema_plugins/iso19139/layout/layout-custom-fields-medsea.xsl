@@ -6,7 +6,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
 
-  <!-- MEDSEA / Use thesaurus external.theme.medsea.challenges
+  <!-- MEDSEA / Use thesaurus local.theme.medsea.challenges
   to populate the field gmd:hierarchyLevelName. -->
   <xsl:template mode="mode-iso19139" priority="2000"
                 match="gmd:hierarchyLevelName[contains($metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
@@ -20,7 +20,7 @@
         <input class="form-control" value="{gco:CharacterString}"
                name="_{gco:CharacterString/gn:element/@ref}"
                data-gn-keyword-picker=""
-               data-thesaurus-key="external.theme.medsea.challenges"
+               data-thesaurus-key="local.theme.medsea.challenges"
                data-gn-field-tooltip="iso19139|gmd:hierarchyLevelName||/gmd:MD_Metadata/gmd:hierarchyLevelName"
                type="text"/>
       </div>

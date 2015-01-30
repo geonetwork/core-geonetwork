@@ -392,23 +392,26 @@ form.gn-tab-datasources {
   /* Display remove action for the third and fifth
   form field in this tab. It should select EDMERP
   and EDMO field if the record follow the guideline. */
-  .gn-field:nth-of-type(3) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(2) .btn.fa.fa-times.text-danger,
   .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
     display: block;
   }
 }
 
-form.gn-tab-timeCoverage {
-  /*div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well {
-    display: block !important;
-    visibility: visible !important;
-  }*/
+form.gn-tab-timeCoverage div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well,
+form.gn-tab-spatialCoverage div[data-tooltip='iso19139|gmd:distance||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance'] + .well {
+  display: block !important;
+  visibility: visible !important;
+
+  button {
+    display: none;
+  }
 }
 
 form.gn-tab-accessibility {
   /* Hide the last option of helper
   which is the other for free text input. */
-  .helper > div > div:last-of-type {
+  .helper > div > div.radio:last-of-type {
       display: none;
   }
 }
