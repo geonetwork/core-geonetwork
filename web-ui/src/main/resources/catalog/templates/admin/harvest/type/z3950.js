@@ -11,7 +11,7 @@ var gnHarvesterz3950 = {
                 "name" : "",
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -27,13 +27,13 @@ var gnHarvesterz3950 = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
-                "createThumbnails" : "true",
-                "useLayer" : "true",
-                "useLayerMd" : "true",
+                "createThumbnails" : true,
+                "useLayer" : true,
+                "useLayerMd" : true,
                 "datasetCategory" : "",
                 "outputSchema" : "iso19139"
             },
@@ -48,7 +48,7 @@ var gnHarvesterz3950 = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },

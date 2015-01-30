@@ -11,7 +11,7 @@ var gnHarvesterarcsde = {
               "name": "",
               "uuid": "",
               "account":     {
-                "use": "true",
+                "use": true,
                 "username": "",
                 "password": ""
               },
@@ -26,7 +26,7 @@ var gnHarvesterarcsde = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "privileges": [{
@@ -39,7 +39,7 @@ var gnHarvesterarcsde = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
