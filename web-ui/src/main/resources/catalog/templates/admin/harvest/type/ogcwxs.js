@@ -11,7 +11,7 @@ var gnHarvesterogcwxs = {
                 "name" : "",
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -25,7 +25,7 @@ var gnHarvesterogcwxs = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
@@ -46,7 +46,7 @@ var gnHarvesterogcwxs = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },

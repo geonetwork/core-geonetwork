@@ -12,7 +12,7 @@ var gnHarvesterwebdav = {
                 "uuid" : "",
                 "url" : "http://",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -24,9 +24,9 @@ var gnHarvesterwebdav = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
-                "recurse" : "true",
+                "recurse" : true,
                 "subtype" : "waf"
             },
             "privileges" : [ {
@@ -40,7 +40,7 @@ var gnHarvesterwebdav = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },

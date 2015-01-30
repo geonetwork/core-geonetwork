@@ -11,7 +11,7 @@ var gnHarvesterwfsfeatures = {
                 "name" : "",
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -24,13 +24,13 @@ var gnHarvesterwfsfeatures = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "query" : "",
                 "stylesheet" : "",
-                "streamFeatures" : "false",
-                "createSubtemplates" : "false",
+                "streamFeatures" : false,
+                "createSubtemplates" : false,
                 "templateId" : "",
                 "recordsCategory": "",
                 "outputSchema" : "iso19139"
@@ -46,7 +46,7 @@ var gnHarvesterwfsfeatures = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },
