@@ -1,0 +1,23 @@
+<strings>
+    <dataset-link>Datenbestand</dataset-link>
+    <fcat-link>Feature-Katalog</fcat-link>
+    <parent>Eltern</parent>
+    <sibling-link>Geschwister</sibling-link>
+    <xml>XML</xml>
+    <associated-link>Verbunden</associated-link>
+    <datasets-link>Datenbestände</datasets-link>
+    <hassource-link>hat eine Quelle</hassource-link>
+    <links>Links</links>
+    <services-link>Dienste</services-link>
+    <testString>Dieser dient für Tests, bitte nicht löschen!</testString>
+    <abstract>Kurzbeschreibung</abstract>
+    <noUuidInLink>Keine UUID im Link vorhanden</noUuidInLink>
+    <parent-link>Eltern</parent-link>
+    <children-link>Kinder</children-link>
+    <complete>vollständig</complete>
+    <hierarchy>Hierarchie</hierarchy>
+    <overview>Überblick</overview>
+    <related-link>verwandt</related-link>
+    <service-link>Dienst</service-link>
+    <source-link>Quellen</source-link>
+</strings>
