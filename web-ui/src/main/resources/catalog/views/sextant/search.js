@@ -171,11 +171,13 @@
         addMdLayerToMap: function(link, md) {
 
           var label, theme = md.sextantTheme;
-          for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
-            var t = sxtGlobals.sextantTheme[i];
-            if (t.props.uri == theme) {
-              label = t.label;
-              break;
+          if(angular.isArray(sxtGlobals.sextantTheme)) {
+            for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
+              var t = sxtGlobals.sextantTheme[i];
+              if (t.props.uri == theme) {
+                label = t.label;
+                break;
+              }
             }
           }
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
