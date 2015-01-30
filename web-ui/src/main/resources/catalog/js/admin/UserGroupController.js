@@ -222,13 +222,13 @@
           password2: $scope.resetPassword2
         };
 
-        $http.post('admin.user.update@json', null, {params: params})
+        $http.post('admin.user.resetpassword', null, {params: params})
               .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
-              // TODO
+              alert("Error occurred while resetting password: " + data.error.message);
             });
 
       };

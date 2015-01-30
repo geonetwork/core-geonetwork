@@ -1,20 +1,8 @@
 package org.fao.geonet.services.user;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.servlet.http.HttpSession;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.JeevesServlet;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
@@ -32,6 +20,17 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.servlet.http.HttpSession;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Test User update service.
@@ -66,6 +65,24 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
     @Autowired
     Update update;
 
+    @Test
+    public void testExecResetPassword() throws Exception {
+
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        HttpSession session = new MockHttpSession();
+
+        session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
+                serviceContext.getUserSession());
+        User admin = _userRepo.findOneByUsername("admin");
+        assertFalse(_encoder.matches(password, admin.getPassword()));
+
+        update.resetPassword(session, serviceContext.getUserSession().getUserId(), password, password);
+
+        admin = _userRepo.findOneByUsername("admin");
+        assertTrue(_encoder.matches(password, admin.getPassword()));
+    }
     @Test
     public void testExecAddNewUserCompatibilityModeAsAdmin() throws Exception {
 

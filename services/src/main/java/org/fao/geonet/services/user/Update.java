@@ -23,30 +23,17 @@
 
 package org.fao.geonet.services.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import jeeves.constants.Jeeves;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -59,6 +46,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Update the information of a user.
@@ -77,9 +74,27 @@ public class Update {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @RequestMapping(value = "/{lang}/admin.user.resetpassword", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody OkResponse resetPassword(
+            HttpSession session,
+            @RequestParam(value = Params.ID) String id,
+            @RequestParam(value = Params.PASSWORD) String password,
+            @RequestParam(value = Params.PASSWORD + "2") String password2
+    ) throws Exception {
+        Assert.equals(password, password2);
+        new LoadCurrentUserInfo(session, id).invoke();
+
+        User user = userRepository.findOne(id);
+        setPassword(Params.Operation.RESETPW, password, user);
+        userRepository.save(user);
+
+        return new OkResponse();
+    }
+
     @RequestMapping(value = "/{lang}/admin.user.update", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody String run(
+    public @ResponseBody OkResponse run(
             HttpSession session,
             HttpServletRequest request,
             @RequestParam(value = Params.OPERATION) String operation,
@@ -102,27 +117,19 @@ public class Update {
             id = "";
         }
 
+        List<GroupElem> groups = new LinkedList<>();
         Profile profile = Profile.findProfileIgnoreCase(profile_);
 
-        Profile myProfile = Profile.Guest;
-        String myUserId = null;
-        Object tmp = session
-                .getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
-        if (tmp instanceof UserSession) {
-            UserSession usrSess = (UserSession) tmp;
-            myProfile = usrSess.getProfile();
-            myUserId = usrSess.getUserId();
-        }
-
-        List<GroupElem> groups = new LinkedList<GroupElem>();
+        LoadCurrentUserInfo loadCurrentUserInfo = new LoadCurrentUserInfo(session, id).invoke();
+        Profile myProfile = loadCurrentUserInfo.getMyProfile();
+        String myUserId = loadCurrentUserInfo.getMyUserId();
 
         Map<String, String[]> params = request.getParameterMap();
 
         for (String key : params.keySet()) {
             if (key.startsWith("groups_")) {
                 for (String s : params.get(key)) {
-                    groups.add(new GroupElem(key.substring(7), Integer
-                            .valueOf(s)));
+                    groups.add(new GroupElem(key.substring(7), Integer.valueOf(s)));
                 }
             }
         }
@@ -131,101 +138,104 @@ public class Update {
             groups.clear();
         }
 
-        if (myProfile == Profile.Administrator
-                || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
-            checkAccessRights(operation, id, username, myProfile, myUserId,
-                    groups, userGroupRepository);
+        checkAccessRights(operation, id, username, myProfile, myUserId, groups, userGroupRepository);
 
-            User user = getUser(userRepository, operation, id, username);
-            if (username != null) {
-                user.setUsername(username);
-            }
+        User user = getUser(userRepository, operation, id, username);
 
-            if (name != null) {
-                user.setName(name);
-            }
-            if (surname != null) {
-                user.setSurname(surname);
-            }
-
-            if (profile != null) {
-                if (!myProfile.getAll().contains(profile)) {
-                    throw new IllegalArgumentException(
-                            "Trying to set profile to " + profile
-                                    + " max profile permitted is: " + myProfile);
-                }
-                user.setProfile(profile);
-            }
-            if (kind != null) {
-                user.setKind(kind);
-            }
-            if (organ != null) {
-                user.setOrganisation(organ);
-            }
-
-            Address addressEntity;
-            boolean hasNoAddress = user.getAddresses().isEmpty();
-            if (hasNoAddress) {
-                addressEntity = new Address();
-            } else {
-                addressEntity = user.getAddresses().iterator().next();
-
-            }
-            if (address != null) {
-                addressEntity.setAddress(address);
-            }
-            if (city != null) {
-                addressEntity.setCity(city);
-            }
-            if (state != null) {
-                addressEntity.setState(state);
-            }
-            if (zip != null) {
-                addressEntity.setZip(zip);
-            }
-            if (country != null) {
-                addressEntity.setCountry(country);
-            }
-
-            if (hasNoAddress) {
-                user.getAddresses().add(addressEntity);
-            }
-
-            if (email != null) {
-                user.getEmailAddresses().add(email);
-            }
-
-            if (password != null) {
-                user.getSecurity().setPassword(
-                        PasswordUtil.encoder(applicationContext).encode(
-                                password));
-            } else if (operation.equals(Params.Operation.RESETPW)
-                    || operation.equals(Params.Operation.NEWUSER)) {
-                throw new IllegalArgumentException(
-                        "password is a required parameter for operation: "
-                                + Params.Operation.RESETPW);
-            }
-
-            // -- For adding new user
-            if (operation.equals(Params.Operation.NEWUSER)
-                    || operation.equals(Params.Operation.FULLUPDATE)
-                    || operation.equals(Params.Operation.EDITINFO)) {
-                user = userRepository.save(user);
-                setUserGroups(user, groups);
-
-            } else if (operation.equals(Params.Operation.RESETPW)) {
-                user = userRepository.save(user);
-
-            } else {
-                throw new IllegalArgumentException(
-                        "unknown user update operation " + operation);
-            }
+        setPassword(operation, password, user);
+        if (operation.equalsIgnoreCase(Params.Operation.RESETPW)) {
+            userRepository.save(user);
         } else {
-            throw new IllegalArgumentException(
-                    "You don't have rights to do this");
+            updateOrSave(operation, username, surname, name, address, city, state, zip, country, email, organ, kind, profile,
+                    myProfile, groups, user);
         }
 
-        return "\"" + Jeeves.Elem.RESPONSE + "\"";
+        return new OkResponse();
+    }
+
+    public void updateOrSave(String operation, String username, String surname, String name, String address, String city, String state,
+                             String zip, String country, String email, String organ, String kind, Profile profile, Profile myProfile, List<GroupElem> groups, User user) throws Exception {
+        if (username != null) {
+            user.setUsername(username);
+        }
+
+        if (name != null) {
+            user.setName(name);
+        }
+        if (surname != null) {
+            user.setSurname(surname);
+        }
+
+        if (profile != null) {
+            if (!myProfile.getAll().contains(profile)) {
+                throw new IllegalArgumentException(
+                        "Trying to set profile to " + profile
+                        + " max profile permitted is: " + myProfile);
+            }
+            user.setProfile(profile);
+        }
+        if (kind != null) {
+            user.setKind(kind);
+        }
+        if (organ != null) {
+            user.setOrganisation(organ);
+        }
+
+        Address addressEntity;
+        boolean hasNoAddress = user.getAddresses().isEmpty();
+        if (hasNoAddress) {
+            addressEntity = new Address();
+        } else {
+            addressEntity = user.getAddresses().iterator().next();
+
+        }
+        if (address != null) {
+            addressEntity.setAddress(address);
+        }
+        if (city != null) {
+            addressEntity.setCity(city);
+        }
+        if (state != null) {
+            addressEntity.setState(state);
+        }
+        if (zip != null) {
+            addressEntity.setZip(zip);
+        }
+        if (country != null) {
+            addressEntity.setCountry(country);
+        }
+
+        if (hasNoAddress) {
+            user.getAddresses().add(addressEntity);
+        }
+
+        if (email != null) {
+            user.getEmailAddresses().add(email);
+        }
+
+        // -- For adding new user
+        if (operation.equals(Params.Operation.NEWUSER)
+            || operation.equals(Params.Operation.FULLUPDATE)
+            || operation.equals(Params.Operation.EDITINFO)) {
+            user = userRepository.save(user);
+            setUserGroups(user, groups);
+        } else {
+            throw new IllegalArgumentException(
+                    "unknown user update operation " + operation);
+        }
+    }
+
+    public void setPassword(String operation, String password, User user) {
+        if (password != null) {
+            user.getSecurity().setPassword(
+                    PasswordUtil.encoder(applicationContext).encode(
+                            password));
+        } else if (operation.equals(Params.Operation.RESETPW)
+                   || operation.equals(Params.Operation.NEWUSER)) {
+            throw new IllegalArgumentException(
+                    "password is a required parameter for operation: "
+                    + Params.Operation.RESETPW);
+        }
     }
 
     private User getUser(final UserRepository repo, final String operation,
@@ -367,6 +377,43 @@ public class Update {
         // Add only new usergroups (if any)
         userGroupRepository.save(toAdd);
 
+    }
+
+    private class LoadCurrentUserInfo {
+        private HttpSession session;
+        private String id;
+        private Profile myProfile;
+        private String myUserId;
+
+        public LoadCurrentUserInfo(HttpSession session, String id) {
+            this.session = session;
+            this.id = id;
+        }
+
+        public Profile getMyProfile() {
+            return myProfile;
+        }
+
+        public String getMyUserId() {
+            return myUserId;
+        }
+
+        public LoadCurrentUserInfo invoke() {
+            myProfile = Profile.Guest;
+
+            myUserId = null;
+            Object tmp = session.getAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY);
+            if (tmp instanceof UserSession) {
+                UserSession usrSess = (UserSession) tmp;
+                myProfile = usrSess.getProfile();
+                myUserId = usrSess.getUserId();
+            }
+
+            if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(id)) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
+            return this;
+        }
     }
 }
 
