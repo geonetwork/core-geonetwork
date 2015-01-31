@@ -34,6 +34,7 @@ import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaGroupId;
 import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -83,6 +84,7 @@ public class MetadataSchema
 
     private SchematronRepository schemaRepo;
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
+	private SchemaPlugin schemaPlugin;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -94,7 +96,7 @@ public class MetadataSchema
         schemaName = "UNKNOWN";
         this.schemaRepo = schemaRepo;
         this.criteriaGroupRepository = criteriaGroupRepository;
-    }
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -119,6 +121,7 @@ public class MetadataSchema
 	public void setName(String inName)
 	{
 		schemaName = inName;
+		this.schemaPlugin = SchemaManager.getSchemaPlugin(schemaName);
 	}
 
 	//---------------------------------------------------------------------------
@@ -464,7 +467,11 @@ public class MetadataSchema
         return hmOperationFilters.get(operation.name());
     }
 
-    /**
+	public SchemaPlugin getSchemaPlugin() {
+		return schemaPlugin;
+	}
+
+	/**
 	 * Schematron rules filename is like "schematron-rules-iso.xsl
 	 * 
 	 */

@@ -254,7 +254,7 @@
                           
                           <!-- Add the inspire field if it's one of the 34 themes -->
                           <xsl:if test="normalize-space($inspireannex)!=''">
-                            <Field name="inspiretheme" string="{string(.)}" store="false" index="true"/>
+                            <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
                 <xsl:variable name="englishInspireTheme">
                   <xsl:call-template name="translateInspireThemeToEnglish">
                     <xsl:with-param name="keyword" select="string(.)"/>
@@ -262,7 +262,7 @@
                   </xsl:call-template>
                 </xsl:variable>
                 <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
-                          	<Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
+                          	<Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
                             <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
                           	<Field name="inspirecat" string="true" store="false" index="true"/>
                           </xsl:if>
