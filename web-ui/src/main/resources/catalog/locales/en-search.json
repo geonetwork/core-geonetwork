@@ -64,6 +64,8 @@
   "publish": "Publish",
   "unpublish": "Unpublish",
   "View": "View",
+  "Other": "Other",
+  "export": "Export",
   "exportXML": "Export (XML)",
   "exportcheXML": "Export (iso19139 XML)",
   "exportGM03": "Export (GM03)",
