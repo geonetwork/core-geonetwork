@@ -1,5 +1,5 @@
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd" >
+         xsi:noNamespaceSchemaLocation="../../../../web/src/main/webapp/WEB-INF/wro-sources.xsd" >
   <require pathOnDisk="web-ui/src/main/resources" >
       <jsSource webappPath="catalog/js" />
       <jsSource webappPath="catalog/views" />
