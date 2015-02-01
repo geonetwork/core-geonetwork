@@ -129,7 +129,7 @@
 
         <filter-name>WebResourceOptimizer</filter-name>
         <filter-class>
-            ro.isdc.wro.http.WroFilter
+            org.fao.geonet.wro4j.GeonetWro4jFilter
         </filter-class>
     </filter>
     <filter-mapping>

@@ -84,21 +84,22 @@
     -->
 	</util:map>
 
-
-    <util:list id="initCacheUrls">
-        <value>../../static/lib.js</value>
-        <value>../../static/nv.d3.css</value>
-        <value>../../static/gn_search_default.css</value>
-        <value>../../static/gn_search_default.js</value>
-        <value>../../static/gn_editor.css</value>
-        <value>../../static/gn_editor.js</value>
-        <value>../../static/gn_admin.css</value>
-        <value>../../static/gn_admin.js</value>
-        <value>../../static/gn_login.css</value>
-        <value>../../static/gn_login.js</value>
-        <value>md.format.xml?xsl=full_view&amp;id={{mdId}}</value>
-        <value>md.format.xml?xsl=xml_view&amp;id={{mdId}}</value>
-    </util:list>
+    <!-- A map of all the urls that need to be called in order to fill the caches.
+         The key is the url and the value is if the url may return a error code  -->
+    <util:map id="initCacheUrls" key-type="java.lang.String" value-type="java.lang.Boolean">
+        <entry key="../../static/lib.js" value="false" />
+        <entry key="../../static/nv.d3.css" value="false" />
+        <entry key="../../static/gn_search_default.css" value="false" />
+        <entry key="../../static/gn_search_default.js" value="false" />
+        <entry key="../../static/gn_editor.css" value="false" />
+        <entry key="../../static/gn_editor.js" value="false" />
+        <entry key="../../static/gn_admin.css" value="false" />
+        <entry key="../../static/gn_admin.js" value="false" />
+        <entry key="../../static/gn_login.css" value="false" />
+        <entry key="../../static/gn_login.js" value="false" />
+        <entry key="md.format.xml?xsl=full_view&amp;id={{mdId}}" value="true" />
+        <entry key="md.format.xml?xsl=xml_view&amp;id={{mdId}}" value="true" />
+    </util:map>
 
     <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     </util:set>
