@@ -21,17 +21,42 @@
         $scope.healthy = false;
         $scope.healthcheck = data;
       });
-      $scope.indexMessageTitle = function (md) {
-        return md.idxMsg.split("|")[0];
+
+      $scope.indexMessages = function(md) {
+        if (angular.isArray(md.idxMsg)) {
+          return md.idxMsg;
+        }
+
+        return [md.idxMsg];
       };
-      $scope.indexMessageReason = function (md) {
-        return md.idxMsg.split("|")[1];
+      $scope.indexMessageTitle = function (errorMsg) {
+        if (errorMsg === undefined) {
+          return "Empty error message";
+        }
+        return errorMsg.split("|")[0];
       };
-      $scope.indexMessageDetail = function (md) {
+      $scope.indexMessageReason = function (errorMsg) {
+        if (errorMsg === undefined) {
+          return "Empty error message";
+        }
+        return errorMsg.split("|")[1];
+      };
+      $scope.rawIndexMessageDetail = function (errorMsg) {
+        if (errorMsg === undefined) {
+          return "Empty error message";
+        }
+        return errorMsg.split("|")[2]
+      };
+      $scope.indexMessageDetail = function (errorMsg) {
         var maxLine = 80,
             indentPattern = /(\s*).*/,
-            detail = md.idxMsg.split("|")[2],
-            lines = detail.split("\n");
+            detail = $scope.rawIndexMessageDetail(errorMsg);
+
+        if (detail.trim() == '') {
+          return '';
+        }
+
+        var lines = detail.split("\n");
 
         detail = "";
 

@@ -42,13 +42,19 @@
 
                           <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
                               <li>
-                                  <dl>
-                                      <dt>{{indexMessageTitle(md) | translate}}</dt>
-                                      <dd>
-                                          <span>Error reason: {{indexMessageReason(md)}}</span>
-                                          <pre>{{indexMessageDetail(md)}}</pre>
-                                      </dd>
-                                  </dl>
+                                  <table class="table">
+                                      <tr data-ng-repeat="errorMsg in indexMessages(md)">
+                                          <td>
+                                              <dl>
+                                                  <dt>{{indexMessageTitle(errorMsg) | translate}}</dt>
+                                                  <dd>
+                                                      <span>Error reason: {{indexMessageReason(errorMsg)}}</span>
+                                                      <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
+                                                  </dd>
+                                              </dl>
+                                          </td>
+                                      </tr>
+                                  </table>
                               </li>
                           </ul>
                       </div>
