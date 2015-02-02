@@ -30,8 +30,6 @@
   <metadataConstraints>Md. constraints</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
-  <noThesaurusName>Keywords</noThesaurusName>
-  <bboxesSection>Geographic coverage</bboxesSection>
 
   <!-- XSD error translation -->
   <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>
@@ -88,7 +86,7 @@
 
   <!-- Medsea-->
   <medsea>MedSea</medsea>
-  <medsea-metadata>Other information</medsea-metadata>
+  <medsea-metadata>Identification</medsea-metadata>
   <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
   <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
@@ -98,23 +96,29 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMERP name*</edmerpName>
+  <edmerpName>EDMERP name</edmerpName>
   <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
-  <environmental-matrix>Environmental matrix*</environmental-matrix>
-  <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
-  <level-of-characteristics>Level of characteristics</level-of-characteristics>
+  <serviceExtent>Service extent</serviceExtent>
+  <useByChallenges>Used by challenges</useByChallenges>
+  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <sdn-parameter-discovery>Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
+  <p03>Agreed Parameter Groups (P03)</p03>
+  <p01>Parameter Usage Vocabulary (P01)</p01>
+  <production-mode>Production mode</production-mode>
+  <level-of-characteristics>Processing level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of production*</providerSpecification>
   <processStepReference>Production specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
   <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
-  <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
+  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth*</minDepth>
-  <maxDepth>Max depth*</maxDepth>
-  <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
+  <minDepth>Min depth (meters)</minDepth>
+  <maxDepth>Max depth (meters)</maxDepth>
+  <verticalResolution>Vertical resolution (meters)</verticalResolution>
+  <listOfObservationLevel>List of observations level</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
@@ -127,10 +131,13 @@
   <medseaDataSourceCatalogueName>Catalog name*</medseaDataSourceCatalogueName>
   <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
-  <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
+  <medseaDataSourceDOI>Dataset URL</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
-  <acronym>Acronym</acronym>
+  <acronym>Project acronym</acronym>
+  <projectTitle>Project title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
+  <edmoId>EDMO id</edmoId>
+  <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
     <div class="row">
       <div class="col-xs-offset-2 col-xs-8">

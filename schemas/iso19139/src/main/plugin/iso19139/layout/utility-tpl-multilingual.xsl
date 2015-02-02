@@ -7,7 +7,7 @@
   <!-- Get the main metadata languages -->
   <xsl:template name="get-iso19139-language">
     <xsl:value-of select="$metadata/gmd:language/gco:CharacterString|
-      $metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
+      $metadata/gmd:language/gmd:LanguageCode/@codeListValue"></xsl:value-of>
   </xsl:template>
 
 
@@ -18,7 +18,7 @@
         <lang><xsl:value-of select="concat('&quot;', gmd:languageCode/gmd:LanguageCode/@codeListValue, '&quot;:&quot;#', @id, '&quot;')"/></lang>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:text>{</xsl:text><xsl:value-of select="string-join($langs/lang, ',')"/><xsl:text>}</xsl:text>
+    {<xsl:value-of select="string-join($langs/lang, ',')"/>}
   </xsl:template>
 
   <!-- Get the list of other languages -->

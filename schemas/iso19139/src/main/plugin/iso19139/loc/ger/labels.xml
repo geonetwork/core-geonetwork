@@ -6,7 +6,6 @@
 
 	<element name="gmd:MD_Metadata" id="1">
 		<label>Metadaten</label>
-		<abbrLabel>Metadaten</abbrLabel>
 		<help>Dieses Element bildet im ISO Standard 19115 die Basisklasse
 			eines Metadatensatzes. Hier
 			werden alle Informationen zu den Metadaten selbst erfasst.</help>
@@ -196,7 +195,6 @@
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12">
 		<label>Struktur der räumlichen Daten</label>
-		<abbrLabel>Räumlichen</abbrLabel>
 		<help>Angaben, wie räumliche Ausprägungen definiert werden.
 			Unterschieden werden Vektordaten und
 			Rasterdaten.</help>
@@ -279,7 +277,6 @@
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13">
 		<label>Referenzsystem</label>
-		<abbrLabel>Ref. Sys.</abbrLabel>
 		<help />
 		<condition />
 		<description>Beschreibung der räumlichen und zeitlichen
@@ -365,7 +362,6 @@
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14">
 		<label>Metadatenerweiterung</label>
-		<abbrLabel>Erweiterung</abbrLabel>
 		<help />
 		<condition />
 		<description>Beschreibung von Metadatenelementen, die nicht in ISO
@@ -459,7 +455,6 @@
 	</element>
 	<element name="gmd:identificationInfo" id="15">
 		<label>Basisinformation</label>
-		<abbrLabel>Basisinf.</abbrLabel>
 		<help>Mit diesem Element werden grundlegende Informationen zur
 			dokumentierten Ressource erfasst.
 			Eigenschaften wie Titel, Schlüsselwörter, Kurzbeschreibung usw. werden hier
@@ -546,7 +541,6 @@
 	</element>
 	<element name="gmd:contentInfo" id="16">
 		<label>Dateninhalt</label>
-		<abbrLabel>Dateninhalt</abbrLabel>
 		<help />
 		<condition />
 		<description>Information zum Objektartenkatalog und Beschreibung von
@@ -660,7 +654,6 @@
 	</element>
 	<element name="gmd:distributionInfo" id="17">
 		<label>Vertriebsinformation</label>
-		<abbrLabel>Vertrieb</abbrLabel>
 		<help />
 		<condition />
 		<description>Information zum Vertrieb und Bezug der Ressource</description>
@@ -743,7 +736,6 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18">
 		<label>Datenqualität</label>
-		<abbrLabel>Qualität</abbrLabel>
 		<help />
 		<condition />
 		<description>Umfassende Qualitätsbewertung der Ressource</description>
@@ -810,7 +802,6 @@
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19">
 		<label>Darstellungskatalog</label>
-		<abbrLabel>Darstellungs</abbrLabel>
 		<help>z.B. Signaturenkatalog</help>
 		<condition />
 		<description>Information über das Regelwerk für die Darstellung einer
@@ -843,9 +834,9 @@
 		<condition />
 		<description>Eindeutiger Identifikator für diesen Metadatensatz</description>
 	</element>
-	<element name="gmd:metadataConstraints" context="gmd:MD_Metadata" id="20">
+	<element name="gmd:metadataConstraints" context="gmd:MD_Metadata"
+		id="20">
 		<label>Metadateneinschränkungen</label>
-		<abbrLabel>Einschränkungen</abbrLabel>
 		<help />
 		<condition />
 		<description>Einschränkungen in Zugriff und Benutzung der Metadaten</description>
@@ -895,7 +886,6 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21">
 		<label>Anwendungsschema</label>
-		<abbrLabel>Anwendung</abbrLabel>
 		<help>Mit diesem Element werden Informationen zu einem
 			Anwendungsschema erfasst. Ein
 			Anwendungsschema bietet eine formale Beschreibung der Datenstruktur und des Inhaltes
@@ -909,7 +899,6 @@
 	</element>
 	<element name="gmd:metadataMaintenance" id="22">
 		<label>Metadatenpflege</label>
-		<abbrLabel>Pflege</abbrLabel>
 		<help>z.B. Informationen zur Metadatennachführung</help>
 		<condition />
 		<description>Information über die Häufigkeit und den Umfang der
@@ -2668,80 +2657,5 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element>
-    <element name="gmd:MD_CharacterSetCode">
-        <label>Zeichensatz</label>
-    </element>
-    <element name="gmd:parentIdentifier">
-        <label>Identifikator des übergeordneten Metadatensatzes</label>
-    </element>
-    <element name="gmd:MD_TopologyLevelCode">
-        <label>Topologie-Ebene</label>
-    </element>
-    <element name="gmd:dateStamp">
-        <label>Zuletzt bearbeitet</label>
-    </element>
-    <element name="gmd:CI_RoleCode">
-        <label>Funktion</label>
-    </element>
-    <element name="gmd:MD_MaintenanceFrequencyCode">
-        <label>Wartungsintervalle</label>
-    </element>
-    <element name="gmd:MD_SpatialRepresentationTypeCode">
-        <label>Räumliche Darstellungsart</label>
-    </element>
-    <element name="gmd:MD_ProgressCode" context="gmd:status">
-        <label>Status Fortschritt</label>
-    </element>
-    <element name="gmd:MD_GeometricObjectTypeCode">
-        <label>Geometrische Objekttyp</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
-        <label>Zugriffsbeschränkung</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
-        <label>Nutzungsbeschränkung</label>
-    </element>
-    <element name="gmd:DS_AssociationTypeCode">
-        <label>Assoziationstyp</label>
-    </element>
-    <element name="gmd:DS_InitiativeTypeCode">
-        <label>Initiative Typ</label>
-    </element>
-    <element name="gmd:otherConstraints">
-        <label>Andere Einschränkungen</label>
-    </element>
-    <element name="gmd:MD_LegalConstraints">
-        <label>Rechtliche Einschränkungen</label>
-    </element>
-    <element name="gmd:MD_LegalConstraints">
-        <label>Rechtliche Einschränkungen</label>
-    </element>
-    <element name="gmd:aggregateDataSetIdentifier">
-        <label>Identifikator</label>
-    </element>
-    <element name="gmd:MD_AggregateInformation">
-        <label>Aggregationsinformation</label>
-    </element>
-    <element name="gmd:denominator">
-        <label>Räumliche Auflösung</label>
-    </element>
-    <element name="gmd:MD_RepresentativeFraction">
-        <label>Representative Fraction</label>
-    </element>
-    <element name="gmd:MD_ScopeCode">
-        <label>Anwendungsbereich</label>
-    </element>
-    <element name="gmd:Country">
-        <label>Land</label>
-    </element>
-    <element name="gmd:LanguageCode">
-        <label>Sprache</label>
-    </element>
-    <element name="gmd:statement">
-        <label>Erklärung</label>
-    </element>
-    <element name="gmd:LI_Lineage">
-        <label>Abstammung</label>
-    </element>
+    </element> 
 </labels>

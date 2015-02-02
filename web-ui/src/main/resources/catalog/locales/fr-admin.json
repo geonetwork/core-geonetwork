@@ -968,7 +968,7 @@
     "z3950-portPort": " ",
     "NOVALIDATION": "Accepter toutes les fiches sans validation",
     "XSDVALIDATION": "Accepter toutes les fiches valides pour le modèle (XSD)",
-    "SCHEMATRONVALIDATION": "Accepter toutes les fiches valides pour le standard (XSD + Schematron)"
+    "SCHEMATRONVALIDATION": "Accepter toutes les fiches valides pour le standard (XSD + Schematron)",
 
     "reports": "Rapports",
     "createReport": " Créer un rapport",
