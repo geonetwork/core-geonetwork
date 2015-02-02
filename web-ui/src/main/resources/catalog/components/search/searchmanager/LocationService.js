@@ -13,7 +13,9 @@
       this.METADATA = '/metadata/';
       this.HOME = '/home';
 
-      this.absUrl = $location.absUrl;
+      this.absUrl = function() {
+        return $location.absUrl();
+      };
 
       this.isSearch = function() {
         return $location.path() == this.SEARCH;
