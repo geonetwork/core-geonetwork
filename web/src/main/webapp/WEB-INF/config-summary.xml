@@ -83,13 +83,21 @@
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
       <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>
-      <item name="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
-						plural="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
-						indexKey="thesaurus-local.parameter.seadatanet-ocean-discovery-parameter"
+			<item name="thesaurus-external.parameter.NVS.P01"
+						plural="thesaurus-external.parameter.NVS.P01"
+						indexKey="thesaurus-external.parameter.NVS.P01"
 						max="300"/>
-      <item name="p35"
-						plural="p35"
-						indexKey="thesaurus-parameter.seadatanet-ocean-chemistry-variable"
+			<item name="thesaurus-external.parameter.NVS.P02"
+						plural="thesaurus-external.parameter.NVS.P02"
+						indexKey="thesaurus-external.parameter.NVS.P02"
+						max="300"/>
+			<item name="thesaurus-external.parameter.NVS.P03"
+						plural="thesaurus-external.parameter.NVS.P03"
+						indexKey="thesaurus-external.parameter.NVS.P03"
+						max="300"/>
+			<item name="thesaurus-external.parameter.NVS.P35"
+						plural="thesaurus-external.parameter.NVS.P35"
+						indexKey="thesaurus-external.parameter.NVS.P35"
 						max="300"/>
 		</suggestions>
 	</def>
