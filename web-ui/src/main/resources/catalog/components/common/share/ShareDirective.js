@@ -46,6 +46,10 @@
             internalGroupsProfiles: gnShareConstants.internalGroupsProfiles
           });
 
+          if(angular.isUndefined(scope.id)) {
+              scope.alertMsg = true;
+          }
+
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.groups = data.groups;

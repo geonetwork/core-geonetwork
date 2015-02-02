@@ -243,5 +243,6 @@
   "or":"or",
   "KMLfileURL":"URL of a KML file",
   "refineSearch" : "Refine Search",
-  "backToList": "Back To List"
+  "backToList": "Back To List",
+  "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !"
 }
