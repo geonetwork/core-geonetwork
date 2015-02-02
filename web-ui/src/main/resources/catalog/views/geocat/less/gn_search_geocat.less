@@ -142,13 +142,17 @@ h1, h2, h3, h4, h5, h6,
   .maincol.expanded:first-of-type + .maincol{
     transition-property: width;
   }
+  .geocat-leftcol {
+    .panel-heading {
+      .dropdown-menu {
+        max-height: 40em;
+        overflow-y: auto;
+      }
+    }
+  }
   .panel-heading {
     .input-group-btn {
       line-height: normal;
-    }
-    .dropdown-menu {
-      max-height: 40em;
-      overflow-y: auto;
     }
   }
   .relative {
@@ -494,4 +498,10 @@ h1, h2, h3, h4, h5, h6,
   text-align: center;
   padding: 4px 5px;
   vertical-align: middle;
+}
+
+[gn-metadata-display] {
+  .md-actions {
+    margin-top: 12px;
+  }
 }
