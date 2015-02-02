@@ -149,6 +149,7 @@
     "uuid": "Identifier",
     "url": "URL",
     "updateStatus": "Update record status",
+    "enableWorkflow": "Enable workflow",
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",

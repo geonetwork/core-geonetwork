@@ -37,6 +37,24 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
+          scope.isWorkflowEnabled = function(md) {
+            var st = md.status;
+            var res = st && 
+                  //Status is unknown
+                  (!isNaN(st) && st != '0');
+            
+            //What if it is an array: gmd:MD_ProgressCode
+            if(!res && Array.isArray(st)) {
+              angular.each(st, function(s) {
+                if(!isNaN(s) && s != '0') {
+                  res = true;
+                }
+              });
+            }
+            
+            return res;
+
+          };
         }
       };
     }
