@@ -14,7 +14,8 @@
                         <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
 
                         <div ng-hide="info.status === 'OK'" class="dropdown">
-                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                              <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                                 aria-expanded="false">
                                 <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
                             </a>
                             <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
@@ -26,8 +27,7 @@
                         </div>
                     </td>
                 <td><span class="badge"
-                          data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'">
-                {{info.status}} </span></td>
+                                data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"> {{info.status}} </span></td>
                 </table>
         </div>
       </div>
@@ -44,7 +44,8 @@
                         <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
 
                         <div ng-hide="info.status === 'OK'" class="dropdown">
-                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                               aria-expanded="false">
                                 <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
                             </a>
                             <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
@@ -56,8 +57,7 @@
                         </div>
                     </td>
                     <td><span class="badge"
-                              data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'">
-                {{info.status}} </span></td>
+                              data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"> {{info.status}} </span></td>
             </table>
         </div>
       </div>
@@ -76,13 +76,15 @@
                 <tr data-ng-repeat="md in searchResults.records">
                   <td>
                       <div class="dropdown">
-                          <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                                      <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true"
+                                         role="button" aria-expanded="false">
                               {{md.title || md.defaultTitle}}
                           </a>
 
-                          <a class="pull-right" target="_blank" data-ng-href="catalog.search?#/metadata/{{md['geonet:info'].uuid}}">
-                              <i class="fa fa-eye"></i>
-                          </a>
+                                      <a class="pull-right" target="_blank"
+                                         data-ng-href="catalog.search#/metadata/{{md['geonet:info'].uuid}}">
+                      <i class="fa fa-eye"></i>
+                    </a>
 
                           <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
                               <li>
@@ -96,9 +98,9 @@
                                                       <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
                                                   </dd>
                                               </dl>
-                                          </td>
-                                      </tr>
-                                  </table>
+                  </td>
+                </tr>
+              </table>
                               </li>
                           </ul>
                       </div>
