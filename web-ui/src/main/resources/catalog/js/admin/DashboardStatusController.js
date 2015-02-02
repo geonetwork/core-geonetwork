@@ -38,37 +38,37 @@
 
         return [md.idxMsg];
       };
-      $scope.indexMessageTitle = function (errorMsg) {
+      $scope.indexMessageTitle = function(errorMsg) {
         if (errorMsg === undefined) {
-          return "Empty error message";
+          return 'Empty error message';
         }
-        return errorMsg.split("|")[0];
+        return errorMsg.split('|')[0];
       };
-      $scope.indexMessageReason = function (errorMsg) {
+      $scope.indexMessageReason = function(errorMsg) {
         if (errorMsg === undefined) {
-          return "Empty error message";
+          return 'Empty error message';
         }
-        return errorMsg.split("|")[1];
+        return errorMsg.split('|')[1];
       };
-      $scope.rawIndexMessageDetail = function (errorMsg) {
+      $scope.rawIndexMessageDetail = function(errorMsg) {
         if (errorMsg === undefined) {
-          return "Empty error message";
+          return 'Empty error message';
         }
-        return errorMsg.split("|")[2]
+        return errorMsg.split('|')[2];
       };
-      $scope.restrictMessageWidth = function (detail) {
+      $scope.restrictMessageWidth = function(detail) {
         var maxLine = 80,
-          indentPattern = /(\s*).*/;
+            indentPattern = /(\s*).*/;
 
         if (!detail || detail.trim() == '') {
           return '';
         }
 
-        var lines = detail.split("\n");
+        var lines = detail.split('\n');
 
-        detail = "";
+        detail = '';
 
-        var nextSpace = function (line) {
+        var nextSpace = function(line) {
           for (var j = maxLine; j < line.length; j++) {
             if (' ' === line.charAt(j)) {
               return j;
@@ -79,18 +79,19 @@
 
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i];
-          var indent = indentPattern.exec(line)[1] + "    ";
-          while(line.length > maxLine) {
+          var indent = indentPattern.exec(line)[1] + '    ';
+          while (line.length > maxLine) {
             var ns = nextSpace(line);
-            detail += line.substring(0, ns) + "\n";
+            detail += line.substring(0, ns) + '\n';
             line = indent + line.substring(ns);
           }
-          detail += line + "\n";
+          detail += line + '\n';
         }
         return detail;
       };
-      $scope.indexMessageDetail = function (errorMsg) {
-        return $scope.restrictMessageWidth($scope.rawIndexMessageDetail(errorMsg));
+      $scope.indexMessageDetail = function(errorMsg) {
+        return $scope.restrictMessageWidth(
+            $scope.rawIndexMessageDetail(errorMsg));
       };
       $scope.searchObj = {
         params: {

@@ -210,11 +210,12 @@
           .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update') + "?_content_type=json", body, {
+            ($scope.harvesterNew ? 'add' : 'update') +
+            '?_content_type=json', body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
-          if (!$scope.harvesterSelected["@id"]) {
-            $scope.harvesterSelected["@id"] = data[0];
+          if (!$scope.harvesterSelected['@id']) {
+            $scope.harvesterSelected['@id'] = data[0];
           }
           loadHarvesters().then(refreshSelectedHarvester);
           $rootScope.$broadcast('StatusUpdated', {
@@ -258,7 +259,7 @@
       var refreshSelectedHarvester = function() {
         if ($scope.harvesterSelected) {
           // Refresh the selected harvester
-          angular.forEach($scope.harvesters, function (h) {
+          angular.forEach($scope.harvesters, function(h) {
             if (h['@id'] === $scope.harvesterSelected['@id']) {
               $scope.selectHarvester(h);
             }
@@ -314,7 +315,7 @@
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               loadHarvesters().then(refreshSelectedHarvester);
-                });
+            });
       };
       $scope.stopping = false;
       $scope.stopHarvester = function() {
@@ -327,7 +328,7 @@
               loadHarvesters().then(refreshSelectedHarvester);
             }).then(function() {
               $scope.stopping = false;
-          });
+            });
       };
 
       $scope.setHarvesterSchedule = function() {

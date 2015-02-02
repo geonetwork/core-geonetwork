@@ -213,9 +213,11 @@
           },
 
           link: function(scope, element, attrs) {
-            var url = 'info?_content_type=json&type=groupsIncludingSystemGroups';
+            var url = 'info?_content_type=json' +
+                '&type=groupsIncludingSystemGroups';
             if (attrs.profile) {
-              url = 'info?_content_type=json&type=groups&profile=' + attrs.profile;
+              url = 'info?_content_type=json' +
+                  '&type=groups&profile=' + attrs.profile;
             }
             $http.get(url, {cache: true}).
                 success(function(data) {

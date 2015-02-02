@@ -228,7 +228,8 @@
               $scope.resetPassword2 = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
-              alert("Error occurred while resetting password: " + data.error.message);
+              alert('Error occurred while resetting password: ' +
+                  data.error.message);
             });
 
       };
