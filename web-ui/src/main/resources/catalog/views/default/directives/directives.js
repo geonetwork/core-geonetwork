@@ -45,7 +45,7 @@
             
             //What if it is an array: gmd:MD_ProgressCode
             if(!res && Array.isArray(st)) {
-              angular.each(st, function(s) {
+              angular.forEach(st, function(s) {
                 if(!isNaN(s) && s != '0') {
                   res = true;
                 }

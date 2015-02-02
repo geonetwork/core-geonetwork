@@ -160,7 +160,7 @@
         return $http.get('md.status.update?' +
             '_content_type=json&id=' + md.getId() +
             '&changeMessage=Enable workflow' +
-            '&status=0').then(
+            '&status=1').then(
             function(data) {
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {

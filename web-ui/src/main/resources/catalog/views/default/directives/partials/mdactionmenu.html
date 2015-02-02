@@ -42,13 +42,15 @@
     based on current status. -->
     <li><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
-                              isWorkflowEnabled(md)">
+                              isWorkflowEnabled(md)"
+           data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">updateStatus</span>
     </a></li>
     <li><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
-                                !isWorkflowEnabled(md)">
+                                !isWorkflowEnabled(md)"
+           data-ng-click="mdService.startWorkflow(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">enableWorkflow</span>
     </a></li>
