@@ -28,7 +28,10 @@
 
   <xsl:template name="to-iso19139.sdn-use-limitation">
     <!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
-    <xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
+    <xsl:variable name="currentThesaurus"
+									select="if (thesaurus/key)
+										then thesaurus/key
+										else /root/request/thesaurus"/>
     <gmd:MD_Constraints>
       <gmd:useLimitation>
         <!-- An empty snippet is always returned in order to keep the element -->
