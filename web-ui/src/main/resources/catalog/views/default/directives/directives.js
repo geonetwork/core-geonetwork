@@ -37,6 +37,11 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
+          
+          scope.$watch(attrs.gnMdActionsMenu, function(a) {
+            scope.md = a;
+          });
+          
           scope.isWorkflowEnabled = function(md) {
             var st = md.status;
             var res = st && 
