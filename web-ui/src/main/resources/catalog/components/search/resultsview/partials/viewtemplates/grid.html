@@ -34,9 +34,8 @@
             <span data-translate="">listOfCategories</span>
             <a data-ng-repeat="cat in ::md.category"
                data-ng-href="#/search?_cat={{cat}}">
-              <i class="fa"
-                 title="{{cat | translate}}">
-                <img data-ng-src="../../images/category/{{cat}}.png"/>
+              <i class="fa" title="{{cat | translate}}">
+                <span class="fa gn-icon-{{cat}}"></span>
               </i>
             </a>
           </div>
@@ -53,26 +52,7 @@
             <a href=""
                data-ng-click="openRecord($index, md, searchResults.records)"
                title="{{md.title || md.defaultTitle}}">
-              <!-- Icon for types - usually only one -->
-                <!-- TODO : add feature cat -->
-              <span data-ng-if="md.type.indexOf('dataset')>=0"
-                    class="fa fa-database"
-                    title="{{'dataset' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('software')>=0"
-                    class="fa fa-hdd-o"
-                    title="{{'software' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('map')>=0"
-                    class="fa fa-globe"
-                    title="{{'map' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('application')>=0"
-                    class="fa fa-hdd-o"
-                    title="{{'application' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
-                    class="fa fa-globe"
-                    title="{{'geodata' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('service')>=0"
-                    class="fa fa-globe"
-                    title="{{'service' | translate}}"></span>
+			  <span class="fa gn-icon-{{md.type | split}}"></span>
               {{md.title || md.defaultTitle}}</a>
           </h4>
         </div>
