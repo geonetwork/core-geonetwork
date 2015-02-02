@@ -456,22 +456,23 @@
                 });
               case 'wmts':
                 var that = this;
-                  if(opt.name && opt.url) {
-                    gnOwsCapabilities.getWMTSCapabilities(opt.url).
-                        then(function(capObj) {
-                          var info = gnOwsCapabilities.getLayerInfoFromCap(
-                              opt.name, capObj);
-                          //info.group = layer.group;
-                          return that.addWmtsToMapFromCap(undefined, info, capObj);
-/*
+                if (opt.name && opt.url) {
+                  gnOwsCapabilities.getWMTSCapabilities(opt.url).
+                      then(function(capObj) {
+                        var info = gnOwsCapabilities.getLayerInfoFromCap(
+                            opt.name, capObj);
+                        //info.group = layer.group;
+                        return that.addWmtsToMapFromCap(undefined, info,
+                            capObj);
+                        /*
                           l.setOpacity(layer.opacity);
                           l.setVisible(!layer.hidden);
-*/
-                        });
-                  }
+                        */
+                      });
+                }
                 else {
-                    console.warn('cant load wmts, url or name not provided');
-                  }
+                  console.warn('cant load wmts, url or name not provided');
+                }
             }
             $log.warn('Unsupported layer type: ', type);
           }
