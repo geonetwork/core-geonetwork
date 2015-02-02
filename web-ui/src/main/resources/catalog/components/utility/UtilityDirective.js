@@ -664,14 +664,14 @@
         element.on('click', function(e) {
           var next = element.next();
           next.collapse('toggle');
-/*
+          /*
           if(scope.collapsed) {
             next.show();
           }
           else {
             next.hide();
           }
-*/
+          */
         });
       }
     };

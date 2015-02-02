@@ -22,10 +22,10 @@
     'gnOwsCapabilities',
     '$http',
     'gnViewerSettings',
-	  '$translate',
+    '$translate',
     '$q',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q ) {
+             $translate, $q) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -68,10 +68,10 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == $translate('BackgroundLayers')
-                && layer.name.match(re)) {
+            if (layer.group == $translate('BackgroundLayers') &&
+                layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
-              if(type != 'wmts') {
+              if (type != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type);
                 if (olLayer) {
                   bgLayers.push(olLayer);
@@ -84,14 +84,14 @@
               else {
                 promises.push(this.createLayer(layer, map).then(
                     function(o) {
-                  var olLayer = o.ol;
-                  var ctxLayer = o.ctx;
-                  bgLayers.push(olLayer);
-                  olLayer.displayInLayerManager = false;
-                  olLayer.background = true;
-                  olLayer.set('group', $translate('BackgroundLayers'));
-                  olLayer.setVisible(!ctxLayer.hidden);
-                }));
+                      var olLayer = o.ol;
+                      var ctxLayer = o.ctx;
+                      bgLayers.push(olLayer);
+                      olLayer.displayInLayerManager = false;
+                      olLayer.background = true;
+                      olLayer.set('group', $translate('BackgroundLayers'));
+                      olLayer.setVisible(!ctxLayer.hidden);
+                    }));
               }
             } else {
               var server = layer.server[0];
@@ -170,7 +170,7 @@
         };
 
         // add the background layers
-		//todo: grab this from config
+        // todo: grab this from config
         angular.forEach(gnViewerSettings.bgLayers, function(layer) {
           var source = layer.getSource();
           var name;
@@ -188,7 +188,7 @@
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.WMTS) {
-            name = '{type=wmts,name='+layer.get('name')+'}';
+            name = '{type=wmts,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
                 href: layer.get('urlCap')
@@ -296,7 +296,7 @@
                   var l = gnMap.createOlWMTSFromCap(map, info, capObj);
                   l.setOpacity(layer.opacity);
                   l.setVisible(!layer.hidden);
-                  defer.resolve({ol:l, ctx:layer});
+                  defer.resolve({ol: l, ctx: layer});
                 });
           }
         }
@@ -308,7 +308,7 @@
             var l = gnMap.createOlWMSFromCap(map, info);
             l.setOpacity(layer.opacity);
             l.setVisible(!layer.hidden);
-            defer.resolve({ol:l, ctx:layer});
+            defer.resolve({ol: l, ctx: layer});
           });
         }
         return defer.promise;

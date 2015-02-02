@@ -53,9 +53,10 @@
         },
         link: function(scope) {
           scope.facetConfig = [];
-          gnFacetConfigService.loadConfig(scope.summaryType).then(function(data) {
-            scope.facetConfig = data;
-          });
+          gnFacetConfigService.loadConfig(scope.summaryType).
+              then(function(data) {
+                scope.facetConfig = data;
+              });
         }
       };
     }]);
@@ -101,8 +102,8 @@
           scope.name = attrs.gnFacetMultiselect;
 
           gnFacetConfigService.loadConfig('hits').then(function(data) {
-            if(angular.isArray(data)) {
-              for(var i = 0;i<data.length;i++) {
+            if (angular.isArray(data)) {
+              for (var i = 0; i < data.length; i++) {
                 if (data[i].name == scope.name) {
                   scope.facetConfig = data[i];
                   break;
@@ -150,11 +151,13 @@
                 var s = search.split(delimiter);
                 var idx = s.indexOf(value);
                 if (idx < 0) {
-                  scope.searchObj.params[scope.facetConfig.key] += delimiter + value;
+                  scope.searchObj.params[scope.facetConfig.key] +=
+                      delimiter + value;
                 }
                 else {
                   s.splice(idx, 1);
-                  scope.searchObj.params[scope.facetConfig.key] = s.join(delimiter);
+                  scope.searchObj.params[scope.facetConfig.key] =
+                      s.join(delimiter);
                 }
               }
             }
