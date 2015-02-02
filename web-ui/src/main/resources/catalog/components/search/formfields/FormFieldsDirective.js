@@ -208,7 +208,8 @@
           scope: {
             ownerGroup: '=',
             lang: '=',
-            groups: '='
+            groups: '=',
+            excludeSpecialGroups: '='
           },
 
           link: function(scope, element, attrs) {
