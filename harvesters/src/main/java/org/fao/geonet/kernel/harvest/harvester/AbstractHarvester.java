@@ -434,6 +434,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return context;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     //---------------------------------------------------------------------------
     //---
     //--- Package methods (called by Executor)

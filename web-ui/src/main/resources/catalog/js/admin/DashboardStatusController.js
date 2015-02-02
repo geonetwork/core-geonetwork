@@ -13,13 +13,22 @@
     '$scope', '$routeParams', '$http', 'gnSearchManagerService',
     function($scope, $routeParams, $http, gnSearchManagerService) {
       $scope.healthy = undefined;
+      $scope.nowarnings = undefined;
 
       $http.get('../../criticalhealthcheck').success(function(data) {
         $scope.healthy = true;
-        $scope.healthcheck = data;
+        $scope.criticalhealthcheck = data;
       }).error(function(data) {
         $scope.healthy = false;
-        $scope.healthcheck = data;
+        $scope.criticalhealthcheck = data;
+      });
+
+      $http.get('../../warninghealthcheck').success(function(data) {
+        $scope.nowarnings = true;
+        $scope.warninghealthcheck = data;
+      }).error(function(data) {
+        $scope.nowarnings = false;
+        $scope.warninghealthcheck = data;
       });
 
       $scope.indexMessages = function(md) {
@@ -47,12 +56,11 @@
         }
         return errorMsg.split("|")[2]
       };
-      $scope.indexMessageDetail = function (errorMsg) {
+      $scope.restrictMessageWidth = function (detail) {
         var maxLine = 80,
-            indentPattern = /(\s*).*/,
-            detail = $scope.rawIndexMessageDetail(errorMsg);
+          indentPattern = /(\s*).*/;
 
-        if (detail.trim() == '') {
+        if (!detail || detail.trim() == '') {
           return '';
         }
 
@@ -80,6 +88,9 @@
           detail += line + "\n";
         }
         return detail;
+      };
+      $scope.indexMessageDetail = function (errorMsg) {
+        return $scope.restrictMessageWidth($scope.rawIndexMessageDetail(errorMsg));
       };
       $scope.searchObj = {
         params: {

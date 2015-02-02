@@ -210,10 +210,13 @@
           .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update'), body, {
+            ($scope.harvesterNew ? 'add' : 'update') + "?_content_type=json", body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
-          loadHarvesters();
+          if (!$scope.harvesterSelected["@id"]) {
+            $scope.harvesterSelected["@id"] = data[0];
+          }
+          loadHarvesters().then(refreshSelectedHarvester);
           $rootScope.$broadcast('StatusUpdated', {
             msg: $translate('harvesterUpdated'),
             timeout: 2,
@@ -252,7 +255,16 @@
         });
         $scope.$broadcast('resetSearch', $scope.searchObj.params);
       };
-
+      var refreshSelectedHarvester = function() {
+        if ($scope.harvesterSelected) {
+          // Refresh the selected harvester
+          angular.forEach($scope.harvesters, function (h) {
+            if (h['@id'] === $scope.harvesterSelected['@id']) {
+              $scope.selectHarvester(h);
+            }
+          });
+        }
+      };
       $scope.refreshHarvester = function() {
         loadHarvesters().then(function() {
           // Select the clone
@@ -301,14 +313,7 @@
         $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
-              loadHarvesters().then(function() {
-                // Refesh the harvester
-                angular.forEach($scope.harvesters, function (h) {
-                  if (h['@id'] === $scope.harvesterSelected['@id']) {
-                    $scope.selectHarvester(h);
-                  }
-                });
-              });
+              loadHarvesters().then(refreshSelectedHarvester);
             });
       };
       $scope.stopping = false;
@@ -318,14 +323,7 @@
         $scope.stopping = true;
         $http.get('admin.harvester.stop?_content_type=json&id=' + id + '&status=' + status)
           .success(function(data) {
-              loadHarvesters().then(function() {
-                // Refresh the harvester
-                angular.forEach($scope.harvesters, function (h) {
-                  if (h['@id'] === $scope.harvesterSelected['@id']) {
-                    $scope.selectHarvester(h);
-                  }
-                });
-              });
+              loadHarvesters().then(refreshSelectedHarvester);
             }).then(function() {
               $scope.stopping = false;
           });
