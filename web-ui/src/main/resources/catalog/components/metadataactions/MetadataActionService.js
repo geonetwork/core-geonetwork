@@ -156,6 +156,27 @@
         }, scope, 'metadataStatusUpdated');
       };
 
+      this.startWorkflow = function(md, scope) {
+        return $http.get('md.status.update?' +
+            '_content_type=json&id=' + md.getId() +
+            '&changeMessage=Enable workflow' +
+            '&status=0').then(
+            function(data) {
+              scope.$emit('metadataStatusUpdated', true);
+              scope.$emit('StatusUpdated', {
+                msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                timeout: 2,
+                type: 'success'});
+            }, function(data) {
+              scope.$emit('metadataStatusUpdated', false);
+              scope.$emit('StatusUpdated', {
+                title: $translate('metadataStatusUpdatedErrors'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
       this.openPrivilegesBatchPanel = function(scope) {
         openModal({
           title: 'privileges',

@@ -37,7 +37,7 @@ public class Functions extends SchemaLocalizations {
         super(fparams.context.getApplicationContext(), env, fparams.schema, fparams.config.dependOn());
 
         this.env = env;
-        this.schemaPlugin = SchemaManager.getSchemaPlugin(fparams.context, fparams.schema);
+        this.schemaPlugin = SchemaManager.getSchemaPlugin(fparams.schema);
         this.fparams = fparams;
     }
 

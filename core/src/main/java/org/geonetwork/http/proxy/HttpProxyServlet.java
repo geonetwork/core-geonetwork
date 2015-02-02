@@ -31,7 +31,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
-;
 import org.fao.geonet.constants.Geonet;
 
 import org.geonetwork.http.proxy.util.RequestUtil;
