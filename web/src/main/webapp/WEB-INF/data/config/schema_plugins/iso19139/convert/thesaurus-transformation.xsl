@@ -26,19 +26,25 @@
 		</xsl:call-template>
 	</xsl:template>
 
-
-	<xsl:template name="to-iso19139.sdn-use-limitation">
-		<gmd:MD_Constraints>
-			<xsl:for-each select="//descKeys/keyword">
-				<gmd:useLimitation>
-					<gmx:Anchor
-									xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
-						<xsl:value-of select="value"/>
-					</gmx:Anchor>
-				</gmd:useLimitation>
-			</xsl:for-each>
-		</gmd:MD_Constraints>
-	</xsl:template>
+  <xsl:template name="to-iso19139.sdn-use-limitation">
+    <!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
+    <xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
+    <gmd:MD_Constraints>
+      <gmd:useLimitation>
+        <!-- An empty snippet is always returned in order to keep the element -->
+        <xsl:choose>
+          <xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
+            <xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+              <gmx:Anchor xlink:href="{uri}"><xsl:value-of select="value"/></gmx:Anchor>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <gmx:Anchor/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </gmd:useLimitation>
+    </gmd:MD_Constraints>
+  </xsl:template>
 
 
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
