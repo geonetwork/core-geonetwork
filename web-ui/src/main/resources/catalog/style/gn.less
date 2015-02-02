@@ -198,7 +198,7 @@ div.gn-scroll-spy {
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: 800px;
+  max-height: ~"calc(100% - 89px)";
   z-index: 2000;
 
   .gn-share-grid {
@@ -341,7 +341,7 @@ span.twitter-typeahead {
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: @gn-popup-max-height;
+  max-height: ~"calc(100% - 89px)";
   z-index: 2000;
 
   @media (max-width: @screen-tablet) {
@@ -364,7 +364,7 @@ span.twitter-typeahead {
 .gn-popup-content {
   overflow: auto;
   max-width: inherit;
-  max-height: (@gn-popup-max-height - 60);
+  max-height: ~"calc(100% - 149px)";
   font-size: 12px;
   @media (max-width: @screen-phone) {
     width: 100%;
