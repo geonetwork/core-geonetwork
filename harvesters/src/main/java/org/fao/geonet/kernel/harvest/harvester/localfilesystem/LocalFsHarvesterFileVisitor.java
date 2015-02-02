@@ -47,8 +47,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private final GroupMapper localGroups;
     private final List<String> idsForHarvestingResult = Lists.newArrayList();
 
-    public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log,
-                                       LocalFilesystemHarvester harvester) throws Exception {
+    public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log, LocalFilesystemHarvester harvester) throws Exception {
         this.aligner = new BaseAligner(cancelMonitor) {};
 
         this.cancelMonitor = cancelMonitor;
@@ -141,7 +140,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             }
 
                             log.debug("adding new metadata");
-                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner);
+                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, false);
                             result.addedMetadata++;
                         } else {
                             // Check last modified date of the file with the record change date
