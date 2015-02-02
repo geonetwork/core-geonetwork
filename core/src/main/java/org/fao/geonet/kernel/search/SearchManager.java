@@ -133,7 +133,7 @@ import javax.annotation.PreDestroy;
  */
 public class SearchManager {
     private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
-	private static final String INDEXING_ERROR_FIELD = "_indexingError";
+	public static final String INDEXING_ERROR_FIELD = "_indexingError";
 
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
