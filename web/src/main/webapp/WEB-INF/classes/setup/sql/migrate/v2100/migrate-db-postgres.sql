@@ -8,7 +8,7 @@ ALTER TABLE UserGroups ADD profile varchar(32);
 UPDATE UserGroups SET profile = (SELECT profile from users WHERE id = userid);
 UPDATE UserGroups SET profile = 'RegisteredUser' WHERE profile IS null;
 
-ALTER TABLE UserGroups ALTER COLUMN profile varchar(32) NOT NULL;
+ALTER TABLE UserGroups ALTER profile SET NOT NULL;
 ALTER TABLE UserGroups DROP CONSTRAINT usergroups_pkey;
 ALTER TABLE UserGroups ADD PRIMARY KEY (userid, profile, groupid);
 

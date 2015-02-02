@@ -41,7 +41,10 @@ public class Handlers {
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
         handlers.add select: 'gmd:language', group: false, isoLanguageEl
         handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
-        handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, isoSimpleTextElGrouped
+        handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, { elems ->
+            def listItems = elems.findAll{!it.text().isEmpty()}.collect {f.codelistValueLabel("MD_TopicCategoryCode", it.text())};
+            handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
+        }
 
         handlers.skip name: "skip date parent element", select: matchers.hasDateChild, {it.children()}
         handlers.skip name: "skip codelist parent element", select: matchers.hasCodeListChild, {it.children()}

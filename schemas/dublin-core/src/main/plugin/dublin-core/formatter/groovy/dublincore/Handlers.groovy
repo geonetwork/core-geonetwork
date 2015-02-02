@@ -53,7 +53,6 @@ public class Handlers {
         summary.addNavBarItem(commonHandlers.createXmlNavBarItem())
         summary.addCompleteNavItem = false
         summary.addOverviewNavItem = true
-        commonHandlers.configureSummaryActionMenu(summary)
 
         LinkBlock linkBlock = new LinkBlock(f.translate("links"), "fa fa-link");
         summary.links.add(linkBlock)

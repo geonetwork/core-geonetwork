@@ -1,0 +1,23 @@
+<strings>
+    <complete>Complete</complete>
+    <datasets-link>Datasets</datasets-link>
+    <hierarchy>Hierarchy</hierarchy>
+    <noUuidInLink>No uuid in link</noUuidInLink>
+    <services-link>Services</services-link>
+    <abstract>Descrizione</abstract>
+    <sibling-link>Siblings</sibling-link>
+    <related-link>Related</related-link>
+    <source-link>Sources</source-link>
+    <xml>XML</xml>
+    <associated-link>Associated</associated-link>
+    <dataset-link>Dataset</dataset-link>
+    <overview>Visione generale</overview>
+    <parent>Parent</parent>
+    <parent-link>Parent</parent-link>
+    <testString>This String is here for testing don't delete</testString>
+    <children-link>Children</children-link>
+    <fcat-link>Feature Catalog</fcat-link>
+    <hassource-link>Has Source</hassource-link>
+    <links>Links</links>
+    <service-link>Service</service-link>
+</strings>

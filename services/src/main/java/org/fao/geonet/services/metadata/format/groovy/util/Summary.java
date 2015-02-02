@@ -13,7 +13,6 @@ import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,6 @@ public class Summary {
     protected final Environment env;
     protected final Functions functions;
 
-    private List<MenuAction> actions = Lists.newArrayList();
     private String logo;
     private List<String> thumbnails = Lists.newArrayList();
     private String title = "";
@@ -79,7 +77,6 @@ public class Summary {
         params.put("extents", extent != null ? extent : "");
         params.put("formats", formats != null ? formats : "");
         params.put("keywords", keywords != null ? keywords : "");
-        params.put("actions", this.actions);
         params.put("isHTML", env.getFormatType() == FormatType.html);
         params.put("isPDF", env.getFormatType() == FormatType.pdf);
 
@@ -197,33 +194,5 @@ public class Summary {
 
     public void setFormats(String formats) {
         this.formats = formats;
-    }
-
-    public List<MenuAction> getActions() {
-        return this.actions;
-    }
-
-    /**
-     * look up the the action using the menu names as keys for lookup.
-     *
-     * @param path the path to the action
-     */
-    public MenuAction findAction(String... path) {
-        List<MenuAction> current = this.actions;
-        for (int i = 0; i < path.length; i++) {
-            String segment = path[i];
-            for (MenuAction menuAction : current) {
-                if (segment.equals(menuAction.getLabel())) {
-                    if (i == path.length - 1) {
-                        return menuAction;
-                    } else {
-                        current = menuAction.getSubmenu();
-                        break;
-                    }
-                }
-            }
-
-        }
-        throw new IllegalArgumentException("No menu action found given the path: " + Arrays.toString(path));
     }
 }

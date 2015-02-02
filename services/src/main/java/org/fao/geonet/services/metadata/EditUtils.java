@@ -306,7 +306,7 @@ class EditUtils {
         if (ref.startsWith("lang")) {
             if (val.length() > 0) {
 
-                SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(context, schema);
+                SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
                 if (schemaPlugin instanceof MultilingualSchemaPlugin) {
                     String[] ids = ref.split("_");
                     // --- search element in current parent

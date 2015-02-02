@@ -12,12 +12,12 @@ var gnHarvestercsw = {
         "uuid" : "",
         "icon" : "blank.gif",
         "account" : {
-          "use" : "false",
+          "use" : false,
           "username" : [],
           "password" : []
         },
         "capabilitiesUrl" : "http://",
-        "rejectDuplicateResource" : "false",
+        "rejectDuplicateResource" : false,
         "xslfilter": [],
         "outputSchema": ""
       },
@@ -26,7 +26,7 @@ var gnHarvestercsw = {
       },
       "options" : {
         "every" : "0 0 0 ? * *",
-        "oneRunOnly" : "false",
+        "oneRunOnly" : false,
         "status" : "active"
       },
       "privileges" : [ {
@@ -40,7 +40,7 @@ var gnHarvestercsw = {
       "categories" : [],
       "info" : {
         "lastRun" : [],
-        "running" : "false"
+        "running" : false
       }
     };
   },

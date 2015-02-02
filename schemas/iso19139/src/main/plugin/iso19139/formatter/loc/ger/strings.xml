@@ -1,0 +1,8 @@
+<strings>
+    <general>Allgemein</general>
+    <kml-link>KML Datei zum herunterladen</kml-link>
+    <link-link>Verknüpfung</link-link>
+    <noFormatName>Kein Formatname bereitgestellt</noFormatName>
+    <noThesaurusName>Kein Thesaurus Name</noThesaurusName>
+    <wms-link>Web Map Server URLs</wms-link>
+</strings>

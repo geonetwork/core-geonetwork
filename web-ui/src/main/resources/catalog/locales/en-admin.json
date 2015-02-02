@@ -974,5 +974,10 @@
     "development" : "Development",
     "integration" : "Integration",
     "profileUpdated" : "System Profile has been updated",
-    "profileUpdatedFailed" : "Failure updating System Profile"
+    "profileUpdatedFailed" : "Failure updating System Profile",
+    "GNIDX-XSL" : "XSLT transform error",
+    "GNIDX-GEOWRITE" : "Error writing geometry to spatial index",
+    "GNIDX-GEO" : "Error indexing geometry",
+    "GNIDX-BADNUMVALUE" : "Error converting lucene index value to a number",
+    "indexingErrors" : "Indexing Errors"
 }

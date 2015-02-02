@@ -68,7 +68,7 @@ public class XmlResolver extends XMLCatalogResolver {
             Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: " + type + " NamespaceURI :" + namespaceURI + " " +
                                         "PublicId :" + publicId + " SystemId :" + systemId + " BaseURI:" + baseURI);
 
-        LSInput result = tryToResolveOnFs(type, namespaceURI, publicId, systemId, baseURI);
+        LSInput result = tryToResolveOnFs(publicId, systemId, baseURI);
         if (result != null) {
             return result;
         }
@@ -153,7 +153,7 @@ public class XmlResolver extends XMLCatalogResolver {
         return result;
     }
 
-    private LSInput tryToResolveOnFs(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+    private LSInput tryToResolveOnFs(String publicId, String systemId, String baseURI) {
         if (baseURI != null && systemId != null) {
             try {
                 Path basePath = IO.toPath(new URI(baseURI));
@@ -161,8 +161,9 @@ public class XmlResolver extends XMLCatalogResolver {
                 if (Files.isRegularFile(resolved)) {
                     try {
                         final String uri = resolved.normalize().toUri().toASCIIString();
-                        return new DOMInputImpl(publicId, uri, uri, IO.newInputStream(resolved),
-                                Constants.ENCODING);
+                        return new DOMInputImpl(publicId, uri, uri, new String(Files.readAllBytes(resolved), Constants.ENCODING), Constants.ENCODING) {
+
+                        };
                     } catch (IOException e) {
                         Log.error(Log.JEEVES, "Error opening resource: " + resolved + " for reading", e);
                     }

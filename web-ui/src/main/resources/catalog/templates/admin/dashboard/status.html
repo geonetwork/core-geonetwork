@@ -28,13 +28,36 @@
         <div class="panel panel-default panel-danger">
           <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
           <div class="panel-body">
-              <table class="table table-striped">
+              <table class="table">
                 <tr data-ng-repeat="md in searchResults.records">
-                  <td>{{md.title || md.defaultTitle}}</td>
                   <td>
-                    <a target="_blank" data-ng-href="md.format.html?xsl=full_view&uuid={{md['geonet:info'].uuid}}">
-                      <i class="fa fa-eye"></i>
-                    </a>
+                      <div class="dropdown">
+                          <a id="dLabel" data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                              {{md.title || md.defaultTitle}}
+                          </a>
+
+                          <a class="pull-right" target="_blank" data-ng-href="catalog.search?#/metadata/{{md['geonet:info'].uuid}}">
+                              <i class="fa fa-eye"></i>
+                          </a>
+
+                          <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                              <li>
+                                  <table class="table">
+                                      <tr data-ng-repeat="errorMsg in indexMessages(md)">
+                                          <td>
+                                              <dl>
+                                                  <dt>{{indexMessageTitle(errorMsg) | translate}}</dt>
+                                                  <dd>
+                                                      <span>Error reason: {{indexMessageReason(errorMsg)}}</span>
+                                                      <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
+                                                  </dd>
+                                              </dl>
+                                          </td>
+                                      </tr>
+                                  </table>
+                              </li>
+                          </ul>
+                      </div>
                   </td>
                 </tr>
               </table>

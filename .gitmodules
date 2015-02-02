@@ -6,7 +6,7 @@
 	url = https://github.com/geonetwork/chromedriver.git
 [submodule "web-ui/src/main/resources/catalog/lib/style/bootstrap"]
 	path = web-ui/src/main/resources/catalog/lib/style/bootstrap
-	url = git@github.com:twbs/bootstrap.git
+	url = https://github.com/twbs/bootstrap.git
 [submodule "web-ui/src/main/resources/catalog/lib/style/font-awesome"]
 	path = web-ui/src/main/resources/catalog/lib/style/font-awesome
-	url = git@github.com:FortAwesome/Font-Awesome.git
+	url = https://github.com/FortAwesome/Font-Awesome.git

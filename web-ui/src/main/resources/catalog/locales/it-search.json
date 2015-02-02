@@ -240,5 +240,6 @@
     "UploadKMZfile": "Upoad a KMZ file",
     "or": "or",
     "KMLfileURL": "URL of a KML file",
-    "refineSearch": "Affinare la ricerca"
+    "refineSearch": "Affinare la ricerca",
+    "backToList": "Back To List"
 }

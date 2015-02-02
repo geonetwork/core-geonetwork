@@ -61,8 +61,6 @@ class SummaryFactory {
             createDynamicHierarchyHtml(summary)
         }
 
-        isoHandlers.commonHandlers.configureSummaryActionMenu(summary)
-
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             def abbrName = f.nodeTranslation(s, null, "abbrLabel")

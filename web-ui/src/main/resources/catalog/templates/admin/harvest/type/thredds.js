@@ -11,7 +11,7 @@ var gnHarvesterthredds = {
                 "name" : "",
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -22,25 +22,25 @@ var gnHarvesterthredds = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
-                "createThumbnails" : "true",
-                "createAtomicDatasetMd" : "false",
-                "ignoreHarvestOnAtomics" : "false",
+                "createThumbnails" : true,
+                "createAtomicDatasetMd" : false,
+                "ignoreHarvestOnAtomics" : false,
                 "atomicGeneration" : "default",
-                "modifiedOnly": "false",
+                "modifiedOnly": false,
                 "atomicFragmentStylesheet" : "",
                 "atomicMetadataTemplate" : "",
                 "createAtomicSubtemplates" : "",
                 "outputSchemaOnAtomicsDIF" : "",
                 "outputSchemaOnAtomicsFragments" : "",
-                "ignoreHarvestOnCollections" : "false",
+                "ignoreHarvestOnCollections" : false,
                 "collectionGeneration" : "default",
                 "collectionFragmentStylesheet" : "",
                 "collectionMetadataTemplate" : "",
-                "createCollectionSubtemplates" : "false",
+                "createCollectionSubtemplates" : false,
                 "outputSchemaOnCollectionsDIF" : "",
                 "outputSchemaOnCollectionsFragments" : "",
                 "datasetCategory" : ""
@@ -56,7 +56,7 @@ var gnHarvesterthredds = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },

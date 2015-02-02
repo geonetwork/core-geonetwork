@@ -11,14 +11,14 @@ var gnHarvestergeonetwork = {
         "name": "",
         "uuid": "",
         "account":     {
-          "use": "false",
+          "use": false,
           "username": "",
           "password": ""
         },
         "host": [],
               "node": "srv",
-        "createRemoteCategory": "false",
-        "mefFormatFull": "false",
+        "createRemoteCategory": false,
+        "mefFormatFull": false,
         "xslfilter": []
       },
       "content":   {
@@ -27,7 +27,7 @@ var gnHarvestergeonetwork = {
       },
       "options":   {
         "every": "0 0 0 ? * *",
-        "oneRunOnly": "false",
+        "oneRunOnly": false,
         "status": ""
       },
       "searches": [{
@@ -55,7 +55,7 @@ var gnHarvestergeonetwork = {
       "groupsCopyPolicy": [],
       "info":   {
         "lastRun": [],
-        "running": "false"
+        "running": false
       }
     };
   },
