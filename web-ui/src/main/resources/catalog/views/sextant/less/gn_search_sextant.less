@@ -26,8 +26,11 @@
   }
   .gn-searchform
   {
-    height: ~"calc(100% - 55px)";
+    height: ~"calc(100%)";
     overflow: auto;
+    .close {
+      font-size: 20px;
+    }
   }
 }
 
@@ -417,7 +420,7 @@ ul.gn-resultview {
 
   /* Button on the right, current page info on the left */
   .btn-group {
-    float: left;
+    float: initial;
 
     /* Drop down to select hits is a simple link */
     button {

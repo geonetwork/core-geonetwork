@@ -5,6 +5,9 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
+  goog.require('gn_mdactions_directive');
+  goog.require('gn_related_directive');
+  goog.require('gn_search_default_directive');
   goog.require('sxt_categorytree');
   goog.require('sxt_panier_directive');
   goog.require('sxt_viewer_directive');
@@ -12,9 +15,12 @@
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'sxt_panier_directive',
+    'gn_mdactions_directive',
+    'gn_related_directive',
+    'gn_search_default_directive',
     'gn_thesaurus',
     'sxt_categorytree',
+    'sxt_panier_directive',
     'sxt_viewer_directive'
   ]);
 
@@ -49,9 +55,13 @@
 
       // Manage routing
       if (!$location.path()) {
-        $location.path('/search');
+        gnSearchLocation.setSearch();
       }
       gnSearchLocation.initTabRouting($scope.mainTabs);
+
+      $scope.gotoPanier = function() {
+        $location.path('/panier');
+      };
 
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
