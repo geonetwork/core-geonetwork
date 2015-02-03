@@ -121,7 +121,9 @@
                 scope.facetObj = v[scope.facetConfig.label];
               }
 */
-              scope.facetObj = v[scope.facetConfig.label];
+              if(v && scope.facetConfig && scope.facetConfig.label) {
+                scope.facetObj = v[scope.facetConfig.label];
+              }
             });
           });
 
