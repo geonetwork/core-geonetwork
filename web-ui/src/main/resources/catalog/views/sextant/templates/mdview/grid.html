@@ -50,9 +50,8 @@
               data-ng-if="md.getThumbnails().small"/>
             </div>
 
-            <p ng-if="md.credit" class="text-justify gn-md-credit">Sources:  {{md.credit}}</p>
-            <p class="text-justify">
-              {{(md.abstract || md.defaultAbstract) | striptags | characters:330}}
+            <p class="text-justify md-abstract">
+              {{(md.abstract || md.defaultAbstract) | striptags | characters:275}}
             </p>
             <p data-ng-if="md.getContacts().resource">
               <!--<h5 data-translate="">contacts</h5>-->

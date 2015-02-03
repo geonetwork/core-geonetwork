@@ -10,9 +10,9 @@
       <span class="fa fa-tasks"></span>
       <span role="tooltip" data-translate="">Layers</span>
     </button>
-    <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#importLayersPanel" gi-btn gnv-tools-btn>
-      <span class="fa fa-download"></span>
-      <span role="tooltip" data-translate="">importLayers</span>
+    <button sxt-tool class="btn btn-default" ng-model="activeTools.import" type="submit" rel="#importLayer" gi-btn gnv-tools-btn>
+      <span class="fa fa-plus-square-o"></span>
+      <span role="tooltip" data-translate="">Import</span>
     </button>
     <button sxt-tool class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
       <span class="fa fa-book"></span>
@@ -100,10 +100,10 @@
     </div>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="importLayersPanel" gnv-layermanager-btn>
+  <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
     <div class="panel-body">
-      <button type="button" class="btn btn-default unfold">
-        <span class="fa fa-chevron-down"></span>
+      <button type="button" class="btn btn-default close" sxt-close-tool>
+        &times;
       </button>
       <h5 data-translate="">AddALayer</h5>
 
