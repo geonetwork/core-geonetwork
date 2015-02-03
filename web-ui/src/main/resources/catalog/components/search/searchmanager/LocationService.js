@@ -76,21 +76,14 @@
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
-          if (that.isSearch()) {
-            tabs.search.active = true;
-          }
-          else if (that.isMap()) {
-            tabs.map.active = true;
-          }
-          else if (that.isMdView()) {
-            tabs.view.active = true;
-          }
+          var tab = $location.path().
+              match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
+
+          tabs[tab].active = true;
         };
         updateTabs();
         $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
     }
   ]);
-
-
 })();
