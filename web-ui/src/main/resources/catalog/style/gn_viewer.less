@@ -86,26 +86,6 @@
         color: #FFF;
       }
     }
-    [role=tooltip] {
-      position: absolute;
-      clip: rect(1px, 1px, 1px, 1px);
-      right: 0;
-    }
-    button:focus [role=tooltip],
-    button:hover [role=tooltip] {
-      clip: auto;
-      right: 2.8em;
-      background: rgba(0, 0, 0, .6);
-      color: #fff;
-      padding: .2em .5em;
-      margin-top: -.2em;
-      border-radius: .2em 0 0 .2em;
-      text-shadow: 0 0 1px #000;
-      z-index: 9000;
-    }
-    button.active [role=tooltip] {
-      display: none;
-    }
   }
   .control-tools {
     top: auto;
