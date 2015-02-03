@@ -22,29 +22,53 @@
         'gnOwsCapabilities',
         'gnSearchSettings',
         'ngeoDecorateLayer',
+        'gnSearchLocation',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, 
-            ngeoDecorateLayer, $scope) {
+            ngeoDecorateLayer, gnSearchLocation) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
           };
 
           var addWMSToMap = function(link) {
-            gnOwsCapabilities.getWMSCapabilities(link.url).then(
-               function(capObj) {
-                 var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                 link.name, capObj);
-                 gnMap.addWmsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo);
-               });
+
+            if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
+              gnOwsCapabilities.getWMSCapabilities(link.url).then(
+                 function(capObj) {
+                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                   link.name, capObj);
+                   gnMap.addWmsToMapFromCap(
+                       gnSearchSettings.viewerMap, layerInfo);
+                 });
+            } else {
+              gnMap.addOwsServiceToMap(link.url, 'WMS');
+            }
           };
 
+
+          var addWMTSToMap = function(link) {
+
+            if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
+              gnOwsCapabilities.getWMSCapabilities(link.url).then(
+                 function(capObj) {
+                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                   link.name, capObj);
+                   gnMap.addWmsToMapFromCap(
+                       gnSearchSettings.viewerMap, layerInfo);
+                 });
+            } else {
+              gnMap.addOwsServiceToMap(link.url, 'WMTS');
+            }
+          };
+          
           var addWFSToMap = function(md) {
             //TODO open dialog to download features
+            gnSearchLocation.setMap();
           };
 
           var addKMLToMap = function(md) {
             gnMap.addKmlToMap(md.name, md.url, gnSearchSettings.viewerMap);
+            gnSearchLocation.setMap();
           };
 
           var openMd = function(md) {
@@ -66,6 +90,11 @@
               iconClass: 'fa-globe',
               label: 'addToMap',
               action: addWMSToMap
+            }, 
+            'WMTS' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: addWMTSToMap
             },
             'WFS' : {
               iconClass: 'fa-link',
@@ -142,6 +171,10 @@
                 (resource.serviceType && resource.serviceType
                           .contains('WMS'))) {
               return 'WMS';
+            } else if ((resource.protocol && resource.protocol.contains('WMTS')) ||
+                (resource.serviceType && resource.serviceType
+                    .contains('WMTS'))) {
+              return 'WMTS';
             } else if ((resource.protocol && resource.protocol
                       .contains('WFS')) ||
                (resource.serviceType && resource.serviceType
