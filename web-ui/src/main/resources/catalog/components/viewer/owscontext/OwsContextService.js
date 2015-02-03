@@ -68,7 +68,7 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == $translate('BackgroundLayers') &&
+            if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
               if (type != 'wmts') {
