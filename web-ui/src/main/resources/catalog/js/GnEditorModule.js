@@ -1,57 +1,6 @@
 (function() {
   goog.provide('gn_editor');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_batch_service');
   goog.require('gn_draggable_directive');
   goog.require('gn_editor_controller');
@@ -80,6 +29,8 @@
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor']);
+
+  module.constant('gnViewerSettings', {});
 
   module.config(['$translateProvider', '$LOCALES',
                  function($translateProvider, $LOCALES) {

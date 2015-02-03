@@ -1,18 +1,22 @@
 (function() {
   goog.provide('gn_geopublisher_directive');
 
+  goog.require('gn_owscontext_service');
+
   /**
    */
-  angular.module('gn_geopublisher_directive', [])
+  angular.module('gn_geopublisher_directive',
+      ['gn_owscontext_service'])
   .directive('gnGeoPublisher', [
         'gnMap',
+        'gnOwsContextService',
         'gnOnlinesrc',
         'gnGeoPublisher',
         'gnEditor',
         'gnCurrentEdit',
         '$timeout',
         '$translate',
-        function(gnMap, gnOnlinesrc,
+        function(gnMap, gnOwsContextService, gnOnlinesrc,
             gnGeoPublisher, gnEditor, gnCurrentEdit,
             $timeout, $translate) {
           return {
@@ -50,6 +54,13 @@
                     zoom: 2
                   })
                 });
+
+                //Uses configuration from database
+                if (gnMap.getMapConfig().context) {
+                  gnOwsContextService.
+                      loadContextFromUrl(gnMap.getMapConfig().context,
+                          map, true);
+                }
 
                 scope.selectNode(scope.nodeId);
                 // we need to wait the scope.hidden binding is done

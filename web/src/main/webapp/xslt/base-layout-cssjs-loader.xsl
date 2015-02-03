@@ -140,5 +140,21 @@
         }]);
       </script>
     </xsl:if>
+    
+    <xsl:if test="$angularApp = 'gn_editor'">
+      <script type="text/javascript">
+        var module = angular.module('gn_editor');
+        module.config(['gnViewerSettings', function(gnViewerSettings) {
+          <xsl:if test="$owsContext">
+            gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+          </xsl:if>
+          <xsl:if test="$wmsUrl and $layerName">
+            gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+            gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+          </xsl:if>
+          gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+        }]);
+      </script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

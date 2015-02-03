@@ -112,6 +112,10 @@
             }
 
             // first clear settings bgLayers
+            if (!gnViewerSettings.bgLayers) {
+              gnViewerSettings.bgLayers = [];
+            }
+
             gnViewerSettings.bgLayers.length = 0;
 
             var firstVisibleBgLayer = true;
