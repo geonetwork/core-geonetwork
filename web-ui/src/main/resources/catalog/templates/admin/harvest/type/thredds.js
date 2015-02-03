@@ -9,6 +9,7 @@ var gnHarvesterthredds = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "account" : {
                     "use" : false,
@@ -65,7 +66,8 @@ var gnHarvesterthredds = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'

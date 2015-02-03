@@ -52,6 +52,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -72,8 +73,10 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Info implements Service {
@@ -89,6 +92,7 @@ public class Info implements Service {
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
     public static final String ISOLANGUAGES = "isolanguages";
+    public static final String LANGUAGES = "languages";
     public static final String REGIONS = "regions";
     public static final String OPERATIONS = "operations";
     public static final String GROUPS_INCLUDING_SYSTEM_GROUPS = "groupsIncludingSystemGroups";
@@ -213,6 +217,9 @@ public class Info implements Service {
 				result.addContent(regions);
 			} else if (type.equals(ISOLANGUAGES)) {
                 result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
+
+			} else if (type.equals(LANGUAGES)) {
+                result.addContent(context.getBean(LanguageRepository.class).findAllAsXml());
 
             } else if (type.equals(SOURCES)) {
 				result.addContent(getSources(context, sm));
@@ -427,10 +434,10 @@ public class Info implements Service {
         String siteName = sm.getSiteName();
 
 		for (Source o : sourceList) {
-            element.addContent(buildRecord(o.getUuid(), o.getName(), null, null));
+            element.addContent(buildRecord(o.getUuid(), o.getName(), o.getLabelTranslations(), null, null));
 		}
 
-        element.addContent(buildRecord(siteId, siteName, null, null));
+        element.addContent(buildRecord(siteId, siteName, Collections.<String, String>emptyMap(), null, null));
 
 		return element;
 	}
@@ -451,7 +458,8 @@ public class Info implements Service {
 			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
 				continue; // skip Local GeoNetwork Z server if not enabled
 			} else {
-				response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode(),repo.getServerCode()));
+				response.addContent(buildRecord(repo.getDn(),repo.getName(), Collections.<String, String>emptyMap(),
+                        repo.getCode(), repo.getServerCode()));
 			}
 		}
 
@@ -541,13 +549,13 @@ public class Info implements Service {
 
 	private Element buildTemplateRecord(String id, String title, String schema)
 	{
-		return buildRecord(id, title, schema, null);
+		return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
 	}
 
 
 	//--------------------------------------------------------------------------
 
-	private Element buildRecord(String id, String name, String code, String serverCode)
+	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
 	{
 		Element el = new Element("record");
 
@@ -556,8 +564,12 @@ public class Info implements Service {
 		if (serverCode != null) idE.setAttribute("serverCode", serverCode);
 		el.addContent(idE);
 		el.addContent(new Element("name").setText(name));
-
-		return el;
+        Element translations = new Element("label");
+        el.addContent(translations);
+        for (Map.Entry<String, String> entry : labelTranslations.entrySet()) {
+            translations.addContent(new Element(entry.getKey()).setText(entry.getValue()));
+        }
+        return el;
 	}
 
 	//--------------------------------------------------------------------------

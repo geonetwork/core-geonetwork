@@ -116,7 +116,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     ah.init(node, context);
                     
                     hmHarvesters.put(ah.getID(), ah);
-                    hmHarvestLookup.put(ah.getParams().uuid, ah);
+                    hmHarvestLookup.put(ah.getParams().getUuid(), ah);
                 }
             }
         }
@@ -273,7 +273,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
 		ah.add(node);
 		hmHarvesters.put(ah.getID(), ah);
-		hmHarvestLookup.put(ah.getParams().uuid, ah);
+		hmHarvestLookup.put(ah.getParams().getUuid(), ah);
 
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n" + ah.getID());
@@ -299,12 +299,12 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
 		ah.add(node);
 		hmHarvesters.put(ah.getID(), ah);
-		hmHarvestLookup.put(ah.getParams().uuid, ah);
+		hmHarvestLookup.put(ah.getParams().getUuid(), ah);
 
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
-            Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
+            Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().getUuid());
         }
-		return ah.getParams().uuid;
+		return ah.getParams().getUuid();
 	}
 
     /**
@@ -401,7 +401,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
             final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
             // set deleted status in harvest history table to 'y'
-            historyRepository.markAllAsDeleted(ah.getParams().uuid);
+            historyRepository.markAllAsDeleted(ah.getParams().getUuid());
             hmHarvesters.remove(id);
             return OperResult.OK;
         } catch (Exception e) {
@@ -598,7 +598,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         long elapsedTime = System.currentTimeMillis();
 
-        String harvesterUUID = ah.getParams().uuid;
+        String harvesterUUID = ah.getParams().getUuid();
 
         final Specification<Metadata> specification = MetadataSpecs.hasHarvesterUuid(harvesterUUID);
         int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
@@ -620,11 +620,11 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         history.setDeleted(true);
         history.setElapsedTime((int) elapsedTime);
         history.setHarvestDate(lastRunDate);
-        history.setHarvesterName(ah.getParams().name);
+        history.setHarvesterName(ah.getParams().getName());
         history.setHarvesterType(ah.getType());
-        history.setHarvesterUuid(ah.getParams().uuid);
+        history.setHarvesterUuid(ah.getParams().getUuid());
         history.setInfo(historyEl);
-        history.setParams(ah.getParams().node);
+        history.setParams(ah.getParams().getNodeElement());
 
         historyRepository.save(history);
         return OperResult.OK;

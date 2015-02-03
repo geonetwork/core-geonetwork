@@ -73,7 +73,7 @@ public class Z3950Config
 
 	public HarvestResult config(Set<RecordInfo> records) throws Exception
 	{
-		log.info("Start of Z3950 Config Harvest for : "+ params.name);
+		log.info("Start of Z3950 Config Harvest for : "+ params.getName());
 
 		if (params.clearConfig) clearZ3950Config();
 
@@ -92,7 +92,7 @@ public class Z3950Config
 			addServerToZ3950Config(ri.uuid);
 		}
 
-		log.info("End of Z3950 Config Harvest for : "+ params.name);
+		log.info("End of Z3950 Config Harvest for : "+ params.getName());
 
 		return result;
 	}

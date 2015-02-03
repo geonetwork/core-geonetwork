@@ -76,7 +76,7 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         assertEquals(getExpectedAdded(), addedMetadata.size());
         for (Metadata metadata : addedMetadata) {
             assertTrue(metadata.getHarvestInfo().isHarvested());
-            assertEquals(_harvester.getParams().uuid, metadata.getHarvestInfo().getUuid());
+            assertEquals(_harvester.getParams().getUuid(), metadata.getHarvestInfo().getUuid());
         }
 
         performExtraAssertions(_harvester);

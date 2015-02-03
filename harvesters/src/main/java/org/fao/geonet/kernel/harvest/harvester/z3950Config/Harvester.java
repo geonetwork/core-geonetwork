@@ -145,7 +145,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		try
 		{
-			log.info("Searching on : "+ params.name);
+			log.info("Searching on : "+ params.getName());
 			Element response = request.execute(s.createRequest());
             if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 

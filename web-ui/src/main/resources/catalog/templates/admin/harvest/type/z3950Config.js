@@ -9,6 +9,7 @@ var gnHarvesterz3950Config = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
                 "use": false,
@@ -52,7 +53,8 @@ var gnHarvesterz3950Config = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <host>' + h.site.host + '</host>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'

@@ -54,8 +54,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.cancelMonitor = cancelMonitor;
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-        if (!params.importXslt.equals("none")) {
-            thisXslt = thisXslt.resolve(params.importXslt);
+        if (!params.getImportXslt().equals("none")) {
+            thisXslt = thisXslt.resolve(params.getImportXslt());
             transformIt = true;
         }
         localCateg = new CategoryMapper(context);
@@ -95,7 +95,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 }
 
                 try {
-                    params.validate.validate(dataMan, context, xml);
+                    params.getValidate().validate(dataMan, context, xml);
                 } catch (Exception e) {
                     log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
                     result.doesNotValidate++;

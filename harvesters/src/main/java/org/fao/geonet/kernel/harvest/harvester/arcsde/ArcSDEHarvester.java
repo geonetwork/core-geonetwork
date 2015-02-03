@@ -81,8 +81,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		settingMan.add("id:"+siteId, "icon", as.icon);
 		settingMan.add("id:"+siteId, "server", as.server);
 		settingMan.add("id:"+siteId, "port", as.port);
-		settingMan.add("id:"+siteId, "username", as.username);
-		settingMan.add("id:"+siteId, "password", as.password);
+		settingMan.add("id:"+siteId, "username", as.getUsername());
+		settingMan.add("id:"+siteId, "password", as.getPassword());
 		settingMan.add("id:"+siteId, "database", as.database);
 	}
 	
@@ -107,14 +107,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 			params.create(node);
 		
 			//--- force the creation of a new uuid
-			params.uuid = UUID.randomUUID().toString();
+			params.setUuid(UUID.randomUUID().toString());
 		
 			String id = settingMan.add("harvesting", "node", getType());
 			storeNode(params, "id:"+id);
 
-        Source source = new Source(params.uuid, params.name, true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 			
 			return id;
 	//	}
@@ -142,14 +142,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 	@Override
     public void doHarvest(Logger l) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
-		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
+		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.getUsername(), params.getPassword());
 		List<String> metadataList = adapter.retrieveMetadata(cancelMonitor);
 		align(metadataList);
 		Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
 	}
 	
 	private void align(List<String> metadataList) throws Exception {
-	    Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : "+ params.name);
+	    Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : "+ params.getName());
 		result = new HarvestResult();
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -187,7 +187,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 				} else {
 
                     try {
-                        params.validate.validate(dataMan, context, iso19139);
+                        params.getValidate().validate(dataMan, context, iso19139);
                     } catch (Exception e) {
                         Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring invalid metadata with uuid " + uuid);
                         result.doesNotValidate++;
@@ -216,7 +216,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		// delete locally existing metadata from the same source if they were
 		// not in this harvesting result
 		//	
-        List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
+        List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.getUuid());
         for(Metadata existingId : existingMetadata) {
             if (cancelMonitor.get()) {
                 return;
@@ -298,11 +298,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                 setCreateDate(createDate).
                 setChangeDate(createDate);
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -347,9 +347,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		//--- we update a copy first because if there is an exception ArcSDEParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.uuid, copy.name, true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 		
 		params = copy;
         super.setParams(params);

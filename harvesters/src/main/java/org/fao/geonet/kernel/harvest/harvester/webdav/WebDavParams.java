@@ -100,7 +100,7 @@ public class WebDavParams extends AbstractParams
 		copy.url  = url;
 		copy.icon = icon;
 
-		copy.validate = validate;
+		copy.setValidate(getValidate());
 		copy.recurse  = recurse;
 
 		copy.subtype = subtype;

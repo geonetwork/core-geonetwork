@@ -9,6 +9,7 @@ var gnHarvestergeoPREST = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
                 "use": false,
@@ -48,7 +49,8 @@ var gnHarvestergeoPREST = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <baseUrl>' + h.site.baseUrl.replace(/&/g, '&amp;') + '</baseUrl>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'

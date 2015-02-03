@@ -142,7 +142,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        final String harvesterName = this.getParams().name.replaceAll("\\W+", "_");
+        final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
         log = Log.createLogger(harvesterName,
                 "geonetwork.harvester");
 
@@ -224,7 +224,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SchedulerException
      */
     private void doUnschedule() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
@@ -243,7 +243,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SchedulerException
      */
     public void shutdown() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
@@ -266,7 +266,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
         
-        final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().uuid));
+        final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
         Set<String> sources = new HashSet<String>();
         for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
             sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
@@ -277,7 +277,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         for (String sourceUuid : sources) {
             Long ownedBySource = 
                     metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
-            if (ownedBySource == 0 && !sourceUuid.equals(params.uuid) && sourceRepository.exists(sourceUuid)) {
+            if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                 removeIcon(sourceUuid);
                 sourceRepository.delete(sourceUuid);
             }
@@ -318,7 +318,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public OperResult stop(Status newStatus) throws SQLException, SchedulerException {
         this.cancelMonitor.set(true);
-        getScheduler().interrupt(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().interrupt(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
 
         synchronized (this) {
             if (this.running) {
@@ -350,7 +350,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (running) {
             return OperResult.ALREADY_RUNNING;
         }
-        getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().triggerJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
         return OperResult.OK;
     }
 
@@ -474,7 +474,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private void login() throws Exception {
 
-        String ownerId = getParams().ownerId;
+        String ownerId = getParams().getOwnerId();
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
@@ -490,7 +490,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (user == null || StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
             // just pick any Administrator (they can all see all harvesters and groups anyway)
             user = repository.findAllByProfile(Profile.Administrator).get(0);
-            getParams().ownerId = String.valueOf(user.getId());
+            getParams().setOwnerId(String.valueOf(user.getId()));
             if (log.isDebugEnabled()) {
                 log.debug("AbstractHarvester login: picked Administrator  " + ownerId + " to run this job");
             }
@@ -517,11 +517,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             long startTime = System.currentTimeMillis();
 
             String logfile = initializeLog();
-            this.log.info("Starting harvesting of " + this.getParams().name);
+            this.log.info("Starting harvesting of " + this.getParams().getName());
             error = null;
             errors.clear();
             final Logger logger = this.log;
-            final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
+            final String nodeName = getParams().getName() + " (" + getClass().getSimpleName() + ")";
             final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
             try {
                 login();
@@ -536,11 +536,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 h.process();
                 logger.info("Ended harvesting from node : " + nodeName);
 
-                if (getParams().oneRunOnly) {
+                if (getParams().isOneRunOnly()) {
                     stop(Status.INACTIVE);
                 }
             } catch (InvalidParameterValueEx e) {
-                logger.error("The harvester " + this.getParams().name + "["
+                logger.error("The harvester " + this.getParams().getName() + "["
                              + this.getType()
                              + "] didn't accept some of the parameters sent.");
 
@@ -588,11 +588,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
             final HarvestHistory history = new HarvestHistory()
                     .setHarvesterType(getType())
-                    .setHarvesterName(getParams().name)
-                    .setHarvesterUuid(getParams().uuid)
+                    .setHarvesterName(getParams().getName())
+                    .setHarvesterUuid(getParams().getUuid())
                     .setElapsedTime((int) elapsedTime)
                     .setHarvestDate(new ISODate(lastRun))
-                    .setParams(getParams().node)
+                    .setParams(getParams().getNodeElement())
                     .setInfo(result);
             historyRepository.save(history);
 
@@ -685,9 +685,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void doDestroy() throws SQLException {
-        removeIcon(getParams().uuid);
+        removeIcon(getParams().getUuid());
 
-        context.getBean(SourceRepository.class).delete(getParams().uuid);
+        context.getBean(SourceRepository.class).delete(getParams().getUuid());
         // FIXME: Should also delete the categories we have created for servers
     }
 
@@ -757,39 +757,43 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
         String siteId = settingMan.add(path, "site", "");
+        String translations = settingMan.add("id:" + siteId, AbstractParams.TRANSLATIONS, "");
         String optionsId = settingMan.add(path, "options", "");
         String infoId = settingMan.add(path, "info", "");
         String contentId = settingMan.add(path, "content", "");
 
         //--- setup site node ----------------------------------------
 
-        settingMan.add("id:" + siteId, "name", params.name);
-        settingMan.add("id:" + siteId, "uuid", params.uuid);
+        settingMan.add("id:" + siteId, "name", params.getName());
+        for (Map.Entry<String, String> entry : params.getTranslations().entrySet()) {
+            settingMan.add("id:" + translations, entry.getKey(), entry.getValue());
+        }
+        settingMan.add("id:" + siteId, "uuid", params.getUuid());
 
         /**
          * User who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerId", params.ownerId);
+        settingMan.add("id:" + siteId, "ownerId", params.getOwnerId());
         /**
          * Group selected by user who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerGroup", params.ownerIdGroup);
+        settingMan.add("id:" + siteId, "ownerGroup", params.getOwnerIdGroup());
 
-        String useAccId = settingMan.add("id:" + siteId, "useAccount", params.useAccount);
+        String useAccId = settingMan.add("id:" + siteId, "useAccount", params.isUseAccount());
 
-        settingMan.add("id:" + useAccId, "username", params.username);
-        settingMan.add("id:" + useAccId, "password", params.password);
+        settingMan.add("id:" + useAccId, "username", params.getUsername());
+        settingMan.add("id:" + useAccId, "password", params.getPassword());
 
         //--- setup options node ---------------------------------------
 
-        settingMan.add("id:" + optionsId, "every", params.every);
-        settingMan.add("id:" + optionsId, "oneRunOnly", params.oneRunOnly);
+        settingMan.add("id:" + optionsId, "every", params.getEvery());
+        settingMan.add("id:" + optionsId, "oneRunOnly", params.isOneRunOnly());
         settingMan.add("id:" + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
 
-        settingMan.add("id:" + contentId, "importxslt", params.importXslt);
-        settingMan.add("id:" + contentId, "validate", params.validate);
+        settingMan.add("id:" + contentId, "importxslt", params.getImportXslt());
+        settingMan.add("id:" + contentId, "validate", params.getValidate());
 
         //--- setup stats node ----------------------------------------
 
@@ -936,7 +940,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws Exception
      */
     public String getOwnerEmail() throws Exception {
-        String ownerId = getParams().ownerIdGroup;
+        String ownerId = getParams().getOwnerIdGroup();
 
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
         return group.getEmail();
