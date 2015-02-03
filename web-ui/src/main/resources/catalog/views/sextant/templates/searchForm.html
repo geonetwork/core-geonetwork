@@ -18,10 +18,18 @@
     <!--Map field-->
     <div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry"></div>
 
-    <!--TEST FACET MULTI-->
-    <div gn-facet-multiselect="groupPublished"></div>
+    <!--multi facets groups-->
+    <div gn-facet-multiselect="_groupPublished"></div>
+
+    <!--Category Tree-->
+    <div class="gn-facet">
+      <h5 gn-collapse="" translate>sextantThemes</h5>
+      <div sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="thesaurus[0]"></div>
+    </div>
+
+    <!--multi facets groups-->
     <div gn-facet-multiselect="inspireTheme"></div>
-    <div gn-facet-multiselect="keyword"></div>
+    <div gn-facet-multiselect="type"></div>
     <div gn-facet-multiselect="orgName"></div>
     <div gn-facet-multiselect="createDateYear"></div>
 
@@ -31,17 +39,6 @@
       <div class="col-sm-8">
         <input type="text" id="groupF" value="" class="form-control" gn-values="searchObj.params._groupPublished" gn-typeahead="groupPublishedOptions"/>
       </div>
-    </div>
-
-    <!--Category Tree-->
-    <div ng-repeat="t in thesaurus">
-      <div class="radio">
-        <label>
-          <input type="radio" ng-model="activeThesaurus.value" ng-value="t.field">
-          {{t.label.eng}}
-        </label>
-      </div>
-      <div ng-show="activeThesaurus.value == t.field" sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
     </div>
 
     <!--downloadable / visualisable checkboxes-->

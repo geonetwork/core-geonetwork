@@ -184,11 +184,6 @@
         field: 'sextantTheme',
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
-      },{
-        id: 'external.theme.inspire-theme',
-        field: 'inspireTheme_en',
-        tree: false,
-        label: {eng: 'INSPIRE', fre: 'INSPIRE'}
       }];
 
       /* Hits per page combo values configuration */

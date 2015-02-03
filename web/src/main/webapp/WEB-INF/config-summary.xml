@@ -93,6 +93,7 @@
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
+            <item facet="_groupPublished" max="99" sortBy="value"/>
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
