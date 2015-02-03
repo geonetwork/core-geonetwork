@@ -782,7 +782,7 @@
 
 	<xsl:template match="tds:keyword" mode="keywords-cf">
 		<xsl:variable name="parameter-thesaurus"
-			select="document(concat(system-property('geonetwork.codeList.dir'), '/local/thesauri/parameter/myocean.ocean-variables.rdf'))"/>
+			select="document(concat(system-property('geonetwork.codeList.dir'), '/external/thesauri/parameter/myocean.ocean-variables.rdf'))"/>
 		<xsl:variable name="cf-param" select="."/>
 		<xsl:variable name="cf-href"
 			select="$parameter-thesaurus//skos:Concept[skos:prefLabel/text()=$cf-param]/@rdf:about|$parameter-thesaurus//rdf:Description[skos:prefLabel/text()=$cf-param]/@rdf:about"/>

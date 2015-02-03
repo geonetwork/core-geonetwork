@@ -16,27 +16,8 @@
 	
 	
 	<xsl:include href="../process/process-utility.xsl"/>
-
-
-  <xsl:template name="to-iso19139.sdn-use-limitation">
-    <!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
-    <xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
-
-    <gmd:useLimitation>
-      <!-- An empty snippet is always returned in order to keep the element -->
-      <xsl:choose>
-        <xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
-          <xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
-            <gmx:Anchor xlink:href="{uri}"><xsl:value-of select="value"/></gmx:Anchor>
-          </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>
-          <gmx:Anchor/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </gmd:useLimitation>
-  </xsl:template>
-
+	
+	
 	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
         for each keywords pointing to the concept URI-->
 	<xsl:template name="to-iso19139-keyword-with-anchor">
@@ -44,8 +25,29 @@
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
-	
+
+
+  <xsl:template name="to-iso19139.sdn-use-limitation">
+    <!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
+    <xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
+    <gmd:MD_Constraints>
+      <gmd:useLimitation>
+        <!-- An empty snippet is always returned in order to keep the element -->
+        <xsl:choose>
+          <xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
+            <xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+              <gmx:Anchor xlink:href="{uri}"><xsl:value-of select="value"/></gmx:Anchor>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <gmx:Anchor/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </gmd:useLimitation>
+    </gmd:MD_Constraints>
+  </xsl:template>
+
+
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
     will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">

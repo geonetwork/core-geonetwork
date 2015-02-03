@@ -410,7 +410,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         '<ul class="gn-relation-{type}">',
         '<tpl for=".">',
         '<tpl for="data">',
-        '<tpl if="type === \'thumbnail\'">',
+        '<tpl if="type === \'thumbnail\' && sibling === false">',
         '<li alt="{title}">',
         '<tpl if="(typeof id != \'undefined\') && id != \'\'">',
         '<a rel="lightbox-set" href="{id}"><img class="thumb-small" src="{id}"/></a>',

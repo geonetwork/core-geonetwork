@@ -28,9 +28,7 @@
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
-  <noThesaurusName>Mots clés</noThesaurusName>
-  <bboxesSection>Zone géographique</bboxesSection>
-
+  
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
   <onElementOf> Un des éléments suivants </onElementOf>
@@ -91,7 +89,7 @@
 
   <!-- Medsea-->
   <medsea>MedSea</medsea>
-  <medsea-metadata>Other information</medsea-metadata>
+  <medsea-metadata>Identification</medsea-metadata>
   <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
   <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
@@ -101,13 +99,18 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMERP name*</edmerpName>
+  <edmerpName>EDMERP name</edmerpName>
   <edmoName>EDMO name*</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
-  <environmental-matrix>Environmental matrix*</environmental-matrix>
-  <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
-  <level-of-characteristics>Level of characteristics</level-of-characteristics>
+  <serviceExtent>Service extent</serviceExtent>
+  <useByChallenges>Used by challenges</useByChallenges>
+  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <sdn-parameter-discovery>Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
+  <p03>Agreed Parameter Groups (P03)</p03>
+  <p01>Parameter Usage Vocabulary (P01)</p01>
+  <production-mode>Production mode</production-mode>
+  <level-of-characteristics>Processing level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of production*</providerSpecification>
   <processStepReference>Production specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
@@ -115,9 +118,10 @@
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth*</minDepth>
-  <maxDepth>Max depth*</maxDepth>
-  <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
+  <minDepth>Min depth (meters)</minDepth>
+  <maxDepth>Max depth (meters)</maxDepth>
+  <verticalResolution>Vertical resolution (meters)</verticalResolution>
+  <listOfObservationLevel>List of observations level</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
@@ -130,10 +134,51 @@
   <medseaDataSourceCatalogueName>Catalog name*</medseaDataSourceCatalogueName>
   <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
-  <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
+  <medseaDataSourceDOI>Dataset URL</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
-  <acronym>Acronym</acronym>
+  <acronym>Project acronym</acronym>
+  <projectTitle>Project title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
+  <edmoId>EDMO id</edmoId>
+  <additionalInfo>Additional information</additionalInfo>
+  <edmerp-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">The European Directory for Marine Environment Research Project (EDMERP) contains descriptions of many projects. This catalogue is maintained by Seadatanet. To take advantage of the existing descriptions, it is required to extract the Identifier associated to the project name from EDMERP.</p>
+      </div>
+    </div>
+  </edmerp-help>
+
+  <dataProvider-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">Give the name of the organization of the centre or division or laboratory which provides data.
+          <ul>
+            <li class="help-block">In the case of network infrastructures, it is recommended to mention the coordinating organisation in charge of the distribution of the dataset collection. For example, in the case of MyOcean, it would be one of the 5 Thematic Assembly Centers (Sea level, Color, SST, Ice &amp; Wind, In Situ) or of the 7 Monitoring and Forecasting Centers ( 1 global + 6 regional).
+            </li>
+            <li class="help-block">In the case of SeaDataNet, it is the coordinating organization of the project : Ifremer.</li>
+          </ul>
+        </p>
+      </div>
+    </div>
+  </dataProvider-help>
+
+  <dataCollection-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">This is the dataset or the dataset collection name as known by the data provider.</p>
+        <p class="help-block">In the case of in-situ observations, the number of datasets can be very high and undetermined. In such case (eg Seadatanet, Emodnet physics…),  use the name of the subset of the data collection available on the discovery services eg “Sea Level” of the Emodnet “Physics” ).</p>
+      </div>
+    </div>
+  </dataCollection-help>
+
+  <medsea-more-help>
+    <div class="alert alert-info">
+      <strong>For more information</strong>, see the
+      <a href="">Methodology for classifying the existing upstream data
+        Guidelines</a>
+    </div>
+  </medsea-more-help>
 
 
 </strings>

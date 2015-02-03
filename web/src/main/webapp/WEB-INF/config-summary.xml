@@ -8,27 +8,27 @@
         http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd
     "
 >
-<!-- 
-    Configuration of the taxonomy index used for faceting and 
+<!--
+    Configuration of the taxonomy index used for faceting and
     formatting/building facet summaries
-	
+
     Each facet to be indexed is defined in the facets element. The facets element
     lists the facets to index and how they should be indexed using attributes on facet elements as follows:
-	
+
     * name: the name of the facet
     * indexKey: the name of the indexing field to be used for the facet
     * label: the label to use for the facet in returned summaries
     * classifier: (optional) a reference to a spring bean that should be used to
-        determine facet values for the indexing field.  
+        determine facet values for the indexing field.
         The bean must implement the org.fao.kernel.search.classifier.Classifier interface
         Defaults to a classifier which uses the value of the field to be indexed
 
     When a facet definitionis modified or added, the index MUST be rebuilt.
 
-    How facet summaries should be built and formatted for each summary type is defined 
+    How facet summaries should be built and formatted for each summary type is defined
     in the summaryTypes element. The summaryTypes element contains a number of summary type elements each
-    of which define a facet summary that can be configured for a service. Each summary type 
-    element contains a number of item elements defining facets to be returned and how they 
+    of which define a facet summary that can be configured for a service. Each summary type
+    element contains a number of item elements defining facets to be returned and how they
     should be formatted as follows:
 
     * facet: the name of a facet defined above
@@ -36,9 +36,9 @@
 	* (optional) sortOrder: asc or desc. Defaults is descendant.
     * (optional) max: the number of values to be returned for the facet. Defaults to 10.
     * (optional) depth: the depth to which hierarchical facets should be summarised. Defaults to 1.
-    * (optional) format: the format to be used for generating facet summary elements. Defaults to 
+    * (optional) format: the format to be used for generating facet summary elements. Defaults to
         'FACET_NAME'. Can also be 'DIMENSION', which uses a top level
-        dimension tag and category tags for sub-categories which is more suitable for hierarchical facets. 
+        dimension tag and category tags for sub-categories which is more suitable for hierarchical facets.
   * (optional) translator: Define a DB translator to retrieve label from description
   tables (eg. categoriesdes) or codelist translator to retrieve label from schema
   codelists files.
@@ -76,6 +76,18 @@
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="_groupPublished" indexKey="_groupPublished" label="_groupPublished"/>
+        <facet name="thesaurus-external.parameter.NVS.P01"
+               label="thesaurus-external.parameter.NVS.P01"
+               indexKey="thesaurus-external.parameter.NVS.P01"/>
+        <facet name="thesaurus-external.parameter.NVS.P02"
+               label="thesaurus-external.parameter.NVS.P02"
+               indexKey="thesaurus-external.parameter.NVS.P02"/>
+        <facet name="thesaurus-external.parameter.NVS.P03"
+               label="thesaurus-external.parameter.NVS.P03"
+               indexKey="thesaurus-external.parameter.NVS.P03"/>
+        <facet name="thesaurus-external.parameter.NVS.P35"
+               label="thesaurus-external.parameter.NVS.P35"
+               indexKey="thesaurus-external.parameter.NVS.P35"/>
     </facets>
 
     <summaryTypes>
@@ -135,6 +147,10 @@
             <item facet="inspireTheme_en" max="35"/>
             <item facet="sextantTheme" max="300"/>
             <item facet="_groupPublished" max="300"/>
+            <item facet="thesaurus-external.parameter.NVS.P01" max="300"/>
+            <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
+            <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>
+            <item facet="thesaurus-external.parameter.NVS.P35" max="300"/>
         </summaryType>
     </summaryTypes>
 

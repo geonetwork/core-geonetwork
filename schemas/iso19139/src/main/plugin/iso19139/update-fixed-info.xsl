@@ -2,8 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:java="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="#all">
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
 
@@ -319,28 +318,14 @@
 
 	</xsl:template>
 
-	<!-- Thumbnail may not contains full URL for the one updated to the catalog -->
-	<xsl:template match="gmd:MD_BrowseGraphic[
-					gmd:fileDescription/gco:CharacterString = 'thumbnail' or
-					gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/
-						gmd:fileName[gco:CharacterString != '' and not(starts-with(gco:CharacterString, 'http'))]">
-			<gmd:fileName>
-				<gco:CharacterString>
-					<xsl:value-of select="concat(
-					    /root/env/siteURL, 'resources.get?',
-					    'uuid=', /root/env/uuid,
-					    '&amp;fname=', gco:CharacterString)"/>
-				</gco:CharacterString>
-			</gmd:fileName>
-	</xsl:template>
-
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
 		<xsl:element name="gmd:{local-name()}">
-			<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+			<xsl:variable name="id" select="upper-case(
+				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
 
 			<xsl:apply-templates select="@*"/>
 			
@@ -359,7 +344,7 @@
 		<xsl:element name="gmd:{local-name()}">
 			<xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
 			<xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-			<xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
 			<xsl:apply-templates select="@*"/>
 			<xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
 				<xsl:attribute name="locale">
@@ -433,7 +418,7 @@
 
 
   <!-- MedSea specific templates -->
-  <xsl:template
+  <!--<xsl:template
           match="gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
@@ -448,10 +433,10 @@
                           gmd:distributionInfo/gmd:MD_Distribution/
                           gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
                           gmd:onLine[2]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
-    <!-- Compute resource identifier based on the following rules:
+    &lt;!&ndash; Compute resource identifier based on the following rules:
     if online resource available, concatenate the MEDSEA_<Online resource name>
     if not the identifier starts with MEDSEA_<whatever>
-    -->
+    &ndash;&gt;
     <xsl:copy>
       <xsl:choose>
         <xsl:when test="$hasLinkage">
@@ -471,36 +456,49 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:copy>
-  </xsl:template>
+  </xsl:template>-->
 
 
 
-  <!-- Compute title P02 - Dataprovider - Datasetname -->
+  <!-- Compute title and identifier as "P02 - P01 - Dataprovider - Datasetname" -->
   <xsl:template
           match="gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
+                  gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|gmd:MD_Metadata[
+                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
+                  gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
+                  gmd:code/gco:CharacterString"
           priority="200">
 
     <!-- String join in case of multiple but this should not happen -->
     <xsl:variable name="p02" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords/gmd:MD_Keywords
                 [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'seadatanet-ocean-discovery-parameter')]/gmd:keyword/*, ' - ')"/>
+                'NVS.P02')]/gmd:keyword/*, ' - ')"/>
+
+		<xsl:variable name="p01" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords/gmd:MD_Keywords
+                [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'NVS.P01')]/gmd:keyword/*, ' - ')"/>
+
+   <!-- <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+    							gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/
+                 gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+-->
+		<xsl:variable name="edmoProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+									gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']/
+                 gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
 
 
-    <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-
-    <xsl:variable name="currentIdentifier" select="ancestor::gmd:MD_Metadata[
+    <xsl:variable name="dataSetName" select="ancestor::gmd:MD_Metadata[
                     contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
                   gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
-                  gmd:code/gco:CharacterString"/>
+                  gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
 
     <xsl:copy>
-      <xsl:value-of select="concat($p02, ' - ', $dataProvider, ' - ', $currentIdentifier)"/>
+      <xsl:value-of select="concat($p02, $p01, ' - ', $edmoProvider, ' - ', $dataSetName)"/>
     </xsl:copy>
   </xsl:template>
 

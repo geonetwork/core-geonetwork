@@ -35,7 +35,10 @@ public class CatalogueController implements Serializable {
     private String typeSearch;
     private String listThesaurus;
     private String listFacet;
-    
+    private String helpUrl;
+    private String langue;
+    private String login;
+
     public void sendLayerToGeoviewer() {
         CATALOGUESERVICE.sendLayerToGeoviewer(FacesContext.getCurrentInstance(), wmsurl, wmsversion, layername, layergroup);        
         resetVariable();
@@ -68,6 +71,10 @@ public class CatalogueController implements Serializable {
             typeSearch= sextantConfig.getCatalogueTypeSearch();
             listThesaurus = sextantConfig.getCatalogueListThesaurus();
             listFacet = sextantConfig.getCatalogueListFacet();
+            login = sextantConfig.getLogin();
+            langue = sextantConfig.getLangue();
+            helpUrl = sextantConfig.getHelpUrl();
+
         } else {
             maxextent = null;
             geonetworkurl = null;
@@ -79,6 +86,9 @@ public class CatalogueController implements Serializable {
 	        typeSearch = null;
             listThesaurus = null;
             listFacet= null;
+            login= null;
+            langue= null;
+            helpUrl= null;
         }
     	
     }
@@ -214,5 +224,29 @@ public class CatalogueController implements Serializable {
 
     public void setPanierurl(String panierurl) {
         this.panierurl = panierurl;
+    }
+
+    public String getHelpUrl() {
+        return helpUrl;
+    }
+
+    public void setHelpUrl(String helpUrl) {
+        this.helpUrl = helpUrl;
+    }
+
+    public String getLangue() {
+        return langue;
+    }
+
+    public void setLangue(String langue) {
+        this.langue = langue;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

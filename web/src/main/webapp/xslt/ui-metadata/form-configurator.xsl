@@ -313,15 +313,15 @@
                     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($schema, helper/@name, helper/@context, helper/@xpath)"/>
                     
                     <xsl:choose>
-                      <xsl:when test="count($helper) > 1">
+                      <xsl:when test="count($helper) > 1 and $matchingNodeValue/*/gn:element/@parent">
                         <!-- If more than one, get the one matching the context of the matching element. -->
-                        <xsl:variable name="chooseHelperBasedOnElement" 
+                        <xsl:variable name="chooseHelperBasedOnElement"
                           select="gn-fn-metadata:getHelper($helper, 
                           $metadata/descendant::*[gn:element/@ref = $matchingNodeValue/*/gn:element/@parent])"/>
                         <xsl:copy-of select="$chooseHelperBasedOnElement"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:copy-of select="$helper"/>
+                        <xsl:copy-of select="$helper[1]"/>
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:if>

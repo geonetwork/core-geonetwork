@@ -366,7 +366,6 @@
 	</element>
 	<element name="gmd:MD_Metadata" id="1.0">
 		<label>Metadata</label>
-		<abbrLabel>Metadata</abbrLabel>
 		<description>Root entity which defines metadata about a resource or resources</description>
 	</element>
 	<element name="gmd:MD_MetadataExtensionInformation" id="303.0">
@@ -492,7 +491,6 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21.0">
 		<label>Application schema info</label>
-		<abbrLabel>App. Schema</abbrLabel>
 		<description>Provides information about the conceptual schema of a dataset</description>
 	</element>
 	<element name="gmd:associationType" id="66.4">
@@ -692,7 +690,6 @@
 		<description>Provides information about the feature catalogue and describes the coverage and
             image data characteristics</description>
 		<label>Content Information</label>
-		<abbrLabel>Content Info.</abbrLabel>
 	</element>
 	<element name="gmd:contentType" id="241.0">
 		<label>Content type</label>
@@ -730,7 +727,6 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18.0">
 		<label>Data quality info</label>
-		<abbrLabel>Data Quality</abbrLabel>
 		<description>Provides overall assessment of quality of a resource(s)</description>
 	</element>
 	<element name="gmd:dataSetURI" id="11.1">
@@ -913,6 +909,10 @@
 		<label>Distance</label>
 		<description>Ground sample distance</description>
 		<condition>Provide a distance if no equivalent Scale is documented</condition>
+		<helper relAtt="uom">
+			<option value="1" title="second">seconds</option>
+			<option value="1" title="meter">meters</option>
+		</helper>
 		<!--<helper relAtt="uom">
 			<option value="0.10" title="cm">10 cm</option>
 			<option value="0.25" title="cm">25 cm</option>
@@ -932,7 +932,6 @@
 		<description>Provides information about the distributor of and options for obtaining the
             resource(s)</description>
 		<label>Distribution Information</label>
-		<abbrLabel>Distribution</abbrLabel>
 	</element>
 	<element name="gmd:distributionOrderProcess" id="281.0">
 		<label>Distribution / Order Process</label>
@@ -1191,7 +1190,6 @@
 	</element>
 	<element name="gmd:identificationInfo" id="15.0">
 		<label>Identification info</label>
-		<abbrLabel>Identification</abbrLabel>
 		<description>Basic information about the resource(s) to which the metadata
             applies</description>
 		<condition>mandatory</condition>
@@ -1349,22 +1347,18 @@
 	</element>
 	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
 		<label>Metadata constraints</label>
-		<abbrLabel>Constraints</abbrLabel>
 		<description>Provides restrictions on the access and use of metadata</description>
 	</element>
 	<element name="gmd:metadataConstraints">
 		<label>Metadata constraints</label>
-		<abbrLabel>Constraints</abbrLabel>
 		<description>Provides restrictions on the access and use of data</description>
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14.0">
 		<description>Information describing metadata extensions</description>
 		<label>Metadata Extension Information</label>
-		<abbrLabel>Extension Info.</abbrLabel>
 	</element>
 	<element name="gmd:metadataMaintenance" id="22.0">
 		<label>Metadata maintenance</label>
-		<abbrLabel>Maintenance</abbrLabel>
 		<description>Provides information about the frequency of metadata updates, and the scope of
             those updates</description>
 	</element>
@@ -1904,7 +1898,6 @@
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19.0">
 		<label>Portrayal catalogue info</label>
-		<abbrLabel>Portrayal</abbrLabel>
 		<description>Provides information about the catalogue of rules defined for the portrayal of
             a resource(s)</description>
 	</element>
@@ -2039,7 +2032,6 @@
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13.0">
 		<label>Reference System Information</label>
-		<abbrLabel>Ref. Sys.</abbrLabel>
 		<description>Description of the spatial and temporal reference systems used in the
             dataset</description>
 	</element>
@@ -2055,7 +2047,6 @@
     <helper relAtt="uom">
       <option value="1" title="second">seconds</option>
       <option value="1" title="minute">minutes</option>
-      <option value="1" title="hour">hours</option>
       <option value="1" title="hour">hours</option>
       <option value="1" title="day">days</option>
       <option value="1" title="month">months</option>
@@ -2192,7 +2183,6 @@
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
 		<label>Spatial representation info</label>
-		<abbrLabel>Spatial Repr.</abbrLabel>
 		<description>Digital representation of spatial information in the dataset</description>
 	</element>
 	<element name="gmd:spatialRepresentationType" id="37.0">
@@ -3095,35 +3085,5 @@
     </element>
     <element name="gml:realizationEpoch">
         <label>Realization epoch</label>
-    </element>
-    <element name="gmd:MD_ProgressCode">
-        <label>Progress</label>
-    </element>
-    <element name="gmd:MD_MaintenanceFrequencyCode">
-        <label>Maintenance Frequency</label>
-    </element>
-    <element name="gmd:MD_SpatialRepresentationTypeCode">
-        <label>Spatial Representation Type</label>
-    </element>
-    <element name="gmd:MD_CharacterSetCode">
-        <label>Character Set</label>
-    </element>
-    <element name="gmd:MD_TopologyLevelCode">
-        <label>Topology Level</label>
-    </element>
-    <element name="gmd:MD_GeometricObjectTypeCode">
-        <label>Geometric Object Type</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
-        <label>Access Restriction</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
-        <label>Use Restriction</label>
-    </element>
-    <element name="gmd:DS_AssociationTypeCode">
-        <label>Association Type</label>
-    </element>
-    <element name="gmd:DS_InitiativeTypeCode">
-        <label>Initiative Type</label>
     </element>
 </labels>
