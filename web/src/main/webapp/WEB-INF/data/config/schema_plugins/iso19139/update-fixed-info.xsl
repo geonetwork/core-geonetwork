@@ -498,7 +498,7 @@
                   gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
 
     <xsl:copy>
-      <xsl:value-of select="concat($p02, $p01, ' - ', $edmoProvider, ' - ', $dataSetName)"/>
+      <xsl:value-of select="concat($p02, ' - ', $p01, ' - ', $edmoProvider, ' - ', $dataSetName)"/>
     </xsl:copy>
   </xsl:template>
 
