@@ -12,6 +12,7 @@
 				select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString" />
 
 			<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 				<title>
 					Metadata:
 					<xsl:value-of select="$title" />
