@@ -15,7 +15,10 @@
       'gnOwsCapabilities',
       'gnConfig',
       '$log',
-      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
+      'gnSearchLocation',
+      '$rootScope',
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
+          gnSearchLocation, $rootScope) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -223,6 +226,15 @@
             map.getLayers().push(vector);
           },
 
+          // Given only the url, it will show a dialog to select
+          // what layers do we want to add to the map
+          addOwsServiceToMap: function(url, type) {
+            // move to map
+            gnSearchLocation.setMap();
+            // open dialog for WMS
+            $rootScope.$broadcast('requestCapLoad' + type.toUpperCase(), url);
+          },
+
           createOlWMS: function(map, layerParams, layerOptions, index) {
 
             var options = layerOptions || {};
@@ -311,6 +323,10 @@
 
           addWmsToMapFromCap: function(map, getCapLayer) {
             map.addLayer(this.createOlWMSFromCap(map, getCapLayer));
+          },
+
+          addWmtsToMapFromCap: function(map, getCapLayer) {
+            map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
           },
 
           /**
