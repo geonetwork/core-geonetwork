@@ -1871,13 +1871,21 @@ public class EditLib {
 				// elements. It could be a good idea to have that information in configuration file
 				// (eg. like schema-substitute) in order to define the default substitute to use
 				// for a type. TODO
-				if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
+                SchemaPlugin plugin = schema.getSchemaPlugin();
+                boolean isISOPlugin = plugin instanceof ISOPlugin;
+                ISOPlugin isoPlugin = isISOPlugin ? (ISOPlugin) plugin : null;
+
+                if (isISOPlugin &&
+                        type.getElementList().contains(
+                                isoPlugin.getBasicTypeCharacterStringName()) &&
+                        !useSuggestion) {
                     if(Log.isDebugEnabled(Geonet.EDITOR))
                         Log.debug(Geonet.EDITOR,"OR element having gco:CharacterString substitute and no suggestion: " + qname);
 
+                    Element basicTypeNode = isoPlugin.createBasicTypeCharacterString();
 					Element newElem = createElement(schema, qname,
-							"gco:CharacterString",
-                            "http://www.isotc211.org/2005/gco", 1, 1);
+                            basicTypeNode.getQualifiedName(),
+                            basicTypeNode.getNamespaceURI(), 1, 1);
 					child.addContent(newElem);
 				} else {
 					action = "before"; // js adds new elements before this child
