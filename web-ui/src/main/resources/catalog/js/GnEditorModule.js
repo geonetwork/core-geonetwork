@@ -28,7 +28,7 @@
   ]);
 
   // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'editor']);
+  module.constant('$LOCALES', ['core', 'search', 'editor']);
 
   module.constant('gnViewerSettings', {});
 
