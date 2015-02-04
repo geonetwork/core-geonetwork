@@ -86,14 +86,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		params.create(node);
 		
 		//--- force the creation of a new uuid
-		params.uuid = UUID.randomUUID().toString();
+		params.setUuid(UUID.randomUUID().toString());
 		
 		String id = settingMan.add( "harvesting", "node", getType());
 		storeNode( params, "id:"+id);
 
-        Source source = new Source(params.uuid, params.name, true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
         	
 		return id;
 	}
@@ -108,7 +108,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 * @throws Exception
 	 */
     private HarvestResult align(Path root) throws Exception {
-        log.debug("Start of alignment for : " + params.name);
+        log.debug("Start of alignment for : " + params.getName());
         final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
@@ -128,7 +128,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			// delete locally existing metadata from the same source if they were
 			// not in this harvesting result
 			//
-            List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
+            List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.getUuid());
             for (Metadata existingId : existingMetadata) {
 
                 if (cancelMonitor.get()) {
@@ -143,7 +143,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 				}
 			}			
 		}
-        log.debug("End of alignment for : " + params.name);
+        log.debug("End of alignment for : " + params.getName());
 		return result;
 	}
 
@@ -202,11 +202,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
                 setCreateDate(new ISODate(createDate)).
                 setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -253,9 +253,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		//--- we update a copy first because if there is an exception LocalFilesystemParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.uuid, copy.name, true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 		
 		params = copy;
         super.setParams(params);

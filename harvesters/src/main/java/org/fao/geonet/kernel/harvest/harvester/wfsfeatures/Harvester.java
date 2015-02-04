@@ -199,11 +199,11 @@ class Harvester implements IHarvester<HarvestResult>
 	public HarvestResult harvest(Logger log) throws Exception {
 
 	    this.log = log;
-		log.info("Retrieving metadata fragments for : " + params.name);
+		log.info("Retrieving metadata fragments for : " + params.getName());
         
 		//--- collect all existing metadata uuids before we update
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        localUuids = new UUIDMapper(metadataRepository, params.uuid);
+        localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
 		//--- parse the xml query from the string - TODO: default should be 
 		//--- get everything
@@ -380,8 +380,8 @@ class Harvester implements IHarvester<HarvestResult>
 		fragmentParams.isoCategory = params.recordsCategory;
 		fragmentParams.privileges = params.getPrivileges();
 		fragmentParams.templateId = params.templateId;
-		fragmentParams.uuid = params.uuid;
-		fragmentParams.owner = params.ownerId;
+		fragmentParams.uuid = params.getUuid();
+		fragmentParams.owner = params.getOwnerId();
 		return fragmentParams;
     }
 

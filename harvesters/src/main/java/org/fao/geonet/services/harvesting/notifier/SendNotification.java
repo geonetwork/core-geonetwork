@@ -27,7 +27,6 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.mail.EmailException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.MailUtil;
@@ -180,8 +179,8 @@ public class SendNotification {
 		}
 
 		htmlMessage = htmlMessage.replace("$$harvesterName$$",
-				ah.getParams().name);
-		subject = subject.replace("$$harvesterName$$", ah.getParams().name);
+                ah.getParams().getName());
+		subject = subject.replace("$$harvesterName$$", ah.getParams().getName());
 
 		htmlMessage = htmlMessage.replace("$$harvesterType$$", ah.getType());
 		subject = subject.replace("$$harvesterType$$", ah.getType());

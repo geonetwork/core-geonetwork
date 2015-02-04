@@ -21,7 +21,7 @@ import javax.persistence.*;
 public class Setting extends GeonetEntity {
     private String name;
     private String value;
-    private SettingDataType dataType;
+    private SettingDataType dataType = SettingDataType.STRING;
     private int position = 0;
     private char internal = Constants.YN_TRUE;
 

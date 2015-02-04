@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search.index;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -31,7 +32,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.io.IOException;
@@ -51,13 +52,14 @@ import java.util.Set;
 public class IndexingTask extends QuartzJobBean {
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private ConfigurableApplicationContext applicationContext;
     @Qualifier("DataManager")
     @Autowired
     private DataManager _dataManager;
 
 
     private void indexRecords() {
+        ApplicationContextHolder.set(applicationContext);
         IndexingList list = applicationContext.getBean(IndexingList.class);
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
         if (metadataIdentifiers.size() > 0) {

@@ -25,6 +25,6 @@ public class CswHarvesterIntegrationNoOwnerTest extends CswHarvesterIntegrationT
     @Override
     protected void performExtraAssertions(AbstractHarvester harvester) {
         final User admin = _userRepo.findAllByProfile(Profile.Administrator).get(0);
-        assertEquals(""+admin.getId(), harvester.getParams().ownerId);
+        assertEquals(""+admin.getId(), harvester.getParams().getOwnerId());
     }
 }

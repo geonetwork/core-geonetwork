@@ -9,6 +9,7 @@ var gnHarvesterfilesystem = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "directory" : "/filesystem/path",
                 "recurse" : true,
@@ -45,7 +46,8 @@ var gnHarvesterfilesystem = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <recurse>' + h.site.recurse + '</recurse>'
                 + '    <nodelete>' + h.site.nodelete + '</nodelete>'
                 + '    <checkFileLastModifiedForUpdate>' + h.site.checkFileLastModifiedForUpdate + '</checkFileLastModifiedForUpdate>'

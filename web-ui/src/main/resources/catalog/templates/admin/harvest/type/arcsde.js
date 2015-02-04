@@ -9,6 +9,7 @@ var gnHarvesterarcsde = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
                 "use": true,
@@ -49,6 +50,7 @@ var gnHarvesterarcsde = {
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
+                + $scope.buildTranslations(h)
                 + '    <server>' + h.site.server + '</server>'
                 + '    <port>' + h.site.port + '</port>' 
                 + '    <icon>' + h.site.icon + '</icon>' 

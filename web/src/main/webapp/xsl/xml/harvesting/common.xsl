@@ -22,7 +22,15 @@
 
 			<site>
 				<name><xsl:value-of select="$site/name/value" /></name>
-				<uuid><xsl:value-of select="$site/uuid/value" /></uuid>
+                <translations>
+                    <xsl:for-each select="$site/translations/children/node()">
+                        <xsl:element name="{name()}">
+                            <xsl:value-of select="."/>
+                        </xsl:element>
+                    </xsl:for-each>
+                </translations>
+
+                <uuid><xsl:value-of select="$site/uuid/value" /></uuid>
 				<account>
 					<use><xsl:value-of select="$site/useAccount/value" /></use>
 					<username><xsl:value-of select="$site/useAccount/children/username/value" /></username>
@@ -83,9 +91,8 @@
 			<xsl:for-each select="category">
 				<category id="{value}"/>
 			</xsl:for-each>
-		</categories>			
+		</categories>
 	</xsl:template>
-	
 	<!-- ============================================================================================= -->
 	<!-- === Hooks -->
 	<!-- ============================================================================================= -->
