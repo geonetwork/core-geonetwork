@@ -103,5 +103,10 @@
 
     <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     </util:set>
-
+    <bean id="threadResources" class="org.mapfish.print.ThreadResources">
+        <property name="connectionTimeout" value="30000"/>
+        <property name="socketTimeout" value="30000" />
+        <property name="globalParallelFetches" value="50"/>
+        <property name="perHostParallelFetches" value="10" />
+    </bean>
 </beans>
