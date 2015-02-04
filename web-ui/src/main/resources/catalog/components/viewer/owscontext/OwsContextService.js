@@ -68,7 +68,7 @@
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name) {
-            if (layer.group == 'BackgroundLayers' &&
+            if (layer.group == 'Background layers' &&
                 layer.name.match(re)) {
               var type = re.exec(layer.name)[1];
               if (type != 'wmts') {
@@ -77,7 +77,7 @@
                   bgLayers.push(olLayer);
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
-                  olLayer.set('group', $translate('BackgroundLayers'));
+                  olLayer.set('group', 'Background layers');
                   olLayer.setVisible(!layer.hidden);
                 }
               }
@@ -89,7 +89,7 @@
                       bgLayers.push(olLayer);
                       olLayer.displayInLayerManager = false;
                       olLayer.background = true;
-                      olLayer.set('group', $translate('BackgroundLayers'));
+                      olLayer.set('group', 'Background layers');
                       olLayer.setVisible(!ctxLayer.hidden);
                     }));
               }
