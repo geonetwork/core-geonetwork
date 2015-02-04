@@ -33,14 +33,26 @@
           var addWMSToMap = function(link) {
 
             if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
+              angular.forEach(link.name, function(name) { 
+                gnOwsCapabilities.getWMSCapabilities(link.url).then(
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    name, capObj);
+                    gnMap.addWmsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+                });
+              gnSearchLocation.setMap();
+            } else if (link.name && !angular.isArray(link.name)) {
               gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj);
-                   gnMap.addWmsToMapFromCap(
-                       gnSearchSettings.viewerMap, layerInfo);
-                 });
-            } else {
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    link.name, capObj);
+                    gnMap.addWmsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+              gnSearchLocation.setMap();
+             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             }
           };
@@ -49,14 +61,26 @@
           var addWMTSToMap = function(link) {
 
             if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
-              gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj);
-                   gnMap.addWmsToMapFromCap(
-                       gnSearchSettings.viewerMap, layerInfo);
-                 });
-            } else {
+              angular.forEach(link.name, function(name) { 
+                gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    name, capObj);
+                    gnMap.addWmtsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+                });
+              gnSearchLocation.setMap();
+            } else if (link.name && !angular.isArray(link.name)) {
+              gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    link.name, capObj);
+                    gnMap.addWmtsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+              gnSearchLocation.setMap();
+             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMTS');
             }
           };

@@ -56,10 +56,23 @@
           // This event focus on map, display the WMSImport and request
           // a getCapabilities
           //TODO : to be improved
-          var event = 'requestCapLoad' + scope.format.toUpperCase();
+          var type = scope.format.toUpperCase();
+          var event = 'requestCapLoad' + type;
           scope.$on(event, function(e, url) {
             $('#layers').removeClass('force-hide');
             $('[gn-wms-import]').removeClass('collapsed');
+            var button = $("[data-gn-import-button=" + type + "]");
+            var element = button.parent().parent();
+            
+            element.find('.btn-group.flux button').removeClass('active');
+            element.addClass('active');
+            button.addClass('active');
+            element.find('.layers').addClass('collapsed');
+            element.find('.panel-carousel').removeClass('collapsed');
+            element.find('.unfold').css('opacity', 1);
+            element.find('.panel-carousel-container').css('left',
+                '-' + (button.index() * 100) + '%');
+            
             scope.url = url;
             scope.load(url);
           });
