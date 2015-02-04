@@ -322,7 +322,9 @@
           },
 
           addWmsToMapFromCap: function(map, getCapLayer) {
-            map.addLayer(this.createOlWMSFromCap(map, getCapLayer));
+            var layer = this.createOlWMSFromCap(map, getCapLayer);
+            map.addLayer(layer);
+            return layer;
           },
 
           addWmtsToMapFromCap: function(map, getCapLayer) {

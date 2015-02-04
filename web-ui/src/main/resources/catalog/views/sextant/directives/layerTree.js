@@ -86,8 +86,8 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile', 'gnMap',
-    function($compile, gnMap) {
+    '$compile', 'gnMap', 'gnMdView',
+    function($compile, gnMap, gnMdView) {
       return {
         restrict: 'E',
         replace: true,
@@ -116,6 +116,13 @@
           };
 
           scope.mapService = gnMap;
+
+          scope.showMetadata = function() {
+            var md = scope.member.get('md');
+            if(md) {
+              gnMdView.feedMd(0, md, [md]);
+            }
+          };
         }
       };
     }]);

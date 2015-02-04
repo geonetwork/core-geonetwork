@@ -178,12 +178,12 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
-          var label, theme = md.sextantTheme;
+          var group, theme = md.sextantTheme;
           if(angular.isArray(sxtGlobals.sextantTheme)) {
             for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
               var t = sxtGlobals.sextantTheme[i];
               if (t.props.uri == theme) {
-                label = t.label;
+                group = t.label;
                 break;
               }
             }
@@ -191,9 +191,10 @@
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
-            layerInfo.group = label;
+            layerInfo.group = group;
             var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
                 layerInfo);
+            layer.set('md', md);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
