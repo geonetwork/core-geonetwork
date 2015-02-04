@@ -2,7 +2,7 @@
 
   <div data-gn-alert-manager=""></div>
   <div id="map" ngeo-map="map" class="map"></div>
-  <div gn-gfi="" map="map"></div>
+  <div gn-gfi="" map="map" ng-class="{'leftBarExpanded': active.tool}"></div>
 
 
   <button class="btn btn-default sxt-search-btn" data-ng-click="locService.setSearch()" >
@@ -196,7 +196,7 @@
 
     </div>
 
-  <footer ng-class="{'small': active.tool}">
+  <footer ng-class="{'leftBarExpanded': active.tool}">
     <div sxt-mouse-position></div>
   </footer>
 

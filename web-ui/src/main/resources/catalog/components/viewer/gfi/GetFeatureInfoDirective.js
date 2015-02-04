@@ -5,15 +5,20 @@
     'angular.filter'
   ]);
 
-  module.directive('gnGfi', ['$http', function($http) {
+  var gfiTemplateURL = '../../catalog/components/viewer/gfi/partials/' +
+      'gfi-popup.html';
+
+  module.value('gfiTemplateURL', gfiTemplateURL);
+
+  module.directive('gnGfi', ['$http', 'gfiTemplateURL',
+      function($http, gfiTemplateURL) {
 
     return {
       restrict: 'A',
       scope: {
         map: '='
       },
-      templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'gfi-popup.html',
+      templateUrl: gfiTemplateURL,
       link: function(scope, element, attrs) {
 
         var map = scope.map;
