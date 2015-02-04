@@ -2,7 +2,20 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 
-import javax.persistence.*;
+import java.util.Map;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Entity representing a metadata source.
@@ -13,7 +26,7 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "Sources")
 @EntityListeners(SourceEntityListenerManager.class)
-public class Source extends GeonetEntity {
+public class Source extends Localized {
     private String _uuid;
     private String _name;
     private char _local = Constants.YN_TRUE;
@@ -31,9 +44,10 @@ public class Source extends GeonetEntity {
      * @param name  the name
      * @param local if the source is the local system
      */
-    public Source(String uuid, String name, boolean local) {
+    public Source(String uuid, String name, Map<String,String> translations, boolean local) {
         this._uuid = uuid;
         this._name = name;
+        setLabelTranslations(translations);
         this._local = Constants.toYN_EnabledChar(local);
     }
 
@@ -117,6 +131,15 @@ public class Source extends GeonetEntity {
     public Source setLocal(boolean local) {
         setIsLocal_JpaWorkaround(Constants.toYN_EnabledChar(local));
         return this;
+    }
+
+    @Override
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
+    @MapKeyColumn(name = "langId", length = 5)
+    @Column(name = "label", nullable = false, length = 96)
+    public Map<String, String> getLabelTranslations() {
+        return super.getLabelTranslations();
     }
 
     @Override

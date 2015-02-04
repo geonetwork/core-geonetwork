@@ -180,6 +180,13 @@
             });
       };
 
+      $scope.buildTranslations = function(h) {
+        var translations = '';
+        angular.forEach(h.site.translations, function(value, key) {
+          translations += '<' + key + '>' + value + '</' + key + '>';
+        });
+        return "<translations>" + translations + "</translations>";
+      };
       $scope.buildResponseGroup = function(h) {
         var groups = '';
         angular.forEach(h.privileges, function(p) {

@@ -43,10 +43,10 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 //=============================================================================
 
@@ -95,7 +95,7 @@ public class Set implements Service {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
             final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {

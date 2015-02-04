@@ -50,7 +50,7 @@ public class HarvestersHealthCheck implements HealthCheckFactory {
                                 final Element stack = harvestHistory.getInfoAsXml().getChild("stack");
                                 Element errorMsg = stack.getChild("message");
                                 errors.append("\n  * ");
-                                errors.append(harvester.getParams().name).append(" (").append(harvester.getType()).append(")");
+                                errors.append(harvester.getParams().getName()).append(" (").append(harvester.getType()).append(")");
                                 errors.append(": ").append(errorMsg);
                             }
                         }

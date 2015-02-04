@@ -23,6 +23,20 @@
             'identification.html',
         link: function(scope, element, attrs) {
           scope.lang = 'eng'; // FIXME
+          scope.openTranslationModal= function() {
+            var translations = scope.harvester.site.translations;
+            if (translations === undefined) {
+              translations = {};
+              scope.harvester.site.translations = translations;
+            }
+
+            for (var i = 0; i < scope.languages.length; i++) {
+              if (translations[scope.languages[i].id] === undefined) {
+                translations[scope.languages[i].id] = scope.harvester.site.name;
+              }
+            }
+            $('#translationModal').modal('show');
+          };
           $http.get('admin.harvester.info?type=icons&_content_type=json',
               {cache: true})
           .success(function(data) {
@@ -30,6 +44,10 @@
               });
           // $http.get('admin.usergroups.list@json?id=' + 1)
           //          .success(function(data) {
+          $http.get('info?_content_type=json&type=languages', {cache: true})
+            .success(function(data) {
+                scope.languages = data.language;
+              });
           $http.get('admin.group.list@json', {cache: true})
             .success(function(data) {
                 scope.groups = data !== 'null' ? data : null;

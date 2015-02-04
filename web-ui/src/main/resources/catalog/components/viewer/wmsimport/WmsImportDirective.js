@@ -118,6 +118,7 @@
               return;
             }
 
+            //FIXME use global constant defined in gnGlobalSettings
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
             var kmlSource = new ol.source.KML({
               projection: 'EPSG:3857',

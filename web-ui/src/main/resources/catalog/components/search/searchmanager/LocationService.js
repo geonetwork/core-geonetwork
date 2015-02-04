@@ -6,7 +6,8 @@
   module.service('gnSearchLocation', [
     '$location',
     '$rootScope',
-    function($location, $rootScope) {
+    'gnGlobalSettings',
+    function($location, $rootScope, gnGlobalSettings) {
 
       this.SEARCH = '/search';
       this.MAP = '/map';
@@ -54,7 +55,9 @@
       };
 
       this.setMap = function() {
-        $location.path(this.MAP);
+        if(gnGlobalSettings.isMapViewerEnabled) {
+          $location.path(this.MAP);
+        }
       };
 
       this.setSearch = function(params) {

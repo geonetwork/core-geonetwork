@@ -5,16 +5,97 @@
   var module = angular.module('gn_dashboard_status_controller',
       []);
 
+  module.filter('count', function() {
+    return function(input) {
+      return !input ? '' : input.length;
+    };
+  });
+  module.filter('ellipses', function() {
+    return function(input) {
+      if (input && input.length > 35) {
+        return input.substring(0, 39) + " ...";
+      } else {
+        return input;
+      }
+    };
+  });
 
   /**
    *
    */
   module.controller('GnDashboardStatusController', [
-    '$scope', '$routeParams', '$http', 'gnSearchManagerService',
-    function($scope, $routeParams, $http, gnSearchManagerService) {
+    '$scope', '$routeParams', '$http',
+    function($scope, $routeParams, $http) {
       $scope.healthy = undefined;
       $scope.nowarnings = undefined;
+      $scope.threadSortField = undefined;
+      $scope.threadSortReverse = false;
+      $scope.threadInfoLoading = false;
+      $scope.setThreadSortField = function(field) {
+        if (field === $scope.threadSortField) {
+          $scope.threadSortReverse = !$scope.threadSortReverse;
+        } else {
+          if (field === 'name' || field === 'state') {
+            $scope.threadSortReverse = false;
+          } else {
+            $scope.threadSortReverse = true;
+          }
+          $scope.threadSortField = field;
+        }
+      };
+      $scope.threadSortClass = function(field) {
+        if ($scope.threadSortField === field) {
+          if ($scope.threadSortReverse) {
+            return ['fa', 'fa-sort-up'];
+          } else {
+            return ['fa', 'fa-sort-down'];
+          }
+        }
+        return '';
+      };
+      $scope.toggleThreadContentionMonitoring = function() {
+        $http.get('thread/debugging/true/' + $scope.threadStatus.threadContentionMonitoringEnabled).success(function (data){
+          $scope.threadStatus = data;
+        });
+      };
+      $scope.toggleThreadCpuTime = function() {
+        $http.get('thread/debugging/false/' + $scope.threadStatus.threadCpuTimeEnabled).success(function (data){
+          $scope.threadStatus = data;
+        });
+      };
+      $scope.openThreadActivity = function (leaveOpen) {
+        var threadActivityEl = $('#threadActivity');
+        if (!leaveOpen) {
+          threadActivityEl.collapse('toggle');
+        }
+        $scope.threadInfoLoading = true;
+        $http.get('thread/status').success(function(data){
+           $scope.threadInfoLoading = false;
+           $scope.threadStatus = data;
 
+          if (!leaveOpen) {
+            $('html, body').animate({
+              scrollTop: $("#threadActivityHeading").offset().top
+            }, 1000);
+          }
+
+          setTimeout(function(){
+            if (threadActivityEl.hasClass('in')) {
+              $scope.openThreadActivity(true);
+            }
+          }, 2000);
+        }).error(function() {
+          $scope.threadInfoLoading = false;
+        });
+      };
+      $scope.showStackTrace = function(thread, $event) {
+        $scope.selectedThread = thread;
+        $scope.threadStackTrace = "Loading...";
+        $('#stackTrace').modal('toggle');
+        $http.get('thread/trace/' + thread.id).success(function(data){
+          $scope.threadStackTrace = data.stackTrace;
+        });
+      };
       $http.get('../../criticalhealthcheck').success(function(data) {
         $scope.healthy = true;
         $scope.criticalhealthcheck = data;

@@ -111,7 +111,7 @@ public class OaiPmhParams extends AbstractParams
 		copy.url  = url;
 		copy.icon = icon;
 
-		copy.validate = validate;
+		copy.setValidate(getValidate());
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());

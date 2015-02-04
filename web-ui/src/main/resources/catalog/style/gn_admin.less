@@ -64,9 +64,12 @@ fieldset.cswCriteriaInfo, ul.list-group {
   color: @alert-danger-text;
 }
 ul.error-message {
-  left: -2em;
-  overflow-x: auto;
+  .left-offset {
+    left: -2em;
+  }
 
+  overflow-x: auto;
+  z-index: 9999999;
   dl,pre {
     margin-left: 5px;
     margin-right: 5px;
@@ -76,4 +79,28 @@ ul.error-message {
       padding-left: 10px;
     }
   }
+}
+
+.input-group-addon.highlight:hover {
+  color: @label-primary-bg;
+  cursor: pointer;
+}
+
+.thread-state-NEW {
+  background-color: white;
+}
+.thread-state-RUNNABLE {
+  background-color: LIGHTGREEN;
+}
+.thread-state-BLOCKED {
+  background-color: RED;
+}
+.thread-state-WAITING {
+  background-color: ORANGE;
+}
+.thread-state-TIMED_WAITING {
+  background-color: YELLOW;
+}
+.thread-state-TERMINATED {
+  background-color: LIGHTGRAY;
 }
