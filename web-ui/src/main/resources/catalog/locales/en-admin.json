@@ -987,5 +987,6 @@
     "GNIDX-GEOWRITE" : "Error writing geometry to spatial index",
     "GNIDX-GEO" : "Error indexing geometry",
     "GNIDX-BADNUMVALUE" : "Error converting lucene index value to a number",
-    "indexingErrors" : "Indexing Errors"
+    "indexingErrors" : "Indexing Errors",
+    "manageSources" : "Sources"
 }

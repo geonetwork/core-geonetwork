@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.main;
 
+import com.google.common.collect.Maps;
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -62,6 +63,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
@@ -78,6 +80,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
 
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
@@ -430,14 +435,20 @@ public class Info implements Service {
         Element element = new Element("results");
         final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
-		String siteId   = sm.getSiteId();
-        String siteName = sm.getSiteName();
-
 		for (Source o : sourceList) {
             element.addContent(buildRecord(o.getUuid(), o.getName(), o.getLabelTranslations(), null, null));
 		}
 
-        element.addContent(buildRecord(siteId, siteName, Collections.<String, String>emptyMap(), null, null));
+        String siteId   = sm.getSiteId();
+        String siteName = sm.getSiteName();
+
+        final SettingRepository settingRepository = context.getBean(SettingRepository.class);
+        final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+        Map<String, String> labels = Maps.newHashMap();
+        for (Setting setting : labelSettings) {
+            labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+        }
+        element.addContent(buildRecord(siteId, siteName, labels, null, null));
 
 		return element;
 	}
@@ -567,7 +578,7 @@ public class Info implements Service {
         Element translations = new Element("label");
         el.addContent(translations);
         for (Map.Entry<String, String> entry : labelTranslations.entrySet()) {
-            translations.addContent(new Element(entry.getKey()).setText(entry.getValue()));
+            translations.addContent(new Element(entry.getKey()).setText(xmlContentEscaper().escape(entry.getValue())));
         }
         return el;
 	}

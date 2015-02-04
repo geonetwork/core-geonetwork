@@ -23,23 +23,19 @@
 
 package org.fao.geonet.kernel.setting;
 
-import java.sql.SQLException;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.repository.HarvesterSettingRepository;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.HarvesterSetting;
-import org.fao.geonet.repository.HarvesterSettingRepository;
-import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Allows hierarchical management of harvester settings. The harvester settings API has been designed with the following goals:
@@ -114,9 +110,8 @@ public class HarvesterSettingsManager {
      * @param path
      * @param name
      * @return
-     * @throws SQLException
      */
-    public boolean setName(String path, String name) throws SQLException {
+    public boolean setName(String path, String name) {
         if (path == null)
             throw new IllegalArgumentException("Path cannot be null");
 
@@ -139,9 +134,8 @@ public class HarvesterSettingsManager {
      * @param path
      * @param value
      * @return
-     * @throws SQLException
      */
-    public boolean setValue(String path, Object value) throws SQLException {
+    public boolean setValue(String path, Object value) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(path, value);
 
@@ -155,9 +149,8 @@ public class HarvesterSettingsManager {
      * 
      * @param values
      * @return
-     * @throws SQLException
      */
-    public boolean setValues(Map<String, Object> values) throws SQLException {
+    public boolean setValues(Map<String, Object> values) {
         boolean success = true;
 
         List<HarvesterSetting> toSave = new ArrayList<HarvesterSetting>(values.size());
@@ -191,9 +184,8 @@ public class HarvesterSettingsManager {
      * @param name
      * @param value
      * @return
-     * @throws SQLException
      */
-    public String add(String path, Object name, Object value) throws SQLException {
+    public String add(String path, Object name, Object value) {
         if (name == null)
             throw new IllegalArgumentException("Name cannot be null");
 
@@ -221,9 +213,8 @@ public class HarvesterSettingsManager {
      * 
      * @param path
      * @return
-     * @throws SQLException
      */
-    public boolean remove(String path) throws SQLException {
+    public boolean remove(String path) {
         HarvesterSetting s = _settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
@@ -239,9 +230,8 @@ public class HarvesterSettingsManager {
      * 
      * @param path
      * @return
-     * @throws SQLException
      */
-    public boolean removeChildren(String path) throws SQLException {
+    public boolean removeChildren(String path) {
         HarvesterSetting parent = _settingsRepo.findOneByPath(path);
 
         if (parent == null)
@@ -327,7 +317,7 @@ public class HarvesterSettingsManager {
 
     // ---------------------------------------------------------------------------
 
-    private void remove(HarvesterSetting s) throws SQLException {
+    private void remove(HarvesterSetting s) {
         _settingsRepo.delete(s);
     }
 

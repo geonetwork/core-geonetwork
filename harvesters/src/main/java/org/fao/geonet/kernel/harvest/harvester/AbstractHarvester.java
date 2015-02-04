@@ -82,6 +82,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
 import static org.quartz.JobKey.jobKey;
 
 /**
@@ -757,47 +758,47 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
         String siteId = settingMan.add(path, "site", "");
-        String translations = settingMan.add("id:" + siteId, AbstractParams.TRANSLATIONS, "");
+        String translations = settingMan.add(ID_PREFIX + siteId, AbstractParams.TRANSLATIONS, "");
         String optionsId = settingMan.add(path, "options", "");
         String infoId = settingMan.add(path, "info", "");
         String contentId = settingMan.add(path, "content", "");
 
         //--- setup site node ----------------------------------------
 
-        settingMan.add("id:" + siteId, "name", params.getName());
+        settingMan.add(ID_PREFIX + siteId, "name", params.getName());
         for (Map.Entry<String, String> entry : params.getTranslations().entrySet()) {
-            settingMan.add("id:" + translations, entry.getKey(), entry.getValue());
+            settingMan.add(ID_PREFIX + translations, entry.getKey(), entry.getValue());
         }
-        settingMan.add("id:" + siteId, "uuid", params.getUuid());
+        settingMan.add(ID_PREFIX + siteId, "uuid", params.getUuid());
 
         /**
          * User who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerId", params.getOwnerId());
+        settingMan.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
         /**
          * Group selected by user who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerGroup", params.getOwnerIdGroup());
+        settingMan.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
-        String useAccId = settingMan.add("id:" + siteId, "useAccount", params.isUseAccount());
+        String useAccId = settingMan.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
-        settingMan.add("id:" + useAccId, "username", params.getUsername());
-        settingMan.add("id:" + useAccId, "password", params.getPassword());
+        settingMan.add(ID_PREFIX + useAccId, "username", params.getUsername());
+        settingMan.add(ID_PREFIX + useAccId, "password", params.getPassword());
 
         //--- setup options node ---------------------------------------
 
-        settingMan.add("id:" + optionsId, "every", params.getEvery());
-        settingMan.add("id:" + optionsId, "oneRunOnly", params.isOneRunOnly());
-        settingMan.add("id:" + optionsId, "status", status);
+        settingMan.add(ID_PREFIX + optionsId, "every", params.getEvery());
+        settingMan.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
+        settingMan.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
 
-        settingMan.add("id:" + contentId, "importxslt", params.getImportXslt());
-        settingMan.add("id:" + contentId, "validate", params.getValidate());
+        settingMan.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
+        settingMan.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
         //--- setup stats node ----------------------------------------
 
-        settingMan.add("id:" + infoId, "lastRun", "");
+        settingMan.add(ID_PREFIX + infoId, "lastRun", "");
 
         //--- store privileges and categories ------------------------
 
@@ -818,9 +819,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String privId = settingMan.add(path, "privileges", "");
 
         for (Privileges p : params.getPrivileges()) {
-            String groupId = settingMan.add("id:" + privId, "group", p.getGroupId());
+            String groupId = settingMan.add(ID_PREFIX + privId, "group", p.getGroupId());
             for (int oper : p.getOperations()) {
-                settingMan.add("id:" + groupId, "operation", oper);
+                settingMan.add(ID_PREFIX + groupId, "operation", oper);
             }
         }
     }
@@ -836,7 +837,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String categId = settingMan.add(path, "categories", "");
 
         for (String id : params.getCategories()) {
-            settingMan.add("id:" + categId, "category", id);
+            settingMan.add(ID_PREFIX + categId, "category", id);
         }
     }
 
