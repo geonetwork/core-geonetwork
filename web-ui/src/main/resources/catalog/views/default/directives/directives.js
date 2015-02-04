@@ -194,4 +194,23 @@
       };
     }
   ]);
+
+
+  module.directive('gnShowMap', ['gnGlobalSettings', '$compile',
+    function(gnGlobalSettings, $compile) {
+      return {
+        restrict: 'A',
+        replace: false,
+//        transclude: true,
+//        template: '<div data-ng-transclude data-ng-if="isMapViewerEnabled"></div>',
+        link: function linkFn(scope, element, attrs) {
+          scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
+          element.attr("data-ng-if", "isMapViewerEnabled");
+          element.removeAttr("data-gn-show-map");
+          element.removeAttr("gn-show-map");
+          $compile(element)(scope);
+        }
+      };
+    }
+  ]);
 })();

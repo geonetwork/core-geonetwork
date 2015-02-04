@@ -466,6 +466,8 @@
     "manageThesaurus": "Thesaurus",
     "manageUsers": "Manage users",
     "manageVirtualCSW": "Virtual CSW",
+    "map/isMapViewerEnabled": "Enable Map Viewer",
+    "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
     "mapserverConfiguration": "URL configuration",
     "mapserverDescription": "Description",
     "mapserverName": "Name",

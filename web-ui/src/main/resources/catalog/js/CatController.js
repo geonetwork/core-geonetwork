@@ -8,7 +8,8 @@
 
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
-    locale: {}
+    locale: {},
+    isMapViewerEnabled : false
   });
 
   /**
