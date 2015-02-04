@@ -325,6 +325,10 @@
             map.addLayer(this.createOlWMSFromCap(map, getCapLayer));
           },
 
+          addWmtsToMapFromCap: function(map, getCapLayer) {
+            map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
+          },
+
           /**
            * Parse an object describing a layer from
            * a getCapabilities document parsing. Create a ol.Layer WMS
