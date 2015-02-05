@@ -19,13 +19,18 @@
 
       $scope.sources = [];
       $scope.sourcesSelected = null;
+      $scope.dirty = false;
       $http.get('info?_content_type=json&type=languages', {cache: true}).success(function(data) {
           $scope.languages = data.language;
         });
 
       $scope.selectSource = function(source) {
+        if ($('.ng-dirty').length && confirm($translate("doSaveConfirm"))) {
+          $scope.saveSources(false);
+        }
         $scope.sourcesSelected = source;
         angular.forEach($scope.languages, function(lang) {
+          $('.ng-dirty').removeClass('ng-dirty');
           if (source.label[lang.id] === undefined) {
             source.label[lang.id] = source.name;
           }
@@ -79,8 +84,8 @@
                     type: 'danger'});
                 });
       };
-
       loadSources();
+      
     }]);
 
 })();
