@@ -54,7 +54,9 @@ public class SourcesController {
             final HttpServletRequest request) {
         if (settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
             updateSite(request);
-        } else {
+        }
+
+        if (sourceRepository.exists(uuid)) {
             updateNormalSource(uuid, request);
         }
         return new OkResponse();

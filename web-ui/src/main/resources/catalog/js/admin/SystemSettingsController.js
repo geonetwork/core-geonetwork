@@ -5,6 +5,17 @@
   var module = angular.module('gn_system_settings_controller',
       []);
 
+  module.filter('hideLanguages', function() {
+    return function(input) {
+      var filtered = [];
+      angular.forEach(input, function(el) {
+        if (el['@name'].indexOf("system/site/labels/") === -1) {
+          filtered.push(el);
+        }
+      });
+      return filtered;
+    }
+  });
   module.filter('orderObjectBy', function() {
     return function(input, attribute) {
       if (!angular.isObject(input)) return input;

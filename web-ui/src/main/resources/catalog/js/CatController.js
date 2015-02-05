@@ -24,8 +24,10 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
+    'gnGlobalSettings',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnConfig) {
+            gnSearchManagerService, gnConfigService, gnConfig,
+            gnGlobalSettings) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -35,8 +37,9 @@
       $scope.langs = {'fre': 'fr', 'eng': 'en', 'spa': 'sp'};
       $scope.url = '';
       $scope.base = '../../catalog/';
-      $scope.proxyUrl = '../../proxy?url=';
+      $scope.proxyUrl = gnGlobalSettings.proxyUrl;
       $scope.logoPath = '../../images/harvesting/';
+      $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.pages = {
         home: 'home',
         admin: 'admin.console',
