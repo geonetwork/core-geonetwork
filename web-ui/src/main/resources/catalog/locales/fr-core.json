@@ -23,7 +23,7 @@
     "address": "Adresse",
     "adminConsole": "Console d'admin",
     "any": "Plein texte",
-    "anyPlaceHolder": "Search ...",
+    "anyPlaceHolder": "Rechercher ...",
     "VALID": "Valide",
     "INVALID": "Invalide",
     "NEVER_CALCULATED": "Never validated",
@@ -126,7 +126,7 @@
     "service": "Service",
     "serviceTypes": "Type de service",
     "signIn": "S'identifier",
-    "signedInAs": "Signed in as",
+    "signedInAs": "Connecté en tant que",
     "signout": "Se déconnecter",
     "somethingWrong": "Quelque chose s'est mal déroulé!",
     "south": "Sud",
@@ -149,6 +149,7 @@
     "uuid": "Identifiant",
     "url": "URL",
     "updateStatus": "Update record status",
+    "enableWorkflow": "Enable workflow",
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",
@@ -168,5 +169,5 @@
     "whoCanAccess": "Qui à accès ?",
     "actions": "Actions",
     "reset": "Reset",
-    "backToList": "Back To List"
+    "stop": "Stop"
 }
