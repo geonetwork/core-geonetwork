@@ -422,8 +422,7 @@ public class Info implements Service {
         return result;
 	}
 
-    private Element getSources(ServiceContext context, SettingManager sm) throws SQLException
-    {
+    private Element getSources(ServiceContext context, SettingManager sm) throws SQLException {
         Element element = new Element("results");
         final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
@@ -435,7 +434,7 @@ public class Info implements Service {
             }
         }
 
-        String siteId   = sm.getSiteId();
+        String siteId = sm.getSiteId();
         if (!sourceIds.contains(siteId)) {
             String siteName = sm.getSiteName();
 
