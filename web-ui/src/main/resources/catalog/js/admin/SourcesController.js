@@ -34,8 +34,8 @@
           $scope.saveSources(false);
         }
         $scope.sourcesSelected = source;
+        $('.ng-dirty').removeClass('ng-dirty');
         angular.forEach($scope.languages, function(lang) {
-          $('.ng-dirty').removeClass('ng-dirty');
           if (source.label[lang.id] === undefined) {
             source.label[lang.id] = source.name;
           }
@@ -76,12 +76,14 @@
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
+            $('.ng-dirty').removeClass('ng-dirty');
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('settingsUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
             .error(function(data) {
+            $('.ng-dirty').removeClass('ng-dirty');
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('settingsUpdateError'),
                     error: data,
