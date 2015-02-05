@@ -6,6 +6,7 @@
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
                                         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 
 	<xsl:include href="convert/functions.xsl"/>
@@ -379,6 +380,11 @@
 			<xsl:for-each select="srv:operatesOn/@uuidref">
                 <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
+
+      <xsl:for-each select="srv:operatesOn/@xlink:href">
+        <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
 			
 			<xsl:for-each select="srv:coupledResource">
 				<xsl:for-each select="srv:SV_CoupledResource/srv:identifier/gco:CharacterString">
