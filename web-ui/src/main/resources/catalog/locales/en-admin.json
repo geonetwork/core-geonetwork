@@ -992,5 +992,6 @@
     "indexingErrors" : "Indexing Errors",
     "manageSources" : "Sources",
     "threadStatus" : "Thread Status",
-    "doSaveConfirm" : "Do you want to save your changes?"
+    "doSaveConfirm" : "Do you want to save your changes?",
+    "unsavedChangesWarning" : "You have unsaved changes\n\nDo you still want to leave the page and lose your changes?"
 }

@@ -17,6 +17,11 @@
     '$scope', '$http', '$rootScope', '$translate',
     function($scope, $http, $rootScope, $translate) {
 
+      $scope.$on("$locationChangeStart", function(event) {
+        if ($('.ng-dirty').length > 0 && !confirm($translate('unsavedChangesWarning')))
+          event.preventDefault();
+      });
+
       $scope.sources = [];
       $scope.sourcesSelected = null;
       $scope.dirty = false;
@@ -25,7 +30,7 @@
         });
 
       $scope.selectSource = function(source) {
-        if ($('.ng-dirty').length && confirm($translate("doSaveConfirm"))) {
+        if ($('.ng-dirty').length > 0 && confirm($translate("doSaveConfirm"))) {
           $scope.saveSources(false);
         }
         $scope.sourcesSelected = source;

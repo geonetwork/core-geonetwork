@@ -120,6 +120,7 @@ public class SettingManager {
                 settingEl.setAttribute("name", setting.getName());
                 settingEl.setAttribute("position", String.valueOf(setting.getPosition()));
                 settingEl.setAttribute("datatype", String.valueOf(setting.getDataType()));
+                settingEl.setAttribute("internal", String.valueOf(setting.isInternal()));
                 settingEl.setText(setting.getValue());
                 env.addContent(settingEl);
             }
