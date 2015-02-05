@@ -1,7 +1,7 @@
 {
-    "all": "Tous",
-    "allInPage": "Toute la page",
-    "none": "Aucun",
+    "all": "Tout désélectionner",
+    "allInPage": "Tout sélectionner dans la page",
+    "none": "Tout désélectionner",
     "BadParameterEx": "Paramètre incorrect",
     "Editor": "Editeur",
     "Keywords": "Keywords",

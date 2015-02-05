@@ -1,7 +1,7 @@
 {
-    "all": "alle",
-    "allInPage": "auf einer Seite",
-    "none": "keiner",
+    "all": "Alles selektieren",
+    "allInPage": "in der Seite alles selektieren",
+    "none": "Alles unselektieren",
     "BadParameterEx": "Falscher Parameter",
     "Editor": "Editor",
     "Keywords": "Schlüsselwörter",
