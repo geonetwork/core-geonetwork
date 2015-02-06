@@ -265,7 +265,7 @@ public class Format extends AbstractFormatService {
         FormatterParams fparams = new FormatterParams();
         fparams.config = config;
         fparams.format = this;
-        fparams.params = request.getParameterMap();
+        fparams.servletRequest= request;
         fparams.context = context;
         fparams.formatDir = formatDir.toRealPath();
         fparams.metadata = metadata;
