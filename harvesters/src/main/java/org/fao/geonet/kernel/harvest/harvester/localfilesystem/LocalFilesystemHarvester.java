@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -107,59 +108,66 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      * @param root the directory to visit
 	 * @throws Exception
 	 */
-    private HarvestResult align(Path root) throws Exception {
-        log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
-        if (params.recurse) {
-            Files.walkFileTree(root, visitor);
-					    } else {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
-                for (Path path : paths) {
-                    if (path != null && Files.isRegularFile(path)) {
-                        visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
-                            }
-                        }
-    					    }
-                            }
-        result = visitor.getResult();
-        List<String> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
-        if (!params.nodelete) {
+	private HarvestResult align(Path root) throws Exception {
+		log.debug("Start of alignment for : " + params.getName());
+		final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
+		if (params.recurse) {
+			Files.walkFileTree(root, visitor);
+		} else {
+			try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+				for (Path path : paths) {
+					if (path != null && Files.isRegularFile(path)) {
+						visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
+					}
+				}
+			}
+		}
+		result = visitor.getResult();
+		List<String> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+		if (!params.nodelete) {
 			//
-			// delete locally existing metadata from the same source if they were
+			// delete locally existing metadata from the same source if they
+			// were
 			// not in this harvesting result
 			//
             List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.getUuid());
             for (Metadata existingId : existingMetadata) {
 
-                if (cancelMonitor.get()) {
-                    return this.result;
-                }
+				if (cancelMonitor.get()) {
+					return this.result;
+				}
 
 				String ex$ = String.valueOf(existingId.getId());
-                if (!idsForHarvestingResult.contains(ex$)) {
-				    log.debug("  Removing: " + ex$);
+				if (!idsForHarvestingResult.contains(ex$)) {
+					log.debug("  Removing: " + ex$);
 					dataMan.deleteMetadata(context, ex$);
 					result.locallyRemoved++;
 				}
-			}			
+			}
 		}
+
+		// indexes the harvested MDs
+		dataMan.batchIndexInThreadPool(context, idsForHarvestingResult);
+		
         log.debug("End of alignment for : " + params.getName());
 		return result;
 	}
 
 	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
+            final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
+		updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, true);
+	}
+	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
+                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner, boolean indexAfterUpdate) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
         // update metadata
         //
-        boolean validate = false;
-        boolean ufo = false;
-        boolean index = false;
+
         String language = context.getLanguage();
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final Metadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
                 true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -171,12 +179,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, true);
+        if (indexAfterUpdate == true) {
+            dataMan.indexMetadata(id, true);
+        }
 	}
 
 	
 	/**
-	 * Inserts a metadata into the database. Lucene index is updated after insertion.
+	 * Inserts a metadata into the database. If index param is true, Lucene index is updated after insertion,
+	 * else the indexation step is skipped
 	 * @param xml
 	 * @param uuid
 	 * @param schema
@@ -186,8 +197,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param aligner
      * @throws Exception
 	 */
+	String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
+            String createDate, BaseAligner aligner) throws Exception {
+		return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
+	}
+	
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
-                       String createDate, BaseAligner aligner) throws Exception {
+                       String createDate, BaseAligner aligner, boolean index) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
 		
@@ -218,7 +234,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, true);
+        if (index) {
+          dataMan.indexMetadata(id, true);
+        }
 		return id;
     }
 
