@@ -4,6 +4,7 @@ import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -14,6 +15,7 @@ import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -42,7 +44,8 @@ public class HarvestersHealthCheck implements HealthCheckFactory {
                     final AbstractHarvester harvester = harvestManager.getHarvester(harvestUuid);
                     if (harvester.getStatus() == Common.Status.ACTIVE) {
                         Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(harvestUuid);
-                        final Page<HarvestHistory> historyPage = historyRepository.findAll(spec, new PageRequest(0, 1));
+                        final PageRequest pageRequest = new PageRequest(0, 1, Sort.Direction.DESC, HarvestHistory_.harvestDate.getName());
+                        final Page<HarvestHistory> historyPage = historyRepository.findAll(spec, pageRequest);
                         if (!historyPage.getContent().isEmpty()) {
                             final HarvestHistory harvestHistory = historyPage.getContent().get(0);
                             if (harvestHistory != null && harvestHistory.getInfoAsXml() != null &&
