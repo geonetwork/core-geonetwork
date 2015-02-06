@@ -93,13 +93,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     return FileVisitResult.CONTINUE; // skip this one
                 }
 
-                try {
-                    params.getValidate().validate(dataMan, context, xml);
-                } catch (Exception e) {
-                    log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
-                    result.doesNotValidate++;
-                    return FileVisitResult.CONTINUE; // skip this one
-                }
+
 
                 // transform using importxslt if not none
                 if (transformIt) {
@@ -112,10 +106,23 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     }
                 }
 
-                String schema = dataMan.autodetectSchema(xml, null);
-                if (schema == null) {
+
+                String schema = null;
+                try {
+                    schema = dataMan.autodetectSchema(xml, null);
+                } catch (Exception e) {
                     result.unknownSchema++;
-                } else {
+                }
+
+                if (schema != null) {
+                    try {
+                        params.getValidate().validate(dataMan, context, xml);
+                    } catch (Exception e) {
+                        log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
+                        result.doesNotValidate++;
+                        return FileVisitResult.CONTINUE; // skip this one
+                    }
+
                     String uuid = dataMan.extractUUID(schema, xml);
                     if (uuid == null || uuid.equals("")) {
                         result.badFormat++;
@@ -192,7 +199,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 }
             }
         } catch (Throwable e) {
-            log.error("An error occurred while harvesting a local file:" + file);
+            log.error("An error occurred while harvesting a local file:" + file + ". Error is: " + e.getMessage());
         }
         return FileVisitResult.CONTINUE;
     }
