@@ -72,6 +72,7 @@ var gnHarvesterz3950 = {
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
                 + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '  </options>' 
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
