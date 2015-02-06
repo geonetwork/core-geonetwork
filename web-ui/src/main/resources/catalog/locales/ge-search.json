@@ -244,5 +244,7 @@
     "KMLfileURL": "URL of a KML file",
     "refineSearch": "Suche verfeinern",
     "backToList": "Zurück zur Liste",
-    "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !"
+    "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !",
+    "permalink" : "Permalink",
+    "zoomto": "Zoom auf"
 }
