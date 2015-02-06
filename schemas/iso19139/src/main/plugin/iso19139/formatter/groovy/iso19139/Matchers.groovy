@@ -48,6 +48,10 @@ public class Matchers {
         !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'*'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
     }
 
+    def isCiOnlineResourceParent = { el ->
+        !el.'gmd:CI_OnlineResource'.text().isEmpty()
+    }
+
     def isBBox = { el ->
         el.name() == 'gmd:EX_GeographicBoundingBox'
     }

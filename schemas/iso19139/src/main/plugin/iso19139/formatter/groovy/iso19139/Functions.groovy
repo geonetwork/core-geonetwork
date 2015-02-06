@@ -1,5 +1,7 @@
 package iso19139
 
+import com.google.common.xml.XmlEscapers
+
 public class Functions {
     def handlers;
     def f
@@ -24,6 +26,6 @@ public class Functions {
      * @return
      */
     def isoTextEl(node, text) {
-        return commonHandlers.func.textEl(f.nodeLabel(node), text)
+        return commonHandlers.func.textEl(f.nodeLabel(node), XmlEscapers.xmlContentEscaper().escape(text))
     }
 }
