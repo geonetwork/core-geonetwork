@@ -28,11 +28,9 @@
           <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected" ng-change="change()"/>
 
           <!-- Icon for types -->
-          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('service')>=0" class="fa fa-globe" title="service"></span>
-          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+		  <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">
+		  <span class="fa gn-icon-{{md.type | split}}"></span>
+          {{md.title || md.defaultTitle}}</a>
         </h4>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
         <blockquote ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</blockquote>
