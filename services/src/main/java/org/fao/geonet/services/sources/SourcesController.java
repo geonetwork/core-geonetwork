@@ -87,17 +87,15 @@ public class SourcesController {
     }
 
     public void updateNormalSource(String uuid, final HttpServletRequest request) {
-        final HarvesterSetting harvesterSetting = harvesterSettingRepository.findOneByNameAndValue("uuid", uuid);
+        final HarvesterSetting harvesterUuidSetting = harvesterSettingRepository.findOneByNameAndValue("uuid", uuid);
         final String translationsIdPath;
-        if (harvesterSetting != null) {
-            HarvesterSetting harvesterSite = harvesterSetting.getParent();
+        if (harvesterUuidSetting != null) {
+            HarvesterSetting harvesterSite = harvesterUuidSetting.getParent();
             final String pathToTranslations = ID_PREFIX + harvesterSite.getId() + SEPARATOR + AbstractParams.TRANSLATIONS;
             final List<HarvesterSetting> translationsSettings = harvesterSettingRepository.findAllByPath(pathToTranslations);
             String translationsSettingId;
             if (translationsSettings.isEmpty()) {
-                translationsSettingId = harvesterSettingsManager.add(ID_PREFIX + harvesterSetting.getId(), AbstractParams.TRANSLATIONS, "");
-
-
+                translationsSettingId = harvesterSettingsManager.add(ID_PREFIX + harvesterSite.getId(), AbstractParams.TRANSLATIONS, "");
             } else {
                 translationsSettingId = String.valueOf(translationsSettings.get(0).getId());
             }

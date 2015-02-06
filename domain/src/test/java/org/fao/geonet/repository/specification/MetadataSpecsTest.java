@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
 import static org.fao.geonet.repository.specification.MetadataSpecs.*;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasExtra;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasSchemaId;
 
 /**
  * Test for MetadataSpecs.
@@ -60,6 +61,26 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(md1.getId(), _repository.findOne(hasType(MetadataType.METADATA)).getId());
         assertEquals(md2.getId(), _repository.findOne(hasType(MetadataType.SUB_TEMPLATE)).getId());
         assertEquals(md3.getId(), _repository.findOne(hasType(MetadataType.TEMPLATE)).getId());
+    }
+
+    @Test
+    public void testHasSchemaId() throws Exception {
+        String schemaId1 = "schemaId1";
+        String schemaId2 = "schemaId2";
+        final Metadata metadata = newMetadata(_inc);
+        metadata.getDataInfo().setSchemaId(schemaId1);
+        Metadata md1 = _repository.save(metadata);
+
+        final Metadata metadata2 = newMetadata(_inc);
+        metadata2.getDataInfo().setSchemaId(schemaId2);
+        Metadata md2 = _repository.save(metadata2);
+
+        assertEquals(1, _repository.findAll(hasSchemaId(schemaId1)).size());
+        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)));
+        assertEquals(0, _repository.findAll(hasSchemaId("other")).size());
+
+        assertEquals(md1.getId(), _repository.findOne(hasSchemaId(schemaId1)).getId());
+        assertEquals(md2.getId(), _repository.findOne(hasSchemaId(schemaId2)).getId());
     }
 
     @Test

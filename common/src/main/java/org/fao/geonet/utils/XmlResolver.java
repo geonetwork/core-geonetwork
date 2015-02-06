@@ -3,11 +3,11 @@ package org.fao.geonet.utils;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;
-import org.fao.geonet.Constants;
 import org.fao.geonet.JeevesJCS;
 import org.jdom.Element;
 import org.w3c.dom.ls.LSInput;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -161,9 +161,7 @@ public class XmlResolver extends XMLCatalogResolver {
                 if (Files.isRegularFile(resolved)) {
                     try {
                         final String uri = resolved.normalize().toUri().toASCIIString();
-                        return new DOMInputImpl(publicId, uri, uri, new String(Files.readAllBytes(resolved), Constants.ENCODING), Constants.ENCODING) {
-
-                        };
+                        return new DOMInputImpl(publicId, uri, uri, new ByteArrayInputStream(Files.readAllBytes(resolved)), null);
                     } catch (IOException e) {
                         Log.error(Log.JEEVES, "Error opening resource: " + resolved + " for reading", e);
                     }
