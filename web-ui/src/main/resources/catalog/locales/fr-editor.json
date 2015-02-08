@@ -183,5 +183,6 @@
     "showHideErrors": "Afficher / masquer les erreurs",
     "showHideSuccess": "Afficher / masquer les succès",
     "deleteField": "Supprimer ce champ",
-    "deleteFieldSet": "Supprimer cette section"
+    "deleteFieldSet": "Supprimer cette section",
+    "onlyMyRecord": "Uniquement mes fiches"
 }

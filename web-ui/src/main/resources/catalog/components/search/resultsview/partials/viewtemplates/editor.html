@@ -1,0 +1,24 @@
+<ul class="list-group gn-resultview gn-resultview-title">
+  <li class="list-group-item"
+      data-ng-repeat="md in searchResults.records">
+    <input data-gn-selection-md type="checkbox"
+           data-ng-model="md['geonet:info'].selected"
+           data-ng-change="change()"/>
+    <a href=""
+       data-ng-href="../../?uuid={{md.getUuid()}}"
+       title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+    <a class="btn btn-link pull-right"
+       data-ng-show="user.canEditRecord(md)"
+       data-ng-href="#/metadata/{{md['geonet:info'].id}}"
+       title="{{'edit' | translate}}">
+      <i class="fa fa-pencil"></i>
+    </a>
+    <a class="btn btn-link pull-right"
+       data-ng-show="user.canEditRecord(md)"
+       data-gn-click-and-spin="deleteRecord(md)"
+       title="{{'delete' | translate}}">
+
+      <i class="fa fa-trash-o"></i>
+    </a>
+  </li>
+</ul>

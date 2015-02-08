@@ -67,6 +67,10 @@
         <facet name="createDateYear" indexKey="createDateYear" label="createDateYears"/>
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
+        <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
+        <facet name="isValid" indexKey="_isValid" label="isValid"/>
+        <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
+        <facet name="status" indexKey="_status" label="status"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     </facets>
@@ -87,6 +91,14 @@
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        </summaryType>
+        <summaryType name="manager">
+          <item facet="metadataType" max="3" sortBy="value"/>
+          <item facet="status" max="10" sortBy="value"/>
+          <item facet="isValid" max="3" sortBy="value"/>
+          <item facet="isHarvested" max="2" sortBy="value"/>
+          <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         </summaryType>
         <summaryType name="titles">

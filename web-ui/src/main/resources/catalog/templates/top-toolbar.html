@@ -36,9 +36,9 @@
         <i class="fa fa-plus"/>
         <span  data-translate="">contribute</span>
       </a></li>
-      <li><a href="{{pages.admin}}"
-         data-ng-show="authenticated"
-         title="{{'adminConsole' | translate}}">
+      <li><a data-ng-href="{{pages.admin}}"
+             data-ng-show="user.isReviewerOrMore()"
+             title="{{'adminConsole' | translate}}">
           <i class="fa fa-th"/>
           <span  data-translate="">adminConsole</span>
       </a></li>

@@ -183,5 +183,6 @@
     "showHideErrors": "Show / hide errors",
     "showHideSuccess": "Show / hide success",
     "deleteField": "Delete this field",
-    "deleteFieldSet": "Delete this fields set"
+    "deleteFieldSet": "Delete this fields set",
+    "onlyMyRecord": "Only my record"
 }
