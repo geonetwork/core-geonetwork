@@ -71,6 +71,7 @@
         <facet name="isValid" indexKey="_isValid" label="isValid"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
         <facet name="status" indexKey="_status" label="status"/>
+        <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     </facets>
@@ -97,6 +98,7 @@
           <item facet="metadataType" max="3" sortBy="value"/>
           <item facet="status" max="10" sortBy="value"/>
           <item facet="isValid" max="3" sortBy="value"/>
+          <item facet="standard" max="15" sortBy="value"/>
           <item facet="isHarvested" max="2" sortBy="value"/>
           <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>

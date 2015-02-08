@@ -51,7 +51,8 @@
       $scope.deleteRecord = function(md) {
         var deferred = $q.defer();
 
-        gnMetadataActions.deleteMd(md).then(function(data) {
+        gnMetadataActions.deleteMd(md, $scope.searchObj.params).
+          then(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('metadataRemoved',
               {title: md.title || md.defaultTitle}),
@@ -60,7 +61,7 @@
           deferred.resolve(data);
         }, function(reason) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate(reason.data),
+            title: $translate(reason.data.error.message),
             timeout: 0,
             type: 'danger'
           });

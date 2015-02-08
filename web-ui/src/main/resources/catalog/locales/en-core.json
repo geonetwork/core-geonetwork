@@ -169,5 +169,14 @@
     "whoCanAccess": "Who has access",
     "actions" : "Actions",
     "reset" : "Reset",
-    "stop": "Stop"
+    "stop": "Stop",
+    "isHarvested": "Harvested",
+    "y": "Yes",
+    "n": "No",
+    "metadataTypes": "Type of record",
+    "_isTemplate": "Type of record",
+    "_isHarvested": "Harvested",
+    "isTemplatey": "Template",
+    "isTemplates": "Directory",
+    "isTemplaten": "Record"
 }

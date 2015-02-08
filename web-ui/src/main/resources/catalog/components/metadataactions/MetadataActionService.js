@@ -126,17 +126,17 @@
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
 
-      this.deleteMd = function(md) {
+      this.deleteMd = function(md, searchParams) {
         if (md) {
           return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch');
+            $rootScope.$broadcast('resetSearch', searchParams);
           });
         }
         else {
           return callBatch('mdDeleteBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch');
+            $rootScope.$broadcast('resetSearch', searchParams);
           });
         }
       };

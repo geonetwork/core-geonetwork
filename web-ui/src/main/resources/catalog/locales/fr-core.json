@@ -169,5 +169,14 @@
     "whoCanAccess": "Qui à accès ?",
     "actions": "Actions",
     "reset": "Reset",
-    "stop": "Stop"
+    "stop": "Stop",
+    "isHarvested": "Moissonnée",
+    "y": "Oui",
+    "n": "Non",
+    "metadataTypes": "Type de fiche",
+    "_isTemplate": "Type de fiche",
+    "_isHarvested": "Moissonnée",
+    "isTemplatey": "Modèle",
+    "isTemplates": "Annuaire",
+    "isTemplaten": "Fiche"
 }

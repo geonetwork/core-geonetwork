@@ -1,24 +1,45 @@
 <ul class="list-group gn-resultview gn-resultview-title">
   <li class="list-group-item"
       data-ng-repeat="md in searchResults.records">
-    <input data-gn-selection-md type="checkbox"
-           data-ng-model="md['geonet:info'].selected"
-           data-ng-change="change()"/>
-    <a href=""
-       data-ng-href="../../?uuid={{md.getUuid()}}"
-       title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
-    <a class="btn btn-link pull-right"
-       data-ng-show="user.canEditRecord(md)"
-       data-ng-href="#/metadata/{{md['geonet:info'].id}}"
-       title="{{'edit' | translate}}">
-      <i class="fa fa-pencil"></i>
-    </a>
-    <a class="btn btn-link pull-right"
-       data-ng-show="user.canEditRecord(md)"
-       data-gn-click-and-spin="deleteRecord(md)"
-       title="{{'delete' | translate}}">
+    <p>
+      <input data-gn-selection-md type="checkbox"
+             data-ng-model="md['geonet:info'].selected"
+             data-ng-change="change()"/>
+      <a href=""
+         data-ng-href="../../?uuid={{md.getUuid()}}"
+         title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
 
-      <i class="fa fa-trash-o"></i>
-    </a>
+      <!-- TODO: subtemplate link for editing is different -->
+      <a class="btn btn-link pull-right"
+         data-ng-show="user.canEditRecord(md)"
+         data-ng-href="#/metadata/{{md['geonet:info'].id}}"
+         title="{{'edit' | translate}}">
+        <i class="fa fa-pencil"></i>
+      </a>
+      <a class="btn btn-link pull-right"
+         data-ng-show="user.canEditRecord(md)"
+         data-gn-click-and-spin="deleteRecord(md)"
+         title="{{'delete' | translate}}">
+
+        <i class="fa fa-trash-o"></i>
+      </a>
+      <a class="btn btn-link pull-right"
+             data-ng-href="#/create?from={{md['geonet:info'].id}}"
+             title="{{'duplicate' | translate}}">
+        <i class="fa fa-copy"></i>
+      </a>
+      <a class="btn btn-link pull-right"
+         data-ng-show="user.canEditRecord(md)"
+         data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
+         title="{{'createChild' | translate}}">
+        <i class="fa fa-sitemap"></i>
+      </a>
+    </p>
+    <p>
+      <span data-ng-show="user.isReviewerOrMore()" class="badge">
+      {{('isTemplate' + md.isTemplate) | translate}}
+      </span>
+      <span class="badge">{{md.isHarvested}}</span>
+    </p>
   </li>
 </ul>
