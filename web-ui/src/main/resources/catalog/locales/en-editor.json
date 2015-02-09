@@ -14,7 +14,7 @@
     "addLinks": "Add links",
     "addOnlinesrc": "Add an online resource",
     "addOnlinesrcTitle": "Link an online resource to the current metadata",
-    "addRecord": "Add record",
+    "addRecord": "Add new record",
     "addThumbnail": "Add a thumbnail",
     "addThumbnailTitle": "Add an overview to the current metadata",
     "allChangesCanceled": "All changes cancelled.",
@@ -183,5 +183,7 @@
     "showHideErrors": "Show / hide errors",
     "showHideSuccess": "Show / hide success",
     "deleteField": "Delete this field",
-    "deleteFieldSet": "Delete this fields set"
+    "deleteFieldSet": "Delete this fields set",
+    "onlyMyRecord": "Only my record",
+    "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records."
 }
