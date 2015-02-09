@@ -395,7 +395,11 @@ public class Info implements Service {
         // you're Administrator
         if (Profile.Administrator == session.getProfile()) {
             // return all groups
-            result = groupRepository.findAllAsXml(null, sort);
+            if (includingSystemGroups) {
+                result = groupRepository.findAllAsXml(null, sort);
+            } else {
+                return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+            }
         } else {
             Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
