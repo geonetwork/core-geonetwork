@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
@@ -50,14 +51,17 @@ import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.harvesting.notifier.SendNotification;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.quartz.JobDetail;
@@ -65,6 +69,11 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.File;
@@ -200,9 +209,26 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         //--- init harvester
         doInit(node, context);
 
+        initInfo(context);
+
         initializeLog();
         if (status == Status.ACTIVE) {
             doSchedule();
+        }
+    }
+
+    private void initInfo(ServiceContext context) {
+        final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+        Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(getParams().getUuid());
+        Pageable pageRequest = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
+        final Page<HarvestHistory> page = historyRepository.findAll(spec, pageRequest);
+        if (page.hasContent()) {
+            final HarvestHistory history = page.getContent().get(0);
+            try {
+                this.loadedInfo = history.getInfoAsXml();
+            } catch (IOException | JDOMException e) {
+                // oh well.  we did our best to get data from the harvester.
+            }
         }
     }
 
@@ -724,7 +750,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
 
-        if (result == null) {
+        if (result == null && this.loadedInfo == null) {
             return;
         }
 
@@ -892,6 +918,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public Element getResult() {
         Element res = new Element("result");
         if (result != null) {
+            this.loadedInfo = null;
             add(res, "added", result.addedMetadata);
             add(res, "atomicDatasetRecords", result.atomicDatasetRecords);
             add(res, "badFormat", result.badFormat);
@@ -917,11 +944,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             add(res, "updated", result.updatedMetadata);
             add(res, "thumbnails", result.thumbnails);
             add(res, "thumbnailsFailed", result.thumbnailsFailed);
+        } else if (this.loadedInfo != null) {
+            return (Element) this.loadedInfo.clone();
         }
         return res;
     }
     public void emptyResult() {
         result = null;
+        this.loadedInfo = null;
     }
 
     /**
@@ -974,6 +1004,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     protected AbstractParams params;
     protected T result;
+    private Element loadedInfo;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 }

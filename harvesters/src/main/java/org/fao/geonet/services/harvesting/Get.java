@@ -108,7 +108,7 @@ public class Get implements Service {
             @SuppressWarnings("unchecked")
             final List<Element> harvesterInfo = harvesters.getChildren();
             for (Element element : harvesterInfo) {
-                if (!element.getName().equalsIgnoreCase("info")) {
+                if (!element.getName().equalsIgnoreCase("info") && !element.getName().equalsIgnoreCase("error")) {
                     toRemove.add(element);
                 }
             }

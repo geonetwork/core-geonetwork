@@ -602,7 +602,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         final Specification<Metadata> specification = MetadataSpecs.hasHarvesterUuid(harvesterUUID);
         int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
-
+        ah.emptyResult();
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
 
         // clear last run info

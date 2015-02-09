@@ -71,7 +71,7 @@
 
       var getRunningHarvesterIds = function() {
         var runningHarvesters = [];
-        for (var i = 0; i < $scope.harvesters.length; i++) {
+        for (var i = 0; $scope.harvesters && i < $scope.harvesters.length; i++) {
           var h = $scope.harvesters[i];
           if (h.info.running) {
             runningHarvesters.push(h['@id']);
@@ -93,6 +93,7 @@
 
         $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id='+runningHarvesters.join("&id=")).success(
           function(data) {
+            isPolling = false;
             if (data != 'null') {
               if (!angular.isArray(data)) {
                 data = [data];
@@ -109,11 +110,13 @@
                 if (old && !angular.equals(old.info, h.info)) {
                   old.info = h.info;
                 }
+                if (old && !angular.equals(old.error, h.error)) {
+                  old.error = h.error;
+                }
               }
 
-              setTimeout(function() {pollHarvesterStatus()}, 5000);
+              setTimeout(pollHarvesterStatus, 5000);
             }
-            isPolling = false;
           }).error(function(data) {
             isPolling = false;
           });
