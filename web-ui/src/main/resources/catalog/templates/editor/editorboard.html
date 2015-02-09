@@ -1,7 +1,7 @@
 <div class="gn-editor-board"
      data-ng-controller="GnSearchController">
   <div class="row" data-ng-controller="GnEditorBoardSearchController">
-    <div class="col-sm-8"
+    <div class="col-sm-9"
          data-ng-search-form=""
          data-runSearch="true">
 
@@ -96,20 +96,24 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <a href="#/create" class="btn btn-primary btn-lg btn-block">
         <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
       </a>
       <a href="#/import" class="btn btn-default btn-lg btn-block">
-        <i class="fa fa-plus"/>&nbsp;<span data-translate="">ImportRecord</span>
+        <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
       </a>
       <a href="#/directory" class="btn btn-default btn-lg btn-block"
         ng-if="user.isReviewerOrMore()">
         <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
       </a>
+
+      <br/>
+
+      <p class="alert alert-info"
+         data-translate="">editorBoardInfo</p>
     </div>
   </div>
-
   <div data-ng-include="'../../catalog/templates/info.html'">
   </div>
 </div>

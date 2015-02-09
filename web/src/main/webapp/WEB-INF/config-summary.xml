@@ -56,6 +56,8 @@
 -->
     <facets>
         <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
+        <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
+        <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
@@ -68,12 +70,13 @@
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
-        <facet name="isValid" indexKey="_isValid" label="isValid"/>
+        <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
         <facet name="status" indexKey="_status" label="status"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
+        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners" localized="true"/>
+        <facet name="publishedForGroup" indexKey="_op0" label="publishedForGroup" localized="true"/>
     </facets>
 
     <summaryTypes>
@@ -82,6 +85,7 @@
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
             <item facet="serviceType"/>
@@ -95,13 +99,18 @@
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         </summaryType>
         <summaryType name="manager">
-          <item facet="metadataType" max="3" sortBy="value"/>
-          <item facet="status" max="10" sortBy="value"/>
+          <item facet="category" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+          <item facet="status" max="10" sortBy="value"
+                translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
           <item facet="isValid" max="3" sortBy="value"/>
+          <item facet="groupOwner" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+          <item facet="publishedForGroup" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
           <item facet="standard" max="15" sortBy="value"/>
           <item facet="isHarvested" max="2" sortBy="value"/>
-          <item facet="groupOwner" max="99" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+          <item facet="metadataType" max="3" sortBy="value"/>
         </summaryType>
         <summaryType name="titles">
             <item facet="title" sortOrder="desc" max="100"/>

@@ -27,7 +27,9 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         params: {
           sortBy: 'changeDate',
-          _isTemplate: 'y or n or s',
+          // TODO manage subtemplate from this UI
+          //_isTemplate: 'y or n or s',
+          _isTemplate: 'y or n',
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
