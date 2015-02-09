@@ -515,7 +515,8 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:copy-of select="$template/snippet/*"/>
+                <xsl:value-of select="saxon:serialize($template/snippet/*,
+                                      'default-serialize-mode')"/>
               </textarea>
             </div>
           </xsl:if>
