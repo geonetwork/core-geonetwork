@@ -266,7 +266,7 @@
         <td><xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $numberFormat)"/></td>
         <td>
           <img class="gn-img-extent"
-                 src="region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
+                 src="{root/url}/geonetwork/srv/fre/region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
         </td>
         <td><xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $numberFormat)"/></td>
       </tr>
