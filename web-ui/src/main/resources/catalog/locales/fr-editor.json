@@ -14,7 +14,7 @@
     "addLinks": "Ajouter les liens",
     "addOnlinesrc": "Ajouter un lien ou un fichier",
     "addOnlinesrcTitle": "Ajouter une ressource en ligne",
-    "addRecord": "Ajouter une donnée",
+    "addRecord": "Ajouter une fiche",
     "addThumbnail": "Ajouter un aperçu",
     "addThumbnailTitle": "Ajouter un aperçu",
     "allChangesCanceled": "Tous les changements ont été annulés.",
@@ -183,5 +183,7 @@
     "showHideErrors": "Afficher / masquer les erreurs",
     "showHideSuccess": "Afficher / masquer les succès",
     "deleteField": "Supprimer ce champ",
-    "deleteFieldSet": "Supprimer cette section"
+    "deleteFieldSet": "Supprimer cette section",
+    "onlyMyRecord": "Uniquement mes fiches",
+    "editorBoardInfo": "A partir de cette page, créer ou importer de nouvelles fiches. Gérer vos fiches avec les accès rapides."
 }
