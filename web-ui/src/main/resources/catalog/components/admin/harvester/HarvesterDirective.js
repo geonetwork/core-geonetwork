@@ -167,7 +167,7 @@
                }
              };
              function loadGroups() {
-               $http.get('info@json?type=groups', {cache: true})
+               $http.get('info@json?type=groupsIncludingSystemGroups', {cache: true})
                  .success(function(data) {
                  scope.groups = data !== 'null' ? data.group : null;
                });
