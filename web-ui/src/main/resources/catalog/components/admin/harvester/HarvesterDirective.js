@@ -25,7 +25,7 @@
           scope.lang = 'eng'; // FIXME
           scope.openTranslationModal= function() {
             var translations = scope.harvester.site.translations;
-            if (translations === undefined) {
+            if (translations === undefined || angular.isArray(translations)) {
               translations = {};
               scope.harvester.site.translations = translations;
             }
