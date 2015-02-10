@@ -110,20 +110,14 @@
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
-    'gnEditor',
-    'gnSearchManagerService',
-    'gnConfigService',
-    'gnUtilityService',
-    'gnCurrentEdit',
-    'gnConfig',
+    'gnEditor', 'gnSearchManagerService',
+    'gnConfigService', 'gnUtilityService',
+    'gnCurrentEdit', 'gnConfig', 'gnMetadataActions',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
-        gnEditor, 
-        gnSearchManagerService, 
-        gnConfigService,
-            gnUtilityService, 
-            gnCurrentEdit,
-            gnConfig) {
+        gnEditor, gnSearchManagerService,
+        gnConfigService, gnUtilityService,
+        gnCurrentEdit, gnConfig, gnMetadataActions) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -266,7 +260,7 @@
       };
 
       $scope.startVersioning = function() {
-        return gnEditor.startVersioning();
+        return gnMetadataActions.startVersioning(gnCurrentEdit.id);
       };
 
       /**
