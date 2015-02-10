@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.search;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -1078,7 +1079,7 @@ public class SearchManager {
 	 */
 	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
 	                                            int threshold, ServiceContext context) throws Exception {
-        Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
+        Map<String, TermFrequency> termList = Maps.newHashMap();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
@@ -1105,8 +1106,13 @@ public class SearchManager {
                                         || (!startsWithOnly && StringUtils.containsIgnoreCase(analyzedText, analyzedSearchValue))
                                         || (startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
                                         || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
-                                    TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                                    termList.add(freq);
+                                    final TermFrequency existing = termList.get(text);
+                                    if (existing != null) {
+                                        existing.inc(termEnum.docFreq());
+                                    } else {
+                                        TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                                        termList.put(text, freq);
+                                    }
                                 }
                             }
                             term = termEnum.next();
@@ -1116,7 +1122,7 @@ public class SearchManager {
         } finally {
             releaseIndexReader(indexAndTaxonomy);
         }
-        return termList;
+        return termList.values();
     }
 
 	/**
@@ -1173,9 +1179,12 @@ public class SearchManager {
             TermFrequency other = (TermFrequency) obj;
             return compareTo(other) == 0;
         }
-		
-		
-	}
+
+
+        public void inc(int otherEncounters) {
+            this.frequency += otherEncounters;
+        }
+    }
 	// utilities
 
     /**
