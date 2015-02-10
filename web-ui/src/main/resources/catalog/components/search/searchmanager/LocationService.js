@@ -55,7 +55,7 @@
       };
 
       this.setMap = function() {
-        if(gnGlobalSettings.isMapViewerEnabled) {
+        if (gnGlobalSettings.isMapViewerEnabled) {
           $location.path(this.MAP);
         }
       };

@@ -103,10 +103,10 @@
 
               // Select the default one or the first one
               if ($scope.activeType &&
-                $.inArray($scope.activeType, $scope.mdTypes) !== -1) {
+                  $.inArray($scope.activeType, $scope.mdTypes) !== -1) {
                 $scope.selectType($scope.activeType);
               } else if (defaultType &&
-                $.inArray(defaultType, $scope.mdTypes) !== -1) {
+                  $.inArray(defaultType, $scope.mdTypes) !== -1) {
                 $scope.selectType(defaultType);
               } else if ($scope.mdTypes[0]) {
                 $scope.selectType($scope.mdTypes[0]);

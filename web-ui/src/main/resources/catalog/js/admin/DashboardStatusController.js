@@ -13,7 +13,7 @@
   module.filter('ellipses', function() {
     return function(input) {
       if (input && input.length > 35) {
-        return input.substring(0, 39) + " ...";
+        return input.substring(0, 39) + ' ...';
       } else {
         return input;
       }
@@ -54,32 +54,36 @@
         return '';
       };
       $scope.toggleThreadContentionMonitoring = function() {
-        $http.get('thread/debugging/true/' + $scope.threadStatus.threadContentionMonitoringEnabled).success(function (data){
-          $scope.threadStatus = data;
-        });
+        $http.get('thread/debugging/true/' +
+            $scope.threadStatus.threadContentionMonitoringEnabled).
+            success(function(data) {
+              $scope.threadStatus = data;
+            });
       };
       $scope.toggleThreadCpuTime = function() {
-        $http.get('thread/debugging/false/' + $scope.threadStatus.threadCpuTimeEnabled).success(function (data){
-          $scope.threadStatus = data;
-        });
+        $http.get('thread/debugging/false/' +
+            $scope.threadStatus.threadCpuTimeEnabled).
+            success(function(data) {
+              $scope.threadStatus = data;
+            });
       };
-      $scope.openThreadActivity = function (leaveOpen) {
+      $scope.openThreadActivity = function(leaveOpen) {
         var threadActivityEl = $('#threadActivity');
         if (!leaveOpen) {
           threadActivityEl.collapse('toggle');
         }
         $scope.threadInfoLoading = true;
-        $http.get('thread/status').success(function(data){
-           $scope.threadInfoLoading = false;
-           $scope.threadStatus = data;
+        $http.get('thread/status').success(function(data) {
+          $scope.threadInfoLoading = false;
+          $scope.threadStatus = data;
 
           if (!leaveOpen) {
             $('html, body').animate({
-              scrollTop: $("#threadActivityHeading").offset().top
+              scrollTop: $('#threadActivityHeading').offset().top
             }, 1000);
           }
 
-          setTimeout(function(){
+          setTimeout(function() {
             if (threadActivityEl.hasClass('in')) {
               $scope.openThreadActivity(true);
             }
@@ -90,9 +94,9 @@
       };
       $scope.showStackTrace = function(thread, $event) {
         $scope.selectedThread = thread;
-        $scope.threadStackTrace = "Loading...";
+        $scope.threadStackTrace = 'Loading...';
         $('#stackTrace').modal('toggle');
-        $http.get('thread/trace/' + thread.id).success(function(data){
+        $http.get('thread/trace/' + thread.id).success(function(data) {
           $scope.threadStackTrace = data.stackTrace;
         });
       };

@@ -45,7 +45,7 @@
                     scope.hasErrors = scope.hasErrors || ruleType.error > 0;
                     angular.forEach(ruleType.patterns, function(pat) {
                       scope.numberOfRules +=
-                        pat.rules ? pat.rules.length : 0;
+                          pat.rules ? pat.rules.length : 0;
                     });
                   });
 

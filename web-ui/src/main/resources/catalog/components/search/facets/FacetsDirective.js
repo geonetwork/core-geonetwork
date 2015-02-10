@@ -112,7 +112,7 @@
             }
           }).then(function() {
             scope.$watch('searchResults.facet', function(v) {
-/*
+              /*
               if (oldParams &&
                   oldParams != scope.searchObj.params[scope.facetConfig.key]) {
               }
@@ -120,8 +120,8 @@
                 oldParams = scope.searchObj.params[scope.facetConfig.key];
                 scope.facetObj = v[scope.facetConfig.label];
               }
-*/
-              if(v && scope.facetConfig && scope.facetConfig.label) {
+              */
+              if (v && scope.facetConfig && scope.facetConfig.label) {
                 scope.facetObj = v[scope.facetConfig.label];
               }
             });
