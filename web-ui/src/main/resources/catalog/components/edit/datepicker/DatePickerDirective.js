@@ -12,8 +12,9 @@
    *  It's also useful as html datetime input are not
    *  yet widely supported.
    */
-  module.directive('gnDatePicker', ['$http', '$rootScope', '$filter',
-    function($http, $rootScope, $filter) {
+  module.directive('gnDatePicker',
+    ['$http', '$rootScope', '$filter', 'gnNamespaces', 'gnCurrentEdit',
+    function($http, $rootScope, $filter, gnNamespaces, gnCurrentEdit) {
 
       return {
         restrict: 'A',
@@ -36,8 +37,14 @@
           scope.dateTypeSupported = Modernizr.inputtypes.date;
           scope.isValidDate = true;
           var namespaces = {
-            gco: 'http://www.isotc211.org/2005/gco',
-            gml: 'http://www.opengis.net/gml'
+            iso19139: {
+              gco: gnNamespaces.gco,
+              gml: gnNamespaces.gml
+            },
+            'iso19115-3': {
+              gco: gnNamespaces.gco3,
+              gml: gnNamespaces.gml32
+            }
           }, datePattern = new RegExp('^\\d{4}$|' +
               '^\\d{4}-\\d{2}$|' +
               '^\\d{4}-\\d{2}-\\d{2}$|' +
@@ -141,7 +148,9 @@
                       scope.indeterminatePosition + '"';
                 }
                 scope.xmlSnippet = '<' + tag +
-                    ' xmlns:' + namespace + '="' + namespaces[namespace] + '"' +
+                    ' xmlns:' +
+                        namespace + '="' +
+                        namespaces[gnCurrentEdit.schema][namespace] + '"' +
                     attribute + '>' +
                     scope.dateTime + '</' + tag + '>';
               } else {
