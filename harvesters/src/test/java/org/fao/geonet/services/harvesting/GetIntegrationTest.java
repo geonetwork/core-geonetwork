@@ -79,9 +79,11 @@ public class GetIntegrationTest extends AbstractHarvesterServiceIntegrationTest 
         Element params = createParams(Pair.read("id", added));
         final Element result = get.exec(params, context);
 
-        Assert.assertEquals(Xml.getString(result)+"\n", added, result.getAttributeValue("id"));
-        Assert.assertEquals(Xml.getString(result)+"\n", "csw", result.getAttributeValue("type"));
-        Assert.assertFalse(Xml.getString(result) + "\n", result.getChildren().isEmpty());
+        Assert.assertEquals(1, result.getChildren().size());
+        Element node = result.getChild("node");
+        Assert.assertEquals(Xml.getString(result)+"\n", added, node.getAttributeValue("id"));
+        Assert.assertEquals(Xml.getString(result)+"\n", "csw", node.getAttributeValue("type"));
+        Assert.assertFalse(Xml.getString(result) + "\n", node.getChildren().isEmpty());
     }
 
 

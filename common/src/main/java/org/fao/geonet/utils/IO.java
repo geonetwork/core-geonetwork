@@ -391,7 +391,8 @@ public final class IO {
     }
 
     public static InputStream newInputStream(Path file) throws IOException {
-        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
+        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class) != null &&
+            ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
             return new DebuggingInputStream(file.toString(), Files.newInputStream(file));
         } else {
             return Files.newInputStream(file);
@@ -399,7 +400,8 @@ public final class IO {
     }
 
     public static BufferedReader newBufferedReader(Path path, Charset cs) throws IOException {
-        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
+        if (ApplicationContextHolder.get() != null && ApplicationContextHolder.get().getBean(SystemInfo.class) != null &&
+            ApplicationContextHolder.get().getBean(SystemInfo.class).isDevMode()) {
             return new DebuggingReader(path.toString(), Files.newBufferedReader(path, cs));
         } else {
             return Files.newBufferedReader(path, cs);

@@ -201,7 +201,7 @@ public abstract class AbstractParams {
         Element categ = node.getChild("categories");
 
         setName(Util.getParam(site, "name", getName()));
-        if (site.getChild(TRANSLATIONS) != null) {
+        if (site != null && site.getChild(TRANSLATIONS) != null) {
             setTranslations(Localized.translationXmlToLangMap(site.getChild(TRANSLATIONS).getChildren()));
         }
 

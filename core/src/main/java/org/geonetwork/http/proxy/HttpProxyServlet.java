@@ -1,5 +1,29 @@
 package org.geonetwork.http.proxy;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.geonetwork.http.proxy.util.RequestUtil;
+import org.geonetwork.http.proxy.util.ServletConfigUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -8,35 +32,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import jeeves.config.springutil.JeevesDelegatingFilterProxy;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.fao.geonet.Constants;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.constants.Geonet;
-
-import org.geonetwork.http.proxy.util.RequestUtil;
-import org.geonetwork.http.proxy.util.ServletConfigUtil;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Http proxy for ajax calls
@@ -44,7 +44,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author Jose Garcia
  */
 public class HttpProxyServlet extends HttpServlet {
-    protected AutowireCapableBeanFactory ctx;
+
+    protected transient AutowireCapableBeanFactory ctx;
 
     private static final long serialVersionUID = 1L;
 
@@ -122,8 +123,8 @@ public class HttpProxyServlet extends HttpServlet {
 
             // Get the proxy parameters
             //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
+//            String proxyHost = System.getProperty("http.proxyHost");
+//            String proxyPort = System.getProperty("http.proxyPort");
 
             // Checks if allowed host
             if (!isAllowedHost(host)) {

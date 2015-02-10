@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
@@ -83,12 +84,14 @@ public class Get implements Service {
         for (String id : ids) {
             Element node = harvestManager.get(id, context, sortField);
 
-            if (result != null) {
+            if (node != null) {
                 if (idEls.isEmpty()) {
                     result = node;
                 } else {
                     result.addContent(node.detach());
                 }
+            } else {
+                throw new ObjectNotFoundEx("No Harvester found with id: " + id);
             }
         }
 

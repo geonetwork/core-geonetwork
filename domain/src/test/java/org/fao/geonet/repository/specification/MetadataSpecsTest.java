@@ -4,7 +4,11 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,14 +16,22 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
-import static org.fao.geonet.repository.specification.MetadataSpecs.*;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasCategory;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasExtra;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasHarvesterUuid;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataIdIn;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasSchemaId;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasSource;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasType;
+import static org.fao.geonet.repository.specification.MetadataSpecs.isHarvested;
+import static org.fao.geonet.repository.specification.MetadataSpecs.isOwnedByOneOfFollowingGroups;
+import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
 
 /**
  * Test for MetadataSpecs.
@@ -76,7 +88,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         Metadata md2 = _repository.save(metadata2);
 
         assertEquals(1, _repository.findAll(hasSchemaId(schemaId1)).size());
-        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)));
+        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)).size());
         assertEquals(0, _repository.findAll(hasSchemaId("other")).size());
 
         assertEquals(md1.getId(), _repository.findOne(hasSchemaId(schemaId1)).getId());
