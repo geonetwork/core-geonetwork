@@ -457,7 +457,7 @@
           },
 
 
-        /**
+          /**
            * Creates an ol.layer for a given type. Useful for contexts
            * @param {string} type
            * @param {Object} opt for url or layer name

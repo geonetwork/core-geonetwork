@@ -17,20 +17,22 @@
     '$scope', '$http', '$rootScope', '$translate',
     function($scope, $http, $rootScope, $translate) {
 
-      $scope.$on("$locationChangeStart", function(event) {
-        if ($('.ng-dirty').length > 0 && !confirm($translate('unsavedChangesWarning')))
+      $scope.$on('$locationChangeStart', function(event) {
+        if ($('.ng-dirty').length > 0 &&
+            !confirm($translate('unsavedChangesWarning')))
           event.preventDefault();
       });
 
       $scope.sources = [];
       $scope.sourcesSelected = null;
       $scope.dirty = false;
-      $http.get('info?_content_type=json&type=languages', {cache: true}).success(function(data) {
-          $scope.languages = data.language;
-        });
+      $http.get('info?_content_type=json&type=languages', {cache: true}).
+          success(function(data) {
+            $scope.languages = data.language;
+          });
 
       $scope.selectSource = function(source) {
-        if ($('.ng-dirty').length > 0 && confirm($translate("doSaveConfirm"))) {
+        if ($('.ng-dirty').length > 0 && confirm($translate('doSaveConfirm'))) {
           $scope.saveSources(false);
         }
         $scope.sourcesSelected = source;
@@ -67,23 +69,25 @@
         var data = [];
         for (var l in $scope.sourcesSelected.label) {
           if ($scope.sourcesSelected.label.hasOwnProperty(l)) {
-            data.push("translations-" + l + "=" + $scope.sourcesSelected.label[l]);
+            data.push('translations-' + l + '=' +
+                $scope.sourcesSelected.label[l]);
           }
         }
 
-        $http.post($scope.url + 'source/' + encodeURIComponent($scope.sourcesSelected.uuid),
+        $http.post($scope.url + 'source/' +
+            encodeURIComponent($scope.sourcesSelected.uuid),
             data.join('&'), {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
+              $('.ng-dirty').removeClass('ng-dirty');
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('settingsUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
             .error(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
+              $('.ng-dirty').removeClass('ng-dirty');
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('settingsUpdateError'),
                     error: data,
@@ -92,7 +96,7 @@
                 });
       };
       loadSources();
-      
+
     }]);
 
 })();

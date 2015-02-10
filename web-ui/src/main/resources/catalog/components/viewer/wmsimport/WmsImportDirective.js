@@ -61,9 +61,9 @@
           scope.$on(event, function(e, url) {
             $('#layers').removeClass('force-hide');
             $('[gn-wms-import]').removeClass('collapsed');
-            var button = $("[data-gn-import-button=" + type + "]");
+            var button = $('[data-gn-import-button=' + type + ']');
             var element = button.parent().parent();
-            
+
             element.find('.btn-group.flux button').removeClass('active');
             element.addClass('active');
             button.addClass('active');
@@ -72,7 +72,7 @@
             element.find('.unfold').css('opacity', 1);
             element.find('.panel-carousel-container').css('left',
                 '-' + (button.index() * 100) + '%');
-            
+
             scope.url = url;
             scope.load(url);
           });

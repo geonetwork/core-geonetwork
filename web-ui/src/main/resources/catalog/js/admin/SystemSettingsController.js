@@ -9,7 +9,7 @@
     return function(input) {
       var filtered = [];
       angular.forEach(input, function(el) {
-        if (el['@name'].indexOf("system/site/labels/") === -1) {
+        if (el['@name'].indexOf('system/site/labels/') === -1) {
           filtered.push(el);
         }
       });

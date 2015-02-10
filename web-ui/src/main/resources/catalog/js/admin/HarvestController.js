@@ -71,7 +71,8 @@
 
       var getRunningHarvesterIds = function() {
         var runningHarvesters = [];
-        for (var i = 0; $scope.harvesters && i < $scope.harvesters.length; i++) {
+        for (var i = 0; $scope.harvesters &&
+            i < $scope.harvesters.length; i++) {
           var h = $scope.harvesters[i];
           if (h.info.running) {
             runningHarvesters.push(h['@id']);
@@ -91,35 +92,36 @@
         }
         isPolling = true;
 
-        $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id='+runningHarvesters.join("&id=")).success(
-          function(data) {
-            isPolling = false;
-            if (data != 'null') {
-              if (!angular.isArray(data)) {
-                data = [data];
-              }
-              var harvesterIndex = {};
-              angular.forEach($scope.harvesters, function(oldH) {
-                harvesterIndex[oldH['@id']] = oldH;
-              });
-
-              for (var i = 0; i < data.length; i++) {
-                var h = data[i];
-                gnUtilityService.parseBoolean(h.info);
-                var old = harvesterIndex[h['@id']];
-                if (old && !angular.equals(old.info, h.info)) {
-                  old.info = h.info;
+        $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id=' +
+            runningHarvesters.join('&id=')).success(
+            function(data) {
+              isPolling = false;
+              if (data != 'null') {
+                if (!angular.isArray(data)) {
+                  data = [data];
                 }
-                if (old && !angular.equals(old.error, h.error)) {
-                  old.error = h.error;
-                }
-              }
+                var harvesterIndex = {};
+                angular.forEach($scope.harvesters, function(oldH) {
+                  harvesterIndex[oldH['@id']] = oldH;
+                });
 
-              setTimeout(pollHarvesterStatus, 5000);
-            }
-          }).error(function(data) {
-            isPolling = false;
-          });
+                for (var i = 0; i < data.length; i++) {
+                  var h = data[i];
+                  gnUtilityService.parseBoolean(h.info);
+                  var old = harvesterIndex[h['@id']];
+                  if (old && !angular.equals(old.info, h.info)) {
+                    old.info = h.info;
+                  }
+                  if (old && !angular.equals(old.error, h.error)) {
+                    old.error = h.error;
+                  }
+                }
+
+                setTimeout(pollHarvesterStatus, 5000);
+              }
+            }).error(function(data) {
+          isPolling = false;
+        });
       };
 
       function loadHistory(backgroundLoad) {
@@ -238,7 +240,7 @@
         angular.forEach(h.site.translations, function(value, key) {
           translations += '<' + key + '>' + value + '</' + key + '>';
         });
-        return "<translations>" + translations + "</translations>";
+        return '<translations>' + translations + '</translations>';
       };
       $scope.buildResponseGroup = function(h) {
         var groups = '';

@@ -111,6 +111,12 @@
                      var width = ($(window).width() -
                          element.offset().left -
                          element.outerWidth()) * .95;
+
+                     var closeBtn = '<button onclick="$(this).' +
+                       'closest(\'div.popover\').prev().' +
+                       'popover(\'hide\');" type="button" ' +
+                       'class="fa fa-times btn btn-link pull-right"></button>';
+
                      element.popover({
                        title: info.description,
                        content: html,
@@ -121,7 +127,7 @@
                        'width:' + width + 'px"' +
                        '>' +
                        '<div class="arrow">' +
-                       '</div><div class="popover-inner">' +
+                       '</div><div class="popover-inner">' + closeBtn +
                        '<h3 class="popover-title"></h3>' +
                        '<div class="popover-content"><p></p></div></div></div>',
                        //                       trigger: 'click',
@@ -136,7 +142,6 @@
                      } else {
                        element.focus();
                      }
-
                      isInitialized = true;
                    }
                  });

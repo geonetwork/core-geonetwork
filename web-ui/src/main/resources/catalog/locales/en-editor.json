@@ -185,5 +185,6 @@
     "deleteField": "Delete this field",
     "deleteFieldSet": "Delete this fields set",
     "onlyMyRecord": "Only my record",
+    "toggleSection": "Toggle expand / collapse",
     "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records."
 }

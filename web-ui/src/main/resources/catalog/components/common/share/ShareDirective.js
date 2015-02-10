@@ -46,8 +46,8 @@
             internalGroupsProfiles: gnShareConstants.internalGroupsProfiles
           });
 
-          if(angular.isUndefined(scope.id)) {
-              scope.alertMsg = true;
+          if (angular.isUndefined(scope.id)) {
+            scope.alertMsg = true;
           }
 
           var loadPrivileges;

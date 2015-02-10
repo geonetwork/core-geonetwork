@@ -110,20 +110,14 @@
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
-    'gnEditor',
-    'gnSearchManagerService',
-    'gnConfigService',
-    'gnUtilityService',
-    'gnCurrentEdit',
-    'gnConfig',
+    'gnEditor', 'gnSearchManagerService',
+    'gnConfigService', 'gnUtilityService',
+    'gnCurrentEdit', 'gnConfig', 'gnMetadataActions',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
-        gnEditor, 
-        gnSearchManagerService, 
-        gnConfigService,
-            gnUtilityService, 
-            gnCurrentEdit,
-            gnConfig) {
+        gnEditor, gnSearchManagerService,
+        gnConfigService, gnUtilityService,
+        gnCurrentEdit, gnConfig, gnMetadataActions) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -266,7 +260,7 @@
       };
 
       $scope.startVersioning = function() {
-        return gnEditor.startVersioning();
+        return gnMetadataActions.startVersioning(gnCurrentEdit.id);
       };
 
       /**
@@ -312,6 +306,9 @@
         $(function() {
           $('fieldset, .gn-field').on('mouseover', function(e) {
             e.stopPropagation();
+
+            // TODO: This may need improvements
+            // on touchscreen delete action will not be visible
             $(this).addClass('field-bg');
             $(this).find('i.btn.fa-times.text-danger')
               .css('visibility', 'visible');
@@ -325,6 +322,8 @@
         $timeout(function() {
           /**
           * Toggle collapse-expand fieldsets
+          * TODO: This is in conflict with click
+          * event added by field tooltip
           */
           $('legend').click(function() {
             var legend = $(this);
@@ -332,7 +331,7 @@
             var content = legend.nextAll();
             //open up the content needed - toggle the slide-
             //if visible, slide up, if not slidedown.
-            content.slideToggle(500, function() {
+            content.slideToggle(250, function() {
               //execute this after slideToggle is done
               //change the icon of the legend based on
               // visibility of content div
@@ -342,12 +341,6 @@
               else { legend.addClass('collapsed'); }
             });
 
-          });
-          /**
-          * initialize tooltip
-          */
-          $(function() {
-            $('[data-toggle="tooltip"]').tooltip();
           });
         });
 
