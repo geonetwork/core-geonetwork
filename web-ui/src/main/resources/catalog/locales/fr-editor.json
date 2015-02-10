@@ -185,5 +185,6 @@
     "deleteField": "Supprimer ce champ",
     "deleteFieldSet": "Supprimer cette section",
     "onlyMyRecord": "Uniquement mes fiches",
+    "toggleSection": "Déplier / replier la section",
     "editorBoardInfo": "A partir de cette page, créer ou importer de nouvelles fiches. Gérer vos fiches avec les accès rapides."
 }

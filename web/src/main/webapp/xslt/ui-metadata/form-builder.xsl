@@ -238,7 +238,15 @@
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
       class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-toggle="tooltip" data-placement="top" title="Toggle expand / collapse">
+      <legend class="{$cls}"
+              data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+        <!--
+         The toggle title is in conflict with the element title
+         required for the element tooltip
+         and bootstrap set the title attribute an higher priority.
+         TODO: Could be improved ?
+         title="{{{{'toggleSection' | translate}}}}"
+        -->
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -285,7 +293,7 @@
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
-      data-toggle="tooltip" data-placement="top" title="{{{{'deleteFieldSet' | translate}}}}"/>
+      title="{{{{'deleteFieldSet' | translate}}}}"/>
 
   </xsl:template>
   
