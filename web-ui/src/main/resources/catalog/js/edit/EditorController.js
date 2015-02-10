@@ -322,6 +322,8 @@
         $timeout(function() {
           /**
           * Toggle collapse-expand fieldsets
+          * TODO: This is in conflict with click
+          * event added by field tooltip
           */
           $('legend').click(function() {
             var legend = $(this);
