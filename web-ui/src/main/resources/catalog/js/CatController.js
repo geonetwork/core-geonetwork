@@ -24,10 +24,10 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings',
+    'gnGlobalSettings', '$location',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings) {
+            gnGlobalSettings, $location) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -42,9 +42,24 @@
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.pages = {
         home: 'home',
-        admin: 'admin.console',
         signin: 'catalog.signin'
       };
+      var adminConsolePath = "admin.console";
+      if (window.location.search.indexOf("debug") !== -1) {
+        adminConsolePath += "?debug";
+      }
+      if (window.location.pathname.indexOf("admin.console") !== -1) {
+        $scope.pages.adminClick = function($event) {
+          $event.stopPropagation();
+          if ($event.button === 1 || ($event.button === 0 && $event.ctrlKey)) {
+            window.open(adminConsolePath, '_blank');
+          } else {
+            $location.path('/');
+          }
+        };
+      } else {
+        $scope.pages.admin = adminConsolePath;
+      }
       $scope.layout = {
         hideTopToolBar: false
       };
