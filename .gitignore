@@ -37,7 +37,9 @@ docs/schema-loc-*.rst
 eclipse/
 web/src/main/webapp/WEB-INF/data/data/metadata_data
 web/src/main/webapp/WEB-INF/data/data/metadata_subversion
-web/src/main/webapp/WEB-INF/data/data/resources
+web/src/main/webapp/WEB-INF/data/data/resources/htmlcache
+web/src/main/webapp/WEB-INF/data/data/resources/xml
+web/src/main/webapp/WEB-INF/data/data/resources/images
 web/src/main/webapp/WEB-INF/data/index
 web/src/main/webapp/META-INF/MANIFEST.MF
 web-itest/jcs_caching

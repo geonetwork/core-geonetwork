@@ -23,10 +23,12 @@
 
 package org.fao.geonet.kernel.search.facet;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.kernel.search.classifier.Classifier;
 import org.fao.geonet.kernel.search.classifier.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 import java.util.Set;
 
@@ -103,5 +105,10 @@ public class Dimension {
     @SuppressWarnings("unchecked")
     public Set<String> getLocales() {
         return this.context.getBean("languages", Set.class);
+    }
+
+    @VisibleForTesting
+    void setApplicationContext(GenericApplicationContext applicationContext) {
+        this.context = applicationContext;
     }
 }

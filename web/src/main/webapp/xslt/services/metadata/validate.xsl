@@ -6,6 +6,9 @@
 
     <xsl:include href="validate-fn.xsl" />
 
+    <!-- Retrieve GUI language first 2 letters
+    for multilingual schematron using xml:lang attribute. -->
+    <xsl:variable name="language" select="substring(/root/gui/language, 1, 2)"/>
     <xsl:variable name="metadataSchema" select="/root/response/schema"/>
 
     <xsl:template match="/">
@@ -108,8 +111,9 @@
             </displayPriority>
             <label>
                 <xsl:variable name="translatedTitle"
-                    select="/root/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title" />
-                <xsl:variable name="defaultTitle" select="svrl:schematron-output/@title" />
+                              select="/root/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title" />
+                <xsl:variable name="defaultTitle"
+                              select="svrl:schematron-output/@title" />
                 <xsl:choose>
                     <xsl:when test="$translatedTitle">
                         <xsl:value-of select="$translatedTitle" />
@@ -146,7 +150,15 @@
     <xsl:template name="pattern">
         <pattern>
             <title>
+                <xsl:variable name="attributeName"
+                              select="concat('name_', $language)"/>
                 <xsl:choose>
+                    <xsl:when test="attribute::*[name() = $attributeName] != ''">
+                      <xsl:value-of select="attribute::*[name() = $attributeName]"/>
+                    </xsl:when>
+                    <xsl:when test="attribute::*[name() = 'name_en'] != ''">
+                      <xsl:value-of select="attribute::*[name() = 'name_en']"/>
+                    </xsl:when>
                     <xsl:when test="normalize-space(@name) != ''">
                         <xsl:value-of select="@name" />
                     </xsl:when>
@@ -178,7 +190,17 @@
                 <xsl:value-of select="@location" />
             </details>
             <msg>
-                <xsl:value-of select="normalize-space(svrl:text)" />
+              <xsl:choose>
+                <xsl:when test="svrl:diagnostic-reference[@xml:lang = $language]">
+                  <xsl:value-of select="svrl:diagnostic-reference[@xml:lang = $language]"/>
+                </xsl:when>
+                <xsl:when test="svrl:diagnostic-reference[@xml:lang = 'en']">
+                  <xsl:value-of select="svrl:diagnostic-reference[@xml:lang = 'en']"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="normalize-space(svrl:text)" />
+                </xsl:otherwise>
+              </xsl:choose>
             </msg>
         </rule>
     </xsl:template>

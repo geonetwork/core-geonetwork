@@ -15,7 +15,6 @@
         <img fmt-if="logo" class="logo" src="{{logo | escapeXmlAttrs}}"></img>
         <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
         <span class="title">{{title | escapeXmlContent}}</span>
-        <div fmt-include="html/drop-down-list.html" class="pull-right" />
     </h1>
     <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
         <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>

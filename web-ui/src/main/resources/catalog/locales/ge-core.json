@@ -1,7 +1,7 @@
 {
-    "all": "alle",
-    "allInPage": "auf einer Seite",
-    "none": "keiner",
+    "all": "Alles selektieren",
+    "allInPage": "in der Seite alles selektieren",
+    "none": "Alles unselektieren",
     "BadParameterEx": "Falscher Parameter",
     "Editor": "Editor",
     "Keywords": "Schlüsselwörter",
@@ -124,9 +124,9 @@
     "sendAComment": "Send us a comment",
     "sendPasswordLinkToMyEmail": "Send password link to my email",
     "service": "Dienste",
-    "serviceTypes": "Type of services",
+    "serviceTypes": "Service Typ",
     "signIn": "Anmelden",
-    "signedInAs": "Signed in as",
+    "signedInAs": "Identifiziert als",
     "signout": "Abmelden",
     "somethingWrong": "Something went wrong!",
     "south": "Sud",
@@ -149,6 +149,7 @@
     "uuid": "Geobasisdaten-ID",
     "url": "URL",
     "updateStatus": "Update record status",
+    "enableWorkflow": "Enable workflow",
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",
@@ -167,5 +168,6 @@
     "privileges": "Berechtigungen",
     "whoCanAccess": "Who has access",
     "actions": "Aktionen",
-    "reset": "Reset"
+    "reset": "Reset",
+    "stop": "Stop"
 }

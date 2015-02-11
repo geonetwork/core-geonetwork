@@ -3,7 +3,6 @@
 @viewport-padding: 1em;
 @transition-params: .3s ease;
 
-@gn-popup-max-height: 1000px;
 @gn-popup-max-width: 1200px;
 
 [gn-main-viewer],
@@ -86,26 +85,6 @@
         border-color: transparent;
         color: #FFF;
       }
-    }
-    [role=tooltip] {
-      position: absolute;
-      clip: rect(1px, 1px, 1px, 1px);
-      right: 0;
-    }
-    button:focus [role=tooltip],
-    button:hover [role=tooltip] {
-      clip: auto;
-      right: 2.8em;
-      background: rgba(0, 0, 0, .6);
-      color: #fff;
-      padding: .2em .5em;
-      margin-top: -.2em;
-      border-radius: .2em 0 0 .2em;
-      text-shadow: 0 0 1px #000;
-      z-index: 9000;
-    }
-    button.active [role=tooltip] {
-      display: none;
     }
   }
   .control-tools {
@@ -465,8 +444,9 @@
   min-width: 200px;
   max-width: @gn-popup-max-width;
   min-height: 100px;
-  max-height: @gn-popup-max-height;
+  max-height: ~"calc(100% - 89px)";
   z-index: 2000;
+  height: auto;
 
   @media (max-width: @screen-tablet) {
     z-index: 1500;
@@ -493,7 +473,7 @@
 .gn-popup-content {
   overflow: auto;
   max-width: inherit;
-  max-height: (@gn-popup-max-height - 60);
+  max-height: 600px;
   font-size: 12px;
   @media (max-width: @screen-phone) {
     width: 100%;

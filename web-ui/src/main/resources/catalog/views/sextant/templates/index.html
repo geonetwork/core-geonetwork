@@ -23,13 +23,6 @@
                   <div class="panel-body gn-searchform">
                     <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
                   </div>
-                  <div class="panel-footer">
-                    <div class="submit">
-                      <button type="button" data-ng-click="resetSearch()" class="btn btn-link" data-translate>Reset</button>
-                      <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
-                        <i class="fa fa-search"></i> <span data-translate>Search</span></button>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -37,6 +30,12 @@
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <div class="btn-toolbar">
+
+                      <!-- To Basket button-->
+                      <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
+                        <span class="fa fa-shopping-cart"></span>
+                        <span role="tooltip" data-translate="">Basket</span>
+                      </button>
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
@@ -56,8 +55,8 @@
           </form>
         </div>
       </tab>
-      <tab heading="{{mainTabs.view.title}}"
-           active="mainTabs.view.active">
+      <tab heading="{{mainTabs.metadata.title}}"
+           active="mainTabs.metadata.active">
         <div class="container-fluid">
           <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
         </div>

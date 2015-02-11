@@ -24,29 +24,25 @@ package org.fao.geonet.kernel.security.ldap;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.Log;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchResult;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,10 +50,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchResult;
 
 public class LDAPSynchronizerJob extends QuartzJobBean {
     
-    private ApplicationContext applicationContext;
+    private ConfigurableApplicationContext applicationContext;
     
     private DefaultSpringSecurityContextSource contextSource;
     
@@ -72,7 +74,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             // Retrieve application context. A defautl SpringBeanJobFactory
             // will not provide the application context to the job. Use
             // AutowiringSpringBeanJobFactory.
-            applicationContext = (ApplicationContext) jobExecContext
+            applicationContext = (ConfigurableApplicationContext) jobExecContext
                     .getJobDetail().getJobDataMap().get("applicationContext");
             
             
@@ -82,6 +84,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                         "  Application context is null. Be sure to configure SchedulerFactoryBean job factory property with AutowiringSpringBeanJobFactory.");
             }
 
+            ApplicationContextHolder.set(applicationContext);
             // start transaction
             runInTransaction(jobExecContext);
 

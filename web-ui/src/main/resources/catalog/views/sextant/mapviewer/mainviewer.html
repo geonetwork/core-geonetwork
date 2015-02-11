@@ -4,15 +4,21 @@
   <div id="map" ngeo-map="map" class="map"></div>
   <div gn-gfi="" map="map"></div>
 
+
+  <button class="btn btn-default sxt-search-btn" data-ng-click="locService.setSearch()" >
+    <span translate>Catalogue</span>
+    <i class="fa fa-play"></i>
+  </button>
+
   <!-- Left buttons - Tools-->
   <div class="tools main-tools" ng-class="{'activeTool': active.tool }" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
     <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
       <span class="fa fa-tasks"></span>
       <span role="tooltip" data-translate="">Layers</span>
     </button>
-    <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#importLayersPanel" gi-btn gnv-tools-btn>
-      <span class="fa fa-download"></span>
-      <span role="tooltip" data-translate="">importLayers</span>
+    <button sxt-tool class="btn btn-default" ng-model="activeTools.import" type="submit" rel="#importLayer" gi-btn gnv-tools-btn>
+      <span class="fa fa-plus-square-o"></span>
+      <span role="tooltip" data-translate="">Import</span>
     </button>
     <button sxt-tool class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
       <span class="fa fa-book"></span>
@@ -21,6 +27,10 @@
     <button sxt-tool class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
       <span class="fa fa-print"></span>
       <span role="tooltip" data-translate="">Print</span>
+    </button>
+    <button sxt-tool class="btn btn-default" ng-model="activeTools.info" type="submit" rel="#info" gi-btn gnv-tools-btn>
+      <span class="fa fa-info"></span>
+      <span role="tooltip" data-translate="">Info</span>
     </button>
     <button sxt-tool gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
       <span class="fa fa-expand"></span>
@@ -34,38 +44,18 @@
 
 
   <!--Top right buttons - Navigation-->
+  <div class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
   <div class="btn-group sx-toolbar tools">
-    <button gn-graticule-btn="map" class="btn btn-default" type="submit">
-    </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
-      <span class="fa fa-pencil"></span>
-      <span role="tooltip" data-translate="">Measure</span>
-    </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
-      <span class="fa fa-info"></span>
-      <span role="tooltip" data-translate="">Info</span>
-    </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
-      <span class="fa fa-book"></span>
-      <span role="tooltip" data-translate="">Contexts</span>
-    </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
-      <span class="fa fa-print"></span>
-      <span role="tooltip" data-translate="">Print</span>
-    </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
-      <span class="fa fa-arrows-alt"></span>
-      <span role="tooltip" data-translate="">Fullscreen</span>
-    </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
       <span class="fa fa-shopping-cart"></span>
       <span role="tooltip" data-translate="">Basket</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="locService.setSearch()">
-      <span class="fa fa-search"></span>
-      <span role="tooltip" data-translate="">backToSearch</span>
+  </div>
+  <div class="btn-group control-tools tools sxt-fullscreen">
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+      <span class="fa fa-desktop"></span>
+      <span role="tooltip" data-translate="">Fullscreen</span>
     </button>
-    <div gn-localisation-input map="map"></div>
   </div>
 
   <!--Top right buttons - Navigation-->
@@ -74,13 +64,15 @@
       <span class="fa fa-plus"></span>
       <span role="tooltip" data-translate="">Zoom</span>
     </button>
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+      <span class="fa fa-arrows-alt"></span>
+      <span role="tooltip" data-translate="">Localisation</span>
+    </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
       <span class="fa fa-minus"></span>
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
-      <span class="fa fa-map-marker"></span>
-      <span role="tooltip" data-translate="">Localisation</span>
+    <button gn-graticule-btn="map" class="btn btn-default" type="submit">
     </button>
   </div>
 
@@ -96,14 +88,14 @@
         <h5 data-translate="">ThemeLayers</h5>
       </div>
       <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-      <div gn-layermanager="" gn-layermanager-map="map"></div>
+      <div sxt-layertree="map"></div>
     </div>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="importLayersPanel" gnv-layermanager-btn>
+  <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
     <div class="panel-body">
-      <button type="button" class="btn btn-default unfold">
-        <span class="fa fa-chevron-down"></span>
+      <button type="button" class="btn btn-default close" sxt-close-tool>
+        &times;
       </button>
       <h5 data-translate="">AddALayer</h5>
 
@@ -131,6 +123,17 @@
       </button>
       <h5 data-translate="">MapContexts</h5>
       <div gn-ows-context="" map="map"></div>
+    </div>
+  </div>
+
+  <!--Info Panel-->
+  <div class="panel panel-default force-hide panel-tools" id="info">
+    <div class="panel-body panel-sm">
+      <button type="button" class="btn btn-default close" sxt-close-tool>
+        &times;
+      </button>
+      <h5 data-translate="">Info</h5>
+      <div class="alert alert-warning hidden-print" translate>info_instruction</div>
     </div>
   </div>
 

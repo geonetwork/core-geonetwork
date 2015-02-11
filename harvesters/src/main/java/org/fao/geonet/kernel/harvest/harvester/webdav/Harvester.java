@@ -83,7 +83,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	@Override
 	public HarvestResult harvest(Logger log) throws Exception {
 		this.log = log;
-        if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
+        if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.getName());
         RemoteRetriever rr = null;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
@@ -110,13 +110,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//---------------------------------------------------------------------------
 
 	private void align(final List<RemoteFile> files) throws Exception {
-		log.info("Start of alignment for : "+ params.name);
+		log.info("Start of alignment for : "+ params.getName());
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUris  = new UriMapper(context, params.uuid);
+		localUris  = new UriMapper(context, params.getUuid());
 
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -158,7 +158,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 				updateMetadata(rf, records.get(0));
 			}
 		}
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 	}
 
 	//--------------------------------------------------------------------------
@@ -261,11 +261,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 setCreateDate(date).
                 setType(MetadataType.METADATA);
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid).
+                setUuid(params.getUuid()).
                 setUri(rf.getPath());
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -293,7 +293,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.autodetectSchema(md);
 
             try {
-                params.validate.validate(dataMan, context, md);
+                params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();
             } catch (Exception e) {
                 log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());

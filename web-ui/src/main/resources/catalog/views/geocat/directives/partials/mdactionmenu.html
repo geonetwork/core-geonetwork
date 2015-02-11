@@ -1,0 +1,38 @@
+<div class="btn-group md-actions">
+  <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a ng-href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview"><i class="fa fa-eye"/><span translate>View</span></a></li>
+    <li><a ng-href="" ng-click="mdService.getPermalink(md)"><i class="fa fa-link"/><span translate>permalink</span></a></li>
+    <li><a ng-href="" data-ng-click="zoomToMdExtent(md,map)"><i class="fa fa-globe"></i><span translate>zoomto</span></a></li>
+    <li ng-if="user['@authenticated'] == 'true'"><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
+    <li ng-if="user['@authenticated'] == 'true'"><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
+    <li ng-if="user['@authenticated'] == 'true'" >
+      <a ng-click="mdService.publish(md)">
+        <i class="fa" data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
+        <span data-ng-if="md.isPublished()" translate>unpublish</span>
+        <span data-ng-if="!md.isPublished()" translate>publish</span>
+      </a>
+    </li>
+    <li ng-if="user['@authenticated'] == 'true'" class="dropdown-submenu">
+      <a tabindex="-1" href="" translate>Other</a>
+      <ul class="dropdown-menu ">
+        <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
+        <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
+        <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a tabindex="-1" href="" translate>Export</a>
+      <ul class="dropdown-menu ">
+        <li><a ng-href="xml.metadata.get?uuid={{md.getUuid()}}" target="_blank"><i class="fa fa-file-code-o"></i><span translate>exportXML</span></a></li>
+        <li><a ng-href="xml_iso19139?uuid={{md.getUuid()}}" target="_blank"><i class="fa fa-file-code-o"></i><span translate>exportcheXML</span></a></li>
+        <li><a ng-href="gm03.xml?uuid={{md.getUuid()}}" target="_blank"><i class="fa fa-file-code-o"></i><span translate>exportGM03</span></a></li>
+        <li><a ng-href="" data-ng-click="mdService.metadataRDF(md.getUuid())"><i class="fa fa-file-text-o"></i><span translate>exportRDF</span></a></li>
+        <li><a ng-href="md.format.pdf?xsl=full_view&id={{md.getUuid()}}"  target="_blank"><i class="fa fa-file-pdf-o"></i><span translate>exportPDF</span></a></li>
+        <li><a ng-href="" data-ng-click="mdService.metadataMEF(md.getUuid())"><i class="fa fa-file-zip-o"></i><span translate>exportMEF</span></a></li>
+      </ul>
+    </li>
+  </ul>
+</div>

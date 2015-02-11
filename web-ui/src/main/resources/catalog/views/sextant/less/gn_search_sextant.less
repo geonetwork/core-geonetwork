@@ -26,8 +26,11 @@
   }
   .gn-searchform
   {
-    height: ~"calc(100% - 55px)";
+    height: ~"calc(100%)";
     overflow: auto;
+    .close {
+      font-size: 20px;
+    }
   }
 }
 
@@ -52,7 +55,6 @@
     margin: 0;
   }
 }
-
 
 .expander {
   position: absolute;
@@ -309,6 +311,10 @@ ul.gn-resultview {
         font-size: .8em;
       }
     }
+    .md-abstract {
+      float: left;
+      width: ~"calc(66% - 1em)";
+    }
     div.gn-md-links {
       right: auto;
       position: static;
@@ -370,6 +376,8 @@ ul.gn-resultview {
     }
     .gn-md-title {
       margin: 1em;
+      max-height: 2.3em;
+      white-space: normal;
       a {
         color: #333333;
       }
@@ -417,7 +425,7 @@ ul.gn-resultview {
 
   /* Button on the right, current page info on the left */
   .btn-group {
-    float: left;
+    float: initial;
 
     /* Drop down to select hits is a simple link */
     button {

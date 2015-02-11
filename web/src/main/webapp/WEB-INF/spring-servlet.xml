@@ -17,7 +17,7 @@
     </bean>
 
     <bean class="org.springframework.web.servlet.view.xslt.XsltViewResolver">
-		<property name="prefix" value="/xsl" />
+		<property name="prefix" value="/xsl/" />
 		<property name="suffix" value=".xsl" />
 	</bean>
 

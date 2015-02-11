@@ -129,62 +129,6 @@ public class Handlers {
     NavBarItem createXmlNavBarItem() {
         return new NavBarItem(f.translate("xml"), f.translate("xml"), "", "xml.metadata.get?uuid=${env.metadataUUID}")
     }
-    def configureSummaryActionMenu(Summary summary) {
-        def url = env.localizedUrl
-        if (env.canEdit()) {
-            summary.actions << new MenuAction(label: "edit", javascript: "window.open('catalog.edit#/metadata/${this.env.metadataId}')", iconClasses: "fa fa-edit")
-            def publishUrl = {
-                def service = it ? "publish" : "unpublish"
-                "md.$service?ids=${env.metadataId}"
-            }
-
-            def basicPublicJs = { isPublish ->
-                """\$.ajax({
-                        url: '${publishUrl(isPublish)}',
-                        success: function() {
-                            \$('li#menu-action-publish').toggleClass('disabled');
-                            \$('li#menu-action-unpublish').toggleClass('disabled');
-                        }
-                      })""".replaceAll(/\s+/, " ")
-            }
-
-
-            def published = hasIndexValue("_groupPublished", "all")
-            def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
-            summary.actions << publishAction
-
-            def isValid = env.indexInfo.get("_valid")
-            if (isValid == null) {
-                isValid = '-1';
-            }
-            if (!published && (!requireValidMetadataForPublish || isValid.contains("1"))) {
-                publishAction.liClasses = ""
-            }
-            def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
-            summary.actions << unpublishAction
-            if (published) {
-                unpublishAction.liClasses = ""
-            }
-        }
-        summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
-                new MenuAction(label: "exportRaw", javascript: "window.open('xml.metadata.get?uuid=${this.env.metadataUUID}', '_blank')", iconClasses: "fa fa-file-code-o"),
-                new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
-                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-file-pdf-o"),
-                new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
-        ]);
-
-        def shareURL = { it + URLEncoder.encode("${url}md.format.html?xsl=full_view&uuid=${this.env.metadataUUID}", "UTF-8") }
-        summary.actions << new MenuAction(label: "share", iconClasses: "fa fa-share", submenu: [
-                new MenuAction(label: "googlePlus", javascript: "window.open('${shareURL('https://plus.google.com/share?url=')}')", iconClasses: "fa fa-google-plus"),
-                new MenuAction(label: "twitter", javascript: "window.open('${shareURL('https://twitter.com/share?url=')}')", iconClasses: "fa fa-twitter"),
-                new MenuAction(label: "facebook", javascript: "window.open('${shareURL('href="https://www.facebook.com/sharer.php?u=')}')", iconClasses: "fa fa-facebook")
-        ]);
-    }
-
-    def boolean hasIndexValue(indexField, value) {
-        def values = env.indexInfo.get(indexField)
-        values != null && values.contains(value)
-    }
 
     def loadHierarchyLinkBlocks() {
         def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]

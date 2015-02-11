@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
@@ -50,14 +51,17 @@ import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.harvesting.notifier.SendNotification;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.quartz.JobDetail;
@@ -65,6 +69,11 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.File;
@@ -82,6 +91,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
 import static org.quartz.JobKey.jobKey;
 
 /**
@@ -142,7 +152,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        final String harvesterName = this.getParams().name.replaceAll("\\W+", "_");
+        final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
         log = Log.createLogger(harvesterName,
                 "geonetwork.harvester");
 
@@ -199,9 +209,26 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         //--- init harvester
         doInit(node, context);
 
+        initInfo(context);
+
         initializeLog();
         if (status == Status.ACTIVE) {
             doSchedule();
+        }
+    }
+
+    private void initInfo(ServiceContext context) {
+        final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+        Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(getParams().getUuid());
+        Pageable pageRequest = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
+        final Page<HarvestHistory> page = historyRepository.findAll(spec, pageRequest);
+        if (page.hasContent()) {
+            final HarvestHistory history = page.getContent().get(0);
+            try {
+                this.loadedInfo = history.getInfoAsXml();
+            } catch (IOException | JDOMException e) {
+                // oh well.  we did our best to get data from the harvester.
+            }
         }
     }
 
@@ -224,7 +251,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SchedulerException
      */
     private void doUnschedule() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
@@ -243,7 +270,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SchedulerException
      */
     public void shutdown() throws SchedulerException {
-        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
     /**
@@ -266,7 +293,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
         
-        final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().uuid));
+        final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
         Set<String> sources = new HashSet<String>();
         for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
             sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
@@ -277,7 +304,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         for (String sourceUuid : sources) {
             Long ownedBySource = 
                     metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
-            if (ownedBySource == 0 && !sourceUuid.equals(params.uuid) && sourceRepository.exists(sourceUuid)) {
+            if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                 removeIcon(sourceUuid);
                 sourceRepository.delete(sourceUuid);
             }
@@ -318,7 +345,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public OperResult stop(Status newStatus) throws SQLException, SchedulerException {
         this.cancelMonitor.set(true);
-        getScheduler().interrupt(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().interrupt(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
 
         synchronized (this) {
             if (this.running) {
@@ -350,7 +377,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (running) {
             return OperResult.ALREADY_RUNNING;
         }
-        getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
+        getScheduler().triggerJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
         return OperResult.OK;
     }
 
@@ -434,6 +461,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return context;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     //---------------------------------------------------------------------------
     //---
     //--- Package methods (called by Executor)
@@ -470,7 +501,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private void login() throws Exception {
 
-        String ownerId = getParams().ownerId;
+        String ownerId = getParams().getOwnerId();
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
@@ -486,7 +517,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (user == null || StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
             // just pick any Administrator (they can all see all harvesters and groups anyway)
             user = repository.findAllByProfile(Profile.Administrator).get(0);
-            getParams().ownerId = String.valueOf(user.getId());
+            getParams().setOwnerId(String.valueOf(user.getId()));
             if (log.isDebugEnabled()) {
                 log.debug("AbstractHarvester login: picked Administrator  " + ownerId + " to run this job");
             }
@@ -513,11 +544,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             long startTime = System.currentTimeMillis();
 
             String logfile = initializeLog();
-            this.log.info("Starting harvesting of " + this.getParams().name);
+            this.log.info("Starting harvesting of " + this.getParams().getName());
             error = null;
             errors.clear();
             final Logger logger = this.log;
-            final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
+            final String nodeName = getParams().getName() + " (" + getClass().getSimpleName() + ")";
             final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
             try {
                 login();
@@ -532,11 +563,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 h.process();
                 logger.info("Ended harvesting from node : " + nodeName);
 
-                if (getParams().oneRunOnly) {
+                if (getParams().isOneRunOnly()) {
                     stop(Status.INACTIVE);
                 }
             } catch (InvalidParameterValueEx e) {
-                logger.error("The harvester " + this.getParams().name + "["
+                logger.error("The harvester " + this.getParams().getName() + "["
                              + this.getType()
                              + "] didn't accept some of the parameters sent.");
 
@@ -584,11 +615,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
             final HarvestHistory history = new HarvestHistory()
                     .setHarvesterType(getType())
-                    .setHarvesterName(getParams().name)
-                    .setHarvesterUuid(getParams().uuid)
+                    .setHarvesterName(getParams().getName())
+                    .setHarvesterUuid(getParams().getUuid())
                     .setElapsedTime((int) elapsedTime)
                     .setHarvestDate(new ISODate(lastRun))
-                    .setParams(getParams().node)
+                    .setParams(getParams().getNodeElement())
                     .setInfo(result);
             historyRepository.save(history);
 
@@ -681,9 +712,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void doDestroy() throws SQLException {
-        removeIcon(getParams().uuid);
+        removeIcon(getParams().getUuid());
 
-        context.getBean(SourceRepository.class).delete(getParams().uuid);
+        context.getBean(SourceRepository.class).delete(getParams().getUuid());
         // FIXME: Should also delete the categories we have created for servers
     }
 
@@ -719,7 +750,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
 
-        if (result == null) {
+        if (result == null && this.loadedInfo == null) {
             return;
         }
 
@@ -753,43 +784,47 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
         String siteId = settingMan.add(path, "site", "");
+        String translations = settingMan.add(ID_PREFIX + siteId, AbstractParams.TRANSLATIONS, "");
         String optionsId = settingMan.add(path, "options", "");
         String infoId = settingMan.add(path, "info", "");
         String contentId = settingMan.add(path, "content", "");
 
         //--- setup site node ----------------------------------------
 
-        settingMan.add("id:" + siteId, "name", params.name);
-        settingMan.add("id:" + siteId, "uuid", params.uuid);
+        settingMan.add(ID_PREFIX + siteId, "name", params.getName());
+        for (Map.Entry<String, String> entry : params.getTranslations().entrySet()) {
+            settingMan.add(ID_PREFIX + translations, entry.getKey(), entry.getValue());
+        }
+        settingMan.add(ID_PREFIX + siteId, "uuid", params.getUuid());
 
         /**
          * User who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerId", params.ownerId);
+        settingMan.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
         /**
          * Group selected by user who created or updated this node.
          */
-        settingMan.add("id:" + siteId, "ownerGroup", params.ownerIdGroup);
+        settingMan.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
-        String useAccId = settingMan.add("id:" + siteId, "useAccount", params.useAccount);
+        String useAccId = settingMan.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
-        settingMan.add("id:" + useAccId, "username", params.username);
-        settingMan.add("id:" + useAccId, "password", params.password);
+        settingMan.add(ID_PREFIX + useAccId, "username", params.getUsername());
+        settingMan.add(ID_PREFIX + useAccId, "password", params.getPassword());
 
         //--- setup options node ---------------------------------------
 
-        settingMan.add("id:" + optionsId, "every", params.every);
-        settingMan.add("id:" + optionsId, "oneRunOnly", params.oneRunOnly);
-        settingMan.add("id:" + optionsId, "status", status);
+        settingMan.add(ID_PREFIX + optionsId, "every", params.getEvery());
+        settingMan.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
+        settingMan.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
 
-        settingMan.add("id:" + contentId, "importxslt", params.importXslt);
-        settingMan.add("id:" + contentId, "validate", params.validate);
+        settingMan.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
+        settingMan.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
         //--- setup stats node ----------------------------------------
 
-        settingMan.add("id:" + infoId, "lastRun", "");
+        settingMan.add(ID_PREFIX + infoId, "lastRun", "");
 
         //--- store privileges and categories ------------------------
 
@@ -810,9 +845,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String privId = settingMan.add(path, "privileges", "");
 
         for (Privileges p : params.getPrivileges()) {
-            String groupId = settingMan.add("id:" + privId, "group", p.getGroupId());
+            String groupId = settingMan.add(ID_PREFIX + privId, "group", p.getGroupId());
             for (int oper : p.getOperations()) {
-                settingMan.add("id:" + groupId, "operation", oper);
+                settingMan.add(ID_PREFIX + groupId, "operation", oper);
             }
         }
     }
@@ -828,7 +863,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String categId = settingMan.add(path, "categories", "");
 
         for (String id : params.getCategories()) {
-            settingMan.add("id:" + categId, "category", id);
+            settingMan.add(ID_PREFIX + categId, "category", id);
         }
     }
 
@@ -883,6 +918,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public Element getResult() {
         Element res = new Element("result");
         if (result != null) {
+            this.loadedInfo = null;
             add(res, "added", result.addedMetadata);
             add(res, "atomicDatasetRecords", result.atomicDatasetRecords);
             add(res, "badFormat", result.badFormat);
@@ -908,11 +944,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             add(res, "updated", result.updatedMetadata);
             add(res, "thumbnails", result.thumbnails);
             add(res, "thumbnailsFailed", result.thumbnailsFailed);
+        } else if (this.loadedInfo != null) {
+            return (Element) this.loadedInfo.clone();
         }
         return res;
     }
     public void emptyResult() {
         result = null;
+        this.loadedInfo = null;
     }
 
     /**
@@ -932,7 +971,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws Exception
      */
     public String getOwnerEmail() throws Exception {
-        String ownerId = getParams().ownerIdGroup;
+        String ownerId = getParams().getOwnerIdGroup();
 
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
         return group.getEmail();
@@ -965,6 +1004,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     protected AbstractParams params;
     protected T result;
+    private Element loadedInfo;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 }

@@ -5,17 +5,21 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
-  goog.require('sxt_categorytree');
+  goog.require('gn_mdactions_directive');
+  goog.require('gn_related_directive');
+  goog.require('gn_search_default_directive');
+  goog.require('sxt_directives');
   goog.require('sxt_panier_directive');
-  goog.require('sxt_viewer_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'sxt_panier_directive',
+    'gn_mdactions_directive',
+    'gn_related_directive',
+    'gn_search_default_directive',
     'gn_thesaurus',
-    'sxt_categorytree',
-    'sxt_viewer_directive'
+    'sxt_directives',
+    'sxt_panier_directive'
   ]);
 
   module.value('sxtGlobals', {});
@@ -49,9 +53,13 @@
 
       // Manage routing
       if (!$location.path()) {
-        $location.path('/search');
+        gnSearchLocation.setSearch();
       }
       gnSearchLocation.initTabRouting($scope.mainTabs);
+
+      $scope.gotoPanier = function() {
+        $location.path('/panier');
+      };
 
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
@@ -170,12 +178,12 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
-          var label, theme = md.sextantTheme;
+          var group, theme = md.sextantTheme;
           if(angular.isArray(sxtGlobals.sextantTheme)) {
             for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
               var t = sxtGlobals.sextantTheme[i];
               if (t.props.uri == theme) {
-                label = t.label;
+                group = t.label;
                 break;
               }
             }
@@ -183,9 +191,10 @@
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
-            layerInfo.group = label;
+            layerInfo.group = group;
             var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
                 layerInfo);
+            layer.set('md', md);
           });
           $scope.mainTabs.map.titleInfo += 1;
 

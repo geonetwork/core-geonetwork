@@ -39,11 +39,6 @@
           <version>3.2.0</version>
       </dependency>
 
-      <dependency>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr-runtime</artifactId>
-          <version>3.5.2</version>
-      </dependency>
     <dependency>
           <groupId>org.antlr</groupId>
           <artifactId>antlr-runtime</artifactId>
@@ -162,6 +157,10 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.jdbc</groupId>
+      <artifactId>gt-jdbc-postgis</artifactId>
     </dependency>
 
     <dependency>

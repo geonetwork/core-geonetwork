@@ -1825,10 +1825,6 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="prcStep">
-<<<<<<< HEAD
-=======
-		<element name="prcStep">
->>>>>>> Git cherry pick revision 118bfde496eff4343fab8556703bb4cdf2746e83 from the 2.6 branch which contains the Tuk language inclusion.
 		<label>İlerleme adımı</label>
 		<description>information about an event in the creation process for the data specified by the
 			scope</description>

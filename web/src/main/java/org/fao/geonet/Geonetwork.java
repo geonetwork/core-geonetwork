@@ -37,6 +37,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.inspireatom.InspireAtomType;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -44,8 +46,6 @@ import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerSvn;
-import org.fao.geonet.inspireatom.InspireAtomType;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
@@ -96,6 +96,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -426,32 +427,28 @@ public class Geonetwork implements ApplicationHandler {
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 
-        fillCaches();
+        fillCaches(context);
 
         return gnContext;
     }
 
-    private void fillCaches() {
+    private void fillCaches(final ServiceContext context) {
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
+                ApplicationContextHolder.set(_applicationContext);
                 final String siteURL = _applicationContext.getBean(SettingManager.class).getSiteURL("eng");
 
-                while (true) {
+                // poll context to see whether servlet is up yet
+                while (!context.isServletInitialized()) {
+                    if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                        Log.debug(Geonet.THESAURUS_MAN, "Waiting for servlet to finish initializing..");
                     try {
-                        URL testUrl = new URL(siteURL + "home");
-                        testUrl.getContent();
-                        break;
-                    } catch (IOException e) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e1) {
-                            return;
-                        }
+                        Thread.sleep(10000); // sleep 10 seconds
+                    } catch (InterruptedException e) {
+                        return;
                     }
-
                 }
-
 
                 final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
                 Integer mdId = null;
@@ -459,20 +456,45 @@ public class Geonetwork implements ApplicationHandler {
                     mdId = metadatas.getContent().get(0).getId();
                 }
 
-                List initCacheUrls = _applicationContext.getBean("initCacheUrls", List.class);
-                for (Object initCacheUrl : initCacheUrls) {
-                    String url = siteURL + initCacheUrl;
+                Map<String, Boolean> initCacheUrls = _applicationContext.getBean("initCacheUrls", Map.class);
+                for (Map.Entry<String, Boolean> initCacheUrl : initCacheUrls.entrySet()) {
+                    Boolean allowErrors = initCacheUrl.getValue();
+                    String url = siteURL + initCacheUrl.getKey();
                     if (mdId != null) {
                         url = url.replace("{{mdId}}", mdId.toString());
                     }
 
-                    try {
-                        Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
-                        if (!url.matches("[^{}]*\\{\\{\\w+\\}\\}[^{}]*")) {
-                            new URL(url).getContent();
+                    boolean done = false;
+                    int iterations = 0;
+                    while (!done && iterations < 20) {
+                        iterations ++;
+                        try {
+                            Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
+                            if (!url.matches("[^{}]*\\{\\{\\w+\\}\\}[^{}]*")) {
+                                new URL(url).getContent();
+                            }
+
+                            done = true;
+                        } catch (IOException e) {
+                            // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
+                            if (allowErrors) {
+                                break;
+                            } else {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e1) {
+                                    return;
+                                }
+                            }
                         }
-                    } catch (IOException e) {
-                        // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
+                    }
+
+                    if (!done && !allowErrors) {
+                        Log.error(Geonet.GEONETWORK + ".fillcache", "Failed to execute query after " + iterations + " tries: " + url);
+                    } else if (!done && allowErrors) {
+                        Log.info(Geonet.GEONETWORK + ".fillcache", url + " did not execute correctly but that is not unexpected according to the configuration and therefore not an error");
+                    } else {
+                        Log.info(Geonet.GEONETWORK + ".fillcache", "Successfully executed " + url);
                     }
                 }
             }

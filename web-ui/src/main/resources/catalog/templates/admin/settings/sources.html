@@ -1,0 +1,47 @@
+<div class="row" data-ng-controller="GnSourcesController">
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <div class="panel-heading" data-translate="">manageSources</div>
+            <div class="panel-body">
+                <div class="list-group">
+                    <ul class="list-group">
+                        <input class="form-control"
+                               data-ng-show="sources.length > 1"
+                               data-ng-model="sourcesSearch.$" autofocus=""
+                               placeholder="{{'filter' | translate}}"/>
+                        <a class="list-group-item"
+                           data-ng-class="source.uuid === sourcesSelected.uuid ? 'active' : ''"
+                           data-ng-click="selectSource(source)"
+                           data-ng-repeat="source in sources | filter:sourcesSearch | orderBy:'name'">{{source.name}}</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8" data-ng-hide="!sourcesSelected">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{sourcesSelected.name}}
+                <div class="btn-toolbar">
+                    <button type="button" class="btn btn-primary pull-right fa fa-floppy-o"
+                            data-ng-click="saveSources()" data-translate="">save</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="source{{sourcesSelected.name}}" class="form-horizontal">
+                    <div class="form-group" data-ng-repeat="lang in languages | orderBy:'name'">
+                        <label for="translations-{{lang.id}}" class="col-sm-2 control-label">{{lang.name}}</label>
+                        <div class="col-sm-10">
+                            <input id="translations-{{lang.id}}"
+                                   data-ng-model="sourcesSelected.label[lang.id]"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="{{lang.name}}"></input>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

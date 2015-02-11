@@ -139,7 +139,7 @@
           titleInfo: 0,
           active: false
         },
-        view: {
+        metadata: {
           title: 'view',
           active: false
         },
@@ -192,17 +192,16 @@
       }];
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [10, 20, 50, 100];
+      searchSettings.hitsperpageValues = [20, 50, 100];
 
       searchSettings.paginationInfo = {
-        hitsPerPage: searchSettings.hitsperpageValues[1]
+        hitsPerPage: searchSettings.hitsperpageValues[0]
       };
       /* Sort by combo values configuration */
       searchSettings.sortbyValues = [
         {sortBy: 'popularity', sortOrder: ''},
-        {sortBy: 'changeDate', sortOrder: ''},
         {sortBy: 'title', sortOrder: 'reverse'},
-        {sortBy: 'relevance', sortOrder: ''}];
+        {sortBy: 'changeDate', sortOrder: ''}];
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       // Set custom config in gnSearchSettings

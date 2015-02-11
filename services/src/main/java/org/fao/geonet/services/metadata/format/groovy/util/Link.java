@@ -21,4 +21,24 @@ public class Link {
     public String getText() {
         return text == null ? null : text;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link link = (Link) o;
+
+        if (href != null ? !href.equals(link.href) : link.href != null) return false;
+        if (text != null ? !text.equals(link.text) : link.text != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = href != null ? href.hashCode() : 0;
+        result = 31 * result + (text != null ? text.hashCode() : 0);
+        return result;
+    }
 }

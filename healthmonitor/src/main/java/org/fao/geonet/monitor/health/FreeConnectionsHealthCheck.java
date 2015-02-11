@@ -19,7 +19,7 @@ public class FreeConnectionsHealthCheck implements HealthCheckFactory {
 
     @Override
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Sufficient free connections in "+Geonet.Res.MAIN_DB) {
+        return new HealthCheck("Available Database Connections") {
             @Override
             protected Result check() throws Exception {
                 Stats stats;

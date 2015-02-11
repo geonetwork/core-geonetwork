@@ -1,12 +1,13 @@
 package org.fao.geonet.domain;
 
+import com.google.common.collect.Maps;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Common superclass of entities that are have translated labels.
@@ -86,11 +87,18 @@ public abstract class Localized extends GeonetEntity {
      */
     public void setLabelTranslations(List<Element> translations) {
         getLabelTranslations().clear();
+        getLabelTranslations().putAll(translationXmlToLangMap(translations));
+    }
 
-        for (Element translation : translations) {
-            String langId = translation.getName();
-            String value = translation.getText();
-            getLabelTranslations().put(langId, value);
+    public static Map<String, String> translationXmlToLangMap(List<Element> translations) {
+        Map<String, String> labelTranslations = Maps.newHashMap();
+        if (translations != null) {
+            for (Element translation : translations) {
+                String langId = translation.getName();
+                String value = translation.getText();
+                labelTranslations.put(langId, value);
+            }
         }
+        return labelTranslations;
     }
 }

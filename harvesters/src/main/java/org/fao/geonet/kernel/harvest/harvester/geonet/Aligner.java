@@ -145,7 +145,7 @@ public class Aligner extends BaseAligner
 
 	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
-		log.info("Start of alignment for : "+ params.name);
+		log.info("Start of alignment for : "+ params.getName());
 
         //-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -153,7 +153,7 @@ public class Aligner extends BaseAligner
 
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
@@ -220,7 +220,7 @@ public class Aligner extends BaseAligner
 			}
 		}
 
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 
 		return result;
 	}
@@ -437,7 +437,7 @@ public class Aligner extends BaseAligner
         if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
         try {
-            params.validate.validate(dataMan, context, md);
+            params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;
@@ -460,10 +460,10 @@ public class Aligner extends BaseAligner
                 setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
                 setSourceId(siteId).
-                setOwner(Integer.parseInt(params.ownerId));
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -644,7 +644,7 @@ public class Aligner extends BaseAligner
 
 		if (localUuids.getID(ri.uuid) == null) {
             if(log.isDebugEnabled())
-                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
         } else {
 			Path mefFile = retrieveMEF(ri.uuid);
 
@@ -729,7 +729,7 @@ public class Aligner extends BaseAligner
 
 
         try {
-            params.validate.validate(dataMan, context, md);
+            params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;

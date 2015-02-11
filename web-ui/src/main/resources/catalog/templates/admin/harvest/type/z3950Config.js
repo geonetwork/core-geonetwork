@@ -9,9 +9,10 @@ var gnHarvesterz3950Config = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
@@ -22,9 +23,9 @@ var gnHarvesterz3950Config = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": "",
-              "clearConfig": "false"
+              "clearConfig": false
             },
             "searches": [{
                 "freeText": "",
@@ -43,7 +44,7 @@ var gnHarvesterz3950Config = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
@@ -52,7 +53,8 @@ var gnHarvesterz3950Config = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <host>' + h.site.host + '</host>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -72,7 +74,8 @@ var gnHarvesterz3950Config = {
                 + '  </searches>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <clearConfig>' + h.options.clearConfig + '</clearConfig>' 
                 + '  </options>' 
                 + '  <content>'

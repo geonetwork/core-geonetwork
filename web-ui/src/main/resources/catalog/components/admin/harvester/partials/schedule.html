@@ -15,7 +15,7 @@
       </label>
     </div>
   </legend>
-  <div>
+  <div data-ng-show="harvester.options.status === 'active'">
     <label class="control-label" data-translate="">every</label>
     <div class="input-group">
       <input type="text" class="form-control" data-ng-model="harvester.options.every"/>
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div>
+  <div data-ng-show="harvester.options.status === 'active'">
     <label class="control-label">
       <input type="checkbox" data-ng-model="harvester.options.oneRunOnly"/>
       <span data-translate="">oneRunOnly</span>

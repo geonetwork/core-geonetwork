@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
@@ -90,6 +91,16 @@ public class EnvironmentProxy implements Environment {
     @Override
     public Collection<ParamValue> paramValues(String paramName) {
         return get().paramValues(paramName);
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return get().getHeaders(name);
+    }
+
+    @Override
+    public Optional<String> getHeader(String name) {
+        return get().getHeader(name);
     }
 
     @Override

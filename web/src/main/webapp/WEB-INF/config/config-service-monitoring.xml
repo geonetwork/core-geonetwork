@@ -9,6 +9,8 @@
         <criticalHealthCheck class=".DatabaseHealthCheck"/>
         <criticalHealthCheck class=".LuceneIndexHealthCheck"/>
         <criticalHealthCheck class=".CswGetCapabilitiesHealthCheck"/>
+        <warningHealthCheck class=".DeadlockedThreadsHealthCheck"/>
+        <warningHealthCheck class=".HarvestersHealthCheck"/>
         <warningHealthCheck class=".NoIndexErrorsHealthCheck"/>
         <warningHealthCheck class=".FreeConnectionsHealthCheck"/>
         <warningHealthCheck class="jeeves.monitor.healthcheck.FreeFileHandlesHealthCheck"/>

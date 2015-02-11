@@ -6,6 +6,7 @@
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
                     xmlns:util="java:org.fao.geonet.util.XslUtil"
                     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                     exclude-result-prefixes="#all">
@@ -254,7 +255,7 @@
                           
                           <!-- Add the inspire field if it's one of the 34 themes -->
                           <xsl:if test="normalize-space($inspireannex)!=''">
-                            <Field name="inspiretheme" string="{string(.)}" store="false" index="true"/>
+                            <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
                 <xsl:variable name="englishInspireTheme">
                   <xsl:call-template name="translateInspireThemeToEnglish">
                     <xsl:with-param name="keyword" select="string(.)"/>
@@ -262,7 +263,7 @@
                   </xsl:call-template>
                 </xsl:variable>
                 <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
-                          	<Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
+                          	<Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
                             <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
                           	<Field name="inspirecat" string="true" store="false" index="true"/>
                           </xsl:if>
@@ -463,11 +464,16 @@
 				<Field  name="operation" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
-			<xsl:for-each select="srv:operatesOn/@uuidref">
-                <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
-            </xsl:for-each>
-			
-			<xsl:for-each select="srv:coupledResource">
+      <xsl:for-each select="srv:operatesOn/@uuidref">
+          <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="srv:operatesOn/@xlink:href">
+        <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
+
+      <xsl:for-each select="srv:coupledResource">
 				<xsl:for-each select="srv:SV_CoupledResource/srv:identifier/gco:CharacterString">
 					<Field  name="operatesOnIdentifier" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>

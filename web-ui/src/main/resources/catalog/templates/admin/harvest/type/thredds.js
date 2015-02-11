@@ -9,9 +9,10 @@ var gnHarvesterthredds = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -22,25 +23,25 @@ var gnHarvesterthredds = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
-                "createThumbnails" : "true",
-                "createAtomicDatasetMd" : "false",
-                "ignoreHarvestOnAtomics" : "false",
+                "createThumbnails" : true,
+                "createAtomicDatasetMd" : false,
+                "ignoreHarvestOnAtomics" : false,
                 "atomicGeneration" : "default",
-                "modifiedOnly": "false",
+                "modifiedOnly": false,
                 "atomicFragmentStylesheet" : "",
                 "atomicMetadataTemplate" : "",
                 "createAtomicSubtemplates" : "",
                 "outputSchemaOnAtomicsDIF" : "",
                 "outputSchemaOnAtomicsFragments" : "",
-                "ignoreHarvestOnCollections" : "false",
+                "ignoreHarvestOnCollections" : false,
                 "collectionGeneration" : "default",
                 "collectionFragmentStylesheet" : "",
                 "collectionMetadataTemplate" : "",
-                "createCollectionSubtemplates" : "false",
+                "createCollectionSubtemplates" : false,
                 "outputSchemaOnCollectionsDIF" : "",
                 "outputSchemaOnCollectionsFragments" : "",
                 "datasetCategory" : ""
@@ -56,7 +57,7 @@ var gnHarvesterthredds = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },
@@ -65,7 +66,8 @@ var gnHarvesterthredds = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -76,7 +78,8 @@ var gnHarvesterthredds = {
                 + '  </site>' 
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>' 
                 + '    <topic>' + h.options.topic + '</topic>'
                 + '    <createThumbnails>' + h.options.createThumbnails + '</createThumbnails>' 

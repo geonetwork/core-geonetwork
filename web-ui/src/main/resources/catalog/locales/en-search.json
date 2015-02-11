@@ -64,8 +64,10 @@
   "publish": "Publish",
   "unpublish": "Unpublish",
   "View": "View",
-  "exportXML": "Export (XML)",
-  "exportcheXML": "Export (iso19139 XML)",
+  "Other": "Other",
+  "export": "Export",
+  "exportXML": "Export (iso19139 XML)",
+  "exportcheXML": "Export (XML)",
   "exportGM03": "Export (GM03)",
   "exportRDF": "Export (RDF)",
   "exportPDF": "Export (PDF)",
@@ -240,5 +242,9 @@
   "UploadKMZfile":"Upoad a KMZ file",
   "or":"or",
   "KMLfileURL":"URL of a KML file",
-  "refineSearch" : "Refine Search"
+  "refineSearch" : "Refine Search",
+  "backToList": "Back To List",
+  "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !",
+  "permalink" : "Permalink",
+  "zoomto": "Zoom To"
 }

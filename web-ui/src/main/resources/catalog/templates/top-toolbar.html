@@ -20,29 +20,24 @@
   <div id="navbar" class="navbar-collapse collapse">
     {{mainTabs}}
     <ul class="nav navbar-nav">
-      <li><a href="catalog.search#/search"
-             title="{{'search' | translate}}">
-        <i class="fa fa-search"/>
-        <span  data-translate="">search</span>
-      </a></li>
-      <li><a href="catalog.search#/map"
-             title="{{'map' | translate}}">
-        <i class="fa fa-globe"/>
-        <span  data-translate="">map</span>
-      </a></li>
-      <li><a href="catalog.edit"
-             data-ng-show="authenticated"
-             title="{{'editorBoard' | translate}}">
-        <i class="fa fa-plus"/>
-        <span  data-translate="">contribute</span>
-      </a></li>
-      <li><a href="{{pages.admin}}"
-         data-ng-show="authenticated"
-         title="{{'adminConsole' | translate}}">
-          <i class="fa fa-th"/>
-          <span  data-translate="">adminConsole</span>
-      </a></li>
+      <li data-gn-top-toolbar-element="search" 
+                data-gn-path="catalog.search#/search"
+                data-gn-cssIcon="fa fa-search"></li>
+      <li data-ng-if="isMapViewerEnabled" data-gn-top-toolbar-element="map" 
+                data-gn-path="catalog.search#/map"
+                data-gn-cssIcon="fa fa-globe"></li>
+      <li data-ng-show="authenticated" 
+                data-gn-top-toolbar-element="contribute" 
+                data-gn-title="editorBoard" 
+                data-gn-path="catalog.edit"
+                data-gn-cssIcon="fa fa-plus"></li>
+      <li id="admin-console-link" data-ng-show="user.isReviewerOrMore()"
+                data-gn-click="pages.adminClick($event)"
+                data-gn-top-toolbar-element="adminConsole" 
+                data-gn-path="{{pages.admin || 'admin.console'}}"
+                data-gn-cssIcon="fa fa-th"></li>
     </ul>
+
 
     <form class="navbar-form navbar-right" role="language">
       <div class="form-group pull-right"

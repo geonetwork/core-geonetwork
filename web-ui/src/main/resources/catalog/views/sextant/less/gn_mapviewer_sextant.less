@@ -1,8 +1,31 @@
 [sxt-main-viewer] {
 
+  .sxt-search-btn {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: 0;
+    border-radius: 0;
+    width: 1em;
+    z-index: 100;
+    span {
+      position: absolute;
+      bottom: 50%;
+      left: -2.35em;
+      transform: rotate(-90deg);
+      height: 1em;
+      text-transform: uppercase;
+    }
+    i {
+      position: absolute;
+      bottom: ~"calc(50% - 4em)";
+      margin-left: -0.4em;
+    }
+  }
+
   .main-tools {
     right: auto;
-    left: 0;
+    left: 1.8em;
     transition: left @transition-params;
     button {
       border-radius: 0 4px 4px 0;
@@ -21,7 +44,7 @@
       border-radius: 0 .2em .2em 0;
     }
     &.activeTool {
-      left: 26em;
+      left: 27.8em;
     }
   }
   .tools:first-of-type {
@@ -29,21 +52,31 @@
   }
 
   .control-tools {
-    top: @viewport-padding;
+    top: 7em;
     right: 0;
     left: auto;
+    button.active {
+      background: @sxt-orange;
+      width: inherit;
+      margin: inherit;
+      border-radius: 4px 0 0 4px;
+    }
+  }
+
+  [gn-baselayerswitcher] {
+    margin: 1em 0 2em;
   }
 
   .panel-tools-container {
     position: absolute;
     top: 0;
-    left: -26em;
+    left: -24.2em;
     bottom: 0;
     width: 26em;
     box-shadow: 6px 0 5px -5px rgba(0,0,0,0.5);
     transition: left @transition-params;
     &.open {
-      left: 0;
+      left: 1.8em;
     }
   }
 
@@ -63,9 +96,8 @@
   .sx-toolbar {
     position: absolute;
     top: @viewport-padding;
-    right: 3.4em;
     width: auto;
-    width: 31.25em;
+    right: 7em;
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
@@ -83,15 +115,54 @@
         top: -10px;
       }
     }
+    &[gn-localisation-input] {
+      right: 11em;
+      left: auto;
+      width: 20em;
+    }
+    & .btn {
+      border-radius: 4px;
+    }
   }
 
-  .search-container {
-    position: static;
-    left: auto;
-    margin-left: 0;
-    width: 12em;
-    input {
-      border-radius: 0 4px 4px 0;
+  .sxt-fullscreen {
+    top: 0;
+    right: 0;
+    .btn {
+      margin: 0.1em 0em 0 -0.5em;
+      border-color: transparent;
+      background: transparent;
+      font-size: 18px;
+      z-index: 10;
+      width: 3.2em;
+      &:focus [role=tooltip],
+      &:hover [role=tooltip] {
+        font-size: 13px;
+        right: 4em;
+        border-radius: 4px;
+        &:after {
+          content: ' ';
+          height: 0;
+          position: absolute;
+          width: 0;
+          border: 5px solid transparent;
+          border-left-color: rgba(0,0,0,.6);
+          right: -.7em;
+          left: auto;
+          top: .5em
+        }
+      }
+    }
+    &:after {
+      content: ' ';
+      position: absolute;
+      top: -3.5em;
+      right: -3.5em;
+      width: 7em;
+      height: 7em;
+      background: rgba(255,255,255,.8);
+      border-bottom: 1px solid @gray;
+      transform: rotate(45deg);
     }
   }
 
@@ -106,13 +177,13 @@
   footer {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 1.8em;
     right: 0;
     height: 32px;
     background: rgba(0,0,0,.4);
     transition: left @transition-params;
     &.small {
-      left: 364px;
+      left: 32.7em;
     }
   }
   .ol-scale-line {
@@ -144,4 +215,34 @@
     }
   }
 
+  [sxt-layertree] {
+    padding: 3px 10px;
+    font-size: 90%;
+    .btn-cog {
+      float: right;
+      margin-right: -.6em;
+      margin-top: -.5em;
+      background: inherit;
+      padding: 6px 8px;
+    }
+    label {
+      font-weight: normal;
+    }
+    .list-group {
+      margin-bottom: 5px;
+    }
+    ul.sxt-layertree-node, ul.sxt-layertree-node > li {
+      list-style-type: none;
+      padding-left: 10px;
+      .fa-minus-square-o, .fa-plus-square-o {
+        font-size: 14px;
+      }
+    }
+    .dropdown-menu > li {
+      font-size: 90%;
+      label {
+        padding: 3px 20px;
+      }
+    }
+  }
 }

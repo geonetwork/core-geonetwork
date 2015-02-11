@@ -9,10 +9,11 @@ var gnHarvesterwebdav = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "url" : "http://",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -24,9 +25,9 @@ var gnHarvesterwebdav = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
-                "recurse" : "true",
+                "recurse" : true,
                 "subtype" : "waf"
             },
             "privileges" : [ {
@@ -40,7 +41,7 @@ var gnHarvesterwebdav = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },
@@ -49,7 +50,8 @@ var gnHarvesterwebdav = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>'
                 + '  </site>' 
@@ -60,7 +62,8 @@ var gnHarvesterwebdav = {
                 + '    </account>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <recurse>' + h.options.recurse + '</recurse>'
                 + '    <subtype>' + h.options.subtype + '</subtype>'
                 + '  </options>' 

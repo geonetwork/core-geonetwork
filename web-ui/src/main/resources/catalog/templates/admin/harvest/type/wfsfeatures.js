@@ -9,9 +9,10 @@ var gnHarvesterwfsfeatures = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "account" : {
-                    "use" : "false",
+                    "use" : false,
                     "username" : [],
                     "password" : []
                 },
@@ -24,13 +25,13 @@ var gnHarvesterwfsfeatures = {
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
-                "oneRunOnly" : "false",
+                "oneRunOnly" : false,
                 "status" : "active",
                 "lang" : "eng",
                 "query" : "",
                 "stylesheet" : "",
-                "streamFeatures" : "false",
-                "createSubtemplates" : "false",
+                "streamFeatures" : false,
+                "createSubtemplates" : false,
                 "templateId" : "",
                 "recordsCategory": "",
                 "outputSchema" : "iso19139"
@@ -46,7 +47,7 @@ var gnHarvesterwfsfeatures = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
-                "running" : "false"
+                "running" : false
             }
         };
     },
@@ -55,7 +56,8 @@ var gnHarvesterwfsfeatures = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -66,7 +68,8 @@ var gnHarvesterwfsfeatures = {
                 + '  </site>' 
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>' 
                 + '    <query>' + h.options.query + '</query>'
                 + '    <stylesheet>' + h.options.stylesheet + '</stylesheet>' 

@@ -1,6 +1,8 @@
 <div class="panel panel-default metadata">
   <div class="panel-heading">
-    <button class="btn btn-default" ng-click="dismiss()" translate>back to list</button>
+    <div gc-md-actions-menu="md" class="pull-right">
+    </div>
+    <button class="btn btn-default" ng-click="dismiss()" translate>backToList</button>
     {{md.title}}
   </div>
   <div class="panel-body" ng-bind-html="fragment">

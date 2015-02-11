@@ -37,11 +37,11 @@
             };
 
             /**
-         * Request geonames search. Trigger when user changes
-         * the search input.
-         *
-         * @param {string} query string value of the search input
-         */
+             * Request geonames search. Trigger when user changes
+             * the search input.
+             *
+             * @param {string} query string value of the search input
+             */
             this.search = function(query) {
               if (query.length < 3) return;
 
@@ -67,7 +67,8 @@
                     });
                 return (props.length == 0) ? '' : '—' + props.join(', ');
               };
-			  //todo: move api url and username to config
+
+              //TODO: move api url and username to config
               var url = 'http://api.geonames.org/searchJSON';
               $http.get(url, {
                 params: {

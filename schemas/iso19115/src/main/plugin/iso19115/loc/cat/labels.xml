@@ -2330,7 +2330,7 @@ no són adients</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatRepTypCd">
-		<label>Codi de tipus de representació espacial
+		<label>Codi de tipus de representació espacial</label>
 	</element>
 	<!-- ==================================================== -->
 	<element name="SpatRepTypes">

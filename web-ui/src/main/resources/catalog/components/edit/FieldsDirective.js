@@ -111,6 +111,12 @@
                      var width = ($(window).width() -
                          element.offset().left -
                          element.outerWidth()) * .95;
+
+                     var closeBtn = '<button onclick="$(this).' +
+                     'closest(\'div.popover\').prev().' +
+                     'popover(\'hide\');" type="button" ' +
+                     'class="fa fa-times btn btn-link pull-right"></button>';
+
                      element.popover({
                        title: info.description,
                        content: html,
@@ -121,7 +127,7 @@
                        'width:' + width + 'px"' +
                        '>' +
                        '<div class="arrow">' +
-                       '</div><div class="popover-inner">' +
+                       '</div><div class="popover-inner">' + closeBtn +
                        '<h3 class="popover-title"></h3>' +
                        '<div class="popover-content"><p></p></div></div></div>',
                        //                       trigger: 'click',
@@ -136,7 +142,6 @@
                      } else {
                        element.focus();
                      }
-
                      isInitialized = true;
                    }
                  });
@@ -183,4 +188,56 @@
         }
       };
     }]);
+
+  /**
+   * Add a danger class to the element about
+   * to be removed by this action
+   */
+  module.directive('gnFieldHighlightRemove', [
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var ref = attrs['gnFieldHighlightRemove'],
+              target = $('#gn-el-' + ref);
+
+          element.on('mouseover', function(e) {
+            target.addClass('text-danger');
+          });
+          element.on('mouseout', function() {
+            target.removeClass('text-danger');
+          });
+        }
+      };
+    }]);
+
+  /**
+   * Highlight an element by adding field-bg class
+   * and looking for all remove button to make them
+   * visible.
+   */
+  module.directive('gnFieldHighlight', [
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+
+          element.on('mouseover', function(e) {
+            e.stopPropagation();
+            // TODO: This may need improvements
+            // on touchscreen delete action will not be visible
+
+            element.addClass('field-bg');
+            element.find('i.btn.fa-times.text-danger')
+              .css('visibility', 'visible');
+          });
+          element.on('mouseout', function() {
+            element.removeClass('field-bg');
+            element.find('i.btn.fa-times.text-danger')
+              .css('visibility', 'hidden');
+          });
+        }
+      };
+    }]);
+
 })();
