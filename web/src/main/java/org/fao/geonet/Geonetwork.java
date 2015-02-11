@@ -439,6 +439,8 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches(final ServiceContext context)  {
+        final Format formatService = context.getBean(Format.class); // this will initialize the formatter
+
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -463,7 +465,6 @@ public class Geonetwork implements ApplicationHandler {
                 final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
                 if (metadatas.getNumberOfElements() > 0) {
                     Integer mdId = metadatas.getContent().get(0).getId();
-                    final Format formatService = context.getBean(Format.class);
                     context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
                     @SuppressWarnings("unchecked")
                     List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
