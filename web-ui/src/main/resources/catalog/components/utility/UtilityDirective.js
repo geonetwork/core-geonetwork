@@ -357,6 +357,44 @@
   });
 
 
+  /**
+   * Make an element able to collapse/expand
+   * the next element. An icon is added before
+   * the element to indicate the status
+   * collapsed or expanded.
+   */
+  module.directive('gnSlideToggle', [
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+
+          element.on('click', function(e) {
+            /**
+             * Toggle collapse-expand fieldsets
+             * TODO: This is in conflict with click
+             * event added by field tooltip
+             */
+            var legend = $(this);
+            //getting the next element
+            var content = legend.nextAll();
+            //open up the content needed - toggle the slide-
+            //if visible, slide up, if not slidedown.
+            content.slideToggle(attrs.duration || 250, function() {
+              //execute this after slideToggle is done
+              //change the icon of the legend based on
+              // visibility of content div
+              if (content.is(':visible')) {
+                legend.removeClass('collapsed');
+              } else {
+                legend.addClass('collapsed');
+              }
+            });
+          });
+        }
+      };
+    }]);
+
   module.directive('gnClickAndSpin', ['$parse',
     function($parse) {
       return {

@@ -303,46 +303,6 @@
           gnCurrentEdit.displayAttributes =
               gnCurrentEdit.displayAttributes === false;
         }
-        $(function() {
-          $('fieldset, .gn-field').on('mouseover', function(e) {
-            e.stopPropagation();
-
-            // TODO: This may need improvements
-            // on touchscreen delete action will not be visible
-            $(this).addClass('field-bg');
-            $(this).find('i.btn.fa-times.text-danger')
-              .css('visibility', 'visible');
-          }).on('mouseout', function(e) {
-            $(this).removeClass('field-bg');
-            $(this).find('i.btn.fa-times.text-danger')
-              .css('visibility', 'hidden');
-          });
-        });
-
-        $timeout(function() {
-          /**
-          * Toggle collapse-expand fieldsets
-          * TODO: This is in conflict with click
-          * event added by field tooltip
-          */
-          $('legend').click(function() {
-            var legend = $(this);
-            //getting the next element
-            var content = legend.nextAll();
-            //open up the content needed - toggle the slide-
-            //if visible, slide up, if not slidedown.
-            content.slideToggle(250, function() {
-              //execute this after slideToggle is done
-              //change the icon of the legend based on
-              // visibility of content div
-              if (content.is(':visible')) {
-                legend.removeClass('collapsed');
-              }
-              else { legend.addClass('collapsed'); }
-            });
-
-          });
-        });
 
         // Update the form to propagate info when saved
         // or tab switch - Needs to be propagated in Update service
@@ -492,21 +452,9 @@
             $scope.add(ref, name, insertRef, position, attribute);
           });
 
-
-
       $scope.validate = function() {
         $('#showvalidationerrors')[0].value = 'true';
         return $scope.save(true);
-      };
-
-
-      $scope.highlightRemove = function(ref) {
-        var target = $('#gn-el-' + ref);
-        target.addClass('text-danger');
-      };
-      $scope.unhighlightRemove = function(ref) {
-        var target = $('#gn-el-' + ref);
-        target.removeClass('text-danger');
       };
 
       init();
