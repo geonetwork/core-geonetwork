@@ -246,7 +246,7 @@
     line-height: 3em;
     font-size: 90%;
     margin: 0;
-    margin-left: 6em;
+    //margin-left: 6em;
     .dropdown-menu {
       max-width: 500px;
       li a {
@@ -276,11 +276,29 @@
     background-color:  #428bca;
   }
   .gn-md-edit-btn {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    margin: 2px;
-    z-index: 10;
+    //position: absolute;
+    //bottom: 0px;
+    //right: 0px;
+    //margin: 2px;
+    //z-index: 10;
+    float: right;
+  }
+  .invisible {
+    display: none;
+  }
+  .gn-md-thumbnail {
+    float:left;
+    width: 140px;
+    height: 140px;
+    margin-right: 15px;
+    background-image: url(../catalog/views/default/images/no-thumbnail.png);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    .gn-img-thumbnail {
+      margin: 0;
+      min-height: 100%;
+    }
   }
 }
 
