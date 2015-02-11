@@ -184,5 +184,6 @@
     "_isHarvested": "Moissonnée",
     "isTemplatey": "Modèle",
     "isTemplates": "Annuaire",
-    "isTemplaten": "Fiche"
+    "isTemplaten": "Fiche",
+    "signinFailure": "Nom d'utilisateur ou mot de passe incorrect."
 }
