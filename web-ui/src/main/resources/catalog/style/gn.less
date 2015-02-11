@@ -237,7 +237,7 @@ min-height: 40px;
 }
 .gn-layers-grid-container {
 overflow:auto;
-height:200px;
+max-height:200px;
 font-size: small;
 }
 .gn-layers-grid-container tr {
@@ -419,3 +419,28 @@ input[type=file] {
 .gn-recordtype-n:before { content: @fa-var-file-text }
 .gn-recordtype-s:before { content: @fa-var-bookmark-o }
 .gn-recordtype-y:before { content: @fa-var-file-o }
+
+[data-gn-slide-toggle] {
+  padding-left: 20px;
+  cursor: pointer;
+}
+[data-gn-slide-toggle]:before {
+  content: "\f0d7";
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  position: absolute;
+  margin-left: -14px;
+  font-size: 16px;
+}
+[data-gn-slide-toggle].collapsed:before {
+  content: "\f0da"
+}
+legend[data-gn-slide-toggle] {
+  border: none;
+  color: #333333;
+}
+legend[data-gn-slide-toggle]:before {
+  margin-top: 3px;
+}

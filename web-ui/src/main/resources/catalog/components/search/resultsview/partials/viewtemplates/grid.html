@@ -3,101 +3,106 @@
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
       data-gn-displayextent-onhover=""
-      data-gn-zoomto-onclick="">
-    <div title="{{md.abstract || md.defaultAbstract}}">
+      data-gn-zoomto-onclick=""
+      title="{{md.abstract || md.defaultAbstract}}">
+     
+      <!--start top row-->
+      <div>
+        <input data-gn-selection-md type="checkbox"
+               data-ng-model="md['geonet:info'].selected"
+               data-ng-change="change()"/>
+               
+        <!--Source catalog Logo-->
+        <a ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+            <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        </a>
+        <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        
+        <div class="gn-md-category"
+             data-ng-class="::md.category.length > 0 ? '' : 'invisible'">
+          <span data-translate="">listOfCategories</span>
+          <a data-ng-repeat="cat in ::md.category"
+             data-ng-href="#/search?_cat={{cat}}">
+            <i class="fa"
+               title="{{cat | translate}}">
+              <img data-ng-src="../../images/category/{{cat}}.png"/>
+            </i>
+          </a>
+        </div>
+      
+      </div>
+      <!--end top row-->
+      <div style="clear: both;"></div>
+      <!--start middle row-->
+      <div style="margin-top:10px">
+        <!-- Thumbnail -->
+        <div class="gn-md-thumbnail">
+          <img class="gn-img-thumbnail"
+               data-ng-src="{{md.getThumbnails().list[0].url}}"
+               data-ng-if="md.getThumbnails().list[0].url"/>
+        </div>
+        
+        <div style="float:left; display:block; width: calc(100% - 162px)">
+          <div class="row gn-md-title">
+              <h3>
+                <a href=""
+                   data-ng-click="openRecord($index, md, searchResults.records)"
+                   title="{{md.title || md.defaultTitle}}">
+                  <!-- Icon for types - usually only one -->
+                    <!-- TODO : add feature cat -->
+                  <span data-ng-if="md.type.indexOf('dataset')>=0"
+                        class="fa fa-database"
+                        title="{{'dataset' | translate}}"></span>
+                  <span data-ng-if="md.type.indexOf('software')>=0"
+                        class="fa fa-hdd-o"
+                        title="{{'software' | translate}}"></span>
+                  <span data-ng-if="md.type.indexOf('map')>=0"
+                        class="fa fa-globe"
+                        title="{{'map' | translate}}"></span>
+                  <span data-ng-if="md.type.indexOf('application')>=0"
+                        class="fa fa-hdd-o"
+                        title="{{'application' | translate}}"></span>
+                  <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
+                        class="fa fa-globe"
+                        title="{{'geodata' | translate}}"></span>
+                  <span data-ng-if="md.type.indexOf('service')>=0"
+                        class="fa fa-globe"
+                        title="{{'service' | translate}}"></span>
+                  {{md.title || md.defaultTitle}}</a>
+              </h3>
+          </div>
 
-      <!--Edit button-->
+          <div class="row gn-md-details">
+            <p data-ng-if="md.getContacts().resource">
+              <!--<h5 data-translate="">contacts</h5>-->
+              {{::md.getContacts().resource}}
+            </p>
+
+            <!--<p data-ng-if="md.Constraints">
+              <h5 data-translate="">license</h5>
+              <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>
+            </p>-->
+            <!--<p data-ng-if="md.keyword">
+              <span class="badge" data-ng-repeat="k in ::md.keyword">{{k}}</span>
+            </p>-->
+          </div>
+        </div>
+      
+      </div>
+      <!--end middle row-->
+      <div style="clear: both;"></div>
+      <!--start bottom row-->
+      <div>
+        <div class="gn-md-links">
+  
+   <!--Edit button-->
       <a class="gn-md-edit-btn"
          data-ng-show="user.canEditRecord(md)"
          data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
          title="{{'edit' | translate}}">
         <i class="fa fa-pencil"></i>
       </a>
-
-      <!--Source catalog Logo-->
-        <a ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
-            <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
-        </a>
-        <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
-
-      <!-- Thumbnail -->
-      <div class="gn-md-thumbnail">
-        <img class="gn-img-thumbnail"
-             data-ng-src="{{md.getThumbnails().list[0].url}}"
-             data-ng-if="md.getThumbnails().list[0].url"/>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="gn-md-category"
-               data-ng-class="::md.category.length > 0 ? '' : 'invisible'">
-            <span data-translate="">listOfCategories</span>
-            <a data-ng-repeat="cat in ::md.category"
-               data-ng-href="#/search?_cat={{cat}}">
-              <i class="fa"
-                 title="{{cat | translate}}">
-                <img data-ng-src="../../images/category/{{cat}}.png"/>
-              </i>
-            </a>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="row gn-md-title">
-        <div class="col-md-12">
-          <input data-gn-selection-md type="checkbox"
-                 data-ng-model="md['geonet:info'].selected"
-                 data-ng-change="change()"/>
-          <h4>
-            <a href=""
-               data-ng-click="openRecord($index, md, searchResults.records)"
-               title="{{md.title || md.defaultTitle}}">
-              <!-- Icon for types - usually only one -->
-                <!-- TODO : add feature cat -->
-              <span data-ng-if="md.type.indexOf('dataset')>=0"
-                    class="fa fa-database"
-                    title="{{'dataset' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('software')>=0"
-                    class="fa fa-hdd-o"
-                    title="{{'software' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('map')>=0"
-                    class="fa fa-globe"
-                    title="{{'map' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('application')>=0"
-                    class="fa fa-hdd-o"
-                    title="{{'application' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
-                    class="fa fa-globe"
-                    title="{{'geodata' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('service')>=0"
-                    class="fa fa-globe"
-                    title="{{'service' | translate}}"></span>
-              {{md.title || md.defaultTitle}}</a>
-          </h4>
-        </div>
-      </div>
-      <div class="row gn-md-details">
-        <div class="col-md-12">
-          <p data-ng-if="md.getContacts().resource">
-            <!--<h5 data-translate="">contacts</h5>-->
-            {{::md.getContacts().resource}}
-          </p>
-
-          <!--<p data-ng-if="md.Constraints">
-            <h5 data-translate="">license</h5>
-            <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>
-          </p>-->
-          <!--<p data-ng-if="md.keyword">
-            <span class="badge" data-ng-repeat="k in ::md.keyword">{{k}}</span>
-          </p>-->
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="gn-md-links">
+      
     <div class="btn-group"
          data-ng-class="::links.length > 0 ? '' : 'invisible'">
       <button type="button"
@@ -114,6 +119,7 @@
         </li>
       </ul>
     </div>
+    
     <div class="btn-group"
          data-ng-class="::downloads.length > 0 ? '' : 'invisible'">
       <button type="button"
@@ -132,6 +138,7 @@
         </li>
       </ul>
     </div>
+      
     <div class="btn-group"
          data-ng-class="layers.length > 0 ? '' : 'invisible'">
       <button type="button"
@@ -152,6 +159,11 @@
         <li><a href="#" data-translate="">addAllLayersToMap</a></li>
       </ul>
     </div>
+    
   </div>
+      
+      </div>
+      <!--end bottom row-->
+      <div style="clear: both;"></div>
   </li>
 </ul>

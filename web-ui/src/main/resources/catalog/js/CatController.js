@@ -2,8 +2,10 @@
   goog.provide('gn_cat_controller');
 
   goog.require('gn_search_manager');
+  goog.require('gn_toptoolbar');
 
-  var module = angular.module('gn_cat_controller', ['gn_search_manager']);
+  var module = angular.module('gn_cat_controller', 
+      ['gn_search_manager', 'gnTopToolbar']);
 
 
   module.constant('gnGlobalSettings', {

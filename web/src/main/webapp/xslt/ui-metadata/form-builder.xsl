@@ -116,7 +116,8 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="form-group gn-field gn-{substring-after(name(), ':')} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
-            id="gn-el-{$editInfo/@ref}">
+             id="gn-el-{$editInfo/@ref}"
+             data-gn-field-highlight="">
           <label
               for="gn-field-{$editInfo/@ref}"
               class="col-sm-2 control-label">
@@ -235,10 +236,12 @@
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
+    <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
+              data-gn-field-highlight=""
       class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
       <legend class="{$cls}"
+              data-gn-slide-toggle=""
               data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
         <!--
          The toggle title is in conflict with the element title
@@ -291,8 +294,7 @@
 
     <i class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
-      data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-      data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
+      data-gn-field-highlight-remove="{$editInfo/@ref}"
       title="{{{{'deleteFieldSet' | translate}}}}"/>
 
   </xsl:template>
@@ -336,7 +338,8 @@
                   select="$template/values/key[position() = 1]/@label"/>
 
     <div class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
-         id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
+         id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
+         data-gn-field-highlight="">
 
       <label class="col-sm-2 control-label">
         <xsl:value-of select="$name"/>
@@ -584,7 +587,8 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
-           id="gn-el-{$id}">
+           id="gn-el-{$id}"
+           data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
@@ -946,8 +950,7 @@
       
       <i class="btn fa fa-times text-danger gn-control pull-right"
         data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
-        data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-        data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"
+        data-gn-field-highlight-remove="{$editInfo/@ref}"
         data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
     </xsl:if>
   </xsl:template>
