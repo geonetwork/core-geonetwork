@@ -90,7 +90,13 @@
          <artifactId>spring-web</artifactId>
          <version>${spring.version}</version>
       </dependency>
- 
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-test</artifactId>
+         <version>${spring.version}</version>
+          <scope>compile</scope>
+      </dependency>
+
  	<!-- This is to avoid 406 error with spring -->
 	<dependency>
 	    <groupId>com.fasterxml.jackson.core</groupId>
@@ -433,10 +439,6 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-test</artifactId>
-      </dependency>
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>domain</artifactId>
