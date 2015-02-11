@@ -131,6 +131,7 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult>
 		settingMan.add("id:"+optionsId, "createThumbnails",  params.createThumbnails);
 		settingMan.add("id:"+optionsId, "useLayer",  params.useLayer);
 		settingMan.add("id:"+optionsId, "useLayerMd",  params.useLayerMd);
+        settingMan.add("id:"+optionsId, "identifierType",  params.identifierType);
 		settingMan.add("id:"+optionsId, "datasetCategory",  params.datasetCategory);
 		settingMan.add("id:"+optionsId, "outputSchema",  params.outputSchema);
 	}

@@ -33,6 +33,7 @@ var gnHarvesterogcwxs = {
                 "createThumbnails" : "",
                 "useLayer" : "",
                 "useLayerMd" : "",
+                "identifierType" : "MD-ID",
                 "datasetCategory" : "",
                 "outputSchema" : "iso19139"
             },
@@ -75,7 +76,8 @@ var gnHarvesterogcwxs = {
                 + '    <topic>' + h.options.topic + '</topic>'
                 + '    <createThumbnails>' + h.options.createThumbnails + '</createThumbnails>' 
                 + '    <useLayer>' + h.options.useLayer + '</useLayer>' 
-                + '    <useLayerMd>' + h.options.useLayerMd + '</useLayerMd>' 
+                + '    <useLayerMd>' + h.options.useLayerMd + '</useLayerMd>'
+                + '    <identifierType>' + h.options.identifierType + '</identifierType>'
                 + '    <datasetCategory>' + h.options.datasetCategory + '</datasetCategory>'
                 + '    <outputSchema>' + h.options.outputSchema + '</outputSchema>' 
                 + '  </options>' 

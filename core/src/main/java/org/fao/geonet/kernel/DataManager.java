@@ -1224,6 +1224,27 @@ public class DataManager {
     /**
      *
      * @param schema
+     * @param md
+     * @return
+     * @throws Exception
+     */
+    public String extractDatasetIdentifier(String schema, Element md) throws Exception {
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATESET_IDENTIFIER);
+        String datasetIdentifier  = Xml.transform(md, styleSheet).getText().trim();
+
+        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "Extracted Dataset Identifier '" + datasetIdentifier + "' for schema '" + schema + "'");
+        }
+
+        //--- needed to detach md from the document
+        md.detach();
+
+        return datasetIdentifier;
+    }
+
+    /**
+     *
+     * @param schema
      * @param uuid
      * @param md
      * @return
