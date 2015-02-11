@@ -10,8 +10,8 @@
                         ng-selected="p === systemInfo.stagingProfile">{{p | translate}}</option>
             </select>
             &nbsp;
-            <button type="submit" class="btn btn-primary fa fa-save" id="gn-btn-settings-save"
-              data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+            <button type="submit" class="btn btn-primary" id="gn-btn-settings-save"
+              data-ng-click="saveSettings('#gn-settings')"><span class="fa fa-save"></span> {{"saveSettings"|translate}}</button>
         </form>
     </div>
   </div>
@@ -122,9 +122,10 @@
                           ng-selected="'remote' == s['#text']">{{'system/inspire/atomRemote' | translate}}</option>
                 </select>
 
-                <button class="btn btn-primary pull-right fa fa-refresh ng-scope"
+                <button class="btn btn-primary pull-right ng-scope"
                         data-ng-switch-when="system/inspire/atom"
                         data-ng-click="executeAtomHarvester()">
+						<span class="fa fa-refresh"></span>
                   {{'system/inspire/atomExecute' | translate}}
                 </button>
 
@@ -216,8 +217,8 @@
 
         </fieldset>
 
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveSettings('#gn-settings')"><span class="fa fa-save"></span> {{"saveSettings"|translate}}</button>
       </fieldset>
     </form>
 

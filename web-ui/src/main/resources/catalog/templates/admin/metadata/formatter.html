@@ -26,7 +26,7 @@
         <form id="fileupload" action="metadata.formatter.register@json" method="POST"
           enctype="multipart/form-data" data-file-upload="formatterUploadOptions">
           <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
-            <i class="fa fa-plus fa fa-white"/>
+            <i class="fa fa-plus fa-white"/>
             <span data-translate="">chooseFormatter</span>
             <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
           </span>
@@ -49,10 +49,10 @@
         <strong>{{formatterSelected.schema}}/{{formatterSelected.id}}</strong>
 
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-default pull-right fa fa-download"
-            data-ng-click="downloadFormatter(formatterSelected)">&nbsp;<span data-translate="">download</span></button>
-          <button type="button" class="btn btn-default pull-right fa fa-trash-o"
-            data-ng-click="formatterDelete(formatterSelected)">&nbsp;<span data-translate="">delete</span></button>
+          <button type="button" class="btn btn-default pull-right"
+            data-ng-click="downloadFormatter(formatterSelected)"><span class="fa fa-download"></span>&nbsp;<span data-translate="">download</span></button>
+          <button type="button" class="btn btn-default pull-right"
+            data-ng-click="formatterDelete(formatterSelected)"><span class="fa fa-trash-o"></span>&nbsp;<span data-translate="">delete</span></button>
         </div>
       </div>
       <div class="panel-body">
@@ -77,7 +77,7 @@
           </div>
           <button type="button" class="btn btn-primary pull-right"
             data-ng-click="saveFormatterFile('#gn-formatter-file-edit')">
-            <i class=" fa fa-save"/>&nbsp; <span data-translate="">saveFile</span></button>
+            <i class="fa fa-save"/>&nbsp; <span data-translate="">saveFile</span></button>
         </form>
       </div>
     </div>
@@ -101,13 +101,13 @@
           <div class="btn-toolbar pull-right">
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
               data-ng-click="testFormatter('XML')">
-              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewXML</span></button>
+              <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewXML</span></button>
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
               data-ng-click="testFormatter('HTML')">
-              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewHTML</span></button>
+              <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewHTML</span></button>
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
               data-ng-click="testFormatter('DEBUG')">
-              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewDEBUG</span></button>
+              <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewDEBUG</span></button>
           </div>
         </form>
 

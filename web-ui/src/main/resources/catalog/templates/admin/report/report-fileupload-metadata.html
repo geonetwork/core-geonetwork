@@ -9,10 +9,10 @@
       <p data-translate="">reportFileUploadMetadata-description</p>
 
       <div class="btn-toolbar">
-        <button type="button" class="btn btn-primary pull-right fa fa-save"
+        <button type="button" class="btn btn-primary pull-right"
                 data-ng-disabled="!gnMetadataFileUploadsReport.$valid && !gnMetadataFileUploadsReport.dirty"
                 data-ng-click="createReport('#gn-metadata-fileuploads-report', 'datauploads.csv')"
-                data-translate="">createReport
+                ><span class="fa fa-save"></span> {{"createReport"|translate}}
         </button>
       </div>
     </div>

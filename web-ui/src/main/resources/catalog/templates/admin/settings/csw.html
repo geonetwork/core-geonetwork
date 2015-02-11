@@ -3,8 +3,9 @@
     <div class="panel-heading">
       <span data-translate="">cswService</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveSettings('#gn-settings')" data-translate="">save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveSettings('#gn-settings')" 
+		  ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
 
@@ -59,9 +60,9 @@
     <div class="panel-heading">
       <span data-translate="">cswCapabilitiesProperties</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveProperties('#gn-csw-capabilities-properties')" data-translate=""
-          >save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveProperties('#gn-csw-capabilities-properties')" 
+          ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
     <div class="panel-body">
@@ -106,9 +107,9 @@
     <div class="panel-heading">
       <span data-translate="">customizeElementSet</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')" data-translate=""
-          >save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')"
+          ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
     <div class="panel-body">
@@ -125,8 +126,8 @@
             </label>
           </div>
           <div class="btn-toolbar">
-            <button type="submit" class="btn fa fa-plus" data-ng-click="addCSWElementSetName()"
-              data-translate="">add</button>
+            <button type="submit" class="btn btn-default" data-ng-click="addCSWElementSetName()"
+              ><span class="fa fa-plus"></span> {{"add"|translate}}</button>
           </div>
         </fieldset>
       </form>
