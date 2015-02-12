@@ -88,9 +88,9 @@
           // in the list and trigger selection.
           // TODO: change route path when selected (issue - controller is
           // reloaded)
-          if ($routeParams.userOrGroup) {
+          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.groups, function(u) {
-              if (u.name === $routeParams.userOrGroup) {
+              if (u.name === $routeParams.userOrGroup || $routeParams.userOrGroupId === u.id.toString()) {
                 $scope.selectGroup(u);
               }
             });
@@ -108,9 +108,11 @@
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
-          if ($routeParams.userOrGroup) {
+          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.users, function(u) {
-              if (u.value.username === $routeParams.userOrGroup) {
+
+              if (u.value.username === $routeParams.userOrGroup || $routeParams.userOrGroupId === u.value.id.toString()) {
+                console.log("Selecting User");
                 $scope.selectUser(u);
               }
             });
