@@ -3,11 +3,6 @@
  */
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.LinkedList;
-import java.util.Map;
-
-import javax.naming.Context;
-
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.events.user.GroupLeft;
@@ -18,6 +13,10 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.ldap.LdapUtils;
+
+import java.util.LinkedList;
+import java.util.Map;
+import javax.naming.Context;
 
 /**
  * When a user-group relation is removed, removed it also on LDAP
@@ -32,8 +31,6 @@ public class AutoUpdateUserGroupsOnRemove implements
     @Autowired
     private AbstractLDAPUserDetailsContextMapper ldapMapper;
 
-    @SuppressWarnings("unused")
-    private ContextSource contextSource;
     private LdapTemplate template;
     private String baseDn = "ou=groups";
     private String groupAttribute = "cn";
@@ -137,7 +134,6 @@ public class AutoUpdateUserGroupsOnRemove implements
     }
 
     public void setContextSource(ContextSource contextSource) {
-        this.contextSource = contextSource;
         this.template = new LdapTemplate(contextSource);
     }
 

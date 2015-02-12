@@ -322,7 +322,13 @@
           },
 
           addWmsToMapFromCap: function(map, getCapLayer) {
-            map.addLayer(this.createOlWMSFromCap(map, getCapLayer));
+            var layer = this.createOlWMSFromCap(map, getCapLayer);
+            map.addLayer(layer);
+            return layer;
+          },
+
+          addWmtsToMapFromCap: function(map, getCapLayer) {
+            map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
           },
 
           /**
@@ -436,6 +442,20 @@
               view.setResolution(newResolution);
             }
           },
+
+          /**
+           * Zoom map to the layer extent if defined. The layer extent
+           * is gotten from capabilities and store in cextent property
+           * of the layer.
+           * @param {ol.Layer} layer
+           * @param {ol.map} map
+           */
+          zoomLayerToExtent: function(layer, map) {
+            if (layer.get('cextent')) {
+              map.getView().fitExtent(layer.get('cextent'), map.getSize());
+            }
+          },
+
 
           /**
            * Creates an ol.layer for a given type. Useful for contexts

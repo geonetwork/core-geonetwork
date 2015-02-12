@@ -48,6 +48,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -65,18 +66,23 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
+import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -116,6 +122,37 @@ public class Format extends AbstractFormatService {
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
+    @PostConstruct
+    public void syncFormatterDirectories() throws IOException {
+        final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+        final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
+        final Path toDir = geonetworkDataDirectory.getFormatterDir();
+        copyNewerFilesToDataDir(fromDir, toDir);
+        final Set<String> schemas = this.schemaManager.getSchemas();
+        for (String schema : schemas) {
+            final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+            final Path webappSchemaDir = this.geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
+            final Path dataDirSchemaFormatterDir = this.schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+            copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
+        }
+    }
+
+    public void copyNewerFilesToDataDir(final Path fromDir, final Path toDir) throws IOException {
+        if (Files.exists(fromDir)) {
+            Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    final Path path = IO.relativeFile(fromDir, file, toDir);
+                    if (!file.getFileName().toString().toLowerCase().endsWith(".iml") &&
+                        (!Files.exists(path) || Files.getLastModifiedTime(path).compareTo(Files.getLastModifiedTime(file)) < 0)) {
+                        Files.deleteIfExists(path);
+                        IO.copyDirectoryOrFile(file, path, false);
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        }
+    }
 
     @RequestMapping(value = "/{lang}/xml.format.{type}")
     public void execXml(
@@ -265,7 +302,7 @@ public class Format extends AbstractFormatService {
         FormatterParams fparams = new FormatterParams();
         fparams.config = config;
         fparams.format = this;
-        fparams.params = request.getParameterMap();
+        fparams.servletRequest= request;
         fparams.context = context;
         fparams.formatDir = formatDir.toRealPath();
         fparams.metadata = metadata;

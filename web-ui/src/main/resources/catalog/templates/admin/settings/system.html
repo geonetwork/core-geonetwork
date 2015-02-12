@@ -24,7 +24,7 @@
           id="{{section2.name.replace('/', '-')}}">
           <legend>{{section2.name | translate}}</legend>
           <!-- According to data type -->
-          <div data-ng-repeat="s in section2.children | orderObjectBy:'@position'"
+          <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'@position'"
             data-ng-switch="s['@datatype']">
             <div data-ng-switch-when="BOOLEAN">
               <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>

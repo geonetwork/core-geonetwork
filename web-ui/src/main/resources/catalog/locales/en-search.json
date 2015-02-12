@@ -66,8 +66,8 @@
   "View": "View",
   "Other": "Other",
   "export": "Export",
-  "exportXML": "Export (XML)",
-  "exportcheXML": "Export (iso19139 XML)",
+  "exportXML": "Export (iso19139 XML)",
+  "exportcheXML": "Export (XML)",
   "exportGM03": "Export (GM03)",
   "exportRDF": "Export (RDF)",
   "exportPDF": "Export (PDF)",
@@ -244,5 +244,7 @@
   "KMLfileURL":"URL of a KML file",
   "refineSearch" : "Refine Search",
   "backToList": "Back To List",
-  "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !"
+  "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !",
+  "permalink" : "Permalink",
+  "zoomto": "Zoom To"
 }

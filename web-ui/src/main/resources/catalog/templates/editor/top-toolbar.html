@@ -24,18 +24,31 @@
       <span data-translate="">share</span>
     </button>-->
 
-    <button type="button" class="btn btn-default navbar-btn"
-            data-gn-click-and-spin="startVersioning()"
-            title="{{'startVersioning-help' | translate}}">
-      <i class="fa fa-history"/>&nbsp;
-      <span class="visible-lg" data-translate="">startVersioning</span>
-    </button>
 
     <div data-gn-metadata-category-updater="mdCategories"
          data-metadata-id="gnCurrentEdit.id" title="{{'categories'|translate}}"/>
 
     <div data-gn-metadata-group-updater="groupOwner"
          data-metadata-id="gnCurrentEdit.id" title="{{'group'|translate}}"/>
+
+    <div class="btn-group">
+      <button class="btn btn-default dropdown-toggle"
+              type="button"
+              data-toggle="dropdown" aria-expanded="true">
+        <i class="fa fa-cog"/>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1"
+             data-gn-click-and-spin="startVersioning()"
+             title="{{'startVersioning-help' | translate}}">
+            <i class="fa fa-history"/>&nbsp;
+            <span class="visible-lg" data-translate="">startVersioning</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <button type="button" class="btn btn-default navbar-btn"
             title="{{'validate'|translate}}" gn-click-and-spin="validate()">
@@ -73,6 +86,5 @@
         </a></li>
       </ul>
     </div>
-
   </div>
 </nav>

@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.jdom.Element;
@@ -58,6 +59,21 @@ public interface Environment extends CurrentLanguageHolder {
      * Return ALL values of parameter with the provided name.
      */
     public Collection<ParamValue> paramValues(String paramName);
+
+    /**
+     * Get the request headers for the given name.
+     *
+     * @param name the name of the header to get
+     * @return the request headers for the given name.
+     */
+    public Collection<String> getHeaders(String name);
+    /**
+     * Get the request header for the given name.
+     *
+     * @param name the name of the header to get
+     * @return the request header for the given name.
+     */
+    public Optional<String> getHeader(String name);
     /**
      * Return the metadata document as a jdom Element.  json is the XML API used typically in geonetwork.  This is useful
      * when one needs to call back into the Geonetwork classes.

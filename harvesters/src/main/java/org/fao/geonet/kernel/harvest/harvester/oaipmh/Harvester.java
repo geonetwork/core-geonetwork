@@ -116,8 +116,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             throw new AbortExecutionException(e1);
         }
 
-		if (params.useAccount) {
-            t.setCredentials(params.username, params.password);
+		if (params.isUseAccount()) {
+            t.setCredentials(params.getUsername(), params.getPassword());
         }
 
 		//--- set the proxy info if necessary
@@ -200,7 +200,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-        log.info("Searching on : " + params.name);
+        log.info("Searching on : " + params.getName());
 
         try {
             ListIdentifiersResponse response = req.execute();
@@ -235,7 +235,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private void align(XmlRequest t, Set<RecordInfo> records) throws Exception
 	{
-		log.info("Start of alignment for : "+ params.name);
+		log.info("Start of alignment for : "+ params.getName());
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -243,7 +243,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
@@ -284,7 +284,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			else				updateMetadata(t, ri, id);
 		}
 
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 	}
 
 	//--------------------------------------------------------------------------
@@ -329,11 +329,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 setChangeDate(ri.changeDate).
                 setCreateDate(ri.changeDate);
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -389,7 +389,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			{
 
                 try {
-                    params.validate.validate(dataMan, context, md);
+                    params.getValidate().validate(dataMan, context, md);
                     return (Element) md.detach();
                 } catch (Exception e) {
                     log.info("Skipping metadata that does not validate. Remote id : "+ ri.id);

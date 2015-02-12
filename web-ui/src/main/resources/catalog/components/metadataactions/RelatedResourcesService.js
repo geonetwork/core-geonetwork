@@ -32,14 +32,27 @@
 
           var addWMSToMap = function(link) {
 
-            if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
+            if (link.name &&
+                (angular.isArray(link.name) && link.name.length > 0)) {
+              angular.forEach(link.name, function(name) {
+                gnOwsCapabilities.getWMSCapabilities(link.url).then(
+                   function(capObj) {
+                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                     name, capObj);
+                     gnMap.addWmsToMapFromCap(
+                     gnSearchSettings.viewerMap, layerInfo, capObj);
+                   });
+              });
+              gnSearchLocation.setMap();
+            } else if (link.name && !angular.isArray(link.name)) {
               gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                    link.name, capObj);
-                   gnMap.addWmsToMapFromCap(
-                       gnSearchSettings.viewerMap, layerInfo);
-                 });
+                    gnMap.addWmsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+              gnSearchLocation.setMap();
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             }
@@ -48,19 +61,32 @@
 
           var addWMTSToMap = function(link) {
 
-            if (link.name && (angular.isArray(link.name) && link.name.length > 0)) {
-              gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+            if (link.name &&
+                (angular.isArray(link.name) && link.name.length > 0)) {
+              angular.forEach(link.name, function(name) {
+                gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                   function(capObj) {
+                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                     name, capObj);
+                     gnMap.addWmtsToMapFromCap(
+                     gnSearchSettings.viewerMap, layerInfo, capObj);
+                   });
+              });
+              gnSearchLocation.setMap();
+            } else if (link.name && !angular.isArray(link.name)) {
+              gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                  function(capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                    link.name, capObj);
-                   gnMap.addWmsToMapFromCap(
-                       gnSearchSettings.viewerMap, layerInfo);
-                 });
+                    gnMap.addWmtsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                  });
+              gnSearchLocation.setMap();
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMTS');
             }
           };
-          
+
           var addWFSToMap = function(md) {
             //TODO open dialog to download features
             gnSearchLocation.setMap();
@@ -90,7 +116,7 @@
               iconClass: 'fa-globe',
               label: 'addToMap',
               action: addWMSToMap
-            }, 
+            },
             'WMTS' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
@@ -171,7 +197,8 @@
                 (resource.serviceType && resource.serviceType
                           .contains('WMS'))) {
               return 'WMS';
-            } else if ((resource.protocol && resource.protocol.contains('WMTS')) ||
+            } else if ((resource.protocol &&
+                        resource.protocol.contains('WMTS')) ||
                 (resource.serviceType && resource.serviceType
                     .contains('WMTS'))) {
               return 'WMTS';

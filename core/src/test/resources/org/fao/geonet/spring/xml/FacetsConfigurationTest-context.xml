@@ -2,8 +2,10 @@
 <beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:gns="http://www.fao.org/geonetwork/spring"
+    xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd">
 
     <bean id="keywordSplitter" class="org.fao.geonet.kernel.search.classifier.Split">
@@ -14,5 +16,22 @@ http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spr
         <gns:facet name="keyword" indexKey="keyword" label="Keywords" localized="true"/>
         <gns:facet name="keywordToken" indexKey="keyword" label="Keyword Tokens" classifier="keywordSplitter"/>
     </gns:facets>
+    <util:set id="languages" value-type="java.lang.String">
+        <value>ara</value>
+        <value>cat</value>
+        <value>chi</value>
+        <value>dut</value>
+        <value>eng</value>
+        <value>fin</value>
+        <value>fre</value>
+        <value>ger</value>
+        <value>ita</value>
+        <value>nor</value>
+        <value>pol</value>
+        <value>por</value>
+        <value>rus</value>
+        <value>spa</value>
+        <value>tur</value>
+    </util:set>
 
 </beans>

@@ -190,13 +190,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         
         this.log = log;
 
-        log.info("Retrieving remote metadata information for : " + params.name);
+        log.info("Retrieving remote metadata information for : " + params.getName());
         
 		// Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ? 
-        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
 
         // Try to load capabilities document
@@ -215,8 +215,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
 
-        if (params.useAccount) {
-            req.setCredentials(params.username, params.password);
+        if (params.isUseAccount()) {
+            req.setCredentials(params.getUsername(), params.getPassword());
         }
 
         xml = req.execute();
@@ -351,11 +351,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                  setRoot(md.getQualifiedName()).
                  setType(MetadataType.METADATA);
          metadata.getSourceInfo().
-                 setSourceId(params.uuid).
-                 setOwner(Integer.parseInt(params.ownerId));
+                 setSourceId(params.getUuid()).
+                 setOwner(Integer.parseInt(params.getOwnerId()));
          metadata.getHarvestInfo().
                  setHarvested(true).
-                 setUuid(params.uuid).
+                 setUuid(params.getUuid()).
                  setUri(params.url);
 
          addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
@@ -661,11 +661,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                     setRoot(xml.getQualifiedName()).
                     setType(MetadataType.METADATA);
             metadata.getSourceInfo().
-                    setSourceId(params.uuid).
-                    setOwner(Integer.parseInt(params.ownerId));
+                    setSourceId(params.getUuid()).
+                    setOwner(Integer.parseInt(params.getOwnerId()));
             metadata.getHarvestInfo().
                     setHarvested(true).
-                    setUuid(params.uuid).
+                    setUuid(params.getUuid()).
                     setUri(params.url);
             if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
                 MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOneByName(params.datasetCategory);

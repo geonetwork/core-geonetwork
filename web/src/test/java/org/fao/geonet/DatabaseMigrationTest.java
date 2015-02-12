@@ -168,7 +168,7 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
         assertEquals(16, _groupRepo.findOne(1).getLabelTranslations().size());
         final Group group = _groupRepo.saveAndFlush(GroupRepositoryTest.newGroup(_inc));
         assertEquals(22, _harvesterSettingRepo.count());
-        assertEquals(1, _harvesterSettingRepo.findByName("name").size());
+        assertEquals(1, _harvesterSettingRepo.findAllByName("name").size());
         _harvesterSettingRepo.saveAndFlush(HarvesterSettingRepositoryTest.newSetting(_inc));
         assertEquals(1, _harvestHistoryRepo.count());
         _harvestHistoryRepo.saveAndFlush(HarvestHistoryRepositoryTest.createHarvestHistory(_inc));

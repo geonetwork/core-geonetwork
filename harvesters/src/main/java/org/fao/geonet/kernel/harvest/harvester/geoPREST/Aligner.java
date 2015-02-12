@@ -86,7 +86,7 @@ public class Aligner extends BaseAligner
 	//--------------------------------------------------------------------------
 
 
-	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.name);
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.getName());
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -94,7 +94,7 @@ public class Aligner extends BaseAligner
 
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
@@ -136,12 +136,12 @@ public class Aligner extends BaseAligner
                 
 		    }catch (Throwable t) {
                 errors.add(new HarvestError(t, log));
-                log.error("Unable to process record from csw (" + this.params.name + ")");
+                log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid); 
 		    }
 		}
 
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 
 		return result;
 	}
@@ -182,11 +182,11 @@ public class Aligner extends BaseAligner
                 setChangeDate(new ISODate(ri.changeDate)).
                 setCreateDate(new ISODate(ri.changeDate));
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
+                setSourceId(params.getUuid()).
                 setOwner(userid);
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -212,7 +212,7 @@ public class Aligner extends BaseAligner
 
 		if (date == null) {
 			if (log.isDebugEnabled()) {
-				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
 			}
 		} else {
 			if (log.isDebugEnabled()) {
@@ -312,7 +312,7 @@ public class Aligner extends BaseAligner
             }
 
             try {
-                params.validate.validate(dataMan, context, response);
+                params.getValidate().validate(dataMan, context, response);
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
@@ -320,9 +320,9 @@ public class Aligner extends BaseAligner
             }
 
 			// transform it here if requested
-			if (!params.importXslt.equals("none")) {
+			if (!params.getImportXslt().equals("none")) {
 				Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
-                        resolve(params.importXslt);
+                        resolve(params.getImportXslt());
 				try {
 					response = Xml.transform(response, thisXslt);
 				} catch (Exception e) {

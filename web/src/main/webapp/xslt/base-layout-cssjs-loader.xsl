@@ -125,10 +125,19 @@
     <xsl:variable name="mapConfig"
                   select="util:getSettingValue('map/config')"/>
 
+    <xsl:variable name="isMapViewerEnabled">
+	    <xsl:choose>
+	    <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')"><xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/></xsl:when>
+	    <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
+	  </xsl:choose>
+                  
+    </xsl:variable>
+
     <xsl:if test="$angularApp = 'gn_search'">
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+        module.config(['gnViewerSettings', 'gnGlobalSettings',
+                function(gnViewerSettings, gnGlobalSettings) {
           <xsl:if test="$owsContext">
             gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
           </xsl:if>
@@ -137,6 +146,7 @@
             gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
           </xsl:if>
           gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>
@@ -144,7 +154,8 @@
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript">
         var module = angular.module('gn_editor');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+        module.config(['gnViewerSettings', 'gnGlobalSettings',
+                function(gnViewerSettings, gnGlobalSettings) {
           <xsl:if test="$owsContext">
             gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
           </xsl:if>
@@ -153,6 +164,17 @@
             gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
           </xsl:if>
           gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        }]);
+      </script>
+    </xsl:if>
+    
+    <xsl:if test="$angularApp = 'gn_admin'">
+      <script type="text/javascript">
+        var module = angular.module('gn_admin');
+        module.config(['gnGlobalSettings',
+                function(gnGlobalSettings) {
+          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>

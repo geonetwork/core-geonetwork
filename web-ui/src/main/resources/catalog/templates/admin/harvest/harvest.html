@@ -17,10 +17,11 @@
       <div class="list-group" data-ng-hide="isLoadingHarvester">
         <a href="" class="list-group-item"
            data-ng-repeat="h in pageItems()"
-           data-ng-class="h['@id'] === harvesterSelected['@id'] ? 'active' : ''"
+           data-ng-class="[h['@id'] === harvesterSelected['@id'] ? 'active' : '', h.error ? 'list-group-item-danger' : '']"
            data-ng-click="selectHarvester(h)"
-           title="{{h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow)}}">
+           title="{{h.error ? ('selectForError' | translate) : (h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow))}}">
           <!-- TODO : Add a tooltip with last run info -->
+
           <i data-ng-show="h.options.status === 'active'" class="fa fa-play"/>
           <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/> {{h.site.name}}
           ({{('harvester-' + h['@type']) | translate}}) <span class="badge"

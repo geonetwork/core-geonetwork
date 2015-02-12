@@ -9,6 +9,7 @@ var gnHarvesterwfsfeatures = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "account" : {
                     "use" : false,
@@ -55,7 +56,8 @@ var gnHarvesterwfsfeatures = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -66,7 +68,8 @@ var gnHarvesterwfsfeatures = {
                 + '  </site>' 
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>' 
                 + '    <query>' + h.options.query + '</query>'
                 + '    <stylesheet>' + h.options.stylesheet + '</stylesheet>' 

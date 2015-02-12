@@ -9,6 +9,7 @@ var gnHarvesterogcwxs = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
+                "translations": {},
                 "uuid" : "",
                 "account" : {
                     "use" : false,
@@ -55,7 +56,8 @@ var gnHarvesterogcwxs = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <ogctype>' + h.site.ogctype + '</ogctype>' 
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
@@ -67,7 +69,8 @@ var gnHarvesterogcwxs = {
                 + '  </site>' 
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>' 
                 + '    <topic>' + h.options.topic + '</topic>'
                 + '    <createThumbnails>' + h.options.createThumbnails + '</createThumbnails>' 

@@ -65,10 +65,10 @@
      * Reset pagination 'from' and 'to' params and merge them
      * to $scope.params
      */
-    this.resetPagination = function() {
+    this.resetPagination = function(customPagination) {
       if ($scope.hasPagination) {
         $scope.paginationInfo.currentPage = 1;
-        this.updateSearchParams(this.getPaginationParams());
+        this.updateSearchParams(this.getPaginationParams(customPagination));
       }
     };
 
@@ -238,7 +238,9 @@
         angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
 
-      self.resetPagination();
+      var customPagination = searchParams;
+      
+      self.resetPagination(customPagination);
       $scope.currentFacets = [];
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');

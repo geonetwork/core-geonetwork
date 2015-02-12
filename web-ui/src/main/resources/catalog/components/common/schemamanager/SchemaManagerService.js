@@ -19,7 +19,8 @@
     mri: 'http://standards.iso.org/19115/-3/mri/1.0/2014-12-25',
     mrd: 'http://standards.iso.org/19115/-3/mrd/1.0/2014-12-25',
     mcc: 'http://standards.iso.org/19115/-3/mcc/1.0/2014-12-25',
-    gco3: 'http://standards.iso.org/19139/gco/1.0/2014-12-25'
+    gco3: 'http://standards.iso.org/19139/gco/1.0/2014-12-25',
+    gml32: 'http://www.opengis.net/gml/3.2'
   });
 
   /**

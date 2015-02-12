@@ -9,6 +9,7 @@ var gnHarvestergeonetwork = {
       "ownerGroup": [""],
       "site":   {
         "name": "",
+        "translations": {},
         "uuid": "",
         "account":     {
           "use": false,
@@ -65,6 +66,7 @@ var gnHarvestergeonetwork = {
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
+      + $scope.buildTranslations(h)
       + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
       + '    <node>' + h.site.node + '</node>'
      + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
@@ -96,6 +98,7 @@ var gnHarvestergeonetwork = {
       + '  <options>'
       + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
       + '    <every>' + h.options.every + '</every>'
+      + '    <status>' + h.options.status + '</status>'
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'

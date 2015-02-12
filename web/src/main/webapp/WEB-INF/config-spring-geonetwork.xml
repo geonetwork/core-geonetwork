@@ -84,24 +84,31 @@
     -->
 	</util:map>
 
-    <!-- A map of all the urls that need to be called in order to fill the caches.
-         The key is the url and the value is if the url may return a error code  -->
-    <util:map id="initCacheUrls" key-type="java.lang.String" value-type="java.lang.Boolean">
-        <entry key="../../static/lib.js" value="false" />
-        <entry key="../../static/nv.d3.css" value="false" />
-        <entry key="../../static/gn_search_default.css" value="false" />
-        <entry key="../../static/gn_search_default.js" value="false" />
-        <entry key="../../static/gn_editor.css" value="false" />
-        <entry key="../../static/gn_editor.js" value="false" />
-        <entry key="../../static/gn_admin.css" value="false" />
-        <entry key="../../static/gn_admin.js" value="false" />
-        <entry key="../../static/gn_login.css" value="false" />
-        <entry key="../../static/gn_login.js" value="false" />
-        <entry key="md.format.xml?xsl=full_view&amp;id={{mdId}}" value="true" />
-        <entry key="md.format.xml?xsl=xml_view&amp;id={{mdId}}" value="true" />
-    </util:map>
+    <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String" >
+        <value>lib.js</value>
+        <value>nv.d3.css</value>
+        <value>gn_search_default.css</value>
+        <value>gn_search_default.js</value>
+        <value>gn_editor.css</value>
+        <value>gn_editor.js</value>
+        <value>gn_admin_default.css </value>
+        <value>gn_admin.js</value>
+        <value>gn_login_default.css</value>
+        <value>srv_custom_style.css</value>
+        <value>gn_login.js</value>
+    </util:list>
+
+    <util:list id="formattersToInitialize" value-type="java.lang.String" >
+        <value>full_view</value>
+        <value>xml_view</value>
+    </util:list>
 
     <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     </util:set>
-
+    <bean id="threadResources" class="org.mapfish.print.ThreadResources">
+        <property name="connectionTimeout" value="30000"/>
+        <property name="socketTimeout" value="30000" />
+        <property name="globalParallelFetches" value="50"/>
+        <property name="perHostParallelFetches" value="10" />
+    </bean>
 </beans>

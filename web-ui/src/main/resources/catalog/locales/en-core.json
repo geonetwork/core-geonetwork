@@ -169,5 +169,21 @@
     "whoCanAccess": "Who has access",
     "actions" : "Actions",
     "reset" : "Reset",
-    "stop": "Stop"
+    "stop": "Stop",
+    "isHarvested": "Harvested",
+    "y": "Yes",
+    "n": "No",
+    "publishedForGroup": "Visible by",
+    "_op0": "Visible by",
+    "status": "Workflow progress",
+    "_status": "Status",
+    "_schema": "Standard",
+    "standards": "Metadata standard",
+    "metadataTypes": "Type of record",
+    "_isTemplate": "Type of record",
+    "_isHarvested": "Harvested",
+    "isTemplatey": "Template",
+    "isTemplates": "Directory",
+    "isTemplaten": "Record",
+    "signinFailure": "Incorrect username or password."
 }
