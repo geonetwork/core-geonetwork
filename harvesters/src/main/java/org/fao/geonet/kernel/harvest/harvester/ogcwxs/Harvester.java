@@ -568,7 +568,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		}
 		
 		if (params.useLayerMd && isWMSService) {
-            boolean useDatasetIdentifier = params.identifierType.equalsIgnoreCase("DS-ID");
 			Namespace xlink 	= Namespace.getNamespace ("http://www.w3.org/1999/xlink");
 			
 			// Get metadataUrl xlink:href
@@ -586,64 +585,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
             Element onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
 
-            // Layer Identifier
-            XPath mdIdentifier = XPath.newInstance ("./" + dummyNsPrefix + "Identifier");
-            if (addNsPrefix) mdIdentifier.addNamespace("x", layer.getNamespace().getURI());
-            Element identifierRef = (Element) mdIdentifier.selectSingleNode (layer);
-
-            if (identifierRef != null) {
-                String layerIdentifier = identifierRef.getText();
-
-                try {
-                    // Check if exists in gmd:MD_DataIdentification
-                    String mdLayerIdentifierUuid = searchMetadataUuidByDatasetIdentifier(layerIdentifier);
-
-                    if (StringUtils.isNotEmpty(mdLayerIdentifierUuid)) {
-                        log.warning("    Metadata with MD_Identifier " + mdLayerIdentifierUuid + "  already exist in the catalogue. Using Capabilities Layer Identifier information.");
-                        result.layerUuidExist ++;
-                        reg.uuid = mdLayerIdentifierUuid;
-                        if (useDatasetIdentifier) {
-                            reg.dsUuid = layerIdentifier;
-                        }
-
-                        return reg;
-                    }
-
-                    // Check if exists in gmd:fileIdentifier
-                    if (!exist) {
-                        exist = dataMan.existsMetadataUuid(layerIdentifier);
-
-                        if (exist) {
-                            log.warning("    Metadata uuid already exist in the catalogue. Using Capabilities Layer Identifier information.");
-                            result.layerUuidExist ++;
-                            reg.uuid = layerIdentifier;
-
-                            if (useDatasetIdentifier) {
-                                String mdId = dataMan.getMetadataId(layerIdentifier);
-                                String mdSchema = dataMan.getMetadataSchema(mdId);
-
-                                // Retrieve MD and extract DS-IDENTIFIER
-                                Element layerMd = dataMan.getMetadata(mdId);
-
-                                String dsIdentifier = dataMan.extractDatasetIdentifier(mdSchema, layerMd);
-                                reg.dsUuid = dsIdentifier;
-                            }
-
-                            return reg;
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                    log.warning("  - Failed to check layer using Identifier attribute : " + e.getMessage());
-                    loaded = false;
-                }
-
-            }
-
             // Check if metadataUrl in WMS 1.3.0 format
             if (onLineSrc == null) {
-                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
+                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and (" + dummyNsPrefix + "Format='text/xml' or " +  dummyNsPrefix + "Format='application/xml')]/" + dummyNsPrefix + "OnlineResource");
                 if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
                 onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
             }
@@ -699,8 +643,72 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				loaded = false;
 			}
 		}
-		
-		
+
+        // If the layer metadata has not been loaded from the MetadataURL, check the layer Identifier
+        // to verify if the metadata already exists in the metadata.
+		if (!loaded && isWMSService) {
+            boolean useDatasetIdentifier = params.identifierType.equalsIgnoreCase("DS-ID");
+
+            String dummyNsPrefix = "";
+            boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
+            if (addNsPrefix) dummyNsPrefix = "x:";
+
+            // Layer Identifier
+            XPath mdIdentifier = XPath.newInstance ("./" + dummyNsPrefix + "Identifier");
+            if (addNsPrefix) mdIdentifier.addNamespace("x", layer.getNamespace().getURI());
+            Element identifierRef = (Element) mdIdentifier.selectSingleNode (layer);
+
+            if (identifierRef != null) {
+                String layerIdentifier = identifierRef.getText();
+
+                try {
+                    // Check if exists in gmd:MD_DataIdentification
+                    String mdLayerIdentifierUuid = searchMetadataUuidByDatasetIdentifier(layerIdentifier);
+
+                    if (StringUtils.isNotEmpty(mdLayerIdentifierUuid)) {
+                        log.warning("    Metadata with MD_Identifier " + mdLayerIdentifierUuid + "  already exist in the catalogue. Using Capabilities Layer Identifier information.");
+                        result.layerUuidExist ++;
+                        reg.uuid = mdLayerIdentifierUuid;
+                        if (useDatasetIdentifier) {
+                            reg.dsUuid = layerIdentifier;
+                        }
+
+                        return reg;
+                    }
+
+                    // Check if exists in gmd:fileIdentifier
+                    if (!exist) {
+                        exist = dataMan.existsMetadataUuid(layerIdentifier);
+
+                        if (exist) {
+                            log.warning("    Metadata uuid already exist in the catalogue. Using Capabilities Layer Identifier information.");
+                            result.layerUuidExist ++;
+                            reg.uuid = layerIdentifier;
+
+                            if (useDatasetIdentifier) {
+                                String mdId = dataMan.getMetadataId(layerIdentifier);
+                                String mdSchema = dataMan.getMetadataSchema(mdId);
+
+                                // Retrieve MD and extract DS-IDENTIFIER
+                                Element layerMd = dataMan.getMetadata(mdId);
+
+                                String dsIdentifier = dataMan.extractDatasetIdentifier(mdSchema, layerMd);
+                                reg.dsUuid = dsIdentifier;
+                            }
+
+                            return reg;
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    log.warning("  - Failed to check layer using Identifier attribute : " + e.getMessage());
+                    loaded = false;
+                }
+
+            }
+        }
+
 		//--- using GetCapabilities document
 		if (!loaded && params.useLayer){
 			try {
