@@ -110,7 +110,7 @@
           // in the list and trigger user selection.
           if ($routeParams.userOrGroup) {
             angular.forEach($scope.users, function(u) {
-              if (u.username === $routeParams.userOrGroup) {
+              if (u.value.username === $routeParams.userOrGroup) {
                 $scope.selectUser(u);
               }
             });
