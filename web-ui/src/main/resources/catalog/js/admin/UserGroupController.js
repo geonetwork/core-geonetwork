@@ -392,6 +392,10 @@
           type: 'danger'});
       };
 
+      $scope.deleteGroupLogo = function() {
+        $scope.groupSelected.logo = null;
+      };
+
       // upload directive options
       $scope.mdImportUploadOptions = {
         autoUpload: false,
@@ -404,7 +408,8 @@
         if (uploadScope.queue.length > 0) {
           uploadScope.submit();
         } else {
-          $http.get('admin.group.update?' + $(formId).serialize())
+          var deleteLogo = $scope.groupSelected.logo === null ? '&deleteLogo=true' : '';
+          $http.get('admin.group.update?' + $(formId).serialize() + deleteLogo)
           .success(uploadImportMdDone())
           .error(uploadImportMdError);
         }
