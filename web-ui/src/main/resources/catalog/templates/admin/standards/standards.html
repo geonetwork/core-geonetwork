@@ -17,8 +17,8 @@
               </ul>
             </p>
             <div class="btn-toolbar">
-              <button type="button" class="btn btn-primary pull-right fa fa-trash-o"
-                data-ng-click="removeStandard(s.id)" data-translate="">removeStandard</button>
+              <button type="button" class="btn btn-primary pull-right"
+                data-ng-click="removeStandard(s.id)"><span class="fa fa-trash-o"></span> {{"removeStandard"|translate}}</button>
             </div>
           </a>
         </div>
@@ -52,12 +52,12 @@
           </div>
 
           <div class="btn-toolbar">
-            <button type="button" class="btn btn-primary pull-right fa fa-plus"
-              data-ng-click="addStandard('#gn-standard-add', 'add')" data-translate=""
-              >addStandard</button>
-            <button type="button" class="btn btn-primary pull-right fa fa-save"
-              data-ng-click="updateStandard('#gn-standard-add', 'update')" data-translate=""
-              >updateStandard</button>
+            <button type="button" class="btn btn-primary pull-right"
+              data-ng-click="addStandard('#gn-standard-add', 'add')" 
+              ><span class="fa fa-plus"></span> {{"addStandard"|translate}}</button>
+            <button type="button" class="btn btn-primary pull-right"
+              data-ng-click="updateStandard('#gn-standard-add', 'update')" 
+              ><span class="fa fa-save"></span> {{"updateStandard"|translate}}</button>
           </div>
         </form>
       </div>
