@@ -125,6 +125,7 @@
       <field name="crs" tagName="crs"/>
       <field name="credit" tagName="credit"/>
       <field name="status" tagName="status"/>
+      <field name="status_text" tagName="status_text" multilingualSortField="true"/>
       <field name="updateFrequency" tagName="updateFrequency"/>
       <field name="lineage" tagName="lineage"/>
       <field name="responsibleParty" tagName="responsibleParty"/>

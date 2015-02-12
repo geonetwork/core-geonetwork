@@ -4,6 +4,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gml="http://www.opengis.net/gml"
     xmlns:srv="http://www.isotc211.org/2005/srv"
+    xmlns:util="java:org.fao.geonet.util.XslUtil"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     >
@@ -111,6 +112,8 @@
             it is nested in a SV_ServiceIdentification class -->
 
         <xsl:for-each select="gmd:identificationInfo/*">
+        
+
 
             <xsl:for-each select="gmd:citation/gmd:CI_Citation">
 
@@ -162,7 +165,13 @@
                 <Field name="abstract" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+            <xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue[. != '']">
+                 <Field name="status_text" 
+                    string="{util:getCodelistTranslation('gmd:MD_ProgressCode', string(.), string($isoLangId))}" 
+                    store="true" index="true"/>          
+            </xsl:for-each>
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            
             <xsl:for-each select="*/gmd:EX_Extent">
                 <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
