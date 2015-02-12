@@ -207,7 +207,7 @@
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
-								<gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary</gco:CharacterString>
+								<gco:CharacterString>Parameter Discovery Vocabulary (P02)</gco:CharacterString>
 							</gmd:title>
 							<gmd:date>
 								<gmd:CI_Date>
@@ -241,7 +241,7 @@
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
-								<gco:CharacterString>Ocean chemistry variable</gco:CharacterString>
+								<gco:CharacterString>EMODNET chemistry lot aggregated parameter names</gco:CharacterString>
 							</gmd:title>
 							<gmd:date>
 								<gmd:CI_Date>
@@ -276,7 +276,7 @@
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
-								<gco:CharacterString>SeaDataNet sea areas</gco:CharacterString>
+								<gco:CharacterString>SeaVoX salt and fresh water body gazetteer</gco:CharacterString>
 							</gmd:title>
 							<gmd:date>
 								<gmd:CI_Date>
