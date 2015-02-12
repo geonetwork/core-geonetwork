@@ -38,10 +38,10 @@
           <div class="input-group-btn"
                data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
 
-              <button type="button" class="btn btn-default dropdown-toggle fa fa--picture"
+              <button type="button" class="btn btn-default dropdown-toggle fa fa-picture"
                       data-toggle="dropdown">
           <span data-translate="">
-            <img class="gn-logo" src="../../images/harvesting/{{harvester.site.icon}}"
+            <img class="gn-logo harvester-logo" src="../../images/harvesting/{{harvester.site.icon}}"
                  alt="{{'harvesterLogoHelo' | translate}}"/>
           </span>
                   <span class="caret"/>
@@ -49,7 +49,7 @@
               <ul class="dropdown-menu" role="menu">
                   <li data-ng-repeat="i in icons">
                       <a data-ng-click="setIcon(i)" title="">
-                          <img class="gn-logo" src="../../images/harvesting/{{i}}"/>
+                          <img class="gn-logo harvester-logo" src="../../images/harvesting/{{i}}"/>
                       </a>
                   </li>
               </ul>

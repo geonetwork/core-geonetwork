@@ -391,8 +391,8 @@
 			</xsl:for-each>
 
 			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue[. != '']">
-				<Field name="status" string="{string(.)}" store="true" index="true"/>
-			</xsl:for-each>
+                <Field name="status" string="{string(.)}" store="true" index="true"/>			
+            </xsl:for-each>
 
 
 			<xsl:for-each select="gmd:resourceConstraints">

@@ -89,14 +89,14 @@
     <div class="row">&nbsp;</div>
 
     <div class="btn-toolbar">
-      <button type="button" class="btn btn-primary pull-right fa fa-play"
+      <button type="button" class="btn btn-primary pull-right"
               data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', false)">
-        <span data-translate="">runProcess</span>
+        <span class="fa fa-play"></span> {{"runProcess"|translate}}
       </button>
 
-      <button type="button" class="btn btn-primary pull-right fa fa-play"
+      <button type="button" class="btn btn-default pull-right"
               data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', true)">
-        <span data-translate="">testProcess</span>
+        <span class="fa fa-play"></span> {{"testProcess"|translate}}
       </button>
 
 
