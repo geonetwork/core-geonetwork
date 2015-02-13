@@ -11,10 +11,9 @@
         data-translate="">setMetadataCategories</li>
     <li data-ng-repeat="c in categories | orderBy:sortByLabel"
         data-ng-class="ids.indexOf(c['@id']) === -1 ? 'disabled' : ''">
-      <a data-ng-click="assign(c, $event)"
-         href="">
-        <img data-ng-src="../../images/category/{{c.name}}.png"/>
-        <span data-translate="">{{c.label[lang]}}</span>
+      <a data-ng-click="assign(c, $event)" href="">
+		<span class="fa gn-icon-{{c.name}}"></span>
+        {{c.label[lang] | translate}}
       </a>
     </li>
   </ul>
