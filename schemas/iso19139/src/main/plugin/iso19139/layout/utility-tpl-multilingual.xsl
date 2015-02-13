@@ -14,7 +14,18 @@
   <!-- Get the list of other languages in JSON -->
   <xsl:template name="get-iso19139-other-languages-as-json">
     <xsl:variable name="langs">
-      <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
+      <xsl:variable name="mainLanguage">
+        <xsl:call-template name="get-iso19139-language"/>
+      </xsl:variable>
+      <xsl:if test="$mainLanguage">
+        <xsl:variable name="mainLanguageId"
+                      select="$metadata/gmd:locale/gmd:PT_Locale[
+                                gmd:languageCode/gmd:LanguageCode/@codeListValue = $mainLanguage]/@id"/>
+
+        <lang><xsl:value-of select="concat('&quot;', $mainLanguage, '&quot;:&quot;#', $mainLanguageId, '&quot;')"/></lang>
+      </xsl:if>
+
+      <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue != $mainLanguage]">
         <lang><xsl:value-of select="concat('&quot;', gmd:languageCode/gmd:LanguageCode/@codeListValue, '&quot;:&quot;#', @id, '&quot;')"/></lang>
       </xsl:for-each>
     </xsl:variable>
