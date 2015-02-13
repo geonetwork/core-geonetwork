@@ -22,6 +22,14 @@
       <relation type="thumbnail">
         <id><xsl:value-of select="gmd:fileName/gco:CharacterString"/></id>
         <title><xsl:value-of select="gmd:fileDescription/gco:CharacterString"/></title>
+        <xsl:choose>
+          <xsl:when test="./ancestor::sibling">
+            <sibling>true</sibling>
+          </xsl:when>
+          <xsl:otherwise>
+            <sibling>false</sibling>
+          </xsl:otherwise>
+        </xsl:choose>
       </relation>
     </xsl:for-each>
     
