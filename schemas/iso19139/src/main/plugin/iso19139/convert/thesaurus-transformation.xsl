@@ -95,7 +95,7 @@
                         <xsl:variable name="lang" select="."/>
                         <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
                           <gmd:textGroup>
-                            <gmd:LocalisedCharacterString locale="#{$lang}">
+                            <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode($lang))}">
                               <xsl:value-of select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
                             </gmd:LocalisedCharacterString>
                           </gmd:textGroup>
