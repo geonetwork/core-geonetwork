@@ -64,7 +64,7 @@ public class IndexingTask extends QuartzJobBean {
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
         if (metadataIdentifiers.size() > 0) {
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.error(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
                         + metadataIdentifiers.toString() + ".");
             }
 
@@ -87,8 +87,8 @@ public class IndexingTask extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.error(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
-                    + new Date() + ".");
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
+                    + new Date() + ". Checking if any records need to be indexed ...");
         }
         indexRecords();
     }
