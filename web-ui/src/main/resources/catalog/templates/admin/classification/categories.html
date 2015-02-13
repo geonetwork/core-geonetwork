@@ -14,7 +14,7 @@
         <div class="list-group">
           <a href="" class="list-group-item" data-ng-repeat="c in pageItems()"
             data-ng-click="selectCategory(c)">
-            <img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>
+			<span class="fa gn-icon-{{c.name}}"></span>
             {{c.label[lang]}}</a>
           <span data-gn-pagination-list=""
                 data-items="categories | filter:categorySearch"
