@@ -1,7 +1,7 @@
 
-<div class="row gn-info-list">
+<ul class="row gn-info-list">
 
-	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+	<li
    	  data-ng-repeat="md in searchResults.records"
       data-ng-click="openRecord($index, md, searchResults.records)"
       data-ng-mouseenter="showMore(true)"
@@ -32,5 +32,5 @@
 	  <div class="hidden thumbnail">
         {{md.abstract}}
       </div>
-	</div>
-</div>
+	</li>
+</ul>
