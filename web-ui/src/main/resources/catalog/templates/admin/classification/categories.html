@@ -14,7 +14,7 @@
         <div class="list-group">
           <a href="" class="list-group-item" data-ng-repeat="c in pageItems()"
             data-ng-click="selectCategory(c)">
-            <img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>
+			<span class="fa gn-icon-{{c.name}}"></span>
             {{c.label[lang]}}</a>
           <span data-gn-pagination-list=""
                 data-items="categories | filter:categorySearch"
@@ -36,13 +36,13 @@
         <strong>{{categorySelected.label[lang]}}</strong>
 
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right fa fa-save"
+          <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!categoryUpdated" data-ng-click="saveCategory('#gn-category-edit')"
-            data-translate=""> saveCategory </button>
-          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
+            ><span class="fa fa-save"></span> {{"saveCategory"|translate}}</button>
+          <button type="button" class="btn btn-primary pull-right btn-danger"
             data-ng-hide="categorySelected['@id'] == ''"
-            data-ng-click="deleteCategory(categorySelected['@id'])" data-translate=""
-            >deleteCategory</button>
+            data-ng-click="deleteCategory(categorySelected['@id'])"
+            ><span class="fa fa-trash-o"></span> {{"deleteCategory"|translate}}</button>
         </div>
       </div>
       <div class="panel-body">

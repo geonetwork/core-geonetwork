@@ -18,7 +18,7 @@
         </div>
 
         <button type="button" class="btn btn-primary btn-block" data-ng-click="addVirtualCSW()">
-          <i class=" fa fa-plus"/>
+          <i class="fa fa-plus"/>
           <span data-translate="">newVirtualCSW</span>
         </button>
       </div>
@@ -34,14 +34,14 @@
         <span data-ng-hide="virtualCSWSelected.id != ''" data-translate="">newVirtualCSW</span>
         <strong>{{virtualCSWSelected.name}}</strong> (<a
           href="{{getCapabilitiesUrl(virtualCSWSelected)}}" data-translate="">capabilities</a>)
-        <button type="button" class="btn btn-primary pull-right fa fa-save"
+        <button type="button" class="btn btn-primary pull-right"
                 data-ng-disabled="!virtualCSWUpdated || gnVirtualCSWEdit.servicename.$error.pattern"
-                data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')" data-translate=""
-            >saveVirtualCSW</button>
-        <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
+                data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')" 
+            ><span class="fa fa-save"></span> {{"saveVirtualCSW"|translate}}</button>
+        <button type="button" class="btn btn-primary pull-right btn-danger"
                 data-ng-hide="virtualCSWSelected.id == ''"
-                data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" data-translate=""
-            >deleteVirtualCSW</button>
+                data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" 
+            ><span class="fa fa-trash-o"></span> {{"deleteVirtualCSW"|translate}}</button>
       </div>
       <div class="panel-body">
         <form id="gn-virtualcsw-edit" name="gnVirtualCSWEdit" class="form-horizontal"

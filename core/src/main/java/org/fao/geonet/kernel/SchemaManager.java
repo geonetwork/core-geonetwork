@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
@@ -46,6 +47,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
@@ -243,22 +245,26 @@ public class SchemaManager {
 		}
 	}
 
-    public static SchemaPlugin getSchemaPlugin(ServiceContext context, String schemaIdentifier) {
+    public static SchemaPlugin getSchemaPlugin(String schemaIdentifier) {
         String schemaBeanIdentifier = schemaIdentifier + "SchemaPlugin";
         SchemaPlugin schemaPlugin = null;
         try {
-            schemaPlugin = (SchemaPlugin) context.getApplicationContext().getBean(schemaBeanIdentifier);
+            if (ApplicationContextHolder.get() != null) {
+                schemaPlugin = (SchemaPlugin) ApplicationContextHolder.
+                        get().
+                        getBean(schemaBeanIdentifier);
 
-            String iso19139SchemaIdentifier = "iso19139";
-            if (schemaPlugin == null && schemaIdentifier.startsWith(iso19139SchemaIdentifier)){
-                // For ISO19139 profiles, get the ISO19139 bean if no custom one defined
-                // Can't depend here on ISO19139SchemaPlugin to avoid to introduce
-                // circular ref.
-                schemaBeanIdentifier = iso19139SchemaIdentifier + "SchemaPlugin";
-                schemaPlugin = (SchemaPlugin) context.getApplicationContext().getBean(schemaBeanIdentifier);
+                if (schemaPlugin == null &&
+                        schemaIdentifier.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
+                    // For ISO19139 profiles, get the ISO19139 bean if no custom one defined
+                    // Can't depend here on ISO19139SchemaPlugin to avoid to introduce
+                    // circular ref.
+                    schemaBeanIdentifier = ISO19139SchemaPlugin.IDENTIFIER + "SchemaPlugin";
+                    schemaPlugin = (SchemaPlugin) ApplicationContextHolder.
+                            get().
+                            getBean(schemaBeanIdentifier);
+                }
             }
-
-
         } catch (Exception e) {
             // No bean for this schema
             if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {

@@ -19,7 +19,7 @@ public class FreeFileHandlesHealthCheck implements HealthCheckFactory {
 
     @Override
     public HealthCheck create(ServiceContext context) {
-        return new HealthCheck("Sufficient free file handles") {
+        return new HealthCheck("Free file handles") {
             @Override
             protected Result check() throws Exception {
                 try {

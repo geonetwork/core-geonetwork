@@ -61,8 +61,6 @@ class SummaryFactory {
             createDynamicHierarchyHtml(summary)
         }
 
-        isoHandlers.commonHandlers.configureSummaryActionMenu(summary)
-
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             def abbrName = f.nodeTranslation(s, null, "abbrLabel")
@@ -113,11 +111,16 @@ class SummaryFactory {
         if (links != null && !links.isEmpty()) {
             LinkBlock linkBlock = new LinkBlock("links", "fa fa-link");
             summary.links.add(linkBlock)
+
             links.each { link ->
                 def linkParts = link.split("\\|")
                 def title = linkParts[0];
+                def desc = linkParts[1];
                 def href = linkParts[2];
-                def mimetype = linkParts[4].toLowerCase();
+                def protocol = linkParts[3].toLowerCase();
+                if (title.trim().isEmpty()) {
+                    title = desc;
+                }
                 if (title.trim().isEmpty()) {
                     title = href;
                 }
@@ -127,21 +130,21 @@ class SummaryFactory {
                 }
 
                 def imagesDir = "../../images/formatter/"
-                def type = "link";
+                def type;
                 def icon = "";
                 def iconClasses = "";
-                if (mimetype.contains("kml")) {
+                if (protocol.contains("kml")) {
                     type = "kml";
                     icon = imagesDir + "kml.png";
-                } else if (mimetype.contains("OGC:")) {
+                } else if (protocol.contains("ogc:")) {
                     type = "ogc";
-                } else if (mimetype.contains("wms")) {
+                } else if (protocol.contains("wms")) {
                     type = "wms";
                     icon = imagesDir + "wms.png";
-                } else if (mimetype.contains("download")) {
+                } else if (protocol.contains("download")) {
                     type = "download";
                     iconClasses = "fa fa-download"
-                } else if (mimetype.contains("wfs")) {
+                } else if (protocol.contains("wfs")) {
                     type = "wfs";
                     icon = imagesDir + "wfs.png";
                 } else {

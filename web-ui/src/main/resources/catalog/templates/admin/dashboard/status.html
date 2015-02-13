@@ -3,22 +3,66 @@
     <div class="col-lg-4">
       <div class="panel panel-default" data-ng-hide="healthy === undefined"
         data-ng-class="healthy ? 'panel-success' : 'panel-danger'">
-        <div class="panel-heading" data-translate="">systemStatus</div>
+        <div class="panel-heading" data-translate="">criticalSystemStatus</div>
 
         <div class="panel-body">
-          <ul class="list-group">
-            <li class="list-group-item" data-ng-repeat="info in healthcheck">
-              <span class="badge"
-                data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'">
-                {{info.status}} </span>
-              <h4 class="list-group-item-heading"> {{info.name}} </h4>
-              <p class="list-group-item-text" data-ng-hide="!info.msg">{{info.msg}}</p>
-              <p class="list-group-item-text" data-ng-hide="!info.exception">{{info.exception}}</p>
-            </li>
-          </ul>
+            <table class="table table-striped">
+                <tr class="health-check"
+                    data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
+                    data-ng-repeat="info in criticalhealthcheck">
+                    <td>
+                        <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
+
+                        <div ng-hide="info.status === 'OK'" class="dropdown">
+                              <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                                 aria-expanded="false">
+                                <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
+                            </a>
+                            <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                                <li>
+                                    <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
+                                    <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                <td><span class="badge"
+                                data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"> {{info.status}} </span></td>
+                </table>
+        </div>
+      </div>
+      <div class="panel panel-default" data-ng-hide="nowarnings === undefined"
+         data-ng-class="nowarnings ? 'panel-success' : 'panel-warning'">
+        <div class="panel-heading" data-translate="">warningSystemStatus</div>
+        <div class="panel-body">
+
+            <table class="table table-striped">
+                <tr class="health-check"
+                    data-ng-class="info.status === 'OK' ? '' : 'alert-warning'"
+                    data-ng-repeat="info in warninghealthcheck">
+                    <td>
+                        <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
+
+                        <div ng-hide="info.status === 'OK'" class="dropdown">
+                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                               aria-expanded="false">
+                                <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
+                            </a>
+                            <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                                <li>
+                                    <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
+                                    <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td><span class="badge"
+                              data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"> {{info.status}} </span></td>
+            </table>
         </div>
       </div>
     </div>
+
     <div class="col-lg-8">
       <form class="form-horizontal"
             role="form"
@@ -30,11 +74,36 @@
           <div class="panel-body">
               <table class="table table-striped">
                 <tr data-ng-repeat="md in searchResults.records">
-                  <td>{{md.title || md.defaultTitle}}</td>
                   <td>
-                    <a target="_blank" data-ng-href="md.format.html?xsl=full_view&uuid={{md['geonet:info'].uuid}}">
-                      <i class="fa fa-eye"></i>
-                    </a>
+                      <div class="dropdown">
+                          <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true"
+                             role="button" aria-expanded="false">
+                              {{md.title || md.defaultTitle}}
+                          </a>
+
+                          <a class="pull-right" target="_blank"
+                             data-ng-href="catalog.search#/metadata/{{md['geonet:info'].uuid}}">
+                              <i class="fa fa-eye"></i>
+                          </a>
+
+                          <ul class="dropdown-menu error-message left-offset" role="menu" aria-labelledby="dLabel">
+                              <li>
+                                  <table class="table">
+                                      <tr data-ng-repeat="errorMsg in indexMessages(md)">
+                                          <td>
+                                              <dl>
+                                                  <dt>{{indexMessageTitle(errorMsg) | translate}}</dt>
+                                                  <dd>
+                                                      <span>Error reason: {{indexMessageReason(errorMsg)}}</span>
+                                                      <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
+                                                  </dd>
+                                              </dl>
+                                          </td>
+                                      </tr>
+                                  </table>
+                              </li>
+                          </ul>
+                      </div>
                   </td>
                 </tr>
               </table>
@@ -72,4 +141,85 @@
       </div>
     </div>
   </div>
+    <div class="panel-group" id="threadActivityTop" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="threadActivityHeading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-ng-click="openThreadActivity()" data-parent="#top" aria-expanded="true" aria-controls="threadActivity" translate>
+                        threadStatus
+                    </a>&nbsp;
+                    <span class="badge">{{threadStatus.threads | filter:threadStatusSearch:false | count}}</span>
+                    <i class="fa fa-spinner fa-spin" data-ng-show="threadInfoLoading" ></i>
+                </h4>
+                <div class="btn-toolbar">
+                    <form class="form-inline pull-right">
+                    <div class="checkbox" data-ng-show="threadStatus.threadContentionMonitoringSupported">
+                        <label>
+                            <input type="checkbox"
+                                   data-ng-click="toggleThreadContentionMonitoring()"
+                                   data-ng-model="threadStatus.threadContentionMonitoringEnabled"> Thread Contention Monitoring
+                        </label>
+                    </div>
+                    <div class="checkbox" data-ng-show="threadStatus.threadCpuTimeSupported">
+                        <label>
+                            <input type="checkbox"
+                                   data-ng-click="toggleThreadCpuTime()"
+                                   data-ng-model="threadStatus.threadCpuTimeEnabled"> Thread CPU Time
+                        </label>
+                    </div>
+                        </form>
+                    <!--<button type="button"-->
+                            <!--class="btn btn-default pull-right"-->
+                            <!--data-ng-click="toggleDebugging()"-->
+                            <!--data-ng-show="threadStatus.threads.length > 1 && threadStatus.isDebugSupported"-->
+                            <!--data-ng-class="threadStatus.isDebugEnabled ? 'active' : ''">Enable Debugging</button>-->
+                </div>
+            </div>
+            <div id="threadActivity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="threadActivityHeading">
+                <div class="modal fade" id="stackTrace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    Stack Trace '{{selectedThread.name}}'</h4>
+                            </div>
+                            <div class="modal-body">
+                                <pre>{{threadStackTrace}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <input class="form-control"
+                           data-ng-show="threadStatus.threads.length > 1"
+                           data-ng-model="threadStatusSearch.$" autofocus=""
+                           placeholder="{{'filter' | translate}}"/>
+                    <table class="table">
+                        <th><a data-ng-click="setThreadSortField('name')">Thread Name</a>&nbsp;<i data-ng-class="threadSortClass('name')"></i></th>
+                        <th data-ng-show="threadStatus.threadCpuTimeEnabled"><a data-ng-click="setThreadSortField('userTime')">User Time</a>&nbsp;<i data-ng-class="threadSortClass('userTime')"></i></th>
+                        <th data-ng-show="threadStatus.threadCpuTimeEnabled"><a data-ng-click="setThreadSortField('cpuTime')">CPU Name</a>&nbsp;<i data-ng-class="threadSortClass('cpuTime')"></i></th>
+                        <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a data-ng-click="setThreadSortField('waitTime')">Wait Time</a>&nbsp;<i data-ng-class="threadSortClass('waitTime')"></i></th>
+                        <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a data-ng-click="setThreadSortField('blockedTime')">Blocked Time</a>&nbsp;<i data-ng-class="threadSortClass('blockedTime')"></i></th>
+                        <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a data-ng-click="setThreadSortField('deadlocked')">Deadlocked</a>&nbsp;<i data-ng-class="threadSortClass('deadlocked')"></i></th>
+                        <th><a data-ng-click="setThreadSortField('state')">State</a>&nbsp;<i data-ng-class="threadSortClass('state')"></i></th>
+                        <tr data-ng-repeat="thread in threadStatus.threads | filter:threadStatusSearch:false | orderBy:threadSortField:threadSortReverse" class="thread-state-{{thread.state}}">
+                            <td class="thread-name">
+                                <a data-ng-click="showStackTrace(thread)" title="{{thread.name}}">
+                                    <i class="fa fa-eye"></i>&nbsp;{{thread.name | ellipses}}
+                                </a>
+                            </td>
+                            <td data-ng-show="threadStatus.threadCpuTimeEnabled">{{thread.userTime}}</td>
+                            <td data-ng-show="threadStatus.threadCpuTimeEnabled">{{thread.cpuTime}}</td>
+                            <td data-ng-show="threadStatus.threadContentionMonitoringEnabled">{{thread.waitTime}}</td>
+                            <td data-ng-show="threadStatus.threadContentionMonitoringEnabled">{{thread.blockedTime}}</td>
+                            <td data-ng-show="threadStatus.threadContentionMonitoringEnabled">{{thread.deadlocked}}</td>
+                            <td>{{thread.state}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -14,11 +14,13 @@
     gts: 'http://www.isotc211.org/2005/gts',
     srv: 'http://www.isotc211.org/2005/srv',
     xlink: 'http://www.w3.org/1999/xlink',
-    cit: 'http://www.isotc211.org/namespace/cit/1.0/2014-07-11',
-    mdb: 'http://www.isotc211.org/namespace/mdb/1.0/2014-07-11',
-    mri: 'http://www.isotc211.org/namespace/mri/1.0/2014-07-11',
-    mrd: 'http://www.isotc211.org/namespace/mrd/1.0/2014-07-11',
-    mcc: 'http://www.isotc211.org/namespace/mcc/1.0/2014-07-11'
+    cit: 'http://standards.iso.org/19115/-3/cit/1.0/2014-12-25',
+    mdb: 'http://standards.iso.org/19115/-3/mdb/1.0/2014-12-25',
+    mri: 'http://standards.iso.org/19115/-3/mri/1.0/2014-12-25',
+    mrd: 'http://standards.iso.org/19115/-3/mrd/1.0/2014-12-25',
+    mcc: 'http://standards.iso.org/19115/-3/mcc/1.0/2014-12-25',
+    gco3: 'http://standards.iso.org/19139/gco/1.0/2014-12-25',
+    gml32: 'http://www.opengis.net/gml/3.2'
   });
 
   /**

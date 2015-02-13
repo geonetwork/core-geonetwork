@@ -29,7 +29,7 @@ public class AbstractEntityListenerManager<T> {
         } else {
             Log.warning(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
                                                      ApplicationContextHolder.class.getName() +
-                                                     " has not been set in this thread");
+                                                     " has not been set in this thread", new IllegalStateException("No ApplicationContext set in thread local"));
         }
     }
 }

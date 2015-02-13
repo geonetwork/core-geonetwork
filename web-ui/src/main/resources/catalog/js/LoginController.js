@@ -31,6 +31,7 @@
           $scope.passwordUpdated = false;
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
 
           function initForm() {

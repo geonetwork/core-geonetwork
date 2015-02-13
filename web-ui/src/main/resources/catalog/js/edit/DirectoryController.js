@@ -52,6 +52,7 @@
       // A map of icon to use for each types
       var icons = {
         'gmd:CI_ResponsibleParty': 'fa-user',
+        'cit:CI_Responsibility': 'fa-user',
         'gmd:MD_Distribution': 'fa-link'
       };
 
@@ -70,7 +71,7 @@
       };
 
       var init = function() {
-        $http.get('admin.group.list@json', {cache: true}).
+        $http.get('admin.group.list?_content_type=json', {cache: true}).
             success(function(data) {
               $scope.groups = data !== 'null' ? data : null;
 
@@ -85,7 +86,7 @@
 
       var searchEntries = function() {
         $scope.tpls = null;
-        gnSearchManagerService.search('qi@json?' +
+        gnSearchManagerService.search('qi?_content_type=json&' +
             'template=s&fast=index&summaryOnly=true&resultType=subtemplates').
             then(function(data) {
               $scope.$broadcast('setPagination', $scope.paginationInfo);
@@ -101,7 +102,11 @@
               $scope.mdTypes = types;
 
               // Select the default one or the first one
-              if (defaultType && $.inArray(defaultType, $scope.mdTypes)) {
+              if ($scope.activeType &&
+                  $.inArray($scope.activeType, $scope.mdTypes) !== -1) {
+                $scope.selectType($scope.activeType);
+              } else if (defaultType &&
+                  $.inArray(defaultType, $scope.mdTypes) !== -1) {
                 $scope.selectType(defaultType);
               } else if ($scope.mdTypes[0]) {
                 $scope.selectType($scope.mdTypes[0]);

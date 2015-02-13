@@ -15,8 +15,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher_directive');
   goog.require('gn_draw_directive');
+  goog.require('gn_graticule');
   goog.require('gn_layermanager_directive');
   goog.require('gn_localisation');
   goog.require('gn_measure_directive');
@@ -29,7 +45,6 @@
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
-  goog.require('gn_graticule');
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',

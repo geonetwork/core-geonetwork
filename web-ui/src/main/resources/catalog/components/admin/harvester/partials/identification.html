@@ -1,43 +1,67 @@
 <fieldset>
-  <legend data-translate="">harvesterIdentification</legend>
-  <div data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
-    <label class="control-label">
-      <span data-translate="">harvesterName</span>
-      <span data-ng-hide="harvester['@type'] == 'geonetwork'" data-translate=""
-        >andNodeLogo</span>
-    </label>
-
-    <input type="hidden" class="form-control" data-ng-model="harvester.site.icon"/>
-
-    <div class="input-group">
-      <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
-      <div class="input-group-btn"
-        data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
-
-        <button type="button" class="btn btn-default dropdown-toggle fa fa--picture"
-          data-toggle="dropdown">
-          <span data-translate="">
-            <img class="gn-logo" src="../../images/harvesting/{{harvester.site.icon}}"
-              alt="{{'harvesterLogoHelo' | translate}}"/>
-          </span>
-          <span class="caret"/>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li data-ng-repeat="i in icons">
-            <a data-ng-click="setIcon(i)" title="">
-              <img class="gn-logo" src="../../images/harvesting/{{i}}"/>
-            </a>
-          </li>
-        </ul>
-      </div>
+    <div class="modal fade" id="translationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="translationModalLabel" translate>harvesterName</h4>
+                </div>
+                <div class="modal-body">
+                    <div data-ng-repeat="lang in languages | orderBy : 'name'">
+                        <label class="control-label">{{lang.name}}</label>
+                        <input class="form-control" data-ng-model="harvester.site.translations[lang.id]"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <p class="help-block" data-translate="">harvesterNameHelp</p>
-  </div>
-  <div data-ng-show="groups.length"
-    data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
-    <label class="control-label" data-translate="">harvesterGroup</label>
-    <div data-groups-combo="" data-owner-group="harvester.ownerGroup[0]" lang="lang" groups="groups"/>
 
-    <p class="help-block" data-translate="">harvesterGroupHelp</p>
-  </div>
+    <legend data-translate="">harvesterIdentification</legend>
+    <div data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
+      <label class="control-label">
+          <span data-translate="">harvesterName</span>
+      <span data-ng-hide="harvester['@type'] == 'geonetwork'" data-translate=""
+              >andNodeLogo</span>
+      </label>
+
+      <input type="hidden" class="form-control" data-ng-model="harvester.site.icon"/>
+
+      <div class="input-group">
+          <div class="input-group margin-bottom-sm">
+              <span class="input-group-addon highlight" data-ng-click="openTranslationModal()" ><i
+                      class="fa fa-pencil fa-fw"></i></span>
+              <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
+          </div>
+          <div class="input-group-btn"
+               data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
+
+              <button type="button" class="btn btn-default dropdown-toggle fa fa-picture"
+                      data-toggle="dropdown">
+          <span data-translate="">
+            <img class="gn-logo harvester-logo" src="../../images/harvesting/{{harvester.site.icon}}"
+                 alt="{{'harvesterLogoHelo' | translate}}"/>
+          </span>
+                  <span class="caret"/>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                  <li data-ng-repeat="i in icons">
+                      <a data-ng-click="setIcon(i)" title="">
+                          <img class="gn-logo harvester-logo" src="../../images/harvesting/{{i}}"/>
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+      <p class="help-block" data-translate="">harvesterNameHelp</p>
+    </div>
+    <div data-ng-show="groups.length"
+         data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
+        <label class="control-label" data-translate="">harvesterGroup</label>
+        <div data-groups-combo="" data-owner-group="harvester.ownerGroup[0]" lang="lang" groups="groups" data-exclude-special-groups="true"/>
+
+        <p class="help-block" data-translate="">harvesterGroupHelp</p>
+    </div>
 </fieldset>

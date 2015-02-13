@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search.index;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -31,7 +32,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.io.IOException;
@@ -51,18 +52,19 @@ import java.util.Set;
 public class IndexingTask extends QuartzJobBean {
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private ConfigurableApplicationContext applicationContext;
     @Qualifier("DataManager")
     @Autowired
     private DataManager _dataManager;
 
 
     private void indexRecords() {
+        ApplicationContextHolder.set(applicationContext);
         IndexingList list = applicationContext.getBean(IndexingList.class);
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
         if (metadataIdentifiers.size() > 0) {
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.error(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
                         + metadataIdentifiers.toString() + ".");
             }
 
@@ -85,8 +87,8 @@ public class IndexingTask extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.error(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
-                    + new Date() + ".");
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
+                    + new Date() + ". Checking if any records need to be indexed ...");
         }
         indexRecords();
     }

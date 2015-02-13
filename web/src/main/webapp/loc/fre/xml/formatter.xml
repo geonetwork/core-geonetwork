@@ -1,0 +1,23 @@
+<strings>
+    <noUuidInLink>Pas de UUID dans le lien</noUuidInLink>
+    <overview>Aperçu</overview>
+    <parent>Parent</parent>
+    <parent-link>Parent</parent-link>
+    <service-link>Service</service-link>
+    <complete>Complet</complete>
+    <dataset-link>Données</dataset-link>
+    <fcat-link>Catalogue de caractéristiques</fcat-link>
+    <xml>XML</xml>
+    <sibling-link>Frères et soeurs</sibling-link>
+    <children-link>Enfant</children-link>
+    <hassource-link>A la sources</hassource-link>
+    <hierarchy>Hiérarchie</hierarchy>
+    <datasets-link>Données</datasets-link>
+    <links>Liens</links>
+    <source-link>Sources</source-link>
+    <services-link>Services</services-link>
+    <testString>Cette chaine de caractères est là pour un test, ne pas la supprimer</testString>
+    <abstract>Résumé</abstract>
+    <associated-link>Associé</associated-link>
+    <related-link>Associé</related-link>
+</strings>

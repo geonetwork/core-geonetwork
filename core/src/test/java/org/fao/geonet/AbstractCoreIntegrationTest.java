@@ -1,30 +1,11 @@
 package org.fao.geonet;
 
-import static java.lang.Math.round;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jeeves.constants.ConfigFile;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -53,7 +34,24 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static java.lang.Math.round;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -270,7 +268,7 @@ import com.google.common.collect.Lists;
         String createDate = new ISODate().getDateAndTime();
         Importer.importRecord(uuid,
                 uuidAction, Lists.newArrayList(metadata), schema, 0,
-                source.getUuid(), source.getName(), context,
+                source.getUuid(), source.getName(), Maps.<String, String>newHashMap(), context,
                 id, createDate, createDate,
                 "" + groupId, metadataType);
 

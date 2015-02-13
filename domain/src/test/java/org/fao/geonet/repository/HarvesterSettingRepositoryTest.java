@@ -25,10 +25,10 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindByName() throws Exception {
         HarvesterSetting setting = _repo.save(newSetting());
-        List<HarvesterSetting> found = _repo.findByName(setting.getName());
+        List<HarvesterSetting> found = _repo.findAllByName(setting.getName());
         assertEquals(1, found.size());
         assertSameContents(setting, found.get(0), _skipProps);
-        assertEquals(0, _repo.findByName("some wrong name").size());
+        assertEquals(0, _repo.findAllByName("some wrong name").size());
     }
 
     @Test

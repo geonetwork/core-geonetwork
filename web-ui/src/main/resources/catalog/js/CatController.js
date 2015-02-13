@@ -2,13 +2,16 @@
   goog.provide('gn_cat_controller');
 
   goog.require('gn_search_manager');
+  goog.require('gn_toptoolbar');
 
-  var module = angular.module('gn_cat_controller', ['gn_search_manager']);
+  var module = angular.module('gn_cat_controller', 
+      ['gn_search_manager', 'gnTopToolbar']);
 
 
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
-    locale: {}
+    locale: {},
+    isMapViewerEnabled: false
   });
 
   /**
@@ -23,8 +26,10 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
+    'gnGlobalSettings', '$location',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnConfig) {
+            gnSearchManagerService, gnConfigService, gnConfig,
+            gnGlobalSettings, $location) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -34,13 +39,29 @@
       $scope.langs = {'fre': 'fr', 'eng': 'en', 'spa': 'sp'};
       $scope.url = '';
       $scope.base = '../../catalog/';
-      $scope.proxyUrl = '../../proxy?url=';
+      $scope.proxyUrl = gnGlobalSettings.proxyUrl;
       $scope.logoPath = '../../images/harvesting/';
+      $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.pages = {
         home: 'home',
-        admin: 'admin.console',
         signin: 'catalog.signin'
       };
+      var adminConsolePath = 'admin.console';
+      if (window.location.search.indexOf('debug') !== -1) {
+        adminConsolePath += '?debug';
+      }
+      if (window.location.pathname.indexOf('admin.console') !== -1) {
+        $scope.pages.adminClick = function($event) {
+          $event.stopPropagation();
+          if ($event.button === 1 || ($event.button === 0 && $event.ctrlKey)) {
+            window.open(adminConsolePath, '_blank');
+          } else {
+            $location.path('/');
+          }
+        };
+      } else {
+        $scope.pages.admin = adminConsolePath;
+      }
       $scope.layout = {
         hideTopToolBar: false
       };

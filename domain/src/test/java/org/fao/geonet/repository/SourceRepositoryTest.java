@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for the SourceRepository repository.
@@ -22,10 +23,14 @@ public class SourceRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindOneByName() throws Exception {
         Source source1 = _repo.save(newSource());
-        Source source2 = _repo.save(newSource());
+        final Source source2BeforeSave = newSource();
+        Source source2 = _repo.save(source2BeforeSave);
 
         assertEquals(source1.getUuid(), _repo.findOneByName(source1.getName()).getUuid());
-        assertEquals(source2.getUuid(), _repo.findOneByName(source2.getName()).getUuid());
+        assertEquals(source2BeforeSave.getUuid(), _repo.findOneByName(source2.getName()).getUuid());
+        assertEquals(source2BeforeSave.getLabel("eng"), _repo.findOneByName(source2.getName()).getLabel("eng"));
+        assertNotNull(_repo.findOneByName(source2.getName()).getLabel("eng"));
+        assertEquals(source2BeforeSave.getLabel("fre"), _repo.findOneByName(source2.getName()).getLabel("fre"));
     }
 
     @Test
@@ -48,6 +53,9 @@ public class SourceRepositoryTest extends AbstractSpringDataTest {
         source.setName("name" + val);
         source.setLocal(val % 2 == 0);
         source.setUuid("uuid" + val);
+
+        source.getLabelTranslations().put("eng", "enlabel" + val);
+        source.getLabelTranslations().put("fre", "frlabel" + val);
 
         return source;
     }

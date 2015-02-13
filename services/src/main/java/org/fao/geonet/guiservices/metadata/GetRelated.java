@@ -310,7 +310,7 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         String schemaIdentifier = dm.getMetadataSchema(id);
-        SchemaPlugin instance = SchemaManager.getSchemaPlugin(context, schemaIdentifier);
+        SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
         AssociatedResourcesSchemaPlugin schemaPlugin = null;
         if (instance instanceof AssociatedResourcesSchemaPlugin) {
             schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;

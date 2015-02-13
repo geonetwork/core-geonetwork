@@ -9,9 +9,10 @@ var gnHarvesterarcsde = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
-                "use": "true",
+                "use": true,
                 "username": "",
                 "password": ""
               },
@@ -26,7 +27,7 @@ var gnHarvesterarcsde = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "privileges": [{
@@ -39,7 +40,7 @@ var gnHarvesterarcsde = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
@@ -49,6 +50,7 @@ var gnHarvesterarcsde = {
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
+                + $scope.buildTranslations(h)
                 + '    <server>' + h.site.server + '</server>'
                 + '    <port>' + h.site.port + '</port>' 
                 + '    <icon>' + h.site.icon + '</icon>' 
@@ -63,7 +65,8 @@ var gnHarvesterarcsde = {
                 + '  </site>' 
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '  </options>' 
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'

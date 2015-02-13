@@ -21,8 +21,8 @@ import javax.persistence.*;
 public class Setting extends GeonetEntity {
     private String name;
     private String value;
-    private SettingDataType dataType;
-    private int position;
+    private SettingDataType dataType = SettingDataType.STRING;
+    private int position = 0;
     private char internal = Constants.YN_TRUE;
 
     @Id
@@ -58,6 +58,7 @@ public class Setting extends GeonetEntity {
         return this;
     }
 
+    @Column(name = "position", nullable = false, columnDefinition="int default 0")
     public int getPosition() {
         return position;
     }
@@ -72,7 +73,7 @@ public class Setting extends GeonetEntity {
      * This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "internal", nullable = false, length = 1)
+    @Column(name = "internal", nullable = false, length = 1, columnDefinition="char default 'y'")
     protected char getInternal_JpaWorkaround() {
         return internal;
     }

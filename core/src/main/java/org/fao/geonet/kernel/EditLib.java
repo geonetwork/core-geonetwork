@@ -37,11 +37,8 @@ import org.apache.commons.jxpath.ri.parser.XPathParser;
 import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.MetadataAttribute;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
@@ -1005,7 +1002,10 @@ public class EditLib {
      */
     private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element) throws Exception {
         String elemName = element.getQualifiedName();
-        
+        SchemaPlugin plugin = schema.getSchemaPlugin();
+        boolean isISOPlugin = plugin instanceof ISOPlugin;
+        ISOPlugin isoPlugin = isISOPlugin ? (ISOPlugin) plugin : null;
+
         boolean isSimpleElement = schema.isSimpleElement(elemName,parentName);
         
         if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
@@ -1127,8 +1127,10 @@ public class EditLib {
                         // Add it to the element
                         element.addContent(child);
                         
-                        if (childHasOnlyCharacterStringSuggestion) {
-                            child.addContent(new Element("CharacterString", Namespaces.GCO));
+                        if (childHasOnlyCharacterStringSuggestion &&
+                                isISOPlugin) {
+                            child.addContent(isoPlugin.createBasicTypeCharacterString()
+                            );
                         }
                         
                         // Continue ....
@@ -1136,8 +1138,9 @@ public class EditLib {
                     } else {
                         // Logging some cases to avoid
                         if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
-                            if (elemType.isOrType()) {
-                                 if (elemType.getElementList().contains("gco:CharacterString") 
+                            if (elemType.isOrType() && isISOPlugin) {
+                                 if (elemType.getElementList().contains(
+                                         isoPlugin.getBasicTypeCharacterStringName())
                                          && !childHasOneSuggestion) {
                                     Log.debug(Geonet.EDITORFILLELEMENT,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
                                  } else {
@@ -1148,14 +1151,17 @@ public class EditLib {
                     }
                 }
             }
-        } else if (type.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
+        } else if (isISOPlugin &&
+                   type.getElementList().contains(
+                        isoPlugin.getBasicTypeCharacterStringName()) &&
+                   !hasSuggestion) {
             // expand element which have no suggestion
             // and have a gco:CharacterString substitute.
             // gco:CharacterString is the default.
             if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
                 Log.debug(Geonet.EDITORFILLELEMENT, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
             }
-            Element child = new Element("CharacterString", Namespaces.GCO);
+            Element child = isoPlugin.createBasicTypeCharacterString();
             element.addContent(child);
         } else {
             // TODO: this could be supported if only one suggestion defined for an or element ?
@@ -1865,13 +1871,21 @@ public class EditLib {
 				// elements. It could be a good idea to have that information in configuration file
 				// (eg. like schema-substitute) in order to define the default substitute to use
 				// for a type. TODO
-				if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
+                SchemaPlugin plugin = schema.getSchemaPlugin();
+                boolean isISOPlugin = plugin instanceof ISOPlugin;
+                ISOPlugin isoPlugin = isISOPlugin ? (ISOPlugin) plugin : null;
+
+                if (isISOPlugin &&
+                        type.getElementList().contains(
+                                isoPlugin.getBasicTypeCharacterStringName()) &&
+                        !useSuggestion) {
                     if(Log.isDebugEnabled(Geonet.EDITOR))
                         Log.debug(Geonet.EDITOR,"OR element having gco:CharacterString substitute and no suggestion: " + qname);
 
+                    Element basicTypeNode = isoPlugin.createBasicTypeCharacterString();
 					Element newElem = createElement(schema, qname,
-							"gco:CharacterString",
-                            "http://www.isotc211.org/2005/gco", 1, 1);
+                            basicTypeNode.getQualifiedName(),
+                            basicTypeNode.getNamespaceURI(), 1, 1);
 					child.addContent(newElem);
 				} else {
 					action = "before"; // js adds new elements before this child

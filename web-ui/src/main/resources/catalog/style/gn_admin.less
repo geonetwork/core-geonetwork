@@ -27,6 +27,10 @@
   max-height:60%;
 }
 
+.harvester-logo {
+ height:20px;
+}
+
 .gn-action:not([disabled]) {
   cursor: pointer;
 }
@@ -40,9 +44,71 @@
   outline-color: #ff0000;
 }
 
-fieldset.cswCriteriaInfo {
+fieldset.cswCriteriaInfo, ul.list-group {
   padding-right: 1em;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   max-height: 40em;
+}
+
+.badge-warning {
+  background-color: @alert-warning-text;
+}
+
+.badge-danger {
+  background-color: @alert-danger-text;
+}
+
+.health-check.alert-warning a {
+  background-color: @alert-warning-bg;
+  color: @alert-warning-text;
+}
+.health-check.alert-danger a {
+  background-color: @alert-danger-bg;
+  color: @alert-danger-text;
+}
+ul.error-message {
+  .left-offset {
+  left: -2em;
+  }
+
+  overflow-x: auto;
+  z-index: 9999999;
+  dl,pre {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    dd > span {
+      padding-left: 10px;
+    }
+  }
+}
+
+.input-group-addon.highlight:hover {
+  color: @label-primary-bg;
+  cursor: pointer;
+}
+
+.thread-state-NEW {
+  background-color: white;
+}
+.thread-state-RUNNABLE {
+  background-color: LIGHTGREEN;
+}
+.thread-state-BLOCKED {
+  background-color: RED;
+}
+.thread-state-WAITING {
+  background-color: ORANGE;
+}
+.thread-state-TIMED_WAITING {
+  background-color: YELLOW;
+}
+.thread-state-TERMINATED {
+  background-color: LIGHTGRAY;
+}
+
+#admin-console-link {
+  cursor: pointer;
 }

@@ -1,13 +1,16 @@
 (function() {
   goog.provide('gn_map_directive');
+  goog.require('gn_owscontext_service');
 
-  angular.module('gn_map_directive', [])
+  angular.module('gn_map_directive',
+      ['gn_owscontext_service'])
 
     .directive(
       'gnDrawBbox',
       [
        'gnMap',
-       function(gnMap) {
+       'gnOwsContextService',
+       function(gnMap, gnOwsContextService) {
          return {
            restrict: 'A',
            replace: true,
@@ -125,6 +128,13 @@
                  zoom: 2
                })
              });
+
+             //Uses configuration from database
+             if (gnMap.getMapConfig().context) {
+               gnOwsContextService.
+                   loadContextFromUrl(gnMap.getMapConfig().context,
+                       map, true);
+             }
 
              var dragbox = new ol.interaction.DragBox({
                style: boxStyle,

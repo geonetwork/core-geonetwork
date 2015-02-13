@@ -96,10 +96,11 @@
                               <div class="col-md-4">
                                   <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
                                        style="max-width:128px; max-height:128px"></img>
+                                  <i data-ng-show="groupSelected.logo" class="fa fa-times delete" data-ng-click="deleteGroupLogo()"></i>
                               </div>
                               <div class="col-md-8">
                                   <span class="btn btn-success btn-block fileinput-button">
-                                      <i class="fa fa-plus fa fa-white"></i>
+                                      <i class="fa fa-plus fa-white"></i>
                                       <span data-translate="">chooseOrDropResource</span>
                                       <input type="file" id="group-logo" name="logofile" multiple="false"></input>
                                   </span>

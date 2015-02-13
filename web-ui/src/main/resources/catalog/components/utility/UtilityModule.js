@@ -58,6 +58,16 @@
                         '<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
               });
         };
-      });
+      })
+.filter('split', function() {
+		//filter to split a string and grab the nth item (default splitter: '|', default item: 1st), used on {{metadata[n].type | split:',':0 }}
+        return function(input, splitChar, splitIndex) {
+			if (!input) return "";
+			if (!splitIndex) splitIndex=0;
+			if (!splitChar) splitChar="|";
+			if (!input.split(splitChar).length > splitIndex) return "";
+            return input.split(splitChar)[splitIndex];
+        }
+    });
 
 })();

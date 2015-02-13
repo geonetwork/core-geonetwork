@@ -40,7 +40,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletContext;
@@ -104,9 +103,10 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
         final FormatterParams fparams = new FormatterParams();
         fparams.context = this.serviceContext;
-        fparams.params = Collections.emptyMap();
+        fparams.servletRequest = request;
         // make sure context is cleared
         EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
 
@@ -120,7 +120,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         Files.deleteIfExists(formatterDir.resolve(functionsXslName));
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
-        MockHttpServletRequest request = new MockHttpServletRequest();
         formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
     }
 
@@ -130,9 +129,10 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         Level level = logger.getLevel();
         logger.setLevel(Level.ALL);
         try {
+            MockHttpServletRequest request = new MockHttpServletRequest();
             final FormatterParams fparams = new FormatterParams();
             fparams.context = this.serviceContext;
-            fparams.params = Collections.emptyMap();
+            fparams.servletRequest = request;
             // make sure context is cleared
             EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
 
@@ -147,7 +147,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
 
-            MockHttpServletRequest request = new MockHttpServletRequest();
             formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
 
             // no Error is success

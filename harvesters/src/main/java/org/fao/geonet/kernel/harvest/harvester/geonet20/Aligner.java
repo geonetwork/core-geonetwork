@@ -195,11 +195,11 @@ public class Aligner
                 setChangeDate(new ISODate(changeDate)).
                 setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid);
+                setUuid(params.getUuid());
 
         @SuppressWarnings("unchecked")
         List<Element> categories = info.getChildren("category");
@@ -401,7 +401,7 @@ public class Aligner
 				info.detach();
 
             try {
-                params.validate.validate(dataMan, context, md);
+                params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata: " + id);

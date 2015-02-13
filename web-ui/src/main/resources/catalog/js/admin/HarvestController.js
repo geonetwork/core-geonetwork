@@ -60,6 +60,7 @@
               if (data != 'null') {
                 $scope.harvesters = data;
                 gnUtilityService.parseBoolean($scope.harvesters);
+                pollHarvesterStatus();
               }
               $scope.isLoadingHarvester = false;
             }).error(function(data) {
@@ -68,6 +69,60 @@
         });
       }
 
+      var getRunningHarvesterIds = function() {
+        var runningHarvesters = [];
+        for (var i = 0; $scope.harvesters &&
+            i < $scope.harvesters.length; i++) {
+          var h = $scope.harvesters[i];
+          if (h.info.running) {
+            runningHarvesters.push(h['@id']);
+          }
+        }
+
+        return runningHarvesters;
+      };
+      var isPolling = false;
+      var pollHarvesterStatus = function() {
+        if (isPolling) {
+          return;
+        }
+        var runningHarvesters = getRunningHarvesterIds();
+        if (runningHarvesters.length == 0) {
+          return;
+        }
+        isPolling = true;
+
+        $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id=' +
+            runningHarvesters.join('&id=')).success(
+            function(data) {
+              isPolling = false;
+              if (data != 'null') {
+                if (!angular.isArray(data)) {
+                  data = [data];
+                }
+                var harvesterIndex = {};
+                angular.forEach($scope.harvesters, function(oldH) {
+                  harvesterIndex[oldH['@id']] = oldH;
+                });
+
+                for (var i = 0; i < data.length; i++) {
+                  var h = data[i];
+                  gnUtilityService.parseBoolean(h.info);
+                  var old = harvesterIndex[h['@id']];
+                  if (old && !angular.equals(old.info, h.info)) {
+                    old.info = h.info;
+                  }
+                  if (old && !angular.equals(old.error, h.error)) {
+                    old.error = h.error;
+                  }
+                }
+
+                setTimeout(pollHarvesterStatus, 5000);
+              }
+            }).error(function(data) {
+          isPolling = false;
+        });
+      };
 
       function loadHistory(backgroundLoad) {
         var page, size, uuid;
@@ -180,6 +235,13 @@
             });
       };
 
+      $scope.buildTranslations = function(h) {
+        var translations = '';
+        angular.forEach(h.site.translations, function(value, key) {
+          translations += '<' + key + '>' + value + '</' + key + '>';
+        });
+        return '<translations>' + translations + '</translations>';
+      };
       $scope.buildResponseGroup = function(h) {
         var groups = '';
         angular.forEach(h.privileges, function(p) {
@@ -210,10 +272,14 @@
           .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update'), body, {
+            ($scope.harvesterNew ? 'add' : 'update') +
+            '?_content_type=json', body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
-          loadHarvesters();
+          if (!$scope.harvesterSelected['@id']) {
+            $scope.harvesterSelected['@id'] = data[0];
+          }
+          loadHarvesters().then(refreshSelectedHarvester);
           $rootScope.$broadcast('StatusUpdated', {
             msg: $translate('harvesterUpdated'),
             timeout: 2,
@@ -252,11 +318,20 @@
         });
         $scope.$broadcast('resetSearch', $scope.searchObj.params);
       };
-
+      var refreshSelectedHarvester = function() {
+        if ($scope.harvesterSelected) {
+          // Refresh the selected harvester
+          angular.forEach($scope.harvesters, function(h) {
+            if (h['@id'] === $scope.harvesterSelected['@id']) {
+              $scope.selectHarvester(h);
+            }
+          });
+        }
+      };
       $scope.refreshHarvester = function() {
         loadHarvesters().then(function() {
           // Select the clone
-          angular.forEach($scope.harvesters, function (h) {
+          angular.forEach($scope.harvesters, function(h) {
             if (h['@id'] === $scope.harvesterSelected['@id']) {
               $scope.selectHarvester(h);
             }
@@ -288,47 +363,25 @@
               console.log(data);
             });
       };
-      $scope.deleteHarvesterHistory = function() {
-        $http.get('admin.harvester.history.delete?uuid=' +
-            $scope.harvesterSelected.site.uuid)
-          .success(function(data) {
-              loadHarvesters().then(function() {
-                $scope.selectHarvester($scope.harvesterSelected);
-              });
-            });
-      };
       $scope.runHarvester = function() {
         $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
-              loadHarvesters().then(function() {
-                // Refesh the harvester
-                angular.forEach($scope.harvesters, function (h) {
-                  if (h['@id'] === $scope.harvesterSelected['@id']) {
-                    $scope.selectHarvester(h);
-                  }
-                });
-              });
+              loadHarvesters().then(function() {refreshSelectedHarvester();});
             });
       };
       $scope.stopping = false;
       $scope.stopHarvester = function() {
-        var status =  $scope.harvesterSelected.options.status;
+        var status = $scope.harvesterSelected.options.status;
         var id = $scope.harvesterSelected['@id'];
         $scope.stopping = true;
-        $http.get('admin.harvester.stop?_content_type=json&id=' + id + '&status=' + status)
+        $http.get('admin.harvester.stop?_content_type=json&id=' +
+            id + '&status=' + status)
           .success(function(data) {
-              loadHarvesters().then(function() {
-                // Refresh the harvester
-                angular.forEach($scope.harvesters, function (h) {
-                  if (h['@id'] === $scope.harvesterSelected['@id']) {
-                    $scope.selectHarvester(h);
-                  }
-                });
-              });
+              loadHarvesters().then(refreshSelectedHarvester);
             }).then(function() {
               $scope.stopping = false;
-          });
+            });
       };
 
       $scope.setHarvesterSchedule = function() {

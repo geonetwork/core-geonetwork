@@ -36,7 +36,11 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.inspireatom.InspireAtomType;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -44,8 +48,6 @@ import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerSvn;
-import org.fao.geonet.inspireatom.InspireAtomType;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
@@ -62,6 +64,8 @@ import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.metadata.format.Format;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -70,6 +74,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.XmlResolver;
+import org.fao.geonet.wro4j.GeonetWro4jFilter;
 import org.geotools.data.DataStore;
 import org.geotools.data.shapefile.indexed.IndexType;
 import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
@@ -86,9 +91,11 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockFilterChain;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -426,53 +433,52 @@ public class Geonetwork implements ApplicationHandler {
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 
-        fillCaches();
+        fillCaches(context);
 
         return gnContext;
     }
 
-    private void fillCaches() {
+    private void fillCaches(final ServiceContext context)  {
+        final Format formatService = context.getBean(Format.class); // this will initialize the formatter
+
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
-                final String siteURL = _applicationContext.getBean(SettingManager.class).getSiteURL("eng");
+                final ServletContext servletContext = context.getServlet().getServletContext();
+                GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
-                while (true) {
+                @SuppressWarnings("unchecked")
+                List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
+
+                for (String wro4jUrl : wro4jUrls) {
+                    Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
+                    final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext, "GET", "/static/" + wro4jUrl);
+                    final MockHttpServletResponse response = new MockHttpServletResponse();
                     try {
-                        URL testUrl = new URL(siteURL + "home");
-                        testUrl.getContent();
-                        break;
-                    } catch (IOException e) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e1) {
-                            return;
-                        }
+                        filter.doFilter(servletRequest, response, new MockFilterChain());
+                    } catch (Throwable t) {
+                        Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
                     }
-
                 }
 
 
                 final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
-                Integer mdId = null;
                 if (metadatas.getNumberOfElements() > 0) {
-                    mdId = metadatas.getContent().get(0).getId();
-                }
+                    Integer mdId = metadatas.getContent().get(0).getId();
+                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
+                    @SuppressWarnings("unchecked")
+                    List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
 
-                List initCacheUrls = _applicationContext.getBean("initCacheUrls", List.class);
-                for (Object initCacheUrl : initCacheUrls) {
-                    String url = siteURL + initCacheUrl;
-                    if (mdId != null) {
-                        url = url.replace("{{mdId}}", mdId.toString());
-                    }
-
-                    try {
-                        Log.info(Geonet.GEONETWORK, "Executing: " + url + " in order to fill caches");
-                        if (!url.matches("[^{}]*\\{\\{\\w+\\}\\}[^{}]*")) {
-                            new URL(url).getContent();
+                    for (String formatterName : formattersToInitialize) {
+                        Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                        final MockHttpServletResponse response = new MockHttpServletResponse();
+                        try {
+                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
+                                    Boolean.TRUE.toString(), false, servletRequest, response);
+                        } catch (Throwable t) {
+                            Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
                         }
-                    } catch (IOException e) {
-                        // ignore errors caused by fetching data from url the important part is to trigger as many caches as we can.
                     }
                 }
             }

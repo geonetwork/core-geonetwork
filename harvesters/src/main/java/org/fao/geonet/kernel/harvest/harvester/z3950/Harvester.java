@@ -99,12 +99,12 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		int groupSize = 10;
 
 		this.log = log;
-		log.info("Retrieving remote metadata information:" + params.uuid);
+		log.info("Retrieving remote metadata information:" + params.getUuid());
 
 		Z3950ServerResults serverResults = new Z3950ServerResults();
 
 		// --- Clean all before harvest : Remove/Add mechanism
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
@@ -236,8 +236,8 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 			boolean transformIt = false;
 			Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-			if (!params.importXslt.equals("none")) {
-				thisXslt = thisXslt.resolve(params.importXslt);
+			if (!params.getImportXslt().equals("none")) {
+				thisXslt = thisXslt.resolve(params.getImportXslt());
 				transformIt = true;
 			}
 
@@ -341,9 +341,9 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                 //
                 try {
                     int owner = 1;
-                    if (params.ownerId != null && !params.ownerId.isEmpty()) {
+                    if (params.getOwnerId() != null && !params.getOwnerId().isEmpty()) {
                         try {
-                            owner = Integer.parseInt(params.ownerId);
+                            owner = Integer.parseInt(params.getOwnerId());
                         } catch (NumberFormatException e) {
                             // skip
                         }
@@ -355,13 +355,13 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                             setRoot(md.getQualifiedName()).
                             setType(MetadataType.METADATA).setDoctype(docType);
                     metadata.getSourceInfo().
-                            setSourceId(params.uuid).
+                            setSourceId(params.getUuid()).
                             setOwner(owner).
                             setGroupOwner(1);
                     metadata.getHarvestInfo().
                             setHarvested(true).
-                            setUuid(params.uuid).
-                            setUri(params.name);
+                            setUuid(params.getUuid()).
+                            setUri(params.getName());
 
                     addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
                     metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
@@ -380,7 +380,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
 				// validate it here if requested
-				if (params.validate != HarvestValidationEnum.NOVALIDATION) {
+				if (params.getValidate() != HarvestValidationEnum.NOVALIDATION) {
 					Document docVal;
 					if (!transformIt && (doc.getDocType() != null)) {
 						docVal = new Document(md, (DocType)doc.getDocType().detach());

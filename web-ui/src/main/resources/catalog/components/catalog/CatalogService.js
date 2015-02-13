@@ -497,6 +497,10 @@
           !angular.isArray(this.category)) {
         this.category = [this.category];
       }
+      if (angular.isDefined(this.topicCat) &&
+        !angular.isArray(this.topicCat)) {
+        this.topicCat = [this.topicCat];
+      }
     };
 
     function formatLink(sLink) {
@@ -555,12 +559,14 @@
           var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
+            var insertFn = 'push';
             if (s[0] === 'thumbnail') {
               images.small = s[1];
+              var insertFn = 'unshift';
             } else if (s[0] === 'overview') {
               images.big = s[1];
             }
-            images.list.push({url: s[1], label: s[2]});
+            images.list[insertFn]({url: s[1], label: s[2]});
           }
         }
         return images;

@@ -70,8 +70,8 @@ class WebDavRetriever implements RemoteRetriever {
         final HttpClientBuilder clientBuilder = context.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
         Lib.net.setupProxy(context, clientBuilder, new URL(params.url).getHost());
 
-        if (params.useAccount) {
-            this.sardine = new SardineImpl(clientBuilder, params.username, params.password);
+        if (params.isUseAccount()) {
+            this.sardine = new SardineImpl(clientBuilder, params.getUsername(), params.getPassword());
         } else {
             this.sardine = new SardineImpl(clientBuilder);
         }
@@ -136,7 +136,7 @@ class WebDavRetriever implements RemoteRetriever {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Connecting to webdav url for node : " + params.name + " URL: " + params.url);
+            log.debug("Connecting to webdav url for node : " + params.getName() + " URL: " + params.url);
         }
 
         final List<DavResource> davResources = sardine.list(url, 1, false);
