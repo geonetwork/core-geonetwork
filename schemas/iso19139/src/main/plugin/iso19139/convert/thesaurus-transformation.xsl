@@ -46,8 +46,12 @@
         It's recommended to use it in order to have the thesaurus widget inline editor
         which use the thesaurus identifier for initialization. -->
 		<xsl:param name="withThesaurusAnchor" select="true()"/>
-		<gmd:descriptiveKeywords>
-			<xsl:choose>
+
+    <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
+    <xsl:variable name="textgroupOnly" select="/root/request/textgroupOnly"/>
+
+    <gmd:descriptiveKeywords>
+      <xsl:choose>
 				<xsl:when test="$withXlink">
 					<xsl:variable name="multiple"
 												select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
@@ -60,7 +64,10 @@
 
 					<xsl:attribute name="xlink:href"
 												 select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-							'&amp;amp;id=', replace(/root/request/id, '#', '%23'), '&amp;amp;multiple=', $multiple)"/>
+							                '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
+							                '&amp;amp;multiple=', $multiple,
+							                if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
+							                if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
 					<xsl:attribute name="xlink:show">replace</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
@@ -69,25 +76,52 @@
 						<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
 
 						<!-- Loop on all keyword from the same thesaurus -->
-						<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+        		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
 							<gmd:keyword>
-								<xsl:choose>
-									<xsl:when test="$withAnchor">
-										<!-- TODO multilingual Anchor ? -->
-										<gmx:Anchor
-											xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
-											<xsl:value-of select="value"/>
-										</gmx:Anchor>
-									</xsl:when>
-									<xsl:otherwise>
-										<gco:CharacterString>
-											<xsl:value-of select="value"/>
-										</gco:CharacterString>
-										<!-- TODO multilingual keywords
-															add a lang parameter to only get some of them -->
-										<!--                            <xsl:for-each select="values"> </xsl:for-each>
-	-->                     </xsl:otherwise>
-								</xsl:choose>
+
+                <xsl:choose>
+                  <xsl:when test="/root/request/lang">
+
+                    <xsl:variable name="keyword" select="."/>
+
+                    <xsl:if test="not($textgroupOnly)">
+                      <gco:CharacterString>
+                        <xsl:value-of select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
+                      </gco:CharacterString>
+                    </xsl:if>
+
+                    <gmd:PT_FreeText>
+                      <xsl:for-each select="$listOfLanguage">
+                        <xsl:variable name="lang" select="."/>
+                        <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
+                          <gmd:textGroup>
+                            <gmd:LocalisedCharacterString locale="#{$lang}">
+                              <xsl:value-of select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
+                            </gmd:LocalisedCharacterString>
+                          </gmd:textGroup>
+                        </xsl:if>
+                      </xsl:for-each>
+                    </gmd:PT_FreeText>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:choose>
+                      <xsl:when test="$withAnchor">
+                        <!-- TODO multilingual Anchor ? -->
+                        <gmx:Anchor
+                                xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
+                          <xsl:value-of select="value"/>
+                        </gmx:Anchor>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="value"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+
 
 							</gmd:keyword>
 						</xsl:for-each>
