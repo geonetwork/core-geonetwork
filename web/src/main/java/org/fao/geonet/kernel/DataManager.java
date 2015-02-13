@@ -896,7 +896,7 @@ public class DataManager {
             Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
         }
 
-        boolean keepXlinkAttributes = false;
+        boolean keepXlinkAttributes = true;
         boolean forEditing = false;
         boolean withValidationErrors = false;
         Element metadataBeforeAnyChanges = getGeocatMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes, false, false);
@@ -936,7 +936,7 @@ public class DataManager {
                     validate, ufo, index,
                     context.getLanguage(),
                     info.getChildText(Edit.Info.Elem.CHANGE_DATE),
-                    false, true);
+                    false, false);
             endEditingSession(id, session);
         } else {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {

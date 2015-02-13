@@ -23,10 +23,24 @@
 
 package org.fao.geonet.kernel.reusable;
 
-import static org.fao.geonet.constants.Geocat.Profile.SHARED;
-import static org.fao.geonet.kernel.reusable.Utils.addChild;
-import static org.fao.geonet.util.LangUtils.FieldType.STRING;
-import static org.fao.geonet.util.LangUtils.FieldType.URL;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.PasswordUtil;
+import jeeves.utils.SerialFactory;
+import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
+import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.util.ElementFinder;
+import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.util.XslUtil;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.filter.Filter;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -39,26 +53,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
-import jeeves.xlink.XLink;
-
-import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.util.ElementFinder;
-import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.filter.Filter;
+import static org.fao.geonet.constants.Geocat.Profile.SHARED;
+import static org.fao.geonet.kernel.reusable.Utils.addChild;
+import static org.fao.geonet.util.LangUtils.FieldType.STRING;
+import static org.fao.geonet.util.LangUtils.FieldType.URL;
 
 public final class ContactsStrategy extends ReplacementStrategy
 {
@@ -92,7 +90,7 @@ public final class ContactsStrategy extends ReplacementStrategy
 
         Element roleElem = Utils.nextElement(originalElem.getDescendants(new ElementFinder("CI_RoleCode",
                 XslUtil.GMD_NAMESPACE, "role")));
-        String query = "select id,validated,organisation from Users where COALESCE(TRIM(email),'')||COALESCE(TRIM(name),'')||COALESCE(TRIM(surname),'') ILIKE ? AND profile=?";
+        String query = "select id,validated,organisation from Users where COALESCE(TRIM(email),'')||COALESCE(TRIM(name),'')||COALESCE(TRIM(surname),'') ILIKE ? AND profile=? order by validated DESC";
         List<Element> records = _dbms.select(query, key, SHARED).getChildren();
 
         for (Element record : records) {
