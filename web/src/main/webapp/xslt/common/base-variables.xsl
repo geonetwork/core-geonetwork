@@ -28,7 +28,7 @@
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
-  <xsl:variable name="withD3" select="$service = 'admin.console' or $service = 'catalog.search'"/>
+  <xsl:variable name="withD3" select="$service = 'admin.console'"/>
   <xsl:variable name="searchView" select="if (/root/request/view) then /root/request/view else 'default'"></xsl:variable>
   <xsl:variable name="owsContext" select="/root/request/owscontext" />
   <xsl:variable name="wmsUrl" select="/root/request/wmsurl" />
@@ -72,7 +72,8 @@
     $env/system/server/port)"/>
   <!-- Full URL for services -->
   <xsl:variable name="fullURLForService" select="concat($fullURL, /root/gui/locService)"/>
-  
+  <xsl:variable name="fullURLForWebapp" select="concat($fullURL, /root/gui/url)"/>
+
   <xsl:variable name="isMailEnabled" select="$env/feedback/emailServer/host != ''"/>
 
   <xsl:variable name="serviceInfo" select="/root/gui"/>
