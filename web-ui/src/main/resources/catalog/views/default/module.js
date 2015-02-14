@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
   goog.require('cookie_warning');
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');

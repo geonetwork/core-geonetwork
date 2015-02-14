@@ -53,8 +53,9 @@
              class="gn-search-filter col-lg-12">
 
 
-          <tabset data-vertical="true" data-type="pills">
-            <tab heading="{{'what' | translate}}">
+          <div class="row">
+            <div class="col-md-4">
+              <h3 data-translate="">what</h3>
               <div class="form-group">
                 <label for="categoriesF"
                        class="col-md-4 col-sm-12 control-label"
@@ -64,7 +65,8 @@
                   <input type="text" id="categoriesF" value=""
                          class="form-control"
                          gn-typeahead="categoriesOptions"
-                         gn-values="searchObj.params._cat"/></div>
+                         gn-values="searchObj.params._cat"/>
+                </div>
               </div>
               <div class="form-group">
                 <label for="keywordsF"
@@ -90,29 +92,23 @@
                          gn-typeahead="orgNameOptions"/>
                 </div>
               </div>
-            </tab>
-            <tab heading="{{'when' | translate}}">
-              <div data-gn-time-filter=""></div>
-
-              <div class="row">
-                <div class="col-lg-4"
-                     data-gn-period-chooser="resourcesCreatedTheLast"
-                     data-date-from="searchObj.params.creationDateFrom"
-                     data-date-to="searchObj.params.creationDateTo">
-                </div>
-
-                <div class="col-lg-4"
-                     data-gn-period-chooser="recordsCreatedTheLast"
-                     data-date-from="searchObj.params.dateFrom"
-                     data-date-to="searchObj.params.dateTo">
-                </div>
+            </div>
+            <div class="col-md-5">
+              <h3 data-translate="">when</h3>
+              <div data-gn-period-chooser="resourcesCreatedTheLast"
+                   data-date-from="searchObj.params.creationDateFrom"
+                   data-date-to="searchObj.params.creationDateTo">
               </div>
-            </tab>
-            <tab heading="{{'where' | translate}}">
-              Filter by geotag
-            </tab>
-          </tabset>
 
+              <div data-gn-period-chooser="recordsCreatedTheLast"
+                   data-date-from="searchObj.params.dateFrom"
+                   data-date-to="searchObj.params.dateTo">
+              </div>
+            </div>
+            <div class="col-md-5">
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
