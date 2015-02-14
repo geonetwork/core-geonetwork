@@ -9,8 +9,8 @@
 
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/env/site/name"/></title>
-		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
-		<link rel="icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
+		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/GN3.ico"/>
+		<link rel="icon" type="image/x-icon" href="{/root/gui/url}/images/logos/GN3.ico"/>
 
 		<!-- Recent updates newsfeed -->
 		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />
