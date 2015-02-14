@@ -26,6 +26,19 @@
     }
   ]);
 
+  module.directive('gnAttributeTableRenderer', ['gnMdView',
+    function(gnMdView) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/views/default/directives/' +
+        'partials/attributetable.html',
+        scope: {
+          attributeTable: '=gnAttributeTableRenderer'
+        }
+      };
+    }
+  ]);
 
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
     function(gnMetadataActions) {

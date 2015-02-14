@@ -185,5 +185,11 @@
     "isTemplatey": "Template",
     "isTemplates": "Directory",
     "isTemplaten": "Record",
-    "signinFailure": "Incorrect username or password."
+    "signinFailure": "Incorrect username or password.",
+    "attributeName": "Attribute name",
+    "attributeDefinition": "Definition",
+    "attributeValues": "List of values",
+    "valueName": "Name",
+    "valueDefinition": "Definition",
+    "valueCode": "Code"
 }

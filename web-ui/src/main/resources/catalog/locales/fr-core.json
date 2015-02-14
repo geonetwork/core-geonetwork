@@ -185,5 +185,11 @@
     "isTemplatey": "Modèle",
     "isTemplates": "Annuaire",
     "isTemplaten": "Fiche",
-    "signinFailure": "Nom d'utilisateur ou mot de passe incorrect."
+    "signinFailure": "Nom d'utilisateur ou mot de passe incorrect.",
+    "attributeName": "Nom de l'attribut",
+    "attributeDefinition": "Définition",
+    "attributeValues": "Liste de valeurs possibles",
+    "valueName": "Nom",
+    "valueDefinition": "Définition",
+    "valueCode": "Code"
 }
