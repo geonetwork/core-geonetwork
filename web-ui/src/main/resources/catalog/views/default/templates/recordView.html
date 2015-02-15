@@ -71,7 +71,7 @@
 
     <div class="col-md-9 gn-record">
       <h1>
-        <span class="fa gn-icon-{{mdView.current.record.type | split}}"></span> {{mdView.current.record.type}} {{mdView.current.record.type }}
+        <i class="fa gn-icon-{{mdView.current.record.type | split}}"/>
         {{mdView.current.record.title || mdView.current.record.defaultTitle}}
       </h1>
 
@@ -162,7 +162,7 @@
 
       <div data-ng-if="mdView.current.record['geonet:info'].schema === 'iso19110'"
            data-gn-attribute-table-renderer="mdView.current.record.attributeTable">
-      </tr>
+      </div>
 
 
       <table class="table table-bordered">

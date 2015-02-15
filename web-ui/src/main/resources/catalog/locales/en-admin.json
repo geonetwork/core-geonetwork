@@ -997,5 +997,15 @@
     "threadStatus" : "Thread Status",
     "doSaveConfirm" : "Do you want to save your changes?",
     "unsavedChangesWarning" : "You have unsaved changes\n\nDo you still want to leave the page and lose your changes?",
-    "selectForError": "Click to see error message"
+    "selectForError": "Click to see error message",
+    "map/config": "Configuration for maps",
+    "map/proj4js": "List of CRS",
+    "region": "Region API",
+    "region/getmap": "GetMap request",
+    "region/getmap/background": "Background map",
+    "region/getmap/mapproj": "Map projection",
+    "region/getmap/summaryWidth": "Summary width",
+    "region/getmap/width": "Width",
+    "metadata/editor": "Metadata editor configuration",
+    "metadata/editor/schemaConfig": "Configuration par standard"
 }

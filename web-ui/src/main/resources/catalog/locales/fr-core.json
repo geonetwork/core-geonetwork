@@ -191,5 +191,9 @@
     "attributeValues": "Liste de valeurs possibles",
     "valueName": "Nom",
     "valueDefinition": "Définition",
-    "valueCode": "Code"
+    "valueCode": "Code",
+    "ImportRecord": "Importer des fiches",
+    "addRecord": "Ajouter une fiche",
+    "directoryManager": "Gestion des annuaires",
+    "privilegesUpdated": "Privilèges mis à jour."
 }

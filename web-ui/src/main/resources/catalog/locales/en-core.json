@@ -191,5 +191,8 @@
     "attributeValues": "List of values",
     "valueName": "Name",
     "valueDefinition": "Definition",
-    "valueCode": "Code"
+    "valueCode": "Code",
+    "addRecord": "Add new record",
+    "ImportRecord": "Import new records",
+    "directoryManager": "Manage directory"
 }
