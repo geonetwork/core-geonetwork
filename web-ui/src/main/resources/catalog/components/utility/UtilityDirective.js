@@ -708,6 +708,62 @@
   }]);
 
 
+  /**
+   * Directive which create the href attribute
+   * for an element preserving the debug mode
+   * if activated and adding an active class
+   * to the parent element (required to highlight
+   * element in navbar)
+   */
+  module.directive('gnActiveTbItem', ['$location', function($location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var link = attrs.gnActiveTbItem, href,
+            isCurrentService = false;
+
+        // Insert debug mode between service and route
+        if (link.indexOf('#') !== -1) {
+          var tokens = link.split('#');
+          isCurrentService = window.location.pathname.
+                match('.*' + tokens[0] + '$') !== null;
+          href =
+            (isCurrentService ? '' :
+              tokens[0] + (scope.isDebug ? '?debug' : '')
+            ) + '#' +
+            tokens[1];
+        } else {
+          isCurrentService = window.location.pathname.
+            match('.*' + link + '$') !== null;
+          href =
+            isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '')
+
+        }
+
+        // Set the href attribute for the element
+        // with the link containing the debug mode
+        // or not
+        element.attr('href', href);
+
+        function checkActive() {
+          // Ignore the service parameters and
+          // check url contains path
+          var isActive = $location.absUrl().replace(/\?.*#/, '#').
+            match('.*' + link + '.*') !== null;
+
+          if (isActive) {
+            element.parent().addClass('active');
+          } else {
+            element.parent().removeClass('active');
+          }
+        }
+
+        scope.$on('$locationChangeSuccess', checkActive);
+
+        checkActive();
+      }
+    };
+  }]);
 
   module.directive('gnJsonText', function() {
     return {
