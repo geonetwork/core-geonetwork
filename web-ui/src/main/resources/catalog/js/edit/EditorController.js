@@ -242,7 +242,7 @@
         });
       };
 
-      $scope.$watch('gnCurrentEdit.isMinor', function () {
+      $scope.$watch('gnCurrentEdit.isMinor', function() {
         if ($('#minor')[0]) {
           $('#minor')[0].value = $scope.gnCurrentEdit.isMinor;
         }

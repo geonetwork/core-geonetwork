@@ -726,17 +726,17 @@
         if (link.indexOf('#') !== -1) {
           var tokens = link.split('#');
           isCurrentService = window.location.pathname.
-                match('.*' + tokens[0] + '$') !== null;
+              match('.*' + tokens[0] + '$') !== null;
           href =
-            (isCurrentService ? '' :
+              (isCurrentService ? '' :
               tokens[0] + (scope.isDebug ? '?debug' : '')
-            ) + '#' +
-            tokens[1];
+              ) + '#' +
+              tokens[1];
         } else {
           isCurrentService = window.location.pathname.
-            match('.*' + link + '$') !== null;
+              match('.*' + link + '$') !== null;
           href =
-            isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '')
+              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
 
         }
 
@@ -749,7 +749,7 @@
           // Ignore the service parameters and
           // check url contains path
           var isActive = $location.absUrl().replace(/\?.*#/, '#').
-            match('.*' + link + '.*') !== null;
+              match('.*' + link + '.*') !== null;
 
           if (isActive) {
             element.parent().addClass('active');

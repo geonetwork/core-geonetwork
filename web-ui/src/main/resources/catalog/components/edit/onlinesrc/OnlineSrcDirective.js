@@ -630,7 +630,7 @@
                     }
                     else if (scope.mode == 'parent') {
                       searchParams = {
-                          hitsPerPage: 10
+                        hitsPerPage: 10
                       };
                       scope.btn = {
                         icon: 'fa-sitemap',
@@ -639,7 +639,7 @@
                     }
                     else if (scope.mode == 'source') {
                       searchParams = {
-                          hitsPerPage: 10
+                        hitsPerPage: 10
                       };
                       scope.btn = {
                         icon: 'fa-sitemap fa-rotate-180',

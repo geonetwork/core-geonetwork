@@ -170,7 +170,7 @@
 
              //Get langs of metadata
              var langs = [];
-             for(var p in JSON.parse(scope.lang)) {
+             for (var p in JSON.parse(scope.lang)) {
                langs.push(p);
              }
              scope.langs = langs.join(',');

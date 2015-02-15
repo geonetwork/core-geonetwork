@@ -489,7 +489,7 @@
         this.category = [this.category];
       }
       if (angular.isDefined(this.topicCat) &&
-        !angular.isArray(this.topicCat)) {
+          !angular.isArray(this.topicCat)) {
         this.topicCat = [this.topicCat];
       }
     };

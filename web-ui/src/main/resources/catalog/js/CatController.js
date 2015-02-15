@@ -3,7 +3,7 @@
 
   goog.require('gn_search_manager');
 
-  var module = angular.module('gn_cat_controller', 
+  var module = angular.module('gn_cat_controller',
       ['gn_search_manager']);
 
 

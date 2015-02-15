@@ -90,7 +90,8 @@
           // reloaded)
           if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.groups, function(u) {
-              if (u.name === $routeParams.userOrGroup || $routeParams.userOrGroupId === u.id.toString()) {
+              if (u.name === $routeParams.userOrGroup ||
+                  $routeParams.userOrGroupId === u.id.toString()) {
                 $scope.selectGroup(u);
               }
             });
@@ -111,8 +112,8 @@
           if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.users, function(u) {
 
-              if (u.value.username === $routeParams.userOrGroup || $routeParams.userOrGroupId === u.value.id.toString()) {
-                console.log("Selecting User");
+              if (u.value.username === $routeParams.userOrGroup ||
+                  $routeParams.userOrGroupId === u.value.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -410,7 +411,8 @@
         if (uploadScope.queue.length > 0) {
           uploadScope.submit();
         } else {
-          var deleteLogo = $scope.groupSelected.logo === null ? '&deleteLogo=true' : '';
+          var deleteLogo = $scope.groupSelected.logo === null ?
+              '&deleteLogo=true' : '';
           $http.get('admin.group.update?' + $(formId).serialize() + deleteLogo)
           .success(uploadImportMdDone())
           .error(uploadImportMdError);

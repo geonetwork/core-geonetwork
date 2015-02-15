@@ -127,10 +127,10 @@
                   multiple: keywordUris instanceof Array ? 'true' : 'false',
                   transformation: transformation || 'to-iso19139-keyword'
                 };
-                if(lang) {
+                if (lang) {
                   params.lang = lang;
                 }
-                if(textgroupOnly) {
+                if (textgroupOnly) {
                   params.textgroupOnly = textgroupOnly;
                 }
                 var url = gnUrlUtils.append('thesaurus.keyword',

@@ -39,26 +39,23 @@
           scope.languages = angular.fromJson(attrs.gnMultilingualField);
           scope.currentLanguage = scope.mainLanguage;
           scope.mainLangInOtherLang =
-            angular.isDefined(scope.languages[scope.mainLanguage]);
+              angular.isDefined(scope.languages[scope.mainLanguage]);
           /**
            * Get the 3 letter code set in codeListValue
            * from a lang identifier eg. "EN"
-           *
-           * @param langId
-           * @returns {*}
            */
-          function getISO3Code (langId) {
+          function getISO3Code(langId) {
             var langCode = null;
             if (langId === scope.mainLanguage) {
               return scope.mainLanguage;
             }
             angular.forEach(scope.languages,
-              function (key, value) {
-                if (key === '#' + langId) {
-                  langCode = value;
-                  return;
+                function(key, value) {
+                  if (key === '#' + langId) {
+                    langCode = value;
+                    return;
+                  }
                 }
-              }
             );
             return langCode;
           }
@@ -90,8 +87,8 @@
             scope.currentLanguage = langId.replace('#', '');
             $(element).find(formFieldsSelector).each(function() {
               if ($(this).attr('lang') === scope.currentLanguage ||
-                ($(this).attr('lang') === scope.mainLanguage &&
-                scope.currentLanguage === '')) {
+                  ($(this).attr('lang') === scope.mainLanguage &&
+                  scope.currentLanguage === '')) {
                 $(this).removeClass('hidden').focus();
               } else {
                 $(this).addClass('hidden');
