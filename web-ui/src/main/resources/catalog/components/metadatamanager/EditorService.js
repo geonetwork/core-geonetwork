@@ -256,6 +256,7 @@
                angular.fromJson(getInputValue('geoPublisherConfig')),
                extent:
                angular.fromJson(getInputValue('extent')),
+               isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false

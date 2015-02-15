@@ -28,11 +28,11 @@
           '</gmd:MD_ReferenceSystem>' +
           '</gmd:referenceSystemInfo>',
       'iso19115-3': '<mdb:referenceSystemInfo ' +
-          "xmlns:mrs='http://www.isotc211.org/namespace/mrs/1.0/2014-07-11' " +
-          "xmlns:mcc='http://www.isotc211.org/namespace/mcc/1.0/2014-07-11' " +
-          "xmlns:mdb='http://www.isotc211.org/namespace/mdb/1.0/2014-07-11' " +
-          "xmlns:cit='http://www.isotc211.org/namespace/cit/1.0/2014-07-11' " +
-          "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+          "xmlns:mrs='http://standards.iso.org/19115/-3/mrs/1.0/2014-12-25' " +
+          "xmlns:mcc='http://standards.iso.org/19115/-3/mcc/1.0/2014-12-25' " +
+          "xmlns:mdb='http://standards.iso.org/19115/-3/mdb/1.0/2014-12-25' " +
+          "xmlns:cit='http://standards.iso.org/19115/-3/cit/1.0/2014-12-25' " +
+          "xmlns:gco='http://standards.iso.org/19139/gco/1.0/2014-12-25'>" +
           '<mrs:MD_ReferenceSystem>' +
           '  <mrs:referenceSystemIdentifier>' +
           '    <mcc:MD_Identifier>' +
