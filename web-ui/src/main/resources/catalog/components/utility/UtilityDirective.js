@@ -702,17 +702,38 @@
         element.on('click', function(e) {
           var next = element.next();
           next.collapse('toggle');
-          /*
-          if(scope.collapsed) {
-            next.show();
-          }
-          else {
-            next.hide();
-          }
-          */
         });
       }
     };
   }]);
 
+
+
+  module.directive('gnJsonText', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attr, ngModel) {
+        function into(input) {
+          return ioFn(input, 'parse');
+        }
+        function out(input) {
+          return ioFn(input, 'stringify');
+        }
+        function ioFn(input, method) {
+          var json;
+          try {
+            json = JSON[method](input);
+            ngModel.$setValidity('json', true);
+          } catch (e) {
+            ngModel.$setValidity('json', false);
+          }
+          return json;
+        }
+        ngModel.$parsers.push(into);
+        ngModel.$formatters.push(out);
+
+      }
+    };
+  });
 })();

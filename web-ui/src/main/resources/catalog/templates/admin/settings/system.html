@@ -5,18 +5,24 @@
     <span data-translate="">settings</span>
     <div class="btn-toolbar">
         <form class="form-inline pull-right">
-            <select ng-change="updateProfile()" class="form-control" data-ng-model="systemInfo.stagingProfile">
+            <select ng-change="updateProfile()" class="form-control"
+                    data-ng-model="systemInfo.stagingProfile">
                 <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
                         ng-selected="p === systemInfo.stagingProfile">{{p | translate}}</option>
             </select>
             &nbsp;
-            <button type="submit" class="btn btn-primary" id="gn-btn-settings-save"
-              data-ng-click="saveSettings('#gn-settings')"><span class="fa fa-save"></span> {{"saveSettings"|translate}}</button>
+            <button type="submit" class="btn btn-primary"
+                    id="gn-btn-settings-save"
+                    data-ng-disabled="!gnSettings.$valid"
+                    data-ng-click="saveSettings('#gn-settings')">
+              <span class="fa fa-save"></span>
+              {{"saveSettings"|translate}}
+            </button>
         </form>
     </div>
   </div>
   <div class="panel-body">
-    <form id="gn-settings" class="form-horizontal">
+    <form id="gn-settings" name="gnSettings" class="form-horizontal">
       <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'@position'"
         id="gn-settings-spy-target">
         <h1>{{section1.name | translate}}</h1>
@@ -36,7 +42,10 @@
 
               </div>
             </div>
-            <div data-ng-switch-default="" class="form-group">
+            <div data-ng-switch-default=""
+                 data-ng-class="gnSettings[s.formName].$error.required ||
+                                gnSettings[s.formName].$error.json ? 'has-error' : ''"
+                 class="form-group">
               <label class="col-sm-4 control-label" for="{{s['@name']}}">{{s['@name'] |
                 translate}}</label>
               <!-- According to entry -->
@@ -67,16 +76,30 @@
                 <!-- JSON configuration for map and editor -->
                 <textarea 
                   data-gn-autogrow=""
+                  data-gn-json-text=""
+                  data-ng-model="s['#text']"
                   data-ng-switch-when="map/config" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                  >{{s['#text']}}</textarea>
+                  ></textarea>
                 <textarea 
                   data-gn-autogrow=""
+                  data-gn-json-text=""
+                  data-ng-model="s['#text']"
                   data-ng-switch-when="metadata/editor/schemaConfig" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                  >{{s['#text']}}</textarea>
-                
-                <select data-ng-switch-when="system/server/protocol" class="form-control"
+                  ></textarea>
+                <textarea
+                   data-gn-autogrow=""
+                   data-gn-json-text=""
+                   data-ng-model="s['#text']"
+                   data-ng-switch-when="map/proj4js" type="text"
+                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                   ></textarea>
+
+
+
+                <select data-ng-switch-when="system/server/protocol"
+                        class="form-control"
                       name="{{s.formName}}">
                   <option value="http"
                           ng-selected="'http' == s['#text']">http</option>
@@ -216,9 +239,13 @@
           </div>
 
         </fieldset>
-
-        <button type="submit" class="btn btn-primary pull-right"
-          data-ng-click="saveSettings('#gn-settings')"><span class="fa fa-save"></span> {{"saveSettings"|translate}}</button>
+        <button type="submit"
+                class="btn btn-primary pull-right"
+                data-ng-disabled="!gnSettings.$valid"
+                data-ng-click="saveSettings('#gn-settings')">
+          <span class="fa fa-save"></span>&nbsp;
+          {{"saveSettings"|translate}}
+        </button>
       </fieldset>
     </form>
 
