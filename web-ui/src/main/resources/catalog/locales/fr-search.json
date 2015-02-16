@@ -246,5 +246,6 @@
     "backToList": "Retour à la liste",
     "privilegesBatchAlert": "The privileges will be updated for all selected metadatas. The privilege form is empty and does not reflect the selected metadata actual privileges !",
     "permalink" : "Permalink",
-    "zoomto": "Zoom vers"
+    "zoomto": "Zoom vers",
+    "recordNotFound": "La fiche avec l'identifiant <strong>{{uuid}}</strong> n'a pas été trouvée ou n'est pas partagée avec vous."
 }
