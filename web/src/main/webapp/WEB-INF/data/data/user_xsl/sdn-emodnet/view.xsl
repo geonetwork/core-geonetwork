@@ -68,7 +68,6 @@
 							<tbody>
 
 								<!-- **************************************** IDENTIFICATION **************************************** -->
-								<xsl:if test="//gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString/text() != '' or //gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString/text() != '' or //gmd:graphicOverview">
 									<tr valign="top">
 										<td class="print_ttl">
 											<xsl:value-of select="$schemaStrings/productIdentification/text()"/>
@@ -95,27 +94,14 @@
 											</td>
 										</tr>
 									</xsl:if>
-								</xsl:if>
-
-								<!-- **************************************** ABSTRACT **************************************** -->
-								<xsl:if test="//gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString/text() != ''">
-									<tr valign="top">
-										<td class="print_ttl">
-											<xsl:value-of select="$schemaLabels19139/element[@name='gmd:abstract' and @id='25.0']/label/text()"/>
-										</td> 
-										<td class="print_data">
-
-										</td>
-									</tr>
-
+							
 									<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
-										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:abstract']/label/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaLabels19139/element[@name='gmd:abstract' and @id='25.0']/label/text()"/> 
 									</xsl:apply-templates>
-								</xsl:if>
 
-								<!-- **************************************** DESCRIPTIVE KEYWORDS **************************************** -->
+								<!-- *** DESCRIPTIVE KEYWORDS *** -->
 								<tr valign="top">
-									<td class="print_ttl">
+									<td class="print_ttl_h1">
 										<xsl:value-of select="$schemaStrings/descriptiveKeywords/text()"/>
 									</td>
 									<td class="print_data">
