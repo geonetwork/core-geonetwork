@@ -87,14 +87,6 @@
                     <label>dublin-core</label>
                     <total>3</total>
                 </record>
-                <record>
-                    <label>fgdc-std</label>
-                    <total>3</total>
-                </record>
-                <record>
-                    <label>iso19115</label>
-                    <total>3</total>
-                </record>
             </response>
             ]]></documentation>
             <class name=".services.statistics.MetadataStatistics"/>

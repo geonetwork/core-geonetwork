@@ -574,14 +574,6 @@
                   <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/fgdc-std/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
               </resources>
             </configuration>
           </execution>

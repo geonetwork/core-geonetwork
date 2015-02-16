@@ -148,6 +148,7 @@
       <field name="_groupOwner" tagName="groupOwner"/>
       <field name="_logo" tagName="logo"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
+      <field name="attributeTable" tagName="attributeTable"/>
     </dumpFields>
   </search>
 

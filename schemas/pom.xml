@@ -23,10 +23,9 @@
     <module>schema-core</module>
     <module>csw-record</module>
     <module>dublin-core</module>
-    <module>fgdc-std</module>
     <module>iso19110</module>
-    <module>iso19115</module>
     <module>iso19139</module>
+    <module>iso19115-3</module>
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
