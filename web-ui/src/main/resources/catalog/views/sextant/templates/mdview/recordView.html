@@ -1,4 +1,4 @@
-<div class="row gn-md-view hfull"
+<div class="row gn-md-view"
      data-ng-controller="GnMdViewController">
 
 <button class="btn btn-primary"
@@ -71,26 +71,8 @@
 
 <div class="col-md-9 gn-record">
   <h1>
-        <span data-ng-if="mdView.current.record.type.indexOf('dataset')>=0"
-              class="fa fa-database"
-              title="{{'dataset' | translate}}"></span>
-        <span data-ng-if="mdView.current.record.type.indexOf('software')>=0"
-              class="fa fa-hdd-o"
-              title="{{'software' | translate}}"></span>
-        <span data-ng-if="mdView.current.record.type.indexOf('map')>=0"
-              class="fa fa-globe"
-              title="{{'map' | translate}}"></span>
-        <span data-ng-if="mdView.current.record.type.indexOf('application')>=0"
-              class="fa fa-hdd-o"
-              title="{{'application' | translate}}"></span>
-        <span data-ng-if="mdView.current.record.type.indexOf('basicgeodata')>=0"
-              class="fa fa-globe"
-              title="{{'geodata' | translate}}"></span>
-        <span data-ng-if="mdView.current.record.type.indexOf('service')>=0"
-              class="fa fa-globe"
-              title="{{'service' | translate}}"></span>
+    <i class="fa gn-icon-{{mdView.current.record.type | split}}"/>
     {{mdView.current.record.title || mdView.current.record.defaultTitle}}
-
   </h1>
 
   <div class="pull-right">
@@ -102,7 +84,7 @@
   <div style="clear:both"></div>
 
   <div class="well">
-    {{mdView.current.record.abstract}}
+    {{mdView.current.record.abstract | striptags}}
   </div>
 
   <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
@@ -119,10 +101,7 @@
       <td>
         <a data-ng-repeat="cat in mdView.current.record.category"
            data-ng-href="#?tab=search&_cat={{cat}}">
-          <i class="fa"
-             title="{{cat | translate}}">
-            <img data-ng-src="../../images/category/{{cat}}.png"/>
-          </i>
+          <span class="fa gn-icon-{{cat}}" title="{{cat | translate}}"></span>
         </a>
       </td>
     </tr>
@@ -160,9 +139,9 @@
       <th data-translate="">credit</th>
       <td>{{mdView.current.record.credit}}</td>
     </tr>
-    <tr data-ng-if="mdView.current.record.status">
+    <tr data-ng-if="mdView.current.record.status_text">
       <th data-translate="">status</th>
-      <td>{{mdView.current.record.status}}</td>
+      <td>{{mdView.current.record.status_text}}</td>
     </tr>
     <tr data-ng-if="mdView.current.record.updateFrequency">
       <th data-translate="">updateFrequency</th>
@@ -175,10 +154,15 @@
     </tbody>
   </table>
 
-  <h2 data-translate="">preview</h2>
-  <div class="gn-map-preview"/>
+  <!--<h2 data-translate="">preview</h2>-->
+  <!--<div class="gn-map-preview"/>-->
 
   <h2 data-translate="">technicalInformation</h2>
+
+
+  <div data-ng-if="mdView.current.record['geonet:info'].schema === 'iso19110'"
+       data-gn-attribute-table-renderer="mdView.current.record.attributeTable">
+  </div>
 
 
   <table class="table table-bordered">
@@ -276,7 +260,7 @@
     </blockquote>
   </section>
 
-  <section>
+  <section data-ng-if="mdView.current.record.getBoxAsPolygon()">
     <h4>
       <i class="fa fa-map-marker"></i>
       <span data-translate="">extent</span>
@@ -345,11 +329,6 @@
        class="btn btn-link"><i class="fa fa-twitter"></i></a>
     <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
        class="btn btn-link"><i class="fa fa-facebook"></i></a>
-
-  </section>
-
-  <section>
-    <a href="" class="btn btn-link"><i class="fa fa-print"></i></a>
   </section>
 </div>
 

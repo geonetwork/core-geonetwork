@@ -89,8 +89,20 @@
         </div>
         <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
         <div sxt-layertree="map"></div>
-        <div gn-legend-panel="map"></div>
-        <div gn-layerorder-panel="map"></div>
+
+        <div class="btn-group flux">
+          <button type="button" class="btn btn-default active" translate>legends</i></button>
+          <button type="button" class="btn btn-default" translate>sort</i></button>
+          <button type="button" class="btn btn-default" translate>sources</button>
+        </div>
+
+        <div class="panel-carousel-window">
+          <div class="panel-carousel-container">
+            <div class="panel-carousel" gn-legend-panel="map"></div>
+            <div class="panel-carousel" gn-layerorder-panel="map"></div>
+            <div class="panel-carousel" gn-layersources-panel="map"></div>
+          </div>
+        </div>
       </div>
     </div>
 
