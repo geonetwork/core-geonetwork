@@ -9,7 +9,8 @@
     <pointOfContact>Organizations responsible for management and processing, point of contact</pointOfContact>
     <featureType>Feature type</featureType>
     <usageLicense>Usage license</usageLicense>
-    <oceanDiscoveryParameters>Ocean Discovery Parameters</oceanDiscoveryParameters>
+    <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
+	<oceanChemistryVariable>Ocean chemistry variable</oceanChemistryVariable>
     <seaAreas>Sea areas</seaAreas>
     <verticalExtent>Vertical extent</verticalExtent>
     <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>
@@ -23,7 +24,8 @@
     <productAccess>Product access</productAccess> 
     <orgAdd>Add organisation</orgAdd>
     <creationDate>Creation date</creationDate>
-
+	<DOIURL>DOI</DOIURL>
+	
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Full</advanced>
