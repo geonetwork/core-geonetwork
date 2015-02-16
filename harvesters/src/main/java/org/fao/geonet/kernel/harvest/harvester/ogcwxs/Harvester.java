@@ -368,9 +368,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          dataMan.flush();
 
-         //dataMan.indexMetadata(dbms, id); setTemplate update the index
-		
-		result.addedMetadata++;
+         dataMan.indexMetadata(id, true);
+         result.addedMetadata++;
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
