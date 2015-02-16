@@ -347,11 +347,19 @@
             if (getCapLayer) {
               var layer = getCapLayer;
 
-              var url = capabilities.operationsMetadata.GetTile.
-                  dcp.http.get[0].url;
+              var url, urls = capabilities.operationsMetadata.GetTile.
+                  DCP.HTTP.Get;
+
+              for (var i = 0; i < urls.length; i++) {
+                if(urls[i].Constraint[0].AllowedValues.Value[0].toLowerCase()
+                    == 'kvp') {
+                  url = urls[i].href;
+                  break;
+                }
+              }
 
               var urlCap = capabilities.operationsMetadata.GetCapabilities.
-                  dcp.http.get[0].url;
+                DCP.HTTP.Get[0].href;
 
               var projection = map.getView().getProjection();
 

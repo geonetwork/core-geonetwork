@@ -60,7 +60,7 @@
           var result = parser.read(data);
 
           //result.contents.Layer = result.contents.layers;
-          result.Contents.operationsMetadata = result.operationsMetadata;
+          result.Contents.operationsMetadata = result.OperationsMetadata;
           return result.Contents;
         };
 

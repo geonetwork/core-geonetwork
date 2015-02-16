@@ -78,42 +78,45 @@
 
   <div class="panel-tools-container" ng-class="{'open': active.tool }">
 
-  <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
+    <!--Layer tree & background layers-->
+    <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
+      <div class="layers">
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close" sxt-close-tool>
+            &times;
+          </button>
+          <h5 data-translate="">ThemeLayers</h5>
+        </div>
+        <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
+        <div sxt-layertree="map"></div>
+        <div gn-legend-panel="map"></div>
+        <div gn-layerorder-panel="map"></div>
+      </div>
+    </div>
 
-    <div class="layers">
+    <!--Import layer WMS,WMTS,KML-->
+    <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
       <div class="panel-body">
         <button type="button" class="btn btn-default close" sxt-close-tool>
           &times;
         </button>
-        <h5 data-translate="">ThemeLayers</h5>
-      </div>
-      <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-      <div sxt-layertree="map"></div>
-    </div>
-  </div>
+        <h5 data-translate="">AddALayer</h5>
 
-  <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
-    <div class="panel-body">
-      <button type="button" class="btn btn-default close" sxt-close-tool>
-        &times;
-      </button>
-      <h5 data-translate="">AddALayer</h5>
+        <div class="btn-group flux">
+          <button type="button" class="btn btn-default" data-translate="">LayerWMS</button>
+          <button type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
+          <button type="button" class="btn btn-default" data-translate="">LayerKML</button>
+        </div>
 
-      <div class="btn-group flux">
-        <button type="button" class="btn btn-default" data-translate="">LayerWMS</button>
-        <button type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
-        <button type="button" class="btn btn-default" data-translate="">LayerKML</button>
-      </div>
-
-      <div class="panel-carousel-window">
-        <div class="panel-carousel-container">
-          <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
-          <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
-          <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
+        <div class="panel-carousel-window">
+          <div class="panel-carousel-container">
+            <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
+            <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
+            <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <div class="panel panel-default force-hide panel-tools" id="contexts">
 
