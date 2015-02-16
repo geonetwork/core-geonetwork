@@ -272,34 +272,40 @@ ul.gn-resultview {
     &:hover {
       background: white;
     }
-    .media {
-      .gn-md-thumbnail {
-        width: 180px;
-        .img-thumbnail {
-          max-width: 180px;
-          max-height: 140px;
-          min-height: 40px;
-          height: auto;
-        }
-      }
-      h4 {
-        margin-top: 0;
-        font-weight: 700;
-        a {
-          color: rgb(51, 51, 51);
-        }
-      }
-      .gn-md-type {
-        font-size: 20px;
-      }
-      .gn-md-credit {
-        font-size: 11.4px;
-        color: #808080
-      }
-      p {
-        font-size: .8em;
-      }
+
+  .gn-md-thumbnail {
+    width: 180px;
+    min-height: 40px;
+    max-height: 140px;
+    height: auto;
+    .img-thumbnail {
+      max-width: 180px;
+      max-height: 140px;
+      min-height: 40px;
+      height: auto;
     }
+  }
+  .gn-md-emptythumbnail {
+    min-height: 120px;
+  }
+  h4 {
+    margin-top: 0;
+    font-weight: 700;
+    a {
+      color: rgb(51, 51, 51);
+    }
+  }
+  .gn-md-type {
+    font-size: 20px;
+  }
+  .gn-md-source {
+    clear: left;
+    color: #808080
+  }
+  p {
+    font-size: .8em;
+  }
+
     .md-abstract {
       float: left;
       width: ~"calc(66% - 1em)";
