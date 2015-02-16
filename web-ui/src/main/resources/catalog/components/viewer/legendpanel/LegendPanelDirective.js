@@ -73,4 +73,26 @@
       };
     }]);
 
+  module.directive('gnLayersourcesPanel', [
+    '$filter',
+    'gnLayerFilters',
+
+    function($filter, gnLayerFilters) {
+
+      return {
+        restrict: 'A',
+        scope: {
+          map: '=gnLayersourcesPanel'
+        },
+        templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
+            'layersources.html',
+        link: function(scope, element, attrs) {
+
+          var map = scope.map;
+          scope.layers = map.getLayers().getArray();
+          scope.layerFilterFn = gnLayerFilters.selected;
+        }
+      };
+    }]);
+
 })();
