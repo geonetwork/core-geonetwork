@@ -53,7 +53,7 @@
          * Load catalog settings and extract CSW settings
          */
       function loadSettings() {
-        $http.get('admin.config.list@json?asTree=false')
+        $http.get('admin.config.list?_content_type=json&asTree=false')
           .success(function(data) {
               for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
@@ -71,7 +71,7 @@
       }
 
       function loadUsers() {
-        $http.get('admin.user.list@json').success(function(data) {
+        $http.get('admin.user.list?_content_type=json&').success(function(data) {
           $scope.users = data;
           loadSettings();
         }).error(function(data) {
@@ -81,11 +81,11 @@
 
 
       function loadCSWConfig() {
-        $http.get('admin.config.csw@json').success(function(data) {
-          $scope.cswConfig = data.record;
-          angular.forEach($scope.cswConfig, function(value, key) {
-            $scope.cswLanguages[$scope.cswConfig[key].langid] = true;
-            $scope.cswFields[$scope.cswConfig[key].fieldname] = true;
+        $http.get('admin.config.csw?_content_type=json&').success(function(data) {
+          $scope.cswConfig = data;
+          angular.forEach($scope.cswConfig.capabilitiesInfoFields, function(value, key) {
+            $scope.cswLanguages[$scope.cswConfig.capabilitiesInfoFields[key].langId] = true;
+            $scope.cswFields[$scope.cswConfig.capabilitiesInfoFields[key].fieldName] = true;
           });
           loadSettings();
         }).error(function(data) {
@@ -94,7 +94,7 @@
       }
 
       function loadCSWElementSetName() {
-        $http.get('admin.config.csw.customelementset@json')
+        $http.get('admin.config.csw.customelementset?_content_type=json&')
         .success(function(data) {
               if (data) {
                 $scope.cswElementSetName =
@@ -112,7 +112,7 @@
         $scope.cswElementSetName.splice(index, 1);
       };
       $scope.saveCSWElementSetName = function(formId) {
-        $http.get('admin.config.csw.customelementset.save@json?' +
+        $http.get('admin.config.csw.customelementset.save?_content_type=json&' +
                 $(formId).serialize())
           .success(function(data) {
               loadCSWElementSetName();
@@ -161,25 +161,25 @@
         var lang = $scope.cswLanguageFilterValue;
 
         if (items) {
-          angular.forEach(items, function(value, key) {
+          angular.forEach(items.capabilitiesInfoFields, function(value, key) {
             var selected = false;
             // Filter only by lang
             if (lang !== '' &&
                 field === '' &&
-                items[key].langid === lang) {
+                items.capabilitiesInfoFields[key].langId === lang) {
               selected = true;
             }
             //Filter only by field
             if (field !== '' &&
                 lang === '' &&
-                items[key].fieldname === field) {
+                items.capabilitiesInfoFields[key].fieldName === field) {
               selected = true;
             }
             // Filter by both
             if (field !== '' &&
                 lang !== '' &&
-                items[key].langid === lang &&
-                items[key].fieldname === field) {
+                items.capabilitiesInfoFields[key].langId === lang &&
+                items.capabilitiesInfoFields[key].fieldName === field) {
               selected = true;
             }
             // All
@@ -188,7 +188,7 @@
               selected = true;
             }
             if (selected) {
-              result.push(items[key]);
+              result.push(items.capabilitiesInfoFields[key]);
             }
           });
         }
