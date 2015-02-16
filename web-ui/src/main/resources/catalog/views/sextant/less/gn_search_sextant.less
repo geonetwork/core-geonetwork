@@ -16,7 +16,7 @@
     height: ~"calc(100% - 3.9em)";
   }
   .container-fluid {
-    height: ~"calc(100% - 5.4em)";
+    height: ~"calc(100% - 0.6em)";
     padding: 0 5px;
   }
   [search-results]
@@ -227,6 +227,13 @@
     background: rgba(255,255,255,.7);
     border-radius: 1em;
     padding: .2em;
+  }
+}
+
+.tab-pane .container-fluid {
+  overflow-y: auto;
+  .gn-md-side {
+    .clearfix();
   }
 }
 
@@ -445,7 +452,7 @@ ul.gn-resultview {
   left: 0;
   right: 0;
   bottom: 0;
-  top: ~"calc(98px + 1.6em)";
+  top: 4em;
   border: 1px solid @panel-default-border;
   [ngeo-map] {
     height: 100%;
