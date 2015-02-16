@@ -10,33 +10,33 @@
 
     function($filter, gnLayerFilters) {
 
-    return {
-      restrict: 'A',
-      scope: {
-        map: '=gnLegendPanel'
-      },
-      templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
-          'legendpanel.html',
-      link: function(scope, element, attrs) {
+      return {
+        restrict: 'A',
+        scope: {
+          map: '=gnLegendPanel'
+        },
+        templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
+            'legendpanel.html',
+        link: function(scope, element, attrs) {
 
-        var map = scope.map;
+          var map = scope.map;
 
-        map.getLayers().on('change:length', function(e) {
+          map.getLayers().on('change:length', function(e) {
 
-          var fLayers = $filter('filter')(map.getLayers().getArray(),
-              gnLayerFilters.selected);
+            var fLayers = $filter('filter')(map.getLayers().getArray(),
+                gnLayerFilters.selected);
 
-          scope.legends = [];
-          for (var i = 0; i < fLayers.length; i++) {
-            scope.legends.push({
-              title: fLayers[i].get('label'),
-              legend: fLayers[i].get('legend')
-            })
-          }
-        });
-      }
-    };
-  }]);
+            scope.legends = [];
+            for (var i = 0; i < fLayers.length; i++) {
+              scope.legends.push({
+                title: fLayers[i].get('label'),
+                legend: fLayers[i].get('legend')
+              });
+            }
+          });
+        }
+      };
+    }]);
 
   module.directive('gnLayerorderPanel', [
     '$filter',

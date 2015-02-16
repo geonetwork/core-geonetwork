@@ -367,10 +367,10 @@
         $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
           .success(function(data) {
-            loadHarvesters().then(function() {
-              $scope.selectHarvester($scope.harvesterSelected);
+              loadHarvesters().then(function() {
+                $scope.selectHarvester($scope.harvesterSelected);
+              });
             });
-          });
       };
       $scope.runHarvester = function() {
         $http.get('admin.harvester.run?_content_type=json&id=' +

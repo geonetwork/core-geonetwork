@@ -71,26 +71,33 @@
       }
 
       function loadUsers() {
-        $http.get('admin.user.list?_content_type=json&').success(function(data) {
-          $scope.users = data;
-          loadSettings();
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('admin.user.list?_content_type=json&').
+            success(function(data) {
+              $scope.users = data;
+              loadSettings();
+            }).error(function(data) {
+              // TODO
+            });
       }
 
 
       function loadCSWConfig() {
-        $http.get('admin.config.csw?_content_type=json&').success(function(data) {
-          $scope.cswConfig = data;
-          angular.forEach($scope.cswConfig.capabilitiesInfoFields, function(value, key) {
-            $scope.cswLanguages[$scope.cswConfig.capabilitiesInfoFields[key].langId] = true;
-            $scope.cswFields[$scope.cswConfig.capabilitiesInfoFields[key].fieldName] = true;
-          });
-          loadSettings();
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('admin.config.csw?_content_type=json&').
+            success(function(data) {
+              $scope.cswConfig = data;
+              angular.forEach($scope.cswConfig.capabilitiesInfoFields,
+                  function(value, key) {
+                    $scope.cswLanguages;
+                    [$scope.cswConfig.capabilitiesInfoFields[key].langId] =
+                        true;
+                    $scope.cswFields;
+                    [$scope.cswConfig.capabilitiesInfoFields[key].fieldName] =
+                        true;
+                  });
+              loadSettings();
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadCSWElementSetName() {

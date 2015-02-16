@@ -351,15 +351,15 @@
                   DCP.HTTP.Get;
 
               for (var i = 0; i < urls.length; i++) {
-                if(urls[i].Constraint[0].AllowedValues.Value[0].toLowerCase()
-                    == 'kvp') {
+                if (urls[i].Constraint[0].AllowedValues.Value[0].
+                    toLowerCase() == 'kvp') {
                   url = urls[i].href;
                   break;
                 }
               }
 
               var urlCap = capabilities.operationsMetadata.GetCapabilities.
-                DCP.HTTP.Get[0].href;
+                  DCP.HTTP.Get[0].href;
 
               var projection = map.getView().getProjection();
 
