@@ -267,7 +267,7 @@
 								</xsl:if>
 
 								<!-- **************************************** Contact **************************************** -->
-								<xsl:if test="//gmd:pointOfContact">
+								<xsl:if test="//gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian' or //gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian'">
 									<tr valign="top">
 										<td class="print_ttl">
 											<xsl:value-of select="$schemaLabels19139/element[@name='gmd:contact' and @id='8.0' and @context='gmd:MD_Metadata']/label/text()"/>	
