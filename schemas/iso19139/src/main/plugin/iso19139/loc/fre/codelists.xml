@@ -1458,6 +1458,11 @@
 			<label>Carte interactive</label>
 			<description></description>
 		</entry>
+    <entry hideInEditMode="true">
+      <code>featureCatalog</code>
+      <label>Catalogue d'attributs</label>
+      <description></description>
+    </entry>
 	</codelist>
 <!--
 	Example to customize scope code codelist for a service metadata record.

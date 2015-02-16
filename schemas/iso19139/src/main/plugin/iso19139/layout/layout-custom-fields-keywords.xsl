@@ -83,8 +83,6 @@
     <xsl:variable name="isTheaurusAvailable"
       select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
 
-    <xsl:message>#####<xsl:value-of select="$isTheaurusAvailable"></xsl:value-of> </xsl:message>
-
     <xsl:choose>
       <xsl:when test="$isTheaurusAvailable">
 
