@@ -9,7 +9,8 @@
     <pointOfContact>Organisations responsables de la gestion et du traitement, point de contact</pointOfContact>
     <featureType>Type d'élément géographique</featureType>
     <usageLicense>License d'usage</usageLicense>
-    <oceanDiscoveryParameters>Ocean Discovery Parameters</oceanDiscoveryParameters>
+    <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
+	<oceanChemistryVariable>Ocean chemistry variable</oceanChemistryVariable>	
     <seaAreas>Zones de mer</seaAreas>
     <verticalExtent>Étendue verticale</verticalExtent>
     <nbVerticalLevels>Nombre de niveaux verticaux</nbVerticalLevels>
@@ -23,7 +24,7 @@
     <productAccess>Accès au produit</productAccess>
     <orgAdd>Ajouter une organisation</orgAdd>
     <creationDate>Date de création</creationDate>
-
+	<DOIURL>DOI</DOIURL>
 
   <advanced>Complète</advanced>
   <default>Simple</default>
