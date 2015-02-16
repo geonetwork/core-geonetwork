@@ -8,6 +8,7 @@
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
+  goog.require('gn_legendpanel_directive');
   goog.require('sxt_directives');
   goog.require('sxt_panier_directive');
 
@@ -17,6 +18,7 @@
     'gn_mdactions_directive',
     'gn_related_directive',
     'gn_search_default_directive',
+    'gn_legendpanel_directive',
     'gn_thesaurus',
     'sxt_directives',
     'sxt_panier_directive'
