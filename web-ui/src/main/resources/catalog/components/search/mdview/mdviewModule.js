@@ -21,7 +21,7 @@
       $scope.compileScope = $scope.$new();
 
       $scope.deleteRecord = function(md) {
-        gnMetadataActions.deleteMd(md).then(function(data) {
+        return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate('metadataRemoved',
                 {title: md.title || md.defaultTitle}),
