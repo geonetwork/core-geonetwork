@@ -87,12 +87,10 @@
               $scope.cswConfig = data;
               angular.forEach($scope.cswConfig.capabilitiesInfoFields,
                   function(value, key) {
-                    $scope.cswLanguages;
-                    [$scope.cswConfig.capabilitiesInfoFields[key].langId] =
-                        true;
-                    $scope.cswFields;
-                    [$scope.cswConfig.capabilitiesInfoFields[key].fieldName] =
-                        true;
+                    $scope.cswLanguages[$scope.cswConfig.
+                      capabilitiesInfoFields[key].langId] = true;
+                    $scope.cswFields[$scope.cswConfig.
+                      capabilitiesInfoFields[key].fieldName] = true;
                   });
               loadSettings();
             }).error(function(data) {
