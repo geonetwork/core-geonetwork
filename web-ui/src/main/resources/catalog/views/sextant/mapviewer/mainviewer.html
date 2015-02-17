@@ -40,6 +40,10 @@
       <span class="fa fa-pencil"></span>
       <span role="tooltip" data-translate="">Annotations</span>
     </button>
+    <button sxt-tool gi-btn class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique" gnv-tools-btn>
+      <span class="fa fa-anchor"></span>
+      <span role="tooltip" data-translate="">Espèces benthiques</span>
+    </button>
   </div>
 
 
@@ -171,17 +175,29 @@
     </div>
   </div>
 
-  <!--Draw Panel-->
-  <div class="panel panel-default force-hide panel-tools" id="draw">
-    <div class="panel-body">
-      <button type="button" class="btn btn-default close" sxt-close-tool>
-        &times;
-      </button>
-      <h5 data-translate="">Annotations</h5>
-      <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
+    <!--Draw Panel-->
+    <div class="panel panel-default force-hide panel-tools" id="draw">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close" sxt-close-tool>
+          &times;
+        </button>
+        <h5 data-translate="">Annotations</h5>
+        <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
+        </div>
       </div>
     </div>
-  </div>
+
+    <!--Espece benthique panel-->
+    <div class="panel panel-default force-hide panel-tools" id="benthique">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close" sxt-close-tool>
+          &times;
+        </button>
+        <h5 data-translate="">benthiqueSpicies</h5>
+        <div class="sxt-benthique" sxtb-panel="map">
+        </div>
+      </div>
+    </div>
 
   <div class="panel panel-default force-hide panel-tools" id="print">
 
