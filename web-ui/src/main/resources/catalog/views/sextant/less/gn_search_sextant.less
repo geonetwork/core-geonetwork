@@ -13,10 +13,10 @@
     overflow: hidden;
   }
   .tab-content {
-    height: ~"calc(100% - 3.9em)";
+    height: 100%;
   }
   .container-fluid {
-    height: ~"calc(100% - 0.6em)";
+    height: 100%;
     padding: 0 5px;
   }
   [search-results]
@@ -31,6 +31,40 @@
     .close {
       font-size: 20px;
     }
+  }
+}
+
+[data-ng-search-form] {
+  margin-right: 15px;
+}
+
+.sxt-side-btn {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  border-radius: 0;
+  width: 1em;
+  z-index: 100;
+  span {
+    position: absolute;
+    bottom: 50%;
+    left: -2.35em;
+    transform: rotate(-90deg);
+    height: 1em;
+    text-transform: uppercase;
+  }
+  i {
+    position: absolute;
+    bottom: ~"calc(50% - 4em)";
+    margin-left: -0.4em;
+  }
+}
+.sxt-map-btn {
+  right: 0;
+  span {
+    bottom: 51%;
+    transform-origin: bottom right;
+    left: -2.25em;
   }
 }
 
@@ -52,7 +86,8 @@
     position: relative;
   }
   .row& {
-    margin: 0;
+    height: ~"calc(100% - 2em)";
+    margin: 1em 0 0 ;
   }
 }
 
@@ -452,8 +487,7 @@ ul.gn-resultview {
   left: 0;
   right: 0;
   bottom: 0;
-  top: 4em;
-  border: 1px solid @panel-default-border;
+  top: 0;
   [ngeo-map] {
     height: 100%;
   }

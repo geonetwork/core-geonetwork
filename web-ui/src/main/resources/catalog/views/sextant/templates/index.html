@@ -1,7 +1,3 @@
-<div class="navbar navbar-default gn-top-bar" role="navigation"
-     data-ng-include="'../../catalog/templates/top-toolbar.html'">
-</div>
-
 <div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsSextant">
 
@@ -9,6 +5,11 @@
       <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
 
         <div class="hfull" data-ng-controller="gnsSextantSearch">
+
+          <button class="btn btn-default sxt-side-btn sxt-map-btn" data-ng-click="locService.setMap()" >
+            <span translate>Carte</span>
+            <i class="fa fa-play fa-flip-horizontal"></i>
+          </button>
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
