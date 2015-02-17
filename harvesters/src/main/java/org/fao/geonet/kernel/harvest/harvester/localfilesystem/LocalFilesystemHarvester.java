@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
@@ -123,25 +124,23 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			}
 		}
 		result = visitor.getResult();
-		List<String> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+		List<Integer> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
 		if (!params.nodelete) {
 			//
 			// delete locally existing metadata from the same source if they
 			// were
 			// not in this harvesting result
 			//
-            List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.getUuid());
-            for (Metadata existingId : existingMetadata) {
+		    List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+            for (Integer existingId : existingMetadata) {
 
 				if (cancelMonitor.get()) {
 					return this.result;
 				}
-
-				String ex$ = String.valueOf(existingId.getId());
-				if (!idsForHarvestingResult.contains(ex$)) {
-					log.debug("  Removing: " + ex$);
-					dataMan.deleteMetadata(context, ex$);
-					result.locallyRemoved++;
+                if (!idsForHarvestingResult.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    dataMan.deleteMetadata(context, existingId.toString());
+                    result.locallyRemoved++;
 				}
 			}
 		}
