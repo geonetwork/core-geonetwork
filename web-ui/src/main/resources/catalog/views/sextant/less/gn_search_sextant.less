@@ -476,4 +476,38 @@ ul.gn-resultview {
     }
   }
 
+  .layers {
+    max-height: 50%;
+    height: 50%;
+  }
+
+  .sxt-layertree {
+    max-height: ~"calc(100% - 4em)";
+    overflow-y: auto;
+  }
+
+  .layers-tools {
+    position: absolute;
+    bottom: 0px;
+    top: 50%;
+    width: 100%;
+    height: 50%;
+    padding-top: 0;
+    .btn-group {
+      margin-top: 0;
+    }
+    .panel-carousel-window {
+      height: ~"calc(100% - 4em)";
+    }
+    .panel-carousel-container {
+      height: 100%;
+    }
+    .panel-carousel {
+      max-width: 100%;
+      overflow-x: hidden;
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
+
 }
