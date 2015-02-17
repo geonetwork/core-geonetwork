@@ -63,6 +63,8 @@
         $location.path('/panier');
       };
 
+      $scope.locService = gnSearchLocation;
+
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) :

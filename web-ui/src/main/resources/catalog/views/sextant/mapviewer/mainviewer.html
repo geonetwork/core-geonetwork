@@ -2,10 +2,10 @@
 
   <div data-gn-alert-manager=""></div>
   <div id="map" ngeo-map="map" class="map"></div>
-  <div gn-gfi="" map="map"></div>
+  <div gn-gfi="" map="map" ng-class="{'leftBarExpanded': active.tool}"></div>
 
 
-  <button class="btn btn-default sxt-search-btn" data-ng-click="locService.setSearch()" >
+  <button class="btn btn-default sxt-side-btn sxt-search-btn" data-ng-click="locService.setSearch()" >
     <span translate>Catalogue</span>
     <i class="fa fa-play"></i>
   </button>
@@ -85,28 +85,35 @@
     <!--Layer tree & background layers-->
     <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
       <div class="layers">
+
         <div class="panel-body">
           <button type="button" class="btn btn-default close" sxt-close-tool>
             &times;
           </button>
           <h5 data-translate="">ThemeLayers</h5>
         </div>
-        <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-        <div sxt-layertree="map"></div>
 
-        <div class="btn-group flux">
-          <button type="button" class="btn btn-default active" translate>legends</i></button>
-          <button type="button" class="btn btn-default" translate>sort</i></button>
-          <button type="button" class="btn btn-default" translate>sources</button>
+        <div class="sxt-layertree">
+          <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
+          <div sxt-layertree="map"></div>
         </div>
 
-        <div class="panel-carousel-window">
-          <div class="panel-carousel-container">
+        <div class="panel-body layers-tools">
+          <div class="btn-group flux">
+            <button type="button" class="btn btn-default active" translate>legends</i></button>
+            <button type="button" class="btn btn-default" translate>sort</i></button>
+            <button type="button" class="btn btn-default" translate>sources</button>
+          </div>
+
+          <div class="panel-carousel-window">
+            <div class="panel-carousel-container">
             <div class="panel-carousel" gn-legend-panel="map"></div>
             <div class="panel-carousel" gn-layerorder-panel="map"></div>
             <div class="panel-carousel" gn-layersources-panel="map"></div>
           </div>
         </div>
+      </div>
+
       </div>
     </div>
 
@@ -212,7 +219,7 @@
 
     </div>
 
-  <footer ng-class="{'small': active.tool}">
+  <footer ng-class="{'leftBarExpanded': active.tool}">
     <div sxt-mouse-position></div>
   </footer>
 
