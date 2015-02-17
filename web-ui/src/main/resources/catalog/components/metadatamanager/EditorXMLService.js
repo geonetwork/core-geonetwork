@@ -119,7 +119,7 @@
              var nsDeclaration = getNamespacesForElement(elementName);
 
              // Escape & in XLink url
-             xlink = xlink.replace('&', '&amp;');
+             xlink = xlink.replace(/&/g, '&amp;');
 
              var tokens = [
                '<', elementName,
