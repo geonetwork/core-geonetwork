@@ -1,0 +1,6 @@
+<li class="" data-ng-class="{'active': member.showInfo}">
+  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="fa fa-minus-square-o"></i>&nbsp;<span>{{member.name}}</span></div>
+  <div ng-if="!isParentNode()">
+    {{member[6]}}
+  </div>
+</li>
