@@ -195,5 +195,6 @@
     "ImportRecord": "Importer des fiches",
     "addRecord": "Ajouter une fiche",
     "directoryManager": "Gestion des annuaires",
-    "privilegesUpdated": "Privilèges mis à jour."
+    "privilegesUpdated": "Privilèges mis à jour.",
+    "privilegesUpdatedError": "Échec lors de la sauvegarde des privilèges.",
 }

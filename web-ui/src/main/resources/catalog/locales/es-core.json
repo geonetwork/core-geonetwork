@@ -81,6 +81,8 @@
     "organisation": "Organización",
     "organization": "Organización",
     "owner": "Propietario",
+    "privilegesUpdated": "Permisos actualizados.",
+    "privilegesUpdatedError": "Ocurrió un error al actualizar los privilegios.",
     "password": "Contraseña",
     "passwordMinlength": "La contraseña debe contener al menos seis caracteres.",
     "passwordNotMatching": "Las contraseñas no coinciden.",

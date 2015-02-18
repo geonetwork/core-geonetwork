@@ -111,8 +111,6 @@
     "parentMd": "Metadato Padre",
     "print_layout": "Diseño",
     "print_scale": "Escala",
-    "privilegesUpdated": "Permisos actualizados.",
-    "privilegesUpdatedError": "Ocurrió un error al actualizar los privilegios.",
     "process": "Procesar",
     "publish": "Publicar",
     "publishIn": "Publicar <strong>{{layer}}</strong> en ",

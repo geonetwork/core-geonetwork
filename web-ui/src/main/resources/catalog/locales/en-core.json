@@ -93,6 +93,8 @@
     "organisation": "Organisation",
     "organization": "Organization",
     "owner": "Owner",
+    "privilegesUpdated": "Privileges updated.",
+    "privilegesUpdatedError": "Error occurred while updating privileges.",
     "password": "Password",
     "passwordMinlength": "Password must contain at least 6 characters!",
     "passwordNotMatching": "The password does not match!",

@@ -114,8 +114,6 @@
     "parentMd": "Fiche parent",
     "print_layout": "Mise en page",
     "print_scale": "Échelle",
-    "privilegesUpdated": "Privilèges mis à jour.",
-    "privilegesUpdatedError": "Échec lors de la sauvegarde des privilèges.",
     "process": "Mettre à jour",
     "publish": "Publier",
     "publishIn": "Publier <strong>{{layer}}</strong> dans ",
