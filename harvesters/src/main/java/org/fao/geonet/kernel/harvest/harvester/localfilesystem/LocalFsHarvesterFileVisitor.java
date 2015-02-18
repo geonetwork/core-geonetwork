@@ -194,7 +194,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 result.updatedMetadata++;
                             }
                         }
-                        idsForHarvestingResult.add(new Integer(id));
+                        idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
             }

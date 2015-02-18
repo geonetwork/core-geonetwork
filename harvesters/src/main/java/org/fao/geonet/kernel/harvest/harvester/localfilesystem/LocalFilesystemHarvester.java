@@ -46,6 +46,8 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
+import com.google.common.collect.Sets;
+
 import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -53,6 +55,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -125,6 +128,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		}
 		result = visitor.getResult();
 		List<Integer> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+		Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
+
 		if (!params.nodelete) {
 			//
 			// delete locally existing metadata from the same source if they
@@ -137,7 +142,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 				if (cancelMonitor.get()) {
 					return this.result;
 				}
-                if (!idsForHarvestingResult.contains(existingId)) {
+                if (!idsResultHs.contains(existingId)) {
                     log.debug("  Removing: " + existingId);
                     dataMan.deleteMetadata(context, existingId.toString());
                     result.locallyRemoved++;
