@@ -103,12 +103,20 @@
 
         <table class="table table-striped">
           <tbody>
-          <tr data-ng-if="mdView.current.record.category.length > 0">
+          <tr data-ng-if="mdView.current.record.category.length > 0 ||
+                    mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
               <a data-ng-repeat="cat in mdView.current.record.category"
-                 data-ng-href="#?tab=search&_cat={{cat}}">
-           <span class="fa gn-icon-{{cat}}" title="{{cat | translate}}"></span>
+                 data-ng-href="#/search?_cat={{cat}}">
+                <span class="fa gn-icon-{{cat}}" title="{{cat | translate}}"></span>
+              </a>
+
+              <a data-ng-repeat="t in mdView.current.record.topicCat"
+                 data-ng-href="#/search?topicCat={{t}}">
+                <i class="fa" title="{{t | translate}}">
+                  <span class="fa gn-icon-{{t}}"></span>
+                </i>
               </a>
             </td>
           </tr>
