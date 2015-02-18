@@ -3057,9 +3057,10 @@ public class DataManager {
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
             List config = settingMan.getAllAsXML(true).cloneContent();
-            Element settings = (Element) config.get(0);
-            settings.setName("config");
-            env.addContent(settings);
+            for (Object c : config) {
+                Element settings = (Element) c;
+                env.addContent(settings);
+            }
 
             result.addContent(env);
             // apply update-fixed-info.xsl
