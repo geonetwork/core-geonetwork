@@ -45,7 +45,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private Path thisXslt;
     private final CategoryMapper localCateg;
     private final GroupMapper localGroups;
-    private final List<String> idsForHarvestingResult = Lists.newArrayList();
+    private final List<Integer> idsForHarvestingResult = Lists.newArrayList();
 
     public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log, LocalFilesystemHarvester harvester) throws Exception {
         this.aligner = new BaseAligner(cancelMonitor) {};
@@ -194,7 +194,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 result.updatedMetadata++;
                             }
                         }
-                        idsForHarvestingResult.add(id);
+                        idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
             }
@@ -208,7 +208,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         return result;
     }
 
-    public List<String> getIdsForHarvestingResult() {
+    public List<Integer> getIdsForHarvestingResult() {
         return idsForHarvestingResult;
     }
 }

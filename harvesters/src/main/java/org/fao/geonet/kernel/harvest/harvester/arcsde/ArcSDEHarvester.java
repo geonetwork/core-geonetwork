@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
@@ -42,16 +43,20 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+
+import com.google.common.collect.Sets;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -159,7 +164,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        List<String> idsForHarvestingResult = new ArrayList<String>();
+        List<Integer> idsForHarvestingResult = new ArrayList<Integer>();
 		//-----------------------------------------------------------------------
 		//--- insert/update metadata		
 		for(String metadata : metadataList) {
@@ -208,26 +213,27 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 						updateMetadata(iso19139, id, localGroups, localCateg, aligner);
 						result.updatedMetadata++;
 					}
-					idsForHarvestingResult.add(id);
+					idsForHarvestingResult.add(Integer.valueOf(id));
 				}
 			}
 		}
 		//
 		// delete locally existing metadata from the same source if they were
 		// not in this harvesting result
-		//	
-        List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.getUuid());
-        for(Metadata existingId : existingMetadata) {
+		//
+	    Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
+        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        for (Integer existingId : existingMetadata) {
+
             if (cancelMonitor.get()) {
                 return;
             }
-
-            String ex$ = String.valueOf(existingId.getId());
-			if(!idsForHarvestingResult.contains(ex$)) {
-				dataMan.deleteMetadataGroup(context, ex$);
-				result.locallyRemoved++;
-			}
-		}			
+            if (!idsResultHs.contains(existingId)) {
+                log.debug("  Removing: " + existingId);
+                dataMan.deleteMetadata(context, existingId.toString());
+                result.locallyRemoved++;
+            }
+        }
 	}
 
 	private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg, BaseAligner aligner) throws Exception {
