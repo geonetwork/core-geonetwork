@@ -411,7 +411,7 @@ public class DataManager {
      * @param context context object
      * @param metadataIds the metadata ids to index
      */
-    public void batchIndexInThreadPool(ServiceContext context, List<String> metadataIds) {
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
 
         TransactionStatus transactionStatus = null;
         try {
@@ -441,7 +441,7 @@ public class DataManager {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
             }
 
-            List<String> subList = metadataIds.subList(start, nbRecords);
+            List subList = metadataIds.subList(start, nbRecords);
 
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, subList.toString());

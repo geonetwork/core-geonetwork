@@ -44,18 +44,16 @@
           <div class="gn-md-details">
 
             <!-- Thumbnail -->
-            <div class="gn-md-thumbnail">
-              <img class="gn-img-thumbnail"
-              data-ng-src="{{md.getThumbnails().small}}"
-              data-ng-if="md.getThumbnails().small"/>
+            <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small }">
+              <img class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small}}" data-ng-if="md.getThumbnails().small"/>
             </div>
 
             <p class="text-justify md-abstract">
               {{(md.abstract || md.defaultAbstract) | striptags | characters:275}}
             </p>
-            <p data-ng-if="md.getContacts().resource">
+            <p data-ng-if="md.getContacts().resource" class="gn-md-source">
               <!--<h5 data-translate="">contacts</h5>-->
-              {{::md.getContacts().resource}}
+              Source: {{::md.getContacts().resource}}
             </p>
 
           </div>
