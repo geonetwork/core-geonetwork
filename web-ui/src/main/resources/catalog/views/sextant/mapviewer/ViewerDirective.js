@@ -48,7 +48,7 @@
               });
               scope.map.addOverlay(overlay);
 
-              scope.active = { tool: false };
+              scope.active = { tool: false, layersTools: false };
               scope.locService = gnSearchLocation;
 
             },
@@ -149,5 +149,25 @@
       }
     }
   }]);
+
+  module.directive('sxtLayersTools', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        element.find('.flux button').on('click', function(e) {
+          var active = $(this).hasClass('active');
+          var elem = $(this);
+          scope.$apply(function(){
+            scope.active.layersTools = !active;
+          });
+          if (active) {
+            elem.removeClass('active');
+            e.stopImmediatePropagation();
+          }
+        });
+      }
+    }
+  }]);
+
 
 })();

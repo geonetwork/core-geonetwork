@@ -84,7 +84,7 @@
 
     <!--Layer tree & background layers-->
     <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
-      <div class="layers">
+      <div class="layers" ng-class="{'layers-tools-expanded': active.layersTools}">
 
         <div class="panel-body">
           <button type="button" class="btn btn-default close" sxt-close-tool>
@@ -98,7 +98,7 @@
           <div sxt-layertree="map"></div>
         </div>
 
-        <div class="panel-body layers-tools">
+        <div class="panel-body layers-tools" ng-class="{'layers-tools-expanded': active.layersTools}" sxt-layers-tools>
           <div class="btn-group flux">
             <button type="button" class="btn btn-default active" translate>legends</i></button>
             <button type="button" class="btn btn-default" translate>sort</i></button>
