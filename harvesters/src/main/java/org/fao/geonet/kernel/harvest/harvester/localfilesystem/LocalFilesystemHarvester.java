@@ -131,7 +131,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			// were
 			// not in this harvesting result
 			//
-		    List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
             for (Integer existingId : existingMetadata) {
 
 				if (cancelMonitor.get()) {
