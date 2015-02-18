@@ -119,4 +119,35 @@
     }
   }]);
 
+  module.directive('sxtFullScreen', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        var map = scope.$eval(attrs['sxtFullScreen']);
+        // FIXME: which element to maximize??
+        var elem = $('[sxt-main-viewer]')[0];
+        element.on('click', function() {
+          if (!document.fullscreenElement && !document.mozFullScreenElement &&
+            !document.webkitFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+          } else {
+            if (document.cancelFullScreen) {
+              document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+              document.webkitCancelFullScreen();
+            }
+          }
+        });
+      }
+    }
+  }]);
+
 })();

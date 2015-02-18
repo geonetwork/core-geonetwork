@@ -50,13 +50,13 @@
   <!--Top right buttons - Navigation-->
   <div class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
   <div class="btn-group sx-toolbar tools">
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+    <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
       <span class="fa fa-shopping-cart"></span>
       <span role="tooltip" data-translate="">Basket</span>
     </button>
   </div>
   <div class="btn-group control-tools tools sxt-fullscreen">
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+    <button class="btn btn-default" type="submit" sxt-full-screen="map">
       <span class="fa fa-desktop"></span>
       <span role="tooltip" data-translate="">Fullscreen</span>
     </button>
