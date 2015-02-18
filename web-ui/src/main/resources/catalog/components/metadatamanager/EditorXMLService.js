@@ -114,8 +114,10 @@
            /**
            * Build an XML snippet for the element name
            * and xlink provided.
+            *
+            * extraAttributeMap is other attributes to add to the element.  For example xlink:title
            */
-           buildXMLForXlink: function(elementName, xlink) {
+           buildXMLForXlink: function(elementName, xlink, extraAttributeMap) {
              var nsDeclaration = getNamespacesForElement(elementName);
 
              // Escape & in XLink url
@@ -126,7 +128,18 @@
                ' ', nsDeclaration,
                ' xmlns:xlink="', gnNamespaces.xlink, '"',
                ' xlink:href="',
-               xlink, '"/>'];
+               xlink, '"'];
+
+
+             angular.forEach(extraAttributeMap, function(value, attName){
+               tokens.push(' ');
+               tokens.push(attName);
+               tokens.push('="');
+               tokens.push(value);
+               tokens.push('"');
+             });
+
+             tokens.push(' />');
              return tokens.join('');
            }
          };
