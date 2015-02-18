@@ -26,7 +26,7 @@
           }
         });
 
-        location.href = 'https://google.com';
+        window.history.back();
       };
     }]);
 
