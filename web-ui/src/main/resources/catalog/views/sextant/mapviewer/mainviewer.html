@@ -28,10 +28,6 @@
       <span class="fa fa-print"></span>
       <span role="tooltip" data-translate="">Print</span>
     </button>
-    <button sxt-tool class="btn btn-default" ng-model="activeTools.info" type="submit" rel="#info" gi-btn gnv-tools-btn>
-      <span class="fa fa-info"></span>
-      <span role="tooltip" data-translate="">Info</span>
-    </button>
     <button sxt-tool gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
       <span class="fa fa-expand"></span>
       <span role="tooltip" data-translate="">Measure</span>
@@ -159,17 +155,6 @@
       </button>
       <h5 data-translate="">MapContexts</h5>
       <div gn-ows-context="" map="map"></div>
-    </div>
-  </div>
-
-  <!--Info Panel-->
-  <div class="panel panel-default force-hide panel-tools" id="info">
-    <div class="panel-body panel-sm">
-      <button type="button" class="btn btn-default close" sxt-close-tool>
-        &times;
-      </button>
-      <h5 data-translate="">Info</h5>
-      <div class="alert alert-warning hidden-print" translate>info_instruction</div>
     </div>
   </div>
 
