@@ -98,6 +98,16 @@
           <div sxt-layertree="map"></div>
         </div>
 
+        <div ng-if="active.NCWMS" class="panel panel-default panel-ncwms-container">
+          <div class="panel-heading">
+          <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
+              &times;
+            </button>
+            <h5>{{active.NCWMS.get('label')}}</h5>
+          </div>
+          <div gn-ncwms-transect="" map="map" layer="active.NCWMS"></div>
+        </div>
+
         <div class="panel-body layers-tools" ng-class="{'layers-tools-expanded': active.layersTools}" sxt-layers-tools>
           <div class="btn-group flux">
             <button type="button" class="btn btn-default active" translate>legends</i></button>

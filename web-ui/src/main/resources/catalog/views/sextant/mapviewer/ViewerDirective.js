@@ -48,7 +48,11 @@
               });
               scope.map.addOverlay(overlay);
 
-              scope.active = { tool: false, layersTools: false };
+              scope.active = {
+                tool: false,
+                layersTools: false,
+                NCWMS: null
+              };
               scope.locService = gnSearchLocation;
 
             },
@@ -158,6 +162,7 @@
           var active = $(this).hasClass('active');
           var elem = $(this);
           scope.$apply(function(){
+            scope.active.NCWMS = null;
             scope.active.layersTools = !active;
           });
           if (active) {
