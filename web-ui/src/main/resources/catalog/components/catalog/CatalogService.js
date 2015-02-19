@@ -484,14 +484,15 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      if (angular.isDefined(this.category) &&
-          !angular.isArray(this.category)) {
-        this.category = [this.category];
-      }
-      if (angular.isDefined(this.topicCat) &&
-          !angular.isArray(this.topicCat)) {
-        this.topicCat = [this.topicCat];
-      }
+      var listOfArrayFields = ['topicCat', 'category'];
+      var record = this;
+      $.each(listOfArrayFields, function (idx) {
+        var field = listOfArrayFields[idx];
+        if (angular.isDefined(record[field]) &&
+            !angular.isArray(record[field])) {
+          record[field] = [record[field]];
+        }
+      });
     };
 
     function formatLink(sLink) {

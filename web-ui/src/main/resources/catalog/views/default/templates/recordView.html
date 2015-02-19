@@ -90,9 +90,7 @@
         </div>
         <div style="clear:both"></div>
 
-        <div class="well">
-          {{mdView.current.record.abstract}}
-        </div>
+        <div class="well" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
 
         <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
              data-types="online|service|dataset|parent|children|hasfeaturecat"
@@ -198,7 +196,8 @@
             </tr>
             <tr data-ng-if="mdView.current.record.lineage">
               <th data-translate="">lineage</th>
-              <td>{{mdView.current.record.lineage}}
+              <td>
+                <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
 
 
                 <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"

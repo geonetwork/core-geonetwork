@@ -764,7 +764,15 @@
       }
     };
   }]);
-
+  module.filter('newlines', function () {
+    return function(text) {
+      if (text) {
+        return text.replace(/(\r)?\n/g, '<br/>');
+      } else {
+        return text;
+      }
+    }
+  });
   module.directive('gnJsonText', function() {
     return {
       restrict: 'A',
