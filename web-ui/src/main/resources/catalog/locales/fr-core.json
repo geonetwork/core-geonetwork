@@ -196,5 +196,5 @@
     "addRecord": "Ajouter une fiche",
     "directoryManager": "Gestion des annuaires",
     "privilegesUpdated": "Privilèges mis à jour.",
-    "privilegesUpdatedError": "Échec lors de la sauvegarde des privilèges.",
+    "privilegesUpdatedError": "Échec lors de la sauvegarde des privilèges."
 }
