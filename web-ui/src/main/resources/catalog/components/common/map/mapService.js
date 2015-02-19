@@ -361,6 +361,8 @@
               var urlCap = capabilities.operationsMetadata.GetCapabilities.
                   DCP.HTTP.Get[0].href;
 
+              var style = layer.Style[0].Identifier;
+
               var projection = map.getView().getProjection();
 
               // Try to guess which matrixId to use depending projection
@@ -407,7 +409,7 @@
                   resolutions: resolutions,
                   matrixIds: matrixIds
                 }),
-                style: 'default'
+                style: style
               });
 
               var olLayer = new ol.layer.Tile({
