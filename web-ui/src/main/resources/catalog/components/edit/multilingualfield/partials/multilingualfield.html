@@ -7,8 +7,8 @@
             title="{{languageSwitchHelp}}">{{languageSwitchLabel}}</a></li>
         <li data-ng-repeat="(key, value) in languages"
             data-ng-hide="expanded"
-            data-ng-class="value === '#' + currentLanguage ? 'active' : ''">
-            <a href="" 
+            data-ng-class="{'active': value === '#' + currentLanguage, 'no-data': value !== '#' + currentLanguage && !hasData[value]}">
+            <a href=""
                 data-ng-click="switchToLanguage(value)">{{key | translate}}</a>
         </li>
     </ul>
