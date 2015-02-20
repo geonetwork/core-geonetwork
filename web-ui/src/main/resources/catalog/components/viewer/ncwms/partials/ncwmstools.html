@@ -1,86 +1,84 @@
-<div class="panel panel-default panel-ncwms">
-  <div class="panel-body">
-    <form class="form-horizontal" role="form">
+<div class="panel-body panel-ncwms">
+  <form class="form-horizontal" role="form">
 
-      <!--Scales-->
-      <div class="form-group">
-        <label class="col-sm-4" for="ncwmsscales">Echelles</label>
-        <div class="col-sm-8">
-          <select class="form-control input-sm" data-ng-model="params.LOGSCALE" data-ng-change="updateLayerParams()">
-            <option value="false" translate="linear"></option>
-            <option value="true" translate="logarithmic"></option>
-          </select>
-        </div>
+    <!--Scales-->
+    <div class="form-group">
+      <label class="col-sm-4" for="ncwmsscales">Echelles</label>
+      <div class="col-sm-8">
+        <select class="form-control input-sm" data-ng-model="params.LOGSCALE" data-ng-change="updateLayerParams()">
+          <option value="false" translate="linear"></option>
+          <option value="true" translate="logarithmic"></option>
+        </select>
       </div>
+    </div>
 
-      <!--Color ranges auto compute-->
-      <button type="button" ng-if="colorscalerange" class="btn btn-link pull-right" data-ng-click="setAutoColorranges($event)" title="auto">
-        <span class="fa fa-magic"></span>
+    <!--Color ranges auto compute-->
+    <button type="button" ng-if="colorscalerange" class="btn btn-link pull-right" data-ng-click="setAutoColorranges($event)" title="auto">
+      <span class="fa fa-magic"></span>
+    </button>
+
+    <!--Color ranges double slider-->
+    <div class="form-group" ng-if="colorscalerange">
+      <label class="col-sm-4">
+        <span>{{colorscalerange[0] | number: 3}}</span>
+        <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
+        <span>({{layer.ncInfo.units}})</span>
+      </label>
+      <div class="col-sm-6">
+        <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
+          use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+      </div>
+    </div>
+
+    <!--Elevations combo-->
+    <div class="form-group">
+      <label class="col-sm-4" for="ncwmselevation">Elévation</label>
+      <div class="col-sm-8">
+        <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
+          <option value="{{el}}" data-ng-repeat="el in elevations">{{el | number: 1}}</option>
+        </select>
+      </div>
+    </div>
+
+    <!--Styles combo-->
+    <div class="form-group">
+      <label class="col-sm-4" for="ncwmsstyles">Styles</label>
+      <div class="col-sm-8">
+        <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
+          <option data-ng-repeat="style in styles" value="{{style}}">{{style}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
+        <span class="fa fa-history"></span> Temps
       </button>
+      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
+        <span class="fa fa-crop"></span> Profil
+      </button>
+      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
+        <span class="fa fa-image"></span> Transect
+      </button>
+    </div>
 
-      <!--Color ranges double slider-->
-      <div class="form-group" ng-if="colorscalerange">
-        <label class="col-sm-4">
-          <span>{{colorscalerange[0] | number: 3}}</span>
-          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
-          <span>({{layer.ncInfo.units}})</span>
-        </label>
-        <div class="col-sm-6">
-          <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
-             use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+    <!--Times input only visible if time series button is enabled-->
+    <div class="form-group" data-ng-show="activeTool=='time'">
+      <label class="col-sm-4">Dates</label>
+      <div class="col-sm-8">
+        <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+          gn-bootstrap-datepicker="timeSeries.tsfromD" date-available="layer.ncInfo.datesWithData">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input class="form-control input-sm" type="text">
+        </div>
+        à
+        <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+          gn-bootstrap-datepicker="timeSeries.tstoD" date-available="layer.ncInfo.datesWithData">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input class="form-control input-sm" type="text">
         </div>
       </div>
-
-      <!--Elevations combo-->
-      <div class="form-group">
-        <label class="col-sm-4" for="ncwmselevation">Elévation</label>
-        <div class="col-sm-8">
-          <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
-            <option value="{{el}}" data-ng-repeat="el in elevations">{{el | number: 1}}</option>
-          </select>
-        </div>
-      </div>
-
-      <!--Styles combo-->
-      <div class="form-group">
-        <label class="col-sm-4" for="ncwmsstyles">Styles</label>
-        <div class="col-sm-8">
-          <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
-            <option data-ng-repeat="style in styles" value="{{style}}">{{style}}</option>
-          </select>
-        </div>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
-          <span class="fa fa-history"></span> Temps
-        </button>
-        <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
-          <span class="fa fa-crop"></span> Profil
-        </button>
-        <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
-          <span class="fa fa-image"></span> Transect
-        </button>
-      </div>
-
-      <!--Times input only visible if time series button is enabled-->
-      <div class="form-group" data-ng-show="activeTool=='time'">
-        <label class="col-sm-4">Dates</label>
-        <div class="col-sm-8">
-          <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
-               gn-bootstrap-datepicker="timeSeries.tsfromD" date-available="layer.ncInfo.datesWithData">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input class="form-control input-sm" type="text">
-          </div>
-          à
-          <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
-               gn-bootstrap-datepicker="timeSeries.tstoD" date-available="layer.ncInfo.datesWithData">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input class="form-control input-sm" type="text">
-          </div>
-        </div>
-      </div>
+    </div>
 
 
-    </form>
-  </div>
+  </form>
 </div>
