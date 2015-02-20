@@ -38,6 +38,27 @@
           // form field ? FIXME)
           scope.languages = angular.fromJson(attrs.gnMultilingualField);
           scope.currentLanguage = scope.mainLanguage;
+          scope.mainLangInOtherLang =
+              angular.isDefined(scope.languages[scope.mainLanguage]);
+          /**
+           * Get the 3 letter code set in codeListValue
+           * from a lang identifier eg. "EN"
+           */
+          function getISO3Code(langId) {
+            var langCode = null;
+            if (langId === scope.mainLanguage) {
+              return scope.mainLanguage;
+            }
+            angular.forEach(scope.languages,
+                function(key, value) {
+                  if (key === '#' + langId) {
+                    langCode = value;
+                    return;
+                  }
+                }
+            );
+            return langCode;
+          }
 
           $timeout(function() {
             scope.expanded = scope.expanded === 'true';
@@ -47,10 +68,9 @@
 
               // FIXME : should not be the id but the ISO3Code
               if (langId) {
-                langId = langId.toLowerCase();
                 // Add the language label
                 $(this).before('<span class="label label-primary">' +
-                    $translate(langId) + '</span>');
+                    $translate(getISO3Code(langId)) + '</span>');
 
                 // Set the direction attribute
                 if ($.inArray(langId, rtlLanguages) !== -1) {
@@ -66,7 +86,9 @@
           scope.switchToLanguage = function(langId) {
             scope.currentLanguage = langId.replace('#', '');
             $(element).find(formFieldsSelector).each(function() {
-              if ($(this).attr('lang') === scope.currentLanguage) {
+              if ($(this).attr('lang') === scope.currentLanguage ||
+                  ($(this).attr('lang') === scope.mainLanguage &&
+                  scope.currentLanguage === '')) {
                 $(this).removeClass('hidden').focus();
               } else {
                 $(this).addClass('hidden');

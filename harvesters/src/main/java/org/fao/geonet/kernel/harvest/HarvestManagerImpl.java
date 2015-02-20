@@ -546,7 +546,12 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
 	private void addInfo(Element node) {
 		String id = node.getAttributeValue("id");
-		hmHarvesters.get(id).addInfo(node);
+        if (hmHarvesters.get(id) != null) {
+            hmHarvesters.get(id).addInfo(node);
+        } else {
+            Log.warning(Geonet.HARVEST_MAN, "Trying to add info to a " +
+                    "non existing harvester with id : " + id);
+        }
 	}
 
     /**

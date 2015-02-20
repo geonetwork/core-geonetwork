@@ -28,11 +28,11 @@
           '</gmd:MD_ReferenceSystem>' +
           '</gmd:referenceSystemInfo>',
       'iso19115-3': '<mdb:referenceSystemInfo ' +
-          "xmlns:mrs='http://www.isotc211.org/namespace/mrs/1.0/2014-07-11' " +
-          "xmlns:mcc='http://www.isotc211.org/namespace/mcc/1.0/2014-07-11' " +
-          "xmlns:mdb='http://www.isotc211.org/namespace/mdb/1.0/2014-07-11' " +
-          "xmlns:cit='http://www.isotc211.org/namespace/cit/1.0/2014-07-11' " +
-          "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+          "xmlns:mrs='http://standards.iso.org/19115/-3/mrs/1.0/2014-12-25' " +
+          "xmlns:mcc='http://standards.iso.org/19115/-3/mcc/1.0/2014-12-25' " +
+          "xmlns:mdb='http://standards.iso.org/19115/-3/mdb/1.0/2014-12-25' " +
+          "xmlns:cit='http://standards.iso.org/19115/-3/cit/1.0/2014-12-25' " +
+          "xmlns:gco='http://standards.iso.org/19139/gco/1.0/2014-12-25'>" +
           '<mrs:MD_ReferenceSystem>' +
           '  <mrs:referenceSystemIdentifier>' +
           '    <mcc:MD_Identifier>' +
@@ -114,19 +114,32 @@
            /**
            * Build an XML snippet for the element name
            * and xlink provided.
+            *
+            * extraAttributeMap is other attributes to add to the element.  For example xlink:title
            */
-           buildXMLForXlink: function(elementName, xlink) {
+           buildXMLForXlink: function(elementName, xlink, extraAttributeMap) {
              var nsDeclaration = getNamespacesForElement(elementName);
 
              // Escape & in XLink url
-             xlink = xlink.replace('&', '&amp;');
+             xlink = xlink.replace(/&/g, '&amp;');
 
              var tokens = [
                '<', elementName,
                ' ', nsDeclaration,
                ' xmlns:xlink="', gnNamespaces.xlink, '"',
                ' xlink:href="',
-               xlink, '"/>'];
+               xlink, '"'];
+
+
+             angular.forEach(extraAttributeMap, function(value, attName){
+               tokens.push(' ');
+               tokens.push(attName);
+               tokens.push('="');
+               tokens.push(value);
+               tokens.push('"');
+             });
+
+             tokens.push(' />');
              return tokens.join('');
            }
          };

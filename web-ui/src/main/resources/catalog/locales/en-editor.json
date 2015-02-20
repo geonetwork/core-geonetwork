@@ -1,5 +1,4 @@
 {
-    "ImportRecord": "Import new records",
     "add-extent-from-geokeywords": "Compute extent from keywords",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type place and add matching extents.",
     "addCRS-help": "Add new CRS",
@@ -14,7 +13,6 @@
     "addLinks": "Add links",
     "addOnlinesrc": "Add an online resource",
     "addOnlinesrcTitle": "Link an online resource to the current metadata",
-    "addRecord": "Add new record",
     "addThumbnail": "Add a thumbnail",
     "addThumbnailTitle": "Add an overview to the current metadata",
     "allChangesCanceled": "All changes cancelled.",
@@ -57,7 +55,6 @@
     "description": "Description",
     "directory": "Folder path",
     "directoryEntries": "Entries",
-    "directoryManager": "Manage directory",
     "drawRectangle": "Draw rectangle",
     "error": "Error",
     "errors": "Error(s)",
@@ -117,8 +114,6 @@
     "parentMd": "Parent Metadata",
     "print_layout": "Layout",
     "print_scale": "Scale",
-    "privilegesUpdated": "Privileges updated.",
-    "privilegesUpdatedError": "Error occurred while updating privileges.",
     "process": "Process",
     "publish": "Publish",
     "publishIn": "Publish <strong>{{layer}}</strong> in ",
@@ -186,5 +181,7 @@
     "deleteFieldSet": "Delete this fields set",
     "onlyMyRecord": "Only my record",
     "toggleSection": "Toggle expand / collapse",
-    "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records."
+    "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records.",
+    "minorEditHelp": "Do not update timestamp on save",
+    "minorEdit": "Minor edit"
 }

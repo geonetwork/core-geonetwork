@@ -215,7 +215,7 @@
           </div>
         </li>
       </ul>
-      <ul class="pager">
+      <ul class="pager" data-ng-show="harvesterHistory.length !== 0">
         <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyFirstPage()" class="ng-scope">«</a></li>
         <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''" data-ng-show="harvesterHistoryPaging.pages > 0"><a href="" data-ng-click="historyPreviousPage()" class="ng-scope">‹</a></li>
         <li class="ng-binding">

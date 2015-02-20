@@ -6,6 +6,10 @@
 
   module.constant('gnPanierSettings', {});
 
+  var gfiTemplateURL = '../../catalog/views/sextant/templates/' +
+          'gfi.html';
+  module.value('gfiTemplateURL', gfiTemplateURL);
+
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
     'gnMap',
 

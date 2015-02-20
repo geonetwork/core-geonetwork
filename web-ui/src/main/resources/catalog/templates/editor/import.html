@@ -241,7 +241,8 @@
   </div>
 
   <div class="panel panel-default" data-ng-show="report"
-       data-ng-class="report.exceptions || report.message ?
+       data-ng-class="report.exceptions ||
+       (!report.success && report.message) ?
                         'panel-danger' : 'panel-success'">
     <div class="panel-heading" data-translate="">importReport</div>
     <div class="panel-body">

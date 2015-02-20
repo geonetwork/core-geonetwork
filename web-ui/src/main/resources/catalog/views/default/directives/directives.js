@@ -26,6 +26,19 @@
     }
   ]);
 
+  module.directive('gnAttributeTableRenderer', ['gnMdView',
+    function(gnMdView) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/views/default/directives/' +
+        'partials/attributetable.html',
+        scope: {
+          attributeTable: '=gnAttributeTableRenderer'
+        }
+      };
+    }
+  ]);
 
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
     function(gnMetadataActions) {
@@ -90,7 +103,7 @@
               var date = today.clone().subtract(1, 'day')
                 .format(scope.format);
               scope.dateFrom = date;
-              scope.dateTo = date;
+              scope.dateTo = today.format(scope.format);
               return;
             } else if (option === 'thisWeek') {
               scope.dateFrom = today.clone().startOf('week')
@@ -108,88 +121,8 @@
               scope.dateFrom = today.clone().startOf('year')
                 .format(scope.format);
             }
-            scope.dateTo = today.format(scope.format);
+            scope.dateTo = today.add(1, 'day').format(scope.format);
           };
-        }
-      };
-    }
-  ]);
-  module.directive('gnTimeFilter', ['$timeout',
-    function($timeout) {
-      return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-            'partials/timefilter.html',
-        link: function linkFn(scope, element, attr) {
-          var container = $(element).find('svg');
-          scope.listOfSelectedYears = [];
-          scope.unselectYear = function(year) {
-            scope.listOfSelectedYears.splice(
-                scope.listOfSelectedYears.indexOf(year), 1
-            );
-            scope.selectYear();
-          };
-          scope.selectYear = function(year) {
-            $timeout(function() {
-              if (year) {
-                scope.listOfSelectedYears.push(year);
-              }
-              angular.extend(scope.searchObj.params, {
-                createDateYear: scope.listOfSelectedYears.join(' or ')
-              });
-            });
-          };
-          scope.$watchCollection('searchObj', function() {
-            if (scope.searchObj.params.createDateYear) {
-
-            } else {
-              scope.listOfSelectedYears = [];
-            }
-          });
-          scope.$watch('searchInfo', function() {
-            scope.listOfYears = scope.searchInfo.facet &&
-                scope.searchInfo.facet.createDateYears;
-            if (scope.listOfYears) {
-              var data = [];
-              $.each(scope.listOfYears, function(index, value) {
-                if (value['@count']) {
-                  var count = parseInt(value['@count']);
-                  data.push({label: value['@name'], count: count});
-                }
-              });
-              function compare(a, b) {
-                if (a.label < b.label)
-                  return -1;
-                if (a.label > b.label)
-                  return 1;
-                return 0;
-              }
-              data.sort(compare);
-
-              nv.addGraph(function() {
-                var chart = nv.models.discreteBarChart()
-                  .x(function(d) { return d.label })
-                  .y(function(d) { return d.count })
-                  .staggerLabels(true)
-                  .tooltips(false);
-                //.showLabels(true);
-                //d3.select("svg")
-                d3.select(container.get(0))
-                  .datum([{values: data}])
-                  .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                chart.discretebar.dispatch.on('elementClick', function(e) {
-                  scope.selectYear(e.point.label);
-                });
-                chart.discretebar.dispatch.on('legendClick', function(e) {
-                  scope.selectYear(e.point.label);
-                });
-                return chart;
-              });
-            }
-          });
         }
       };
     }

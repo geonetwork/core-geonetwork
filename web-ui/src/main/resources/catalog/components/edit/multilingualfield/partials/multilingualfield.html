@@ -5,12 +5,6 @@
             data-ng-click="displayAllLanguages()"
             data-translate="" 
             title="{{languageSwitchHelp}}">{{languageSwitchLabel}}</a></li>
-        <li data-ng-class="mainLanguage === currentLanguage ? 'active' : ''" 
-            class="gn-main-language"
-            data-ng-hide="expanded"
-            >
-            <a href="" data-ng-click="switchToLanguage(mainLanguage)">{{mainLanguage | translate}}</a>
-        </li>
         <li data-ng-repeat="(key, value) in languages"
             data-ng-hide="expanded"
             data-ng-class="value === '#' + currentLanguage ? 'active' : ''">

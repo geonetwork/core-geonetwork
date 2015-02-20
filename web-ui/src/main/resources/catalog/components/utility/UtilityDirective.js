@@ -702,17 +702,102 @@
         element.on('click', function(e) {
           var next = element.next();
           next.collapse('toggle');
-          /*
-          if(scope.collapsed) {
-            next.show();
-          }
-          else {
-            next.hide();
-          }
-          */
         });
       }
     };
   }]);
 
+
+  /**
+   * Directive which create the href attribute
+   * for an element preserving the debug mode
+   * if activated and adding an active class
+   * to the parent element (required to highlight
+   * element in navbar)
+   */
+  module.directive('gnActiveTbItem', ['$location', function($location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var link = attrs.gnActiveTbItem, href,
+            isCurrentService = false;
+
+        // Insert debug mode between service and route
+        if (link.indexOf('#') !== -1) {
+          var tokens = link.split('#');
+          isCurrentService = window.location.pathname.
+              match('.*' + tokens[0] + '$') !== null;
+          href =
+              (isCurrentService ? '' :
+              tokens[0] + (scope.isDebug ? '?debug' : '')
+              ) + '#' +
+              tokens[1];
+        } else {
+          isCurrentService = window.location.pathname.
+              match('.*' + link + '$') !== null;
+          href =
+              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
+
+        }
+
+        // Set the href attribute for the element
+        // with the link containing the debug mode
+        // or not
+        element.attr('href', href);
+
+        function checkActive() {
+          // Ignore the service parameters and
+          // check url contains path
+          var isActive = $location.absUrl().replace(/\?.*#/, '#').
+              match('.*' + link + '.*') !== null;
+
+          if (isActive) {
+            element.parent().addClass('active');
+          } else {
+            element.parent().removeClass('active');
+          }
+        }
+
+        scope.$on('$locationChangeSuccess', checkActive);
+
+        checkActive();
+      }
+    };
+  }]);
+  module.filter('newlines', function () {
+    return function(text) {
+      if (text) {
+        return text.replace(/(\r)?\n/g, '<br/>');
+      } else {
+        return text;
+      }
+    }
+  });
+  module.directive('gnJsonText', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attr, ngModel) {
+        function into(input) {
+          return ioFn(input, 'parse');
+        }
+        function out(input) {
+          return ioFn(input, 'stringify');
+        }
+        function ioFn(input, method) {
+          var json;
+          try {
+            json = JSON[method](input);
+            ngModel.$setValidity('json', true);
+          } catch (e) {
+            ngModel.$setValidity('json', false);
+          }
+          return json;
+        }
+        ngModel.$parsers.push(into);
+        ngModel.$formatters.push(out);
+
+      }
+    };
+  });
 })();

@@ -93,6 +93,8 @@
     "organisation": "Organisation",
     "organization": "Organization",
     "owner": "Owner",
+    "privilegesUpdated": "Privileges updated.",
+    "privilegesUpdatedError": "Error occurred while updating privileges.",
     "password": "Password",
     "passwordMinlength": "Password must contain at least 6 characters!",
     "passwordNotMatching": "The password does not match!",
@@ -185,5 +187,14 @@
     "isTemplatey": "Template",
     "isTemplates": "Directory",
     "isTemplaten": "Record",
-    "signinFailure": "Incorrect username or password."
+    "signinFailure": "Incorrect username or password.",
+    "attributeName": "Attribute name",
+    "attributeDefinition": "Definition",
+    "attributeValues": "List of values",
+    "valueName": "Name",
+    "valueDefinition": "Definition",
+    "valueCode": "Code",
+    "addRecord": "Add new record",
+    "ImportRecord": "Import new records",
+    "directoryManager": "Manage directory"
 }

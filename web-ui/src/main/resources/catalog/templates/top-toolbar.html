@@ -11,31 +11,66 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="catalog.search#/home">
-      <img class="gn-logo"
-           data-ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
-      <span class="visible-lg">{{info.site.name}}</span>
-    </a>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
-    {{mainTabs}}
     <ul class="nav navbar-nav">
-      <li data-gn-top-toolbar-element="search" 
-                data-gn-path="catalog.search#/search"
-                data-gn-cssIcon="fa fa-search"></li>
-      <li data-ng-if="isMapViewerEnabled" data-gn-top-toolbar-element="map" 
-                data-gn-path="catalog.search#/map"
-                data-gn-cssIcon="fa fa-globe"></li>
-      <li data-ng-show="authenticated" 
-                data-gn-top-toolbar-element="contribute" 
-                data-gn-title="editorBoard" 
-                data-gn-path="catalog.edit"
-                data-gn-cssIcon="fa fa-plus"></li>
-      <li id="admin-console-link" data-ng-show="user.isReviewerOrMore()"
-                data-ng-click="pages.adminClick($event)"
-                data-gn-top-toolbar-element="adminConsole"
-                data-gn-path="{{pages.admin}}"
-                data-gn-cssIcon="fa fa-th"></li>
+      <li>
+        <a data-gn-active-tb-item="catalog.search#/home">
+          <img class="gn-logo"
+               data-ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
+          <span class="visible-lg">{{info.site.name}}</span>
+        </a>
+      </li>
+      <li>
+        <a data-gn-active-tb-item="catalog.search#/search"
+           title="{{'search' | translate}}">
+          <i class="fa fa-search"></i>
+          <span class="visible-lg" data-translate="">search</span>
+        </a>
+      </li>
+      <li data-ng-if="isMapViewerEnabled">
+        <a data-gn-active-tb-item="catalog.search#/map"
+           title="{{'map' | translate}}">
+          <i class="fa fa-globe"></i>
+          <span class="visible-lg" data-translate="">map</span>
+        </a>
+      </li>
+      <li data-ng-show="authenticated">
+        <a data-gn-active-tb-item="catalog.edit"
+           title="{{'editorBoard' | translate}}">
+          <i class="fa fa-plus"></i>
+          <span class="visible-lg" data-translate="">contribute</span>
+        </a>
+      </li>
+      <li class="dropdown" data-ng-show="authenticated">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown"
+           role="button" aria-expanded="false"><span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a data-gn-active-tb-item="catalog.edit#/create">
+              <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
+            </a>
+          </li>
+          <li>
+            <a data-gn-active-tb-item="catalog.edit#/import">
+              <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
+            </a>
+          </li>
+          <li>
+            <a data-gn-active-tb-item="catalog.edit#/directory"
+               data-ng-if="user.isReviewerOrMore()">
+              <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li data-ng-show="user.isReviewerOrMore()">
+        <a data-gn-active-tb-item="admin.console"
+           title="{{'adminConsole' | translate}}">
+          <i class="fa fa-th"></i>
+          <span class="visible-lg" data-translate="">adminConsole</span>
+        </a>
+      </li>
     </ul>
 
 

@@ -222,6 +222,7 @@
                 $scope.gnCurrentEdit = gnCurrentEdit;
                 $scope.tocIndex = null;
 
+
                 // Create URL for loading the metadata form
                 // appending a random int in order to avoid
                 // caching by route.
@@ -241,6 +242,12 @@
         });
       };
 
+      $scope.$watch('gnCurrentEdit.isMinor', function() {
+        if ($('#minor')[0]) {
+          $('#minor')[0].value = $scope.gnCurrentEdit.isMinor;
+        }
+      });
+
       /**
        * When the form is loaded, this function is called.
        * Use it to retrieve form variables or initialize
@@ -248,7 +255,7 @@
        */
       $scope.onFormLoad = function() {
         gnEditor.onFormLoad();
-
+        $scope.isMinor = gnCurrentEdit.isMinor;
         $scope.$watch('tocIndex', function(newValue, oldValue) {
           if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
             $timeout(function() {
@@ -291,6 +298,7 @@
       $scope.isTemplate = function() {
         return gnCurrentEdit.isTemplate === 'y';
       };
+
 
       /**
        * Display or not attributes editor.

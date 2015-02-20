@@ -62,7 +62,9 @@
 
       this.setSearch = function(params) {
         $location.path(this.SEARCH);
-        $location.search(params);
+        if (params) {
+          $location.search(params);
+        }
       };
       this.removeParams = function() {
         $location.search('');

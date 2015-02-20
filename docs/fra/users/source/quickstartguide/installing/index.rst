@@ -434,6 +434,23 @@ Pour activer le mode trace ajouter le paramètre *-DTRACE=true*::
   java -DTRACE=true -jar |project_name|-install-x.y.z.jar
 
 
+
+Installation des standards
+--------------------------
+
+Par défaut, le catalogue installe les standards suivants :
+
+* ISO19139
+* ISO19110
+* Dublin core
+
+D'autres standards sont disponibles dans `le dépôt des schémas <https://github.com/geonetwork/schema-plugins/>`_.
+
+Pour utiliser les standards suivants, il est nécessaire d'utiliser une version 2.10.x ou antérieure :
+* ISO19115-FDIS
+* FGDC
+
+
 Configurer le catalogue
 -----------------------
 

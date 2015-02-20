@@ -17,10 +17,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.opensearch" xmlapi="true">
-			<class name=".services.config.Get"/>
-			<output sheet="opensearch.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

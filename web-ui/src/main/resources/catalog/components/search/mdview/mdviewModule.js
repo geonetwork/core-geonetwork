@@ -11,17 +11,18 @@
   ]);
 
   module.controller('GnMdViewController', [
-    '$scope', '$http', '$compile', 'gnSearchSettings',
+    '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate',
-    function($scope, $http, $compile, gnSearchSettings,
+    function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.usingFormatter = false;
       $scope.compileScope = $scope.$new();
+      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
 
       $scope.deleteRecord = function(md) {
-        gnMetadataActions.deleteMd(md).then(function(data) {
+        return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate('metadataRemoved',
                 {title: md.title || md.defaultTitle}),

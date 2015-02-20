@@ -37,7 +37,9 @@
       var uploadImportMdDone = function(evt, data) {
         $scope.importing = false;
         $scope.report = {
-          id: data.jqXHR.responseJSON.id
+          id: data.jqXHR.responseJSON.id,
+          success: data.jqXHR.responseJSON.success,
+          message: data.jqXHR.responseJSON.msg
         };
       };
       var uploadImportMdError = function(evt, data, o) {

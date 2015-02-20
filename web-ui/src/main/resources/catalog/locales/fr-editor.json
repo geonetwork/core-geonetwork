@@ -1,5 +1,4 @@
 {
-    "ImportRecord": "Importer des fiches",
     "add-extent-from-geokeywords": "Calculer l'étendue à partir des mots clés",
     "add-extent-from-geokeywords-help": "Rechercher tous les mots clés de type 'place' dans les thésaurus et ajouter les étendues correspondantes.",
     "addCRS-help": " ",
@@ -14,7 +13,6 @@
     "addLinks": "Ajouter les liens",
     "addOnlinesrc": "Ajouter un lien ou un fichier",
     "addOnlinesrcTitle": "Ajouter une ressource en ligne",
-    "addRecord": "Ajouter une fiche",
     "addThumbnail": "Ajouter un aperçu",
     "addThumbnailTitle": "Ajouter un aperçu",
     "allChangesCanceled": "Tous les changements ont été annulés.",
@@ -57,7 +55,6 @@
     "description": "Description",
     "directory": "Répertoire",
     "directoryEntries": "Éléments",
-    "directoryManager": "Gestion des annuaires",
     "drawRectangle": "Dessiner une emprise",
     "error": "Erreur",
     "errors": "erreurs",
@@ -117,8 +114,6 @@
     "parentMd": "Fiche parent",
     "print_layout": "Mise en page",
     "print_scale": "Échelle",
-    "privilegesUpdated": "Privilèges mis à jour.",
-    "privilegesUpdatedError": "Échec lors de la sauvegarde des privilèges.",
     "process": "Mettre à jour",
     "publish": "Publier",
     "publishIn": "Publier <strong>{{layer}}</strong> dans ",
@@ -186,5 +181,7 @@
     "deleteFieldSet": "Supprimer cette section",
     "onlyMyRecord": "Uniquement mes fiches",
     "toggleSection": "Déplier / replier la section",
-    "editorBoardInfo": "A partir de cette page, créer ou importer de nouvelles fiches. Gérer vos fiches avec les accès rapides."
+    "editorBoardInfo": "A partir de cette page, créer ou importer de nouvelles fiches. Gérer vos fiches avec les accès rapides.",
+    "minorEditHelp": "Lorsque cette option est activée, la date de mise à jour de la fiche n'est pas modifiée. Lors de l'utilisation des suggestions, ou de la mise à jour d'une imagette, cette option est sans effet, la date est mise à jour.",
+    "minorEdit": "Modification mineure"
 }

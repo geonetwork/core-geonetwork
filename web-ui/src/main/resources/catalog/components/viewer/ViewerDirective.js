@@ -144,35 +144,24 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+
+          var toggleLayer = attrs['gnvLayermanagerBtn'] === 'true';
           element.find('.btn-group.flux button').bind('click', function() {
             element.find('.btn-group.flux button').removeClass('active');
             element.addClass('active');
             $(this).addClass('active');
-            var carousel = $(this).parents('.panel-body').first()
-                .find('.panel-carousel-window');
-            element.find('.layers').addClass('collapsed');
-            carousel.find('.panel-carousel').removeClass('collapsed');
+            if (toggleLayer) element.find('.layers').addClass('collapsed');
+            element.find('.panel-carousel').removeClass('collapsed');
             element.find('.unfold').css('opacity', 1);
-            carousel.find('.panel-carousel-container').css('left',
+            element.find('.panel-carousel-container').css('left',
                 '-' + ($(this).index() * 100) + '%');
-          });
-          element.find('.nav li').bind('click', function(e) {
-            e.preventDefault();
-            $(this).parents('.nav').first().find('li').removeClass('active');
-            $(this).addClass('active');
-            var carousel = $(this).parents('.layers').first()
-                .find('.panel-carousel-window');
-            carousel.find('.panel-carousel-container').css('left',
-                '-' + ($(this).index() * 100) + '%');
-            $(':focus').blur();
           });
 
           element.find('.unfold').click(function() {
-            var el = $(this).parent('.panel-body');
-            el.find('.btn-group button').removeClass('active');
-            element.find('.layers').removeClass('collapsed');
-            el.find('.panel-carousel').addClass('collapsed');
-            el.find('.unfold').css('opacity', 0);
+            element.find('.btn-group button').removeClass('active');
+            if (toggleLayer) element.find('.layers').removeClass('collapsed');
+            element.find('.panel-carousel').addClass('collapsed');
+            element.find('.unfold').css('opacity', 0);
           });
         }
       };
@@ -186,7 +175,7 @@
         scope: true,
         link: function(scope, element, attrs, btngroupCtrl) {
           $('.close').click(function() {
-            var t = $(this).parents('.panel-tools').first();
+            var t = $(this).parents('.panel-tools');
             t.addClass('force-hide');
             $('[rel=#' + t.attr('id') + ']').removeClass('active');
             scope.$apply(function() {

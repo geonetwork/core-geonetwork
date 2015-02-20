@@ -13,10 +13,10 @@
     overflow: hidden;
   }
   .tab-content {
-    height: ~"calc(100% - 3.9em)";
+    height: 100%;
   }
   .container-fluid {
-    height: ~"calc(100% - 5.4em)";
+    height: 100%;
     padding: 0 5px;
   }
   [search-results]
@@ -31,6 +31,40 @@
     .close {
       font-size: 20px;
     }
+  }
+}
+
+[data-ng-search-form] {
+  margin-right: 15px;
+}
+
+.sxt-side-btn {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  border-radius: 0;
+  width: 1em;
+  z-index: 100;
+  span {
+    position: absolute;
+    bottom: 50%;
+    left: -2.35em;
+    transform: rotate(-90deg);
+    height: 1em;
+    text-transform: uppercase;
+  }
+  i {
+    position: absolute;
+    bottom: ~"calc(50% - 4em)";
+    margin-left: -0.4em;
+  }
+}
+.sxt-map-btn {
+  right: 0;
+  span {
+    bottom: 51%;
+    transform-origin: bottom right;
+    left: -2.25em;
   }
 }
 
@@ -52,7 +86,8 @@
     position: relative;
   }
   .row& {
-    margin: 0;
+    height: ~"calc(100% - 2em)";
+    margin: 1em 0 0 ;
   }
 }
 
@@ -77,18 +112,7 @@
 
 .gn-search-page {
   .nav-pills {
-    margin-bottom: 1em;
-    text-align: center;
-    li {
-      display: inline-block;
-      float: none;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .badge {
-      background: @brand-primary;
-    }
+    display: none;
   }
 }
 
@@ -240,6 +264,13 @@
   }
 }
 
+.tab-pane .container-fluid {
+  overflow-y: auto;
+  .gn-md-side {
+    .clearfix();
+  }
+}
+
 
 ul.gn-resultview {
 
@@ -282,34 +313,40 @@ ul.gn-resultview {
     &:hover {
       background: white;
     }
-    .media {
-      .gn-md-thumbnail {
-        width: 180px;
-        .img-thumbnail {
-          max-width: 180px;
-          max-height: 140px;
-          min-height: 40px;
-          height: auto;
-        }
-      }
-      h4 {
-        margin-top: 0;
-        font-weight: 700;
-        a {
-          color: rgb(51, 51, 51);
-        }
-      }
-      .gn-md-type {
-        font-size: 20px;
-      }
-      .gn-md-credit {
-        font-size: 11.4px;
-        color: #808080
-      }
-      p {
-        font-size: .8em;
-      }
+
+  .gn-md-thumbnail {
+    width: 180px;
+    min-height: 40px;
+    max-height: 140px;
+    height: auto;
+    .img-thumbnail {
+      max-width: 180px;
+      max-height: 140px;
+      min-height: 40px;
+      height: auto;
     }
+  }
+  .gn-md-emptythumbnail {
+    min-height: 120px;
+  }
+  h4 {
+    margin-top: 0;
+    font-weight: 700;
+    a {
+      color: rgb(51, 51, 51);
+    }
+  }
+  .gn-md-type {
+    font-size: 20px;
+  }
+  .gn-md-source {
+    clear: left;
+    color: #808080
+  }
+  p {
+    font-size: .8em;
+  }
+
     .md-abstract {
       float: left;
       width: ~"calc(66% - 1em)";
@@ -449,8 +486,7 @@ ul.gn-resultview {
   left: 0;
   right: 0;
   bottom: 0;
-  top: ~"calc(98px + 1.6em)";
-  border: 1px solid @panel-default-border;
+  top: 0;
   [ngeo-map] {
     height: 100%;
   }
@@ -470,6 +506,40 @@ ul.gn-resultview {
   .layermanager-carousel {
     .panel-carousel-container {
       width: 200%;
+    }
+  }
+
+  .layers {
+    max-height: 50%;
+    height: 50%;
+  }
+
+  .sxt-layertree {
+    max-height: ~"calc(100% - 4em)";
+    overflow-y: auto;
+  }
+
+  .layers-tools {
+    position: absolute;
+    bottom: 0px;
+    top: 50%;
+    width: 100%;
+    height: 50%;
+    padding-top: 0;
+    .btn-group {
+      margin-top: 0;
+    }
+    .panel-carousel-window {
+      height: ~"calc(100% - 4em)";
+    }
+    .panel-carousel-container {
+      height: 100%;
+    }
+    .panel-carousel {
+      max-width: 100%;
+      overflow-x: hidden;
+      height: 100%;
+      overflow-y: auto;
     }
   }
 

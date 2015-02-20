@@ -2,10 +2,10 @@
 
   <div data-gn-alert-manager=""></div>
   <div id="map" ngeo-map="map" class="map"></div>
-  <div gn-gfi="" map="map"></div>
+  <div gn-gfi="" map="map" ng-class="{'leftBarExpanded': active.tool}"></div>
 
 
-  <button class="btn btn-default sxt-search-btn" data-ng-click="locService.setSearch()" >
+  <button class="btn btn-default sxt-side-btn sxt-search-btn" data-ng-click="locService.setSearch()" >
     <span translate>Catalogue</span>
     <i class="fa fa-play"></i>
   </button>
@@ -39,6 +39,10 @@
     <button sxt-tool gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
       <span class="fa fa-pencil"></span>
       <span role="tooltip" data-translate="">Annotations</span>
+    </button>
+    <button sxt-tool gi-btn class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique" gnv-tools-btn>
+      <span class="fa fa-anchor"></span>
+      <span role="tooltip" data-translate="">Espèces benthiques</span>
     </button>
   </div>
 
@@ -78,42 +82,64 @@
 
   <div class="panel-tools-container" ng-class="{'open': active.tool }">
 
-  <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
+    <!--Layer tree & background layers-->
+    <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
+      <div class="layers">
 
-    <div class="layers">
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close" sxt-close-tool>
+            &times;
+          </button>
+          <h5 data-translate="">ThemeLayers</h5>
+        </div>
+
+        <div class="sxt-layertree">
+          <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
+          <div sxt-layertree="map"></div>
+        </div>
+
+        <div class="panel-body layers-tools">
+          <div class="btn-group flux">
+            <button type="button" class="btn btn-default active" translate>legends</i></button>
+            <button type="button" class="btn btn-default" translate>sort</i></button>
+            <button type="button" class="btn btn-default" translate>sources</button>
+          </div>
+
+          <div class="panel-carousel-window">
+            <div class="panel-carousel-container">
+            <div class="panel-carousel" gn-legend-panel="map"></div>
+            <div class="panel-carousel" gn-layerorder-panel="map"></div>
+            <div class="panel-carousel" gn-layersources-panel="map"></div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <!--Import layer WMS,WMTS,KML-->
+    <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
       <div class="panel-body">
         <button type="button" class="btn btn-default close" sxt-close-tool>
           &times;
         </button>
-        <h5 data-translate="">ThemeLayers</h5>
-      </div>
-      <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-      <div sxt-layertree="map"></div>
-    </div>
-  </div>
+        <h5 data-translate="">AddALayer</h5>
 
-  <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
-    <div class="panel-body">
-      <button type="button" class="btn btn-default close" sxt-close-tool>
-        &times;
-      </button>
-      <h5 data-translate="">AddALayer</h5>
+        <div class="btn-group flux">
+          <button type="button" class="btn btn-default" data-translate="">LayerWMS</button>
+          <button type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
+          <button type="button" class="btn btn-default" data-translate="">LayerKML</button>
+        </div>
 
-      <div class="btn-group flux">
-        <button type="button" class="btn btn-default" data-translate="">LayerWMS</button>
-        <button type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
-        <button type="button" class="btn btn-default" data-translate="">LayerKML</button>
-      </div>
-
-      <div class="panel-carousel-window">
-        <div class="panel-carousel-container">
-          <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
-          <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
-          <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
+        <div class="panel-carousel-window">
+          <div class="panel-carousel-container">
+            <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
+            <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
+            <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <div class="panel panel-default force-hide panel-tools" id="contexts">
 
@@ -156,17 +182,29 @@
     </div>
   </div>
 
-  <!--Draw Panel-->
-  <div class="panel panel-default force-hide panel-tools" id="draw">
-    <div class="panel-body">
-      <button type="button" class="btn btn-default close" sxt-close-tool>
-        &times;
-      </button>
-      <h5 data-translate="">Annotations</h5>
-      <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
+    <!--Draw Panel-->
+    <div class="panel panel-default force-hide panel-tools" id="draw">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close" sxt-close-tool>
+          &times;
+        </button>
+        <h5 data-translate="">Annotations</h5>
+        <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
+        </div>
       </div>
     </div>
-  </div>
+
+    <!--Espece benthique panel-->
+    <div class="panel panel-default force-hide panel-tools" id="benthique">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close" sxt-close-tool>
+          &times;
+        </button>
+        <h5 data-translate="">benthiqueSpicies</h5>
+        <div class="sxt-benthique" sxtb-panel="map">
+        </div>
+      </div>
+    </div>
 
   <div class="panel panel-default force-hide panel-tools" id="print">
 
@@ -181,7 +219,7 @@
 
     </div>
 
-  <footer ng-class="{'small': active.tool}">
+  <footer ng-class="{'leftBarExpanded': active.tool}">
     <div sxt-mouse-position></div>
   </footer>
 

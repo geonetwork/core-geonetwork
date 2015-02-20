@@ -1,0 +1,36 @@
+<div ng-show="results.length > 0" class="results panel panel-default">
+
+  <div class="panel-heading">
+    <button type="button" class="btn btn-default close" ng-click="close()" title="{{'close'|translate}}">
+      &times;
+    </button>
+    <h5>
+      <span data-translate="">Results</span>
+      <span></span>
+    </h5>
+  </div>
+
+  <div ng-repeat="(key, group) in results | groupBy: 'layer'">
+
+    <h5 class="sxt-layer">{{key}}</h5>
+
+    <div class="table-scroller">
+      <table class="table table-condensed table-hover table-stripped" ng-repeat="result in group">
+        <tr ng-if="$first">
+          <th ng-repeat="(attr, value) in result.getProperties() | attributes">
+            {{attr | lowercase}}
+            <!-- <span ng-bind-html="value | linky:'_blank'"></span> -->
+          </th>
+        </tr>
+        <tr>
+          <td ng-repeat="(attr, value) in result.getProperties() | attributes">
+            <!-- <b>{{attr | lowercase}}</b>: -->
+            <span ng-bind-html="value | linky:'_blank'" title="{{value}}"></span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+</div>

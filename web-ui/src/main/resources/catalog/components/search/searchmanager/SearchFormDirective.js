@@ -239,7 +239,7 @@
       }
 
       var customPagination = searchParams;
-      
+
       self.resetPagination(customPagination);
       $scope.currentFacets = [];
       $scope.triggerSearch();

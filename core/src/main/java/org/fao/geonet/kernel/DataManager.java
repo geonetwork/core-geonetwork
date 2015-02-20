@@ -411,7 +411,7 @@ public class DataManager {
      * @param context context object
      * @param metadataIds the metadata ids to index
      */
-    public void batchIndexInThreadPool(ServiceContext context, List<String> metadataIds) {
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
 
         TransactionStatus transactionStatus = null;
         try {
@@ -441,7 +441,7 @@ public class DataManager {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
             }
 
-            List<String> subList = metadataIds.subList(start, nbRecords);
+            List subList = metadataIds.subList(start, nbRecords);
 
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, subList.toString());
@@ -3057,9 +3057,10 @@ public class DataManager {
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
             List config = settingMan.getAllAsXML(true).cloneContent();
-            Element settings = (Element) config.get(0);
-            settings.setName("config");
-            env.addContent(settings);
+            for (Object c : config) {
+                Element settings = (Element) c;
+                env.addContent(settings);
+            }
 
             result.addContent(env);
             // apply update-fixed-info.xsl
