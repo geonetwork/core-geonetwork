@@ -11,9 +11,12 @@
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/layertree.html',
-        scope: {
-          map: '=sxtLayertree'
-        },
+        controller: [ '$scope', function($scope) {
+          this.setNCWMS = function(layer) {
+            $scope.active.layersTools = false;
+            $scope.active.NCWMS = layer;
+          };
+        }],
         link: function(scope, element, attrs) {
 
           scope.layers = scope.map.getLayers().getArray();
@@ -91,6 +94,7 @@
       return {
         restrict: 'E',
         replace: true,
+        require: '^sxtLayertree',
         scope: {
           member: '=',
           map: '='
@@ -116,6 +120,8 @@
           };
 
           scope.mapService = gnMap;
+
+          scope.setNCWMS = controller.setNCWMS;
 
           scope.showMetadata = function() {
             var md = scope.member.get('md');

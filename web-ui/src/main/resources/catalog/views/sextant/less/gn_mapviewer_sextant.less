@@ -228,7 +228,7 @@
   }
 
   [sxt-layertree], .sxtb-speciestree  {
-    padding: 3px 10px;
+    padding: 3px 15px 0 0;
     font-size: 90%;
     .btn-cog {
       float: right;
@@ -239,9 +239,13 @@
     }
     label {
       font-weight: normal;
+      display: inline;
     }
     .list-group {
-      margin-bottom: 5px;
+      margin: .5em 0;
+    }
+    button.dropdown-toggle {
+      border-color: rgba(0,0,0,0.1);
     }
     ul.sxt-layertree-node, ul.sxt-layertree-node > li {
       list-style-type: none;
@@ -250,6 +254,9 @@
         font-size: 14px;
       }
     }
+    ul {
+      border-left: 1px dashed rgba(0,0,0,.2);
+    }
     .dropdown-menu > li {
       font-size: 90%;
       label {
@@ -257,4 +264,21 @@
       }
     }
   }
+
+  .panel-ncwms-container {
+    position: absolute;
+    top: 50%;
+    height: ~"calc(50% - 4em)";
+    left: 15px;
+    right: 15px;
+    .panel-heading {
+      h5 {
+        line-height: 3.8em;
+      }
+      .close {
+        margin-top: .7em;
+      }
+    }
+  }
+
 }
