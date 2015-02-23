@@ -67,7 +67,7 @@
             return $http.get(proxyUrl).success(function(response) {
               var features;
               if (layer.ncInfo) {
-                var doc = ol.xml.load(response);
+                var doc = ol.xml.parse(response);
                 var props = {};
                 ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
                   var node = doc.getElementsByTagName(v);
