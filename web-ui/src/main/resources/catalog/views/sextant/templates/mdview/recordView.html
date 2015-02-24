@@ -56,18 +56,18 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header" data-translate="">chooseAView</li>
-    <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
-      <a href="" data-ng-click="format()">default</a>
+    <li data-ng-class="{'disabled' : !currentFormatter}">
+      <a href="" data-ng-click="format()" translate>simpleView</a>
     </li>
     <li data-ng-repeat="f in formatter.list"
-        data-ng-class="f === currentFormatter ? 'disabled' : ''">
+        data-ng-class="{'disabled' : f == currentFormatter}">
       <a href="" data-ng-click="format(f)">{{f.label | translate}}</a>
     </li>
   </ul>
 </div>
 
 
+<!--
 <a class="gn-md-delete-btn pull-right"
    data-ng-show="user.canEditRecord(mdView.current.record)"
    data-gn-click-and-spin="deleteRecord(mdView.current.record)"
@@ -81,6 +81,7 @@
    title="{{'edit' | translate}}">
   <i class="fa fa-pencil"></i>
 </a>
+-->
 
 <div data-ng-show="usingFormatter"
      id="gn-metadata-display"
@@ -92,10 +93,10 @@
 <div data-ng-show="!usingFormatter" class="gn-metadata-display">
 
 <div class="col-md-9 gn-record">
-  <h1>
+  <h2>
     <i class="fa gn-icon-{{mdView.current.record.type | split}}"/>
     {{mdView.current.record.title || mdView.current.record.defaultTitle}}
-  </h1>
+  </h2>
 
   <div class="pull-right">
     <i class="fa fa-calendar"></i>
@@ -114,7 +115,7 @@
        data-title="{{'downloadsAndResources' | translate}}">
   </div>
 
-  <h2 data-translate="">aboutThisResource</h2>
+  <h3 data-translate="">aboutThisResource</h3>
 
   <table class="table table-striped">
     <tbody>
@@ -176,10 +177,10 @@
     </tbody>
   </table>
 
-  <!--<h2 data-translate="">preview</h2>-->
+  <!--<h3 data-translate="">preview</h3>-->
   <!--<div class="gn-map-preview"/>-->
 
-  <h2 data-translate="">technicalInformation</h2>
+  <h3 data-translate="">technicalInformation</h3>
 
 
   <div data-ng-if="mdView.current.record['geonet:info'].schema === 'iso19110'"
@@ -227,7 +228,7 @@
        data-title="{{'siblings' | translate}}">
   </div>
 
-  <h2 data-translate="">metadataInformation</h2>
+  <h3 data-translate="">metadataInformation</h3>
 
   <a class="btn btn-link"
      data-ng-href="xml.metadata.get?id={{mdView.current.record.getId()}}">

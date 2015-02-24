@@ -169,7 +169,7 @@
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',
         list: [
-          {label: 'full', url: 'md.format.xml?xsl=full_view&id='}
+          {label: 'fullView', url: 'md.format.xml?xsl=full_view&id='}
         ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
