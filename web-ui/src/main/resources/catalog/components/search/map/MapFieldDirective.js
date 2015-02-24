@@ -48,6 +48,8 @@
                 style: gnSearchSettings.olStyles.drawBbox
               });
               ngeoDecorateInteraction(dragbox, $scope.map);
+              dragbox.active = false;
+              $scope.map.addInteraction(dragbox);
               $scope.interaction = dragbox;
             }],
             link: function(scope, element, attrs) {
