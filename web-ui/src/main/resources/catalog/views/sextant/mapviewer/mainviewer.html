@@ -36,7 +36,7 @@
       <span class="fa fa-pencil"></span>
       <span role="tooltip" data-translate="">Annotations</span>
     </button>
-    <button sxt-tool gi-btn class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique" gnv-tools-btn>
+    <button ng-if="benthique" sxt-tool gi-btn class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique" gnv-tools-btn>
       <span class="fa fa-anchor"></span>
       <span role="tooltip" data-translate="">Espèces benthiques</span>
     </button>
@@ -190,7 +190,7 @@
     </div>
 
     <!--Espece benthique panel-->
-    <div class="panel panel-default force-hide panel-tools" id="benthique">
+    <div ng-if="benthique" class="panel panel-default force-hide panel-tools" id="benthique">
       <div class="panel-body">
         <button type="button" class="btn btn-default close" sxt-close-tool>
           &times;

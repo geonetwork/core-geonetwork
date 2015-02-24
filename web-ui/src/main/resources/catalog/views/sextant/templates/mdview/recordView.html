@@ -22,9 +22,31 @@
   <i class="fa fa-angle-right"></i>
 </button>
 
-
-<div class="gn-md-actions-btn pull-right"
-     data-gn-md-actions-menu="mdView.current.record"/>
+<div class="btn-group md-actions gn-md-actions-btn pull-right">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-expanded="false">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a data-ng-href=""
+           data-ng-click="gnMetadataActions.getPermalink(mdView.current.record)">
+      <i class="fa fa-link"/>&nbsp;
+      <span data-translate="">permalink</span>
+    </a></li>
+    <li><a data-ng-href="xml.metadata.get?uuid={{mdView.current.record.getUuid()}}"
+           target="_blank">
+      <i class="fa fa-file-code-o"></i>&nbsp;
+      <span data-translate="">exportXML</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="gnMetadataActions.metadataPrint(mdView.current.record.getUuid())">
+      <i class="fa fa-file-pdf-o"></i>&nbsp;
+      <span data-translate="">exportPDF</span>
+    </a></li>
+  </ul>
+</div>
 
 <div class="btn-group pull-right">
   <button type="button" class="btn btn-link dropdown-toggle"

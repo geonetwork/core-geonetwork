@@ -5,7 +5,6 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
-  goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
   goog.require('gn_legendpanel_directive');
@@ -15,7 +14,6 @@
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'gn_mdactions_directive',
     'gn_related_directive',
     'gn_search_default_directive',
     'gn_legendpanel_directive',
@@ -46,14 +44,16 @@
     'gnMdView',
     'gnMdViewObj',
     'gnSearchLocation',
+    'gnMetadataActions',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView, mdView, gnSearchLocation) {
+        $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.mainTabs = gnSearchSettings.mainTabs;
+      $scope.gnMetadataActions = gnMetadataActions;
 
       var localStorage = $window.localStorage || {};
 
