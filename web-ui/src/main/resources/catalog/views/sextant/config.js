@@ -169,10 +169,7 @@
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',
         list: [
-          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view' +
-                '&view=inspire&id='},
-          {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
-          {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
+          {label: 'full', url: 'md.format.xml?xsl=full_view&id='}
         ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
