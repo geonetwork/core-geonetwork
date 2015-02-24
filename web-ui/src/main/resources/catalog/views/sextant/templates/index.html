@@ -9,6 +9,7 @@
           <button class="btn btn-default sxt-side-btn sxt-map-btn" data-ng-click="locService.setMap()" >
             <span translate>Carte</span>
             <i class="fa fa-play fa-flip-horizontal"></i>
+            <i class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</i>
           </button>
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
@@ -36,6 +37,7 @@
                       <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
                         <span class="fa fa-shopping-cart"></span>
                         <span role="tooltip" data-translate="">Basket</span>
+                        <span class="badge pull-right" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
                       </button>
 
                       <!--sort by combo-->

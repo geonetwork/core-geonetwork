@@ -49,6 +49,7 @@
     <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
       <span class="fa fa-shopping-cart"></span>
       <span role="tooltip" data-translate="">Basket</span>
+      <span class="badge pull-right" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
     </button>
   </div>
   <div class="btn-group control-tools tools sxt-fullscreen">
