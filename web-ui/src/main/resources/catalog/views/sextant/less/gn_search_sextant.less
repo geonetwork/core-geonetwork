@@ -169,6 +169,9 @@
     .btn {
       .btn-sm;
       opacity: .80;
+      &:nth-of-type(2) {
+        display: none;
+      }
     }
   }
   [gn-facet-multiselect] {
@@ -391,7 +394,7 @@ ul.gn-resultview {
     .gn-grid-item {
       position: relative;
       border: 1px solid @list-group-border;
-      height: 300px;
+      height: 18em;
       background-color: #EFEFEF;
       margin: 0;
       &:hover {

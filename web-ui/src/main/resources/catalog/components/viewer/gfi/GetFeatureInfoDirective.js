@@ -31,10 +31,17 @@
 
         scope.results = fo.getFeatures().getArray();
         scope.pending = 0;
+        var overlay = new ol.Overlay({
+          positioning: 'center-center',
+          position: undefined,
+          element: $('<span class="marker">+</span>')[0]
+        });
+        map.addOverlay(overlay);
 
         scope.close = function() {
           fo.getFeatures().clear();
           scope.pending = 0;
+          overlay.setPosition(undefined);
         };
 
         map.on('singleclick', function(e) {
@@ -62,12 +69,13 @@
                   INFO_FORMAT: layer.ncInfo ? 'text/xml' :
                       'application/vnd.ogc.gml'
                 });
+            var coordinate = e.coordinate;
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(uri);
             scope.pending += 1;
             return $http.get(proxyUrl).success(function(response) {
               var features;
               if (layer.ncInfo) {
-                var doc = ol.xml.load(response);
+                var doc = ol.xml.parse(response);
                 var props = {};
                 ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
                   var node = doc.getElementsByTagName(v);
@@ -84,6 +92,7 @@
               if (features) {
                 features.forEach(function(f) { f.layer = layer.get('label'); });
                 fo.getFeatures().extend(features);
+                overlay.setPosition(coordinate);
               }
               scope.pending = Math.max(0, scope.pending - 1);
             }).error(function() {

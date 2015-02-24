@@ -13,16 +13,18 @@
     </div>
 
     <!--Color ranges auto compute-->
-    <button type="button" ng-if="colorscalerange" class="btn btn-link pull-right" data-ng-click="setAutoColorranges($event)" title="auto">
+    <button type="button" class="btn btn-link pull-right" data-ng-click="setAutoColorranges($event)" title="auto">
       <span class="fa fa-magic"></span>
     </button>
 
     <!--Color ranges double slider-->
-    <div class="form-group" ng-if="colorscalerange">
+    <div class="form-group">
       <label class="col-sm-4">
-        <span>{{colorscalerange[0] | number: 3}}</span>
-        <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
-        <span>({{layer.ncInfo.units}})</span>
+        <span ng-if="colorscalerange">
+          <span>{{colorscalerange[0] | number: 3}}</span>
+          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
+          <span>({{layer.ncInfo.units}})</span>
+        </span>
       </label>
       <div class="col-sm-6">
         <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
