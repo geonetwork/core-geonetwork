@@ -5,7 +5,7 @@
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
 
-      <div class="gn-grid-item" title="{{md.abstract || md.defaultAbstract}}">
+      <div class="gn-grid-item" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
 
 
           <!--Edit button-->

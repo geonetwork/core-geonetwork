@@ -46,17 +46,18 @@
   border-radius: 0;
   width: 1em;
   z-index: 100;
-  span {
+  .side-label {
     position: absolute;
     bottom: 50%;
-    left: -2.35em;
     transform: rotate(-90deg);
     height: 1em;
     text-transform: uppercase;
+    transform-origin: top left;
+    left: 0;
   }
-  i {
+  i.fa {
     position: absolute;
-    bottom: ~"calc(50% - 4em)";
+    bottom: 50%;
     margin-left: -0.4em;
   }
 }
@@ -560,5 +561,14 @@ ul.gn-resultview {
       overflow: visible;
     }
   }
+}
 
+@media (max-width: @screen-sm) {
+  [gn-map-field], .gn-facet, .expander {
+    display:none;
+  }
+}@media (max-width: @screen-md) {
+  .expander {
+    display:none;
+  }
 }

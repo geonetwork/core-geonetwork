@@ -1,7 +1,9 @@
-<div data-ng-repeat="l in legends">
-  <h6>{{l.title}}</h6>
-  <p>
-    <img ng-src="{{l.legend}}"/>
-  </p>
-
-</div>
+<ul class="list-group">
+  <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)" data-ng-if="layer.get('legend')"
+      class="list-group-item" >
+    <h5>{{layer.get('label')}}</h5>
+    <p>
+      <img ng-src="{{layer.get('legend')}}"/>
+    </p>
+  </li>
+</ul>

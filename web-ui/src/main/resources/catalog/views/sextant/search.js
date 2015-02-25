@@ -130,7 +130,7 @@
       ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHFIRST'));
+            ('STARTSWITHONLY'));
 
         return $http.get(url, {
         }).then(function(res) {

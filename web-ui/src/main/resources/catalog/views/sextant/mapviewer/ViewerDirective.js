@@ -37,7 +37,8 @@
                 gnMap.zoom(map, delta);
               };
               scope.zoomToMaxExtent = function(map) {
-                map.getView().setResolution(gnMapConfig.maxResolution);
+                map.getView().fitExtent(map.getView().
+                    getProjection().getExtent(), map.getSize());
               };
 
               var div = document.createElement('div');

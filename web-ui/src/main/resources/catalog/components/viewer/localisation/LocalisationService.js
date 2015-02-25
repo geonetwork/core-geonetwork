@@ -19,7 +19,7 @@
       DMSEast, 'g');
   var regexpDMSDegree = new RegExp(DMSDegree, 'g');
   var regexpCoordinate = new RegExp(
-      '([\\d\\.\']+)[\\s,]+([\\d\\.\']+)');
+      '(\-?[\\d\\.\']+)[\\s,]+(\-?[\\d\\.\']+)');
 
 
   module.value('gnGetCoordinate', function(extent, query) {
@@ -57,8 +57,7 @@
       easting = easting + parseFloat(secondE.replace('"' , '')
               .replace('\'\'' , '').replace('′′' , '')
               .replace('″' , '')) / 3600;
-      position = ol.proj.transform([easting, northing],
-              'EPSG:4326', 'EPSG:3857');
+      position = [easting, northing];
       if (ol.extent.containsCoordinate(
           extent, position)) {
         valid = true;
@@ -68,31 +67,20 @@
     var match =
         query.match(regexpCoordinate);
     if (match && !valid) {
-      var left = parseFloat(match[1].replace('\'', ''));
-      var right = parseFloat(match[2].replace('\'', ''));
+      var x = parseFloat(match[1].replace('\'', ''));
+      var y = parseFloat(match[2].replace('\'', ''));
       var position =
-          [left > right ? left : right,
-           right < left ? right : left];
+          [x, y];
       if (ol.extent.containsCoordinate(
           extent, position)) {
         valid = true;
       } else {
         //TODO: don't use hardcoded projections
         position = ol.proj.transform(position,
-            'EPSG:2056', 'EPSG:3857');
+            'EPSG:3857', 'EPSG:4326');
         if (ol.extent.containsCoordinate(
             extent, position)) {
           valid = true;
-        } else {
-          position =
-              [left < right ? left : right,
-               right > left ? right : left];
-          position = ol.proj.transform(position,
-              'EPSG:4326', 'EPSG:3857');
-          if (ol.extent.containsCoordinate(
-              extent, position)) {
-            valid = true;
-          }
         }
       }
     }

@@ -243,6 +243,7 @@
   "layerMoveDown":"Move layer down",
   "layerMoveUp":"Move layer up",
   "layerExtentZoom":"Zoom to layer extent",
+  "maxExtentZoom": "Zoom to max extent",
   "layerInfo":"Layer information",
   "Locations":"Locations",
   "clear":"clear",

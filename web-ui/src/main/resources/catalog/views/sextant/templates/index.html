@@ -7,7 +7,10 @@
         <div class="hfull" data-ng-controller="gnsSextantSearch">
 
           <button class="btn btn-default sxt-side-btn sxt-map-btn" data-ng-click="locService.setMap()" >
-            <span translate>Carte</span>
+            <span class="side-label">
+              <span translate>Carte</span>
+              <i class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</i>
+            </span>
             <i class="fa fa-play fa-flip-horizontal"></i>
           </button>
 
@@ -35,6 +38,7 @@
                       <!-- To Basket button-->
                       <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
                         <span class="fa fa-shopping-cart"></span>
+                        <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
                         <span role="tooltip" data-translate="">Basket</span>
                       </button>
 
