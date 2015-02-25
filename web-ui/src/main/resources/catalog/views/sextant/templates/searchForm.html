@@ -5,8 +5,8 @@
     <!--any field-->
     <div class="input-group gn-search-input">
       <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
-             typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-             typeahead-min-length="1" id="anySearchField">
+             typeahead="address for address in getAnySuggestions($viewValue)" typeahead-focus-first="false" typeahead-loading="anyLoading" class="form-control"
+             typeahead-min-length="1" id="anySearchField" autocomplete="off">
       <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
         <span class="input-group-btn">
           <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
