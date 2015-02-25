@@ -106,8 +106,9 @@
       };
 
       $scope.displayPanierTab = function() {
-        $scope.$broadcast('renderPanierMap');
-        $scope.mainTabs.panier.titleInfo = 0;
+        $timeout(function() {
+          $scope.$broadcast('renderPanierMap');
+        },0)
       };
 
 
