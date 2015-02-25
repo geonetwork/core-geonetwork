@@ -6,7 +6,9 @@
 
 
   <button class="btn btn-default sxt-side-btn sxt-search-btn" data-ng-click="locService.setSearch()" >
-    <span translate>Catalogue</span>
+    <span class="side-label">
+      <span translate>Catalogue</span>
+    </span>
     <i class="fa fa-play"></i>
   </button>
 
@@ -45,11 +47,11 @@
 
   <!--Top right buttons - Navigation-->
   <div class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
-  <div class="btn-group sx-toolbar tools">
+  <div class="btn-group sx-toolbar tools basket-tools">
     <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
       <span class="fa fa-shopping-cart"></span>
+      <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
       <span role="tooltip" data-translate="">Basket</span>
-      <span class="badge pull-right" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
     </button>
   </div>
   <div class="btn-group control-tools tools sxt-fullscreen">
@@ -95,14 +97,16 @@
           <div sxt-layertree="map"></div>
         </div>
 
-        <div ng-if="active.NCWMS" class="panel panel-default panel-ncwms-container">
-          <div class="panel-heading">
-          <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
-              &times;
-            </button>
-            <h5>{{active.NCWMS.get('label')}}</h5>
+        <div ng-repeat="layer in map.getLayers().getArray()">
+          <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
+            <div class="panel-heading">
+            <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
+                &times;
+              </button>
+              <h5>{{layer.get('label')}}</h5>
+            </div>
+            <div gn-ncwms-transect="" map="map" layer="layer"></div>
           </div>
-          <div gn-ncwms-transect="" map="map" layer="active.NCWMS"></div>
         </div>
 
         <div class="panel-body layers-tools" ng-class="{'layers-tools-expanded': active.layersTools}" sxt-layers-tools>

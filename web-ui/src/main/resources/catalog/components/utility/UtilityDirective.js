@@ -699,8 +699,11 @@
       scope: true,
       link: function(scope, element, attrs) {
         scope.collapsed = attrs['gnCollapse'] == 'true';
+        var next = element.next();
         element.on('click', function(e) {
-          var next = element.next();
+          scope.$apply(function(){
+            scope.collapsed = !scope.collapsed;
+          });
           next.collapse('toggle');
         });
       }
