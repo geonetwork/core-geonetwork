@@ -221,6 +221,7 @@
     '$scope', 'suggestService', 'gnSearchSettings',
     function($scope, suggestService, searchSettings) {
 
+      $scope.categorytreeCollapsed = true;
       $scope.groupPublishedOptions = {
         mode: 'remote',
         remote: {

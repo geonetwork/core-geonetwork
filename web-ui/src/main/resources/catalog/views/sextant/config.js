@@ -130,7 +130,7 @@
         ],
         controls: [],
         view: new ol.View({
-          center: mapsConfig.center,
+          center: [280274.03240585705, 6053178.654789996],
           zoom: 0
         })
       });
