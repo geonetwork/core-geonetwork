@@ -95,14 +95,16 @@
           <div sxt-layertree="map"></div>
         </div>
 
-        <div ng-if="active.NCWMS" class="panel panel-default panel-ncwms-container">
-          <div class="panel-heading">
-          <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
-              &times;
-            </button>
-            <h5>{{active.NCWMS.get('label')}}</h5>
+        <div ng-repeat="layer in map.getLayers().getArray()">
+          <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
+            <div class="panel-heading">
+            <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
+                &times;
+              </button>
+              <h5>{{layer.get('label')}}</h5>
+            </div>
+            <div gn-ncwms-transect="" map="map" layer="layer"></div>
           </div>
-          <div gn-ncwms-transect="" map="map" layer="active.NCWMS"></div>
         </div>
 
         <div class="panel-body layers-tools" ng-class="{'layers-tools-expanded': active.layersTools}" sxt-layers-tools>
