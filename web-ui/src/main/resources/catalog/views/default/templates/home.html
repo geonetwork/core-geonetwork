@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="col-sm-8 col-sm-pull-4">
-      <h1 data-translate="">getstarted</h1>
+      <h2 data-translate="">getstarted</h2>
       <p data-translate=""
          data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
 
@@ -33,9 +33,9 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-8" data-ng-show="searchInfo.facet['topicCats']">
+    <div class="col-sm-8" data-ng-show="searchInfo.facet['orgNames']">
       <div class="panel panel-default">
-        <div class="panel-heading" data-translate="">browseTopics</div>
+        <div class="panel-heading" data-translate="">browseOrganisations</div>
           <div class="panel-body">
             <!-- Here is a facet with icon to do a first level
             filter
@@ -44,23 +44,20 @@
 
             An icon could be provided as a CSS class name or
             a pattern matching a URL resolving to an image.
-
-            Properties
-            <div data-flfilter="categories"
-               data-title=""
-               data-icon-path="../../images/category/{{['@name']}}.png">
             -->
           <div class="row">
-            <div data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
-              class="col-xs-6 col-sm-4 col-lg-3">
-              <a class="thumbnail gn-icon-bg" data-ng-href="#/search?topicCat={{facet['@name']}}">
-                <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i><br/>
-                <span class="gn-icon-label">{{facet['@label']}}</span>
+            <div data-ng-repeat="(key, facet) in searchInfo.facet['orgNames'] | limitTo:12"
+              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-icon-bg">
+			  <div title="{{facet['@name']}}">
+              <a class="thumbnail" data-ng-href="#/search?topicCat={{facet['@name']}}">
+                <span class="gn-icon-label">{{facet['@name']}}</span><br/>
+				<i class="fa fa-3x fa-building gn-icon gn-icon-{{facet['@name']}}"></i><br/>
                 <span class="badge">{{facet['@count']}}</span>
               </a>
+			 </div>
             </div>
             <!--<div data-ng-repeat="(key, facet) in searchInfo.facet['categories']">-->
-              <!--<a class="thumbnail gn-icon-bg" data-ng-href="#/search?_cat={{facet['@name']}}">-->
+            <!--<a class="thumbnail gn-icon-bg" data-ng-href="#/search?_cat={{facet['@name']}}">-->
           </div>
         </div>
       </div>
@@ -71,14 +68,15 @@
         <div class="panel-body">
           <div class="row">
             <div data-ng-repeat="(key, facet) in searchInfo.facet['types']"
-                 data-ng-show="facet['@label']"
-                 class="col-xs-6 col-sm-6 col-lg-5">
-              <a class="thumbnail gn-icon-bg" data-ng-href="#/search?type={{facet['@name']}}">
+                 class="col-xs-3 col-sm-6 col-md-4 col-lg-3 gn-icon-bg">
+			 <div title="{{facet['@label'] || facet['@name'] | translate}}">
+              <a class="thumbnail" data-ng-href="#/search?type={{facet['@name']}}">
+			    <span class="gn-icon-label">{{facet['@label'] || facet['@name'] | translate}}</span><br/>
                 <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i><br/>
-                <span class="gn-icon-label">{{facet['@label']}}</span>
                 <span class="badge">{{facet['@count']}}</span>
               </a>
             </div>
+		   </div>
           </div>
         </div>
       </div>
