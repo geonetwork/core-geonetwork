@@ -559,5 +559,14 @@ ul.gn-resultview {
       overflow: visible;
     }
   }
+}
 
+@media (max-width: @screen-sm) {
+  [gn-map-field], .gn-facet, .expander {
+    display:none;
+  }
+}@media (max-width: @screen-md) {
+  .expander {
+    display:none;
+  }
 }

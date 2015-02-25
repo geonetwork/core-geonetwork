@@ -28,17 +28,6 @@
     <div gn-facet-multiselect="orgName"></div>
     <div gn-facet-multiselect="createDateYear"></div>
 
-    <!--Category Tree-->
-    <div ng-repeat="t in thesaurus">
-      <div class="radio">
-        <label>
-          <input type="radio" ng-model="activeThesaurus.value" ng-value="t.field">
-          {{t.label.eng}}
-        </label>
-      </div>
-      <div ng-show="activeThesaurus.value == t.field" sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
-    </div>
-
     <!--downloadable / visualisable checkboxes-->
     <div class="form-group" ng-if="advanced">
       <label for="groupF" class="col-md-4 col-sm-12 control-label" translate>dataset</label>
