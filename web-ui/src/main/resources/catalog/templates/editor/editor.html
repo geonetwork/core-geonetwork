@@ -10,6 +10,7 @@
     data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
   </div>
   <div class="row gn-editor-container">
+    <div class="modal-backdrop fade in" data-ng-show="gnCurrentEdit.working"></div>
     <div class="col-md-8">
       
       <div class="alert alert-danger" data-ng-if="unsupportedSchema" 
