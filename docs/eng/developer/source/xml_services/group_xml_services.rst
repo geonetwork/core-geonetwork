@@ -3,7 +3,7 @@
 Group services
 ==============
 
-Group List (xml.info&type=groups)
+Group List (xml.info?type=groups)
 ---------------------------------
 
 The **xml.info** service can be used to retrieve the user groups available in GeoNetwork. See :ref:`xml.info`.
