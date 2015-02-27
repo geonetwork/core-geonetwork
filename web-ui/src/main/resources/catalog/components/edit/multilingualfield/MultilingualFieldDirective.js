@@ -131,7 +131,7 @@
             scope.languageSwitchHelp = $translate(key + '-help');
           };
 
-          scope.displayAllLanguages = function(force) {
+          scope.displayAllLanguages = function(force, focus) {
             scope.expanded =
               force !== undefined ? force : !scope.expanded;
 
@@ -139,7 +139,10 @@
               if (scope.expanded) {
                 setLabel('oneLanguage');
                 $(this).prev('span').removeClass('hidden');
-                $(this).removeClass('hidden').focus();
+                var el = $(this).removeClass('hidden')
+                if(focus) {
+                  el.focus();
+                };
               } else {
                 setLabel('allLanguage');
                 $(this).prev('span').addClass('hidden');
@@ -148,7 +151,10 @@
                   $(this).addClass('hidden');
                 } else {
                   scope.currentLanguage = mainLanguage;
-                  $(this).removeClass('hidden');
+                  var el = $(this).removeClass('hidden');
+                  if(focus) {
+                    el.focus();
+                  };
                 }
               }
             });

@@ -2,7 +2,7 @@
     <div data-ng-transclude=""/>
     <ul class="nav nav-pills">
         <li><a href="" 
-            data-ng-click="displayAllLanguages()"
+            data-ng-click="displayAllLanguages(undefined, true)"
             data-translate="" 
             title="{{languageSwitchHelp}}">{{languageSwitchLabel}}</a></li>
         <li data-ng-repeat="(key, value) in languages"
