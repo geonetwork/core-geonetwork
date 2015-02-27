@@ -199,7 +199,7 @@ public class Handlers {
     }
     def keywordsEl = {keywords ->
         def keywordProps = com.google.common.collect.ArrayListMultimap.create()
-        keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
+        keywords.collectNested {it.'**'.findAll{it.name() == 'gmd:keyword'}}.flatten().each { k ->
             def thesaurusName = isofunc.isoText(k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:title')
 
             if (thesaurusName.isEmpty()) {

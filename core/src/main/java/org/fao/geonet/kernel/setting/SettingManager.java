@@ -77,7 +77,8 @@ public class SettingManager {
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
-    public static final java.lang.String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
 
     @Autowired
     private SettingRepository _repo;
