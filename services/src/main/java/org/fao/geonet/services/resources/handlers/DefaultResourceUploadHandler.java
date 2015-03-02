@@ -23,11 +23,7 @@
 
 package org.fao.geonet.services.resources.handlers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.google.common.io.Closer;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -40,6 +36,8 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -111,57 +109,31 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
     
 	private static void moveFile(InputStream is, String filename,
 			Path targetDir, String overwrite) throws Exception {
-		File f = new File(targetDir.toFile(), filename);
+		Path f = targetDir.resolve(filename);
 		
 		if(!Files.exists(targetDir)) {
             Files.createDirectories(targetDir);
 		}
 		
 		// check if file already exists and do whatever overwrite wants
-		if (Files.exists(f.toPath())) {
+		if (Files.exists(f)) {
 			if (overwrite.equals("no")) {
 				throw new Exception("File upload unsuccessful because "
-						+ f.getAbsolutePath()
+						+ f.toAbsolutePath().toString()
 						+ " already exists and overwrite was not permitted");
 			} else {
-				f.delete();
+				Files.deleteIfExists(f);
 			}
 		}
-		
-		f.createNewFile();
-		
-		OutputStream outputStream = null;
 
-		try {
-			// write the inputStream to a FileOutputStream
-			outputStream = new FileOutputStream(f);
 
-			int read = 0;
-			byte[] bytes = new byte[1024];
+        try (Closer closer = Closer.create()) {
+            closer.register(is);
 
-			while ((read = is.read(bytes)) != -1) {
-				outputStream.write(bytes, 0, read);
-			}
-
-		} catch (IOException e) {
-			throw new Exception("Unable to read uploaded file.", e);
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-			}
-			if (outputStream != null) {
-				try {
-					outputStream.flush();
-					outputStream.close();
-				} catch (IOException e) {
-					throw new Exception("Problem writing the uploaded file on destination.", e);
-				}
-
-			}
-		}
+            Files.copy(is, f);
+        } catch (IOException e) {
+            throw new Exception("Unable to read uploaded file.", e);
+        }
 	}
 
 	private static void moveFile(ServiceContext context, Path sourceDir,

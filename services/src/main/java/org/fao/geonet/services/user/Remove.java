@@ -23,19 +23,10 @@
 
 package org.fao.geonet.services.user;
 
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroupId_;
@@ -49,6 +40,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
@@ -83,7 +81,7 @@ public class Remove {
             myUserId = usrSess.getUserId();
         }
 
-        if (myUserId.equals(id)) {
+        if (myUserId == null || myUserId.equals(id)) {
             throw new IllegalArgumentException(
                     "You cannot delete yourself from the user database");
         }

@@ -27,7 +27,7 @@ public class SampleDataAddIntegrationTest extends AbstractServiceIntegrationTest
         final Add add = new Add();
         ServiceContext context = createServiceContext();
 
-        final Collection<String> schemas = Arrays.asList("iso19115", "fgdc-std", "iso19139", "dublin-core");
+        final Collection<String> schemas = Arrays.asList("iso19139", "dublin-core");
         StringBuilder builder = new StringBuilder();
 
         for (String schema : schemas) {

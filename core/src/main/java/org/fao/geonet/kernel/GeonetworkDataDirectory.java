@@ -7,6 +7,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
@@ -95,6 +96,11 @@ public class GeonetworkDataDirectory {
             this.nodeId = nodeInfo.getId();
         }
         setDataDirectory(jeevesServlet, webappName, handlerConfig);
+
+        // might be null during tests
+        if (_applicationContext != null) {
+            _applicationContext.publishEvent(new GeonetworkDataDirectoryInitializedEvent(this));
+        }
     }
     public void init(final String webappName, final Path webappDir,  Path systemDataDir,
                      final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
@@ -604,5 +610,14 @@ public class GeonetworkDataDirectory {
             resourcePath = resourcePath.substring(1);
         }
         return this.webappDir.resolve(resourcePath);
+    }
+
+    /**
+     * Event is raised when GeonetworkDataDirectory has finished being initialized.
+     */
+    public static class GeonetworkDataDirectoryInitializedEvent extends ApplicationEvent {
+        public GeonetworkDataDirectoryInitializedEvent(GeonetworkDataDirectory dataDirectory) {
+            super(dataDirectory);
+        }
     }
 }

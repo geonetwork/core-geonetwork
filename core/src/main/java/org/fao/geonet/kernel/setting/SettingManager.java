@@ -151,7 +151,10 @@ public class SettingManager {
                         currentElement.setAttribute("datatype", String.valueOf(dataType.ordinal()));
                         currentElement.setAttribute("datatypeName", dataType.name());
 
-                        currentElement.setText(xmlContentEscaper().escape(setting.getValue()));
+                        if (setting.getValue() != null)
+                            currentElement.setText(xmlContentEscaper().escape(setting.getValue()));
+                    } else {
+                        currentElement.setText("");
                     }
                     parent.addContent(currentElement);
                     pathElements.put(path.toString(), currentElement);
