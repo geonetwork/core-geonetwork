@@ -8,6 +8,7 @@
 								xmlns:geonet="http://www.fao.org/geonetwork"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
 								xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
 								exclude-result-prefixes="#all">
 	
 	
@@ -129,7 +130,7 @@
                 keywords into the correct thesaurus sections.
             -->
             <xsl:variable name="keywordThesaurus" select="replace(./uri, 'http://org.fao.geonet.thesaurus.all/([^@]+)@@@.+', '$1')" />
-            <xsl:attribute name="xlink:target" select="concat('thesaurus::', $keywordThesaurus)" />
+            <xsl:attribute name="gco:nilReason" select="concat('thesaurus::', $keywordThesaurus)" />
           </xsl:if>
           <xsl:choose>
             <xsl:when test="/root/request/lang">
@@ -175,66 +176,75 @@
 
         </gmd:keyword>
       </xsl:for-each>
-
-      <!-- Add thesaurus theme -->
-      <gmd:type>
-        <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-          codeListValue="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/dname}" />
-      </gmd:type>
-      <xsl:if test="not(/root/request/keywordOnly)">
-        <gmd:thesaurusName>
-          <gmd:CI_Citation>
-            <gmd:title>
-              <gco:CharacterString>
-                <xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/title" />
-              </gco:CharacterString>
-            </gmd:title>
-
-            <xsl:variable name="thesaurusDate"
-              select="normalize-space(/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date)" />
-
-            <xsl:if test="$thesaurusDate != ''">
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:date>
-                    <xsl:choose>
-                      <xsl:when test="contains($thesaurusDate, 'T')">
-                        <gco:DateTime>
-                          <xsl:value-of select="$thesaurusDate" />
-                        </gco:DateTime>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <gco:Date>
-                          <xsl:value-of select="$thesaurusDate" />
-                        </gco:Date>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </gmd:date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode
-                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                      codeListValue="publication" />
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </xsl:if>
-
-            <xsl:if test="$withThesaurusAnchor">
-              <gmd:identifier>
-                <gmd:MD_Identifier>
-                  <gmd:code>
-                    <gmx:Anchor xlink:href="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/url}">geonetwork.thesaurus.<xsl:value-of
-                      select="$currentThesaurus" />
-                    </gmx:Anchor>
-                  </gmd:code>
-                </gmd:MD_Identifier>
-              </gmd:identifier>
-            </xsl:if>
-          </gmd:CI_Citation>
-        </gmd:thesaurusName>
-      </xsl:if>
+      <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
     </gmd:MD_Keywords>
   </xsl:template>
+
+  <xsl:function name="geonet:add-thesaurus-info">
+    <xsl:param name="currentThesaurus" as="xs:string"/>
+    <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
+    <xsl:param name="thesauri" as="node()"/>
+    <xsl:param name="thesaurusInfo" as="xs:boolean"/>
+
+    <!-- Add thesaurus theme -->
+    <gmd:type>
+      <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+        codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
+    </gmd:type>
+    <xsl:if test="$thesaurusInfo">
+      <gmd:thesaurusName>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString>
+              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
+            </gco:CharacterString>
+          </gmd:title>
+
+          <xsl:variable name="thesaurusDate"
+            select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)" />
+
+          <xsl:if test="$thesaurusDate != ''">
+            <gmd:date>
+              <gmd:CI_Date>
+                <gmd:date>
+                  <xsl:choose>
+                    <xsl:when test="contains($thesaurusDate, 'T')">
+                      <gco:DateTime>
+                        <xsl:value-of select="$thesaurusDate" />
+                      </gco:DateTime>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <gco:Date>
+                        <xsl:value-of select="$thesaurusDate" />
+                      </gco:Date>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </gmd:date>
+                <gmd:dateType>
+                  <gmd:CI_DateTypeCode
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    codeListValue="publication" />
+                </gmd:dateType>
+              </gmd:CI_Date>
+            </gmd:date>
+          </xsl:if>
+
+          <xsl:if test="$withThesaurusAnchor">
+            <gmd:identifier>
+              <gmd:MD_Identifier>
+                <gmd:code>
+                  <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/url}">geonetwork.thesaurus.<xsl:value-of
+                    select="$currentThesaurus" />
+                  </gmx:Anchor>
+                </gmd:code>
+              </gmd:MD_Identifier>
+            </gmd:identifier>
+          </xsl:if>
+        </gmd:CI_Citation>
+      </gmd:thesaurusName>
+    </xsl:if>
+  </xsl:function>
+
   <!-- Convert a concept to an ISO19139 extent -->
 	<xsl:template name="to-iso19139-extent">
 		<xsl:param name="isService" select="false()"/>
