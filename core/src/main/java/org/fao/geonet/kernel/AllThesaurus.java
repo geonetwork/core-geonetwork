@@ -347,8 +347,18 @@ public class AllThesaurus extends Thesaurus {
     public String getDefaultNamespace() {
         try {
             final Iterator<Thesaurus> iterator = thesaurusFinder.getThesauriMap().values().iterator();
-            if (iterator.hasNext()) {
-                return URI_CODE_PREFIX + URLEncoder.encode(iterator.next().getDefaultNamespace(), Constants.ENCODING);
+            Thesaurus thesaurus = null;
+            while(iterator.hasNext()) {
+                thesaurus = iterator.next();
+                if (!AllThesaurus.ALL_THESAURUS_KEY.equals(thesaurus.getKey())) {
+                    break;
+                } else {
+                    thesaurus = null;
+                }
+            }
+
+            if (thesaurus != null) {
+                return URI_CODE_PREFIX + URLEncoder.encode(thesaurus.getDefaultNamespace(), Constants.ENCODING);
             } else {
                 return null;
             }

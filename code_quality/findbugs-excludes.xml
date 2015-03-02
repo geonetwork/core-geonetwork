@@ -163,6 +163,10 @@
         <Class name="v280.MoveHarvesterSettingsToHigherNumber$HarvesterSetting" />
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
     </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.AllQueryResultsTable" />
+        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+    </Match>
 
 
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	

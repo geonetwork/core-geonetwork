@@ -47,11 +47,6 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
 
             assertEqualsText("true", info, "edit");
             assertEqualsText("true", info, "owner");
-            try {
-                assertEqualsText("true", info, "isPublishedToAll");
-            } catch (Exception e) {
-                throw new AssertionError("Expected isPublishToAll to be true :" + doc);
-            }
             assertEqualsText("true", info, "view");
             assertEqualsText("true", info, "notify");
             assertEqualsText("true", info, "download");

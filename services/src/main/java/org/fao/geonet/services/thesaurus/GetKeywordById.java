@@ -57,7 +57,7 @@ public class GetKeywordById implements Service {
 
         final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
         for (int i = 0; i < lang.length; i++) {
-            lang[i] = mapper.iso639_2_to_iso639_1(lang[i]);
+            lang[i] = mapper.iso639_2_to_iso639_1(lang[i], lang[i].substring(2));
         }
 
         boolean multiple = Util.getParam(params, "multiple", false);

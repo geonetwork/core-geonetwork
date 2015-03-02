@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel;
 
+import com.google.common.collect.Maps;
 import org.fao.geonet.kernel.rdf.Selectors;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LiteralImpl;
@@ -12,7 +13,8 @@ import java.util.Map;
  * @author Jesse on 2/27/2015.
  */
 public class AllQueryResultsTable extends QueryResultsTable {
-    private final Map<Thesaurus, QueryResultsTable> allResults;
+    private static final long serialVersionUID = 1L;
+    private transient Map<Thesaurus, QueryResultsTable> allResults = Maps.newHashMap();
     private int rowCount = 0;
 
     public AllQueryResultsTable(Map<Thesaurus, QueryResultsTable> allResults) {
@@ -74,5 +76,27 @@ public class AllQueryResultsTable extends QueryResultsTable {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        AllQueryResultsTable that = (AllQueryResultsTable) o;
+
+        if (rowCount != that.rowCount) return false;
+        if (!allResults.equals(that.allResults)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + allResults.hashCode();
+        result = 31 * result + rowCount;
+        return result;
     }
 }

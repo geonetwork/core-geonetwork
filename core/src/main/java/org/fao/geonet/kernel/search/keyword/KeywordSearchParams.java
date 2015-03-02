@@ -52,7 +52,7 @@ public class KeywordSearchParams {
             throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be excuted: '"+query+"'" );
         }
         for (KeywordBean keywordBean : query.execute(thesaurus)) {
-            if (results.size() >= maxResults) {
+            if (maxResults > -1 && results.size() >= maxResults) {
                 break;
             }
             keywordBean.setId(id);
@@ -84,7 +84,7 @@ public class KeywordSearchParams {
             if(thesauriDomainName==null || thesauriDomainName.equals(thesaurus.getDname())) {
                 Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
                 for (KeywordBean keywordBean : query.execute(thesaurus)) {
-                    if (results.size() >= maxResults) {
+                    if (maxResults > -1 && results.size() >= maxResults) {
                         break;
                     }
                     keywordBean.setId(id);

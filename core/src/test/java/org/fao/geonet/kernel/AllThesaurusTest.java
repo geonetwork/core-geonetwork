@@ -48,6 +48,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         final boolean thesauriExist = Files.exists(gcThesaurusFile);
         if (!thesauriExist) {
             String thesaurusName = "secondThesaurus";
+            secondThesaurus.initRepository();
             populateThesaurus(secondThesaurus, SECOND_THES_WORDS, secondThesaurus.getDefaultNamespace(), thesaurusName, thesaurusName,
                     "eng", "fre", "ger", "ita");
         } else {

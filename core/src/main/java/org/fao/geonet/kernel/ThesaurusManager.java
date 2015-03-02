@@ -451,7 +451,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
         Element elRoot = new Element("thesauri");
 
-        Collection<Thesaurus> e = thesauriMap.values();
+        Collection<Thesaurus> e = getThesauriMap().values();
         for (Thesaurus currentTh : e) {
             Element elLoop = new Element("thesaurus");
 
