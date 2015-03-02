@@ -35,6 +35,12 @@
         'partials/attributetable.html',
         scope: {
           attributeTable: '=gnAttributeTableRenderer'
+        },
+        link: function linkFn(scope, element, attrs) {
+          if (angular.isDefined(scope.attributeTable) &&
+            !angular.isArray(scope.attributeTable)) {
+            scope.attributeTable = [scope.attributeTable];
+          }
         }
       };
     }
