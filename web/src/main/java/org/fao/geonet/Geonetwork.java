@@ -39,6 +39,8 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectUriMapper;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
@@ -78,6 +80,7 @@ import org.fao.geonet.wro4j.GeonetWro4jFilter;
 import org.geotools.data.DataStore;
 import org.geotools.data.shapefile.indexed.IndexType;
 import org.geotools.data.shapefile.indexed.IndexedShapefileDataStore;
+import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
@@ -97,7 +100,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -435,6 +437,7 @@ public class Geonetwork implements ApplicationHandler {
 
         fillCaches(context);
 
+        AbstractEntityListenerManager.setSystemRunning(true);
         return gnContext;
     }
 
@@ -627,6 +630,7 @@ public class Geonetwork implements ApplicationHandler {
 
     public void stop() {
         logger.info("Stopping geonetwork...");
+        AbstractEntityListenerManager.setSystemRunning(false);
 
         logger.info("shutting down CSW HarvestResponse executionService");
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();
