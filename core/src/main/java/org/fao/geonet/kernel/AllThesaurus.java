@@ -357,7 +357,7 @@ public class AllThesaurus extends Thesaurus {
         }
     }
 
-    static final class DecomposedAllUri {
+    public static final class DecomposedAllUri {
         private static final Pattern URI_DECOMPOSER = Pattern.compile(Pattern.quote(URI_CODE_PREFIX) + "(.+)" + SEPARATOR + "(.+)");
         public final String thesaurusKey, keywordUri;
 
