@@ -3,10 +3,39 @@
 
 
   goog.require('gn_search');
+  goog.require('gn_search_form_controller');
 
   var module = angular.module('gn_admintools_controller',
-      ['gn_search']);
+      ['gn_search', 'gn_search_form_controller']);
 
+
+  module.controller('GnAdminToolsSearchController', [
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
+
+      var defaultSearchObj = {
+        permalink: false,
+        sortbyValues: gnSearchSettings.sortbyValues,
+        hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        params: {
+          sortBy: 'changeDate',
+          _isTemplate: 'y or n',
+          from: 1,
+          to: 20
+        }
+      };
+      angular.extend($scope.searchObj, defaultSearchObj);
+
+      $scope.setTemplate = function(params) {
+        var values = [];
+        if ($('#batchSearchTemplateY')[0].checked) values.push('y');
+        if ($('#batchSearchTemplateN')[0].checked) values.push('n');
+        if ($('#batchSearchTemplateS')[0].checked) values.push('s');
+        $scope.searchObj.params._isTemplate = values.join(' or ');
+      };
+
+
+    }]);
 
   /**
    * GnAdminToolsController provides administration tools
@@ -15,11 +44,11 @@
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout', '$routeParams', '$location',
     'gnSearchManagerService',
-    'gnUtilityService',
+    'gnUtilityService', 'gnSearchSettings',
     function($scope, $http, $rootScope, $translate, $compile, 
         $q, $timeout, $routeParams, $location,
             gnSearchManagerService, 
-            gnUtilityService) {
+            gnUtilityService, gnSearchSettings) {
 
 
       $scope.pageMenu = {
@@ -101,19 +130,38 @@
       $scope.groupinfo = {};
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
-      $scope.searchObj = {
-        permalink: false,
-        hitsperpageValues: [20, 50, 100],
-        params: {
-          sortBy: 'changeDate',
-          _isTemplate: 'y or n',
-          from: 1,
-          to: 9
-        }
+
+
+
+      gnSearchSettings.resultViewTpls = [{
+        tplUrl: '../../catalog/components/search/resultsview/' +
+        'partials/viewtemplates/titlewithselection.html',
+        tooltip: 'List',
+        icon: 'fa-list'
+      }];
+
+      gnSearchSettings.resultTemplate =
+        gnSearchSettings.resultViewTpls[0].tplUrl;
+
+      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
+
+      gnSearchSettings.sortbyValues = [{
+        sortBy: 'relevance',
+        sortOrder: ''
+      }, {
+        sortBy: 'changeDate',
+        sortOrder: ''
+      }, {
+        sortBy: 'title',
+        sortOrder: 'reverse'
+      }];
+
+      gnSearchSettings.hitsperpageValues = [20, 50, 100];
+
+      gnSearchSettings.paginationInfo = {
+        hitsPerPage: gnSearchSettings.hitsperpageValues[0]
       };
-      $scope.resultTemplate = '../../catalog/' +
-          'components/search/resultsview/' +
-          'partials/viewtemplates/title.html';
+
       function loadEditors() {
         $http.get('admin.ownership.editors?_content_type=json')
             .success(function(data) {
@@ -272,7 +320,12 @@
                 type: 'success'});
               $scope.processing = false;
 
-              checkLastBatchProcessReport();
+              // Turn off batch report checking for search and replace mode
+              // AFA as report is not properly set in session
+              // https://github.com/geonetwork/core-geonetwork/issues/828
+              if (service.indexOf('md.searchandreplace') === -1) {
+                checkLastBatchProcessReport();
+              }
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -284,7 +337,10 @@
             });
 
         gnUtilityService.scrollTo('#gn-batch-process-report');
-        $timeout(checkLastBatchProcessReport, processCheckInterval);
+        // FIXME
+        if (service.indexOf('md.searchandreplace') === -1) {
+          $timeout(checkLastBatchProcessReport, processCheckInterval);
+        }
       };
 
       loadGroups();
@@ -295,14 +351,6 @@
       // TODO: Should only do that if batch process is the current page
       loadProcessConfig();
       checkLastBatchProcessReport();
-
-      $scope.setTemplate = function(params) {
-        var values = [];
-        if ($('#batchSearchTemplateY')[0].checked) values.push('y');
-        if ($('#batchSearchTemplateN')[0].checked) values.push('n');
-        if ($('#batchSearchTemplateS')[0].checked) values.push('s');
-        $scope.searchObj.params._isTemplate = values.join(' or ');
-      };
 
       var initProcessByRoute = function() {
         if ($routeParams.tab === 'batch') {

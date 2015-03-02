@@ -90,12 +90,14 @@
 
     <div class="btn-toolbar">
       <button type="button" class="btn btn-primary pull-right"
-              data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', false)">
+              data-ng-disabled="replacer.replacements.length == 0"
+              data-ng-click="runProcess('#gn-batch-process', 'md.searchandreplace?_content_type=json', false)">
         <span class="fa fa-play"></span> {{"runProcess"|translate}}
       </button>
 
       <button type="button" class="btn btn-default pull-right"
-              data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', true)">
+              data-ng-disabled="replacer.replacements.length == 0"
+              data-ng-click="runProcess('#gn-batch-process', 'md.searchandreplace?_content_type=json', true)">
         <span class="fa fa-play"></span> {{"testProcess"|translate}}
       </button>
 

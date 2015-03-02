@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import javax.servlet.http.HttpSession;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,16 +56,23 @@ public class MassiveReplaceContent extends NotInReadOnlyModeService {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
-        UserSession session = context.getUserSession();
+        UserSession usersession = context.getUserSession();
+//        HttpSession session = usersession.getsHttpSession();
 
         // Clear previous report
-        session.removeProperty("BATCH_PROCESSING_REPORT");
+        usersession.removeProperty(Geonet.Session.BATCH_PROCESSING_REPORT);
+//        https://github.com/geonetwork/core-geonetwork/issues/828
+//        Batch processing report should be stored in HttpSession and
+//        not userSession due to the move to Spring MVC.
+//        Here it fails with IllegalStateException
+//        FIXME
+//        session.removeAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
 
         // Apply the process to the selection
         Set<Integer> metadata = new HashSet<Integer>();
 
         context.info("Get selected metadata");
-        SelectionManager sm = SelectionManager.getManager(session);
+        SelectionManager sm = SelectionManager.getManager(context.getUserSession());
 
         synchronized (sm.getSelection("metadata")) {
             report.setTotalRecords(sm.getSelection("metadata").size());
@@ -76,8 +84,12 @@ public class MassiveReplaceContent extends NotInReadOnlyModeService {
         }
 
         // Add the report to the session
-        session.setProperty("BATCH_PROCESSING_REPORT", report);
-
+        usersession.setProperty(
+                Geonet.Session.BATCH_PROCESSING_REPORT,
+                report);
+//        session.setAttribute(
+//                Geonet.Session.BATCH_PROCESSING_REPORT,
+//                report);
 
         if (fullResponse) {
             return new Element(Jeeves.Elem.RESPONSE)
