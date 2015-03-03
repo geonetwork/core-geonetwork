@@ -6,8 +6,7 @@
 
       .directive('gnMapField', [
         'gnMap',
-        'gnSearchLocation',
-        function(gnMap, gnSearchLocation) {
+        function(gnMap) {
           return {
             restrict: 'A',
             scope: true,
@@ -20,13 +19,45 @@
                   scope.map = scope.$eval(iAttrs['gnMapField']);
                   scope.gnDrawBboxBtn = iAttrs['gnMapFieldGeom'];
                   scope.gnDrawBboxExtent = iAttrs['gnMapFieldExtent'];
+
+                  // get list of relation types
+                  // [overlaps encloses fullyOutsideOf fullyEnclosedWithin
+                  // intersection crosses touches within]
+
+                  var opt = scope.$eval(iAttrs['gnMapFieldOpt']) || {};
+                  scope.relations = opt.relations;
+
                   scope.gnMap = gnMap;
 
+                  /**
+                   * Fit map view to map projection max extent
+                   */
                   scope.maxExtent = function() {
                     scope.map.getView().fitExtent(scope.map.getView().
                             getProjection().getExtent(), scope.map.getSize());
                   };
-                  scope.locService = gnSearchLocation;
+
+                  /**
+                   * When the geomtry is updated, set this value in
+                   * scope.currentExtent and remove relation param if
+                   * geometry is null.
+                   */
+                  scope.$watch(scope.gnDrawBboxBtn, function(v){
+                    if(!v) {
+                      delete scope.searchObj.params.relation;
+                    }
+                    scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
+                  });
+
+                  /**
+                   * Set active relation (include, exclude, etc..). Run search
+                   * when changed.
+                   * @param rel
+                   */
+                  scope.setRelation = function(rel) {
+                    scope.searchObj.params.relation = rel;
+                    scope.triggerSearch();
+                  };
                 }
               };
             }
