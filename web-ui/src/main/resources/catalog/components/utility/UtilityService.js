@@ -14,7 +14,7 @@
             $(elementId).offset().top :
             $(elementId).position().top;
       }
-      $(document.body).animate({scrollTop: top},
+      $('body,html').animate({scrollTop: top},
           duration, easing);
     };
 
