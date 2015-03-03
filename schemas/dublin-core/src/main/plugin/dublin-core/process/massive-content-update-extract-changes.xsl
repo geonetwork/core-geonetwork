@@ -5,7 +5,6 @@
   <xsl:template match="/">
     <changes>
       <xsl:apply-templates select="@*|node()"/>
-      <xsl:message>Changes: <xsl:copy-of select="."/></xsl:message>
     </changes>
   </xsl:template>
 
