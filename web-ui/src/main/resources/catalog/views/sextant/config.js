@@ -130,7 +130,7 @@
         ],
         controls: [],
         view: new ol.View({
-          center: mapsConfig.center,
+          center: [280274.03240585705, 6053178.654789996],
           zoom: 0
         })
       });
@@ -168,10 +168,7 @@
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',
         list: [
-          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view' +
-                '&view=inspire&id='},
-          {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
-          {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
+          {label: 'fullView', url: 'md.format.xml?xsl=full_view&id='}
         ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
@@ -187,11 +184,6 @@
         field: 'sextantTheme',
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
-      },{
-        id: 'external.theme.inspire-theme',
-        field: 'inspireTheme_en',
-        tree: false,
-        label: {eng: 'INSPIRE', fre: 'INSPIRE'}
       }];
 
       /* Hits per page combo values configuration */

@@ -29,7 +29,7 @@
 
           scope.formObj = [];
           scope.extract = function() {
-            console.log(scope.formObj);
+            scope.panier = [];
           };
         }
       };
@@ -74,6 +74,7 @@
                     source: new ol.source.OSM()
                   })
                 ],
+                controls:[],
                 view: new ol.View({
                   center: [0, 0],
                   zoom: 2
