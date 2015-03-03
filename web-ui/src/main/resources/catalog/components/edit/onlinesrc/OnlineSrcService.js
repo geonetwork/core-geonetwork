@@ -254,7 +254,7 @@
          * @param {string} popupid id of the popup to close after process.
          */
         addOnlinesrc: function(params, popupid) {
-          runProcess(this,
+          return runProcess(this,
               setParams('onlinesrc-add', params)).then(function() {
             closePopup(popupid);
           });
@@ -274,7 +274,7 @@
          * @param {string} popupid id of the popup to close after process.
          */
         addThumbnailByURL: function(params, popupid) {
-          runProcess(this,
+          return runProcess(this,
               setParams('thumbnail-add', params)).then(function() {
             closePopup(popupid);
           });
@@ -330,14 +330,6 @@
               return protocolIcons[i][1];
             }
           }
-        },
-
-        /**
-         * Open onlinesrc url into a new window
-         * On onlinesrc list click.
-         */
-        openLink: function(url) {
-          window.open(url, '_blank');
         },
 
         /**

@@ -159,8 +159,6 @@
               scope.loaded = false;
               scope.layers = null;
               scope.gnCurrentEdit = gnCurrentEdit;
-
-              scope.processing = false;
               scope.map = null;
 
               function loadLayers() {
@@ -225,12 +223,22 @@
                 return scope.searchObj.params.version = gnCurrentEdit.version;
               };
 
+              var resetForm = function () {
+                if (scope.params) {
+                  scope.params.url = '';
+                  scope.params.thumbnail_url = '';
+                  scope.params.thumbnail_desc = '';
+                }
+                scope.clear(scope.queue);
+              };
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata form.
                * Callback of the submit().
                */
-              var uploadOnlinesrcDone = function(evt, data) {
+              var uploadThumbnailDone = function(evt, data) {
+                resetForm();
                 gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
                 $(scope.popupid).modal('hide');
@@ -239,14 +247,17 @@
               /**
                * Onlinesrc uploaded with error, broadcast it.
                */
-              var uploadOnlineSrcError = function(data) {
+              var uploadThumbnailError = function(data) {
               };
 
               // upload directive options
-              scope.onlinesrcUploadOptions = {
+              scope.thumbnailUploadOptions = {
                 autoUpload: false,
-                done: uploadOnlinesrcDone,
-                fail: uploadOnlineSrcError
+                url: 'md.thumbnail.upload',
+                //maxNumberOfFiles: 1,
+                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
+                done: uploadThumbnailDone,
+                fail: uploadThumbnailError
               };
 
               /**
@@ -257,14 +268,13 @@
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
                   getVersion();
-                  gnEditor.save(false, true)
+                  return gnEditor.save(false, true)
                   .then(function(data) {
                         scope.submit();
                       });
                 } else if (scope.mode == 'thumbnailMaker') {
                   getVersion();
-                  scope.processing = true;
-                  gnEditor.save(false, true)
+                  return gnEditor.save(false, true)
                     .then(function(data) {
                         scope.action =
                             'md.thumbnail.generate?_content_type=json&';
@@ -273,7 +283,7 @@
                               headers: {'Content-Type':
                                     'application/x-www-form-urlencoded'}
                             }).success(function(data) {
-                          uploadOnlinesrcDone();
+                            uploadThumbnailDone();
                           scope.processing = false;
                         }).error(function(data, status, headers, config) {
                           $rootScope.$broadcast('StatusUpdated', {
@@ -286,12 +296,13 @@
                             },
                             timeout: 0,
                             type: 'danger'});
-                          scope.processing = false;
                         });
                       });
                 } else {
-                  gnOnlinesrc.addThumbnailByURL(scope.params,
-                      scope.popupid);
+                  return gnOnlinesrc.addThumbnailByURL(scope.params,
+                      scope.popupid).then(function () {
+                      resetForm();
+                    });
                 }
               };
 
@@ -358,12 +369,22 @@
 
               scope.onlinesrcService = gnOnlinesrc;
 
+              var resetForm = function () {
+                if (scope.params) {
+                  scope.params.desc = '';
+                  scope.params.url = '';
+                  scope.params.name = '';
+                  scope.params.protocol = '';
+                }
+                scope.clear(scope.queue);
+              };
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(data) {
-                scope.clear(scope.queue);
+                resetForm();
                 gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
                 $(scope.popupid).modal('hide');
@@ -377,7 +398,8 @@
 
               scope.onlinesrcUploadOptions = {
                 autoUpload: false,
-                //        TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+                url: 'resource.upload.and.link',
+                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                 done: uploadOnlinesrcDone,
                 fail: uploadOnlineSrcError
               };
@@ -389,9 +411,12 @@
                */
               scope.addOnlinesrc = function() {
                 if (scope.mode == 'upload') {
-                  scope.submit();
+                  return scope.submit();
                 } else {
-                  gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid);
+                  return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
+                    then(function() {
+                      resetForm();
+                    });
                 }
               };
 

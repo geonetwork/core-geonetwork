@@ -109,7 +109,7 @@
         <li class="list-group-item" href=""
           data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
           <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
-          <a href="" data-ng-click="onlinesrcService.openLink(resource.url)">
+          <a data-ng-href="{{resource.url}}" target="_blank">
             {{resource.title}}
          </a> 
          <span class="onlinesrc-remove"

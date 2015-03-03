@@ -203,11 +203,11 @@
 			<gmd:linkage>
 				<gmd:URL>
 					<xsl:choose>
-						<xsl:when test="/root/env/config/downloadservice/simple='true'">
-							<xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+						<xsl:when test="/root/env/system/downloadservice/simple='true'">
+							<xsl:value-of select="concat($serviceUrl,'resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
-						<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-							<xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+						<xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
+							<xsl:value-of select="concat($serviceUrl,'file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
 						<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
 							<xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -257,10 +257,10 @@
     <xsl:copy>
 			<xsl:attribute name="src">
 				<xsl:choose>
-					<xsl:when test="/root/env/config/downloadservice/simple='true'">
+					<xsl:when test="/root/env/system/downloadservice/simple='true'">
 						<xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
-					<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
+					<xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
 						<xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
 					<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
