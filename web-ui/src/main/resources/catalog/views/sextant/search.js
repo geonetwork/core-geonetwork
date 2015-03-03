@@ -231,8 +231,12 @@
         }
       });
 
-     // Get Thesaurus config and set first one as active
-     $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+      // Get Thesaurus config and set first one as active
+      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+
+      $scope.mapfieldOpt = {
+        relations: ['within']
+      };
 
     }]);
 
