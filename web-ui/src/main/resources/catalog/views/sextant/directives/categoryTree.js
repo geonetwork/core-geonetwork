@@ -106,6 +106,12 @@
                   processThemes(data[1]);
                 });
               }
+            }).error(function(){
+              scope.member = {
+                nodes: []
+              };
+              console.warn('Could not load thesaurus: ' + conf.id);
+
             });
           });
 

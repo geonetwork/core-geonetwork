@@ -219,8 +219,8 @@
     }]);
 
   module.controller('gnsSextantSearchForm', [
-    '$scope', 'suggestService', 'gnSearchSettings',
-    function($scope, suggestService, searchSettings) {
+    '$scope', 'gnSearchSettings',
+    function($scope, searchSettings) {
 
       $scope.categorytreeCollapsed = true;
       $scope.groupPublishedOptions = {
@@ -231,13 +231,11 @@
           filter: suggestService.bhFilter,
           wildcard: 'QUERY'
         }
-      };
+      });
 
-      // Get Thesaurus config and set first one as active
-      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
-      }
+     // Get Thesaurus config and set first one as active
+     $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+
     }]);
 
   module.directive('sxtFixMdlinks', [
