@@ -51,6 +51,7 @@
     <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
     <xsl:variable name="textgroupOnly" select="/root/request/textgroupOnly"/>
 
+
     <xsl:apply-templates mode="to-iso19139-keyword" select="." >
       <xsl:with-param name="withAnchor" select="$withAnchor"/>
       <xsl:with-param name="withXlink" select="$withXlink"/>
