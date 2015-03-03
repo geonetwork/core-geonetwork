@@ -7,7 +7,6 @@ import org.fao.geonet.utils.ResolverRewriteDirective;
 import org.jdom.Element;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class SchemaPluginUrlRewrite implements ResolverRewriteDirective {
                 if (Files.exists(IO.toPath(new URI(replacement)))) {
                     rewrites.add(new PrefixUrlRewrite(prefix, replacement));
                 }
-            } catch (URISyntaxException e) {
+            } catch (Exception e) {
                 // don't add because it is not a path
             }
         }
