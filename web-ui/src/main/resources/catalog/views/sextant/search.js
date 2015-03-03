@@ -223,13 +223,11 @@
     function($scope, searchSettings) {
 
       $scope.categorytreeCollapsed = true;
-      $scope.groupPublishedOptions = {
-        mode: 'remote',
-        remote: {
-          url: suggestService.getUrl('QUERY', '_groupPublished',
-              'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+
+      // Run search on bbox draw
+      $scope.$watch('searchObj.params.geometry', function(v){
+        if(angular.isDefined(v)) {
+          $scope.triggerSearch();
         }
       });
 
