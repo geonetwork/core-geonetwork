@@ -113,6 +113,7 @@
     "overwriteFile": "Remplacer le fichier s'il existe",
     "onlineResourceName": "Nom de la ressource",
     "protocol": "Protocole",
+    "runServiceError": "Une erreur est survenue lors de l'appel du service",
     "overwrite": "Ecraser les métadonnées de même identifiant",
     "parentMd": "Fiche parent",
     "print_layout": "Mise en page",

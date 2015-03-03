@@ -110,6 +110,7 @@
     "other": "Other",
     "onlineResourceName": "Resource name",
     "protocol": "Protocol",
+    "runServiceError": "Error happens while calling service",
     "overwriteFile": "Overwrite file if existing",
     "overview": "Overview",
     "overviews": "Overviews",

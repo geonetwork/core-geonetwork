@@ -26,8 +26,11 @@
     'gnEditor',
     'gnCurrentEdit',
     '$q',
+    '$rootScope',
+    '$translate',
     'Metadata',
-    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q, Metadata) {
+    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
+             $q, $rootScope, $translate, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -140,6 +143,12 @@
       var runProcess = function(scope, params) {
         return gnBatchProcessing.runProcessMd(params).then(function(data) {
           refreshForm(scope, $(data.data));
+        }, function (error) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('runProcessError'),
+            error: error,
+            timeout: 0,
+            type: 'danger'});
         });
       };
 
@@ -152,10 +161,16 @@
        * onlinesrc list on save and on batch success.
        */
       var runService = function(service, params, scope) {
-        gnEditor.save(false, true)
+        return gnEditor.save(false, true)
         .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);
+              }).error(function (error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('runServiceError'),
+                  error: error,
+                  timeout: 0,
+                  type: 'danger'});
               });
             });
       };
@@ -467,13 +482,13 @@
           var scope = this;
 
           if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
-            runService('removeOnlinesrc', {
+            return runService('removeOnlinesrc', {
               id: gnCurrentEdit.id,
               url: onlinesrc.url,
               name: onlinesrc.name
             }, this);
           } else {
-            runProcess(this,
+            return runProcess(this,
                 setParams('onlinesrc-remove', {
                   id: gnCurrentEdit.id,
                   url: onlinesrc.url,
