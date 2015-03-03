@@ -13,6 +13,7 @@
                    id="gn-any-field"
                    data-ng-model="searchObj.params.any"
                    placeholder="{{'anyPlaceHolder' | translate}}"
+                   data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
                    data-typeahead="address for address in getAnySuggestions($viewValue)"
                    data-typeahead-loading="anyLoading" class="form-control"
                    data-typeahead-min-length="1"
