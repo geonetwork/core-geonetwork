@@ -84,6 +84,7 @@
                  scope.$parent.thesaurusKey = scope.thesaurusKey =
                          thesaurusIdentifier;
                } else {
+                 gnCurrentEdit.working = true;
                  gnThesaurusService
                          .getXML(thesaurusIdentifier,  null,
                                  attrs.transformation).then(

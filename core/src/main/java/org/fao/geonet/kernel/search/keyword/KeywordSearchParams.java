@@ -1,11 +1,5 @@
 package org.fao.geonet.kernel.search.keyword;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
@@ -14,6 +8,12 @@ import org.fao.geonet.kernel.rdf.QueryBuilder;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class KeywordSearchParams {
 
@@ -52,6 +52,9 @@ public class KeywordSearchParams {
             throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be excuted: '"+query+"'" );
         }
         for (KeywordBean keywordBean : query.execute(thesaurus)) {
+            if (maxResults > -1 && results.size() >= maxResults) {
+                break;
+            }
             keywordBean.setId(id);
             results.add(keywordBean);
             id++;
@@ -81,6 +84,9 @@ public class KeywordSearchParams {
             if(thesauriDomainName==null || thesauriDomainName.equals(thesaurus.getDname())) {
                 Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
                 for (KeywordBean keywordBean : query.execute(thesaurus)) {
+                    if (maxResults > -1 && results.size() >= maxResults) {
+                        break;
+                    }
                     keywordBean.setId(id);
                     results.add(keywordBean);
                     id++;

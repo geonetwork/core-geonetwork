@@ -81,8 +81,6 @@
         <facet name="status" indexKey="_status" label="status"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
-        <facet name="_groupPublished" indexKey="_groupPublished" label="_groupPublished"/>
         <facet name="thesaurus-external.parameter.NVS.P01"
                label="thesaurus-external.parameter.NVS.P01"
                indexKey="thesaurus-external.parameter.NVS.P01"/>
@@ -96,6 +94,8 @@
                label="thesaurus-external.parameter.NVS.P35"
                indexKey="thesaurus-external.parameter.NVS.P35"/>
         <facet name="publishedForGroup" indexKey="_op0" label="publishedForGroup" localized="true"/>
+        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners" localized="true"/>
+        <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup" localized="true"/>
     </facets>
 
     <summaryTypes>
@@ -130,7 +130,7 @@
           <item facet="groupOwner" max="199" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
           <item facet="publishedForGroup" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
           <item facet="standard" max="15" sortBy="value"/>
           <item facet="isHarvested" max="2" sortBy="value"/>
           <item facet="metadataType" max="3" sortBy="value"/>

@@ -126,9 +126,10 @@ public class Update {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        for (String key : params.keySet()) {
+        for (Map.Entry<String, String[]> entry : params.entrySet()) {
+            String key = entry.getKey();
             if (key.startsWith("groups_")) {
-                for (String s : params.get(key)) {
+                for (String s : entry.getValue()) {
                     groups.add(new GroupElem(key.substring(7), Integer.valueOf(s)));
                 }
             }
@@ -278,7 +279,7 @@ public class Update {
             if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
                 final List<Integer> groupIds = groupRepository
                         .findGroupIds(UserGroupSpecs.hasUserId(Integer
-                                .valueOf(myUserId)));
+                                .parseInt(myUserId)));
                 for (GroupElem userGroup : userGroups) {
                     boolean found = false;
                     for (int myGroup : groupIds) {
@@ -379,7 +380,7 @@ public class Update {
 
     }
 
-    private class LoadCurrentUserInfo {
+    private static class LoadCurrentUserInfo {
         private HttpSession session;
         private String id;
         private Profile myProfile;

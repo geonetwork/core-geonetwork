@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
@@ -172,7 +173,9 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 
                 xslProcessing.process(context, id, process, true, xslProcessingReport, siteURL, request.getParameterMap());
 
-				this.session.setAttribute("BATCH_PROCESSING_REPORT", xslProcessingReport);
+				this.session.setAttribute(
+                        Geonet.Session.BATCH_PROCESSING_REPORT,
+                        xslProcessingReport);
 			}
 		}
 	}

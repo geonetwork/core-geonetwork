@@ -32,7 +32,7 @@
       $scope.dateFrom = null;
       // The end of the temporal range
       $scope.dateTo = null;
-      $scope.graphicType = 'DAY';
+      $scope.graphicType = 'MONTH';
 
 
 

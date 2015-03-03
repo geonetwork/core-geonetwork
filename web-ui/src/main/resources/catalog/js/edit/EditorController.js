@@ -216,7 +216,8 @@
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
-                  formLoadExtraFn: setViewMenuInTopToolbar
+                  formLoadExtraFn: setViewMenuInTopToolbar,
+                  working: false
                 });
 
                 $scope.gnCurrentEdit = gnCurrentEdit;

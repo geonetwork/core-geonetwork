@@ -2,12 +2,15 @@
   <div class="panel panel-default"
        data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
     <div class="panel-heading">
-      <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
-      <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
-        ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
-          >...</span>
-          <span data-ng-show="processReport['@running'] != 'true'"> -
-            {{processReport['@reportDate']}}</span>) </p>
+      <span data-translate="">processReportFor</span>
+      {{processReport['@process'] | translate}}<br/>
+      <p>
+        {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
+        ({{processReport['@startDate']}}
+        <span data-ng-show="processReport['@running'] == 'true'">...</span>
+        <span data-ng-show="processReport['@running'] != 'true'"> -
+            {{processReport['@reportDate']}}</span>)
+      </p>
     </div>
     <div class="panel-body">
       <div class="progress progress-striped active"
@@ -25,11 +28,17 @@
           <td class="text-right">{{processReport.changed.length}}
 
             <ul class="text-left" data-ng-show="processReport.changed.length > 0">
-              <li class="animate-repeat" ng-repeat="changed in processReport.changed">
+              <li class="animate-repeat"
+                  data-ng-repeat="changed in processReport.changed">
                 {{changed['@title']}} ({{changed['@uuid']}})<br/>
-                Field: {{'batchreplacer-el-'+changed.change.fieldid | translate}}<br/>
-                Original value: {{changed.change.originalval}}<br/>
-                Changed value: {{changed.change.changedval}}<br/>
+
+                <ul>
+                  <li data-ng-repeat="c in changed.change">
+                    <span data-translate="">field</span>
+                    <strong>{{'batchreplacer-el-' + c.fieldid | translate}}</strong><br/>
+                    {{c.originalval}} >> {{c.changedval}}
+                  </li>
+                </ul>
               </li>
             </ul>
 
@@ -64,6 +73,24 @@
           <td class="text-right">{{processReport['notOwner'].length}}</td>
         </tr>
       </table>
+
+
+      <div data-ng-hide="processReport.metadataErrorReport.length == 0">
+        <h2 data-translate="">metadataErrorReport</h2>
+        <table class="table table-striped">
+          <tr>
+            <th data-transalte="">identifier</th>
+            <th data-translate="">error</th>
+          </tr>
+          <tr data-ng-repeat="m in processReport.metadataErrorReport">
+            <td>{{m['@id']}}</td>
+            <td>
+              <h4>{{m.message}}</h4>
+              <pre>{{m.stack}}</pre>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

@@ -194,7 +194,6 @@ public class GeonetTestFixture {
 
     private void assertRequiredSchemas(SchemaManager schemaManager) {
         assertTrue(schemaManager.existsSchema("iso19139"));
-        assertTrue(schemaManager.existsSchema("iso19115"));
         assertTrue(schemaManager.existsSchema("dublin-core"));
     }
 

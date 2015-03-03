@@ -11,16 +11,18 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.File;
-import java.util.List;
 
 import static org.fao.geonet.domain.SchematronCriteriaType.ALWAYS_ACCEPT;
 import static org.fao.geonet.domain.SchematronCriteriaType.GROUP;
 import static org.fao.geonet.domain.SchematronCriteriaType.XPATH;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for the json service.
@@ -32,7 +34,7 @@ public class SchematronCriteriaTypeServiceTest extends AbstractServiceIntegratio
     @Test
     public void testExec() throws Exception {
         addSchematron("iso19139");
-        addSchematron("iso19115");
+        addSchematron("dublin-core");
 
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);

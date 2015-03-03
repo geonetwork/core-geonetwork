@@ -2,10 +2,15 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all">
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:java="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
+	<xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
 
+  <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
+  
 	<!-- ================================================================= -->
 
 	<xsl:template match="/root">
@@ -223,10 +228,10 @@
 				<gmd:URL>
 					<xsl:choose>
 						<xsl:when test="/root/env/config/downloadservice/simple='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+							<xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
 						<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+							<xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
 						<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
 							<xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -277,10 +282,10 @@
 			<xsl:attribute name="src">
 				<xsl:choose>
 					<xsl:when test="/root/env/config/downloadservice/simple='true'">
-						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
+						<xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
 					<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-						<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
+						<xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
 					<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
 						<xsl:value-of select="@src"/>
@@ -303,9 +308,9 @@
         <xsl:copy-of select="@uuidref"/>
         <xsl:if test="@uuidref">
             <xsl:choose>
-                <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, /root/env/siteURL)">
+                <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
                     <xsl:attribute name="xlink:href">
-                        <xsl:value-of select="concat(/root/env/siteURL,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+                        <xsl:value-of select="concat($serviceUrl,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
                     </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
@@ -316,6 +321,21 @@
         </xsl:if>
         </xsl:copy>
 
+	</xsl:template>
+
+	<!-- Thumbnail may not contains full URL for the one updated to the catalog -->
+	<xsl:template match="gmd:MD_BrowseGraphic[
+					gmd:fileDescription/gco:CharacterString = 'thumbnail' or
+					gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/
+						gmd:fileName[gco:CharacterString != '' and not(starts-with(gco:CharacterString, 'http'))]">
+			<gmd:fileName>
+				<gco:CharacterString>
+					<xsl:value-of select="concat(
+					    $serviceUrl, 'resources.get?',
+					    'uuid=', /root/env/uuid,
+					    '&amp;fname=', gco:CharacterString)"/>
+				</gco:CharacterString>
+			</gmd:fileName>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -359,8 +379,45 @@
   value which is not a valid facet for it. -->
   <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
 
-	<!-- ================================================================= -->
-	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
+
+  <xsl:template match="gmd:descriptiveKeywords" priority="10">
+    <xsl:variable name="isAllThesaurus" select="count(gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0" />
+    <xsl:variable name="allThesaurusFinished" select="count(preceding-sibling::gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0" />
+    <xsl:choose>
+      <xsl:when test="$isAllThesaurus and not($allThesaurusFinished)">
+        <xsl:variable name="thesaurusNames" select="distinct-values(../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/@gco:nilReason[starts-with(.,'thesaurus::')])" />
+        <xsl:variable name="context" select="."/>
+        <xsl:variable name="root" select="/"/>
+        <xsl:for-each select="$thesaurusNames" >
+          <xsl:variable name="thesaurusName" select="."/>
+          <xsl:variable name="keywords" select="$context/../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[@gco:nilReason = $thesaurusName]"/>
+
+          <gmd:descriptiveKeywords>
+            <gmd:MD_Keywords>
+              <xsl:for-each select="$keywords">
+                <gmd:keyword>
+                  <xsl:copy-of select="./node()"/>
+                </gmd:keyword>
+              </xsl:for-each>
+
+              <xsl:copy-of select="geonet:add-thesaurus-info(substring-after(., 'thesaurus::'), true(), $root/root/env/thesauri, true())" />
+
+            </gmd:MD_Keywords>
+          </gmd:descriptiveKeywords>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$isAllThesaurus and $allThesaurusFinished">
+        <!--Do nothing-->
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <!-- ================================================================= -->
+	<!-- Adjust the namespace declaration - In some cases name() is used to get the
 		element. The assumption is that the name is in the format of  <ns:element> 
 		however in some cases it is in the format of <element xmlns=""> so the 
 		following will convert them back to the expected value. This also corrects the issue 

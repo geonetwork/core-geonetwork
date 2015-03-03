@@ -23,6 +23,19 @@
 
 package org.fao.geonet.kernel.search;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.TermNotFoundException;
+import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.ThesaurusFinder;
+import org.fao.geonet.kernel.search.keyword.KeywordRelation;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.jdom.Element;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,24 +43,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.TermNotFoundException;
-import org.fao.geonet.kernel.KeywordBean;
-import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.ThesaurusFinder;
-import org.fao.geonet.kernel.rdf.Query;
-import org.fao.geonet.kernel.rdf.QueryBuilder;
-import org.fao.geonet.kernel.rdf.Selectors;
-import org.fao.geonet.kernel.rdf.Wheres;
-import org.fao.geonet.kernel.search.keyword.KeywordRelation;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.jdom.Element;
 
 /**
  *
@@ -233,9 +228,9 @@ public class KeywordsSearcher {
         // TODO : Add Thesaurus name
 
         if (kb.isSelected()) {
-        	elSelected.addContent("true");
+            elSelected.addContent("true");
         } else {
-        	elSelected.addContent("false");
+            elSelected.addContent("false");
         }
         
         String defaultLang = kb.getDefaultLang();
