@@ -19,7 +19,19 @@
             {{'upload' | translate}}</button>
         </div>
       </div>
-      
+
+      <!-- Protocol Combo -->
+      <div class="form-group" data-ng-show="mode == 'url' && schema !== 'dublin-core'">
+        <label class="col-sm-2 control-label">
+          <span data-translate="">protocol</span>
+        </label>
+        <div class="col-sm-10">
+          <div data-schema-info-combo="element"
+               data-selected-info="params.protocol"
+               data-gn-schema-info="protocol" lang="lang"></div>
+        </div>
+      </div>
+
       <!-- URL text field -->
       <div class="form-group" data-ng-show="mode == 'url'">
         <label for="onlinesrcUrl" class="col-sm-2 control-label"
@@ -78,19 +90,21 @@
             id="onlinesrcName" placeholder="Name">
         </div>
       </div>
-      
-      <!-- Protocol Combo -->
-      <div class="form-group" data-ng-show="mode == 'url' && schema !== 'dublin-core'">
-        <label class="col-sm-2 control-label">
-          <span data-translate="">protocol</span>
-        </label>
-        <div class="col-sm-10">
-          <div data-schema-info-combo="element"
-               data-selected-info="params.protocol"
-               data-gn-schema-info="protocol" lang="lang"></div>
-        </div>
+
+      <!-- Refresh Grid Button -->
+      <button type="button" class="btn navbar-btn btn-warning"
+              data-ng-click="loadWMSCapabilities()" data-ng-show="isWMSProtocol && mode == 'url'">
+        <i class="fa fa-refresh" /> <span data-translate=""></span>
+      </button>
+
+      <!-- Layers grid directive -->
+      <div data-gn-layers-grid
+           data-ng-show="isWMSProtocol && mode == 'url'"
+           data-gn-selection-mode="multiple"
+           data-layers="layers"
+           data-selection="params.layers">
       </div>
-      
+
       <!-- Description Text area -->
       <div class="form-group" data-ng-hide="schema === 'dublin-core'">
         <label for="onlinesrcDescr" class="col-sm-2 control-label"
@@ -102,19 +116,6 @@
         </div>
       </div>
 
-      <!-- Refresh Grid Button -->
-      <button type="button" class="btn navbar-btn btn-warning"
-        data-ng-click="loadWMSCapabilities()" data-ng-show="isWMSProtocol && mode == 'url'">
-        <i class="fa fa-refresh" /> <span data-translate=""></span>
-      </button>
-
-      <!-- Layers grid directive -->
-      <div data-gn-layers-grid 
-        data-ng-show="isWMSProtocol && mode == 'url'"
-        data-gn-selection-mode="multiple"
-        data-layers="layers"
-        data-selection="params.layers">
-      </div>
     </div>
   </form>
   <div class="">
@@ -126,5 +127,4 @@
       <span data-translate="">addOnlinesrc</span>
     </button>
   </div>
-
 </div>

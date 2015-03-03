@@ -80,8 +80,8 @@
               descs = [];
 
           angular.forEach(params.layers, function(layer) {
-            names.push(layer.name);
-            descs.push(layer.title);
+            names.push(layer.Name || layer.name);
+            descs.push(layer.Title || layer.title);
           });
 
           angular.extend(params, {
