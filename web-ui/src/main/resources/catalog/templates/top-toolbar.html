@@ -18,34 +18,35 @@
         <a data-gn-active-tb-item="catalog.search#/home">
           <img class="gn-logo"
                data-ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
-          <span class="visible-lg">{{info.site.name}}</span>
+          <span class="hidden-sm">{{info.site.name}}</span>
         </a>
       </li>
       <li>
         <a data-gn-active-tb-item="catalog.search#/search"
            title="{{'search' | translate}}">
           <i class="fa fa-search"></i>
-          <span class="visible-lg" data-translate="">search</span>
+          <span class="hidden-sm" data-translate="">search</span>
         </a>
       </li>
       <li data-ng-if="isMapViewerEnabled">
         <a data-gn-active-tb-item="catalog.search#/map"
            title="{{'map' | translate}}">
           <i class="fa fa-globe"></i>
-          <span class="visible-lg" data-translate="">map</span>
+          <span class="hidden-sm" data-translate="">map</span>
         </a>
       </li>
-      <li data-ng-show="authenticated">
-        <a data-gn-active-tb-item="catalog.edit"
-           title="{{'editorBoard' | translate}}">
-          <i class="fa fa-plus"></i>
-          <span class="visible-lg" data-translate="">contribute</span>
-        </a>
-      </li>
+     
       <li class="dropdown" data-ng-show="authenticated">
-        <a href="" class="dropdown-toggle" data-toggle="dropdown"
-           role="button" aria-expanded="false"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
+        <a href="javascript:void()" class="dropdown-toggle" data-toggle="dropdown"
+           role="button" aria-expanded="false">
+		   <i class="fa fa-plus"/>&nbsp;<span class="hidden-sm" data-translate="">contribute</span>&nbsp;<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu"> 
+	      <li data-ng-show="authenticated">
+			<a href="catalog.edit"
+			   title="{{'editorBoard' | translate}}">
+			  <i class="fa fa-home"/>&nbsp;<span data-translate="">Overview</span>
+			</a>
+		  </li>
           <li>
             <a data-gn-active-tb-item="catalog.edit#/create">
               <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
@@ -68,7 +69,7 @@
         <a data-gn-active-tb-item="admin.console"
            title="{{'adminConsole' | translate}}">
           <i class="fa fa-th"></i>
-          <span class="visible-lg" data-translate="">adminConsole</span>
+          <span class="hidden-sm" data-translate="">adminConsole</span>
         </a>
       </li>
     </ul>
