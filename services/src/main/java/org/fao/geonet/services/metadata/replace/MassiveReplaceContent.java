@@ -5,7 +5,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -50,7 +52,7 @@ public class MassiveReplaceContent extends NotInReadOnlyModeService {
 
     public Element serviceSpecificExec(Element params, ServiceContext context)
             throws Exception {
-        String process = "massive-content-update";
+        String process = Util.getParam(params, "process", "massive-content-update");
         MassiveReplaceReport report = new MassiveReplaceReport(process);
 
         GeonetContext gc = (GeonetContext) context
