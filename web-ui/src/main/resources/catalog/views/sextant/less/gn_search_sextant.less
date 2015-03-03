@@ -153,6 +153,9 @@
     margin-left: 0;
     margin-right: 10px;
   }
+  [gn-collapse] {
+    cursor: pointer;
+  }
   .gn-search-input input[type='text'] {
     height: 34px;
     padding: 6px 12px;
@@ -233,7 +236,6 @@
     }
     > ul {
       padding-left:0;
-      padding-top:12px;
     }
   }
   .panel-heading {
@@ -277,7 +279,19 @@
   }
 }
 
+.gn-md-view {
+  padding: 25px;
+  
+  .gn-metadata-display {
+    .nav li {
+      display:none;
+      &:nth-child(2), &:first-child {
+        display: block;
+      }
+    }
+  }
 
+}
 ul.gn-resultview {
 
   @thumbnail-width: 170px;

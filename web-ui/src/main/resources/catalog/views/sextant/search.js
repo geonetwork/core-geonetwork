@@ -24,6 +24,10 @@
 
   module.value('sxtGlobals', {});
 
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('sextant');
+  }]);
+
   module.controller('gnsSextant', [
     '$scope',
     '$location',
@@ -102,8 +106,9 @@
       };
 
       $scope.displayPanierTab = function() {
-        $scope.$broadcast('renderPanierMap');
-        $scope.mainTabs.panier.titleInfo = 0;
+        $timeout(function() {
+          $scope.$broadcast('renderPanierMap');
+        },0)
       };
 
 
@@ -217,6 +222,7 @@
     '$scope', 'suggestService', 'gnSearchSettings',
     function($scope, suggestService, searchSettings) {
 
+      $scope.categorytreeCollapsed = true;
       $scope.groupPublishedOptions = {
         mode: 'remote',
         remote: {

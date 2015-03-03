@@ -21,6 +21,18 @@
     <!--Map field-->
     <div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry"></div>
 
+    <!--multi facets groups-->
+    <div gn-facet-multiselect="_groupPublished" gn-facet-multiselect-collapsed="true"></div>
+
+    <!--Category Tree-->
+    <div class="gn-facet">
+      <h5 gn-collapse="{{categorytreeCollapsed}}">
+        <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+        {{'sextantThemes' | translate}}
+      </h5>
+      <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': categorytreeCollapsed}" sxt-category-tree-conf="thesaurus[0]"></div>
+    </div>
+
     <!--TEST FACET MULTI-->
     <div gn-facet-multiselect="inspireTheme" gn-facet-multiselect-collapsed="true"></div>
     <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="true"></div>
