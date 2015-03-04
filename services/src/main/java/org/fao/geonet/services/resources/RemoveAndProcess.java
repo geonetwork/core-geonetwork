@@ -87,14 +87,14 @@ public class RemoveAndProcess  {
         
         for (String param : parameters) {
             if (param.startsWith("fname")) {
-                filename = param.split("=")[1];
+                String[] parts = param.split("=");
+                filename = parts.length == 2 ? parts[1] : "";
             } else if (param.startsWith("access")) {
-                access = param.split("=")[1];
+                String[] parts = param.split("=");
+                access = parts.length == 2 ? parts[1] : "";
             }
         }
 
-        if ("".equals(filename))
-            throw new OperationAbortedEx("Empty filename. Unable to delete resource.");
 
         // Remove the file and update the file upload/downloads tables
         IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");

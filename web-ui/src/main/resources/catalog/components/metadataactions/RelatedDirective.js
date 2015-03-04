@@ -44,7 +44,7 @@
                               .success(function(data, status, headers, config) {
                          if (data && data != 'null' && data.relation) {
                            if (!angular.isArray(data.relation))
-                             scope.relation = [
+                             scope.relations = [
                                data.relation
                              ];
                            for (var i = 0; i < data.relation.length; i++) {
@@ -66,6 +66,10 @@
 
               scope.$watch('uuid', function() {
                 scope.updateRelations();
+              });
+
+              scope.$watch(scope.list, function() {
+                setTimeout(function() {scope.updateRelations()});
               });
             }
           };

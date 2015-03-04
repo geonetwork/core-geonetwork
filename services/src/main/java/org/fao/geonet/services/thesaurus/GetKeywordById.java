@@ -27,8 +27,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
@@ -59,46 +57,36 @@ public class GetKeywordById implements Service {
 
         final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
         for (int i = 0; i < lang.length; i++) {
-            lang[i] = mapper.iso639_2_to_iso639_1(lang[i]);
+            lang[i] = mapper.iso639_2_to_iso639_1(lang[i], lang[i].substring(2));
         }
 
         boolean multiple = Util.getParam(params, "multiple", false);
 
-        KeywordsSearcher searcher = null;
-
         // perform the search and save search result into session
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-        
-        
-        Element root = null;
+        ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
+
+        Element root;
         
         if (uri == null) {
             root = new Element("descKeys");
         } else {
-            searcher = new KeywordsSearcher(context, thesaurusMan);
-            KeywordBean kb = null;
-            
+            KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
+
+            KeywordBean kb;
             if (!multiple) {
                 kb = searcher.searchById(uri, sThesaurusName, lang);
                 if (kb == null) {
                     root = new Element("descKeys");
                 } else {
-                    root = KeywordsSearcher.toRawElement(new Element("descKeys"),
-                            kb);
+                    root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
                 }
             } else {
                 String[] url = uri.split(",");
-                List<KeywordBean> kbList = new ArrayList<KeywordBean>();
-                for (int i = 0; i < url.length; i++) {
-                    String currentUri = url[i];
+                List<KeywordBean> kbList = new ArrayList<>();
+                for (String currentUri : url) {
                     kb = searcher.searchById(currentUri, sThesaurusName, lang);
-                    if (kb == null) {
-                        root = new Element("null");
-                    } else {
+                    if (kb != null) {
                         kbList.add(kb);
-                        kb = null;
                     }
                 }
                 root = new Element("descKeys");

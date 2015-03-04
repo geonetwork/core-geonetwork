@@ -1,16 +1,7 @@
 package org.fao.geonet.kernel.search;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
@@ -24,6 +15,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test hierarchical facets
@@ -62,8 +61,7 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
     }
 
     @Before
-    public void setup() throws Exception {
-        super.setup();
+    public void setup2() throws Exception {
         serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 

@@ -3,10 +3,39 @@
 
 
   goog.require('gn_search');
+  goog.require('gn_search_form_controller');
 
   var module = angular.module('gn_admintools_controller',
-      ['gn_search']);
+      ['gn_search', 'gn_search_form_controller']);
 
+
+  module.controller('GnAdminToolsSearchController', [
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
+
+      var defaultSearchObj = {
+        permalink: false,
+        sortbyValues: gnSearchSettings.sortbyValues,
+        hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        params: {
+          sortBy: 'changeDate',
+          _isTemplate: 'y or n',
+          from: 1,
+          to: 20
+        }
+      };
+      angular.extend($scope.searchObj, defaultSearchObj);
+
+      $scope.setTemplate = function(params) {
+        var values = [];
+        if ($('#batchSearchTemplateY')[0].checked) values.push('y');
+        if ($('#batchSearchTemplateN')[0].checked) values.push('n');
+        if ($('#batchSearchTemplateS')[0].checked) values.push('s');
+        $scope.searchObj.params._isTemplate = values.join(' or ');
+      };
+
+
+    }]);
 
   /**
    * GnAdminToolsController provides administration tools
@@ -15,11 +44,11 @@
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout', '$routeParams', '$location',
     'gnSearchManagerService',
-    'gnUtilityService',
+    'gnUtilityService', 'gnSearchSettings',
     function($scope, $http, $rootScope, $translate, $compile, 
         $q, $timeout, $routeParams, $location,
             gnSearchManagerService, 
-            gnUtilityService) {
+            gnUtilityService, gnSearchSettings) {
 
 
       $scope.pageMenu = {
@@ -77,6 +106,7 @@
        * The selected process
        */
       $scope.selectedProcess = null;
+      $scope.data = {};
 
       /**
        * The list of batch process available.
@@ -101,19 +131,38 @@
       $scope.groupinfo = {};
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
-      $scope.searchObj = {
-        permalink: false,
-        hitsperpageValues: [20, 50, 100],
-        params: {
-          sortBy: 'changeDate',
-          _isTemplate: 'y or n',
-          from: 1,
-          to: 9
-        }
+
+
+
+      gnSearchSettings.resultViewTpls = [{
+        tplUrl: '../../catalog/components/search/resultsview/' +
+            'partials/viewtemplates/titlewithselection.html',
+        tooltip: 'List',
+        icon: 'fa-list'
+      }];
+
+      gnSearchSettings.resultTemplate =
+          gnSearchSettings.resultViewTpls[0].tplUrl;
+
+      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
+
+      gnSearchSettings.sortbyValues = [{
+        sortBy: 'relevance',
+        sortOrder: ''
+      }, {
+        sortBy: 'changeDate',
+        sortOrder: ''
+      }, {
+        sortBy: 'title',
+        sortOrder: 'reverse'
+      }];
+
+      gnSearchSettings.hitsperpageValues = [20, 50, 100];
+
+      gnSearchSettings.paginationInfo = {
+        hitsPerPage: gnSearchSettings.hitsperpageValues[0]
       };
-      $scope.resultTemplate = '../../catalog/' +
-          'components/search/resultsview/' +
-          'partials/viewtemplates/title.html';
+
       function loadEditors() {
         $http.get('admin.ownership.editors?_content_type=json')
             .success(function(data) {
@@ -272,7 +321,22 @@
                 type: 'success'});
               $scope.processing = false;
 
-              checkLastBatchProcessReport();
+              angular.forEach($scope.processReport.changed, function(c) {
+                if (c.change && !angular.isArray(c.change)) {
+                  c.change = [c.change];
+                  delete c.changedval;
+                  delete c.fieldid;
+                  delete c.originalval;
+                }
+              });
+
+
+              // Turn off batch report checking for search and replace mode
+              // AFA as report is not properly set in session
+              // https://github.com/geonetwork/core-geonetwork/issues/828
+              if (service.indexOf('md.searchandreplace') === -1) {
+                checkLastBatchProcessReport();
+              }
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -284,7 +348,10 @@
             });
 
         gnUtilityService.scrollTo('#gn-batch-process-report');
-        $timeout(checkLastBatchProcessReport, processCheckInterval);
+        // FIXME
+        if (service.indexOf('md.searchandreplace') === -1) {
+          $timeout(checkLastBatchProcessReport, processCheckInterval);
+        }
       };
 
       loadGroups();
@@ -295,14 +362,6 @@
       // TODO: Should only do that if batch process is the current page
       loadProcessConfig();
       checkLastBatchProcessReport();
-
-      $scope.setTemplate = function(params) {
-        var values = [];
-        if ($('#batchSearchTemplateY')[0].checked) values.push('y');
-        if ($('#batchSearchTemplateN')[0].checked) values.push('n');
-        if ($('#batchSearchTemplateS')[0].checked) values.push('s');
-        $scope.searchObj.params._isTemplate = values.join(' or ');
-      };
 
       var initProcessByRoute = function() {
         if ($routeParams.tab === 'batch') {
@@ -445,189 +504,18 @@
 
 
 
-      // Dependent groups batch replace
-      $scope.batchReplacerGroups = {
-        'metadata': {
-          'elements': [
-            'id.contact.individualName',
-            'id.contact.organisationName',
-            'id.contact.voicePhone',
-            'id.contact.faxPhone',
-            'id.contact.address',
-            'id.contact.city',
-            'id.contact.province',
-            'id.contact.postalCode',
-            'id.contact.country',
-            'id.contact.email',
-            'id.contact.or.url',
-            'id.contact.or.ap',
-            'id.contact.or.name',
-            'id.contact.or.description',
-            'id.contact.hoursOfService',
-            'id.contact.contactInstructions'
-          ]
-        },
-        'data-identification': {
-          'elements': [
-            'id.dataid.abstract',
-            'id.dataid.purpose',
-            'id.dataid.keyword',
-            'id.dataid.citation.individualName',
-            'id.dataid.citation.organisationName',
-            'id.dataid.citation.voicePhone',
-            'id.dataid.citation.faxPhone',
-            'id.dataid.citation.address',
-            'id.dataid.citation.city',
-            'id.dataid.citation.province',
-            'id.dataid.citationt.postalCode',
-            'id.dataid.citation.country',
-            'id.dataid.citation.email',
-            'id.dataid.citation.or.url',
-            'id.dataid.citation.or.ap',
-            'id.dataid.citation.or.name',
-            'id.dataid.citation.or.description',
-            'id.dataid.citation.hoursOfService',
-            'id.dataid.citation.contactInstructions',
-            'id.dataid.poc.individualName',
-            'id.dataid.poc.organisationName',
-            'id.dataid.poc.voicePhone',
-            'id.dataid.poc.faxPhone',
-            'id.dataid.poc.address',
-            'id.dataid.poc.city',
-            'id.dataid.poc.province',
-            'id.dataid.poc.postalCode',
-            'id.dataid.poc.country',
-            'id.dataid.poc.email',
-            'id.dataid.poc.or.url',
-            'id.dataid.poc.or.ap',
-            'id.dataid.poc.or.name',
-            'id.dataid.poc.or.description',
-            'id.dataid.poc.hoursOfService',
-            'id.dataid.poc.contactInstructions',
-
-            'id.dataid.resc.gc.useLimitation',
-            'id.dataid.resc.lc.useLimitation',
-            'id.dataid.resc.lc.otherConstraints',
-            'id.dataid.resc.sc.useLimitation',
-            'id.dataid.resc.otherConstraints'
-          ]
-        },
-        'service-identification': {
-          'elements': [
-            'id.serviceid.abstract',
-            'id.serviceid.purpose',
-            'id.serviceid.citation.individualName',
-            'id.serviceid.citation.organisationName',
-            'id.serviceid.citation.voicePhone',
-            'id.serviceid.citation.faxPhone',
-            'id.serviceid.citation.address',
-            'id.serviceid.citation.city',
-            'id.serviceid.citation.province',
-            'id.serviceid.citationt.postalCode',
-            'id.serviceid.citation.country',
-            'id.serviceid.citation.email',
-            'id.serviceid.citation.or.url',
-            'id.serviceid.citation.or.ap',
-            'id.serviceid.citation.or.name',
-            'id.serviceid.citation.or.description',
-            'id.serviceid.citation.hoursOfService',
-            'id.serviceid.citation.contactInstructions',
-            'id.serviceid.poc.individualName',
-            'id.serviceid.poc.organisationName',
-            'id.serviceid.poc.voicePhone',
-            'id.serviceid.poc.faxPhone',
-            'id.serviceid.poc.address',
-            'id.serviceid.poc.city',
-            'id.serviceid.poc.province',
-            'id.serviceid.poc.postalCode',
-            'id.serviceid.poc.country',
-            'id.serviceid.poc.email',
-            'id.serviceid.poc.or.url',
-            'id.serviceid.poc.or.ap',
-            'id.serviceid.poc.or.name',
-            'id.serviceid.poc.or.description',
-            'id.serviceid.poc.hoursOfService',
-            'id.serviceid.poc.contactInstructions',
-            'id.serviceid.connectpoint.url',
-            'id.serviceid.connectpoint.ap',
-            'id.serviceid.connectpoint.name',
-            'id.serviceid.connectpoint.description'
-          ]
-
-        },
-        'maintenance-information': {
-          'elements': [
-            'mi.contact.individualName',
-            'mi.contact.organisationName',
-            'mi.contact.voicePhone',
-            'mi.contact.faxPhone',
-            'mi.contact.address',
-            'mi.contact.city',
-            'mi.contact.province',
-            'mi.contact.postalCode',
-            'mi.contact.country',
-            'mi.contact.email',
-            'mi.contact.or.url',
-            'mi.contact.or.ap',
-            'mi.contact.or.name',
-            'mi.contact.or.description',
-            'mi.contact.hoursOfService',
-            'mi.contact.contactInstructions'
-          ]
-        },
-        'content-information': {
-          'elements': [
-            'ci.citation.individualName',
-            'ci.citation.organisationName',
-            'ci.citation.voicePhone',
-            'ci.citation.faxPhone',
-            'ci.citation.address',
-            'ci.citation.city',
-            'ci.citation.province',
-            'ci.citation.postalCode',
-            'ci.citation.country',
-            'ci.citation.email',
-            'ci.citation.or.url',
-            'ci.citation.or.ap',
-            'ci.citation.or.name',
-            'ci.citation.or.description',
-            'ci.citation.hoursOfService',
-            'ci.citation.contactInstructions'
-          ]
-
-        },
-        'distribution-information': {
-          'elements': [
-            'di.contact.individualName',
-            'di.contact.organisationName',
-            'di.contact.voicePhone',
-            'di.contact.faxPhone',
-            'di.contact.address',
-            'di.contact.city',
-            'di.contact.province',
-            'di.contact.postalCode',
-            'di.contact.country',
-            'di.contact.email',
-            'di.contact.hoursOfService',
-            'di.contact.contactInstructions',
-            'di.fees',
-            'di.transferOptions.url',
-            'di.transferOptions.ap',
-            'di.transferOptions.name',
-            'di.transferOptions.description'
-          ]
-        }
-
-      };
-
 
       $scope.replacer = {};
       $scope.replacer.group = '';
       $scope.replacer.element = '';
       $scope.replacer.elements = [];
       $scope.replacer.replacements = [];
+      $scope.data.replacementsConfig = [];
 
       $scope.addReplacement = function() {
+        if (!$scope.replacer.replacements) {
+          $scope.replacer.replacements = [];
+        }
         $scope.replacer.replacements.push({
           'package': $scope.replacer.group,
           'element': $scope.replacer.element,
@@ -646,6 +534,19 @@
             $scope.replacer.replacements.indexOf(replacement), 1);
       };
 
+      $scope.loadReplacementConfig = function() {
+        try {
+          $scope.replacer.replacements =
+              angular.fromJson($scope.data.replacementsConfig);
+        } catch (e) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('error'),
+            error: e,
+            timeout: 0,
+            type: 'danger'});
+        }
+      };
+
       $scope.$watch('replacer.group', function(newValue, oldValue) {
 
         // Ignore empty value: in initial setup and
@@ -655,18 +556,17 @@
         }
 
         $scope.replacer.elements =
-            $scope.batchReplacerGroups[newValue].elements;
+            $scope.selectedProcess.config[newValue].elements;
       });
 
 
-      $scope.$watch('selectedProcess', function(newValue, oldValue) {
-
+      $scope.$watch('data.selectedProcess', function(newValue, oldValue) {
         // Ignore empty value: in initial setup and
         // if form already mirrors new value.
         if ((newValue === '') || (newValue === oldValue)) {
           return;
         }
-
+        $scope.selectedProcess = newValue;
         $scope.processReport = null;
       });
 

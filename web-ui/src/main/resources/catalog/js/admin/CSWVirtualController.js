@@ -25,6 +25,11 @@
       $scope.groupsFilter = {};
       $scope.sourcesFilter = {};
       $scope.categoriesFilter = {};
+      $scope.newFilterField = null;
+      $scope.newFilterValue = null;
+      $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
+        'denominator', '_source', '_cat', '_groupPublished'];
+
       var operation = '';
 
       /**
@@ -59,16 +64,15 @@
               // TODO
             });
       }
-      $scope.updatingVirtualCSW = function() {
-        $scope.virtualCSWUpdated = true;
-      };
 
       $scope.selectVirtualCSW = function(v) {
         operation = 'updateservice';
         $http.get('admin.config.virtualcsw.get?' +
             '_content_type=json&id=' + v.id)
           .success(function(data) {
-              var params = [];
+              var params = [], formParams = ['abstract', 'title',
+                '_source', '_cat', 'any', '_groupPublished', 'keyword',
+                'denominator', 'type'];
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
               $scope.virtualCSWSelected.serviceParameters = {};
@@ -87,25 +91,34 @@
             });
       };
 
+      $scope.addFilter = function() {
+        $scope.virtualCSWSelected.serviceParameters[$scope.newFilterField] =
+            $scope.newFilterValue;
+        $scope.newFilterValue = $scope.newFilterField = null;
+      };
+      $scope.removeFilter = function(f) {
+        delete $scope.virtualCSWSelected.serviceParameters[f];
+      };
+      $scope.setFilter = function(f) {
+        $scope.newFilterField = f;
+      };
+      $scope.setFilterValue = function(field, value) {
+        $scope.virtualCSWSelected.serviceParameters[field] =
+            value;
+      };
+
+      $scope.$watchCollection('virtualCSWSelected', function() {
+        $scope.virtualCSWUpdated = true;
+      });
+
       $scope.addVirtualCSW = function() {
         operation = 'newservice';
         $scope.virtualCSWSelected = {
           'id': '',
           'name': 'csw-servicename',
           'description': '',
-          'serviceParameters': {
-            'any': '',
-            'abstract': '',
-            'title': '',
-            '_source': '',
-            '_groupPublished': '',
-            'keyword': '',
-            '_cat': '',
-            'denominator': '',
-            'type': ''
-          }
+          'serviceParameters': {}
         };
-
         $timeout(function() {
           $('#servicename').focus();
         }, 100);

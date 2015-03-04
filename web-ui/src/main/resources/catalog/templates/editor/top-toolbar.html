@@ -84,6 +84,12 @@
                data-gn-click-and-spin="switchTypeAndSave(true)">
           {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
         </a></li>
+        <li class="dropdown-header">
+          <label title="{{'minorEditHelp' | translate}}">
+            <input type="checkbox" data-ng-model="gnCurrentEdit.isMinor"/>
+            {{'minorEdit' | translate}}
+          </label>
+        </li>
       </ul>
     </div>
   </div>

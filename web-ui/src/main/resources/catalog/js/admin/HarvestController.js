@@ -119,6 +119,15 @@
 		          }
 		        });
         	  }
+      $scope.deleteHarvesterHistory = function() {
+        $http.get('admin.harvester.history.delete?uuid=' +
+            $scope.harvesterSelected.site.uuid)
+          .success(function(data) {
+              loadHarvesters().then(function() {
+                $scope.selectHarvester($scope.harvesterSelected);
+              });
+            });
+      };
         });
       }
         

@@ -19,8 +19,8 @@
         <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
 
         <div class="gn-md-category"
-             data-ng-class="::md.category.length > 0 ||
-                            ::md.topicCat.length > 0 ? '' : 'invisible'">
+             data-ng-class="md.category.length > 0 ||
+                            md.topicCat.length > 0 ? '' : 'invisible'">
           <span data-translate="">listOfCategories</span>
           <a data-ng-repeat="cat in ::md.category"
              data-ng-href="#/search?_cat={{cat}}">
@@ -55,9 +55,7 @@
                    data-ng-click="openRecord($index, md, searchResults.records)"
                    title="{{md.title || md.defaultTitle}}">
 
-                  <i class="fa" title="{{md.type | translate}}">
-                    <span class="fa gn-icon-{{md.type}}"></span>
-                  </i>
+                  <i class="fa gn-icon-{{md.type}}" title="{{md.type | translate}}"/>
                   {{md.title || md.defaultTitle}}</a>
               </h3>
           </div>

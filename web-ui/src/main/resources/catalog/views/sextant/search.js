@@ -5,24 +5,28 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('gn_thesaurus');
-  goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
+  goog.require('gn_legendpanel_directive');
   goog.require('sxt_directives');
   goog.require('sxt_panier_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'gn_mdactions_directive',
     'gn_related_directive',
     'gn_search_default_directive',
+    'gn_legendpanel_directive',
     'gn_thesaurus',
     'sxt_directives',
     'sxt_panier_directive'
   ]);
 
   module.value('sxtGlobals', {});
+
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('sextant');
+  }]);
 
   module.controller('gnsSextant', [
     '$scope',
@@ -40,14 +44,16 @@
     'gnMdView',
     'gnMdViewObj',
     'gnSearchLocation',
+    'gnMetadataActions',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView, mdView, gnSearchLocation) {
+        $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.mainTabs = gnSearchSettings.mainTabs;
+      $scope.gnMetadataActions = gnMetadataActions;
 
       var localStorage = $window.localStorage || {};
 
@@ -60,6 +66,8 @@
       $scope.gotoPanier = function() {
         $location.path('/panier');
       };
+
+      $scope.locService = gnSearchLocation;
 
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
@@ -98,8 +106,9 @@
       };
 
       $scope.displayPanierTab = function() {
-        $scope.$broadcast('renderPanierMap');
-        $scope.mainTabs.panier.titleInfo = 0;
+        $timeout(function() {
+          $scope.$broadcast('renderPanierMap');
+        },0)
       };
 
 
@@ -122,7 +131,7 @@
       ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHFIRST'));
+            ('STARTSWITHONLY'));
 
         return $http.get(url, {
         }).then(function(res) {
@@ -210,24 +219,21 @@
     }]);
 
   module.controller('gnsSextantSearchForm', [
-    '$scope', 'suggestService', 'gnSearchSettings',
-    function($scope, suggestService, searchSettings) {
+    '$scope', 'gnSearchSettings',
+    function($scope, searchSettings) {
 
-      $scope.groupPublishedOptions = {
-        mode: 'remote',
-        remote: {
-          url: suggestService.getUrl('QUERY', '_groupPublished',
-              'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+      $scope.categorytreeCollapsed = true;
+
+      // Run search on bbox draw
+      $scope.$watch('searchObj.params.geometry', function(v){
+        if(angular.isDefined(v)) {
+          $scope.triggerSearch();
         }
-      };
+      });
 
-      // Get Thesaurus config and set first one as active
-      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
-      }
+     // Get Thesaurus config and set first one as active
+     $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+
     }]);
 
   module.directive('sxtFixMdlinks', [

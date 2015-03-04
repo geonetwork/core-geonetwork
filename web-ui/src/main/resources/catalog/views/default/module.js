@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
   goog.require('cookie_warning');
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
@@ -123,7 +116,9 @@
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
       gnMdView.initMdView();
-
+      $scope.goToSearch = function (any) {
+        $location.path('/search').search({'any': any});
+      };
       $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
         if (record && record['geonet:info'] &&

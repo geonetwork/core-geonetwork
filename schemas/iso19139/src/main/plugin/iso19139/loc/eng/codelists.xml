@@ -1537,6 +1537,11 @@
 			<label>Interactive map</label>
 			<description></description>
 		</entry>
+    <entry hideInEditMode="true">
+      <code>featureCatalog</code>
+      <label>Feature catalog</label>
+      <description></description>
+    </entry>
 	</codelist>
 	<codelist name="gmd:MD_ScopeCode" displayIf="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
 		<entry>

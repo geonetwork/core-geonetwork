@@ -76,7 +76,7 @@
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners" localized="true"/>
-        <facet name="publishedForGroup" indexKey="_op0" label="publishedForGroup" localized="true"/>
+        <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup" localized="true"/>
     </facets>
 
     <summaryTypes>
@@ -85,7 +85,7 @@
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode"/>
+            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
             <item facet="serviceType"/>
@@ -107,7 +107,7 @@
           <item facet="groupOwner" max="199" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
           <item facet="publishedForGroup" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
           <item facet="standard" max="15" sortBy="value"/>
           <item facet="isHarvested" max="2" sortBy="value"/>
           <item facet="metadataType" max="3" sortBy="value"/>

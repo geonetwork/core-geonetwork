@@ -121,6 +121,7 @@
                }
              }
 
+             gnCurrentEdit.working = true;
              $http.post(
              refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
              $(gnCurrentEdit.formId).serialize(),
@@ -136,12 +137,13 @@
                 if (!silent) {
                   setStatus({msg: 'allChangesSaved', saving: false});
                 }
-
+                gnCurrentEdit.working = false;
                 defer.resolve(snippet);
               }).error(function(error) {
                 if (!silent) {
                   setStatus({msg: 'saveMetadataError', saving: false});
                 }
+                gnCurrentEdit.working = false;
                 defer.reject(error);
               });
              return defer.promise;
@@ -256,6 +258,7 @@
                angular.fromJson(getInputValue('geoPublisherConfig')),
                extent:
                angular.fromJson(getInputValue('extent')),
+               isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false

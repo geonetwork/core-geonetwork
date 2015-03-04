@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.main;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ComparisonChain;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -104,9 +106,9 @@ public class SearchSuggestion implements Service {
     private ServiceConfig _config;
     
     enum SORT_BY_OPTION {
-        FREQUENCY, ALPHA, STARTSWITHFIRST
+        FREQUENCY, ALPHA, STARTSWITHFIRST, STARTSWITHONLY
     }
-    
+
     /**
      * Sort a TermFrequency collection by placing element starting with prefix on top
      * then alphabetical order.
@@ -128,7 +130,7 @@ public class SearchSuggestion implements Service {
                     .compare(term1.getTerm(), term2.getTerm()).result();
         }
     }
-    
+
     /**
      * Sort a TermFrequency collection by decreasing frequency and alphabetical order
      */
@@ -161,7 +163,7 @@ public class SearchSuggestion implements Service {
         String fieldName = Util.getParam(params, PARAM_FIELD, _defaultSearchField);
         // The value to search for
         String searchValue = Util.getParam(params, PARAM_Q, "");
-        String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
+        final String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         // Search index term and/or index records
         String origin = Util.getParam(params, PARAM_ORIGIN, "");
@@ -227,7 +229,21 @@ public class SearchSuggestion implements Service {
         
         suggestionsResponse.setAttribute(new Attribute(PARAM_ORIGIN, origin));
 
-        for (TermFrequency suggestion : listOfSuggestions) {
+        Collection<TermFrequency> collectionOfSuggestions;
+        // Filter collection if sortBy STARTSWITHONLY is set
+        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHONLY.toString())) {
+            collectionOfSuggestions = Collections2.filter(listOfSuggestions, new Predicate<TermFrequency>() {
+                @Override
+                public boolean apply(TermFrequency term) {
+                    return StringUtils.startsWithIgnoreCase(term.getTerm(), searchValueWithoutWildcard);
+                }
+            });
+        }
+        else {
+            collectionOfSuggestions = listOfSuggestions;
+        }
+
+        for (TermFrequency suggestion : collectionOfSuggestions) {
             Element md = new Element(ELEM_ITEM);
             // md.setAttribute("term", suggestion.replaceAll("\"",""));
             md.setAttribute(ATT_TERM, suggestion.getTerm());

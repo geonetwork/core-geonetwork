@@ -55,6 +55,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +80,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -90,7 +92,8 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  * @author jeichar
  */
 @Controller("md.formatter.type")
-public class Format extends AbstractFormatService {
+@Lazy
+public class Format extends AbstractFormatService implements ApplicationListener {
 
     @Autowired
     private ApplicationContext springAppContext;
@@ -122,18 +125,24 @@ public class Format extends AbstractFormatService {
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
-    @PostConstruct
-    public void syncFormatterDirectories() throws IOException {
-        final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
-        final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
-        final Path toDir = geonetworkDataDirectory.getFormatterDir();
-        copyNewerFilesToDataDir(fromDir, toDir);
-        final Set<String> schemas = this.schemaManager.getSchemas();
-        for (String schema : schemas) {
-            final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
-            final Path webappSchemaDir = this.geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
-            final Path dataDirSchemaFormatterDir = this.schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
-            copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        if (event instanceof GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent) {
+            final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+            final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
+            final Path toDir = geonetworkDataDirectory.getFormatterDir();
+            try {
+                copyNewerFilesToDataDir(fromDir, toDir);
+                final Set<String> schemas = this.schemaManager.getSchemas();
+                for (String schema : schemas) {
+                    final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+                    final Path webappSchemaDir = this.geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
+                    final Path dataDirSchemaFormatterDir = this.schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+                    copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

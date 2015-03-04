@@ -92,9 +92,12 @@ public class MetadataRegionSearchRequest extends Request {
                 break;
             }
         }
-        Element metadata = findMetadata(mdId, regionFinder.needsEditData());
-        if (metadata != null) {
-            regionFinder.findRegion(this, regions, mdId, id, metadata);
+
+        if (regionFinder != null) {
+            Element metadata = findMetadata(mdId, regionFinder.needsEditData());
+            if (metadata != null) {
+                regionFinder.findRegion(this, regions, mdId, id, metadata);
+            }
         }
     }
 

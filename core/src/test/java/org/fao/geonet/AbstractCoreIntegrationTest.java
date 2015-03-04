@@ -76,12 +76,12 @@ import static org.junit.Assert.assertTrue;
     protected UserRepository _userRepo;
 
     @Before
-    public void setup() throws Exception {
+    public final void setup() throws Exception {
         testFixture.setup(this);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public final void tearDown() throws Exception {
         testFixture.tearDown();
     }
 

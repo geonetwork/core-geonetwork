@@ -1,26 +1,7 @@
 [sxt-main-viewer] {
 
   .sxt-search-btn {
-    position: absolute;
-    top: -1px;
-    bottom: -1px;
     left: 0;
-    border-radius: 0;
-    width: 1em;
-    z-index: 100;
-    span {
-      position: absolute;
-      bottom: 50%;
-      left: -2.35em;
-      transform: rotate(-90deg);
-      height: 1em;
-      text-transform: uppercase;
-    }
-    i {
-      position: absolute;
-      bottom: ~"calc(50% - 4em)";
-      margin-left: -0.4em;
-    }
   }
 
   .main-tools {
@@ -50,11 +31,21 @@
   .tools:first-of-type {
     top: @viewport-padding + .5em;
   }
+  .sx-toolbar.basket-tools {
+    width: 0;
+    right: 10em;
+    button {
+      width: auto;
+      min-width: 2.8em;
+      margin-left: 100%;
+    }
+  }
 
   .control-tools {
     top: 7em;
     right: 0;
     left: auto;
+    bottom: auto;
     button.active {
       background: @sxt-orange;
       width: inherit;
@@ -166,11 +157,39 @@
     }
   }
 
-  .results {
-    left: auto;
+  [gn-gfi] {
+    transition: left @transition-params;
+    position: absolute;
+    left: 1.8em;
     right: 0;
-    .panel-heading {
-      height: auto;
+    bottom: 2.3em;
+    .results {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 0;
+      width: auto;
+      .panel-heading {
+        height: auto;
+        border-radius: 0;
+        z-index: 0;
+      }
+      .sxt-layer {
+        padding: 0 2em;
+      }
+      .table-scroller {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        background: #fff;
+        border-bottom: 1px solid @gray-lighter;
+        font-size: 13px;
+        margin-bottom: 0;
+        th {
+          font-weight: bold;
+        }
+      }
     }
   }
 
@@ -182,10 +201,12 @@
     height: 32px;
     background: rgba(0,0,0,.4);
     transition: left @transition-params;
-    &.small {
-      left: 32.7em;
-    }
   }
+
+  .leftBarExpanded {
+    left: 27.8em;
+  }
+
   .ol-scale-line {
     background: none;
     bottom: 0;
@@ -215,8 +236,8 @@
     }
   }
 
-  [sxt-layertree] {
-    padding: 3px 10px;
+  [sxt-layertree], .sxtb-speciestree  {
+    padding: 3px 15px 0 0;
     font-size: 90%;
     .btn-cog {
       float: right;
@@ -227,9 +248,13 @@
     }
     label {
       font-weight: normal;
+      display: inline;
     }
     .list-group {
-      margin-bottom: 5px;
+      margin: .5em 0;
+    }
+    button.dropdown-toggle {
+      border-color: rgba(0,0,0,0.1);
     }
     ul.sxt-layertree-node, ul.sxt-layertree-node > li {
       list-style-type: none;
@@ -238,6 +263,9 @@
         font-size: 14px;
       }
     }
+    ul {
+      border-left: 1px dashed rgba(0,0,0,.2);
+    }
     .dropdown-menu > li {
       font-size: 90%;
       label {
@@ -245,4 +273,27 @@
       }
     }
   }
+
+  .panel-ncwms-container {
+    position: absolute;
+    top: 50%;
+    height: ~"calc(50% - 4em)";
+    left: 15px;
+    right: 15px;
+    .panel-heading {
+      h5 {
+        line-height: 3.8em;
+      }
+      .close {
+        margin-top: .7em;
+      }
+    }
+  }
+
+  .marker {
+    pointer-events: none;
+    font-size: 23px;
+    text-shadow: 0 0 1px #FFF;
+  }
+
 }

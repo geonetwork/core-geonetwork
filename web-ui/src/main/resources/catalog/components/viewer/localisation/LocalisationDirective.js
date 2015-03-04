@@ -46,7 +46,7 @@
               if (query.length < 3) return;
 
               var coord = gnGetCoordinate(
-                  $scope.map.getView().getProjection().getExtent(), query);
+                  $scope.map.getView().getProjection().getWorldExtent(), query);
 
               if (coord) {
                 function moveTo(map, zoom, center) {

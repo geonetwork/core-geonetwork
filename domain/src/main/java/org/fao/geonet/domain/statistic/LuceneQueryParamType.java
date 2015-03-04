@@ -123,11 +123,15 @@ public enum LuceneQueryParamType {
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof TermRangeQuery) {
                 TermRangeQuery rangeQuery = (TermRangeQuery) query;
-                SearchRequestParam param = new SearchRequestParam()
-                        .setLowerText(rangeQuery.getLowerTerm().utf8ToString())
-                        .setUpperText(rangeQuery.getUpperTerm().utf8ToString())
-                        .setTermField(rangeQuery.getField())
-                        .setQueryType(this);
+                SearchRequestParam param = new SearchRequestParam();
+                if (rangeQuery.getLowerTerm() != null) {
+                    param.setLowerText(rangeQuery.getLowerTerm().utf8ToString());
+                }
+                if (rangeQuery.getUpperTerm().utf8ToString() != null) {
+                    param.setUpperText(rangeQuery.getUpperTerm().utf8ToString());
+                }
+                param.setTermField(rangeQuery.getField());
+                param.setQueryType(this);
 
                 return Optional.of(param);
             } else {

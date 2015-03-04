@@ -232,7 +232,7 @@
       <xsl:with-param name="type"
         select="gn-fn-metadata:getFieldType($editorConfig, name(), 
         name($theElement))"/>
-      <xsl:with-param name="name" select="if ($isEditing) then $theElement/gn:element/@ref else ''"/>
+      <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <!-- TODO: Handle conditional helper -->

@@ -117,7 +117,11 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String authority;
 */
-
+    /**
+     * Available for subclasses.
+     */
+    protected Thesaurus() {
+    }
 	/**
 	 * @param fname
 	 *            file name
@@ -210,7 +214,7 @@ public class Thesaurus {
 		return type + "." + dname + "." + name;
 	}
 
-	private String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
+	protected String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
 		if (type.equals(Geonet.CodeList.REGISTER)) {
 			return siteUrl + "/?uuid="+fname.substring(0, fname.indexOf(".rdf"));
 		} else {
@@ -218,7 +222,7 @@ public class Thesaurus {
 		}
 	}
 
-	private String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
+    protected String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
 		return siteUrl + "/xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id="; 
 		// needs to have term/concept id tacked onto the end
 	}

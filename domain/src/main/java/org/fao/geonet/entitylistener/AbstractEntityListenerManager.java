@@ -17,6 +17,17 @@ import java.util.Map;
  * Time: 11:33 AM
  */
 public class AbstractEntityListenerManager<T> {
+    private static boolean systemRunning = false;
+
+    /**
+     * set to true when it should be considered an error when there is no ApplicationContext set in the
+     * {@link org.fao.geonet.ApplicationContextHolder}.  For example, when the Web application has been loaded it should call this method
+     * to indicate that the system is ready.
+     */
+    public static void setSystemRunning(boolean systemRunning) {
+        AbstractEntityListenerManager.systemRunning = systemRunning;
+    }
+
     protected void handleEvent(final PersistentEventType type, final T entity) {
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         if (context != null) {
@@ -26,8 +37,8 @@ public class AbstractEntityListenerManager<T> {
                     listener.handleEvent(type, entity);
                 }
             }
-        } else {
-            Log.warning(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
+        } else if (systemRunning) {
+            Log.error(Constants.DOMAIN_LOG_MODULE, "An event occurred that was not handled because the " +
                                                      ApplicationContextHolder.class.getName() +
                                                      " has not been set in this thread", new IllegalStateException("No ApplicationContext set in thread local"));
         }

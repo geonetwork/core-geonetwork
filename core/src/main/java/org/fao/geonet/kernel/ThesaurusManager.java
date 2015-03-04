@@ -22,19 +22,24 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -49,30 +54,33 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 
 //=============================================================================
 public class ThesaurusManager implements ThesaurusFinder {
 
+    private SettingManager settingManager;
 	private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
 	private LocalService service = null;
 	private Path thesauriDirectory = null;
     private boolean initialized = false;
-
+    private AllThesaurus allThesaurus;
 
     /**
 	 * Initialize ThesaurusManager.
 	 *
      *
-     * @param isTest
      * @param context ServiceContext used to check when servlet is up only
-     * @param thesauriRepository
-     * @throws Exception
 	 */
 	public synchronized void init(boolean isTest, ServiceContext context, String thesauriRepository)
 			throws Exception {
@@ -80,6 +88,11 @@ public class ThesaurusManager implements ThesaurusFinder {
             return;
         }
         this.initialized = true;
+        this.settingManager = context.getBean(SettingManager.class);
+
+        final String siteURL = this.settingManager.getSiteURL(context);
+        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL);
+
 		// Get Sesame interface
 		service = Sesame.getService();
 
@@ -337,18 +350,25 @@ public class ThesaurusManager implements ThesaurusFinder {
 	
 	@Override
     public Map<String, Thesaurus> getThesauriMap() {
-		return Collections.unmodifiableMap(thesauriMap);
+        if (this.settingManager.getValueAsBool(SettingManager.ENABLE_ALL_THESAURUS)) {
+            final HashMap<String, Thesaurus> all = Maps.newHashMap(this.thesauriMap);
+            all.put(this.allThesaurus.getKey(), this.allThesaurus);
+            return all;
+        } else {
+            return Collections.unmodifiableMap(thesauriMap);
+        }
 	}
 
     @Override
-    public Thesaurus getThesaurusByName(String thesaurusName) {
-		return thesauriMap.get(thesaurusName);
+    @Nullable
+    public Thesaurus getThesaurusByName(@Nonnull String thesaurusName) {
+		return getThesauriMap().get(thesaurusName);
 	}
 
 	@Override
 	public Thesaurus getThesaurusByConceptScheme(String uri) {
 		
-		for (Map.Entry<String, Thesaurus> entry : thesauriMap.entrySet()) {
+		for (Map.Entry<String, Thesaurus> entry : getThesauriMap().entrySet()) {
 			try {
 				Thesaurus thesaurus = entry.getValue();
 				
@@ -370,7 +390,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 */
 	@Override
     public boolean existsThesaurus(String name) {
-		return (thesauriMap.get(name) != null);
+		return (getThesauriMap().get(name) != null);
 	}
 
 	/**
@@ -420,4 +440,79 @@ public class ThesaurusManager implements ThesaurusFinder {
         return context.getBean(IsoLanguagesMapper.class);
     }
 
+    /**
+     *
+     * @param context
+     * @param thesauriMap
+     * @return {@link org.jdom.Element}
+     * @throws java.sql.SQLException
+     */
+    public Element buildResultfromThTable(ServiceContext context) throws SQLException, JDOMException, IOException {
+
+        Element elRoot = new Element("thesauri");
+
+        Collection<Thesaurus> e = getThesauriMap().values();
+        for (Thesaurus currentTh : e) {
+            Element elLoop = new Element("thesaurus");
+
+            Element elKey = new Element("key");
+            String key = currentTh.getKey();
+            elKey.addContent(key);
+
+            Element elDname = new Element("dname");
+            String dname = currentTh.getDname();
+            elDname.addContent(dname);
+
+            Element elFname = new Element("filename");
+            String fname = currentTh.getFname();
+            elFname.addContent(fname);
+
+            Element elTitle = new Element("title");
+            String title = currentTh.getTitles(context.getApplicationContext()).get(context.getLanguage());
+            if(title == null) {
+                title = currentTh.getTitle();
+            }
+            elTitle.addContent(title);
+
+            Element elType = new Element("type");
+            String type = currentTh.getType();
+            elType.addContent(type);
+
+            Element elDate = new Element("date");
+            String date = currentTh.getDate();
+            elDate.addContent(date);
+
+            Element elUrl = new Element("url");
+            String url = currentTh.getDownloadUrl();
+            elUrl.addContent(url);
+
+            Element elDefaultURI = new Element("defaultNamespace");
+            String defaultURI = currentTh.getDefaultNamespace();
+            elDefaultURI.addContent(defaultURI);
+
+
+            Element elActivated= new Element("activated");
+            char activated = Constants.YN_TRUE;
+            final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
+            final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
+            if (activation == null || !activation.isActivated()) {
+                activated = Constants.YN_FALSE;
+            }
+            elActivated.setText(""+activated);
+
+            elLoop.addContent(elKey);
+            elLoop.addContent(elDname);
+            elLoop.addContent(elFname);
+            elLoop.addContent(elTitle);
+            elLoop.addContent(elDate);
+            elLoop.addContent(elUrl);
+            elLoop.addContent(elDefaultURI);
+            elLoop.addContent(elType);
+            elLoop.addContent(elActivated);
+
+            elRoot.addContent(elLoop);
+        }
+
+        return elRoot;
+    }
 }

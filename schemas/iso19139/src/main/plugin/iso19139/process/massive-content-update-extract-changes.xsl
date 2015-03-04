@@ -5,7 +5,7 @@
                   xmlns:gmd="http://www.isotc211.org/2005/gmd"
                   exclude-result-prefixes="gmd xsl geonet">
 
-  <xsl:template match="gmd:MD_Metadata">
+  <xsl:template match="/">
     <changes>
       <xsl:apply-templates select="@*|node()"/>
     </changes>

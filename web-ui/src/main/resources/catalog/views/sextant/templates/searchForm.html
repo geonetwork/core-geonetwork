@@ -5,8 +5,8 @@
     <!--any field-->
     <div class="input-group gn-search-input">
       <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
-             typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-             typeahead-min-length="1" id="anySearchField">
+             typeahead="address for address in getAnySuggestions($viewValue)" typeahead-focus-first="false" typeahead-loading="anyLoading" class="form-control"
+             typeahead-min-length="1" id="anySearchField" autocomplete="off">
       <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
         <span class="input-group-btn">
           <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
@@ -21,31 +21,23 @@
     <!--Map field-->
     <div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry"></div>
 
-    <!--TEST FACET MULTI-->
-    <div gn-facet-multiselect="groupPublished"></div>
-    <div gn-facet-multiselect="inspireTheme"></div>
-    <div gn-facet-multiselect="keyword"></div>
-    <div gn-facet-multiselect="orgName"></div>
-    <div gn-facet-multiselect="createDateYear"></div>
-
-    <!--catalogues-->
-    <div class="form-group">
-      <label for="groupF" class="col-md-4 col-sm-12 control-label" translate>source</label>
-      <div class="col-sm-8">
-        <input type="text" id="groupF" value="" class="form-control" gn-values="searchObj.params._groupPublished" gn-typeahead="groupPublishedOptions"/>
-      </div>
-    </div>
+    <!--multi facets groups-->
+    <div gn-facet-multiselect="_groupPublished" gn-facet-multiselect-collapsed="true"></div>
 
     <!--Category Tree-->
-    <div ng-repeat="t in thesaurus">
-      <div class="radio">
-        <label>
-          <input type="radio" ng-model="activeThesaurus.value" ng-value="t.field">
-          {{t.label.eng}}
-        </label>
-      </div>
-      <div ng-show="activeThesaurus.value == t.field" sxt-category-tree class="sxt-categorytree" sxt-category-tree-conf="t"></div>
+    <div class="gn-facet">
+      <h5 gn-collapse="{{categorytreeCollapsed}}">
+        <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+        {{'sextantThemes' | translate}}
+      </h5>
+      <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': categorytreeCollapsed}" sxt-category-tree-conf="thesaurus[0]"></div>
     </div>
+
+    <!--TEST FACET MULTI-->
+    <div gn-facet-multiselect="inspireTheme" gn-facet-multiselect-collapsed="true"></div>
+    <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="true"></div>
+    <div gn-facet-multiselect="orgName" gn-facet-multiselect-collapsed="true"></div>
+    <div gn-facet-multiselect="createDateYear" gn-facet-multiselect-collapsed="true"></div>
 
     <!--downloadable / visualisable checkboxes-->
     <div class="form-group" ng-if="advanced">

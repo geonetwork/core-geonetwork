@@ -50,9 +50,9 @@ import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Document;
@@ -61,7 +61,6 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
@@ -1142,7 +1141,12 @@ public class SchemaManager {
     			String zero = "";
     			if (baseNrInt < 10) zero = "0";
                 newBlank.setAttribute("uriStartString", Geonet.File.METADATA_BLANK + zero + baseNrInt);
-                newBlank.setAttribute("rewritePrefix",  buildSchemaFolderPath(name).toString());
+                final Path schemaFolderPath = buildSchemaFolderPath(name);
+                try {
+                    newBlank.setAttribute("rewritePrefix", schemaFolderPath.toFile().toString());
+                } catch (UnsupportedOperationException e) {
+                    newBlank.setAttribute("rewritePrefix", schemaFolderPath.toUri().toString());
+                }
     		} else {
     			throw new IllegalArgumentException("Exceeded maximum number of plugin schemas "+Geonet.File.METADATA_MAX_BLANKS);
     		}
@@ -1162,7 +1166,8 @@ public class SchemaManager {
 	 */
 	private void writeSchemaPluginCatalog(Element root) throws Exception {
 	    if (createOrUpdateSchemaCatalog) {
-            try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(schemaPluginsCat))) {
+            NioPathAwareCatalogResolver.addRewriteDirective(new SchemaPluginUrlRewrite(root));
+            try (OutputStream out = Files.newOutputStream(schemaPluginsCat)) {
                 Xml.writeResponse(new Document((Element) root.detach()), out);
                 Xml.resetResolver();
                 Xml.clearTransformerFactoryStylesheetCache();
@@ -1188,8 +1193,7 @@ public class SchemaManager {
 	 */
 	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, Path schemaDir,
                                SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap,
-                               boolean isPlugin, String schemaLocation, List<Element> convElems,
-															 List<Element> dependElems) {
+                               boolean isPlugin, String schemaLocation, List<Element> convElems, List<Element> dependElems) {
 		
 		Schema schema = new Schema();
 

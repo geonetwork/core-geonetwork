@@ -18,7 +18,7 @@
   <xsl:template name="get-iso19139-other-languages-as-json">
     <xsl:variable name="langs">
       <xsl:choose>
-      <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
+       <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
 
         <xsl:for-each select="distinct-values($metadata//gmd:LocalisedCharacterString/@locale)">
           <xsl:variable name="locale" select="string(.)" />
@@ -27,7 +27,18 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
+        <xsl:variable name="mainLanguage">
+          <xsl:call-template name="get-iso19139-language"/>
+        </xsl:variable>
+        <xsl:if test="$mainLanguage">
+          <xsl:variable name="mainLanguageId"
+                        select="$metadata/gmd:locale/gmd:PT_Locale[
+                                gmd:languageCode/gmd:LanguageCode/@codeListValue = $mainLanguage]/@id"/>
+
+          <lang><xsl:value-of select="concat('&quot;', $mainLanguage, '&quot;:&quot;#', $mainLanguageId, '&quot;')"/></lang>
+        </xsl:if>
+
+        <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue != $mainLanguage]">
           <lang><xsl:value-of select="concat('&quot;', gmd:languageCode/gmd:LanguageCode/@codeListValue, '&quot;:&quot;#', @id, '&quot;')"/></lang>
         </xsl:for-each>
       </xsl:otherwise>

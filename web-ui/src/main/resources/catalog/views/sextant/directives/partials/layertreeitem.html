@@ -4,7 +4,9 @@
 
     <!--Drop down button for layer actions-->
     <div class="btn-group pull-right">
-      <span data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle fa fa-cog"></span>
+      <button data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle pull-right btn btn-default btn-xs" type="button">
+        <span class="fa fa-cog"></span>
+      </button>
       <ul class="dropdown-menu" role="menu">
 
         <!--Zoom To layer-->
@@ -28,7 +30,7 @@
         </label></li>
 
         <!--NCWMS-->
-        <li data-ng-if="member.ncInfo"><a href="" data-ng-click="map.removeLayer(member)">
+        <li data-ng-if="member.ncInfo"><a href="" data-ng-click="setNCWMS(member)">
           <i class="fa fa-anchor"></i>&nbsp;<span translate="">ncwms</span>
         </a></li>
 

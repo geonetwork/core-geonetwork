@@ -144,11 +144,13 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+
+          var toggleLayer = attrs['gnvLayermanagerBtn'] === 'true';
           element.find('.btn-group.flux button').bind('click', function() {
             element.find('.btn-group.flux button').removeClass('active');
             element.addClass('active');
             $(this).addClass('active');
-            element.find('.layers').addClass('collapsed');
+            if (toggleLayer) element.find('.layers').addClass('collapsed');
             element.find('.panel-carousel').removeClass('collapsed');
             element.find('.unfold').css('opacity', 1);
             element.find('.panel-carousel-container').css('left',
@@ -157,7 +159,7 @@
 
           element.find('.unfold').click(function() {
             element.find('.btn-group button').removeClass('active');
-            element.find('.layers').removeClass('collapsed');
+            if (toggleLayer) element.find('.layers').removeClass('collapsed');
             element.find('.panel-carousel').addClass('collapsed');
             element.find('.unfold').css('opacity', 0);
           });

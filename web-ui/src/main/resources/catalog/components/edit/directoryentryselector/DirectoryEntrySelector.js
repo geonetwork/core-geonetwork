@@ -110,6 +110,7 @@
                   // <request><codelist schema="iso19139"
                   // name="gmd:CI_RoleCode" /></request>
                   scope.addEntry = function(entry, role, usingXlink) {
+                    gnCurrentEdit.working = true;
                     if (!(entry instanceof Array)) {
                       entry = [entry];
                     }

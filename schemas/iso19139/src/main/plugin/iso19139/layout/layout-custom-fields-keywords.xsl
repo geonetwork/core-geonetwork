@@ -76,10 +76,13 @@
 
 
     <xsl:variable name="thesaurusTitle"
-      select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+      select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+
+    <xsl:message><xsl:copy-of select="."></xsl:copy-of><xsl:value-of select="$thesaurusTitle"></xsl:value-of> </xsl:message>
 
     <xsl:variable name="isTheaurusAvailable"
       select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
+
     <xsl:choose>
       <xsl:when test="$isTheaurusAvailable">
 
@@ -102,6 +105,21 @@
           TODO: support multilingual editing of keywords
           -->
         <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], ',')"/>
+
+
+        <!-- if gui lang eng > #EN -->
+        <xsl:variable name="guiLangId"
+                      select="
+                      if (count($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]) = 1)
+                        then $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id
+                        else $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $metadataLanguage]/@id"/>
+
+        <!--
+        get keyword in gui lang
+        in default language
+        -->
+        <xsl:variable name="keywords" select="string-join(
+                  if ($guiLangId and gmd:keyword//*[@locale = concat('#', $guiLangId)]) then gmd:keyword//*[@locale = concat('#', $guiLangId)] else gmd:keyword/*[1], ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
@@ -145,6 +163,8 @@
             * transformations: list of transformations
             * transformation: current transformation
           -->
+
+        <xsl:variable name="allLanguages" select="concat($metadataLanguage, ',', $metadataOtherLanguages)"></xsl:variable>
         <div data-gn-keyword-selector="{$widgetMode}"
           data-metadata-id="{$metadataId}"
           data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
@@ -152,7 +172,9 @@
           data-thesaurus-key="{$thesaurusKey}"
           data-keywords="{$keywords}" data-transformations="{$transformations}"
           data-current-transformation="{$transformation}"
-          data-max-tags="{$maxTags}">
+          data-max-tags="{$maxTags}"
+          data-lang="{$metadataOtherLanguagesAsJson}"
+          data-textgroup-only="true">
         </div>
 
         <xsl:variable name="isTypePlace" select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>

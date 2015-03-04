@@ -4,93 +4,6 @@
   var module = angular.module('sxt_categorytree', [
   ]);
 
-  var sextantThemes = [
-    'http://www.ifremer.fr/thesaurus/category#50' ,
-    'http://www.ifremer.fr/thesaurus/category#20' ,
-    'http://www.ifremer.fr/thesaurus/category#52' ,
-    'http://www.ifremer.fr/thesaurus/category#77' ,
-    'http://www.ifremer.fr/thesaurus/category#88' ,
-    'http://www.ifremer.fr/thesaurus/category#74' ,
-    'http://www.ifremer.fr/thesaurus/category#87' ,
-    'http://www.ifremer.fr/thesaurus/category#56' ,
-    'http://www.ifremer.fr/thesaurus/category#12' ,
-    'http://www.ifremer.fr/thesaurus/category#49' ,
-    'http://www.ifremer.fr/thesaurus/category#38' ,
-    'http://www.ifremer.fr/thesaurus/category#37' ,
-    'http://www.ifremer.fr/thesaurus/category#11' ,
-    'http://www.ifremer.fr/thesaurus/category#76' ,
-    'http://www.ifremer.fr/thesaurus/category#119' ,
-    'http://www.ifremer.fr/thesaurus/category#105' ,
-    'http://www.ifremer.fr/thesaurus/category#42' ,
-    'http://www.ifremer.fr/thesaurus/category#58' ,
-    'http://www.ifremer.fr/thesaurus/category#78' ,
-    'http://www.ifremer.fr/thesaurus/category#84' ,
-    'http://www.ifremer.fr/thesaurus/category#92' ,
-    'http://www.ifremer.fr/thesaurus/category#44' ,
-    'http://www.ifremer.fr/thesaurus/category#73' ,
-    'http://www.ifremer.fr/thesaurus/category#41' ,
-    'http://www.ifremer.fr/thesaurus/category#18' ,
-    'http://www.ifremer.fr/thesaurus/category#155' ,
-    'http://www.ifremer.fr/thesaurus/category#17' ,
-    'http://www.ifremer.fr/thesaurus/category#29' ,
-    'http://www.ifremer.fr/thesaurus/category#175' ,
-    'http://www.ifremer.fr/thesaurus/category#53' ,
-    'http://www.ifremer.fr/thesaurus/category#68' ,
-    'http://www.ifremer.fr/thesaurus/category#71' ,
-    'http://www.ifremer.fr/thesaurus/category#150' ,
-    'http://www.ifremer.fr/thesaurus/category#65' ,
-    'http://www.ifremer.fr/thesaurus/category#67' ,
-    'http://www.ifremer.fr/thesaurus/category#45' ,
-    'http://www.ifremer.fr/thesaurus/category#103' ,
-    'http://www.ifremer.fr/thesaurus/category#30' ,
-    'http://www.ifremer.fr/thesaurus/category#75' ,
-    'http://www.ifremer.fr/thesaurus/category#85' ,
-    'http://www.ifremer.fr/thesaurus/category#161' ,
-    'http://www.ifremer.fr/thesaurus/category#162' ,
-    'http://www.ifremer.fr/thesaurus/category#33' ,
-    'http://www.ifremer.fr/thesaurus/category#54' ,
-    'http://www.ifremer.fr/thesaurus/category#104' ,
-    'http://www.ifremer.fr/thesaurus/category#19' ,
-    'http://www.ifremer.fr/thesaurus/category#60' ,
-    'http://www.ifremer.fr/thesaurus/category#120' ,
-    'http://www.ifremer.fr/thesaurus/category#171' ,
-    'http://www.ifremer.fr/thesaurus/category#55' ,
-    'http://www.ifremer.fr/thesaurus/category#28' ,
-    'http://www.ifremer.fr/thesaurus/category#40' ,
-    'http://www.ifremer.fr/thesaurus/category#43' ,
-    'http://www.ifremer.fr/thesaurus/category#48' ,
-    'http://www.ifremer.fr/thesaurus/category#64' ,
-    'http://www.ifremer.fr/thesaurus/category#83' ,
-    'http://www.ifremer.fr/thesaurus/category#163' ,
-    'http://www.ifremer.fr/thesaurus/category#164' ,
-    'http://www.ifremer.fr/thesaurus/category#22' ,
-    'http://www.ifremer.fr/thesaurus/category#32' ,
-    'http://www.ifremer.fr/thesaurus/category#39' ,
-    'http://www.ifremer.fr/thesaurus/category#47' ,
-    'http://www.ifremer.fr/thesaurus/category#66' ,
-    'http://www.ifremer.fr/thesaurus/category#81' ,
-    'http://www.ifremer.fr/thesaurus/category#82' ,
-    'http://www.ifremer.fr/thesaurus/category#90' ,
-    'http://www.ifremer.fr/thesaurus/category#91' ,
-    'http://www.ifremer.fr/thesaurus/category#34' ,
-    'http://www.ifremer.fr/thesaurus/category#36' ,
-    'http://www.ifremer.fr/thesaurus/category#79' ,
-    'http://www.ifremer.fr/thesaurus/category#8' ,
-    'http://www.ifremer.fr/thesaurus/category#86' ,
-    'http://www.ifremer.fr/thesaurus/category#109' ,
-    'http://www.ifremer.fr/thesaurus/category#116' ,
-    'http://www.ifremer.fr/thesaurus/category#117' ,
-    'http://www.ifremer.fr/thesaurus/category#14' ,
-    'http://www.ifremer.fr/thesaurus/category#178' ,
-    'http://www.ifremer.fr/thesaurus/category#179' ,
-    'http://www.ifremer.fr/thesaurus/category#180' ,
-    'http://www.ifremer.fr/thesaurus/category#31' ,
-    'http://www.ifremer.fr/thesaurus/category#63' ,
-    'http://www.ifremer.fr/thesaurus/category#69' ,
-    'http://www.ifremer.fr/thesaurus/category#72' ,
-    'http://www.ifremer.fr/thesaurus/category#80'
-  ];
-
   var findChild = function(node, name) {
     var n;
     if (node.nodes) {
@@ -193,6 +106,12 @@
                   processThemes(data[1]);
                 });
               }
+            }).error(function(){
+              scope.member = {
+                nodes: []
+              };
+              console.warn('Could not load thesaurus: ' + conf.id);
+
             });
           });
 

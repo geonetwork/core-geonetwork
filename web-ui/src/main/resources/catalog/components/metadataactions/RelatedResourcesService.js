@@ -175,7 +175,7 @@
           };
 
           this.getClassIcon = function(type) {
-            return this.map[type].iconClass ||
+            return this.map[type || 'DEFAULT'].iconClass ||
                 this.map['DEFAULT'].iconClass;
           };
 

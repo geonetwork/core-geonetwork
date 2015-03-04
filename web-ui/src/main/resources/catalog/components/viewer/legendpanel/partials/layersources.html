@@ -1,0 +1,8 @@
+  <ul class="list-group">
+    <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)" data-ng-if="layer.get('attribution')"
+        class="list-group-item" >
+      <h5>{{layer.get('label')}}</h5>
+      <span translate="">sources</span>&nbsp;:
+      {{layer.get('attribution')}}
+    </li>
+  </ul>

@@ -96,6 +96,7 @@
       <field name="_userinfo" tagName="userinfo"/>
       <field name="_ownername" tagName="ownername"/>
       <field name="_cat" tagName="category"/>
+      <field name="topicCat" tagName="topicCat"/>
       <field name="_valid" tagName="valid"/>
       <field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
       <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
@@ -147,6 +148,7 @@
       <field name="_groupOwner" tagName="groupOwner"/>
       <field name="_logo" tagName="logo"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
+      <field name="attributeTable" tagName="attributeTable"/>
     </dumpFields>
   </search>
 

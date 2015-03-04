@@ -212,3 +212,5 @@ ALTER TABLE Requests DROP COLUMN simple;
 ALTER TABLE Requests ADD COLUMN simple boolean;
 UPDATE Requests SET simpletemp = simple;
 ALTER TABLE Requests DROP COLUMN simpletemp;
+
+UPDATE HarvestHistory SET elapsedTime = 0 WHERE elapsedTime IS NULL;
