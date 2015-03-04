@@ -46,6 +46,7 @@
         total: 0
       };
       $scope.isLoadingHarvester = false;
+      $scope.isLoadingOneHarvester = false;
       $scope.isLoadingHarvesterHistory = false;
 
 
@@ -55,7 +56,7 @@
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
 
-        return $http.get('admin.harvester.list?_content_type=json').success(
+        return $http.get('admin.harvester.list?_content_type=json&id=-1').success(
             function(data) {
               if (data != 'null') {
                 $scope.harvesters = data;
@@ -68,6 +69,26 @@
           $scope.isLoadingHarvester = false;
         });
       }
+      
+      function loadHarvester(id) {
+          $scope.isLoadingOneHarvester = true;
+          return $http.get('admin.harvester.list?_content_type=json&id='+id).success(function(data) {
+            if (data && data[0]) {
+          	  $scope.harvesterSelected = data[0];
+          	  $scope.harvesterUpdated = false;
+          	  $scope.harvesterNew = false;
+          	  $scope.harvesterHistory = {};
+          	  $scope.searchResults = null;
+          	  
+          	  // TODO push harvesterSelected in harvesters and use it the next time
+              gnUtilityService.parseBoolean($scope.$parent.harvesters);
+            }
+            $scope.isLoadingOneHarvester = false;
+          }).error(function(data) {
+            // TODO
+            $scope.isLoadingOneHarvester = false;
+          });
+        }
 
       var getRunningHarvesterIds = function() {
         var runningHarvesters = [];
@@ -310,13 +331,15 @@
         $scope.harvesterHistory = {};
         $scope.searchResults = null;
 
-        loadHistory();
-
-        // Retrieve records in that harvester
-        angular.extend($scope.searchObj.params, {
-          siteId: $scope.harvesterSelected.site.uuid
-        });
-        $scope.$broadcast('resetSearch', $scope.searchObj.params);
+        loadHarvester(h['@id']).then(function(data) {
+	        loadHistory();
+	
+	        // Retrieve records in that harvester
+	        angular.extend($scope.searchObj.params, {
+	          siteId: $scope.harvesterSelected.site.uuid
+	        });
+	        $scope.$broadcast('resetSearch', $scope.searchObj.params);
+      	});
       };
       var refreshSelectedHarvester = function() {
         if ($scope.harvesterSelected) {

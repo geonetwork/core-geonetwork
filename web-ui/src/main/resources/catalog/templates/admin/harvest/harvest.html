@@ -81,9 +81,9 @@
 
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
       <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
+      <i data-ng-show="isLoadingOneHarvester" class="fa fa-spinner fa-spin"></i>
 
-
-      <div class="btn-toolbar">
+      <div class="btn-toolbar" data-ng-hide="isLoadingOneHarvester">
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
                 data-ng-click="runHarvester(harvesterSelected['@id'])">
@@ -121,7 +121,7 @@
         </button>
       </div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" data-ng-hide="isLoadingOneHarvester">
       <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
         <strong data-translate="">harvesterIsRunning</strong>
       </div>
