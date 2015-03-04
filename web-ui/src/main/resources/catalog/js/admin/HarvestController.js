@@ -33,6 +33,7 @@
         	},{
         	  type: 'harvest-report',
               label: 'report',
+              icon: 'fa-th',
               href: '#/harvest/harvest-report'
         	}]
       };

@@ -4,14 +4,7 @@
       <span data-translate="">reportHarvester</span>
       <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
       
-      <div class="btn-toolbar" data-ng-hide="$parent.isLoadingHarvester">
-      	<button type="button" class="btn fa fa-refresh" data-ng-show="$parent.harvesters.length > 0"
-              data-ng-click="$parent.refreshHarvester()" title="{{'refreshHarvester' | translate}}"> </button>
-<!--         <button type="button" class="btn btn-primary pull-right fa fa-save" -->
-<!--                 data-ng-click="" data-translate="">createReport -->
-<!--                 createReport('#gn-metadata-fileuploads-report', 'datauploads.csv')" -->
-<!--         </button> -->
-      </div>
+      <div class="btn-toolbar" data-ng-hide="$parent.isLoadingHarvester"></div>
     </div>
 
     <div class="panel-body">
@@ -27,9 +20,9 @@
         <tr
           data-ng-repeat="h in $parent.harvesters">
           <td>{{h.site.name | translate}}</td>
-          <td><a href="{{h.site.url | translate}}" class="gn-break">{{h.site.url | translate}}</a></td>
+          <td class="gn-break">{{h.site.url | translate}}</td>
           <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
-          <td class="text-center">{{h.info.lastRun}}</td>
+          <td class="text-center" >{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun | date:'medium')}}</td>
           <td class="text-right">{{h.info.result.total}}</td>
         </tr>
       </table>
