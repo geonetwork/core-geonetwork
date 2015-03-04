@@ -388,7 +388,6 @@
     </welcome-file-list>
 
     <session-config>
-        <!-- In minutes -->
-        <session-timeout>15</session-timeout>
+        <session-timeout>${sessionTimeout}</session-timeout>
     </session-config>
 </web-app>
