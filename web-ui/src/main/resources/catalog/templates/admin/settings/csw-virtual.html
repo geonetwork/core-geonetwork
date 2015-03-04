@@ -34,14 +34,21 @@
         <span data-ng-hide="virtualCSWSelected.id != ''" data-translate="">newVirtualCSW</span>
         <strong>{{virtualCSWSelected.name}}</strong> (<a
           href="{{getCapabilitiesUrl(virtualCSWSelected)}}" data-translate="">capabilities</a>)
-        <button type="button" class="btn btn-primary pull-right"
-                data-ng-disabled="!virtualCSWUpdated || gnVirtualCSWEdit.servicename.$error.pattern"
-                data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')" 
-            ><span class="fa fa-save"></span> {{"saveVirtualCSW"|translate}}</button>
-        <button type="button" class="btn btn-primary pull-right btn-danger"
-                data-ng-hide="virtualCSWSelected.id == ''"
-                data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" 
-            ><span class="fa fa-trash-o"></span> {{"deleteVirtualCSW"|translate}}</button>
+
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary pull-right"
+                  data-ng-disabled="!virtualCSWUpdated || gnVirtualCSWEdit.servicename.$error.pattern"
+                  data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')">
+            <i class="fa fa-save"></i>&nbsp;
+            {{"saveVirtualCSW"|translate}}
+          </button>
+          <button type="button" class="btn btn-primary pull-right btn-danger"
+                  data-ng-hide="virtualCSWSelected.id == ''"
+                  data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" >
+            <i class="fa fa-trash-o"></i>&nbsp;
+            {{"deleteVirtualCSW"|translate}}
+          </button>
+        </div>
       </div>
       <div class="panel-body">
         <form id="gn-virtualcsw-edit" name="gnVirtualCSWEdit" class="form-horizontal"
@@ -72,72 +79,81 @@
 
           <fieldset>
             <legend data-translate="">serviceFilter</legend>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">any</label>
-              <div class="col-lg-8">
-                <input type="text" name="any" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters.any"/>
+            <div class="form-group"
+                 data-ng-repeat="(key, value) in virtualCSWSelected.serviceParameters">
+              <label class="col-md-3">
+                <span data-translate="">{{key}}</span>
+              </label>
+              <div class="col-md-4">
+                <input type="text" class="form-control"
+                       data-ng-model="key"/>
+              </div>
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input type="text" name="{{key}}" class="form-control"
+                         data-ng-model="value"/>
+                  <div class="input-group-btn"
+                       data-ng-show="key === '_cat' || key === '_groupPublished'">
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown" aria-expanded="false">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                      <li data-ng-repeat="c in categories"
+                          data-ng-show="key === '_cat'">
+                        <a href="" data-ng-click="setFilterValue('_cat', c.name)">
+                          <span data-translate="">{{c.label[lang]}}</span>
+                        </a>
+                      </li>
+
+                      <li data-ng-repeat="g in groupsFilter | orderBy:sortByLabel"
+                          data-ng-show="key === '_groupPublished'">
+                        <a href="" data-ng-click="setFilterValue('_groupPublished', g.name)">
+                          <span data-translate="">{{g.label[lang]}}</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <button class="btn btn-default"
+                        data-ng-click="removeFilter(key)">
+                  <i class="fa fa-trash-o"></i>
+                </button>
               </div>
             </div>
             <div class="form-group">
-              <label data-translate="" class="col-lg-4">title</label>
-              <div class="col-lg-8">
-                <input type="text" name="title" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters.title"/>
+              <label class="col-md-3">
+                <span data-translate="">addNewFilter</span>
+              </label>
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input type="text" class="form-control"
+                         data-ng-model="newFilterField"/>
+                  <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown" aria-expanded="false">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                      <li data-ng-repeat="f in filterHelper">
+                        <a href="" data-ng-click="setFilter(f)">
+                          <span data-translate="">{{f}}</span>
+                        </a></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">abstract</label>
-              <div class="col-lg-8">
-                <input type="text" name="abstract" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters.abstract"/>
+              <div class="col-md-4">
+                <input type="text" name="{{key}}" class="form-control"
+                       data-ng-model="newFilterValue"/>
               </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">keyword</label>
-              <div class="col-lg-8">
-                <input type="text" name="keyword" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters.keyword"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">denominator</label>
-              <div class="col-lg-8">
-                <input type="text" name="denominator" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters.denominator"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">_source</label>
-              <div class="col-lg-8">
-                <input type="text" name="_source" class="form-control"
-                       data-ng-model="virtualCSWSelected.serviceParameters._source"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">_cat</label>
-              <div class="col-lg-8">
-                <select data-ng-change="updatingVirtualCSW()"
-                        data-ng-model="virtualCSWSelected.serviceParameters._cat"
-                        class="form-control" name="_cat">
-                  <option value=""/>
-                  <option data-ng-repeat="c in categories" value="{{c.name}}"
-                          ng-selected="c.name == virtualCSWSelected.serviceParameters._cat"
-                      >{{c.label[lang]}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label data-translate="" class="col-lg-4">_groupPublished</label>
-              <div class="col-lg-8">
-                <select data-ng-change="updatingVirtualCSW()"
-                        data-ng-model="virtualCSWSelected.serviceParameters._groupPublished"
-                        class="form-control" name="_groupPublished">
-                  <option value=""/>
-                  <option data-ng-repeat="g in groupsFilter | orderBy:sortByLabel" value="{{g.name}}"
-                          ng-selected="g.name == virtualCSWSelected.serviceParameters._groupPublished"
-                      >{{g.label[lang]}}</option>
-                </select>
+              <div class="col-md-1">
+                <button class="btn btn-default"
+                        data-ng-click="addFilter()">
+                  <i class="fa fa-plus"></i>
+                </button>
               </div>
             </div>
           </fieldset>

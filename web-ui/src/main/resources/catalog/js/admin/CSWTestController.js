@@ -23,11 +23,21 @@
       $scope.currentTest = null;
       $scope.currentTestResponse = null;
       $scope.cswUrl = 'csw';
+      $scope.cswVirtual = null;
 
       function loadCSWTest() {
         $http.get('../../xml/csw/test/csw-tests.json').success(function(data) {
           $scope.cswTests = data;
         });
+
+        $http.get('admin.config.virtualcsw.list?_content_type=json').
+          success(function(data) {
+            $scope.cswVirtual = data != 'null' ? data.record : [];
+          });
+      }
+
+      $scope.setCswUrl = function (url) {
+        $scope.cswUrl = url;
       }
 
       $scope.$watch('currentTestId', function() {

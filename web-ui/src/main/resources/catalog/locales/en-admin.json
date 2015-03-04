@@ -20,6 +20,7 @@
     "arcsde-port": "Port",
     "arcsde-portHelp": "The ArcSDE port",
     "arcsde-server": "Server",
+    "addNewFilter": "Add filter",
     "arcsde-serverHelp": "The ArcSDE server hostname",
     "asKeywordIdentifier": " as keyword identifier",
     "availableStandards": "Standards available",
