@@ -701,7 +701,7 @@
         scope.collapsed = attrs['gnCollapse'] == 'true';
         var next = element.next();
         element.on('click', function(e) {
-          scope.$apply(function(){
+          scope.$apply(function() {
             scope.collapsed = !scope.collapsed;
           });
           next.collapse('toggle');
@@ -767,7 +767,7 @@
       }
     };
   }]);
-  module.filter('newlines', function () {
+  module.filter('newlines', function() {
     return function(text) {
       if (text) {
         return text.replace(/(\r)?\n/g, '<br/>');

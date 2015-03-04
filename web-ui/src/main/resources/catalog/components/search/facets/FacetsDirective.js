@@ -102,7 +102,8 @@
               var oldParams;
 
               scope.name = attrs.gnFacetMultiselect;
-              scope.contentCollapsed = attrs.gnFacetMultiselectCollapsed == 'true';
+              scope.contentCollapsed =
+                  attrs.gnFacetMultiselectCollapsed == 'true';
 
               gnFacetConfigService.loadConfig('hits').then(function(data) {
                 if (angular.isArray(data)) {
@@ -117,7 +118,8 @@
                 scope.$watch('searchResults.facet', function(v) {
                   /*
                   if (oldParams &&
-                      oldParams != scope.searchObj.params[scope.facetConfig.key]) {
+                      oldParams !=
+                      scope.searchObj.params[scope.facetConfig.key]) {
                   }
                   else if (v) {
                     oldParams = scope.searchObj.params[scope.facetConfig.key];
@@ -139,8 +141,9 @@
                */
               scope.isInSearch = function(value) {
                 return scope.searchObj.params[scope.facetConfig.key] &&
-                    scope.searchObj.params[scope.facetConfig.key].split(delimiter).
-                        indexOf(value) >= 0;
+                    scope.searchObj.params[scope.facetConfig.key]
+                      .split(delimiter)
+                      .indexOf(value) >= 0;
               };
 
               //TODO improve performance here, maybe to complex $watchers

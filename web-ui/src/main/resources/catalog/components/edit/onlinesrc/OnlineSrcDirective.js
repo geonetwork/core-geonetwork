@@ -223,7 +223,7 @@
                 return scope.searchObj.params.version = gnCurrentEdit.version;
               };
 
-              var resetForm = function () {
+              var resetForm = function() {
                 if (scope.params) {
                   scope.params.url = '';
                   scope.params.thumbnail_url = '';
@@ -283,7 +283,7 @@
                               headers: {'Content-Type':
                                     'application/x-www-form-urlencoded'}
                             }).success(function(data) {
-                            uploadThumbnailDone();
+                          uploadThumbnailDone();
                           scope.processing = false;
                         }).error(function(data, status, headers, config) {
                           $rootScope.$broadcast('StatusUpdated', {
@@ -300,9 +300,9 @@
                       });
                 } else {
                   return gnOnlinesrc.addThumbnailByURL(scope.params,
-                      scope.popupid).then(function () {
-                      resetForm();
-                    });
+                      scope.popupid).then(function() {
+                    resetForm();
+                  });
                 }
               };
 
@@ -369,7 +369,7 @@
 
               scope.onlinesrcService = gnOnlinesrc;
 
-              var resetForm = function () {
+              var resetForm = function() {
                 if (scope.params) {
                   scope.params.desc = '';
                   scope.params.url = '';
@@ -414,9 +414,9 @@
                   return scope.submit();
                 } else {
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
-                    then(function() {
-                      resetForm();
-                    });
+                      then(function() {
+                        resetForm();
+                      });
                 }
               };
 

@@ -486,7 +486,7 @@
       $.extend(true, this, k);
       var listOfArrayFields = ['topicCat', 'category'];
       var record = this;
-      $.each(listOfArrayFields, function (idx) {
+      $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
         if (angular.isDefined(record[field]) &&
             !angular.isArray(record[field])) {

@@ -67,7 +67,7 @@
               scope.$watch('uuid', function() {
                 scope.updateRelations();
               });
-              
+
               scope.$watch(scope.list, function() {
                 setTimeout(function() {scope.updateRelations()});
               });

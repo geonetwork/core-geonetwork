@@ -22,7 +22,7 @@
         restrict: 'A',
         transclude: true,
         templateUrl: '../../catalog/components/edit/' +
-        'multilingualfield/partials/multilingualfield.html',
+            'multilingualfield/partials/multilingualfield.html',
         scope: {
           mainLanguage: '@',
           expanded: '@'
@@ -42,7 +42,7 @@
           if (angular.isDefined(scope.languages[mainLanguage])) {
             mainLanguage = scope.languages[mainLanguage].substring(1);
           } else {
-            $(element).find(formFieldsSelector).each(function () {
+            $(element).find(formFieldsSelector).each(function() {
               var lang = $(this).attr('lang');
               if (!angular.isDefined(scope.languages[lang])) {
                 mainLanguage = scope.languages[lang].substring(1);
@@ -51,10 +51,14 @@
           }
 
           if (!mainLanguage) {
-            // when there is a gco:CharacterString and there is no PT_FreeText with the same language
+            // when there is a gco:CharacterString and there is no
+            // PT_FreeText with the same language
             // then the scope.languages map has an entry mainLanguage -> #
-            // but the problem is that the input element will have the 'lang' attribute to be eng (not empty string).  So
-            // we need to update the map and main language to be '#' + scope.mainLanguage so that all the looks ups can be done correctly.
+            // but the problem is that the input element will have the 'lang'
+            // attribute to be eng (not empty string).  So
+            // we need to update the map and main language to be '#' +
+            // scope.mainLanguage so that all the looks ups
+            // can be done correctly.
             mainLanguage = scope.mainLanguage;
             scope.languages[mainLanguage] = '#' + mainLanguage;
           }
@@ -71,11 +75,11 @@
           function getISO3Code(langId) {
             var langCode = null;
             angular.forEach(scope.languages,
-              function(key, value) {
-                if (key === '#' + langId) {
-                  langCode = value;
+                function(key, value) {
+                  if (key === '#' + langId) {
+                    langCode = value;
+                  }
                 }
-              }
             );
             return langCode;
           }
@@ -91,16 +95,16 @@
               if (langId) {
                 // Add the language label
                 inputEl.before('<span class="label label-primary">' +
-                $translate(getISO3Code(langId)) + '</span>');
+                    $translate(getISO3Code(langId)) + '</span>');
 
                 // Set the direction attribute
                 if ($.inArray(langId, rtlLanguages) !== -1) {
                   inputEl.attr('dir', 'rtl');
                 }
 
-                var setNoDataClass = function(){
+                var setNoDataClass = function() {
                   var code = ('#' + langId);
-                  scope.hasData[code] = inputEl.val().trim().length > 0
+                  scope.hasData[code] = inputEl.val().trim().length > 0;
                 };
 
                 inputEl.on('keyup', setNoDataClass);
@@ -117,8 +121,8 @@
             scope.currentLanguage = langId.replace('#', '');
             $(element).find(formFieldsSelector).each(function() {
               if ($(this).attr('lang') === scope.currentLanguage ||
-                ($(this).attr('lang') === mainLanguage &&
-                scope.currentLanguage === '')) {
+                  ($(this).attr('lang') === mainLanguage &&
+                  scope.currentLanguage === '')) {
                 $(this).removeClass('hidden').focus();
               } else {
                 $(this).addClass('hidden');
@@ -133,16 +137,16 @@
 
           scope.displayAllLanguages = function(force, focus) {
             scope.expanded =
-              force !== undefined ? force : !scope.expanded;
+                force !== undefined ? force : !scope.expanded;
 
             $(element).find(formFieldsSelector).each(function() {
               if (scope.expanded) {
                 setLabel('oneLanguage');
                 $(this).prev('span').removeClass('hidden');
-                var el = $(this).removeClass('hidden')
-                if(focus) {
+                var el = $(this).removeClass('hidden');
+                if (focus) {
                   el.focus();
-                };
+                }
               } else {
                 setLabel('allLanguage');
                 $(this).prev('span').addClass('hidden');
@@ -152,9 +156,9 @@
                 } else {
                   scope.currentLanguage = mainLanguage;
                   var el = $(this).removeClass('hidden');
-                  if(focus) {
+                  if (focus) {
                     el.focus();
-                  };
+                  }
                 }
               }
             });

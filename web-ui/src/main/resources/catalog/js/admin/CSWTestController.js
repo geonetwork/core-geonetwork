@@ -31,14 +31,14 @@
         });
 
         $http.get('admin.config.virtualcsw.list?_content_type=json').
-          success(function(data) {
-            $scope.cswVirtual = data != 'null' ? data.record : [];
-          });
+            success(function(data) {
+              $scope.cswVirtual = data != 'null' ? data.record : [];
+            });
       }
 
-      $scope.setCswUrl = function (url) {
+      $scope.setCswUrl = function(url) {
         $scope.cswUrl = url;
-      }
+      };
 
       $scope.$watch('currentTestId', function() {
         if ($scope.currentTestId !== null) {

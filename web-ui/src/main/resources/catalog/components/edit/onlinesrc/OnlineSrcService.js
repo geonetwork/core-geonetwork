@@ -143,7 +143,7 @@
       var runProcess = function(scope, params) {
         return gnBatchProcessing.runProcessMd(params).then(function(data) {
           refreshForm(scope, $(data.data));
-        }, function (error) {
+        }, function(error) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('runProcessError'),
             error: error,
@@ -165,7 +165,7 @@
         .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);
-              }).error(function (error) {
+              }).error(function(error) {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate('runServiceError'),
                   error: error,

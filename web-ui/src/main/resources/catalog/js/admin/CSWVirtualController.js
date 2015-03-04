@@ -91,23 +91,23 @@
             });
       };
 
-      $scope.addFilter = function () {
+      $scope.addFilter = function() {
         $scope.virtualCSWSelected.serviceParameters[$scope.newFilterField] =
-          $scope.newFilterValue;
+            $scope.newFilterValue;
         $scope.newFilterValue = $scope.newFilterField = null;
       };
-      $scope.removeFilter = function (f) {
+      $scope.removeFilter = function(f) {
         delete $scope.virtualCSWSelected.serviceParameters[f];
       };
-      $scope.setFilter = function (f) {
+      $scope.setFilter = function(f) {
         $scope.newFilterField = f;
       };
-      $scope.setFilterValue = function (field, value) {
+      $scope.setFilterValue = function(field, value) {
         $scope.virtualCSWSelected.serviceParameters[field] =
-          value;
+            value;
       };
 
-      $scope.$watchCollection('virtualCSWSelected', function () {
+      $scope.$watchCollection('virtualCSWSelected', function() {
         $scope.virtualCSWUpdated = true;
       });
 

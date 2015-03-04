@@ -115,7 +115,8 @@
            * Build an XML snippet for the element name
            * and xlink provided.
             *
-            * extraAttributeMap is other attributes to add to the element.  For example xlink:title
+            * extraAttributeMap is other attributes to add to the element.
+            * For example xlink:title
            */
            buildXMLForXlink: function(elementName, xlink, extraAttributeMap) {
              var nsDeclaration = getNamespacesForElement(elementName);
@@ -131,7 +132,7 @@
                xlink, '"'];
 
 
-             angular.forEach(extraAttributeMap, function(value, attName){
+             angular.forEach(extraAttributeMap, function(value, attName) {
                tokens.push(' ');
                tokens.push(attName);
                tokens.push('="');
