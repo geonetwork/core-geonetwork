@@ -1,0 +1,37 @@
+
+  <div class="panel panel-default" data-ng-controller="GnHarvestReportController">
+    <div class="panel-heading">
+      <span data-translate="">reportHarvester</span>
+      <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
+      
+      <div class="btn-toolbar" data-ng-hide="$parent.isLoadingHarvester">
+      	<button type="button" class="btn fa fa-refresh" data-ng-show="$parent.harvesters.length > 0"
+              data-ng-click="$parent.refreshHarvester()" title="{{'refreshHarvester' | translate}}"> </button>
+<!--         <button type="button" class="btn btn-primary pull-right fa fa-save" -->
+<!--                 data-ng-click="" data-translate="">createReport -->
+<!--                 createReport('#gn-metadata-fileuploads-report', 'datauploads.csv')" -->
+<!--         </button> -->
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+			<table class="table table-striped">
+				<tr>
+          <th data-translate="">harvesterName</th>
+          <th data-translate="">serviceUrl</th>
+          <th data-translate="">harvesterType</th>
+          <th data-translate="">lastRun</th>
+          <th data-translate="">totalNonTemplateMetadata</th>
+        </tr>
+        <tr
+          data-ng-repeat="h in $parent.harvesters">
+          <td>{{h.site.name | translate}}</td>
+          <td><a href="{{h.site.url | translate}}" class="gn-break">{{h.site.url | translate}}</a></td>
+          <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
+          <td class="text-center">{{h.info.lastRun}}</td>
+          <td class="text-right">{{h.info.result.total}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>

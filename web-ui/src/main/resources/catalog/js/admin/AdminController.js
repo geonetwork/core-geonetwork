@@ -84,6 +84,9 @@
         when('/harvest', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnHarvestController'}).
+        when('/harvest/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnHarvestController'}).
         when('/settings', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController'}).
