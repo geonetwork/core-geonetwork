@@ -131,28 +131,63 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
-    
+    <xsl:variable name="exclusionMatchesParent">
+      <xsl:variable name="parent">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@parent" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($parent) > 0">
+          <xsl:value-of select="contains($parent, ../name())" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="exclusionMatchesAncestor">
+      <xsl:variable name="ancestor">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@ancestor" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($ancestor) > 0 and count(ancestor::*[contains($ancestor, name())]) != 0">
+          <xsl:value-of select="true()" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="exclusionMatchesChild">
+      <xsl:variable name="child">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@child" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($child) > 0 and count(*[contains($child, name())]) != 0">
+          <xsl:value-of select="true()" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="excluded"
+                  select="count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 or
+                    $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
+
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
     <xsl:variable name="hasOnlyPTFreeText"
                   select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
-    <xsl:variable name="isMultilingualElement" 
-                  select="$metadataIsMultilingual and
-                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
-    <xsl:variable name="isMultilingualElementExpanded" 
+    <xsl:variable name="isMultilingualElement"
+                  select="$metadataIsMultilingual and $excluded = false()"/>
+    <xsl:variable name="isMultilingualElementExpanded"
                   select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
-    
-    <!-- For some fields, always display attributes. 
+
+    <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
-    <xsl:variable name="theElement" select="if ($isMultilingualElement and $hasOnlyPTFreeText)
-    then gmd:PT_FreeText
-    else
-      gco:CharacterString|gco:Integer|gco:Decimal|
+    <xsl:variable name="monoLingualValue" select="gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
+      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName" />
+    <xsl:variable name="theElement" select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
+      then gmd:PT_FreeText
+      else $monoLingualValue"/>
     <!--
       This may not work if node context is lost eg. when an element is rendered
       after a selection with copy-of.
