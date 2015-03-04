@@ -127,12 +127,13 @@
    * and online resource list are refreshed.
    */
    .directive('gnAddThumbnail', ['$http', '$rootScope', '$translate',
+        '$timeout', '$q',
         'gnOnlinesrc',
         'gnEditor',
         'gnCurrentEdit',
         'gnConfig',
         'gnMap',
-        function($http, $rootScope, $translate,
+        function($http, $rootScope, $translate, $timeout, $q,
                  gnOnlinesrc, gnEditor, gnCurrentEdit,
                  gnConfig, gnMap) {
           return {
@@ -149,10 +150,8 @@
               scope.mode = 'url';
               scope.action = 'md.thumbnail.upload';
 
-              // the form params that will be submited
-              scope.searchObj = {
-                params: {}
-              };
+              // the form params that will be submitted
+              scope.params = {};
 
               scope.popupid = attrs['gnPopupid'];
               scope.mapId = 'gn-thumbnail-maker-map';
@@ -162,6 +161,12 @@
               scope.map = null;
 
               function loadLayers() {
+                if (!angular.isArray(scope.map.getSize()) ||
+                    scope.map.getSize().indexOf(0) >= 0) {
+                  $timeout(function () {
+                    scope.map.updateSize();
+                  });
+                }
 
                 // Reset map
                 angular.forEach(scope.map.getLayers(), function(layer) {
@@ -183,12 +188,15 @@
                         })
                       }));
                     });
-                if (angular.isArray(scope.gnCurrentEdit.extent)) {
-                  scope.map.getView().fitExtent(
+
+                $timeout(function () {
+                  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                    scope.map.getView().fitExtent(
                       gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
-                      'EPSG:4326', gnMap.getMapConfig().projection),
+                        'EPSG:4326', gnMap.getMapConfig().projection),
                       scope.map.getSize());
-                }
+                  }
+                });
               };
 
               var init = function() {
@@ -220,7 +228,7 @@
               // TODO: should be in gnEditor ?
               var getVersion = function() {
                 scope.metadataId = gnCurrentEdit.id;
-                return scope.searchObj.params.version = gnCurrentEdit.version;
+                return scope.params.version = gnCurrentEdit.version;
               };
 
               var resetForm = function() {
@@ -274,17 +282,19 @@
                       });
                 } else if (scope.mode == 'thumbnailMaker') {
                   getVersion();
-                  return gnEditor.save(false, true)
+                  var deferred = $q.defer();
+
+                  gnEditor.save(false, true)
                     .then(function(data) {
                         scope.action =
                             'md.thumbnail.generate?_content_type=json&';
-                        $http.post('md.thumbnail.generate?_content_type=json&',
-                            $('#gn-upload-onlinesrc').serialize(), {
+                        $http.post(scope.action,
+                            $('#gn-upload-thumbnail').serialize(), {
                               headers: {'Content-Type':
                                     'application/x-www-form-urlencoded'}
                             }).success(function(data) {
                           uploadThumbnailDone();
-                          scope.processing = false;
+                          deferred.resolve(data);
                         }).error(function(data, status, headers, config) {
                           $rootScope.$broadcast('StatusUpdated', {
                             title: $translate('thumbnailCreationError'),
@@ -296,8 +306,10 @@
                             },
                             timeout: 0,
                             type: 'danger'});
+                           deferred.resolve(data);
                         });
                       });
+                  return deferred.promise;
                 } else {
                   return gnOnlinesrc.addThumbnailByURL(scope.params,
                       scope.popupid).then(function() {
@@ -694,7 +706,7 @@
    * to be able to add a metadata to his selection. The process alow a multiple
    * selection.
    *
-   * On submit, the metadata is saved, the thumbnail is added, then the form
+   * On submit, the metadata is saved, the resource is associated, then the form
    * and online resource list are refreshed.
    */
   .directive('gnLinkToSibling', ['gnOnlinesrc',
