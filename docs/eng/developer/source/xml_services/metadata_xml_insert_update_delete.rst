@@ -200,7 +200,7 @@ Request
 
 Parameters:
 
-- **id** or **uuid**: (mandatory) Identifier of the metadata to update
+- **id** Identifier of the metadata to update
 
 - **version**: (mandatory) This parameter
   is used by the GeoNetwork editor to avoid concurrent updates to the same
