@@ -38,8 +38,11 @@
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
                   data-ng-model="s['#text']"/>
 
-                <p class="help-block ">{{s['@name'] + '-help' | translate}}</p>
-
+                <p class="help-block">
+                  <span data-ng-show="(s['@name'] + '-help' | translate) !== (s['@name'] + '-help')">
+                    {{s['@name'] + '-help' | translate}}
+                  </span>
+                </p>
               </div>
             </div>
             <div data-ng-switch-default=""
