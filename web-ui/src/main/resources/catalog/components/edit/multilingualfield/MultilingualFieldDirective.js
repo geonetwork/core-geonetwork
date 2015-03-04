@@ -44,7 +44,7 @@
           } else {
             $(element).find(formFieldsSelector).each(function() {
               var lang = $(this).attr('lang');
-              if (!angular.isDefined(scope.languages[lang])) {
+              if (angular.isDefined(scope.languages[lang])) {
                 mainLanguage = scope.languages[lang].substring(1);
               }
             });
