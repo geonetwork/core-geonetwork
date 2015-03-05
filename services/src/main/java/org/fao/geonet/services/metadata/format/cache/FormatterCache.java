@@ -1,9 +1,13 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.fao.geonet.domain.Pair;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,9 +43,21 @@ public class FormatterCache {
     private final PersistentStore persistentStore;
     private final Cache<Key, StoreInfoAndData> memoryCache;
     private final ExecutorService executor;
+    private final BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests;
 
-    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize) {
-        this(persistentStore, memoryCacheSize, defaultExecutor());
+    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
+        this(persistentStore, memoryCacheSize, maxStoreRequests, defaultExecutor());
+    }
+
+    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests, ExecutorService executor) {
+        this.persistentStore = persistentStore;
+        this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
+                maximumSize(memoryCacheSize).build();
+
+        this.storeRequests = new ArrayBlockingQueue<Pair<Key, StoreInfoAndData>>(maxStoreRequests);
+
+        this.executor = executor;
+        this.executor.submit(createPersistentStoreRunnable(this.storeRequests, this.persistentStore));
     }
 
     private static ExecutorService defaultExecutor() {
@@ -51,20 +67,15 @@ public class FormatterCache {
         return Executors.newSingleThreadExecutor(threadFactory);
     }
 
-    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, ExecutorService executor) {
-        this.persistentStore = persistentStore;
-        this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
-                maximumSize(memoryCacheSize).build();
-
-        this.executor = executor;
+    @VisibleForTesting
+    Runnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests, PersistentStore store) {
+        return new PersistentStoreRunnable(storeRequests, store);
     }
 
     @PreDestroy
     public void shutdown() {
         this.executor.shutdownNow();
     }
-
-
 
     /**
      * Get a value from the cache, or if it is not in the cache, load it with the loader and add it to the cache.
@@ -107,7 +118,13 @@ public class FormatterCache {
             this.memoryCache.put(key, cached);
             if (writeToStoreInCurrentThread) {
                 this.persistentStore.put(key, cached);
+            } else {
+                if (!this.executor.isShutdown()) {
+                    this.storeRequests.put(Pair.read(key, cached));
+                }
             }
+        } catch (InterruptedException e) {
+            // return
         } finally {
             writeLock.unlock();
         }

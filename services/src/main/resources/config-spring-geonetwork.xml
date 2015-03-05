@@ -39,5 +39,7 @@
     <constructor-arg index="0">
       <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" />
     </constructor-arg>
+    <constructor-arg index="1" value="500000" />
+    <constructor-arg index="2" value="5000" />
 	</bean>
 </beans>
