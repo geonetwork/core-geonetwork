@@ -456,12 +456,13 @@ public abstract class AbstractHarvester extends BaseAligner
 
 
 		error = null;
+		Dbms dbms = null;
 
 		String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
 		try
 		{
-            login();
-			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+      login();
+			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 
 			//--- update lastRun
 
@@ -478,7 +479,7 @@ public abstract class AbstractHarvester extends BaseAligner
 			if (getParams().oneRunOnly)
 				stop(dbms);
 
-			rm.close();
+			rm.close(Geonet.Res.MAIN_DB, dbms);
 		}
 		catch(Throwable t)
 		{
@@ -492,7 +493,7 @@ public abstract class AbstractHarvester extends BaseAligner
 
 			try
 			{
-				rm.abort();
+				rm.abort(Geonet.Res.MAIN_DB, dbms);
 			}
 			catch (Exception ex)
 			{
@@ -503,7 +504,7 @@ public abstract class AbstractHarvester extends BaseAligner
         long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
 		// record the results/errors for this harvest in the database 
-		Dbms dbms = null;
+		dbms = null;
 		try {
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 			Element result = getResult();
