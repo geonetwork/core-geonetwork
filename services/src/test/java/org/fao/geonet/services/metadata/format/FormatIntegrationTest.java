@@ -164,7 +164,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final ServletWebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         final FormatterParams fparams = new FormatterParams();
         fparams.context = this.serviceContext;
-        fparams.servletRequest = webRequest;
+        fparams.webRequest = webRequest;
         // make sure context is cleared
         EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
 
@@ -191,7 +191,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
             final FormatterParams fparams = new FormatterParams();
             fparams.context = this.serviceContext;
-            fparams.servletRequest = request;
+            fparams.webRequest = request;
             // make sure context is cleared
             EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
 

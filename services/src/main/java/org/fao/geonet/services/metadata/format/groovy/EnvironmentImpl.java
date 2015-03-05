@@ -48,7 +48,7 @@ public class EnvironmentImpl implements Environment {
     private final String locUrl;
     private final Element jdomMetadata;
     private final ServiceContext serviceContext;
-    private final WebRequest servletRequest;
+    private final WebRequest webRequest;
     private Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
@@ -60,12 +60,13 @@ public class EnvironmentImpl implements Environment {
         this.resourceUrl = fparams.getResourceUrl();
         this.locUrl = fparams.getLocUrl();
         this.metadataInfo = fparams.metadataInfo;
-        for (Map.Entry<String, String[]> entry : fparams.servletRequest.getParameterMap().entrySet()) {
+        for (Map.Entry<String, String[]> entry : fparams.webRequest.getParameterMap().entrySet()) {
             for (String value : entry.getValue()) {
                 this.params.put(entry.getKey(), new ParamValue(value));
             }
         }
-        this.servletRequest = fparams.servletRequest;
+
+        this.webRequest = fparams.webRequest;
         this.serviceContext = fparams.context;
     }
 
@@ -211,10 +212,10 @@ public class EnvironmentImpl implements Environment {
 
     @Override
     public Optional<String> getHeader(String name) {
-        return Optional.fromNullable(servletRequest.getHeader(name));
+        return Optional.fromNullable(webRequest.getHeader(name));
     }
 
     public Collection<String> getHeaders(final String name) {
-        return Arrays.asList(servletRequest.getHeaderValues(name));
+        return Arrays.asList(webRequest.getHeaderValues(name));
     }
 }

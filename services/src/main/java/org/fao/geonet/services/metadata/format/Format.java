@@ -365,7 +365,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         FormatterParams fparams = new FormatterParams();
         fparams.config = config;
         fparams.format = this;
-        fparams.servletRequest= request;
+        fparams.webRequest = request;
         fparams.context = context;
         fparams.formatDir = formatDir.toRealPath();
         fparams.metadata = metadata;
