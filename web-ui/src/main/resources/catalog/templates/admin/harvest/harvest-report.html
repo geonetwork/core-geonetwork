@@ -20,7 +20,7 @@
         <tr
           data-ng-repeat="h in $parent.harvesters">
           <td>{{h.site.name | translate}}</td>
-          <td class="gn-break">{{(!h.site.url.length ? (!h.site.baseUrl.length : h.site.capabilitiesUrl : h.site.baseUrl) : h.site.url) | translate}}</td>
+          <td class="gn-break">{{(!h.site.url.length ? (!h.site.baseUrl.length ? h.site.capabilitiesUrl : h.site.baseUrl) : h.site.url) | translate}}</td>
           <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
           <td class="text-center" >{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun | date:'medium')}}</td>
           <td class="text-right">{{h.info.result.total}}</td>
