@@ -163,7 +163,7 @@
               function loadLayers() {
                 if (!angular.isArray(scope.map.getSize()) ||
                     scope.map.getSize().indexOf(0) >= 0) {
-                  $timeout(function () {
+                  $timeout(function() {
                     scope.map.updateSize();
                   });
                 }
@@ -189,12 +189,12 @@
                       }));
                     });
 
-                $timeout(function () {
+                $timeout(function() {
                   if (angular.isArray(scope.gnCurrentEdit.extent)) {
                     scope.map.getView().fitExtent(
-                      gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
+                        gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
                         'EPSG:4326', gnMap.getMapConfig().projection),
-                      scope.map.getSize());
+                        scope.map.getSize());
                   }
                 });
               };
@@ -306,7 +306,7 @@
                             },
                             timeout: 0,
                             type: 'danger'});
-                           deferred.resolve(data);
+                          deferred.resolve(data);
                         });
                       });
                   return deferred.promise;

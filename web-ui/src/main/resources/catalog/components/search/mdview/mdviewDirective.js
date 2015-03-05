@@ -1,7 +1,9 @@
 (function() {
   goog.provide('gn_mdview_directive');
 
-  var module = angular.module('gn_mdview_directive', []);
+  var module = angular.module('gn_mdview_directive', [
+    'ui.bootstrap.tpls',
+    'ui.bootstrap.rating']);
 
   module.directive('gnMetadataOpen', [
     '$http',
@@ -49,4 +51,36 @@
       };
     }]);
 
+  module.directive('gnMetadataRate', [
+    '$http',
+    function($http) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+            'rate.html',
+        restrict: 'A',
+        scope: {
+          md: '=gnMetadataRate',
+          readonly: '@readonly'
+        },
+
+        link: function(scope, element, attrs, controller) {
+          scope.$watch('md', function() {
+            scope.rate = scope.md ? scope.md.rating : null;
+          });
+
+          if (!scope.readonly) {
+            scope.$watch('rate', function(value, oldValue) {
+              if (value) {
+                return $http.get('md.rate?_content_type=json&' +
+                    'uuid=' + scope.md['geonet:info'].uuid +
+                    '&rating=' + value).success(function(data) {
+                  scope.rate = data[0];
+                });
+              }
+            });
+          }
+        }
+      };
+    }]
+  );
 })();

@@ -1,4 +1,6 @@
 {
+  "rate": "Rating",
+  "clickToRate": "Click to rate",
   "source": "Catalogue(s)",
   "title": "Title",
   "abstract": "Abstract",

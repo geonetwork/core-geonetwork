@@ -30,12 +30,15 @@ import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -213,23 +216,31 @@ public class ServiceContext extends BasicContext {
      *     <li>If the response is not XML, for example if it is JSON or a string</li>
      * </ol>
      */
-    public void executeOnly(LocalServiceRequest request) throws Exception {
-        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-        UserSession session = this._userSession;
-        if (session == null) {
-            session = new UserSession();
-        }
+    public void executeOnly(final LocalServiceRequest request) throws Exception {
 
-        try {
-            final ServiceManager serviceManager = context.getBean(ServiceManager.class);
-            serviceManager.dispatch(request, session, context);
-        } catch (Exception e) {
-            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
-            throw new ServiceExecutionFailedException(request.getService(), e);
-        } finally {
-            // set old context back as thread local
-            setAsThreadLocal();
-        }
+        TransactionManager.runInTransaction("ServiceContext#executeOnly: " + request.getAddress(), getApplicationContext(),
+                TransactionManager.TransactionRequirement.CREATE_NEW, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
+                new TransactionTask<Void>() {
+                    @Override
+                    public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                        final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
+                        UserSession session = ServiceContext.this._userSession;
+                        if (session == null) {
+                            session = new UserSession();
+                        }
+                        try {
+                            final ServiceManager serviceManager = context.getBean(ServiceManager.class);
+                            serviceManager.dispatch(request, session, context);
+                        } catch (Exception e) {
+                            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
+                            throw new ServiceExecutionFailedException(request.getService(), e);
+                        } finally {
+                            // set old context back as thread local
+                            setAsThreadLocal();
+                        }
+                        return null;
+                    }
+                });
     }
 
     /**

@@ -316,9 +316,9 @@
             <transferOptions>
                 <MD_DigitalTransferOptions>
                     <onLine>
-                        <CI_OnlineResource xlink:href="http://localhost:8080/demodem/editioinxlink">
+                        <CI_OnlineResource>
                             <linkage>
-                                <URL>http://localhost:8080/demodem/editioinurl</URL>
+                                <URL></URL>
                             </linkage>
                             <protocol>
                                 <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>

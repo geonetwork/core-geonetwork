@@ -23,7 +23,19 @@
       </output>
       <error sheet="../xslt/common/error.xsl"/>
     </service>
-    
+
+
+    <service name="md.rate">
+      <documentation>Rate a metadata record.
+
+      Parameters:
+        * uuid or id
+        * rating: Integer value from 1 to 5
+      </documentation>
+      <class name=".services.metadata.Rate"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
     <service name="md.create">
       <documentation><![CDATA[
         Create a new metadata from a template or an existing record.

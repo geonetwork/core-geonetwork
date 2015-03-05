@@ -25,6 +25,7 @@
     <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/slider.js"/>
+    <jsSource webappPath="catalog/lib/angular.ext/rating.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/tabs.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/typeahead.js"/>
     <jsSource webappPath="catalog/lib/style/bootstrap/dist/js/bootstrap.min.js"/>

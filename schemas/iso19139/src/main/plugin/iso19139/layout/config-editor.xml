@@ -155,9 +155,17 @@
       <name>gmd:abstract</name>
     </expanded>
     <!-- All fields in ISO could be multilingual.
-    Define element to exlcude. 
-    TODO: it may be relevant to have parent defined
-    to restrict the list.
+    Define element to exclude.
+
+      The name element can optionally have ancestor, child or parent attributes to
+      further restrict the exclusion.  For example if some gmd:code elements are
+      multilingual but others are not then adding a parent/child/parent attribute
+      can restrict the exclude to only some elements.
+
+      For example:
+        <name ancestor="gmd:thesaurusName">gmd:code</name>
+        or
+        <name child="gmx:Anchor">gmd:code</name>
     -->
     <exclude>
       <name>gmd:identifier</name>
