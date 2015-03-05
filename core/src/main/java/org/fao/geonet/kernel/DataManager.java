@@ -552,8 +552,8 @@ public class DataManager {
 
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CREATE_DATE,  createDate,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CHANGE_DATE,  changeDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE,      source,      true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID,        uuid,        true, true));

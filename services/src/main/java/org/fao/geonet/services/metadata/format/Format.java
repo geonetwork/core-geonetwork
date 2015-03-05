@@ -31,9 +31,16 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
@@ -42,6 +49,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
@@ -80,6 +90,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +130,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private SchemaManager schemaManager;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private SearchManager searchManager;
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
@@ -264,12 +277,38 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final NativeWebRequest request) throws Exception {
+        final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1);
+        final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+
+        Query query;
+        if (id != null) {
+            query = new TermQuery(new Term(LuceneIndexField.ID, id));
+        } else {
+            query = new TermQuery(new Term(LuceneIndexField.UUID, uuid));
+        }
+
+        final TopDocs search = searcher.search(query, 1);
+        if (search.totalHits == 0) {
+            String identifier = id == null ? "uuid=" + uuid : "id = " + id;
+            throw new NoSuchFieldException("There is no metadata " + identifier);
+        }
+
+        Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
+
+        if (doc != null) {
+            final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
+            if (request.checkNotModified(changeDate)) {
+                return;
+            }
+        }
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
                 skipPopularity,
                 hide_withheld, request);
-        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
+        if (result != null) {
+            writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
+        }
     }
 
     private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {

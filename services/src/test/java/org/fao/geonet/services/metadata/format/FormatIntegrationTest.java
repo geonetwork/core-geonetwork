@@ -3,9 +3,11 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.Lists;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
+import org.apache.http.HttpStatus;
 import org.apache.log4j.Level;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -13,7 +15,9 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
@@ -37,12 +41,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -74,6 +81,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     @Autowired
     private DataManager dataManager;
     @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
     protected MockRequestFactoryGeonet requestFactory;
 
     private ServiceContext serviceContext;
@@ -100,6 +109,54 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
                 false, false).getId();
 
+        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
+
+    }
+
+    @Test
+    public void testLastModified() throws Exception {
+        metadataRepository.update(id, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                entity.getDataInfo().setChangeDate(new ISODate("2012-01-18T15:04:43"));
+            }
+        });
+
+        final String formatterName = configureGroovyTestFormatter();
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("h2IdentInfo", "true");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+        final String lastModified = response.getHeader("Last-Modified");
+
+        final String viewString = response.getContentAsString();
+        assertNotNull(viewString);
+
+        request = new MockHttpServletRequest();
+        request.setMethod("GET");
+        response = new MockHttpServletResponse();
+
+        request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+        assertEquals(HttpStatus.SC_NOT_MODIFIED, response.getStatus());
+        metadataRepository.update(id, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                entity.getDataInfo().setChangeDate(new ISODate());
+            }
+        });
+
+        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
+
+        request = new MockHttpServletRequest();
+        request.setMethod("GET");
+        response = new MockHttpServletResponse();
+
+        request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+        assertEquals(HttpStatus.SC_OK, response.getStatus());
     }
 
     @Test(expected = AssertionError.class)
@@ -277,22 +334,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecGroovy() throws Exception {
-        final String formatterName = "groovy-test-formatter";
-        final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
-        final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
-        final Path formatterDir = this.dataDirectory.getFormatterDir();
-        IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
-        final String groovySharedClasses = "groovy";
-        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(groovySharedClasses), formatterDir.resolve(groovySharedClasses), false);
-
-
-        final Path iso19139ConfigProperties = this.schemaManager.getSchemaDir("iso19139").resolve("formatter/config.properties");
-        Files.write(iso19139ConfigProperties, "dependsOn=dublin-core".getBytes("UTF-8"));
-
-        final Path dublinCoreSchemaDir = this.schemaManager.getSchemaDir("dublin-core").resolve("formatter/groovy");
-        Files.createDirectories(dublinCoreSchemaDir);
-        IO.copyDirectoryOrFile(IO.toPath(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").toURI()),
-                dublinCoreSchemaDir.resolve("DCFunctions.groovy"), false);
+        final String formatterName = configureGroovyTestFormatter();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
@@ -354,6 +396,26 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertElement(view, "body//span[@class = 'extents']", "2", 1);
 
         assertNull(Xml.selectElement(view, "body//h1[text() = 'Reference System Information']"));
+    }
+
+    private String configureGroovyTestFormatter() throws URISyntaxException, IOException {
+        final String formatterName = "groovy-test-formatter";
+        final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
+        final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
+        final Path formatterDir = this.dataDirectory.getFormatterDir();
+        IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
+        final String groovySharedClasses = "groovy";
+        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(groovySharedClasses), formatterDir.resolve(groovySharedClasses), false);
+
+
+        final Path iso19139ConfigProperties = this.schemaManager.getSchemaDir("iso19139").resolve("formatter/config.properties");
+        Files.write(iso19139ConfigProperties, "dependsOn=dublin-core".getBytes("UTF-8"));
+
+        final Path dublinCoreSchemaDir = this.schemaManager.getSchemaDir("dublin-core").resolve("formatter/groovy");
+        Files.createDirectories(dublinCoreSchemaDir);
+        IO.copyDirectoryOrFile(IO.toPath(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").toURI()),
+                dublinCoreSchemaDir.resolve("DCFunctions.groovy"), false);
+        return formatterName;
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {
