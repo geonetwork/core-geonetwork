@@ -19,6 +19,6 @@ public class ChangeDateValidator implements Validator {
 
     @Override
     public boolean isCacheVersionValid(StoreInfo info) {
-        return Math.abs(changeDate - info.changeDate) < 10;
+        return Math.abs(changeDate - info.getChangeDate()) < 10;
     }
 }

@@ -1,19 +1,25 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 
 /**
- * Caches Formatter html files in memory (keeping the most recent and most accessed X formatters) and on disk.
+ * Caches Formatter html files in memory (keeping the most recent or most accessed X formatters) and on disk.
  * <p/>
  * The Formatter cache has two caches.
  * <ul>
  * <li>
- *      A fast access in-memory cache which is limitted to some X records.  The records kept are based on the last access/write of the
- *      record and how often that record is accessed in the last X seconds.
+ *      A fast access in-memory cache which is limited to some X records.
  * </li>
  * <li>
  *     A persistent cache which keeps a cache of every formatter that has been added to the cache.
@@ -31,10 +37,34 @@ import javax.annotation.Nullable;
 public class FormatterCache {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final PersistentStore persistentStore;
+    private final Cache<Key, StoreInfoAndData> memoryCache;
+    private final ExecutorService executor;
 
-    public FormatterCache(PersistentStore persistentStore) {
-        this.persistentStore = persistentStore;
+    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize) {
+        this(persistentStore, memoryCacheSize, defaultExecutor());
     }
+
+    private static ExecutorService defaultExecutor() {
+        CustomizableThreadFactory threadFactory = new CustomizableThreadFactory();
+        threadFactory.setDaemon(true);
+        threadFactory.setThreadNamePrefix("FormatterCache-");
+        return Executors.newSingleThreadExecutor(threadFactory);
+    }
+
+    public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, ExecutorService executor) {
+        this.persistentStore = persistentStore;
+        this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
+                maximumSize(memoryCacheSize).build();
+
+        this.executor = executor;
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        this.executor.shutdownNow();
+    }
+
+
 
     /**
      * Get a value from the cache, or if it is not in the cache, load it with the loader and add it to the cache.
@@ -47,14 +77,54 @@ public class FormatterCache {
      *                                    be updated in the current thread instead of in another thread.
      */
     @Nullable
-    public String get(Key key, Validator validator, Callable<StoreInfo> loader, boolean writeToStoreInCurrentThread) {
+    public String get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws
+            Exception {
+        StoreInfoAndData cached = memoryCache.getIfPresent(key);
+        boolean invalid = false;
+        if (cached != null && !validator.isCacheVersionValid(cached)) {
+            cached = null;
+            invalid = true;
+        }
+
+        if (!invalid && cached == null) {
+            cached = loadFromPersistentCache(key, validator);
+        }
+
+        if (cached == null) {
+            cached = loader.call();
+            push(key, cached, writeToStoreInCurrentThread);
+
+        }
+
+        return cached.getResult();
+    }
+
+    private void push(Key key, StoreInfoAndData cached, boolean writeToStoreInCurrentThread) {
+        final Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+
+            this.memoryCache.put(key, cached);
+            if (writeToStoreInCurrentThread) {
+                this.persistentStore.put(key, cached);
+            }
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    private StoreInfoAndData loadFromPersistentCache(Key key, Validator validator) {
         final Lock readLock = lock.readLock();
         try {
             readLock.lock();
-            throw new UnsupportedOperationException("todo");
+            final StoreInfo info = persistentStore.getInfo(key);
+            if (info != null && validator.isCacheVersionValid(info)) {
+                return persistentStore.get(key);
+            }
         } finally {
             readLock.unlock();
         }
+        return null;
     }
 
     /**
@@ -71,7 +141,7 @@ public class FormatterCache {
         final Lock readLock = lock.readLock();
         try {
             readLock.lock();
-            throw new UnsupportedOperationException("todo");
+            return this.persistentStore.getPublic(key);
         } finally {
             readLock.unlock();
         }

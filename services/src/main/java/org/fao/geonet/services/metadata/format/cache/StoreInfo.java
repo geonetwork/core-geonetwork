@@ -1,17 +1,24 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 /**
- * Encapsulates the information when a formatter is executed.
+ * The metadata about the stored value.  Does not contain the value, only the data describing it like change data and published.
+ *
  * @author Jesse on 3/5/2015.
  */
 public class StoreInfo {
-    public final String result;
-    public final long changeDate;
-    public final boolean published;
+    private final long changeDate;
+    private final boolean published;
 
-    public StoreInfo(String result, long changeDate, boolean published) {
-        this.result = result;
+    public StoreInfo(long changeDate, boolean published, int popularity, long lastAccess) {
         this.changeDate = changeDate;
         this.published = published;
+    }
+
+    public long getChangeDate() {
+        return changeDate;
+    }
+
+    public boolean isPublished() {
+        return published;
     }
 }
