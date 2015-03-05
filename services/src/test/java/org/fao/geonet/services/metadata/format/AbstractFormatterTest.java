@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
 import java.util.Collections;
@@ -110,16 +111,18 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
     }
 
     protected Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
+        final ServletWebRequest webRequest = new ServletWebRequest(request);
+
         return this.formatService.loadMetadataAndCreateFormatterAndParams(getUILang(), getOutputType(),
-                "" + id, null, formatterId, "true", false, request);
+                "" + id, null, formatterId, "true", false, webRequest);
     }
 
     protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {
+        final ServletWebRequest webRequest = new ServletWebRequest(request, new MockHttpServletResponse());
         TestFunction testFunction = new TestFunction() {
             @Override
             public void exec() throws Exception{
-                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request,
-                        new MockHttpServletResponse());
+                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, webRequest);
             }
         };
 

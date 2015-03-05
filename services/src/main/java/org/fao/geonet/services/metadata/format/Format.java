@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.metadata.format.cache.FormatterCache;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -66,6 +67,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
@@ -77,7 +80,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +125,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private GeonetHttpRequestFactory requestFactory;
     @Autowired
     private IsoLanguagesMapper isoLanguagesMapper;
+    @Autowired
+    private FormatterCache formatterCache;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -130,6 +134,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
+    /**
+     * We will copy all formatter files to the data directory so that the formatters should always compile in data directory without
+     * administrators manually keeping all the formatter directories up-to-date.
+     */
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent) {
@@ -176,7 +184,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(value = "metadata", required = false) String metadata,
             @RequestParam(value = "url", required = false) final String url,
             @RequestParam(value = "schema") final String schema,
-            final HttpServletRequest request, HttpServletResponse response) throws Exception {
+            final NativeWebRequest request) throws Exception {
 
         if (url == null && metadata == null) {
             throw new IllegalArgumentException("Either the metadata or url parameter must be declared.");
@@ -193,14 +201,14 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
         metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
 
-        final ServiceContext context = createServiceContext(lang, formatType, request);
+        final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid,
                 request, context, metadataEl, metadataInfo);
 
-        writeOutResponse(lang, response, formatType, result);
+        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
     }
 
-    private String getXmlFromUrl(String lang, String url, HttpServletRequest servletRequest) throws IOException, URISyntaxException {
+    private String getXmlFromUrl(String lang, String url, WebRequest request) throws IOException, URISyntaxException {
         String adjustedUrl = url;
         if (!url.startsWith("http")) {
             adjustedUrl = settingManager.getSiteURL(lang) + url;
@@ -211,12 +219,11 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
 
         HttpUriRequest getXmlRequest = new HttpGet(adjustedUrl);
-        final Enumeration<String> headerNames = servletRequest.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            final Enumeration<String> headers = servletRequest.getHeaders(headerName);
-            while (headers.hasMoreElements()) {
-                String header = headers.nextElement();
+        final Iterator<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasNext()) {
+            String headerName = headerNames.next();
+            final String[] headers = request.getHeaderValues(headerName);
+            for (String header : headers) {
                 getXmlRequest.addHeader(headerName, header);
             }
         }
@@ -256,13 +263,13 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(value = "xsl", required = false) final String xslid,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
-            final HttpServletRequest request, HttpServletResponse response) throws Exception {
+            final NativeWebRequest request) throws Exception {
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
                 skipPopularity,
                 hide_withheld, request);
-        writeOutResponse(lang, response, formatType, result);
+        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
     }
 
     private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
@@ -285,9 +292,9 @@ public class Format extends AbstractFormatService implements ApplicationListener
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
             final String lang, final FormatType type, final String id, final String uuid, final String xslid,
-            final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
+            final String skipPopularity, final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
 
-        ServiceContext context = createServiceContext(lang, type, request);
+        ServiceContext context = createServiceContext(lang, type, request.getNativeRequest(HttpServletRequest.class));
         final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
@@ -299,7 +306,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
     }
 
-    private Pair<FormatterImpl, FormatterParams> createFormatterAndParams(String lang, FormatType type, String xslid, HttpServletRequest request, ServiceContext context, Element metadata, Metadata metadataInfo) throws Exception {
+    private Pair<FormatterImpl, FormatterParams> createFormatterAndParams(String lang, FormatType type, String xslid,
+                                                                          NativeWebRequest request,
+                                                                          ServiceContext context, Element metadata,
+                                                                          Metadata metadataInfo) throws Exception {
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {

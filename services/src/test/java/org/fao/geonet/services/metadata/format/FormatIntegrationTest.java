@@ -34,6 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.net.URL;
@@ -103,10 +104,10 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        final ServletWebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         final FormatterParams fparams = new FormatterParams();
         fparams.context = this.serviceContext;
-        fparams.servletRequest = request;
+        fparams.servletRequest = webRequest;
         // make sure context is cleared
         EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
 
@@ -120,7 +121,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         Files.deleteIfExists(formatterDir.resolve(functionsXslName));
         IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
-        formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
+        formatService.exec("eng", "html", "" + id, null, formatterName, null, null, webRequest);
     }
 
     @Test
@@ -129,7 +130,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         Level level = logger.getLevel();
         logger.setLevel(Level.ALL);
         try {
-            MockHttpServletRequest request = new MockHttpServletRequest();
+            final ServletWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
+
             final FormatterParams fparams = new FormatterParams();
             fparams.context = this.serviceContext;
             fparams.servletRequest = request;
@@ -147,7 +149,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
 
-            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
+            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
 
             // no Error is success
         } finally {
@@ -167,7 +169,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(srvAppContext);
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-            formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
+            formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, new ServletWebRequest(request, response));
 
             final String view = response.getContentAsString();
             try {
@@ -178,7 +180,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             }
             try {
                 response = new MockHttpServletResponse();
-                formatService.exec("eng", "testpdf", "" + id, null, formatter.getId(), "true", false, request, response);
+                formatService.exec("eng", "testpdf", "" + id, null, formatter.getId(), "true", false,
+                        new ServletWebRequest(request, response));
 //                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
 //                System.exit(0);
             } catch (Throwable t) {
@@ -211,7 +214,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(applicationContextAttributeKey);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
         final String viewXml = response.getContentAsString();
         final Element view = Xml.loadString(viewXml, false);
         assertEqualsText("fromFunction", view, "*//p");
@@ -225,7 +228,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139", request, response);
+        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139",
+                new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
@@ -244,7 +248,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", request, response);
+        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
@@ -264,7 +268,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", request, response);
+        formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
@@ -294,7 +298,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         request.addParameter("h2IdentInfo", "true");
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
         final String viewString = response.getContentAsString();
 //        com.google.common.io.Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
 

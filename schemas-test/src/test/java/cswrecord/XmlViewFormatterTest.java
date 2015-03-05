@@ -9,6 +9,7 @@ import org.jdom.Text;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
 import java.util.List;
@@ -29,7 +30,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
 //        measureFormatterPerformance(request, formatterId);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, new ServletWebRequest(request, response));
         String view = response.getContentAsString();
 //        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
         view = view.replaceAll("\\s+", " ");

@@ -33,4 +33,11 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
+
+	<bean id="formatterCache"
+		class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
+    <constructor-arg index="0">
+      <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" />
+    </constructor-arg>
+	</bean>
 </beans>
