@@ -100,7 +100,7 @@ public class Rate extends NotInReadOnlyModeService {
 
 		int rating = Integer.parseInt(rat);
 
-		if (rating < 1 || rating > 5)
+		if (rating < 0 || rating > 5)
 			throw new BadParameterEx(Params.RATING, rat);
 
 		String harvUuid = getHarvestingUuid(context, id);
@@ -158,7 +158,7 @@ public class Rate extends NotInReadOnlyModeService {
 
 		Lib.net.setupProxy(context, req);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_METADATA_RATE);
+		req.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_METADATA_RATE);
 		req.clearParams();
 		req.addParam("uuid",   uuid);
 		req.addParam("rating", rating);

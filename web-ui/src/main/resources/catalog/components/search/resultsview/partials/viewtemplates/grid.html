@@ -13,10 +13,11 @@
                data-ng-change="change()"/>
                
         <!--Source catalog Logo-->
-        <a ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+        <a data-ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
             <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
         </a>
-        <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        <img data-ng-if="!md.groupWebsite"
+             data-ng-src="../..{{md.logo}}" class="gn-source-logo"/>
 
         <div class="gn-md-category"
              data-ng-class="md.category.length > 0 ||
@@ -35,7 +36,9 @@
             </i>
           </a>
         </div>
-      
+        <div data-gn-metadata-rate="md"
+             data-readonly="true"
+             class="pull-right"/>
       </div>
       <!--end top row-->
       <div style="clear: both;"></div>
