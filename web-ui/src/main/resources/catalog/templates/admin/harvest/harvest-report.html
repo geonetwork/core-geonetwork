@@ -8,8 +8,11 @@
     </div>
 
     <div class="panel-body">
-
-			<table class="table table-striped">
+      <button type="button" class="btn btn-small"
+          data-ng-click="csvReport($event)" data-translate=""
+          >csvExport</button>
+          
+			<table id="harvestReport" class="table table-striped">
 				<tr>
           <th data-translate="">harvesterName</th>
           <th data-translate="">serviceUrl</th>
