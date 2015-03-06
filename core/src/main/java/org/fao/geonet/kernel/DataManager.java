@@ -1456,15 +1456,10 @@ public class DataManager implements ApplicationEventPublisherAware {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
-            Integer iId = Integer.valueOf(id);
-            _metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata entity) {
-                    final MetadataDataInfo dataInfo = entity.getDataInfo();
-                    int popularity = dataInfo.getPopularity();
-                    dataInfo.setPopularity(popularity + 1);
-                }
-            });
+            int iId = Integer.parseInt(id);
+            _metadataRepository.incrementPopularity(iId);
+            _entityManager.flush();
+            _entityManager.clear();
 
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);

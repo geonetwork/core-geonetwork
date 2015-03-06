@@ -90,4 +90,5 @@ public interface MetadataRepositoryCustom {
      * @return a map of metadataId -> SourceInfo
      */
     Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<Metadata> spec);
+
 }
