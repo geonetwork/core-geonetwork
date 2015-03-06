@@ -14,7 +14,7 @@
      {{layer.get('label')}}
    </label>
    <div class="details">
-     <button class="metadata" ng-if="layer.get('metadata')" data-ng-click="showMetadata(layer.get('metadata'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
+     <button class="metadata" ng-if="layer.get('metadataUrl')" data-ng-click="showMetadata(layer.get('metadataUrl'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
        <span class="fa fa-file"></span>
        {{'layerMetadata'|translate}}
      </button>
