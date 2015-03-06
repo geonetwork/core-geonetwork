@@ -87,6 +87,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -136,6 +137,8 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -180,7 +183,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  */
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
-public class DataManager {
+public class DataManager implements ApplicationEventPublisherAware {
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
@@ -215,6 +218,7 @@ public class DataManager {
 
 
     private String baseURL;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     //--------------------------------------------------------------------------
     //---
@@ -505,6 +509,8 @@ public class DataManager {
         } finally {
             indexLock.unlock();
         }
+        Metadata fullMd;
+
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = Integer.valueOf(metadataId);
@@ -528,7 +534,7 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            final Metadata fullMd = _metadataRepository.findOne(id$);
+            fullMd = _metadataRepository.findOne(id$);
 
             final String  schema     = fullMd.getDataInfo().getSchemaId();
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
@@ -679,6 +685,7 @@ public class DataManager {
             searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            fullMd = null;
         } finally {
             indexLock.lock();
             try {
@@ -686,6 +693,9 @@ public class DataManager {
             } finally {
                 indexLock.unlock();
             }
+        }
+        if (fullMd != null) {
+            applicationEventPublisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
     }
 
@@ -3519,5 +3529,10 @@ public class DataManager {
         _metadataRepository.deleteAll(specification);
 
         return idsOfMetadataToDelete.size();
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
