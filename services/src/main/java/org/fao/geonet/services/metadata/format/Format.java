@@ -89,6 +89,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -212,6 +213,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
     }
 
     @RequestMapping(value = "/{lang}/xml.format.{type}")
+    @ResponseBody
     public void execXml(
             @PathVariable final String lang,
             @PathVariable final String type,
@@ -276,6 +278,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         response.setContentType(formatType.contentType);
         String filename = "metadata." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+        response.setStatus(HttpServletResponse.SC_OK);
         if (formatType == FormatType.pdf) {
             writerAsPDF(response, formattedMetadata, lang);
         } else {
@@ -288,6 +291,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
     }
 
     @RequestMapping(value = "/{lang}/md.format.{type}")
+    @ResponseBody
     public void exec(
             @PathVariable final String lang,
             @PathVariable final String type,
@@ -297,53 +301,43 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final NativeWebRequest request) throws Exception {
-        final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1);
-        final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
-
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
-        String resolvedId;
-        if (id == null) {
-            resolvedId = dataManager.getMetadataId(uuid);
-        } else {
-            try {
-                Integer.parseInt(id);
-                resolvedId = id;
-            } catch (NumberFormatException e) {
-                resolvedId = dataManager.getMetadataId(id);
-            }
-        }
+        String resolvedId = resolveId(id, uuid);
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
-        Query query= new TermQuery(new Term(LuceneIndexField.ID, resolvedId));
-        final TopDocs search = searcher.search(query, 1);
-        if (search.totalHits == 0) {
-            String identifier = id == null ? "uuid=" + uuid : "id = " + id;
-            throw new NoSuchFieldException("There is no metadata " + identifier);
-        }
-
-        Document doc = searcher.doc(search.scoreDocs[0].doc, FIELDS_TO_LOAD);
-
-        final boolean hideWithheld = hide_withheld || accessManager.canEdit(context, resolvedId);
+        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) || accessManager.canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld);
+        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
         Validator validator;
-        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
-        if (doc != null) {
-            long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
-            if (cacheConfig.allowCaching(key) && request.checkNotModified(changeDate)) {
-                if (!skipPopularityBool) {
-                    this.dataManager.increasePopularity(context, resolvedId);
-                }
-                return;
+
+        Query query= new TermQuery(new Term(LuceneIndexField.ID, resolvedId));
+        try (final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1)) {
+            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+            final TopDocs search = searcher.search(query, 1);
+            if (search.totalHits == 0) {
+                String identifier = id == null ? "uuid=" + uuid : "id = " + id;
+                throw new NoSuchFieldException("There is no metadata " + identifier);
             }
 
-            validator = new ChangeDateValidator(changeDate);
-        } else {
-            validator = new NoCacheValidator();
-        }
+            Document doc = searcher.doc(search.scoreDocs[0].doc, FIELDS_TO_LOAD);
 
+            if (doc != null) {
+                long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
+                if (request.checkNotModified(changeDate) && cacheConfig.allowCaching(key)) {
+                    if (!skipPopularityBool) {
+                        this.dataManager.increasePopularity(context, resolvedId);
+                    }
+                    return;
+                }
+
+                validator = new ChangeDateValidator(changeDate);
+            } else {
+                validator = new NoCacheValidator();
+            }
+        }
         final FormatMetadata formatMetadata = new FormatMetadata(lang, formatType, resolvedId, xslid,
                 skipPopularityBool, hide_withheld, request);
 
@@ -363,6 +357,21 @@ public class Format extends AbstractFormatService implements ApplicationListener
         if (bytes != null) {
             writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+    }
+
+    private String resolveId(String id, String uuid) throws Exception {
+        String resolvedId;
+        if (id == null) {
+            resolvedId = dataManager.getMetadataId(uuid);
+        } else {
+            try {
+                Integer.parseInt(id);
+                resolvedId = id;
+            } catch (NumberFormatException e) {
+                resolvedId = dataManager.getMetadataId(id);
+            }
+        }
+        return resolvedId;
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {

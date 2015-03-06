@@ -47,6 +47,11 @@
      <!--This class allows you to configure which formatters, languages, content/type etc... to cache-->
      <!--Simply add the properties.  -->
      <!--By default everything is cached except pdf-->
+    <property name="formatterExceptions">
+      <set>
+        <value>hierarchy_view</value>
+      </set>
+    </property>
   </bean>
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
