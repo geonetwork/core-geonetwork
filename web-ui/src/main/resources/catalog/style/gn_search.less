@@ -38,13 +38,25 @@
   }
 }
 
-
 .gn-icon-bg {
-  height: 130px;
-
+padding-left: 5px;
+padding-right: 5px;
+div {
+overflow:hidden;
+  a {
+  height: 100px;
   text-align: center;
+  .gn-icon {
+	margin: 3px 0px;
+  }
+  .thumbnail {
+  margin-bottom: 4px;
+  }
   .gn-icon-label {
-    font-size: 70%;
+    font-size: 90%;
+	font-weight: bold;
+	white-space:nowrap;
+	text-transform: capitalize;
   }
   .badge {
     background-color: #428BCA;
@@ -59,7 +71,8 @@
     }
   }
 }
-
+}
+}
 
 .gn-select ul.dropdown-menu > li > a:first-letter,
 .gn-sort-by ul.dropdown-menu > li > a:first-letter {
