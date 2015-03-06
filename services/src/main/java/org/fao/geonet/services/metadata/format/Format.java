@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
@@ -43,8 +44,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -56,7 +59,14 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.services.metadata.format.cache.ChangeDateValidator;
 import org.fao.geonet.services.metadata.format.cache.FormatterCache;
+import org.fao.geonet.services.metadata.format.cache.Key;
+import org.fao.geonet.services.metadata.format.cache.NoCacheValidator;
+import org.fao.geonet.services.metadata.format.cache.StoreInfoAndData;
+import org.fao.geonet.services.metadata.format.cache.Validator;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -64,14 +74,15 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.json.JSONException;
+import org.jdom.JDOMException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,11 +107,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -110,12 +123,14 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
 @Controller("md.formatter.type")
 @Lazy
 public class Format extends AbstractFormatService implements ApplicationListener {
-
+    private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
     @Autowired
     private ApplicationContext springAppContext;
 
     @Autowired
     private SettingManager settingManager;
+    @Autowired
+    private AccessManager accessManager;
     @Autowired
     private MetadataRepository metadataRepository;
     @Autowired
@@ -140,11 +155,13 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private IsoLanguagesMapper isoLanguagesMapper;
     @Autowired
     private FormatterCache formatterCache;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
      */
-    private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
+    private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<>();
     private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
     /**
@@ -217,8 +234,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
         final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid,
                 request, context, metadataEl, metadataInfo);
+        final String formattedMetadata = result.one().format(result.two());
+        byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
-        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
+        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
     private String getXmlFromUrl(String lang, String url, WebRequest request) throws IOException, URISyntaxException {
@@ -247,23 +266,19 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, Pair<FormatterImpl, FormatterParams>
-            result) throws Exception {
-        FormatterImpl formatter = result.one();
-        FormatterParams fparams = result.two();
+    public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
 
         response.setContentType(formatType.contentType);
         String filename = "metadata." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-        final String formattedMetadata = formatter.format(fparams);
         if (formatType == FormatType.pdf) {
             writerAsPDF(response, formattedMetadata, lang);
         } else {
-            final byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
             response.setCharacterEncoding(Constants.ENCODING);
             response.setContentType("text/html");
-            response.setContentLength(bytes.length);
-            response.getOutputStream().write(bytes);
+            response.setContentLength(formattedMetadata.length);
+            response.setHeader("Cache-Control", "no-cache");
+            response.getOutputStream().write(formattedMetadata);
         }
     }
 
@@ -280,7 +295,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1);
         final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
 
-        FormatType formatType = FormatType.valueOf(type.toLowerCase());
+        final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
         String resolvedId;
         if (id == null) {
@@ -305,28 +320,59 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
         Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
 
-        boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
+        Validator validator;
+        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
         if (doc != null) {
-            final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
+            long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
             if (request.checkNotModified(changeDate)) {
-
                 if (!skipPopularityBool) {
                     this.dataManager.increasePopularity(context, resolvedId);
                 }
-
                 return;
             }
+
+            validator = new ChangeDateValidator(changeDate);
+        } else {
+            validator = new NoCacheValidator();
         }
 
-        Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, resolvedId, xslid,
-                skipPopularityBool,
-                hide_withheld, request);
-        if (result != null) {
-            writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
+        final FormatMetadata formatMetadata = new FormatMetadata(lang, formatType, resolvedId, xslid,
+                skipPopularityBool, hide_withheld, request);
+
+        byte[] bytes;
+        if (hasNonStandardParameters(request)) {
+            // the http headers can cause a formatter to output custom output due to the parameters.
+            // because it is not known how the parameters may affect the output then we have two choices
+            // 1. make a unique cache for each configuration of parameters
+            // 2. don't cache anything that has extra parameters beyond the standard parameters used to
+            //    create the key
+            // #1 has a major flaw because an attacker could simply make new requests always changing the parameters
+            // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
+            bytes = formatMetadata.call().data;
+        } else {
+            boolean elementsMustBeHidden = !accessManager.canEdit(context, resolvedId) || Boolean.TRUE.equals(hide_withheld);
+            Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, elementsMustBeHidden);
+            bytes = this.formatterCache.get(key, validator, formatMetadata, false);
+        }
+        if (bytes != null) {
+            writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
-    private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
+    private boolean hasNonStandardParameters(NativeWebRequest request) {
+        Iterator<String> iter = request.getParameterNames();
+        while (iter.hasNext()) {
+            if (!ALLOWED_PARAMETERS.contains(iter.next())) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+
+    private void writerAsPDF(HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.itextpdf.text.DocumentException {
+        final String htmlContent = new String(bytes, Constants.CHARSET);
         try {
             XslUtil.setNoScript();
             ITextRenderer renderer = new ITextRenderer();
@@ -560,5 +606,44 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
     public void setIsoLanguagesMapper(IsoLanguagesMapper isoLanguagesMapper) {
         this.isoLanguagesMapper = isoLanguagesMapper;
+    }
+
+    private class FormatMetadata implements Callable<StoreInfoAndData> {
+        private final String lang;
+        private final FormatType formatType;
+        private final String finalResolvedId;
+        private final String xslid;
+        private final boolean skipPopularityBool;
+        private final Boolean hide_withheld;
+        private final NativeWebRequest request;
+
+        public FormatMetadata(String lang, FormatType formatType, String finalResolvedId, String xslid, boolean skipPopularityBool,
+                              Boolean hide_withheld, NativeWebRequest request) {
+            this.lang = lang;
+            this.formatType = formatType;
+            this.finalResolvedId = finalResolvedId;
+            this.xslid = xslid;
+            this.skipPopularityBool = skipPopularityBool;
+            this.hide_withheld = hide_withheld;
+            this.request = request;
+        }
+
+        @Override
+        public StoreInfoAndData call() throws Exception {
+            Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, finalResolvedId, xslid,
+
+                    skipPopularityBool,
+                    hide_withheld, request);
+            FormatterImpl formatter = result.one();
+            FormatterParams fparams = result.two();
+            final String formattedMetadata = formatter.format(fparams);
+            byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+            long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
+            final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+            final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(finalResolvedId);
+            final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished));
+
+            return new StoreInfoAndData(bytes, changeDate, one != null);
+        }
     }
 }
