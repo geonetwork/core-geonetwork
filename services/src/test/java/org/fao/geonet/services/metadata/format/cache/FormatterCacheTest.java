@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.junit.After;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -75,13 +77,13 @@ public class FormatterCacheTest {
         final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
 
-        assertNull(formatterCache.getPublic(key));
+        assertNull(formatterCache.getPublished(key));
 
         formatterCache.get(key, new ChangeDateValidator(changeDate + 100), new TestLoader("published", changeDate, true), true);
-        assertEquals("published", formatterCache.getPublic(key));
+        assertArrayEquals("published".getBytes(Constants.CHARSET), formatterCache.getPublished(key));
 
         formatterCache.get(key, new ChangeDateValidator(changeDate + 1000), new TestLoader("lastResult", changeDate, false), true);
-        assertNull(formatterCache.getPublic(key));
+        assertNull(formatterCache.getPublished(key));
     }
 
     @Test
@@ -106,13 +108,17 @@ public class FormatterCacheTest {
 
             @Nullable
             @Override
-            public byte[] getPublic(Key key) {
+            public byte[] getPublished(Key key) {
                 throw new UnsupportedOperationException("to implement");
             }
 
             @Override
             public void remove(@Nonnull Key key) throws IOException, SQLException {
                 // ignore
+            }
+            @Override
+            public void setPublished(int metadataId, boolean published) {
+                throw new UnsupportedOperationException("not yet implemented");
             }
         }, 100, 5000);
 
@@ -165,20 +171,4 @@ public class FormatterCacheTest {
         assertNotNull(persistentStore.get(key));
     }
 
-    private static class TestLoader implements Callable<StoreInfoAndData> {
-        private final String resultToStore;
-        private final long changeDate;
-        private final boolean published;
-
-        public TestLoader(String resultToStore, long changeDate, boolean published) {
-            this.resultToStore = resultToStore;
-            this.changeDate = changeDate;
-            this.published = published;
-        }
-
-        @Override
-        public StoreInfoAndData call() throws Exception {
-            return new StoreInfoAndData(resultToStore, changeDate, published);
-        }
-    }
 }

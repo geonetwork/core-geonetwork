@@ -81,7 +81,7 @@ public class FilesystemStoreTest {
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, false);
         Key key = new Key(1, "eng", FormatType.html, "full_view", true);
         store.put(key, data);
-        assertNull(store.getPublic(key));
+        assertNull(store.getPublished(key));
         assertEquals(1, countFiles(store.getPrivatePath(key)));
         assertEquals(0, countFiles(store.getPublicPath(key)));
 
@@ -89,20 +89,20 @@ public class FilesystemStoreTest {
         Key key2 = new Key(2, "eng", FormatType.html, "full_view", true);
         store.put(key2, data);
 
-        assertNotNull(store.getPublic(key2));
-        assertNull(store.getPublic(key));
+        assertNotNull(store.getPublished(key2));
+        assertNull(store.getPublished(key));
         assertEquals(3, countFiles(geonetworkDataDirectory.getHtmlCacheDir()));
 
         data = new StoreInfoAndData("three", 10000, true);
         store.put(key, data);
-        assertNotNull(store.getPublic(key2));
-        assertNotNull(store.getPublic(key));
+        assertNotNull(store.getPublished(key2));
+        assertNotNull(store.getPublished(key));
         assertEquals(4, countFiles(geonetworkDataDirectory.getHtmlCacheDir()));
 
         data = new StoreInfoAndData("four", 10000, false);
         store.put(key2, data);
-        assertNull(store.getPublic(key2));
-        assertNotNull(store.getPublic(key));
+        assertNull(store.getPublished(key2));
+        assertNotNull(store.getPublished(key));
         assertEquals(3, countFiles(geonetworkDataDirectory.getHtmlCacheDir()));
     }
 
@@ -221,14 +221,14 @@ public class FilesystemStoreTest {
         Key key = new Key(1, "eng", FormatType.html, "full_view", true);
         store.put(key, data);
         assertNotNull(store.get(key));
-        assertNotNull(store.getPublic(key));
+        assertNotNull(store.getPublished(key));
         assertNotNull(store.getInfo(key));
         assertEquals(1, countFiles(store.getPrivatePath(key)));
         assertEquals(1, countFiles(store.getPublicPath(key)));
 
         store.remove(key);
         assertNull(store.getInfo(key));
-        assertNull(store.getPublic(key));
+        assertNull(store.getPublished(key));
         assertNull(store.get(key));
         assertEquals(0, countFiles(store.getPrivatePath(key)));
         assertEquals(0, countFiles(store.getPublicPath(key)));
@@ -241,12 +241,53 @@ public class FilesystemStoreTest {
 
         store.remove(key);
         assertNull(store.getInfo(key));
-        assertNull(store.getPublic(key));
+        assertNull(store.getPublished(key));
         assertNull(store.get(key));
         assertEquals(0, countFiles(store.getPrivatePath(key)));
         assertEquals(0, countFiles(store.getPublicPath(key)));
 
         store.remove(key); // no exception ? good
+    }
+
+    @Test
+    public void testSetPublished() throws Exception {
+        StoreInfoAndData data = new StoreInfoAndData("result", 10000, true);
+        Key key1 = new Key(1, "eng", FormatType.html, "full_view", true);
+        Key key2 = new Key(1, "fre", FormatType.html, "full_view", true);
+        Key key3 = new Key(1, "fre", FormatType.xml, "full_view", true);
+        Key key4 = new Key(1, "fre", FormatType.html, "xml_view", true);
+        Key key5 = new Key(1, "fre", FormatType.html, "xml_view", false);
+        store.put(key1, data);
+        store.put(key2, data);
+        store.put(key3, data);
+        store.put(key4, data);
+        store.put(key5, data);
+
+        assertPublished(key1, key2, key3, key4, key5);
+
+        store.setPublished(1, true);
+        assertPublished(key1, key2, key3, key4, key5);
+
+        store.setPublished(1, false);
+        assertUnpublished(key1, key2, key3, key4, key5);
+
+        store.setPublished(1, false);
+        assertUnpublished(key1, key2, key3, key4, key5);
+
+        store.setPublished(1, true);
+        assertPublished(key1, key2, key3, key4, key5);
+
+    }
+
+    private void assertUnpublished(Key... keys) throws IOException {
+        for (Key key : keys) {
+            assertNull(key.toString(), store.getPublished(key));
+        }
+    }
+    private void assertPublished(Key... keys) throws IOException {
+        for (Key key : keys) {
+            assertNotNull(key.toString(), store.getPublished(key));
+        }
     }
 
     private int countFiles(Path htmlCacheDir) throws IOException {
@@ -265,9 +306,8 @@ public class FilesystemStoreTest {
 
     private void initStore() throws SQLException, ClassNotFoundException {
         this.store = new FilesystemStore();
-        this.store.testing = true;
+        this.store.setTesting(true);
         store.setGeonetworkDataDir(geonetworkDataDirectory);
-        store.init();
     }
 
     private void createDataDir() {

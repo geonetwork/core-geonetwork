@@ -34,7 +34,7 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	</bean>
 
-	<bean id="formatterCache"
+	<bean id="formatterCache" lazy-init="true"
 		class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
     <constructor-arg index="0">
       <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore">
@@ -44,4 +44,6 @@
     <constructor-arg index="1" value="500000" />
     <constructor-arg index="2" value="5000" />
 	</bean>
+  <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
+  <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
 </beans>

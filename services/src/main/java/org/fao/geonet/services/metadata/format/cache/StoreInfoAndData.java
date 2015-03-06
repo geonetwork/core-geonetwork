@@ -10,7 +10,7 @@ public class StoreInfoAndData extends StoreInfo {
     public final byte[] data;
 
     public StoreInfoAndData(String data, long changeDate, boolean published) {
-        this(data.getBytes(Constants.CHARSET), changeDate, published);
+        this(data == null ? null : data.getBytes(Constants.CHARSET), changeDate, published);
     }
     public StoreInfoAndData(byte[] data, long changeDate, boolean published) {
         super(changeDate, published);
@@ -23,6 +23,6 @@ public class StoreInfoAndData extends StoreInfo {
     }
 
     public String getDataAsString() {
-        return new String(data, Constants.CHARSET);
+        return data == null ? null : new String(data, Constants.CHARSET);
     }
 }

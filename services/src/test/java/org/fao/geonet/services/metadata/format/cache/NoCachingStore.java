@@ -52,7 +52,7 @@ public class NoCachingStore extends FormatterCache {
 
     @Nullable
     @Override
-    public byte[] getPublic(Key key) {
+    public byte[] getPublished(Key key) {
         return null;
     }
 }

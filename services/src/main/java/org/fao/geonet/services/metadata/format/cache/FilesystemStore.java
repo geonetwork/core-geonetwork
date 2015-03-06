@@ -3,7 +3,6 @@ package org.fao.geonet.services.metadata.format.cache;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
@@ -13,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,8 +26,10 @@ import java.sql.Statement;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
+import static org.fao.geonet.constants.Params.Access.PRIVATE;
+import static org.fao.geonet.constants.Params.Access.PUBLIC;
 
 /**
  * A {@link org.fao.geonet.services.metadata.format.cache.PersistentStore} that saves the files to disk.
@@ -55,43 +59,53 @@ public class FilesystemStore implements PersistentStore {
     private GeonetworkDataDirectory geonetworkDataDir;
     @VisibleForTesting
     Connection metadataDb;
-    @VisibleForTesting
-    boolean testing = false;
+    private boolean testing = false;
     private volatile long maxSizeB = 10000;
     private volatile long currentSize = 0;
+    private volatile boolean initialized = false;
 
-    @PostConstruct
-    void init() throws ClassNotFoundException, SQLException {
-        // using a h2 database and not normal geonetwork DB to ensure that the accesses are always on localhost and therefore
-        // hopefully quick.
-        Class.forName("org.h2.Driver");
-
-        String[] initSql = {
-                "CREATE SCHEMA IF NOT EXISTS " + INFO_TABLE,
-                "CREATE TABLE IF NOT EXISTS " + INFO_TABLE + "(" + KEY + " INT PRIMARY KEY, " + CHANGE_DATE + " BIGINT NOT NULL, " +
-                PUBLISHED + " BOOL NOT NULL, " + PATH + " VARCHAR(256) NOT NULL)",
-                "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(32) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
-        };
-        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";
-        String dbPath = testing ? "mem:" + UUID.randomUUID() : getBaseCacheDir().resolve("info-store").toString();
-        metadataDb = DriverManager.getConnection("jdbc:h2:" + dbPath + init, "fsStore", "");
-
-        try (
-                Statement statement = metadataDb.createStatement();
-                ResultSet rs = statement.executeQuery(QUERY_GETCURRENT_SIZE)) {
-            if (rs.next()) {
-                this.currentSize = Long.parseLong(rs.getString(1));
+    private synchronized void init() throws SQLException {
+        if (!initialized) {
+            // using a h2 database and not normal geonetwork DB to ensure that the accesses are always on localhost and therefore
+            // hopefully quick.
+            try {
+                Class.forName("org.h2.Driver");
+            } catch (ClassNotFoundException e) {
+                throw new Error(e);
             }
+
+            String[] initSql = {
+                    "CREATE SCHEMA IF NOT EXISTS " + INFO_TABLE,
+                    "CREATE TABLE IF NOT EXISTS " + INFO_TABLE + "(" + KEY + " INT PRIMARY KEY, " + CHANGE_DATE + " BIGINT NOT NULL, " +
+                    PUBLISHED + " BOOL NOT NULL, " + PATH + " VARCHAR(256) NOT NULL)",
+                    "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(32) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
+
+            };
+            String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";
+            String dbPath = testing ? "mem:" + UUID.randomUUID() : getBaseCacheDir().resolve("info-store").toString();
+            metadataDb = DriverManager.getConnection("jdbc:h2:" + dbPath + init, "fsStore", "");
+
+            try (
+                    Statement statement = metadataDb.createStatement();
+                    ResultSet rs = statement.executeQuery(QUERY_GETCURRENT_SIZE)) {
+                if (rs.next()) {
+                    this.currentSize = Long.parseLong(rs.getString(1));
+                }
+            }
+            initialized = true;
         }
     }
 
     @PreDestroy
-    void close() throws ClassNotFoundException, SQLException {
-        metadataDb.close();
+    synchronized void close() throws ClassNotFoundException, SQLException {
+        if (metadataDb != null) {
+            metadataDb.close();
+        }
     }
 
     @Override
     public synchronized StoreInfoAndData get(@Nonnull Key key) throws IOException, SQLException {
+        init();
         StoreInfo info = getInfo(key);
         if (info == null) {
             return null;
@@ -102,6 +116,7 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public synchronized StoreInfo getInfo(@Nonnull Key key) throws SQLException {
+        init();
         try (PreparedStatement statement = this.metadataDb.prepareStatement(QUERY_GET_INFO)) {
             statement.setInt(1, key.hashCode());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -118,6 +133,7 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public synchronized void put(@Nonnull Key key, @Nonnull StoreInfoAndData data) throws IOException, SQLException {
+        init();
         resizeIfRequired(key, data);
         final Path privatePath = getPrivatePath(key);
 
@@ -192,7 +208,12 @@ public class FilesystemStore implements PersistentStore {
 
     @Nullable
     @Override
-    public byte[] getPublic(@Nonnull Key key) throws IOException {
+    public byte[] getPublished(@Nonnull Key key) throws IOException {
+        try {
+            init();
+        } catch (SQLException e) {
+            throw new Error(e);
+        }
         final Path publicPath = getPublicPath(key);
         if (Files.exists(publicPath)) {
             return Files.readAllBytes(publicPath);
@@ -203,21 +224,46 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public synchronized void remove(@Nonnull Key key) throws IOException, SQLException {
+        init();
         final Path path = getPrivatePath(key);
         final int keyHashCode = key.hashCode();
         doRemove(path, keyHashCode, true);
     }
 
-    private void doRemove(Path path, int keyHashCode, boolean updateDbCurrentSize) throws IOException, SQLException {
+    @Override
+    public void setPublished(int metadataId, final boolean published) throws IOException {
+        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
+        if (Files.exists(metadataDir)) {
+            Files.walkFileTree(metadataDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path privatePath, BasicFileAttributes attrs) throws IOException {
+                    final Path publicPath = toPublicPath(privatePath);
+                    if (published) {
+                        if (!Files.exists(publicPath)) {
+                            if (!Files.exists(publicPath.getParent())) {
+                                Files.createDirectories(publicPath.getParent());
+                            }
+                            Files.createLink(publicPath, privatePath);
+                        }
+                    } else {
+                        Files.deleteIfExists(publicPath);
+                    }
+                    return super.visitFile(privatePath, attrs);
+                }
+            });
+        }
+    }
+
+    private void doRemove(Path privatePath, int keyHashCode, boolean updateDbCurrentSize) throws IOException, SQLException {
         try {
-            if (Files.exists(path)) {
-                currentSize -= Files.size(path);
-                Files.delete(path);
+            if (Files.exists(privatePath)) {
+                currentSize -= Files.size(privatePath);
+                Files.delete(privatePath);
             }
         } finally {
             try {
-                Path relativePrivate = getBaseCacheDir().resolve(Params.Access.PRIVATE).relativize(path);
-                Files.deleteIfExists(getBaseCacheDir().resolve(Params.Access.PUBLIC).resolve(relativePrivate));
+                final Path publicPath = toPublicPath(privatePath);
+                Files.deleteIfExists(publicPath);
             } finally {
                 try (PreparedStatement statement = metadataDb.prepareStatement(QUERY_REMOVE)) {
                     statement.setInt(1, keyHashCode);
@@ -229,6 +275,11 @@ public class FilesystemStore implements PersistentStore {
                 }
             }
         }
+    }
+
+    private Path toPublicPath(Path privatePath) {
+        Path relativePrivate = getBaseCacheDir().resolve(PRIVATE).relativize(privatePath);
+        return getBaseCacheDir().resolve(PUBLIC).resolve(relativePrivate);
     }
 
     public void setGeonetworkDataDir(GeonetworkDataDirectory geonetworkDataDir) {
@@ -244,7 +295,7 @@ public class FilesystemStore implements PersistentStore {
     }
 
     private Path getCacheFile(Key key, boolean isPublicCache) {
-        final String accessDir = isPublicCache ? Params.Access.PUBLIC : Params.Access.PRIVATE;
+        final String accessDir = isPublicCache ? PUBLIC : PRIVATE;
         final String sMdId = String.valueOf(key.mdId);
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
         return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(key.hashCode() + "." + key.formatType.name());
@@ -264,5 +315,9 @@ public class FilesystemStore implements PersistentStore {
 
     public void setMaxSizeGb(int maxSize) {
         setMaxSizeMb(maxSize * 1024);
+    }
+
+    public void setTesting(boolean testing) {
+        this.testing = testing;
     }
 }

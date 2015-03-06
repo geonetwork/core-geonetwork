@@ -1,5 +1,7 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class MemoryPersistentStore implements PersistentStore {
 
     @Nullable
     @Override
-    public byte[] getPublic(@Nonnull Key key) {
+    public byte[] getPublished(@Nonnull Key key) {
         final StoreInfoAndData storeInfoAndData = dataMap.get(key);
         if (storeInfoAndData.isPublished()) {
             return storeInfoAndData.data;
@@ -40,5 +42,14 @@ public class MemoryPersistentStore implements PersistentStore {
     @Override
     public void remove(@Nonnull Key key) throws IOException, SQLException {
         this.dataMap.remove(key);
+    }
+
+    @Override
+    public void setPublished(int metadataId, boolean published) {
+        for (Map.Entry<Key, StoreInfoAndData> dataEntry : Lists.newArrayList(dataMap.entrySet())) {
+            final byte[] data = dataEntry.getValue().data;
+            final long changeDate = dataEntry.getValue().getChangeDate();
+            dataMap.put(dataEntry.getKey(), new StoreInfoAndData(data, changeDate, true));
+        }
     }
 }

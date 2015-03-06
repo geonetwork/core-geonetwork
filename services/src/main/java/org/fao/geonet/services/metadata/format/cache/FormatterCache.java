@@ -3,11 +3,16 @@ package org.fao.geonet.services.metadata.format.cache;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.fao.geonet.domain.Pair;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -25,10 +30,10 @@ import javax.annotation.PreDestroy;
  * The Formatter cache has two caches.
  * <ul>
  * <li>
- *      A fast access in-memory cache which is limited to some X records.
+ * A fast access in-memory cache which is limited to some X records.
  * </li>
  * <li>
- *     A persistent cache which keeps a cache of every formatter that has been added to the cache.
+ * A persistent cache which keeps a cache of every formatter that has been added to the cache.
  * </li>
  * </ul>
  * <p/>
@@ -44,6 +49,7 @@ public class FormatterCache {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final PersistentStore persistentStore;
     private final Cache<Key, StoreInfoAndData> memoryCache;
+    private final Multimap<Integer, Pair<Key, StoreInfoAndData>> mdIdIndex = ArrayListMultimap.create();
     private final ExecutorService executor;
     private final BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests;
 
@@ -54,6 +60,7 @@ public class FormatterCache {
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests, ExecutorService executor) {
         this.persistentStore = persistentStore;
         this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
+                removalListener(new RemoveFromIndexListener()).
                 maximumSize(memoryCacheSize).build();
 
         this.storeRequests = new ArrayBlockingQueue<>(maxStoreRequests);
@@ -79,13 +86,25 @@ public class FormatterCache {
         this.executor.shutdownNow();
     }
 
+    public void remove(Key key) throws IOException, SQLException {
+        final Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            this.memoryCache.invalidate(key);
+            this.persistentStore.remove(key);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
     /**
      * Get a value from the cache, or if it is not in the cache, load it with the loader and add it to the cache.
      *
-     * @param key the lookup/store key
-     * @param validator a strategy for checking if the value should be reloaded (for example if the metadata has changed since last
-     *                  caching of the value)
-     * @param loader the strategy to use for loading the value if the value is not in the cache (or is out-of-date).
+     * @param key                         the lookup/store key
+     * @param validator                   a strategy for checking if the value should be reloaded (for example if the metadata has
+     *                                    changed since last
+     *                                    caching of the value)
+     * @param loader                      the strategy to use for loading the value if the value is not in the cache (or is out-of-date).
      * @param writeToStoreInCurrentThread if true then the {@link org.fao.geonet.services.metadata.format.cache.PersistentStore} will
      *                                    be updated in the current thread instead of in another thread.
      */
@@ -118,6 +137,7 @@ public class FormatterCache {
             writeLock.lock();
 
             this.memoryCache.put(key, cached);
+            this.mdIdIndex.put(key.mdId, Pair.read(key, cached));
             if (writeToStoreInCurrentThread) {
                 this.persistentStore.put(key, cached);
             } else {
@@ -149,22 +169,47 @@ public class FormatterCache {
     /**
      * Get a pre-cached public value.  This will very quickly get a public metadata if it has been pre-cached.  It is intended to
      * be a VERY fast lookup for search engine crawlers (for example).  If the metadata has not previously been cached it returns null.
-     *<p/>
+     * <p/>
      * When a metadata is cached it is noted if it is public or not, if it the requested metadata public and cached then this method
      * will return it.  If it is not public or not cached it will not be returned.
      * <p/>
+     *
      * @param key the lookup key
      */
     @Nullable
-    public byte[] getPublic(Key key) throws IOException, SQLException {
+    public byte[] getPublished(Key key) throws IOException, SQLException {
         final Lock readLock = lock.readLock();
         try {
             readLock.lock();
-            return this.persistentStore.getPublic(key);
+            return this.persistentStore.getPublished(key);
         } finally {
             readLock.unlock();
         }
     }
 
+    /**
+     * Publish or unpublish all cached values related to the given metadata.
+     *
+     * @param metadataId the id of the metadata whose published state may have changed
+     * @param published  mark all cached values for this metadata
+     */
+    synchronized void setPublished(int metadataId, boolean published) throws IOException {
+        this.persistentStore.setPublished(metadataId, published);
+    }
 
+    public synchronized void removeAll(int metadataId) throws IOException, SQLException {
+        Collection<Pair<Key, StoreInfoAndData>> storeInfoAndDatas = this.mdIdIndex.removeAll(metadataId);
+        for (Pair<Key, StoreInfoAndData> storeInfoAndData : storeInfoAndDatas) {
+            final Key key = storeInfoAndData.one();
+            this.memoryCache.invalidate(key);
+            this.persistentStore.remove(key);
+        }
+    }
+
+    private class RemoveFromIndexListener implements RemovalListener<Key, StoreInfoAndData> {
+        @Override
+        public void onRemoval(RemovalNotification<Key, StoreInfoAndData> notification) {
+            mdIdIndex.remove(notification.getKey().mdId, notification.getValue());
+        }
+    }
 }

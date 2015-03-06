@@ -40,7 +40,7 @@ public interface PersistentStore {
      * @param key the lookup key.
      */
     @Nullable
-    byte[] getPublic(@Nonnull Key key) throws IOException, SQLException;
+    byte[] getPublished(@Nonnull Key key) throws IOException, SQLException;
 
     /**
      * Remove values with the key from the cache.
@@ -48,4 +48,12 @@ public interface PersistentStore {
      * @param key the lookup key
      */
     void remove(@Nonnull Key key) throws IOException, SQLException;
+
+    /**
+     * Publish or unpublish all cached values related to the given metadata.
+     *
+     * @param metadataId the id of the metadata whose published state may have changed
+     * @param published  mark all cached values for this metadata
+     */
+    void setPublished(int metadataId, boolean published) throws IOException;
 }
