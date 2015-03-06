@@ -6,6 +6,8 @@ import com.google.common.cache.CacheBuilder;
 import org.fao.geonet.domain.Pair;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -54,7 +56,7 @@ public class FormatterCache {
         this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
                 maximumSize(memoryCacheSize).build();
 
-        this.storeRequests = new ArrayBlockingQueue<Pair<Key, StoreInfoAndData>>(maxStoreRequests);
+        this.storeRequests = new ArrayBlockingQueue<>(maxStoreRequests);
 
         this.executor = executor;
         this.executor.submit(createPersistentStoreRunnable(this.storeRequests, this.persistentStore));
@@ -107,10 +109,10 @@ public class FormatterCache {
 
         }
 
-        return cached.getResult();
+        return cached.getDataAsString();
     }
 
-    private void push(Key key, StoreInfoAndData cached, boolean writeToStoreInCurrentThread) {
+    private void push(Key key, StoreInfoAndData cached, boolean writeToStoreInCurrentThread) throws IOException, SQLException {
         final Lock writeLock = lock.writeLock();
         try {
             writeLock.lock();
@@ -130,7 +132,7 @@ public class FormatterCache {
         }
     }
 
-    private StoreInfoAndData loadFromPersistentCache(Key key, Validator validator) {
+    private StoreInfoAndData loadFromPersistentCache(Key key, Validator validator) throws IOException, SQLException {
         final Lock readLock = lock.readLock();
         try {
             readLock.lock();
@@ -154,7 +156,7 @@ public class FormatterCache {
      * @param key the lookup key
      */
     @Nullable
-    public String getPublic(Key key) {
+    public byte[] getPublic(Key key) throws IOException, SQLException {
         final Lock readLock = lock.readLock();
         try {
             readLock.lock();

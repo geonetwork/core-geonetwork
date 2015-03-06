@@ -9,7 +9,7 @@ public class StoreInfo {
     private final long changeDate;
     private final boolean published;
 
-    public StoreInfo(long changeDate, boolean published, int popularity, long lastAccess) {
+    public StoreInfo(long changeDate, boolean published) {
         this.changeDate = changeDate;
         this.published = published;
     }

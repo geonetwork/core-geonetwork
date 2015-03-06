@@ -5,10 +5,13 @@ import org.fao.geonet.services.metadata.format.FormatType;
 import org.junit.After;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +40,7 @@ public class FormatterCacheTest {
         StoreInfoAndData info = persistentStore.get(key);
         assertEquals(changeDate, info.getChangeDate());
         assertEquals(false, info.isPublished());
-        assertEquals("result", info.getResult());
+        assertEquals("result", info.getDataAsString());
         StoreInfo basicInfo = persistentStore.getInfo(key);
         assertEquals(changeDate, basicInfo.getChangeDate());
         assertEquals(false, basicInfo.isPublished());
@@ -56,7 +59,7 @@ public class FormatterCacheTest {
         info = persistentStore.get(key);
         assertEquals(updatedChangeDate, info.getChangeDate());
         assertEquals(false, info.isPublished());
-        assertEquals("newVal", info.getResult());
+        assertEquals("newVal", info.getDataAsString());
         basicInfo = persistentStore.getInfo(key);
         assertEquals(updatedChangeDate, basicInfo.getChangeDate());
         assertEquals(false, basicInfo.isPublished());
@@ -88,7 +91,7 @@ public class FormatterCacheTest {
             @Override
             public StoreInfoAndData get(Key key) {
                 persistentStoreHit.set(true);
-                return new StoreInfoAndData("lksjdf", 234982734, false, 98345, 0);
+                return new StoreInfoAndData("lksjdf", 234982734, false);
             }
 
             @Override
@@ -103,8 +106,13 @@ public class FormatterCacheTest {
 
             @Nullable
             @Override
-            public String getPublic(Key key) {
+            public byte[] getPublic(Key key) {
                 throw new UnsupportedOperationException("to implement");
+            }
+
+            @Override
+            public void remove(@Nonnull Key key) throws IOException, SQLException {
+                // ignore
             }
         }, 100, 5000);
 
@@ -132,7 +140,7 @@ public class FormatterCacheTest {
             Runnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests, PersistentStore store) {
                 return new PersistentStoreRunnable(storeRequests, store) {
                     @Override
-                    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException {
+                    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException, IOException, SQLException {
                         waitForStartPut.set(true);
                         while(!waitForAllowPut.get()) {
                             Thread.sleep(100);
@@ -170,7 +178,7 @@ public class FormatterCacheTest {
 
         @Override
         public StoreInfoAndData call() throws Exception {
-            return new StoreInfoAndData(resultToStore, changeDate, published, 98345, 0);
+            return new StoreInfoAndData(resultToStore, changeDate, published);
         }
     }
 }

@@ -1,8 +1,14 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Log;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -28,11 +34,26 @@ public class PersistentStoreRunnable implements Runnable {
             }
         } catch (InterruptedException e) {
             return;
+        } catch (SQLException e) {
+            StringBuilder exception = new StringBuilder(e.toString());
+            exception.append('\n').append(strackTrace(e));
+            for (Throwable next : e) {
+                exception.append("\nNext Exception: '").append(next.getMessage()).append('\n').append(strackTrace(next));
+            }
+            Log.error(Geonet.FORMATTER, "Error writing to Formatter PersistenceStore: " + exception);
+        } catch (IOException e) {
+            Log.error(Geonet.FORMATTER, "Error writing to Formatter PersistenceStore", e);
         }
     }
 
+    private String strackTrace(Throwable e) {
+        final StringWriter out = new StringWriter();
+        e.printStackTrace(new PrintWriter(out));
+        return out.toString();
+    }
+
     @VisibleForTesting
-    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException {
+    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException, IOException, SQLException {
         store.put(request.one(), request.two());
     }
 }

@@ -37,7 +37,9 @@
 	<bean id="formatterCache"
 		class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
     <constructor-arg index="0">
-      <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" />
+      <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore">
+        <property name="maxSizeGb" value="500" />
+      </bean>
     </constructor-arg>
     <constructor-arg index="1" value="500000" />
     <constructor-arg index="2" value="5000" />

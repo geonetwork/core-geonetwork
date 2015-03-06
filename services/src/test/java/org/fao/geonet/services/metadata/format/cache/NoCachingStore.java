@@ -47,12 +47,12 @@ public class NoCachingStore extends FormatterCache {
     @Nullable
     @Override
     public String get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws Exception {
-        return loader.call().getResult();
+        return loader.call().getDataAsString();
     }
 
     @Nullable
     @Override
-    public String getPublic(Key key) {
+    public byte[] getPublic(Key key) {
         return null;
     }
 }

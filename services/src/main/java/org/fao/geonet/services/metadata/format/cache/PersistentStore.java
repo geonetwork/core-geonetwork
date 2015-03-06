@@ -1,5 +1,8 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -15,14 +18,14 @@ public interface PersistentStore {
      * @param key the key to use for retrieval.
      * @return return the value and associated data
      */
-    StoreInfoAndData get(Key key);
+    StoreInfoAndData get(@Nonnull Key key) throws IOException, SQLException;
 
     /**
      * Get the stored value from the store;
      * @param key the key to use for retrieval.
      * @return return the value and associated data
      */
-    StoreInfo getInfo(Key key);
+    StoreInfo getInfo(@Nonnull Key key) throws SQLException;
 
     /**
      * Put data in this store.
@@ -30,12 +33,19 @@ public interface PersistentStore {
      * @param key the cache key
      * @param data the data to cache
      */
-    void put(Key key, StoreInfoAndData data);
+    void put(@Nonnull Key key, @Nonnull StoreInfoAndData data) throws IOException, SQLException;
 
     /**
      * Return the cached value if it has been cached and is public, otherwise null.
      * @param key the lookup key.
      */
     @Nullable
-    String getPublic(Key key);
+    byte[] getPublic(@Nonnull Key key) throws IOException, SQLException;
+
+    /**
+     * Remove values with the key from the cache.
+     *
+     * @param key the lookup key
+     */
+    void remove(@Nonnull Key key) throws IOException, SQLException;
 }

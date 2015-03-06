@@ -13,7 +13,6 @@ public class Key {
     final FormatType formatType;
     final String formatterId;
     final boolean hideWithheld;
-    private volatile int hash;
 
     public Key(int mdId, String lang, FormatType formatType, String formatterId, boolean hideWithheld) {
         this.mdId = mdId;
@@ -47,5 +46,16 @@ public class Key {
         result = 31 * result + formatterId.hashCode();
         result = 31 * result + (hideWithheld ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Key{" +
+               "mdId=" + mdId +
+               ", lang='" + lang + '\'' +
+               ", formatType=" + formatType +
+               ", formatterId='" + formatterId + '\'' +
+               ", hideWithheld=" + hideWithheld +
+               '}';
     }
 }

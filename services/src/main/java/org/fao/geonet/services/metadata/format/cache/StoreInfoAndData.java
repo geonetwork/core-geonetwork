@@ -1,18 +1,28 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import org.fao.geonet.Constants;
+
 /**
  * Encapsulates the information when a formatter is executed.
  * @author Jesse on 3/5/2015.
  */
 public class StoreInfoAndData extends StoreInfo {
-    private final String result;
+    public final byte[] data;
 
-    public StoreInfoAndData(String result, long changeDate, boolean published, long lastAccess, int popularity) {
-        super(changeDate, published, popularity, lastAccess);
-        this.result = result;
+    public StoreInfoAndData(String data, long changeDate, boolean published) {
+        this(data.getBytes(Constants.CHARSET), changeDate, published);
+    }
+    public StoreInfoAndData(byte[] data, long changeDate, boolean published) {
+        super(changeDate, published);
+        this.data = data;
     }
 
-    public String getResult() {
-        return result;
+    public StoreInfoAndData(StoreInfo info, byte[] data) {
+        super(info.getChangeDate(), info.isPublished());
+        this.data = data;
+    }
+
+    public String getDataAsString() {
+        return new String(data, Constants.CHARSET);
     }
 }
