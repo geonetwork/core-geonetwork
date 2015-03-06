@@ -22,7 +22,8 @@
 
         link: function(scope, element, attrs, controller) {
 
-          element.on('click', function() {
+          element.on('click', function(e) {
+            e.preventDefault();
             gnMdView.setLocationUuid(scope.md.getUuid());
             scope.$apply();
           });
