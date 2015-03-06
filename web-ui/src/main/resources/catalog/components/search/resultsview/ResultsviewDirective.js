@@ -142,7 +142,7 @@
           });
 
           //TODO: remove this is defined in custom controllers
-          scope.addToMap = function(link) {
+          scope.addToMap = function(link, md) {
             gnOwsCapabilities.getWMSCapabilities(link.url).then(
                 function(capObj) {
                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(

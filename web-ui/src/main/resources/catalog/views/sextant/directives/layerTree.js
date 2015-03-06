@@ -124,10 +124,7 @@
           scope.setNCWMS = controller.setNCWMS;
 
           scope.showMetadata = function() {
-            var md = scope.member.get('md');
-            if(md) {
-              gnMdView.feedMd(0, md, [md]);
-            }
+            gnMdView.openMdFromLayer(scope.member);
           };
         }
       };
