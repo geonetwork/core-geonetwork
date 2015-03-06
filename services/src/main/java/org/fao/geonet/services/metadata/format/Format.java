@@ -282,13 +282,21 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
-        Query query;
-        if (id != null) {
-            query = new TermQuery(new Term(LuceneIndexField.ID, id));
+        String resolvedId;
+        if (id == null) {
+            resolvedId = dataManager.getMetadataId(uuid);
         } else {
-            query = new TermQuery(new Term(LuceneIndexField.UUID, uuid));
+            try {
+                Integer.parseInt(id);
+                resolvedId = id;
+            } catch (NumberFormatException e) {
+                resolvedId = dataManager.getMetadataId(id);
+            }
         }
+        ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+        Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
+        Query query= new TermQuery(new Term(LuceneIndexField.ID, resolvedId));
         final TopDocs search = searcher.search(query, 1);
         if (search.totalHits == 0) {
             String identifier = id == null ? "uuid=" + uuid : "id = " + id;
@@ -301,16 +309,16 @@ public class Format extends AbstractFormatService implements ApplicationListener
         if (doc != null) {
             final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
             if (request.checkNotModified(changeDate)) {
+
                 if (!skipPopularityBool) {
-                    ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
-                    this.dataManager.increasePopularity(context, id);
+                    this.dataManager.increasePopularity(context, resolvedId);
                 }
 
                 return;
             }
         }
 
-        Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
+        Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, resolvedId, xslid,
                 skipPopularityBool,
                 hide_withheld, request);
         if (result != null) {
@@ -337,11 +345,11 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
-            final String lang, final FormatType type, final String id, final String uuid, final String xslid,
+            final String lang, final FormatType type, final String id, final String xslid,
             final boolean skipPopularity, final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
 
         ServiceContext context = createServiceContext(lang, type, request.getNativeRequest(HttpServletRequest.class));
-        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, skipPopularity, hide_withheld);
+        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, skipPopularity, hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
 
@@ -418,10 +426,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, boolean skipPopularity,
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, boolean skipPopularity,
                                                Boolean hide_withheld) throws Exception {
 
-        Metadata md = loadMetadata(this.metadataRepository, id, uuid);
+        Metadata md = loadMetadata(this.metadataRepository, id);
         Element metadata = xmlSerializer.removeHiddenElements(false, md);
 
 

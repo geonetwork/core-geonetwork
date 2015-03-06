@@ -36,26 +36,14 @@ abstract class AbstractFormatService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    protected Metadata loadMetadata(MetadataRepository metadataRepository, String id, String uuid) {
+    protected Metadata loadMetadata(MetadataRepository metadataRepository, String id) {
         Metadata md = null;
         if (id != null) {
-            try {
-                md = metadataRepository.findOne(Integer.parseInt(id));
-            } catch (NumberFormatException e) {
-                md = metadataRepository.findOneByUuid(id);
-                if (md != null) {
-                    uuid = id;
-                }
-            }
-        }
-
-        if (md == null && uuid != null) {
-            md = metadataRepository.findOneByUuid(uuid);
+            md = metadataRepository.findOne(Integer.parseInt(id));
         }
 
         if (md == null) {
-            throw new IllegalArgumentException("No metadata found. id = " + id + ", uuid = " + uuid + ".  One of them must find a " +
-                                               "metadata");
+            throw new IllegalArgumentException("No metadata found. id = " + id);
         }
         return md;
     }
