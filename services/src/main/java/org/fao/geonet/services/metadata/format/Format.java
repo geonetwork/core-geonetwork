@@ -280,6 +280,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
         final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1);
         final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
 
+        FormatType formatType = FormatType.valueOf(type.toLowerCase());
+
         Query query;
         if (id != null) {
             query = new TermQuery(new Term(LuceneIndexField.ID, id));
@@ -295,16 +297,21 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
         Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
 
+        boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
         if (doc != null) {
             final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
             if (request.checkNotModified(changeDate)) {
+                if (!skipPopularityBool) {
+                    ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+                    this.dataManager.increasePopularity(context, id);
+                }
+
                 return;
             }
         }
 
-        FormatType formatType = FormatType.valueOf(type.toLowerCase());
         Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, id, uuid, xslid,
-                skipPopularity,
+                skipPopularityBool,
                 hide_withheld, request);
         if (result != null) {
             writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, result);
@@ -331,10 +338,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
             final String lang, final FormatType type, final String id, final String uuid, final String xslid,
-            final String skipPopularity, final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
+            final boolean skipPopularity, final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
 
         ServiceContext context = createServiceContext(lang, type, request.getNativeRequest(HttpServletRequest.class));
-        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
+        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, skipPopularity, hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
 
@@ -411,7 +418,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, boolean skipPopularity,
                                                Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(this.metadataRepository, id, uuid);
@@ -427,7 +434,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
         Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-        if (!skipPopularity.toBool()) {
+        if (!skipPopularity) {
             this.dataManager.increasePopularity(context, id);
         }
 
