@@ -36,14 +36,19 @@
 
 	<bean id="formatterCache" lazy-init="true"
 		class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
-    <constructor-arg index="0">
-      <bean class="org.fao.geonet.services.metadata.format.cache.FilesystemStore">
-        <property name="maxSizeGb" value="500" />
-      </bean>
-    </constructor-arg>
+    <constructor-arg index="0" ref="fsStore"/>
     <constructor-arg index="1" value="500000" />
     <constructor-arg index="2" value="5000" />
+    <constructor-arg index="3" ref="formatterCacheConfig"/>
 	</bean>
+  <bean id="fsStore" class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" lazy-init="true">
+    <property name="maxSizeGb" value="500" />
+  </bean>
+  <bean id="formatterCacheConfig" class="org.fao.geonet.services.metadata.format.cache.ConfigurableCacheConfig" lazy-init="true">
+     <!--This class allows you to configure which formatters, languages, content/type etc... to cache-->
+     <!--Simply add the properties.  -->
+     <!--By default everything is cached except pdf-->
+  </bean>
   <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
   <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
 </beans>

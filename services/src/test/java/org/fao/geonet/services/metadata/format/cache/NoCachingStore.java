@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 public class NoCachingStore extends FormatterCache {
     public NoCachingStore() {
-        super(new MemoryPersistentStore(), 10, 10, new AbstractExecutorService() {
+        super(new MemoryPersistentStore(), 10, 10, new ConfigurableCacheConfig(), new AbstractExecutorService() {
             @Override
             public void shutdown() {
 
@@ -46,8 +46,8 @@ public class NoCachingStore extends FormatterCache {
 
     @Nullable
     @Override
-    public String get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws Exception {
-        return loader.call().getDataAsString();
+    public byte[] get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws Exception {
+        return loader.call().data;
     }
 
     @Nullable

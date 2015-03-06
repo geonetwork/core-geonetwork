@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.cache;
 
+import com.google.common.collect.Sets;
 import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.services.metadata.format.FormatType;
@@ -30,6 +31,72 @@ public class FormatterCacheTest {
     }
 
     @Test
+    public void testTypesToCache() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
+        config.setAllowedTypes(Sets.newHashSet(FormatType.xml));
+        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
+        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
+    }
+    @Test
+    public void testLanguagesToCache() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
+        config.setAllowedLanguages(Sets.newHashSet("fre"));
+        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
+        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
+    }
+    @Test
+    public void testFormattersToCache() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
+        config.setFormatterIds(Sets.newHashSet("blarg"));
+        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
+        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
+    }
+    @Test
+    public void testCacheWithheld() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
+        config.setCacheHideWithheld(false);
+        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
+        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
+    }
+    @Test
+    public void testCacheFullMetadata() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
+        config.setCacheFullMetadata(false);
+        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
+
+        final boolean hideWithheld = false;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
+        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
+    }
+
+    @Test
     public void testGet() throws Exception {
         final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
         this.formatterCache = new FormatterCache(persistentStore, 1, 5000);
@@ -37,7 +104,8 @@ public class FormatterCacheTest {
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
         final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        String result = formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
+        final TestLoader loader = new TestLoader("result", changeDate, false);
+        String result = getAsString(key, changeDate, loader);
         assertEquals("result", result);
         StoreInfoAndData info = persistentStore.get(key);
         assertEquals(changeDate, info.getChangeDate());
@@ -47,16 +115,16 @@ public class FormatterCacheTest {
         assertEquals(changeDate, basicInfo.getChangeDate());
         assertEquals(false, basicInfo.isPublished());
 
-        result = formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndData>() {
+        result = getAsString(key, changeDate, new Callable<StoreInfoAndData>() {
             @Override
             public StoreInfoAndData call() throws Exception {
                 throw new AssertionError("Should not be called because cache should be up-to-date");
             }
-        }, true);
+        });
         assertEquals("result", result);
 
         final long updatedChangeDate = changeDate + 100;
-        result = formatterCache.get(key, new ChangeDateValidator(updatedChangeDate), new TestLoader("newVal", updatedChangeDate, false), true);
+        result = getAsString(key, updatedChangeDate, new TestLoader("newVal", updatedChangeDate, false));
         assertEquals("newVal", result);
         info = persistentStore.get(key);
         assertEquals(updatedChangeDate, info.getChangeDate());
@@ -65,6 +133,11 @@ public class FormatterCacheTest {
         basicInfo = persistentStore.getInfo(key);
         assertEquals(updatedChangeDate, basicInfo.getChangeDate());
         assertEquals(false, basicInfo.isPublished());
+    }
+
+    private String getAsString(Key key, long changeDate, Callable<StoreInfoAndData> loader) throws Exception {
+        byte[] bytes = formatterCache.get(key, new ChangeDateValidator(changeDate), loader, true);
+        return new String(bytes, Constants.CHARSET);
     }
 
     @Test
@@ -132,7 +205,8 @@ public class FormatterCacheTest {
         assertEquals(true, persistentStoreHit.get());
 
         persistentStoreHit.set(false);
-        String result = formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result",changeDate, false), true);
+        byte[] bytes = formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
+        String result = new String(bytes, Constants.CHARSET);
         assertEquals("result", result);
         assertEquals(false, persistentStoreHit.get());
     }
