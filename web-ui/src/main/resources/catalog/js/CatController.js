@@ -134,7 +134,7 @@
             return !this.isAnonymous();
           },
           canEditRecord: function(md) {
-            if (md === null) {
+            if (!md) {
               return false;
             }
 
