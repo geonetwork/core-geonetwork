@@ -61,6 +61,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.services.metadata.format.cache.CacheConfig;
 import org.fao.geonet.services.metadata.format.cache.ChangeDateValidator;
 import org.fao.geonet.services.metadata.format.cache.FormatterCache;
 import org.fao.geonet.services.metadata.format.cache.Key;
@@ -124,9 +125,13 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Lazy
 public class Format extends AbstractFormatService implements ApplicationListener {
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
+    public static final Set<String> FIELDS_TO_LOAD = Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
     @Autowired
     private ApplicationContext springAppContext;
 
+
+    @Autowired
+    private CacheConfig cacheConfig;
     @Autowired
     private SettingManager settingManager;
     @Autowired
@@ -318,13 +323,16 @@ public class Format extends AbstractFormatService implements ApplicationListener
             throw new NoSuchFieldException("There is no metadata " + identifier);
         }
 
-        Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
+        Document doc = searcher.doc(search.scoreDocs[0].doc, FIELDS_TO_LOAD);
+
+        final boolean hideWithheld = hide_withheld || accessManager.canEdit(context, resolvedId);
+        Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld);
 
         Validator validator;
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
         if (doc != null) {
             long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
-            if (request.checkNotModified(changeDate)) {
+            if (cacheConfig.allowCaching(key) && request.checkNotModified(changeDate)) {
                 if (!skipPopularityBool) {
                     this.dataManager.increasePopularity(context, resolvedId);
                 }
@@ -350,8 +358,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
             // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
             bytes = formatMetadata.call().data;
         } else {
-            boolean elementsMustBeHidden = !accessManager.canEdit(context, resolvedId) || Boolean.TRUE.equals(hide_withheld);
-            Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, elementsMustBeHidden);
             bytes = this.formatterCache.get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {

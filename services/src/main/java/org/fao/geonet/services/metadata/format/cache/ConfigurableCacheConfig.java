@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.cache;
 import com.google.common.collect.Sets;
 import org.fao.geonet.services.metadata.format.FormatType;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,6 +17,9 @@ public class ConfigurableCacheConfig implements CacheConfig {
     private Set<String> formatterIds = null;
     private boolean cacheFullMetadata = true;
     private boolean cacheHideWithheld = true;
+    private HashSet<FormatType> typeExceptions;
+    private HashSet<String> formatterExceptions;
+    private HashSet<String> langExceptions;
 
     public ConfigurableCacheConfig() {
         allowedTypes.remove(FormatType.pdf);
@@ -24,6 +28,15 @@ public class ConfigurableCacheConfig implements CacheConfig {
 
     @Override
     public boolean allowCaching(Key key) {
+        if (typeExceptions != null && typeExceptions.contains(key.formatType)) {
+            return false;
+        }
+        if (formatterExceptions != null && formatterExceptions.contains(key.formatterId)) {
+            return false;
+        }
+        if (langExceptions != null && langExceptions.contains(key.lang)) {
+            return false;
+        }
         if (!allowedTypes.contains(key.formatType)) {
             return false;
         }
@@ -87,5 +100,17 @@ public class ConfigurableCacheConfig implements CacheConfig {
      */
     public void setCacheHideWithheld(boolean cacheHideWithheld) {
         this.cacheHideWithheld = cacheHideWithheld;
+    }
+
+    public void setTypeExceptions(HashSet<FormatType> typeExceptions) {
+        this.typeExceptions = typeExceptions;
+    }
+
+    public void setFormatterExceptions(HashSet<String> formatterExceptions) {
+        this.formatterExceptions = formatterExceptions;
+    }
+
+    public void setLangExceptions(HashSet<String> langExceptions) {
+        this.langExceptions = langExceptions;
     }
 }

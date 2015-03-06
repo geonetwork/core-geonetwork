@@ -8,6 +8,7 @@ import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.domain.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import java.io.IOException;
@@ -46,13 +47,15 @@ import javax.annotation.PreDestroy;
  * @author Jesse on 3/5/2015.
  */
 public class FormatterCache {
+    @Autowired
+    private CacheConfig cacheConfig;
+
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final PersistentStore persistentStore;
     private final Cache<Key, StoreInfoAndData> memoryCache;
     private final Multimap<Integer, Pair<Key, StoreInfoAndData>> mdIdIndex = ArrayListMultimap.create();
     private final ExecutorService executor;
     private final BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests;
-    private final CacheConfig cacheConfig;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());

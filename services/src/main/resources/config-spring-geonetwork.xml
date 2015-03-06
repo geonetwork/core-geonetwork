@@ -39,7 +39,6 @@
     <constructor-arg index="0" ref="fsStore"/>
     <constructor-arg index="1" value="500000" />
     <constructor-arg index="2" value="5000" />
-    <constructor-arg index="3" ref="formatterCacheConfig"/>
 	</bean>
   <bean id="fsStore" class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" lazy-init="true">
     <property name="maxSizeGb" value="500" />
