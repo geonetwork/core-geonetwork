@@ -10,13 +10,16 @@ public class ChangeDateValidatorTest {
     @Test
     public void testIsCacheVersionValid() throws Exception {
         final long date = 123456789;
-        StoreInfoAndData info = new StoreInfoAndData(null, date, false);
+        StoreInfoAndData info = new StoreInfoAndData((byte[]) null, date, false);
         assertTrue(new ChangeDateValidator(date).isCacheVersionValid(info));
-        info = new StoreInfoAndData(null, date + 100, false);
+
+        info = new StoreInfoAndData((byte[]) null, date + 100, false);
         assertFalse(new ChangeDateValidator(date).isCacheVersionValid(info));
-        info = new StoreInfoAndData(null, date - 100, false);
+
+        info = new StoreInfoAndData((byte[]) null, date - 100, false);
         assertFalse(new ChangeDateValidator(date).isCacheVersionValid(info));
-        info = new StoreInfoAndData(null, date - 9, false);
+
+        info = new StoreInfoAndData((byte[]) null, date - 9, false);
         assertTrue(new ChangeDateValidator(date).isCacheVersionValid(info));
     }
 }

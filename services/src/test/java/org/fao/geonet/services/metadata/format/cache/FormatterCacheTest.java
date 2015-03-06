@@ -91,24 +91,26 @@ public class FormatterCacheTest {
         final AtomicBoolean persistentStoreHit = new AtomicBoolean(false);
         this.formatterCache = new FormatterCache(new PersistentStore() {
             @Override
-            public StoreInfoAndData get(Key key) {
+            @Nullable
+            public StoreInfoAndData get(@Nonnull Key key) {
                 persistentStoreHit.set(true);
                 return new StoreInfoAndData("lksjdf", 234982734, false);
             }
 
             @Override
-            public StoreInfo getInfo(Key key) {
+            @Nullable
+            public StoreInfo getInfo(@Nonnull Key key) {
                 return get(key);
             }
 
             @Override
-            public void put(Key key, StoreInfoAndData data) {
+            public void put(@Nonnull Key key, @Nonnull StoreInfoAndData data) {
                 // ignore
             }
 
             @Nullable
             @Override
-            public byte[] getPublished(Key key) {
+            public byte[] getPublished(@Nonnull Key key) {
                 throw new UnsupportedOperationException("to implement");
             }
 
