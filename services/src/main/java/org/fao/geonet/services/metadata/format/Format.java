@@ -339,7 +339,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             }
         }
         final FormatMetadata formatMetadata = new FormatMetadata(lang, formatType, resolvedId, xslid,
-                skipPopularityBool, hide_withheld, request);
+                hide_withheld, request);
 
         byte[] bytes;
         if (hasNonStandardParameters(request)) {
@@ -355,6 +355,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
             bytes = this.formatterCache.get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {
+            if (!skipPopularityBool) {
+                this.dataManager.increasePopularity(context, resolvedId);
+            }
+
             writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
@@ -407,10 +411,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
             final String lang, final FormatType type, final String id, final String xslid,
-            final boolean skipPopularity, final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
+            final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
 
         ServiceContext context = createServiceContext(lang, type, request.getNativeRequest(HttpServletRequest.class));
-        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, skipPopularity, hide_withheld);
+        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, hide_withheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
 
@@ -487,7 +491,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, boolean skipPopularity,
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id,
                                                Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(this.metadataRepository, id);
@@ -500,13 +504,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
 
         id = String.valueOf(md.getId());
-
-        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-
-        if (!skipPopularity) {
-            this.dataManager.increasePopularity(context, id);
-        }
-
 
         return Pair.read(metadata, md);
 
@@ -628,17 +625,15 @@ public class Format extends AbstractFormatService implements ApplicationListener
         private final FormatType formatType;
         private final String finalResolvedId;
         private final String xslid;
-        private final boolean skipPopularityBool;
         private final Boolean hide_withheld;
         private final NativeWebRequest request;
 
-        public FormatMetadata(String lang, FormatType formatType, String finalResolvedId, String xslid, boolean skipPopularityBool,
+        public FormatMetadata(String lang, FormatType formatType, String finalResolvedId, String xslid,
                               Boolean hide_withheld, NativeWebRequest request) {
             this.lang = lang;
             this.formatType = formatType;
             this.finalResolvedId = finalResolvedId;
             this.xslid = xslid;
-            this.skipPopularityBool = skipPopularityBool;
             this.hide_withheld = hide_withheld;
             this.request = request;
         }
@@ -647,7 +642,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         public StoreInfoAndData call() throws Exception {
             Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, finalResolvedId, xslid,
 
-                    skipPopularityBool,
+
                     hide_withheld, request);
             FormatterImpl formatter = result.one();
             FormatterParams fparams = result.two();
