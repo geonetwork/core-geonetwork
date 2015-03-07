@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * @author Jesse on 3/6/2015.
  */
-public class ConfigurableCacheConfig implements CacheConfig {
+public class ConfigurableCacheConfig extends AbstractCacheConfig {
     private Set<FormatType> allowedTypes = Sets.newHashSet(FormatType.values());
     private Set<String> allowedLanguages = null;
     private Set<String> formatterIds = null;
@@ -27,7 +27,7 @@ public class ConfigurableCacheConfig implements CacheConfig {
     }
 
     @Override
-    public boolean allowCaching(Key key) {
+    public boolean extraChecks(Key key) {
         if (typeExceptions != null && typeExceptions.contains(key.formatType)) {
             return false;
         }
