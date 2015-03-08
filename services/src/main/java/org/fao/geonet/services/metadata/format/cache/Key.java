@@ -8,11 +8,11 @@ import org.fao.geonet.services.metadata.format.FormatType;
  * @author Jesse on 3/5/2015.
  */
 public class Key {
-    final int mdId;
-    final String lang;
-    final FormatType formatType;
-    final String formatterId;
-    final boolean hideWithheld;
+    public final int mdId;
+    public final String lang;
+    public final FormatType formatType;
+    public final String formatterId;
+    public final boolean hideWithheld;
 
     public Key(int mdId, String lang, FormatType formatType, String formatterId, boolean hideWithheld) {
         this.mdId = mdId;

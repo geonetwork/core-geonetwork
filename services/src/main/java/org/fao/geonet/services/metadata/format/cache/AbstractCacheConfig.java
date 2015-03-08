@@ -14,7 +14,8 @@ public abstract class AbstractCacheConfig implements CacheConfig {
 
     @Override
     public final boolean allowCaching(Key key) {
-        return !systemInfo.isDevMode() && extraChecks(key);
+        final boolean isTesting = systemInfo == null;
+        return (isTesting || !systemInfo.isDevMode()) && extraChecks(key);
     }
 
     /**

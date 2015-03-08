@@ -48,7 +48,6 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -66,7 +65,7 @@ import org.fao.geonet.services.metadata.format.cache.ChangeDateValidator;
 import org.fao.geonet.services.metadata.format.cache.FormatterCache;
 import org.fao.geonet.services.metadata.format.cache.Key;
 import org.fao.geonet.services.metadata.format.cache.NoCacheValidator;
-import org.fao.geonet.services.metadata.format.cache.StoreInfoAndData;
+import org.fao.geonet.services.metadata.format.cache.StoreInfoAndDataLoadResult;
 import org.fao.geonet.services.metadata.format.cache.Validator;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.util.XslUtil;
@@ -75,8 +74,8 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.json.JSONException;
 import org.jdom.JDOMException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -84,6 +83,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -149,8 +149,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private ServiceManager serviceManager;
     @Autowired
     private SchemaManager schemaManager;
-    @Autowired
-    private DataManager dataManager;
     @Autowired
     private SearchManager searchManager;
     @Autowired
@@ -273,23 +271,31 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    public void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
+    /**
+     * This service will read directly from the cache and return the value.  If it is not in the cache then a 404 will be returned.
+     *
+     * This is a service to use if there is process to keep the cache at least periodically up-to-date and if maximum performance
+     * is required.
+     */
+    @RequestMapping(value = "/{lang}/md.format.public.{type}")
+    public HttpEntity<byte[]> getCachedPublicMetadata(
+            @PathVariable final String lang,
+            @PathVariable final String type,
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(value = "hide_withheld", defaultValue = "false") final boolean hide_withheld) throws Exception {
+        final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
-        response.setContentType(formatType.contentType);
-        String filename = "metadata." + formatType;
-        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-        response.setStatus(HttpServletResponse.SC_OK);
-        if (formatType == FormatType.pdf) {
-            writerAsPDF(response, formattedMetadata, lang);
-        } else {
-            response.setCharacterEncoding(Constants.ENCODING);
-            response.setContentType("text/html");
-            response.setContentLength(formattedMetadata.length);
-            response.setHeader("Cache-Control", "no-cache");
-            response.getOutputStream().write(formattedMetadata);
+        String resolvedId = resolveId(id, uuid);
+        Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, true);
+        byte[] bytes = this.formatterCache.getPublished(key);
+
+        if (bytes != null) {
+            return new HttpEntity<>(bytes);
         }
+        return null;
     }
-
     @RequestMapping(value = "/{lang}/md.format.{type}")
     @ResponseBody
     public void exec(
@@ -338,8 +344,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
                 validator = new NoCacheValidator();
             }
         }
-        final FormatMetadata formatMetadata = new FormatMetadata(lang, formatType, resolvedId, xslid,
-                hide_withheld, request);
+        final FormatMetadata formatMetadata = new FormatMetadata(key, request);
 
         byte[] bytes;
         if (hasNonStandardParameters(request)) {
@@ -363,19 +368,20 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
     }
 
-    private String resolveId(String id, String uuid) throws Exception {
-        String resolvedId;
-        if (id == null) {
-            resolvedId = dataManager.getMetadataId(uuid);
+    private void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
+        response.setContentType(formatType.contentType);
+        String filename = "metadata." + formatType;
+        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+        response.setStatus(HttpServletResponse.SC_OK);
+        if (formatType == FormatType.pdf) {
+            writerAsPDF(response, formattedMetadata, lang);
         } else {
-            try {
-                Integer.parseInt(id);
-                resolvedId = id;
-            } catch (NumberFormatException e) {
-                resolvedId = dataManager.getMetadataId(id);
-            }
+            response.setCharacterEncoding(Constants.ENCODING);
+            response.setContentType("text/html");
+            response.setContentLength(formattedMetadata.length);
+            response.setHeader("Cache-Control", "no-cache");
+            response.getOutputStream().write(formattedMetadata);
         }
-        return resolvedId;
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {
@@ -410,7 +416,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(
-            final String lang, final FormatType type, final String id, final String xslid,
+            final String lang, final FormatType type, final int id, final String xslid,
             final Boolean hide_withheld, final NativeWebRequest request) throws Exception {
 
         ServiceContext context = createServiceContext(lang, type, request.getNativeRequest(HttpServletRequest.class));
@@ -491,7 +497,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id,
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, int id,
                                                Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(this.metadataRepository, id);
@@ -502,8 +508,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
             XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
         }
-
-        id = String.valueOf(md.getId());
 
         return Pair.read(metadata, md);
 
@@ -619,41 +623,37 @@ public class Format extends AbstractFormatService implements ApplicationListener
     public void setIsoLanguagesMapper(IsoLanguagesMapper isoLanguagesMapper) {
         this.isoLanguagesMapper = isoLanguagesMapper;
     }
-
-    private class FormatMetadata implements Callable<StoreInfoAndData> {
-        private final String lang;
-        private final FormatType formatType;
-        private final String finalResolvedId;
-        private final String xslid;
-        private final Boolean hide_withheld;
+    private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
+        private final Key key;
         private final NativeWebRequest request;
 
-        public FormatMetadata(String lang, FormatType formatType, String finalResolvedId, String xslid,
-                              Boolean hide_withheld, NativeWebRequest request) {
-            this.lang = lang;
-            this.formatType = formatType;
-            this.finalResolvedId = finalResolvedId;
-            this.xslid = xslid;
-            this.hide_withheld = hide_withheld;
+        public FormatMetadata(Key key, NativeWebRequest request) {
+            this.key = key;
             this.request = request;
         }
 
         @Override
-        public StoreInfoAndData call() throws Exception {
-            Pair<FormatterImpl, FormatterParams> result = loadMetadataAndCreateFormatterAndParams(lang, formatType, finalResolvedId, xslid,
-
-
-                    hide_withheld, request);
+        public StoreInfoAndDataLoadResult call() throws Exception {
+            Pair<FormatterImpl, FormatterParams> result =
+                    loadMetadataAndCreateFormatterAndParams(key.lang, key.formatType, key.mdId,
+                            key.formatterId, key.hideWithheld, request);
             FormatterImpl formatter = result.one();
             FormatterParams fparams = result.two();
             final String formattedMetadata = formatter.format(fparams);
             byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
-            final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(finalResolvedId);
+            final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
             final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished));
+            final boolean isPublishedMd = one != null;
 
-            return new StoreInfoAndData(bytes, changeDate, one != null);
+            Key withheldKey = null;
+            FormatMetadata loadWithheld = null;
+            if (!key.hideWithheld && isPublishedMd) {
+                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true);
+                loadWithheld = new FormatMetadata(withheldKey, request);
+            }
+            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, key, loadWithheld);
         }
     }
 }

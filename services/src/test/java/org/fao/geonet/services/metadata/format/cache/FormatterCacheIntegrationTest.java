@@ -1,6 +1,8 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -10,6 +12,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.Publish;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +41,15 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     private OperationAllowedRepository operationAllowedRepository;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private SystemInfo systemInfo;
     @PersistenceContext
     EntityManager entityManager;
     private FilesystemStore fsStore;
     private FormatterCache formatterCache;
 
     private String metadataId;
+    private String stagingProfile;
 
     @Before
     public void setUp() throws Exception {
@@ -55,6 +61,13 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
 
         this.fsStore = _applicationContext.getBean(FilesystemStore.class);
         this.formatterCache = _applicationContext.getBean(FormatterCache.class);
+        this.stagingProfile = systemInfo.getStagingProfile();
+        systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
+    }
+
+    @After
+    public void resetStagingProfile() throws Exception {
+        systemInfo.setStagingProfile(stagingProfile);
     }
 
     @Test
@@ -98,7 +111,8 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         assertNull(formatterCache.getPublished(key));
         assertNull(fsStore.getPublished(key));
         assertNull(fsStore.get(key));
-        assertEquals("newValue",
-                formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("newValue", changeDate, true), true));
+        final byte[] result = formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("newValue", changeDate,
+                true), true);
+        assertEquals("newValue", new String(result, Constants.CHARSET));
     }
 }

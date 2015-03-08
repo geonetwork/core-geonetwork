@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 /**
 * @author Jesse on 3/6/2015.
 */
-public class TestLoader implements Callable<StoreInfoAndData> {
+public class TestLoader implements Callable<StoreInfoAndDataLoadResult> {
     private final String resultToStore;
     private final long changeDate;
     private final boolean published;
@@ -17,7 +17,7 @@ public class TestLoader implements Callable<StoreInfoAndData> {
     }
 
     @Override
-    public StoreInfoAndData call() throws Exception {
-        return new StoreInfoAndData(resultToStore, changeDate, published);
+    public StoreInfoAndDataLoadResult call() throws Exception {
+        return new StoreInfoAndDataLoadResult(resultToStore, changeDate, published, null, null);
     }
 }

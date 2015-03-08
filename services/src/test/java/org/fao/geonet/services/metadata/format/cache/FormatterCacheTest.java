@@ -44,59 +44,6 @@ public class FormatterCacheTest {
         assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
     }
     @Test
-    public void testLanguagesToCache() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
-        config.setAllowedLanguages(Sets.newHashSet("fre"));
-        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
-
-        final boolean hideWithheld = true;
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
-        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
-    }
-    @Test
-    public void testFormattersToCache() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
-        config.setFormatterIds(Sets.newHashSet("blarg"));
-        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
-
-        final boolean hideWithheld = true;
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
-        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
-    }
-    @Test
-    public void testCacheWithheld() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
-        config.setCacheHideWithheld(false);
-        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
-
-        final boolean hideWithheld = true;
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
-        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
-    }
-    @Test
-    public void testCacheFullMetadata() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
-        config.setCacheFullMetadata(false);
-        this.formatterCache = new FormatterCache(persistentStore, 1, 5000, config);
-
-        final boolean hideWithheld = false;
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
-        assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
-    }
-
-    @Test
     public void testGet() throws Exception {
         final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
         this.formatterCache = new FormatterCache(persistentStore, 1, 5000);
@@ -115,9 +62,9 @@ public class FormatterCacheTest {
         assertEquals(changeDate, basicInfo.getChangeDate());
         assertEquals(false, basicInfo.isPublished());
 
-        result = getAsString(key, changeDate, new Callable<StoreInfoAndData>() {
+        result = getAsString(key, changeDate, new Callable<StoreInfoAndDataLoadResult>() {
             @Override
-            public StoreInfoAndData call() throws Exception {
+            public StoreInfoAndDataLoadResult call() throws Exception {
                 throw new AssertionError("Should not be called because cache should be up-to-date");
             }
         });
@@ -135,7 +82,7 @@ public class FormatterCacheTest {
         assertEquals(false, basicInfo.isPublished());
     }
 
-    private String getAsString(Key key, long changeDate, Callable<StoreInfoAndData> loader) throws Exception {
+    private String getAsString(Key key, long changeDate, Callable<StoreInfoAndDataLoadResult> loader) throws Exception {
         byte[] bytes = formatterCache.get(key, new ChangeDateValidator(changeDate), loader, true);
         return new String(bytes, Constants.CHARSET);
     }
@@ -157,6 +104,26 @@ public class FormatterCacheTest {
 
         formatterCache.get(key, new ChangeDateValidator(changeDate + 1000), new TestLoader("lastResult", changeDate, false), true);
         assertNull(formatterCache.getPublished(key));
+    }
+
+    @Test
+    public void testGetPublicCachePopulatedWithNonWithheld() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
+
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", false);
+        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true);
+
+        formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndDataLoadResult>() {
+            @Override
+            public StoreInfoAndDataLoadResult call() throws Exception {
+                return new StoreInfoAndDataLoadResult("result", changeDate, true, key2, new TestLoader("result", changeDate, true));
+            }
+        }, true);
+
+        assertNull(formatterCache.getPublished(key));
+        assertNotNull(formatterCache.getPublished(key2));
     }
 
     @Test
@@ -219,10 +186,11 @@ public class FormatterCacheTest {
         final AtomicBoolean waitForDone = new AtomicBoolean(false);
         this.formatterCache = new FormatterCache(persistentStore, 100, 5000) {
             @Override
-            Runnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests, PersistentStore store) {
+            PersistentStoreRunnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests,
+                                                                  PersistentStore store) {
                 return new PersistentStoreRunnable(storeRequests, store) {
                     @Override
-                    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException, IOException, SQLException {
+                    void doStore(Pair<Key, StoreInfoAndDataLoadResult> request) throws Exception {
                         waitForStartPut.set(true);
                         while(!waitForAllowPut.get()) {
                             Thread.sleep(100);

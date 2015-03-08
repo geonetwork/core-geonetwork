@@ -3,8 +3,10 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.MetadataRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -21,6 +23,8 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XS
  * @author jeichar
  */
 abstract class AbstractFormatService {
+    @Autowired
+    protected DataManager dataManager;
 
     protected static final DirectoryStream.Filter<Path> FORMATTER_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -36,11 +40,8 @@ abstract class AbstractFormatService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    protected Metadata loadMetadata(MetadataRepository metadataRepository, String id) {
-        Metadata md = null;
-        if (id != null) {
-            md = metadataRepository.findOne(Integer.parseInt(id));
-        }
+    protected Metadata loadMetadata(MetadataRepository metadataRepository, int id) {
+        Metadata md = metadataRepository.findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("No metadata found. id = " + id);
@@ -111,5 +112,20 @@ abstract class AbstractFormatService {
             }
         }
         return formatDir;
+    }
+
+    protected String resolveId(String id, String uuid) throws Exception {
+        String resolvedId;
+        if (id == null) {
+            resolvedId = dataManager.getMetadataId(uuid);
+        } else {
+            try {
+                Integer.parseInt(id);
+                resolvedId = id;
+            } catch (NumberFormatException e) {
+                resolvedId = dataManager.getMetadataId(id);
+            }
+        }
+        return resolvedId;
     }
 }

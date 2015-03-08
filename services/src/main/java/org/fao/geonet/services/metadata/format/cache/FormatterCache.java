@@ -55,7 +55,7 @@ public class FormatterCache {
     private final Cache<Key, StoreInfoAndData> memoryCache;
     private final Multimap<Integer, Pair<Key, StoreInfoAndData>> mdIdIndex = ArrayListMultimap.create();
     private final ExecutorService executor;
-    private final BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests;
+    private final BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());
@@ -86,7 +86,8 @@ public class FormatterCache {
     }
 
     @VisibleForTesting
-    Runnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests, PersistentStore store) {
+    PersistentStoreRunnable createPersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests,
+                                                          PersistentStore store) {
         return new PersistentStoreRunnable(storeRequests, store);
     }
 
@@ -118,8 +119,8 @@ public class FormatterCache {
      *                                    be updated in the current thread instead of in another thread.
      */
     @Nullable
-    public byte[] get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws
-            Exception {
+    public byte[] get(Key key, Validator validator, Callable<StoreInfoAndDataLoadResult> loader,
+                      boolean writeToStoreInCurrentThread) throws Exception {
         StoreInfoAndData cached = memoryCache.getIfPresent(key);
         boolean invalid = false;
         if (cached != null && !validator.isCacheVersionValid(cached)) {
@@ -132,9 +133,10 @@ public class FormatterCache {
         }
 
         if (cached == null) {
-            cached = loader.call();
+            StoreInfoAndDataLoadResult loaded = loader.call();
+            cached = loaded;
             if (cacheConfig.allowCaching(key)) {
-                push(key, cached, writeToStoreInCurrentThread);
+                push(key, loaded, writeToStoreInCurrentThread);
             }
 
         }
@@ -142,15 +144,16 @@ public class FormatterCache {
         return cached.data;
     }
 
-    private void push(Key key, StoreInfoAndData cached, boolean writeToStoreInCurrentThread) throws IOException, SQLException {
+    private void push(Key key, StoreInfoAndDataLoadResult cached,
+                      boolean writeToStoreInCurrentThread) throws IOException, SQLException {
         final Lock writeLock = lock.writeLock();
         try {
             writeLock.lock();
 
             this.memoryCache.put(key, cached);
-            this.mdIdIndex.put(key.mdId, Pair.read(key, cached));
+            this.mdIdIndex.put(key.mdId, Pair.read(key, (StoreInfoAndData) cached));
             if (writeToStoreInCurrentThread) {
-                this.persistentStore.put(key, cached);
+                createPersistentStoreRunnable(storeRequests, persistentStore).processStoreRequest(Pair.read(key, cached));
             } else {
                 if (!this.executor.isShutdown()) {
                     this.storeRequests.put(Pair.read(key, cached));

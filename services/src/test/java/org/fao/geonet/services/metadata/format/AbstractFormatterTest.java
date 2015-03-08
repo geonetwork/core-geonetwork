@@ -114,7 +114,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         final ServletWebRequest webRequest = new ServletWebRequest(request);
 
         return this.formatService.loadMetadataAndCreateFormatterAndParams(getUILang(), getOutputType(),
-                "" + id, formatterId, false, webRequest);
+                id, formatterId, false, webRequest);
     }
 
     protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {

@@ -5,7 +5,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -17,10 +16,10 @@ import java.util.concurrent.BlockingQueue;
  * @author Jesse on 3/5/2015.
  */
 public class PersistentStoreRunnable implements Runnable {
-    private final BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests;
+    private final BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests;
     private final PersistentStore store;
 
-    public PersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndData>> storeRequests, PersistentStore store) {
+    public PersistentStoreRunnable(BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests, PersistentStore store) {
         this.storeRequests = storeRequests;
         this.store = store;
     }
@@ -29,11 +28,17 @@ public class PersistentStoreRunnable implements Runnable {
     public final void run() {
         try {
             while (true) {
-                final Pair<Key, StoreInfoAndData> request = storeRequests.take();
-                doStore(request);
+                final Pair<Key, StoreInfoAndDataLoadResult> request = storeRequests.take();
+                processStoreRequest(request);
             }
         } catch (InterruptedException e) {
-            return;
+            // do nothing
+        }
+    }
+
+    void processStoreRequest(Pair<Key, StoreInfoAndDataLoadResult> request) {
+        try {
+            doStore(request);
         } catch (SQLException e) {
             StringBuilder exception = new StringBuilder(e.toString());
             exception.append('\n').append(strackTrace(e));
@@ -41,7 +46,7 @@ public class PersistentStoreRunnable implements Runnable {
                 exception.append("\nNext Exception: '").append(next.getMessage()).append('\n').append(strackTrace(next));
             }
             Log.error(Geonet.FORMATTER, "Error writing to Formatter PersistenceStore: " + exception);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.error(Geonet.FORMATTER, "Error writing to Formatter PersistenceStore", e);
         }
     }
@@ -53,7 +58,15 @@ public class PersistentStoreRunnable implements Runnable {
     }
 
     @VisibleForTesting
-    void doStore(Pair<Key, StoreInfoAndData> request) throws InterruptedException, IOException, SQLException {
-        store.put(request.one(), request.two());
+    void doStore(Pair<Key, StoreInfoAndDataLoadResult> request) throws Exception {
+        Key key = request.one();
+        StoreInfoAndDataLoadResult result = request.two();
+        store.put(key, result);
+
+        while (result.getKey() != null && result.getToCache() != null) {
+            key = result.getKey();
+            result = result.getToCache().call();
+            store.put(key, result);
+        }
     }
 }

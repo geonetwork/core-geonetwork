@@ -169,7 +169,7 @@ public class ListFormatters extends AbstractFormatService {
     ) throws Exception {
         if (id != null || uuid != null) {
             try {
-                loadMetadata(this.repository, id);
+                loadMetadata(this.repository, Integer.parseInt(resolveId(id, uuid)));
             } catch (Throwable e) {
                 // its ok.  just can't use metadata
             }

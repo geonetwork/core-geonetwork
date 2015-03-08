@@ -46,7 +46,8 @@ public class NoCachingStore extends FormatterCache {
 
     @Nullable
     @Override
-    public byte[] get(Key key, Validator validator, Callable<StoreInfoAndData> loader, boolean writeToStoreInCurrentThread) throws Exception {
+    public byte[] get(Key key, Validator validator, Callable<StoreInfoAndDataLoadResult> loader,
+                      boolean writeToStoreInCurrentThread) throws Exception {
         return loader.call().data;
     }
 

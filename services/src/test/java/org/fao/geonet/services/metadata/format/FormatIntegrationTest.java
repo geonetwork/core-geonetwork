@@ -6,6 +6,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Level;
 import org.fao.geonet.MockRequestFactoryGeonet;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -84,6 +85,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private MetadataRepository metadataRepository;
     @Autowired
     protected MockRequestFactoryGeonet requestFactory;
+    @Autowired
+    protected SystemInfo systemInfo;
 
     private ServiceContext serviceContext;
     private int id;
@@ -115,48 +118,56 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testLastModified() throws Exception {
-        metadataRepository.update(id, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                entity.getDataInfo().setChangeDate(new ISODate("2012-01-18T15:04:43"));
-            }
-        });
+        String stage = systemInfo.getStagingProfile();
+        systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
+        try {
+            metadataRepository.update(id, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata entity) {
+                    entity.getDataInfo().setChangeDate(new ISODate("2012-01-18T15:04:43"));
+                }
+            });
+            dataManager.indexMetadata(Lists.newArrayList("" + this.id));
 
-        final String formatterName = configureGroovyTestFormatter();
+            final String formatterName = configureGroovyTestFormatter();
 
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("h2IdentInfo", "true");
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            request.addParameter("h2IdentInfo", "true");
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
-        final String lastModified = response.getHeader("Last-Modified");
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+            final String lastModified = response.getHeader("Last-Modified");
+            assertEquals("no-cache", response.getHeader("Cache-Control"));
+            final String viewString = response.getContentAsString();
+            assertNotNull(viewString);
 
-        final String viewString = response.getContentAsString();
-        assertNotNull(viewString);
+            request = new MockHttpServletRequest();
+            request.setMethod("GET");
+            response = new MockHttpServletResponse();
 
-        request = new MockHttpServletRequest();
-        request.setMethod("GET");
-        response = new MockHttpServletResponse();
+            request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
+            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+            assertEquals(HttpStatus.SC_NOT_MODIFIED, response.getStatus());
+            final ISODate newChangeDate = new ISODate();
+            metadataRepository.update(id, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata entity) {
+                    entity.getDataInfo().setChangeDate(newChangeDate);
+                }
+            });
 
-        request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
-        assertEquals(HttpStatus.SC_NOT_MODIFIED, response.getStatus());
-        metadataRepository.update(id, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                entity.getDataInfo().setChangeDate(new ISODate());
-            }
-        });
+            dataManager.indexMetadata(Lists.newArrayList("" + this.id));
 
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
+            request = new MockHttpServletRequest();
+            request.setMethod("GET");
+            response = new MockHttpServletResponse();
 
-        request = new MockHttpServletRequest();
-        request.setMethod("GET");
-        response = new MockHttpServletResponse();
-
-        request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
-        assertEquals(HttpStatus.SC_OK, response.getStatus());
+            request.addHeader("If-Modified-Since", Long.valueOf(lastModified));
+            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, new ServletWebRequest(request, response));
+             assertEquals(HttpStatus.SC_OK, response.getStatus());
+        } finally {
+            systemInfo.setStagingProfile(stage);
+        }
     }
 
     @Test(expected = AssertionError.class)

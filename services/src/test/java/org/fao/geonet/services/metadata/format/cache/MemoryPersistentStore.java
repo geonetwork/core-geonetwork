@@ -33,7 +33,7 @@ public class MemoryPersistentStore implements PersistentStore {
     @Override
     public byte[] getPublished(@Nonnull Key key) {
         final StoreInfoAndData storeInfoAndData = dataMap.get(key);
-        if (storeInfoAndData.isPublished()) {
+        if (storeInfoAndData != null && storeInfoAndData.isPublished() && key.hideWithheld) {
             return storeInfoAndData.data;
         }
         return null;

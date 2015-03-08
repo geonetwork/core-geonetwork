@@ -47,6 +47,8 @@ public class FilesystemStore implements PersistentStore {
     private static final String NAME = "name";
     private static final String CURRENT_SIZE = "currentsize";
     private static final String VALUE = "value";
+    public static final String WITHHELD_MD_DIRNAME = "withheld_md";
+    public static final String FULL_MD_NAME = "full_md";
 
     private static final String QUERY_GET_INFO = "SELECT * FROM " + INFO_TABLE + " WHERE " + KEY + "=?";
     private static final String QUERY_GET_INFO_FOR_RESIZE = "SELECT " +KEY + "," + PATH + " FROM " + INFO_TABLE + " ORDER BY " + CHANGE_DATE + " ASC";
@@ -149,7 +151,8 @@ public class FilesystemStore implements PersistentStore {
 
         Path publicPath = getPublicPath(key);
         Files.deleteIfExists(publicPath);
-        if (data.isPublished()) {
+        // only publish if withheld (hidden) elements are hidden.
+        if (data.isPublished() && key.hideWithheld) {
             Files.createDirectories(publicPath.getParent());
             try {
                 Files.createLink(publicPath, privatePath);
@@ -232,9 +235,18 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public void setPublished(int metadataId, final boolean published) throws IOException {
+
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
         if (Files.exists(metadataDir)) {
             Files.walkFileTree(metadataDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if (dir.getFileName().toString().equals(FULL_MD_NAME)) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    return super.preVisitDirectory(dir, attrs);
+                }
+
                 @Override
                 public FileVisitResult visitFile(Path privatePath, BasicFileAttributes attrs) throws IOException {
                     final Path publicPath = toPublicPath(privatePath);
@@ -298,7 +310,8 @@ public class FilesystemStore implements PersistentStore {
         final String accessDir = isPublicCache ? PUBLIC : PRIVATE;
         final String sMdId = String.valueOf(key.mdId);
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
-        return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(key.hashCode() + "." + key.formatType.name());
+        String hidden = key.hideWithheld ? WITHHELD_MD_DIRNAME : FULL_MD_NAME;
+        return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(hidden).resolve(key.hashCode() + "." + key.formatType.name());
     }
 
     private Path getBaseCacheDir() {
