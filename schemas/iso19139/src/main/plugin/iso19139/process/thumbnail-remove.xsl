@@ -3,8 +3,8 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
 
-  <!-- 
-      Usage: 
+  <!--
+      Usage:
         thumbnail-from-url-remove?thumbnail_url=http://geonetwork.org/thumbnails/image.png
     -->
 
@@ -12,7 +12,8 @@
 
   <!-- Remove the thumbnail define in thumbnail_url parameter -->
   <xsl:template
-    match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString= $thumbnail_url]"/>
+    priority="2"
+    match="gmd:graphicOverview[normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)]"/>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

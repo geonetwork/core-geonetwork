@@ -229,7 +229,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
         byte[] response;
         String contentType;
-        if (acceptContentType == null ||
+        if (acceptContentType.isEmpty() ||
             acceptsType(acceptContentType, "xml") ||
             acceptContentType.contains("*/*")||
             acceptContentType.contains("text/plain")) {
