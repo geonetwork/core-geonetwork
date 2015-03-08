@@ -127,11 +127,20 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
-		UserSession us = context.getUserSession();
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
 			return hsAllOps;
 		}
+
+		return getOperationsNotOwner(context, mdId, ip, operations);
+	}
+
+	public Set<String> getAllOperationsForOwner() {
+			return hsAllOps;
+	}
+
+	public Set<String> getOperationsNotOwner(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
+		UserSession us = context.getUserSession();
 
 		// otherwise build result
 		Set<String> out = new HashSet<String>();
