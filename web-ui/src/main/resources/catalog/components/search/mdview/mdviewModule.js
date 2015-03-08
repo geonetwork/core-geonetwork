@@ -13,8 +13,11 @@
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate',
+    'gnMdView', 'gnMdViewObj',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
-             gnMetadataActions, gnAlertService, $translate) {
+             gnMetadataActions, gnAlertService, $translate, gnMdView,
+             gnMdViewObj) {
+
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.usingFormatter = false;
@@ -66,6 +69,14 @@
         $scope.usingFormatter = false;
         $scope.currentFormatter = null;
       });
+
+      // Know from what path we come from
+      $scope.gnMdViewObj = gnMdViewObj;
+      $scope.$watch('gnMdViewObj.from', function(v) {
+        $scope.fromView = v ? v.substring(1) : v;
+      });
+
+
     }]);
 
 })();

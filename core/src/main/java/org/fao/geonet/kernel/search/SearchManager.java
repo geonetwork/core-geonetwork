@@ -1623,14 +1623,14 @@ public class SearchManager {
         {
             Map<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
             try {
-                types.put(Geonet.SearchResult.Relation.ENCLOSES, constructor(ContainsFilter.class));
-                types.put(Geonet.SearchResult.Relation.CROSSES, constructor(CrossesFilter.class));
-                types.put(Geonet.SearchResult.Relation.OUTSIDEOF, constructor(IsFullyOutsideOfFilter.class));
-                types.put(Geonet.SearchResult.Relation.EQUAL, constructor(EqualsFilter.class));
-                types.put(Geonet.SearchResult.Relation.INTERSECTION, constructor(IntersectionFilter.class));
-                types.put(Geonet.SearchResult.Relation.OVERLAPS, constructor(OverlapsFilter.class));
-                types.put(Geonet.SearchResult.Relation.TOUCHES, constructor(TouchesFilter.class));
-                types.put(Geonet.SearchResult.Relation.WITHIN, constructor(WithinFilter.class));
+                types.put(Geonet.SearchResult.Relation.ENCLOSES.toLowerCase(), constructor(ContainsFilter.class));
+                types.put(Geonet.SearchResult.Relation.CROSSES.toLowerCase(), constructor(CrossesFilter.class));
+                types.put(Geonet.SearchResult.Relation.OUTSIDEOF.toLowerCase(), constructor(IsFullyOutsideOfFilter.class));
+                types.put(Geonet.SearchResult.Relation.EQUAL.toLowerCase(), constructor(EqualsFilter.class));
+                types.put(Geonet.SearchResult.Relation.INTERSECTION.toLowerCase(), constructor(IntersectionFilter.class));
+                types.put(Geonet.SearchResult.Relation.OVERLAPS.toLowerCase(), constructor(OverlapsFilter.class));
+                types.put(Geonet.SearchResult.Relation.TOUCHES.toLowerCase(), constructor(TouchesFilter.class));
+                types.put(Geonet.SearchResult.Relation.WITHIN.toLowerCase(), constructor(WithinFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
             }

@@ -14,7 +14,7 @@
           <!-- </a> -->
 
           <h4 class="row gn-md-title">
-            <a href=""
+            <a href="#/metadata/{{md.getUuid()}}"
               data-ng-click="openRecord($index, md, searchResults.records)"
               title="{{md.title || md.defaultTitle}}">
               <!-- Icon for types - usually only one -->
@@ -64,7 +64,7 @@
         <div class="gn-md-links">
 
           <div class="btn-group pull-right" ng-if="links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Liens">
               <span class="fa fa-link"></span>
               <span class="caret"></span>
             </button>
@@ -75,7 +75,7 @@
           </div>
 
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Télécharger">
               <span class="fa fa-download"></span>
               <span class="caret"></span>
             </button>
@@ -87,14 +87,14 @@
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
+                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="Télécharger">
             <span class="fa fa-download"></span>
           </button>
 
 
           <!--Layers to map button-->
           <div class="btn-group pull-right" ng-if="layers.length > 1 ">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Visualiser">
               <span class="fa fa-globe"></span>
               <span class="caret"></span>
             </button>
@@ -108,13 +108,13 @@
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)">
+                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="Visualiser">
             <span class="fa fa-globe"></span>
           </button>
 
           <!--admin button-->
           <div class="btn-group pull-right md-actions" ng-if="user.canEditRecord(md)">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Administrer">
               <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>

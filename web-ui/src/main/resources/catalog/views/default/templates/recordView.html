@@ -11,19 +11,19 @@
     <button class="btn btn-primary"
             data-ng-click="closeRecord(mdView.current.record)">
       <i class="fa fa-search"></i>
-      <span data-translate="">backToSearch</span>
+      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
     </button>
 
     <button class="btn btn-link"
             data-ng-class="mdView.current.index === 0 ? 'disabled' : ''"
-            data-ng-show="mdView.records"
+            data-ng-show="mdView.records.length > 1"
             data-ng-click="previousRecord()">
       <i class="fa fa-angle-left"></i>
       <span data-translate="">previous</span>
     </button>
     <button class="btn btn-link"
             data-ng-class="mdView.current.index === mdView.records.length-1 ? 'disabled' : ''"
-            data-ng-show="mdView.records"
+            data-ng-show="mdView.records.length > 1"
             data-ng-click="nextRecord()">
       <span data-translate="">next</span>
       <i class="fa fa-angle-right"></i>

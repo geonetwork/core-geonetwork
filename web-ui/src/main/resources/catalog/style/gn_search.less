@@ -376,16 +376,23 @@
     border-radius: 3px;
     position: relative;
     [gn-draw-bbox-btn],
-    .btn-group-vertical {
+    .btn-group-vertical,
+    .dropdown{
       position: absolute;
       top: 4px;
       z-index: 10;
-    }
-    .btn-group-vertical {
       right: 4px;
     }
     [gn-draw-bbox-btn] {
       left: 4px;
+    }
+    .dropdown {
+      left: 4px;
+      top: initial;
+      bottom: 4px;
+      .dropdown-menu {
+        font-size: 90%;
+      }
     }
   }
 

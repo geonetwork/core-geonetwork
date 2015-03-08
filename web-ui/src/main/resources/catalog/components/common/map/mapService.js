@@ -17,8 +17,9 @@
       '$log',
       'gnSearchLocation',
       '$rootScope',
+      'gnUrlUtils',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
-          gnSearchLocation, $rootScope) {
+          gnSearchLocation, $rootScope, gnUrlUtils) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -252,12 +253,21 @@
               source: source,
               legend: options.legend,
               attribution: options.attribution,
-              metadata: options.metadata,
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
               cextent: options.extent
             });
+
+            if(options.metadata) {
+              olLayer.set('metadataUrl', options.metadata);
+              var params = gnUrlUtils.parseKeyValue(
+                  options.metadata.split('?')[1]);
+              var uuid = params.uuid || params.id;
+              if(uuid) {
+                olLayer.set('metadataUuid', uuid);
+              }
+            }
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 

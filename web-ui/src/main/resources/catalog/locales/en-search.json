@@ -103,7 +103,8 @@
   "aboutThisResource": "About this resource",
   "preview": "Preview",
   "metadataInformation": "Metadata information",
-  "backToSearch": "Back to search",
+  "backTosearch": "Back to search",
+  "backTosmap": "Back to map",
   "shareOn": "Share on social sites",
   "updatedOn": "Updated: ",
   "license": "License",
@@ -238,5 +239,10 @@
   "privilegesBatchAlert": "The privileges will be updated for all selected records. The privilege form is empty and does not reflect the selected records current privileges!",
   "permalink" : "Permalink",
   "zoomto": "Zoom To",
-  "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you"
+  "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you",
+  "intersectWith": "Intersects with",
+  "fullyOutsideOf": "Fully outside of",
+  "encloses": "Enclosing",
+  "within": "Within"
+
 }
