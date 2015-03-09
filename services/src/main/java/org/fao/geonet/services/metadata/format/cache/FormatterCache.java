@@ -121,6 +121,10 @@ public class FormatterCache {
     @Nullable
     public byte[] get(Key key, Validator validator, Callable<StoreInfoAndDataLoadResult> loader,
                       boolean writeToStoreInCurrentThread) throws Exception {
+        if (!cacheConfig.allowCaching(key)) {
+            return loader.call().data;
+        }
+
         StoreInfoAndData cached = memoryCache.getIfPresent(key);
         boolean invalid = false;
         if (cached != null && !validator.isCacheVersionValid(cached)) {
@@ -135,10 +139,7 @@ public class FormatterCache {
         if (cached == null) {
             StoreInfoAndDataLoadResult loaded = loader.call();
             cached = loaded;
-            if (cacheConfig.allowCaching(key)) {
-                push(key, loaded, writeToStoreInCurrentThread);
-            }
-
+            push(key, loaded, writeToStoreInCurrentThread);
         }
 
         return cached.data;

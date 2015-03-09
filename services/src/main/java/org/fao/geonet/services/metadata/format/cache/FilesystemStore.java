@@ -96,6 +96,17 @@ public class FilesystemStore implements PersistentStore {
             }
             initialized = true;
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    close();
+                } catch (SQLException | ClassNotFoundException e) {
+                    Log.error(Geonet.FORMATTER, "Error shutting down FilesystemStore Database", e);
+                }
+            }
+        }));
     }
 
     @PreDestroy

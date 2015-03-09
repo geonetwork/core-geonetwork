@@ -42,7 +42,7 @@ public class Key {
     public int hashCode() {
         int result = mdId;
         result = 31 * result + lang.hashCode();
-        result = 31 * result + formatType.hashCode();
+        result = 31 * result + formatType.ordinal();
         result = 31 * result + formatterId.hashCode();
         result = 31 * result + (hideWithheld ? 1 : 0);
         return result;

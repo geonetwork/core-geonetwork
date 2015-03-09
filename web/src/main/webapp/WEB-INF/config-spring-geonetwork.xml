@@ -101,6 +101,7 @@
     <util:list id="formattersToInitialize" value-type="java.lang.String" >
         <value>full_view</value>
         <value>xml_view</value>
+        <value>hierarchy_view</value>
     </util:list>
 
     <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">

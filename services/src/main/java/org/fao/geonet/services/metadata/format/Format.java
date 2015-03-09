@@ -38,6 +38,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
@@ -78,9 +79,9 @@ import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
@@ -128,7 +129,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
     public static final Set<String> FIELDS_TO_LOAD = Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
     @Autowired
-    private ApplicationContext springAppContext;
+    private ConfigurableApplicationContext springAppContext;
 
 
     @Autowired
@@ -313,7 +314,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
-        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) || accessManager.canEdit(context, resolvedId);
+        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) || !accessManager.canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld);
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
@@ -331,8 +332,9 @@ public class Format extends AbstractFormatService implements ApplicationListener
             Document doc = searcher.doc(search.scoreDocs[0].doc, FIELDS_TO_LOAD);
 
             if (doc != null) {
-                long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime() / 1000 * 1000;
-                if (request.checkNotModified(changeDate) && cacheConfig.allowCaching(key)) {
+                final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime();
+                long roundedChangeDate = changeDate / 1000 * 1000;
+                if (request.checkNotModified(roundedChangeDate) && cacheConfig.allowCaching(key)) {
                     if (!skipPopularityBool) {
                         this.dataManager.increasePopularity(context, resolvedId);
                     }
@@ -344,7 +346,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
                 validator = new NoCacheValidator();
             }
         }
-        final FormatMetadata formatMetadata = new FormatMetadata(key, request);
+        final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
         if (hasNonStandardParameters(request)) {
@@ -626,14 +628,19 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
+        private final ServiceContext serviceContext;
 
-        public FormatMetadata(Key key, NativeWebRequest request) {
+        public FormatMetadata(ServiceContext context, Key key, NativeWebRequest request) {
             this.key = key;
             this.request = request;
+            this.serviceContext = context;
         }
 
         @Override
         public StoreInfoAndDataLoadResult call() throws Exception {
+            ApplicationContextHolder.set(springAppContext);
+            serviceContext.setAsThreadLocal();
+
             Pair<FormatterImpl, FormatterParams> result =
                     loadMetadataAndCreateFormatterAndParams(key.lang, key.formatType, key.mdId,
                             key.formatterId, key.hideWithheld, request);
@@ -651,9 +658,9 @@ public class Format extends AbstractFormatService implements ApplicationListener
             FormatMetadata loadWithheld = null;
             if (!key.hideWithheld && isPublishedMd) {
                 withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true);
-                loadWithheld = new FormatMetadata(withheldKey, request);
+                loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
             }
-            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, key, loadWithheld);
+            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
         }
     }
 }
