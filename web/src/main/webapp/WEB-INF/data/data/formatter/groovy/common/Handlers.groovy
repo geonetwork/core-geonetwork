@@ -6,6 +6,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
 import org.fao.geonet.utils.Xml
+import org.jdom.Element
 
 public class Handlers {
     private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -137,9 +138,15 @@ public class Handlers {
 
         LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-sitemap")
         def bean = this.env.getBean(GetRelated.class)
-        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
+        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
-        def related = Xml.transform(new org.jdom.Element("root").addContent(raw), relatedXsl);
+        def withGui = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                        new Element("language").setText(env.lang3),
+                        new Element("locUrl").setText(env.getLocalizedUrl())
+                )),
+                raw));
+        def related = Xml.transform(withGui, relatedXsl);
 
         related.getChildren("relation").each { rel ->
             def type = rel.getAttributeValue("type")

@@ -12,7 +12,7 @@
   xmlns:util="java:org.fao.geonet.util.XslUtil"
   xmlns:exslt="http://exslt.org/common"
   xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
-  exclude-result-prefixes="gn-fn-rel geonet exslt che gmd gco">
+  exclude-result-prefixes="gn-fn-rel geonet exslt gmd gco">
 
   <xsl:include href="../iso19139/convert/functions.xsl" />
 
