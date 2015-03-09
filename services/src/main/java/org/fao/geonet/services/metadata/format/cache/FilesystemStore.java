@@ -79,8 +79,8 @@ public class FilesystemStore implements PersistentStore {
             String[] initSql = {
                     "CREATE SCHEMA IF NOT EXISTS " + INFO_TABLE,
                     "CREATE TABLE IF NOT EXISTS " + INFO_TABLE + "(" + KEY + " INT PRIMARY KEY, " + CHANGE_DATE + " BIGINT NOT NULL, " +
-                    PUBLISHED + " BOOL NOT NULL, " + PATH + " VARCHAR(256) NOT NULL)",
-                    "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(32) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
+                    PUBLISHED + " BOOL NOT NULL, " + PATH + " CLOB  NOT NULL)",
+                    "CREATE TABLE IF NOT EXISTS " + STATS_TABLE + " (" + NAME + " VARCHAR(64) PRIMARY KEY, " + VALUE + " VARCHAR(32) NOT NULL)"
 
             };
             String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";
