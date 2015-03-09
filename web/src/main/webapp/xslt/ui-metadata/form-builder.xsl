@@ -710,6 +710,9 @@
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
+          <xsl:if test="$isDisabled">
+            <xsl:attribute name="disabled" select="'disabled'"/>
+          </xsl:if>
           <xsl:if test="$tooltip">
             <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
           </xsl:if>
