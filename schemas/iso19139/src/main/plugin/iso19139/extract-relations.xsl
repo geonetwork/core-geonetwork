@@ -10,7 +10,6 @@
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:util="java:org.fao.geonet.util.XslUtil"
-  xmlns:che="http://www.geocat.ch/2008/che"
   xmlns:exslt="http://exslt.org/common"
   xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
   exclude-result-prefixes="gn-fn-rel geonet exslt che gmd gco">
@@ -41,9 +40,7 @@
       </relation>
     </xsl:for-each>
 
-    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='' or
-                                                                    gmd:linkage/che:PT_FreeURL//che:LocalisedURL[text() != ''] or
-                                                                    gmd:linkage/che:LocalisedURL!='']">
+    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
       <relation type="onlinesrc">
         <xsl:variable name="langCode">
           <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
