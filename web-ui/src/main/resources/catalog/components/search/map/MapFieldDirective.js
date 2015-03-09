@@ -42,8 +42,8 @@
                    * scope.currentExtent and remove relation param if
                    * geometry is null.
                    */
-                  scope.$watch(scope.gnDrawBboxBtn, function(v){
-                    if(!v) {
+                  scope.$watch(scope.gnDrawBboxBtn, function(v) {
+                    if (!v) {
                       delete scope.searchObj.params.relation;
                     }
                     scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
@@ -52,7 +52,6 @@
                   /**
                    * Set active relation (include, exclude, etc..). Run search
                    * when changed.
-                   * @param rel
                    */
                   scope.setRelation = function(rel) {
                     scope.searchObj.params.relation = rel;

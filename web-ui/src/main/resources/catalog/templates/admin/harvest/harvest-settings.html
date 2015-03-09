@@ -1,20 +1,20 @@
-<div class="row">
+<div class="row" data-ng-controller="GnHarvestSettingsController">
 <div class="col-lg-4">
   <div class="panel panel-default">
     <div class="panel-heading">
       <span data-translate="">harvester</span>
-      <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
+      <i data-ng-show="$parent.isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
     </div>
 
     <div class="panel-body">
       <input class="form-control"
-             data-ng-show="harvesters.length > 1"
+             data-ng-show="$parent.harvesters.length > 1"
              data-ng-model="harvesterSearch.$"
              data-ng-change="firstPage()"
              autofocus=""
              placeholder="{{'filter' | translate}}"/>
 
-      <div class="list-group" data-ng-hide="isLoadingHarvester">
+      <div class="list-group" data-ng-hide="$parent.isLoadingHarvester">
         <a href="" class="list-group-item"
            data-ng-repeat="h in pageItems()"
            data-ng-class="[h['@id'] === harvesterSelected['@id'] ? 'active' : '', h.error ? 'list-group-item-danger' : '']"
@@ -29,8 +29,8 @@
           <i data-ng-show="h.info.running" class="fa fa-spinner fa-spin"/>
         </a>
         <span data-gn-pagination-list=""
-              data-items="harvesters | filter:harvesterSearch | orderBy:'name'"
-              data-cache="harvesters"/>
+              data-items="$parent.harvesters | filter:harvesterSearch | orderBy:'name'"
+              data-cache="$parent.harvesters"/>
       </div>
 
       <div class="btn-group">
@@ -51,22 +51,22 @@
         </ul>
       </div>
 
-      <div class="btn-group" data-ng-show="harvesters.length > 0">
+      <div class="btn-group" data-ng-show="$parent.harvesters.length > 0">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
 		  <span class="fa fa-copy"></span>
           <span data-translate="">cloneHarvester</span>
           <span class="caret"/>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li data-ng-repeat="h in harvesters | orderBy:'site.name'">
+          <li data-ng-repeat="h in $parent.harvesters | orderBy:'site.name'">
             <a href="" data-ng-click="cloneHarvester(h['@id'])"
                title="{{'cloneHarvester' | translate}} {{h.site.name}}"> {{h.site.name}}
               ({{('harvester-' + h['@type']) | translate}}) </a>
           </li>
         </ul>
       </div>
-      <button type="button" class="btn" data-ng-show="harvesters.length > 0"
-              data-ng-click="refreshHarvester()" title="{{'refreshHarvester' | translate}}">
+      <button type="button" class="btn" data-ng-show="$parent.harvesters.length > 0"
+              data-ng-click="$parent.refreshHarvester()" title="{{'refreshHarvester' | translate}}">
 			  <span class="fa fa-refresh"></span></button>
     </div>
   </div>
@@ -81,9 +81,10 @@
 
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
       <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
+      <i data-ng-show="isLoadingOneHarvester" class="fa fa-spinner fa-spin"></i>
 
 
-      <div class="btn-toolbar">
+      <div class="btn-toolbar" data-ng-hide="isLoadingOneHarvester">
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
                 data-ng-click="runHarvester(harvesterSelected['@id'])">
@@ -121,7 +122,7 @@
         </button>
       </div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" data-ng-hide="isLoadingOneHarvester">
       <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
         <strong data-translate="">harvesterIsRunning</strong>
       </div>
