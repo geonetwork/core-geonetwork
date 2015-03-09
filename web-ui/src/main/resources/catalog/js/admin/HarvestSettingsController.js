@@ -1,12 +1,12 @@
 (function() {
   goog.provide('gn_harvest_settings_controller');
 
-  
+
 
 
   goog.require('gn_category');
   goog.require('gn_importxsl');
-  
+
   var module = angular.module('gn_harvest_settings_controller',
       ['gn_category',
        'gn_importxsl']);
@@ -44,24 +44,25 @@
 
       var unbindStatusListener = null;
 
-      
+
       function loadHarvester(id) {
-          $scope.isLoadingOneHarvester = true;
-          return $http.get('admin.harvester.list?_content_type=json&id='+id).success(function(data) {
-            if (data && data[0]) {
-              $scope.harvesterSelected = data[0];
-              $scope.harvesterUpdated = false;
-              $scope.harvesterNew = false;
-              $scope.harvesterHistory = {};
-              $scope.searchResults = null;
-              gnUtilityService.parseBoolean($scope.$parent.harvesters);
-            }
-            $scope.isLoadingOneHarvester = false;
-          }).error(function(data) {
-            // TODO
-            $scope.isLoadingOneHarvester = false;
-          });
-        }
+        $scope.isLoadingOneHarvester = true;
+        return $http.get('admin.harvester.list?_content_type=json&id=' + id).
+            success(function(data) {
+              if (data && data[0]) {
+                $scope.harvesterSelected = data[0];
+                $scope.harvesterUpdated = false;
+                $scope.harvesterNew = false;
+                $scope.harvesterHistory = {};
+                $scope.searchResults = null;
+                gnUtilityService.parseBoolean($scope.$parent.harvesters);
+              }
+              $scope.isLoadingOneHarvester = false;
+            }).error(function(data) {
+              // TODO
+              $scope.isLoadingOneHarvester = false;
+            });
+      }
 
 
       function loadHistory(backgroundLoad) {
@@ -252,13 +253,13 @@
         $scope.searchResults = null;
 
         loadHarvester(h['@id']).then(function(data) {
-    	  loadHistory();
+          loadHistory();
 
-    	  // Retrieve records in that harvester
-    	  angular.extend($scope.searchObj.params, {
+          // Retrieve records in that harvester
+          angular.extend($scope.searchObj.params, {
             siteId: $scope.harvesterSelected.site.uuid
           });
-    	  $scope.$broadcast('resetSearch', $scope.searchObj.params);
+          $scope.$broadcast('resetSearch', $scope.searchObj.params);
         });
       };
 
@@ -302,16 +303,18 @@
         $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
           .success(function(data) {
-            loadHarvesters().then(function() {
-              $scope.selectHarvester($scope.harvesterSelected);
+              loadHarvesters().then(function() {
+                $scope.selectHarvester($scope.harvesterSelected);
+              });
             });
-          });
       };
       $scope.runHarvester = function() {
         $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
-        	  $scope.$parent.loadHarvesters().then(function() {refreshSelectedHarvester();});
+              $scope.$parent.loadHarvesters().then(function() {
+                refreshSelectedHarvester();
+              });
             });
       };
       $scope.stopping = false;

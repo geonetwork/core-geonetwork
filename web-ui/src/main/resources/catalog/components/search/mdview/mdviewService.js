@@ -28,8 +28,8 @@
       var lastSearchParams = {};
 
       // Keep where the metadataview come from to get back on close
-      $rootScope.$on('$locationChangeStart', function(o, v){
-        if(!gnSearchLocation.isMdView()) {
+      $rootScope.$on('$locationChangeStart', function(o, v) {
+        if (!gnSearchLocation.isMdView()) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
       });
@@ -152,11 +152,11 @@
        */
       this.openMdFromLayer = function(layer) {
         var md = layer.get('md');
-        if(!md && layer.get('metadataUrl')) {
+        if (!md && layer.get('metadataUrl')) {
 
           var mdUrl = gnUrlUtils.urlResolve(layer.get('metadataUrl'));
-          if(mdUrl.host == gnSearchLocation.host()) {
-            gnSearchLocation.setUuid(layer.get('metadataUuid'))
+          if (mdUrl.host == gnSearchLocation.host()) {
+            gnSearchLocation.setUuid(layer.get('metadataUuid'));
           } else {
             window.open(layer.get('metadataUrl'), '_blank');
           }
