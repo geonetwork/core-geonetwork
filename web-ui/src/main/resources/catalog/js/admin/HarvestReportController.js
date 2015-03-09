@@ -8,13 +8,12 @@
   /**
    * GnHarvestReportController provides management interface
    * for report on harvesters.
-   *
    */
   module.controller('GnHarvestReportController', [
-	'$scope', '$http', '$translate', '$injector', '$rootScope', 'gnUtilityService',
-	function($scope, $http, $translate, $injector, $rootScope) {
+	'$scope',
+	function($scope) {
 		$scope.csvReport = function(event) {
-			var json = [];// [$translate('harvestName'), $translate('serviceUrl'), $translate('harvesterType'), $translate('totalNonTemplateMetadata')];
+			var json = [];
 			var table = document.getElementById("harvestReport");
 			var names = [];
 			for (var i = 0, row; row = table.rows[i]; i++) {

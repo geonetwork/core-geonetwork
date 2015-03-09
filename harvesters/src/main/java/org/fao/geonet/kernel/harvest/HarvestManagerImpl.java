@@ -83,7 +83,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
     private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
     
-    private final List<String> summaryHarvesterSettings = Arrays.asList("harvesting","node","site","name","uuid","url","capabUrl","baseUrl","useAccount","ogctype","options","status","info","lastRun");
+    private final List<String> summaryHarvesterSettings =
+            Arrays.asList("harvesting", "node", "site", "name", "uuid",
+                    "url", "capabUrl", "baseUrl", "host", "useAccount",
+                    "ogctype", "options", "status", "info", "lastRun");
     
     private Element SettingsCache = null;
 
