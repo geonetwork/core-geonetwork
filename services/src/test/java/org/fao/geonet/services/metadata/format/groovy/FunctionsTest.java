@@ -10,6 +10,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.services.metadata.format.ConfigFile;
@@ -82,6 +83,10 @@ public class FunctionsTest {
             }
         };
 
+        final IsoLanguagesMapper languagesMapper = Mockito.mock(IsoLanguagesMapper.class);
+        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en")).thenReturn("eng");
+        fparams.format.setIsoLanguagesMapper(languagesMapper);
+
         Environment env = Mockito.mock(Environment.class);
         Mockito.when(env.getLang3()).thenReturn("eng");
         Mockito.when(env.getLang2()).thenReturn("#EN");
@@ -106,7 +111,7 @@ public class FunctionsTest {
 
         assertEquals("FormatterStrings", functions.translate("formatter-strings"));
         final String inBoth = functions.translate("in-both");
-        assertTrue(inBoth.equals("In Both strings") || inBoth.equals("In Both other-strings"));
+        assertTrue(inBoth, inBoth.equals("In Both strings") || inBoth.equals("In Both other-strings"));
         assertEquals("In Both other-strings", functions.translate("in-both", "other-strings"));
         assertEquals("In Both strings", functions.translate("in-both", "strings"));
         assertEquals("Schema Normal Strings XML", functions.translate("schema-strings"));

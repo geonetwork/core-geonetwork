@@ -1,0 +1,23 @@
+{
+    "abstract": "Extracto",
+    "associated-link": "Asociado",
+    "children-link": "Hijos",
+    "complete": "Completar",
+    "dataset-link": "Conjunto de Datos",
+    "datasets-link": "Conjuntos de Datos",
+    "fcat-link": "Catálogo de Features",
+    "hassource-link": "Tiene Fuentes",
+    "hierarchy": "Jerarquía",
+    "links": "Enlaces",
+    "noUuidInLink": "Ningún uuid en el enlace",
+    "overview": "Visión de Conjunto",
+    "parent": "Padre",
+    "parent-link": "Padre",
+    "related-link": "Relacionados",
+    "service-link": "Servicio",
+    "services-link": "Servicios",
+    "sibling-link": "Hermanos",
+    "source-link": "Fuentes",
+    "testString": "Esta cadena está aquí para tests, no borrar",
+    "xml": "XML"
+}

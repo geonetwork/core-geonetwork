@@ -1,0 +1,23 @@
+{
+    "abstract": "Περίληψη",
+    "associated-link": "Associated",
+    "children-link": "Children",
+    "complete": "Complete",
+    "dataset-link": "Δέσμη δεδομένων",
+    "datasets-link": "Σύνολα Δεδομένων",
+    "fcat-link": "Feature Catalog",
+    "hassource-link": "Has Source",
+    "hierarchy": "Hierarchy",
+    "links": "Σύνδεσμοι",
+    "noUuidInLink": "No uuid in link",
+    "overview": "Επισκόπηση",
+    "parent": "Parent",
+    "parent-link": "Parent",
+    "related-link": "Σχετικά",
+    "service-link": "υπηρεσία",
+    "services-link": "Services",
+    "sibling-link": "Siblings",
+    "source-link": "Sources",
+    "testString": "This String is here for testing don't delete",
+    "xml": "XML"
+}

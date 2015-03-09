@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
@@ -53,6 +54,8 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -118,6 +121,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
+    @Autowired
+    private IsoLanguagesMapper isoLanguagesMapper;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -420,27 +425,48 @@ public class Format extends AbstractFormatService implements ApplicationListener
             allLangResources = new Element("loc");
             Path baseLoc = formatDir.resolve("loc");
             if (Files.exists(baseLoc)) {
-                try (DirectoryStream<Path> locDirs = Files.newDirectoryStream(baseLoc)) {
-                    for (Path locDir : locDirs) {
-                        final String locDirName = getNameWithoutExtension(locDir.getFileName().toString());
-                        Element resources = new Element(locDirName);
-                        if (Files.exists(locDir)) {
-                            try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
-                                for (Path file : paths) {
-                                    final Element fileElements = Xml.loadFile(file);
-                                    final String fileName = getNameWithoutExtension(file.getFileName().toString());
-                                    fileElements.setName(fileName);
-                                    if (!fileElements.getChildren().isEmpty()) {
-                                        resources.addContent(fileElements);
-                                    }
+                final Element finalAllLangResources = allLangResources;
+                Files.walkFileTree(baseLoc, new SimpleFileVisitor<Path>(){
+                    private void addTranslations(String locDirName, Element fileElements) {
+                        Element resources = finalAllLangResources.getChild(locDirName);
+                        if (resources == null) {
+                            resources = new Element(locDirName);
+                            finalAllLangResources.addContent(resources);
+                        }
+                        resources.addContent(fileElements);
+                    }
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (file.getFileName().toString().toLowerCase().endsWith(".xml")) {
+                            try {
+                                final Element fileElements = Xml.loadFile(file);
+                                final String fileName = getNameWithoutExtension(file.getFileName().toString());
+                                fileElements.setName(fileName);
+                                final String locDirName = getNameWithoutExtension(file.getParent().getFileName().toString());
+                                addTranslations(locDirName, fileElements);
+                            } catch (JDOMException e) {
+                                throw new RuntimeException(e);
+                            }
+                        } else if (file.getFileName().toString().toLowerCase().endsWith(".json")) {
+                            try {
+                                final String fileName = getNameWithoutExtension(file.getFileName().toString());
+                                final String[] nameParts = fileName.split("-", 2);
+                                String lang = isoLanguagesMapper.iso639_1_to_iso639_2(nameParts[0].toLowerCase());
+                                final JSONObject json = new JSONObject(new String(Files.readAllBytes(file), Constants.CHARSET));
+                                Element fileElements = new Element(nameParts[1]);
+                                final Iterator keys = json.keys();
+                                while (keys.hasNext()) {
+                                    String key = (String) keys.next();
+                                    fileElements.addContent(new Element(key).setText(json.getString(key)));
                                 }
+                                addTranslations(lang, fileElements);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
                             }
                         }
-                        if (!resources.getChildren().isEmpty()) {
-                            allLangResources.addContent(resources);
-                        }
+                        return super.visitFile(file, attrs);
                     }
-                }
+                });
             }
 
             this.pluginLocs.put(formatDirPath, allLangResources);
@@ -468,4 +494,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
+    public void setIsoLanguagesMapper(IsoLanguagesMapper isoLanguagesMapper) {
+        this.isoLanguagesMapper = isoLanguagesMapper;
+    }
 }
