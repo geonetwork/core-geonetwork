@@ -335,6 +335,8 @@
     "geonetwork-hostHelp": "URL with catalog name only eg. http://www.fao.org/geonetwork.",
     "geonetwork-mefFormatFull": "Use full MEF format",
     "geonetwork-mefFormatFullHelp": "Recommended to retrieve remotes files.",
+    "geonetwork-useChangeDateForUpdate": "Use change date for comparison",
+    "geonetwork-useChangeDateForUpdateHelp": "Use change date to detect changes on remote server. This will not update minor changes but improves speed on harvester.",
     "geonetwork-xslfilter": "XSL filter name to apply",
     "geonetwork-xslfilterHelp": "The XSL filter is applied to each metadata record",
     "groupDeleteError": "Error when deleting group",

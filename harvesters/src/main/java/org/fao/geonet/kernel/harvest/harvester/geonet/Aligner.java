@@ -166,6 +166,7 @@ public class Aligner extends BaseAligner
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs()) {
+		    //FIXME can we do it on one step?
             if (cancelMonitor.get()) {
                 return this.result;
             }
@@ -215,7 +216,7 @@ public class Aligner extends BaseAligner
 				if (id == null) {
                     addMetadata(ri, localRating);
                 } else {
-					updateMetadata(ri, id, localRating);
+					updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
 				}
 			}
 		}
@@ -636,7 +637,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating) throws Exception
+	private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating, 
+	        final boolean useChangeDate, String localChangeDate) throws Exception
 	{
 		final Element md[]     = { null };
 		final Element publicFiles[] = { null };
@@ -646,78 +648,82 @@ public class Aligner extends BaseAligner
             if(log.isDebugEnabled())
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
         } else {
-			Path mefFile = retrieveMEF(ri.uuid);
-
-			try
-			{
-                String fileType = "mef";
-                MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-                if (version != null && version.equals(MEFLib.Version.V2)) {
-                    fileType = "mef2";
-                }
-
-                IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
-
-                MEFLib.visit(mefFile, visitor, new IMEFVisitor()
-				{
-					public void handleMetadata(Element mdata, int index) throws Exception
-					{
-						md[index] = mdata;
-					}
-
-					//-----------------------------------------------------------------
-					
-					public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception
-					{
-                        // Import valid metadata
-                        Element metadataValidForImport = extractValidMetadataForImport(files, info);
-
-                        if (metadataValidForImport != null) {
-                            handleMetadata(metadataValidForImport, index);
-					}
+            if(!useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
+    			Path mefFile = retrieveMEF(ri.uuid);
+    
+    			try
+    			{
+                    String fileType = "mef";
+                    MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
+                    if (version != null && version.equals(MEFLib.Version.V2)) {
+                        fileType = "mef2";
                     }
-					
-					public void handleInfo(Element info, int index) throws Exception
-					{
-						updateMetadata(ri, id, md[index], info, localRating);
-						publicFiles[index] = info.getChild("public");
-						privateFiles[index] = info.getChild("private");
-					}
-
-					//-----------------------------------------------------------------
-
-					public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
-					{
-						updateFile(id, file, "public", changeDate, is, publicFiles[index]);
-					}
-
-					public void handleFeatureCat(Element md, int index)
-							throws Exception {
-						// Feature Catalog not managed for harvesting
-					}
-
-					public void handlePrivateFile(String file,
-							String changeDate, InputStream is, int index)
-							throws IOException {
-	                       updateFile(id, file, "private", changeDate, is, privateFiles[index]);
-					}
-					
-				});
-			}
-			catch(Exception e)
-			{
-				//--- we ignore the exception here. Maybe the metadata has been removed just now
-				result.unretrievable++;
-			}
-			finally
-			{
-                try{
-                    Files.deleteIfExists(mefFile);
-                } catch (IOException e) {
-	                 log.warning("Unable to delete mefFile: "+mefFile);
-	             }
-
-			}
+    
+                    IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+    
+                    MEFLib.visit(mefFile, visitor, new IMEFVisitor()
+    				{
+    					public void handleMetadata(Element mdata, int index) throws Exception
+    					{
+    						md[index] = mdata;
+    					}
+    
+    					//-----------------------------------------------------------------
+    					
+    					public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception
+    					{
+                            // Import valid metadata
+                            Element metadataValidForImport = extractValidMetadataForImport(files, info);
+    
+                            if (metadataValidForImport != null) {
+                                handleMetadata(metadataValidForImport, index);
+    					}
+                        }
+    					
+    					public void handleInfo(Element info, int index) throws Exception
+    					{
+    						updateMetadata(ri, id, md[index], info, localRating);
+    						publicFiles[index] = info.getChild("public");
+    						privateFiles[index] = info.getChild("private");
+    					}
+    
+    					//-----------------------------------------------------------------
+    
+    					public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException
+    					{
+    						updateFile(id, file, "public", changeDate, is, publicFiles[index]);
+    					}
+    
+    					public void handleFeatureCat(Element md, int index)
+    							throws Exception {
+    						// Feature Catalog not managed for harvesting
+    					}
+    
+    					public void handlePrivateFile(String file,
+    							String changeDate, InputStream is, int index)
+    							throws IOException {
+    	                       updateFile(id, file, "private", changeDate, is, privateFiles[index]);
+    					}
+    					
+    				});
+    			}
+    			catch(Exception e)
+    			{
+    				//--- we ignore the exception here. Maybe the metadata has been removed just now
+    				result.unretrievable++;
+    			}
+    			finally
+    			{
+                    try{
+                        Files.deleteIfExists(mefFile);
+                    } catch (IOException e) {
+    	                 log.warning("Unable to delete mefFile: "+mefFile);
+    	             }
+    
+    			}
+            } else {
+                result.unchangedMetadata++;
+            }
 		}
 	}
 
