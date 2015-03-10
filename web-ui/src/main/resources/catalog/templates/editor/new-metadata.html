@@ -52,14 +52,14 @@
         </div>
         <div class="panel-body">
           <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang"
-               data-groups="groups" data-profile="Editor"/>
+               data-groups="groups" data-profile="Editor" data-exclude-special-groups="true"/>
         </div>
       </div>
     </div>
     <div class="col-sm-3">
       <div class="btn-group">
         <button type="button" class="btn btn-success btn-lg"
-          data-ng-click="createNewMetadata()"
+          data-gn-click-and-spin="createNewMetadata()"
           data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
@@ -73,7 +73,7 @@
         <ul class="dropdown-menu pull-right" role="menu">
           <li><a
               title="{{'createMetadataForGroup-help' | translate}}"
-              data-ng-click="createNewMetadata(true)"
+              data-gn-click-and-spin="createNewMetadata(true)"
               href="" data-translate="">
             createMetadataForGroup</a></li>
         </ul>

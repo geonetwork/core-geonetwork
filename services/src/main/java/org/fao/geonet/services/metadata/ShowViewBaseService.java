@@ -3,6 +3,8 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 
+import java.nio.file.Path;
+
 /**
  * @author heikki doeleman
  */
@@ -14,7 +16,7 @@ public abstract class ShowViewBaseService implements Service {
      * @throws Exception
      */
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         String skip;
 
         skip = params.getValue("skipPopularity", "n");

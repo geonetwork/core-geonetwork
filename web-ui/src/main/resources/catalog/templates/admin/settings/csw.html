@@ -3,8 +3,9 @@
     <div class="panel-heading">
       <span data-translate="">cswService</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveSettings('#gn-settings')" data-translate="">save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveSettings('#gn-settings')" 
+		  ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
 
@@ -45,9 +46,9 @@
           <label for="{{system.csw.contactId}}">{{'system/csw/contactId' | translate}}</label>
           <select data-ng-model="cswSettings['system/csw/contactId']" name="system.csw.contactId"
             required="" class="form-control">
-            <option data-ng-repeat="u in users" value="{{u.id}}"
-              ng-selected="u.id == cswSettings['system/csw/contactId']">{{u.name + ' ' +
-              u.surname}}</option>
+            <option data-ng-repeat="u in users.users" value="{{u.value.id}}"
+              ng-selected="u.value.id == cswSettings['system/csw/contactId']">
+              {{u.value.name + ' ' + u.value.surname}}</option>
           </select>
           <p class="help-block">{{'system/csw/contactId-help' | translate}}</p>
         </div>
@@ -59,9 +60,9 @@
     <div class="panel-heading">
       <span data-translate="">cswCapabilitiesProperties</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveProperties('#gn-csw-capabilities-properties')" data-translate=""
-          >save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveProperties('#gn-csw-capabilities-properties')" 
+          ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
     <div class="panel-body">
@@ -72,8 +73,9 @@
               <span data-translate="">properties</span>
               <select data-ng-model="cswFieldFilterValue" class="form-control">
                 <option value=""/>
-                <option data-ng-repeat="(key, value) in cswFields track by $index" value="{{key}}"
-                  ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
+                <option data-ng-repeat="(key, value) in cswFields track by $index"
+                        value="{{key}}"
+                        data-ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
               </select>
             </th>
             <th>
@@ -81,18 +83,20 @@
               <select data-ng-model="cswLanguageFilterValue" class="form-control">
                 <option value=""/>
                 <option data-ng-repeat="(key, value) in cswLanguages track by $index"
-                  value="{{key}}" ng-selected="key == cswLanguageFilterValue">{{key |
+                        value="{{key}}"
+                        data-ng-selected="key == cswLanguageFilterValue">{{key |
                   translate}}</option>
               </select>
             </th>
             <th data-translate="">value</th>
           </tr>
           <tr data-ng-repeat="element in cswFilter(cswConfig) track by $index">
-            <td>{{element.fieldname | translate}}</td>
-            <td>{{element.langid | translate}}</td>
+            <td>{{element.fieldName | translate}}</td>
+            <td>{{element.langId | translate}}</td>
             <td>
               <input type="text" class="form-control"
-                name="csw.{{element.fieldname}}_{{element.langid}}" value="{{element.value}}"
+                name="csw.{{element.fieldName}}_{{element.langId}}"
+                value="{{element.value}}"
                 data-ng-model="element.value"/>
             </td>
           </tr>
@@ -106,9 +110,9 @@
     <div class="panel-heading">
       <span data-translate="">customizeElementSet</span>
       <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')" data-translate=""
-          >save</button>
+        <button type="submit" class="btn btn-primary pull-right"
+          data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')"
+          ><span class="fa fa-save"></span> {{"save"|translate}}</button>
       </div>
     </div>
     <div class="panel-body">
@@ -125,8 +129,8 @@
             </label>
           </div>
           <div class="btn-toolbar">
-            <button type="submit" class="btn fa fa-plus" data-ng-click="addCSWElementSetName()"
-              data-translate="">add</button>
+            <button type="submit" class="btn btn-default" data-ng-click="addCSWElementSetName()"
+              ><span class="fa fa-plus"></span> {{"add"|translate}}</button>
           </div>
         </fieldset>
       </form>

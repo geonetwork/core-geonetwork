@@ -2,10 +2,12 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Metadata;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Data Access object for the {@link Metadata} entities.
@@ -31,4 +33,11 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
-}
+
+    /**
+     * Increment popularity of metadata by 1.
+     * @param mdId the id of the metadata
+     */
+    @Modifying
+    @Query("UPDATE "+Metadata.TABLENAME+" m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
+    void incrementPopularity(int mdId);}

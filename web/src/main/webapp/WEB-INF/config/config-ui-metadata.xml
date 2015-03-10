@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <geonet>
   <services package="org.fao.geonet">
-    <service name="catalog.edit">
-      <documentation>Metadata editor</documentation>
-      <output sheet="../xslt/ui-metadata/editor.xsl">
-        <xml name="i18n" file="xml/i18n.xml"/>
-      </output>
-    </service>
+      <service name="catalog.edit">
+          <documentation>Metadata editor</documentation>
+          <output sheet="../xslt/ui-metadata/editor.xsl">
+              <xml name="i18n" file="xml/i18n.xml"/>
+          </output>
+      </service>
+
+      <service name="catalog.viewer">
+          <documentation>Map viewer</documentation>
+          <output sheet="../xslt/ui-metadata/viewer.xsl">
+              <xml name="i18n" file="xml/i18n.xml"/>
+          </output>
+      </service>
 
     <service name="md.view">
       <documentation>View a metadata record</documentation>
@@ -16,7 +23,19 @@
       </output>
       <error sheet="../xslt/common/error.xsl"/>
     </service>
-    
+
+
+    <service name="md.rate">
+      <documentation>Rate a metadata record.
+
+      Parameters:
+        * uuid or id
+        * rating: Integer value from 1 to 5
+      </documentation>
+      <class name=".services.metadata.Rate"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
     <service name="md.create">
       <documentation><![CDATA[
         Create a new metadata from a template or an existing record.
@@ -86,20 +105,6 @@
       <error sheet="../xslt/common/error.xsl"/>
     </service>
 
-    <service name="md.insert">
-      <documentation><![CDATA[
-        Insert a metadata sending an XML document.
-        
-        Parameters are:
-        * insert_mode: 0
-        * template: The type of record (y or n or s)
-        * data: The XML to insert
-        * group:
-        
-        ]]></documentation>
-      <class name=".services.metadata.Insert" />
-    </service>
-    
     <service name="md.delete">
       <documentation><![CDATA[
         Delete a new metadata 
@@ -181,6 +186,21 @@
       <error sheet="../xslt/common/error.xsl"/>
     </service>
 
+      <service name="md.edit.commit">
+          <documentation>
+              <![CDATA[
+        Save a metadata record and return the new form.
+         This version will update the session with the new begin metadata so
+         that a cancel will rollback to this point.
+        ]]>
+          </documentation>
+          <class name=".services.metadata.Update">
+              <param name="starteditingsession" value="yes" />
+          </class>
+          <output forward="md.edit"/>
+          <error sheet="../xslt/common/error.xsl"/>
+      </service>
+
     <service name="md.element.add">
       <documentation><![CDATA[
                 Add an element or attribute to the metadata record.
@@ -260,28 +280,7 @@
     
       <class name=".services.schema.Info" />
     </service>
-    
-    
-    <service name="md.thumbnail.upload">
-      <documentation><![CDATA[
-        Upload a thumbnail and attach it to the metadata record.
-        This service must be used in the context of an editing session.
-        
-        Parameters:
-        * scalingDir
-        * smallScalingDir
-        * type eg. large
-        * scalingFactor
-        * smallScalingFactor
-        * version: The version number of the editing session
-        * id: The metadata id
-        * thumbnail_desc: 
-        * fname: The image
-        
-        ]]></documentation>
-      <class name=".services.thumbnail.Set"/>
-    </service>
-    
+
     <service name="md.thumbnail.remove">
       <documentation><![CDATA[
         Delete a thumbnail from the data diretory and detach 
@@ -335,5 +334,61 @@
       <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
+    <service name="md.category.update">
+      <documentation><![CDATA[
+        Update metadata category by first removing all existing
+        and then setting the one provided in parameters.
+
+        Parameters:
+        * id: The metadata id
+        * _<category_id>=on : The category ids
+
+        ]]></documentation>
+      <class name=".services.metadata.UpdateCategories" />
+    </service>
+
+    <service name="md.category.batch.update">
+      <class name=".services.metadata.BatchUpdateCategories" />
+    </service>
+
+    <service name="md.versioning.start">
+      <documentation><![CDATA[
+        Start versioning of a metadata record
+
+        Parameters:
+        * id: The metadata id
+        ]]></documentation>
+      <class name=".services.metadata.Version" />
+    </service>
+
+    <service name="md.batch.versioning">
+      <documentation><![CDATA[
+        Start versioning of the selected records
+
+        ]]></documentation>
+      <class name=".services.metadata.BatchVersion" />
+    </service>
+
+
+    <service name="md.status.list">
+      <documentation><![CDATA[
+        Get the list of all possible status.
+        ]]></documentation>
+      <class name=".services.metadata.GetStatus" />
+    </service>
+
+
+    <service name="md.status.update">
+
+      <documentation><![CDATA[
+        Update metadata status.
+
+        Parameters:
+        * id: The metadata id
+        * status: The new status
+        * changeMessage: The log message
+        ]]></documentation>
+      <class name=".services.metadata.UpdateStatus" />
+    </service>
   </services>
 </geonet>

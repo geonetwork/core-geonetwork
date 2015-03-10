@@ -104,7 +104,6 @@ public class MimeTypeFinder
 				MimeType mt = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(theUrl));
 				return mt.toString();
 			} catch (Exception e) {
-				e.printStackTrace();
 				return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
 			}
 		} else return blank;

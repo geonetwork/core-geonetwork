@@ -1,0 +1,32 @@
+<csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier>81de0ca8-2090-4386-9f9c-6648a7dc600f</dc:identifier>
+    <dc:title>Geothermische Potenzialabschätzung auf Grundlage der Temperaturen in 1500 m unter Gelände</dc:title>
+    <dc:type>dataset</dc:type>
+    <dc:subject>Modellierung</dc:subject>
+    <dc:subject>Geologie</dc:subject>
+    <dc:subject>Temperatur</dc:subject>
+    <dc:subject>Geologie</dc:subject>
+    <dc:subject>Simulation</dc:subject>
+    <dc:subject>Energie</dc:subject>
+    <dc:subject>Geology</dc:subject>
+    <dc:subject>geoscientificInformation</dc:subject>
+    <dc:format>ESRI Grid</dc:format>
+    <dct:abstract>Die Karte zeigt die Potenzialabschätzung für verschiedene geothermische Nutzungsformen für das innere Projektgebiet auf
+        Grundlage der Temperaturen in 1500 m unter Gelände (Grad Celsius). Zusätzlich sind Störungen und Störungszonen in gleicher
+        Tiefenlage dargestellt. Details siehe Abschlussbericht zum INTERREG IV-Projekt "GeORG" .
+    </dct:abstract>
+    <dc:rights>copyright</dc:rights>
+    <dc:source>3D-Temperaturmodell und geologisches 3D-Modell des INTERREG IV A Projekts GeORG</dc:source>
+    <dc:format>ESRI Grid</dc:format>
+    <ows:BoundingBox crs="urn:ogc:def:crs:::EPSG:31467">
+        <ows:LowerCorner>9.096 47.44</ows:LowerCorner>
+        <ows:UpperCorner>6.692 49.722</ows:UpperCorner>
+    </ows:BoundingBox>
+    <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="GeORG Temperaturdaten"
+        description="Interreg IV Projekt &quot;GeORG&quot;: Temperaturkarten zu verschiedenen Themen: Schnitte durch das Temperaturmodell in 500 m Schritten">
+        http://www4.lgrb.uni-freiburg.de/ws/application/wms.phtml?REQUEST=GetCapabilities&amp;VERSION=1.1.1&amp;SERVICE=WMS&amp;SERVICE_NAME=lgrb_georg_temp_de
+    </dc:URI>
+    <dc:URI>http://www.lgrb.uni-freiburg.de/lgrb/Produkte</dc:URI>
+    <dc:URI name="thumbnail">resources.get?id=350&amp;fname=g_temp1500nk.jpg&amp;access=public</dc:URI>
+</csw:Record>

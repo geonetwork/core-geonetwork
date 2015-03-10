@@ -1,0 +1,37 @@
+<div>
+  <div class="btn-group btn-group-xs">
+    <button type="button" class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown" aria-expanded="false">
+      <span data-translate="">{{label}}</span> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li data-ng-repeat="o in options">
+        <a href=""
+           data-ng-click="setPeriod(o)"
+           data-translate="">{{o}}</a></li>
+    </ul>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="input-group date" data-date=""
+           data-date-format="yyyy-mm-dd"
+           data-gn-bootstrap-datepicker="dateFrom">
+        <input class="form-control" type="text"
+               placeholder="{{'from' | translate}}"/>
+      <span class="input-group-addon"><i
+              class="fa fa-calendar"></i></span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="input-group date" data-date=""
+       data-date-format="yyyy-mm-dd"
+       data-gn-bootstrap-datepicker="dateTo">
+        <input class="form-control" type="text"
+               placeholder="{{'to' | translate}}"/>
+        <span class="input-group-addon"><i
+                class="fa fa-calendar"></i></span>
+      </div>
+    </div>
+  </div>
+</div>

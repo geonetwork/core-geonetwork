@@ -186,6 +186,26 @@
             <gmd:extent>
                 <gmd:EX_Extent>
                     <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Na4e69fc306a840c98ba8bb1140a16107">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Na4e69fc306a840c98ba8bb1140a16107.1">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.154 47.216 7.14 47.218 7.148 47.234 7.153 47.237 7.171 47.235 7.178 47.237 7.214 47.225 7.227 47.208 7.217 47.208 7.207 47.201 7.174 47.213 7.154 47.216</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
                         <gmd:EX_GeographicBoundingBox>
                             <gmd:westBoundLongitude>
                                 <gco:Decimal>-180</gco:Decimal>

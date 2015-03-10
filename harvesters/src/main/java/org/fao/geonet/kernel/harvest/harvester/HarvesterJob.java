@@ -1,9 +1,11 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.InterruptableJob;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.UnableToInterruptJobException;
 
 /**
  * A Quartz job that obtains the Harvester from the JobExecutionContext and executes it.
@@ -17,11 +19,11 @@ import org.quartz.JobExecutionException;
  * @author jeichar
  */
 @DisallowConcurrentExecution
-public class HarvesterJob implements Job {
+public class HarvesterJob implements Job, InterruptableJob {
     
     public static final String ID_FIELD = "harvesterId";
     String harvesterId;
-    AbstractHarvester harvester;
+    AbstractHarvester<?> harvester;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -41,9 +43,13 @@ public class HarvesterJob implements Job {
         this.harvesterId = harvesterId;
     }
 
-    public void setHarvester(AbstractHarvester harvester) {
+    public void setHarvester(AbstractHarvester<?> harvester) {
         this.harvester = harvester;
     }
 
-    
+
+    @Override
+    public void interrupt() throws UnableToInterruptJobException {
+        harvester.cancelMonitor.set(true);
+    }
 }

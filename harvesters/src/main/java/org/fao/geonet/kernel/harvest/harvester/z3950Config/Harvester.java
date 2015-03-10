@@ -39,23 +39,27 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult>
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Z3950ConfigParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, Z3950ConfigParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.params = params;
 		this.context = context;
@@ -79,8 +83,13 @@ class Harvester implements IHarvester<HarvestResult>
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		for(Search s : params.getSearches())
-			records.addAll(search(req, s));
+		for(Search s : params.getSearches()) {
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
+            records.addAll(search(req, s));
+        }
 
 		if (params.isSearchEmpty())
 			records.addAll(search(req, Search.createEmptySearch()));
@@ -89,7 +98,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		//--- config local node
 
-		Z3950Config  configer = new Z3950Config(log, context, req, params);
+		Z3950Config  configer = new Z3950Config(cancelMonitor, log, context, req, params);
 		HarvestResult result  = configer.config(records);
 
 		return result;
@@ -103,7 +112,11 @@ class Harvester implements IHarvester<HarvestResult>
 
 		for (Object o : doSearch(request, s).getChildren("metadata"))
 		{
-			Element md   = (Element) o;
+            if (cancelMonitor.get()) {
+                return Collections.emptySet();
+            }
+
+            Element md   = (Element) o;
 			Element info = md.getChild("info", Edit.NAMESPACE);
 
 			if (info == null)
@@ -132,7 +145,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		try
 		{
-			log.info("Searching on : "+ params.name);
+			log.info("Searching on : "+ params.getName());
 			Element response = request.execute(s.createRequest());
             if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 

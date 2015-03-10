@@ -35,7 +35,6 @@ import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -44,10 +43,10 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 //=============================================================================
 
@@ -60,7 +59,7 @@ public class Set implements Service {
      */
     private boolean reloadServices = false;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(java.nio.file.Path appPath, ServiceConfig params) throws Exception {
         reloadServices = "y".equalsIgnoreCase(params.getValue("reloadServices", "n"));
     }
 
@@ -96,7 +95,7 @@ public class Set implements Service {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
             final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {

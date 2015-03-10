@@ -4,11 +4,23 @@
       <div class="panel-heading" data-translate="">testCSW</div>
       <div class="panel-body">
         <label class="radio-inline">
-          <input type="radio" name="csw" id="csw1" value="csw" data-ng-model="cswUrl"><label for="csw1">csw</label>
+          <input type="radio" name="csw" id="csw1" value="csw"
+                 data-ng-model="cswUrl"/>
+          <label for="csw1">csw</label>
         </label>
         <label class="radio-inline">
-          <input type="radio" name="csw" id="csw2" value="csw-publication" data-ng-model="cswUrl"><label for="csw2">csw-publication</label>
+          <input type="radio" name="csw" id="csw2" value="csw-publication"
+                 data-ng-model="cswUrl"/>
+          <label for="csw2">csw-publication</label>
         </label>
+
+        <label class="radio-inline" data-ng-repeat="csw in cswVirtual">
+          <input type="radio" name="csw" id="csw{{$index + 3}}"
+                 value="{{csw.name}}"
+                 data-ng-click="setCswUrl(csw.name)">
+          <label for="csw{{$index + 3}}">{{csw.name}}</label>
+        </label>
+
         <h4 data-translate="">cswRequest</h4>
         <select class="form-control" data-ng-model="currentTestId" autofocus="">
           <option data-ng-repeat="(key, value) in cswTests" value="{{key}}">{{value[0]}}</option>

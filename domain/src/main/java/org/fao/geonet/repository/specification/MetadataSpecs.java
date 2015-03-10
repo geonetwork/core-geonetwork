@@ -1,12 +1,24 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataHarvestInfo_;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Metadata_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
@@ -18,13 +30,22 @@ public final class MetadataSpecs {
         // no instantiation
     }
 
+    public static Specification<Metadata> hasSchemaId(final String schemaId) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> schemaIdPath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+                return cb.equal(schemaIdPath, cb.literal(schemaId));
+            }
+        };
+    }
+
     public static Specification<Metadata> hasMetadataId(final int metadataId) {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> userIdAttributePath = root.get(Metadata_.id);
-                Predicate idEqualPredicate = cb.equal(userIdAttributePath, cb.literal(metadataId));
-                return idEqualPredicate;
+                return cb.equal(userIdAttributePath, cb.literal(metadataId));
             }
         };
     }
@@ -34,8 +55,7 @@ public final class MetadataSpecs {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<String> userNameAttributePath = root.get(Metadata_.uuid);
-                Predicate uuidEqualPredicate = cb.equal(userNameAttributePath, cb.literal(uuid));
-                return uuidEqualPredicate;
+                return cb.equal(userNameAttributePath, cb.literal(uuid));
             }
         };
     }
@@ -105,6 +125,15 @@ public final class MetadataSpecs {
         };
     }
 
+    public static Specification<Metadata> hasMetadataUuidIn(final Collection<String> uuids) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(Metadata_.uuid).in(uuids);
+            }
+        };
+    }
+
     public static Specification<Metadata> hasType(final MetadataType metadataType) {
         return new Specification<Metadata>() {
             @Override
@@ -137,6 +166,27 @@ public final class MetadataSpecs {
                 final Expression<Set<MetadataCategory>> categoriesPath = root.get(Metadata_.categories);
 
                 return cb.isMember(category, categoriesPath);
+            }
+        };
+    }
+
+    public static Specification<Metadata> hasExtra(final String extra) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.extra), extra);
+            }
+        };
+    }
+
+
+    public static Specification<Metadata> isIso19139Schema() {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> schemaIdAttributePath =  root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+                Predicate likeSchemaIdPredicate = cb.like(schemaIdAttributePath, cb.literal("iso19139"));
+                return likeSchemaIdPredicate;
             }
         };
     }

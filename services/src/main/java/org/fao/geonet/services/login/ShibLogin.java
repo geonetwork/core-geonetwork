@@ -27,6 +27,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class ShibLogin extends NotInReadOnlyModeService {
     // ---
     // --------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

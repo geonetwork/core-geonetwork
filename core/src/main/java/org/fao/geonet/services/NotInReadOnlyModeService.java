@@ -7,6 +7,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Base class for services that should not run their normal execution path if GeoNetwork is in read-only mode.
  * @author heikki doeleman
@@ -15,7 +17,7 @@ public abstract class NotInReadOnlyModeService extends MailSendingService {
     private org.apache.commons.logging.Log log = LogFactory.getLog(NotInReadOnlyModeService.class);
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {}
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {

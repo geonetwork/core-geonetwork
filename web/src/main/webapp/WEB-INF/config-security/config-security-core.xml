@@ -26,6 +26,7 @@
 				<sec:filter-chain pattern="/*.css" filters="" />
 				<sec:filter-chain pattern="/images/**" filters="" />
 				<sec:filter-chain pattern="/maps/**" filters="" />
+				<sec:filter-chain pattern="/map/**" filters="" />
 				<sec:filter-chain pattern="/wmc/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />
@@ -220,9 +221,26 @@
     	</property>
     </bean>
 
+
+	<bean id="roleHierarchy"
+	        class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+	    <property name="hierarchy">
+	        <value>
+	            Administrator > UserAdmin
+	            UserAdmin > Reviewer 
+	            Reviewer > Editor
+	            Editor > RegisteredUser
+	            RegisteredUser > Guest
+	        </value>
+	    </property>
+	</bean>
+
     <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 	    <property name="decisionVoters">
-	        <list>
+	        <list> 
+		<bean  class="org.springframework.security.access.vote.RoleHierarchyVoter">
+		    <constructor-arg ref="roleHierarchy" />
+		</bean>
 	            <bean class="org.springframework.security.access.vote.RoleVoter"/>
 	            <bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/>
 	            <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>

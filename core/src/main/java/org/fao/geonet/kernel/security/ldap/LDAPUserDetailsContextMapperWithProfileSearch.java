@@ -28,6 +28,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -61,6 +62,11 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
     private String privilegeObject;
     private String privilegeQuery;
     private String privilegeQueryPattern;
+
+    private String privilegePattern;
+    private Pattern pattern = null;
+    private int groupIndexInPattern;
+    private int profilIndexInPattern;
 
     private Pattern groupQueryPatternCompiled;
 
@@ -121,7 +127,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     }
                 }
                 
-                // TODO: This is broken.  
+                //First time, to get a default profile in case profilIndexInPattern fails
                 Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[profileList.size()]));
                 if (highestUserProfile != null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -141,8 +147,6 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     userDetails.getUser().setProfile(defaultProfile);
                 }
                 
-                
-                
                 // Get groups
                 String groupQuery = MessageFormat.format(this.groupQuery,
                         userDetails.getUsername());
@@ -152,18 +156,79 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     String groupName = (String) sr.getAttributes()
                             .get(groupAttribute).get();
 
-                    Matcher m = groupQueryPatternCompiled.matcher(groupName);
-                    boolean b = m.matches();
-                    if (b) {
-                        String group = m.group(1);
-                        userDetails.addPrivilege(group,
-                                userDetails.getUser().getProfile());
-                    } else {
-                        Log.error(Geonet.LDAP, "LDAP group '" + groupName
-                                + "' does not match search pattern '"
-                                + groupQueryPattern + "'. Information ignored.");
+                    if(this.pattern != null) {
+                    	Matcher m = pattern.matcher(groupName);
+                        if (m.matches()) {
+                            String group = m.group(groupIndexInPattern);
+                            Profile profile = null;
+                            
+                            if(profilIndexInPattern > 0) {
+                                profile = Profile.findProfileIgnoreCase(m.group(profilIndexInPattern));
+                            }
+
+                            if (profile != null) {
+                                if (!LDAPConstants.ALL_GROUP_INDICATOR.equals(group)) {
+                                    if (Log.isDebugEnabled(Geonet.LDAP)) {
+                                        Log.debug(Geonet.LDAP, "  Adding profile "
+                                                + profile + " for group " + group);
+                                    }
+                                    userDetails.addPrivilege(group, profile);
+                                    profileList.add(profile);
+                                } else {
+                                    profileList.add(profile);
+                                }
+                            } else {
+                                userDetails.addPrivilege(group,
+                                        userDetails.getUser().getProfile());
+                            }
+                        } else {
+                        	Matcher m2 = groupQueryPatternCompiled.matcher(groupName);
+                            if (m2.matches()) {
+                                String group = m2.group(1);
+                                userDetails.addPrivilege(group,
+                                        userDetails.getUser().getProfile());
+                            } else {
+                                Log.error(Geonet.LDAP, "LDAP group '" + groupName
+                                        + "' does not match search pattern '"
+                                        + groupQueryPattern + "'. Information ignored.");
+                            }
+                        }
                     }
+                    else {
+                        
+                        Matcher m = groupQueryPatternCompiled.matcher(groupName);
+                        boolean b = m.matches();
+                        if (b) {
+                            String group = m.group(1);
+                            userDetails.addPrivilege(group,
+                                    userDetails.getUser().getProfile());
+                        } else {
+                            Log.error(Geonet.LDAP, "LDAP group '" + groupName
+                                    + "' does not match search pattern '"
+                                    + groupQueryPattern + "'. Information ignored.");
+                        }
+                   }
+                }  
+               
+                highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[profileList.size()]));
+                if (highestUserProfile != null) {
+                    if (Log.isDebugEnabled(Geonet.LDAP)) {
+                        Log.debug(Geonet.LDAP, "  Highest user profile is "
+                                + highestUserProfile);
+                    }
+                    userDetails.getUser().setProfile(highestUserProfile);
                 }
+                
+                // If no profile defined, use default profile
+                if (userDetails.getUser().getProfile() == null) {
+                    if (Log.isDebugEnabled(Geonet.LDAP)) {
+                        Log.debug(Geonet.LDAP,
+                                "  No profile defined in LDAP, using default profile "
+                                        + defaultProfile);
+                    }
+                    userDetails.getUser().setProfile(defaultProfile);
+                }
+               
             } catch (NamingException e) {
                 Log.error(Geonet.LDAP, "Failed to extract profiles and groups. Error is: " + e.getMessage());
                 e.printStackTrace();
@@ -236,5 +301,30 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
 
     public void setPrivilegeAttribute(String privilegeAttribute) {
         this.privilegeAttribute = privilegeAttribute;
+    }
+
+    public String getPrivilegePattern() {
+        return privilegePattern;
+    }
+
+    public void setPrivilegePattern(String privilegePattern) {
+        this.privilegePattern = privilegePattern;
+        this.pattern = Pattern.compile(privilegePattern);
+    }
+
+    public int getGroupIndexInPattern() {
+        return groupIndexInPattern;
+    }
+
+    public void setGroupIndexInPattern(int groupIndexInPattern) {
+        this.groupIndexInPattern = groupIndexInPattern;
+    }
+
+    public int getProfilIndexInPattern() {
+        return profilIndexInPattern;
+    }
+
+    public void setProfilIndexInPattern(int profilIndexInPattern) {
+        this.profilIndexInPattern = profilIndexInPattern;
     }
 }

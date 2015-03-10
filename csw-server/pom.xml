@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>geonetwork</artifactId>
 		<groupId>org.geonetwork-opensource</groupId>
-		<version>2.11.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -13,11 +13,6 @@
 
 
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>core</artifactId>

@@ -121,6 +121,7 @@
                }
              }
 
+             gnCurrentEdit.working = true;
              $http.post(
              refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
              $(gnCurrentEdit.formId).serialize(),
@@ -136,12 +137,13 @@
                 if (!silent) {
                   setStatus({msg: 'allChangesSaved', saving: false});
                 }
-
+                gnCurrentEdit.working = false;
                 defer.resolve(snippet);
               }).error(function(error) {
                 if (!silent) {
                   setStatus({msg: 'saveMetadataError', saving: false});
                 }
+                gnCurrentEdit.working = false;
                 defer.reject(error);
               });
              return defer.promise;
@@ -231,18 +233,6 @@
              $(gnCurrentEdit.formId).
              find('input[id="version"]').val(version);
            },
-           assignGroup: function(groupId) {
-             var defer = $q.defer();
-             $http.get('md.group.update?id=' + gnCurrentEdit.id +
-             '&groupid=' + groupId)
-              .success(function(data) {
-               defer.resolve(data);
-             })
-              .error(function(data) {
-               defer.reject(data);
-             });
-             return defer.promise;
-           },
            /**
            * Called after the edit form has been loaded.
            * Fill gnCurrentEdit all the info of the current
@@ -268,6 +258,7 @@
                angular.fromJson(getInputValue('geoPublisherConfig')),
                extent:
                angular.fromJson(getInputValue('extent')),
+               isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false

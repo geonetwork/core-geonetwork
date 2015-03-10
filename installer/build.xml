@@ -25,7 +25,7 @@
 	<!-- =================================================================================== -->
 	
 	<property name="appName" value="geonetwork" />
-	<property name="version" value="2.11.0" />
+	<property name="version" value="3.0.0" />
     <property name="subVersion" value="SNAPSHOT" />
 	<property name="javaVersion" value="1.6.0" /> <!-- Minimum version required -->
 	<property name="jre_url" value="http://java.sun.com/javase/downloads" />
@@ -128,38 +128,28 @@
 		
 		<!-- make sure all files that need have version numbers etc updated -->
 
-	    <!-- Windows installer build -->
-	    <copy 	file="../installer/installer-config.xml" 
-	    		tofile="${propsdir}/installer-config.xml" 
-	    		filtering="on" overwrite="yes"/>
+		<!-- Windows installer build -->
+		<copy 	file="../installer/installer-config.xml"
+				tofile="${propsdir}/installer-config.xml"
+				filtering="on" overwrite="yes"/>
 
-		<replace 	file="${propsdir}/installer-config.xml" 
+		<replace 	file="${propsdir}/installer-config.xml"
 					propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
 			<replacefilter token="@version@" property="version"/>
 			<replacefilter token="@subVersion@" property="subVersion"/>
 			<replacefilter token="@javaVersion@" property="javaVersion"/>
 		</replace>
-    	
-    	<!-- Modify the config-gui.xml replacing the default view setting with a variable $defaultGUI that can be used to 
-    		 configure the selected view during the installation process. The choice depends on the userInputPanel.xml radio selection -->
 
-    	<replace file="../web/target/geonetwork/WEB-INF/config-gui.xml" >
-    		<replacefilter>
-    			<replacetoken><![CDATA[<client type="redirect" widget="false" url="main.home" />]]></replacetoken>
-    			<replacevalue><![CDATA[${defaultGUI}]]></replacevalue>
-    		</replacefilter>
-    	</replace>
-    	
-    	<!-- help file -->
-	    <copy 	file="../docs/readme.html" 
-	    		tofile="${propsdir}/readme.html" 
-	    		filtering="on" overwrite="yes"/>
-	    <copy 	file="../docs/readme_fra.html" 
-	    		tofile="${propsdir}/readme_fra.html" 
-	    		filtering="on" overwrite="yes"/>
-        <copy 	file="../docs/readme_spa.html"
-                tofile="${propsdir}/readme_spa.html"
-                filtering="on" overwrite="yes"/>
+		<!-- help file -->
+		<copy 	file="../docs/readme.html"
+				tofile="${propsdir}/readme.html"
+				filtering="on" overwrite="yes"/>
+		<copy 	file="../docs/readme_fra.html"
+				tofile="${propsdir}/readme_fra.html"
+				filtering="on" overwrite="yes"/>
+		<copy 	file="../docs/readme_spa.html"
+						tofile="${propsdir}/readme_spa.html"
+						filtering="on" overwrite="yes"/>
         
 		<replace 	file="${propsdir}/readme.html"
 			propertyFile="../web/src/main/webapp/WEB-INF/server.prop">

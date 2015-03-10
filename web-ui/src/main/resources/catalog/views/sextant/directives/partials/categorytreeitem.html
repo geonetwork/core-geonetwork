@@ -1,0 +1,9 @@
+<li>
+    <label ng-if="isParentNode()">
+      <span ng-click="toggleNode($event)" class="fa fa-plus-square-o" ></span>
+      <input type="checkbox" ng-click="$event.stopPropagation()" ng-model="member.selected" ng-change="selectChildren(member, member.selected)">{{member.name}}
+    </label>
+  <label ng-if="!isParentNode()">
+    <input type="checkbox" class="sxt-categorytree-leaf" ng-model="member.selected" />{{member.name}}
+  </label>
+ </li>

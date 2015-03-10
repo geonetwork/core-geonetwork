@@ -6,7 +6,7 @@ import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -23,26 +23,26 @@ import static org.junit.Assert.assertEquals;
 public class SchematronRulesIsoTest extends AbstractSchematronTest {
 
 
-    protected File schematronXsl;
+    protected Path schematronXsl;
     protected Element schematron;
 
     @Before
     public void before() {
         super.before();
-        String schematronFile = "iso19139/schematron/schematron-rules-iso.sch";
-        Pair<Element,File> compiledResult = compileSchematron(new File(SCHEMA_PLUGINS, schematronFile));
+        Pair<Element,Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-iso.sch"));
         schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }
 
-    protected File getSchematronXsl() {
+
+    protected Path getSchematronXsl() {
         return schematronXsl;
     }
 
     @Test
     public void testPasses() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
     }
 
@@ -76,14 +76,14 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
 
         citationEl.detach();
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         testMetadata.getChild("identificationInfo", GMD)
                 .getChild("MD_DataIdentification", GMD)
                 .getChild("citation", GMD).setAttribute("nilReason","missing", GCO);
 
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
 
     }
@@ -130,23 +130,23 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     private void testNoStringErrors(Element testMetadata, Element contact) throws Exception {
         contact.setContent(Collections.emptyList());
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         contact.setAttribute("nilReason", "missing", GCO);
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
     }
 
     private void testEmptyStringErrors(Element testMetadata, Element charStringEl) throws Exception {
         charStringEl.setContent(Arrays.asList());
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         charStringEl.addContent(new Element("CharacterString", GCO).setText(""));
 
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         charStringEl.addContent(
@@ -156,15 +156,15 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
                         )));
 
 
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         charStringEl.setAttribute("nilReason", "missing", GCO);
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         charStringEl.setContent(Arrays.asList());
-        results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
 
     }

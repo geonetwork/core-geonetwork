@@ -1,0 +1,86 @@
+<ul class="list-group gn-resultview">
+  <li class="list-group-item" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick
+      sxt-fix-mdlinks="">
+    <div class="media">
+
+      <!-- Thumbnail -->
+      <div class="pull-left gn-md-thumbnail">
+        <span ng-if="!md.getThumbnails().small" translate>noThumbnail</span>
+        <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail" ng-if="md.getThumbnails().small"/>
+      </div>
+
+      <!-- Icon for types -->
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="gn-md-type pull-right fa fa-database " title="dataset"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="gn-md-type pull-right fa fa-hdd-o" title="software"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="gn-md-type pull-right fa fa-globe" title="geodata"></span>
+
+      <div class="media-body">
+        <h4>
+          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+        </h4>
+        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | striptags}}"></p>
+        <p ng-if="md.credit" class="text-justify gn-md-credit">Sources:  {{md.credit}}</p>
+      </div>
+
+      <!-- Buttons (download - view - admin) -->
+
+    </div>
+    <div class="clearfix gn-md-links">
+
+      <div class="btn-group pull-right" ng-if="links.length > 0">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+          <span class="fa fa-link"></span>
+          {{links.length}}
+          <ng-pluralize translate count="links.length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="link in links">
+            <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
+        </ul>
+      </div>
+
+      <div class="btn-group pull-right" ng-if="downloads.length > 1">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+          <span class="fa fa-download"></span>
+          <span translate>download</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="link in downloads">
+            <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)">
+              <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
+              {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-default btn-sm pull-right"
+              ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
+        <span class="fa fa-download"></span>
+        <span translate>download</span>
+      </button>
+
+
+      <div class="btn-group pull-right" ng-if="layers.length > 1 ">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+          <span class="fa fa-globe"></span>
+          <span translate>visualize</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)">
+            <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
+            <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
+            {{layer.desc}} </a></li>
+          <li class="divider"></li>
+          <li><a href="#">Add all layers</a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-default btn-sm pull-right"
+              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)">
+        <span class="fa fa-globe"></span>
+        <span translate>visualize</span>
+      </button>
+    </div>
+
+  </li>
+</ul>

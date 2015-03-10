@@ -1,0 +1,8 @@
+{
+    "general": "일반",
+    "kml-link": "다운로드할 KML 파일",
+    "link-link": "링크",
+    "noFormatName": "제공된 포맷 이름이 없음",
+    "noThesaurusName": "분류어사전 이름 없음",
+    "wms-link": "Web Map Service URL"
+}

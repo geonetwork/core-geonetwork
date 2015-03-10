@@ -1,0 +1,31 @@
+<ows-context:OWSContext xmlns:ows-context="http://www.opengis.net/ows-context"
+                        xmlns:ows="http://www.opengis.net/ows"
+                        version="0.3.1" id="ows-context-ex-1-v3">
+  <ows-context:General>
+    <ows:BoundingBox crs="EPSG:3857">
+      <ows:LowerCorner>-8604130.477526832 -320097.07393612247</ows:LowerCorner>
+      <ows:UpperCorner>8948257.201654762 8720263.135408245</ows:UpperCorner>
+    </ows:BoundingBox>
+  </ows-context:General>
+  <ows-context:ResourceList>
+    <ows-context:Layer name="{type=mapquest}"
+                       group="Background layers"
+                       hidden="false"
+                       opacity="1">
+      <ows:Title>MapQuest</ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=osm}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>OpenStreetMap
+      </ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=bing_aerial}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>Bing Aerial</ows:Title>
+    </ows-context:Layer>
+  </ows-context:ResourceList>
+</ows-context:OWSContext>

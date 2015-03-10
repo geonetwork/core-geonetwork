@@ -12,20 +12,21 @@ var gnHarvestercsw = {
         "uuid" : "",
         "icon" : "blank.gif",
         "account" : {
-          "use" : "false",
+          "use" : false,
           "username" : [],
           "password" : []
         },
         "capabilitiesUrl" : "http://",
-        "rejectDuplicateResource" : "false",
-        "xslfilter": []
+        "rejectDuplicateResource" : false,
+        "xslfilter": [],
+        "outputSchema": ""
       },
       "content" : {
-        "validate" : "false"
+        "validate" : "NOVALIDATION"
       },
       "options" : {
         "every" : "0 0 0 ? * *",
-        "oneRunOnly" : "false",
+        "oneRunOnly" : false,
         "status" : "active"
       },
       "privileges" : [ {
@@ -39,7 +40,7 @@ var gnHarvestercsw = {
       "categories" : [],
       "info" : {
         "lastRun" : [],
-        "running" : "false"
+        "running" : false
       }
     };
   },
@@ -68,6 +69,7 @@ var gnHarvestercsw = {
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
+      + $scope.buildTranslations(h)
       + '    <rejectDuplicateResource>' + h.site.rejectDuplicateResource + '</rejectDuplicateResource>'
       + '    <capabilitiesUrl>' + h.site.capabilitiesUrl.replace(/&/g, '&amp;') + '</capabilitiesUrl>'
       + '    <icon>' + h.site.icon + '</icon>'
@@ -77,11 +79,13 @@ var gnHarvestercsw = {
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
+      + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
       + '  </site>'
       + gnHarvestercsw.buildResponseCSWSearch($scope)
       + '  <options>'
       + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
       + '    <every>' + h.options.every + '</every>'
+      + '    <status>' + h.options.status + '</status>'
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'

@@ -49,19 +49,22 @@ import org.jdom.Element;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult>
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, CswParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -76,18 +79,25 @@ class Harvester implements IHarvester<HarvestResult>
 	public HarvestResult harvest(Logger log) throws Exception
 	{	    
 	    this.log = log;
-		log.info("Retrieving capabilities file for : "+ params.name);
+		log.info("Retrieving capabilities file for : "+ params.getName());
 
 		CswServer server = retrieveCapabilities(log);
+        if (cancelMonitor.get()) {
+            return new HarvestResult();
+        }
 
-		//--- perform all searches
+        //--- perform all searches
 		
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 		
 		Search s = new Search();
 		
 		for (Element element : params.eltSearches) {
-			if (element.getChildText("value")!=null){
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
+            if (element.getChildText("value")!=null){
 				if (!element.getChildText("value").trim().equals("")){
 					s.addAttribute(element.getName(), element.getChildText("value").trim());
 				}
@@ -109,27 +119,11 @@ class Harvester implements IHarvester<HarvestResult>
             errors.add(new HarvestError(t, log));
         }
 
-		if (params.isSearchEmpty()) {
-		    try {
-		        log.debug("Doing an empty search");
-		        records.addAll(search(server, Search.createEmptySearch()));
-            } catch(Exception t) {
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(t, log));
-		    } catch(Throwable t) {
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                errors.add(new HarvestError(t, log));
-            }
-	    }
-
 		log.info("Total records processed in all searches :"+ records.size());
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, server, params);
+		Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
 
 		return aligner.align(records, errors);
 	}
@@ -157,8 +151,8 @@ class Harvester implements IHarvester<HarvestResult>
 
 		Lib.net.setupProxy(context, req);
 
-		if (params.useAccount)
-			req.setCredentials(params.username, params.password);
+		if (params.isUseAccount())
+			req.setCredentials(params.getUsername(), params.getPassword());
 		CswServer server = null;
 		try{
     		Element capabil = req.execute();
@@ -230,9 +224,9 @@ class Harvester implements IHarvester<HarvestResult>
 
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
 
-        if (params.useAccount) {
-            log.debug("Logging into server (" + params.username + ")");
-            request.setCredentials(params.username, params.password);
+        if (params.isUseAccount()) {
+            log.debug("Logging into server (" + params.getUsername() + ")");
+            request.setCredentials(params.getUsername(), params.getPassword());
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
@@ -287,7 +281,7 @@ class Harvester implements IHarvester<HarvestResult>
 
                 } catch (Exception ex) {
                     errors.add(new HarvestError(ex, log));
-                    log.error("Unable to process record from csw (" + this.params.name + ")");
+                    log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + counter); 
                     log.debug("   Record: " +  ((Element)record).getName()); 
                 }
@@ -331,9 +325,13 @@ class Harvester implements IHarvester<HarvestResult>
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
-        request.setUrl(url);
+        request.setUrl(context, url);
         request.setServerVersion(server.getPreferredServerVersion());
-        request.setOutputSchema(oper.getPreferredOutputSchema());
+        String preferredOutputSchema = oper.getPreferredOutputSchema();
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            preferredOutputSchema = this.params.outputSchema;
+        }
+        request.setOutputSchema(preferredOutputSchema);
         request.setConstraintLanguage(constraintLanguage);
         request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
         request.setConstraint(constraint);
@@ -394,8 +392,15 @@ class Harvester implements IHarvester<HarvestResult>
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
-                    buildFilterQueryable(queriables, "csw:" + entry.getKey(), entry.getValue());
-                }
+					// If the queriable has the namespace, use it
+					String queryableName = entry.getKey();
+					if (queryableName.contains("__")) {
+						queryableName = queryableName.replace("__", ":");
+					} else if (!queryableName.contains(":")) {
+						queryableName = "csw:" + queryableName;
+					}
+					buildFilterQueryable(queriables, queryableName, entry.getValue());
+				}
             }
         } else {
             log.debug("no search criterion specified, harvesting all ... ");
@@ -532,7 +537,7 @@ class Harvester implements IHarvester<HarvestResult>
 	{
 		try
 		{
-			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
+			log.info("Searching on : "+ params.getName() +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
             if(log.isDebugEnabled()) {
                 log.debug("Sent request "+request.getSentData());

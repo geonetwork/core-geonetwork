@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
     <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
@@ -43,5 +47,12 @@
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
     <bean id="forceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
     <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
+    <bean id="geonetTestFixture" class="org.fao.geonet.GeonetTestFixture" />
+    <!--<bean id="coreTestDatastoreInitializer" class="org.fao.geonet.DatastoreInitializer" />-->
 
+    <bean id="stagingProfile" class="java.lang.String">
+        <constructor-arg value="development" />
+    </bean>
+
+    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
 </beans>

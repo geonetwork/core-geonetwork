@@ -1,11 +1,49 @@
-<ul class="pager" data-ng-show="config.pages > 1">
-  <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''"
-    data-ng-show="config.pages > 0">
-    <a href="" data-ng-click="previous()" 
-       data-translate>previous</a></li>
-  <li>{{config.currentPage}} / {{config.pages}}</li>
-  <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''"
-    data-ng-show="config.pages > 0">
-    <a href="" data-ng-click="next()"
-      data-translate>next</a></li>
-</ul>
+<div class="gn-pager"
+     data-ng-show="config.pages > 0">
+  <ul class="pager gn-pager-start">
+    <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
+      <a href="" data-ng-click="first()">
+        <i class="fa fa-angle-double-left"></i>
+      </a>
+    </li>
+    <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
+      <a href="" data-ng-click="previous()">
+        <i class="fa fa-angle-left"></i>
+      </a>
+    </li>
+  </ul>
+  <!-- A dropdown button to select the number of page
+  and indicating the current page info -->
+  <div class="btn-group"
+          title="{{'chooseRecordsPerPage' | translate}}">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      {{config.from}} - {{config.to}}
+      <em data-translate="">on</em>
+      {{config.resultsCount}}
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li role="presentation"
+          class="dropdown-header" data-translate="">hitsPerPage</li>
+      <li data-ng-repeat="nb in values"
+              data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''">
+        <a data-ng-click="updateSearch(nb)">{{nb}}</a>
+      </li>
+    </ul>
+  </div>
+  <ul class="pager gn-pager-end">
+    <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
+      <a href="" data-ng-click="next()">
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </li>
+    <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
+      <a href="" data-ng-click="last()">
+        <i class="fa fa-angle-double-right"></i>
+      </a>
+    </li>
+  </ul>
+</div>

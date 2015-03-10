@@ -20,6 +20,7 @@
                 <entry key="Loose bbox" value="true"/>
                 <entry key="Estimated extends" value="true"/>
                 <entry key="encode functions" value="true"/>
+                <entry key="Expose primary keys" value="true"/>
                 <entry key="Data Source" value-ref="jdbcDataSource"/>
             </map>
         </constructor-arg>

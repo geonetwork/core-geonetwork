@@ -14,6 +14,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.JavaMailer;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -34,7 +35,7 @@ public class Receptor implements Service {
 
     //private static final String NOREPLY = "noreply@nationaalgeoregister.nl";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {}
 
     public Element exec(Element params, final ServiceContext context) throws Exception {
         try {

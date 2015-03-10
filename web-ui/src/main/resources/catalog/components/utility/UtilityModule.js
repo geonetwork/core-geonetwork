@@ -44,5 +44,40 @@
           }
           return input;
         };
+      })
+.filter('striptags', function() {
+        return function(value, allowed) {
+          if (!value) return value;
+          allowed = (((allowed || '') + '').toLowerCase().
+              match(/<[a-z][a-z0-9]*>/g) || []).join('');
+          var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+              commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+          return value.replace(commentsAndPhpTags, '').
+              replace(tags, function($0, $1) {
+                return allowed.indexOf(
+                        '<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+              });
+        };
+      })
+
+      /* filter to split a string and grab the nth item
+ (default splitter: '|', default item: 1st),
+ used on {{metadata[n].type | split:',':0 }}*/
+.filter('split', function() {
+        return function(input, splitChar, splitIndex) {
+          if (!input) {
+            return '';
+          }
+          if (!splitIndex) {
+            splitIndex = 0;
+          }
+          if (!splitChar) {
+            splitChar = '|';
+          }
+          if (!input.split(splitChar).length > splitIndex) {
+            return '';
+          }
+          return input.split(splitChar)[splitIndex];
+        }
       });
 })();

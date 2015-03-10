@@ -22,43 +22,36 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.responses.CswVirtualServiceResponse;
 import org.fao.geonet.repository.ServiceRepository;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
 
 /**
  * Retrieves a particular service
  */
-public class Get implements Service {
+@Controller("admin.config.virtualcsw.get")
+public class Get {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
+    @Autowired
+    private ServiceRepository serviceRepository;
 
-    public Element exec(Element params, ServiceContext context)
+    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.get", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody
+    CswVirtualServiceResponse exec(@RequestParam String id)
             throws Exception {
 
-        String id = params.getChildText(Params.ID);
+        final Service service = serviceRepository.findOne(Integer.valueOf(id));
 
-        final ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
-        final org.fao.geonet.domain.Service service = serviceRepository.findOne(Integer.valueOf(id));
+        CswVirtualServiceResponse response = new CswVirtualServiceResponse(service);
 
-        final Map<String,String> parameters = service.getParameters();
-
-        Element elParameters = new Element("serviceParameters");
-        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
-            elParameters.addContent(new Element("parameter")
-                    .setAttribute("name", parameter.getKey())
-                    .setText(parameter.getValue()));
-        }
-        return new Element("service")
-               .addContent(new Element("id").setText(String.valueOf(service.getId())))
-               .addContent(new Element("name").setText(service.getName()))
-               .addContent(new Element("description").setText(service.getDescription()))
-               .addContent(elParameters);
+        return response;
     }
 }

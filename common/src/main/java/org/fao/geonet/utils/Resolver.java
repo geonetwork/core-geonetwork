@@ -26,6 +26,7 @@ package org.fao.geonet.utils;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 
 import java.util.Vector;
 
@@ -93,7 +94,7 @@ public final class Resolver implements ProxyInfoObserver
         if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);
 		catMan.setVerbosity(iCatVerb);
 
-		catResolver = new CatalogResolver(catMan);
+		catResolver = new NioPathAwareCatalogResolver(catMan);
 
 		@SuppressWarnings("unchecked")
         Vector<String> catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();

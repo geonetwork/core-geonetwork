@@ -1,15 +1,7 @@
 package org.fao.geonet.kernel.search.keyword;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Util;
-
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
 import org.fao.geonet.kernel.rdf.Selector;
@@ -18,6 +10,13 @@ import org.fao.geonet.kernel.rdf.Where;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Represents the parameters for doing a broad keyword search.
@@ -56,7 +55,7 @@ public class KeywordSearchParamsBuilder {
         if(keyword != null) {
             KeywordSearchType searchType = KeywordSearchType.parseString(Util.getParam(params, XmlParams.pTypeSearch, KeywordSearchType.MATCH.name()));
             parsedParams.keyword(keyword, searchType, true);
-            parsedParams.uri(keyword);
+            parsedParams.uri(keyword, searchType, true);
         }
         
         String uri = Util.getParam(params, XmlParams.pUri, null);
@@ -96,13 +95,14 @@ public class KeywordSearchParamsBuilder {
         
         return parsedParams;
     }
+
+
     /**
      * if set to true then the params will not throw exceptions when incorrectly configured.
      * 
      * This parameter is for backwards compatibility.
      * 
-     * @param b
-     * @return
+     * @param lenient
      */
     public KeywordSearchParamsBuilder lenient(boolean lenient) {
         this.lenient = lenient;
@@ -305,6 +305,11 @@ public class KeywordSearchParamsBuilder {
         this.searchClauses.add(new URISearchClause(keywordURI));
         return this;
     }
+    public KeywordSearchParamsBuilder uri(String keywordURI, KeywordSearchType searchType, boolean ignoreCase) {
+        this.searchClauses.add(new URISearchClause(searchType, keywordURI, ignoreCase));
+        return this;
+    }
+
     public void relationship(String relatedId, KeywordRelation relation, KeywordSearchType searchType, boolean ignoreCase) {
         this.selectClauses.add(Selectors.BROADER);
         this.searchClauses.add(new RelationShipClause(relation, relatedId, searchType, ignoreCase));

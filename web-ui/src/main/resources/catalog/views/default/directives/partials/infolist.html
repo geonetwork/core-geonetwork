@@ -1,0 +1,36 @@
+
+<ul class="row gn-info-list">
+
+	<li
+   	  data-ng-repeat="md in searchResults.records"
+      data-ng-click="openRecord($index, md, searchResults.records)"
+      data-ng-mouseenter="showMore(true)"
+      data-ng-mouseleave="showMore(false)"
+      id="gn-info-list{{md.getUuid()}}">
+	  <div>
+      <div class="gn-md-thumbnail">
+        <img class="gn-img-thumbnail"
+             data-ng-src="{{md.getThumbnails().list[0].url}}"
+             data-ng-if="md.getThumbnails().list[0].url"/>
+      </div>
+      <div class="gn-md-title">
+        <a >
+          {{md.title || md.defaultTitle}}
+        </a>
+        <br/>
+		<div class="pull-right">
+		<a data-ng-href="#/search?_cat={{md.type}}"  title="{{md.type | translate}}">
+          <i class="fa gn-icon gn-icon-{{md.type}}"></i>
+        </a>
+        <a data-ng-repeat="cat in ::md.category"
+           data-ng-href="#/search?_cat={{cat}}"  title="{{cat | translate}}">
+          <i class="fa gn-icon gn-icon-{{cat}}"></i>
+        </a>
+		</div>
+      </div>
+	  </div>
+	  <div class="hidden thumbnail">
+        {{md.abstract}}
+      </div>
+	</li>
+</ul>

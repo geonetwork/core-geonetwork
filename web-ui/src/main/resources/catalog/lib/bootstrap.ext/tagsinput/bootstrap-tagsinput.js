@@ -103,7 +103,7 @@
       self.itemsArray.push(item);
 
       // add a tag element
-      var $tag = $('<span class="tag ' + htmlEncode(tagClass) + '">' + htmlEncode(itemText) + '<span data-role="remove"></span></span>');
+      var $tag = $('<span class="tag ' + htmlEncode(tagClass) + '"><span class="tag-content">' + htmlEncode(itemText) + '</span><span data-role="remove"></span></span>');
       $tag.data('item', item);
       self.findInputWrapper().before($tag);
       $tag.after(' ');
@@ -190,7 +190,7 @@
           // Update tag's class and inner text
           $tag.attr('class', null);
           $tag.addClass('tag ' + htmlEncode(tagClass));
-          $tag.contents().filter(function() {
+          $tag.contents().first().contents().filter(function() {
             return this.nodeType == 3;
           })[0].nodeValue = htmlEncode(itemText);
 

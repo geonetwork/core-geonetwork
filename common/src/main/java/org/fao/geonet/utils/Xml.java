@@ -22,17 +22,19 @@
 //==============================================================================
 
 package org.fao.geonet.utils;
+
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
-import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
-import org.eclipse.core.runtime.URIUtil;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
+import org.fao.geonet.utils.nio.NioPathHolder;
+import org.fao.geonet.utils.nio.PathStreamSource;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.DocType;
@@ -41,6 +43,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
+import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.SAXOutputter;
@@ -57,8 +60,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -75,9 +76,17 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
@@ -104,24 +113,27 @@ public final class Xml
 {
 
 	public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+    public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
 
-   //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      *
      * @param validate
      * @return
      */
-	private static SAXBuilder getSAXBuilder(boolean validate) {
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate);
+	private static SAXBuilder getSAXBuilder(boolean validate, Path base) {
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, base);
         Resolver resolver = ResolverWrapper.getInstance();
         builder.setEntityResolver(resolver.getXmlResolver());
         return builder;
 	}
 
-    private static SAXBuilder getSAXBuilderWithoutXMLResolver(boolean validate) {
+    private static SAXBuilder getSAXBuilderWithPathXMLResolver(boolean validate, Path base) {
         SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        NioPathHolder.setBase(base);
+        builder.setEntityResolver(Xml.PATH_RESOLVER);
         return builder;
     }
 
@@ -141,18 +153,6 @@ public final class Xml
 	//---
 	//--------------------------------------------------------------------------
 
-    /**
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws JDOMException
-     */
-	public static Element loadFile(String file) throws IOException, JDOMException
-	{
-		return loadFile(new File(file));
-	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -165,13 +165,24 @@ public final class Xml
      */
 	public static Element loadFile(URL url) throws IOException, JDOMException
 	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
+        Path path = pathFromUrl(url);
+        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, path);//new SAXBuilder();
 		Document   jdoc    = builder.build(url);
 
 		return (Element) jdoc.getRootElement().detach();
 	}
 
-	//--------------------------------------------------------------------------
+    protected static Path pathFromUrl(URL url) {
+        Path path = null;
+        try {
+            path = IO.toPath(url.toURI());
+        } catch (Exception e) {
+            // not a path
+        }
+        return path;
+    }
+
+    //--------------------------------------------------------------------------
 
     /**
      * Loads an xml file from a URL after posting content to the URL.
@@ -196,7 +207,8 @@ public final class Xml
 			out.print(getString(xmlQuery));
 			out.close();
 
-			SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
+            Path path = pathFromUrl(url);
+			SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, path);//new SAXBuilder();
 			Document   jdoc    = builder.build(connection.getInputStream());
 
 			result = (Element)jdoc.getRootElement().detach();
@@ -209,32 +221,33 @@ public final class Xml
 
 	//--------------------------------------------------------------------------
 
-    /**
-     * Loads an xml file and returns its root node.
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws JDOMException
-     */
-	public static Element loadFile(File file) throws IOException, JDOMException
-	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
+    public static Element loadFile(Path file) throws JDOMException, NoSuchFileException {
+        try {
+            SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
-		String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
+            String convert = System.getProperty("jeeves.filecharsetdetectandconvert", "");
 
-		// detect charset and convert if required
-		if (convert != null && convert.equals("enabled")) { 
-			byte[] content = convertFileToUTF8ByteArray(file);
-			return loadStream(new ByteArrayInputStream(content));
+            // detect charset and convert if required
+            if (convert.equals("enabled")) {
+                byte[] content = convertFileToUTF8ByteArray(file);
+                return loadStream(new ByteArrayInputStream(content));
 
-		// no charset detection and conversion allowed
-		} else { 
-			Document   jdoc    = builder.build(file);
-			return (Element) jdoc.getRootElement().detach();
-		}
+                // no charset detection and conversion allowed
+            } else {
+                try (InputStream in = IO.newInputStream(file)) {
+                    Document jdoc = builder.build(in);
+                    return (Element) jdoc.getRootElement().detach();
+                }
+            }
+        } catch (JDOMException e) {
+            throw new JDOMException("Error occurred while trying to load an xml file: " + file, e);
+        } catch (NoSuchFileException e) {
+            throw e;
+        } catch (Throwable e) {
+            throw new RuntimeException("Error occurred while trying to load an xml file: " + file, e);
+        }
 
-	}
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -248,37 +261,26 @@ public final class Xml
      * @throws CharacterCodingException
      */
 
-	public synchronized static byte[] convertFileToUTF8ByteArray(File file) throws IOException, CharacterCodingException {
-	        FileInputStream in = null;
-			DataInputStream inStream = null;
-			try {
-                in = new FileInputStream(file);
-                inStream = new DataInputStream(in);
-			byte[] buf = new byte[(int)file.length()];
-			int nrRead = inStream.read(buf);
-		
-			UniversalDetector detector = new UniversalDetector(null);
-			detector.handleData(buf, 0, nrRead);
-			detector.dataEnd();
+	public synchronized static byte[] convertFileToUTF8ByteArray(Path file) throws IOException {
+        try (DataInputStream inStream = new DataInputStream(IO.newInputStream(file))) {
+            byte[] buf = new byte[(int) Files.size(file)];
+            int nrRead = inStream.read(buf);
 
-			String encoding = detector.getDetectedCharset();
-			detector.reset();
-			if (encoding != null) {
-				if (!encoding.equals(ENCODING)) {
-					Log.error(Log.JEEVES,"Detected character set "+encoding+", converting to UTF-8");
-					return convertByteArrayToUTF8ByteArray(buf, encoding);
-				}
-			} 
-			return buf;
-			} finally {
-			    if(in != null) {
-			        IOUtils.closeQuietly(in);
-			    }
-			    if (inStream != null) {
-			        IOUtils.closeQuietly(inStream);
-			    }
-			}
-	}
+            UniversalDetector detector = new UniversalDetector(null);
+            detector.handleData(buf, 0, nrRead);
+            detector.dataEnd();
+
+            String encoding = detector.getDetectedCharset();
+            detector.reset();
+            if (encoding != null) {
+                if (!encoding.equals(ENCODING)) {
+                    Log.error(Log.JEEVES, "Detected character set " + encoding + ", converting to UTF-8");
+                    return convertByteArrayToUTF8ByteArray(buf, encoding);
+                }
+            }
+            return buf;
+        }
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -338,7 +340,7 @@ public final class Xml
 												throws IOException, JDOMException
 	{
 		//SAXBuilder builder = new SAXBuilder(validate);
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate); // oasis catalogs are used
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null); // oasis catalogs are used
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -356,7 +358,7 @@ public final class Xml
      */
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, null); //new SAXBuilder();
 		builder.setFeature("http://apache.org/xml/features/validation/schema",false);
 		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
 		Document   jdoc    = builder.build(input);
@@ -378,17 +380,16 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath) throws Exception
-	{
-		JDOMResult resXml = new JDOMResult();
-		transform(xml, styleSheetPath, resXml, null);
-		return (Element)resXml.getDocument().getRootElement().detach();
-	}
-
+	public static Element transform(Element xml, Path styleSheetPath) throws Exception {
+        JDOMResult resXml = new JDOMResult();
+        transform(xml, styleSheetPath, resXml, null);
+        return (Element)resXml.getDocument().getRootElement().detach();
+    }
 	//--------------------------------------------------------------------------
 
     /**
      * Transforms an xml tree into another using a stylesheet on disk and pass parameters.
+     *
      *
      * @param xml
      * @param styleSheetPath
@@ -396,13 +397,12 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath, Map<String,String> params) throws Exception
+	public static Element transform(Element xml, Path styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
 		transform(xml, styleSheetPath, resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -413,7 +413,7 @@ public final class Xml
      * @param out
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, OutputStream out) throws Exception
+	public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception
 	{
 		StreamResult resStream= new StreamResult(out);
 		transform(xml, styleSheetPath, resStream, null);
@@ -431,7 +431,7 @@ public final class Xml
      */
 	public static void transform(Element xml, String styleSheetPath, Result result) throws Exception
 	{
-		transform(xml, styleSheetPath, result, null);
+		transform(xml, IO.toPath(styleSheetPath), result, null);
 	}
 
 
@@ -503,10 +503,10 @@ public final class Xml
         }
         Source s = catResolver.resolve(href, base);
 
-         boolean isFile = false;
+         boolean isFile;
          try {
-             final File file = new File(s.getSystemId());
-             isFile = file.isFile();
+             final Path file = Paths.get(new URI(s.getSystemId()));
+             isFile = Files.isRegularFile(file);
          } catch (Exception e) {
              isFile = false;
          }
@@ -519,16 +519,20 @@ public final class Xml
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f = URIUtil.toFile(new URI(s.getSystemId()));
+
+                Path f;
+                f = resolvePath(s);
                 if(Log.isDebugEnabled(Log.XML_RESOLVER))
-                    Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
+                    Log.debug(Log.XML_RESOLVER, "Check on "+f+" exists returned: "+Files.exists(f));
                 // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                if (f == null || !(f.exists())) {
+                if (!Files.exists(f)) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
                     }
                     s.setSystemId(blankXSLFile);
+                } else {
+                    s.setSystemId(f.toUri().toASCIIString());
                 }
             }
             catch (URISyntaxException e) {
@@ -544,10 +548,22 @@ public final class Xml
          }
      }
 
-	//--------------------------------------------------------------------------
+    protected static Path resolvePath(Source s) throws URISyntaxException {
+        Path f;
+        final String systemId = s.getSystemId().replaceAll("%5C", "/");
+        try {
+            f = IO.toPath(new URI(systemId));
+        } catch (FileSystemNotFoundException e) {
+            f = IO.toPath(systemId);
+        }
+        return f;
+    }
+
+    //--------------------------------------------------------------------------
 
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
+     *
      *
      * @param xml
      * @param styleSheetPath
@@ -555,38 +571,41 @@ public final class Xml
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
+	public static void
+    transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
-		File styleSheet = new File(styleSheetPath);
+        NioPathHolder.setBase(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-		Source srcSheet = new StreamSource(styleSheet);
+        try (InputStream in = IO.newInputStream(styleSheetPath)) {
+            Source srcSheet = new StreamSource(in, styleSheetPath.toUri().toASCIIString());
 
-		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
-		// stylesheet so switch it off but trap any exceptions because this
-		// code is run on transformers other than saxon 
-		TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
-		transFact.setURIResolver(new JeevesURIResolver());
-		try {
-			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
-			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
-			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,false);
-			transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
-			// Add the following to get timing info on xslt transformations
-			//transFact.setAttribute(FeatureKeys.TIMING,true);
-		} catch (IllegalArgumentException e) {
-		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-			//e.printStackTrace();
-		} finally {
-			Transformer t = transFact.newTransformer(srcSheet);
-			if (params != null) {
-				for (Map.Entry<String,String> param : params.entrySet()) {
-					t.setParameter(param.getKey(),param.getValue());
-				}
-			}
-			t.transform(srcXml, result);
-		}
+            // Dear old saxon likes to yell loudly about each and every XSLT 1.0
+            // stylesheet so switch it off but trap any exceptions because this
+            // code is run on transformers other than saxon
+            TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
+            transFact.setURIResolver(new JeevesURIResolver());
+            try {
+                transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
+                transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
+                transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
+                transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+                // Add the following to get timing info on xslt transformations
+                //transFact.setAttribute(FeatureKeys.TIMING,true);
+            } catch (IllegalArgumentException e) {
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
+                //e.printStackTrace();
+            } finally {
+                transFact.setURIResolver(new JeevesURIResolver());
+                Transformer t = transFact.newTransformer(srcSheet);
+                if (params != null) {
+                    for (Map.Entry<String, Object> param : params.entrySet()) {
+                        t.setParameter(param.getKey(), param.getValue());
+                    }
+                }
+                t.transform(srcXml, result);
+            }
+        }
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -612,55 +631,50 @@ public final class Xml
    * on disk)
    */
 
-   public static String transformFOP(String uploadDir, Element xml, String styleSheetPath)
+   public static Path transformFOP(Path uploadDir, Element xml, String styleSheetPath)
            throws Exception {
-       String file = uploadDir + UUID.randomUUID().toString () + ".pdf";
+       Path file = uploadDir.resolve(UUID.randomUUID().toString() + ".pdf");
 
    // Step 1: Construct a FopFactory
    // (reuse if you plan to render multiple documents!)
    FopFactory fopFactory = FopFactory.newInstance();
    
    // Step 2: Set up output stream.
-   // Note: Using BufferedOutputStream for performance reasons (helpful
-   // with FileOutputStreams).
-   OutputStream out = new BufferedOutputStream(new FileOutputStream(
-           new File(file)));
-   
-   try {
+   // Note: Using BufferedOutputStream for performance reasons
+
+   try (OutputStream out = Files.newOutputStream(file);
+        OutputStream bufferedOut = new BufferedOutputStream(out)) {
        // Step 3: Construct fop with desired output format
-   Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
+       Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, bufferedOut);
 
-   // Step 4: Setup JAXP using identity transformer
-   TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
-	 factory.setURIResolver(new JeevesURIResolver());
-   Source xslt = new StreamSource(new File(styleSheetPath));
-		try {
-			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
-			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
-			factory.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
-		} catch (IllegalArgumentException e) {
-		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-			//e.printStackTrace();
-		} finally {
-   		Transformer transformer = factory.newTransformer(xslt);
+       // Step 4: Setup JAXP using identity transformer
+       TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
+       factory.setURIResolver(new JeevesURIResolver());
+       Source xslt = new StreamSource(new File(styleSheetPath));
+       try {
+           factory.setAttribute(FeatureKeys.VERSION_WARNING, false);
+           factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
+           factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+       } catch (IllegalArgumentException e) {
+           Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
+           //e.printStackTrace();
+       } finally {
+           Transformer transformer = factory.newTransformer(xslt);
 
-   		// Step 5: Setup input and output for XSLT transformation
-   		// Setup input stream
-			Source src = new JDOMSource(new Document((Element)xml.detach()));
-   
-   		// Resulting SAX events (the generated FO) must be piped through to
-   		// FOP
-   		Result res = new SAXResult(fop.getDefaultHandler());
+           // Step 5: Setup input and output for XSLT transformation
+           // Setup input stream
+           Source src = new JDOMSource(new Document((Element) xml.detach()));
 
-   		// Step 6: Start XSLT transformation and FOP processing
-      transformer.transform(src, res);
-		}
+           // Resulting SAX events (the generated FO) must be piped through to
+           // FOP
+           Result res = new SAXResult(fop.getDefaultHandler());
+
+           // Step 6: Start XSLT transformation and FOP processing
+           transformer.transform(src, res);
+       }
 
    }
-   finally {
-       // Clean-up
-           out.close();
-   }
+
        
        return file;
    }
@@ -976,6 +990,42 @@ public final class Xml
 		return xp.numberValueOf(xml);
 	}
 
+    /**
+     * Search in metadata all matching element for the filter
+     * and return a list of uuid separated by or to be used in a
+     * search on uuid. Extract uuid from matched element if
+     * elementName is null or from the elementName child.
+     *
+     * @param element
+     * @param elementFilter Filter to get element descendants
+     * @param elementName   Child element to get value from. If null, filtered element value is returned
+     * @param elementNamespace
+     * @param attributeName Attribute name to get value from. If null, TODO: improve
+     * @return
+     */
+    public static Set<String> filterElementValues(Element element,
+                                                     ElementFilter elementFilter,
+                                                     String elementName,
+                                                     Namespace elementNamespace,
+                                                     String attributeName) {
+        @SuppressWarnings("unchecked")
+        Iterator<Element> i = element.getDescendants(elementFilter);
+        Set<String> values = new HashSet<String>();
+        boolean first = true;
+        while (i.hasNext()) {
+            Element e = i.next();
+            String uuid = elementName == null && attributeName == null?
+                    e.getText() :
+                    (attributeName == null ?
+                            e.getChildText(elementName, elementNamespace) :
+                            e.getAttributeValue(attributeName)
+                    );
+            if (uuid != null && !uuid.isEmpty()) {
+                values.add(uuid);
+            }
+        }
+        return values;
+    }
 	//---------------------------------------------------------------------------
 
     /**
@@ -1083,7 +1133,7 @@ public final class Xml
      */
 	public synchronized static void validate(Document doc) throws Exception {
 		if (doc.getDocType() != null) { // assume DTD validation
-			SAXBuilder builder = getSAXBuilder(true);	
+			SAXBuilder builder = getSAXBuilder(true, null);
 			builder.build(new StringReader(getString(doc))); 
 		} 
 
@@ -1126,7 +1176,7 @@ public final class Xml
      * @param xml
      * @throws Exception
      */
-	public static void validate(String schemaPath, Element xml) throws Exception
+	public static void validate(Path schemaPath, Element xml) throws Exception
 	{
 		Element xsdXPaths = validateInfo(schemaPath,xml);
 		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s):\n"+getString(xsdXPaths), xsdXPaths);
@@ -1184,7 +1234,7 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element validateInfo(String schemaPath, Element xml) throws Exception
+	public static Element validateInfo(Path schemaPath, Element xml) throws Exception
 	{
 		ErrorHandler eh = new ErrorHandler();
 		validateGuts(schemaPath, xml, eh);
@@ -1206,7 +1256,7 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element validateInfo(String schemaPath, Element xml, ErrorHandler eh)
+	public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh)
 			throws Exception {
 		validateGuts(schemaPath, xml, eh);
 		if (eh.errors()) {
@@ -1226,9 +1276,15 @@ public final class Xml
      * @param eh
      * @throws Exception
      */
-	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
-		StreamSource schemaFile = new StreamSource(new File(schemaPath));
-		Schema schema = factory().newSchema(schemaFile);
+	private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+        PathStreamSource schemaFile = new PathStreamSource(schemaPath);
+        schemaFile.setSystemId(schemaPath.toUri().toASCIIString());
+
+        final SchemaFactory factory = factory();
+        NioPathHolder.setBase(schemaPath);
+        Resolver resolver = ResolverWrapper.getInstance();
+        factory.setResourceResolver(resolver.getXmlResolver());
+        Schema schema = factory.newSchema(schemaFile);
 		validateRealGuts(schema, xml, eh);
 	}
 
@@ -1242,7 +1298,6 @@ public final class Xml
      * @throws Exception
      */
 	private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
-
 		Resolver resolver = ResolverWrapper.getInstance();
 
 		ValidatorHandler vh = schema.newValidatorHandler();

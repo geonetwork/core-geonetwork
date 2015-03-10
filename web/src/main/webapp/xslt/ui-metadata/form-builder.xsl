@@ -115,8 +115,9 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
-            id="gn-el-{$editInfo/@ref}">
+        <div class="form-group gn-field gn-{substring-after(name(), ':')} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
+             id="gn-el-{$editInfo/@ref}"
+             data-gn-field-highlight="">
           <label
               for="gn-field-{$editInfo/@ref}"
               class="col-sm-2 control-label">
@@ -235,10 +236,20 @@
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
-      class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
+    <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
+              data-gn-field-highlight=""
+      class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+      <legend class="{$cls}"
+              data-gn-slide-toggle=""
+              data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+        <!--
+         The toggle title is in conflict with the element title
+         required for the element tooltip
+         and bootstrap set the title attribute an higher priority.
+         TODO: Could be improved ?
+         title="{{{{'toggleSection' | translate}}}}"
+        -->
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -283,8 +294,8 @@
 
     <i class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
-      data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-      data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
+      data-gn-field-highlight-remove="{$editInfo/@ref}"
+      title="{{{{'deleteFieldSet' | translate}}}}"/>
 
   </xsl:template>
   
@@ -322,8 +333,13 @@
       <xsl:value-of select="$isExisting"/>/
       <xsl:value-of select="$id"/>
     </xsl:message>-->
-    <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
-         id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
+
+    <xsl:variable name="firstFieldKey"
+                  select="$template/values/key[position() = 1]/@label"/>
+
+    <div class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+         id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
+         data-gn-field-highlight="">
 
       <label class="col-sm-2 control-label">
         <xsl:value-of select="$name"/>
@@ -334,7 +350,7 @@
         is the first element of its kind in the form. The key for a template
         field is {schemaIdentifier}|{firstTemplateFieldKey} -->
         <input type="hidden"
-               data-gn-field-tooltip="{$schema}|{$template/values/key[position() = 1]/@label}"/>
+               data-gn-field-tooltip="{$schema}|{$firstFieldKey}"/>
 
         <!-- Create a title indicating that the element is missing in the current
         record. A checkbox display the template field to be populated. -->
@@ -510,7 +526,8 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:copy-of select="$template/snippet/*"/>
+                <xsl:value-of select="saxon:serialize($template/snippet/*,
+                                      'default-serialize-mode')"/>
               </textarea>
             </div>
           </xsl:if>
@@ -556,7 +573,7 @@
   -->
   <xsl:template name="render-element-to-add">
     <xsl:param name="label" as="xs:string?"/>
-    <xsl:param name="directive" as="xs:string?"/>
+    <xsl:param name="directive" as="node()?"/>
     <xsl:param name="childEditInfo"/>
     <xsl:param name="parentEditInfo"/>
     <!-- Hide add element if child of an XLink section. -->
@@ -566,10 +583,12 @@
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
-  
+      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
+
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
-           id="gn-el-{$id}">
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+           id="gn-el-{$id}"
+           data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
@@ -577,7 +596,6 @@
           </xsl:if>
         </label>
         <div class="col-sm-9">
-          
           <xsl:choose>
             <!-- When element have different types, provide
                   a list of those types to be selected. The type list
@@ -592,7 +610,7 @@
                   <xsl:for-each select="$childEditInfo/gn:choose">
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
                     
-                    <i type="button" class="btn fa fa-plus gn-add" 
+                    <i type="button" class="btn btn-default fa fa-plus gn-add" 
                     title="{$label/description}"
                     data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
                     </i>
@@ -602,7 +620,7 @@
                   If many choices, make a dropdown button -->
             <xsl:when test="count($childEditInfo/gn:choose) > 1">
               <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
                   <span/>
                   <span class="caret"/>
                 </button>
@@ -627,9 +645,10 @@
                 The directive is in charge of displaying the default add button if needed.
               -->
               <xsl:choose>
-                <xsl:when test="$directive != ''">
+                <xsl:when test="$directive/@addDirective != ''">
                   <div>
-                    <xsl:attribute name="{$directive}"/>
+                    <xsl:attribute name="{$directive/@addDirective}"/>
+                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                     <xsl:attribute name="data-dom-id" select="$id"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
@@ -639,7 +658,7 @@
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
-                  <i class="btn fa fa-plus gn-add"
+                  <i class="btn btn-default fa fa-plus gn-add"
                     data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
                   />
                 </xsl:otherwise>
@@ -931,8 +950,8 @@
       
       <i class="btn fa fa-times text-danger gn-control pull-right"
         data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
-        data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
-        data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
+        data-gn-field-highlight-remove="{$editInfo/@ref}"
+        data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
     </xsl:if>
   </xsl:template>
 
@@ -946,7 +965,7 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <i class="btn fa fa-plus gn-add"
+      <i class="btn btn-default fa fa-plus gn-add"
         data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
     </xsl:if>
   </xsl:template>
@@ -1030,7 +1049,7 @@
         </xsl:choose>
       </div>
       <div class="col-sm-1">
-        <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')"/>
+          <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
       </div>
     </div>
   </xsl:template>

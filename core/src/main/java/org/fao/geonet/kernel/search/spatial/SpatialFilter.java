@@ -124,7 +124,7 @@ public abstract class SpatialFilter extends Filter
         final OpenBitSet bits = new OpenBitSet(context.reader().maxDoc());
 
         final Map<String, FeatureId> unrefinedSpatialMatches = unrefinedSpatialMatches();
-        final Set<FeatureId> matches = new HashSet<FeatureId>();
+        final Set<FeatureId> matches = new HashSet<>();
         final Multimap<FeatureId,Integer> docIndexLookup = HashMultimap.create();
         
         if(unrefinedSpatialMatches.isEmpty() || _hits >= _numHits) return bits;
@@ -302,7 +302,7 @@ public abstract class SpatialFilter extends Filter
             SpatialIndex spatialIndex = sourceAccessor.two();
             @SuppressWarnings("unchecked")
             List<Pair<FeatureId,String>> fids = spatialIndex.query(geom.getEnvelopeInternal());
-            _unrefinedMatches = new HashMap<String,FeatureId>();
+            _unrefinedMatches = new HashMap<>();
             for (Pair<FeatureId, String> match : fids) {
                 _unrefinedMatches.put(match.two(), match.one());
             }

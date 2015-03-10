@@ -26,9 +26,12 @@ package org.fao.geonet.services.harvesting;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -40,7 +43,7 @@ public class Stop implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -50,11 +53,16 @@ public class Stop implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		return Util.exec(params, context, new Util.Job()
+        String statusParam = org.fao.geonet.Util.getParam(params, "status", Common.Status.INACTIVE.toString());
+        if (statusParam.isEmpty()) {
+            statusParam = Common.Status.INACTIVE.toString();
+        }
+        final Common.Status newStatus = Common.Status.parse(statusParam);
+        return Util.exec(params, context, new Util.Job()
 		{
 			public OperResult execute(HarvestManager hm, String id) throws Exception
 			{
-				return hm.stop(id);
+				return hm.stop(id, newStatus);
 			}
 		});
 	}

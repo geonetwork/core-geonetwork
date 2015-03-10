@@ -76,14 +76,14 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 		params.create(node);
 
 		//--- force the creation of a new uuid
-		params.uuid = UUID.randomUUID().toString();
+		params.setUuid(UUID.randomUUID().toString());
 
 		String id = settingMan.add("harvesting", "node", getType());
 
 		storeNode(params, "id:"+id);
-        Source source = new Source(params.uuid, params.name, true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
 		return id;
 	}
@@ -118,9 +118,9 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 		//--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
 		// in an inconsistent state
 
-        Source source = new Source(copy.uuid, copy.name, true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
 		params = copy;
         super.setParams(params);
@@ -144,7 +144,8 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:"+siteId, "queryScope", params.queryScope);
         settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
         settingMan.add("id:"+siteId, "xslfilter",     params.xslfilter);
-		
+        settingMan.add("id:"+siteId, "outputSchema",     params.outputSchema);
+
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(path, "search", "");	
 		
@@ -169,7 +170,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      * @throws Exception
      */
     public void doHarvest(Logger log) throws Exception {
-		Harvester h = new Harvester(log, context, params);
+		Harvester h = new Harvester(cancelMonitor, log, context, params);
 		result = h.harvest(log);
 	}
 

@@ -192,13 +192,14 @@
        */
       loadFormatter = function() {
         $scope.formatters = [];
-        $http.get('md.formatter.list@json').success(function(data) {
-          if (data !== 'null') {
-            $scope.formatters = data; // TODO: check multiple
-          }
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('md.formatter.list?_content_type=json').
+            success(function(data) {
+              if (data !== 'null') {
+                $scope.formatters = data.formatters; // TODO: check multiple
+              }
+            }).error(function(data) {
+              // TODO
+            });
       };
 
       /**
@@ -223,7 +224,12 @@
       $scope.listFormatterFiles = function(f) {
         //md.formatter.files?id=sextant
         $scope.formatterFiles = [];
-        $http.get('md.formatter.files@json?id=' + f).success(function(data) {
+
+        var url = 'md.formatter.files?_content_type=json&id=' + f.id;
+        if (f.schema) {
+          url += '&schema=' + f.schema;
+        }
+        $http.get(url).success(function(data) {
           if (data !== 'null') {
             // Format files
             angular.forEach(data.file, function(file) {
@@ -258,11 +264,19 @@
 
 
       $scope.downloadFormatter = function(f) {
-        location.replace('md.formatter.download?id=' + f, '_blank');
+        var url = 'md.formatter.download?id=' + f.id;
+        if (f.schema) {
+          url += '&schema=' + f.schema;
+        }
+        location.replace(url, '_blank');
       };
 
       $scope.formatterDelete = function(f) {
-        $http.get('md.formatter.remove?id=' + f)
+        var url = 'md.formatter.remove?id=' + f.id;
+        if (f.schema) {
+          url += '&schema=' + f.schema;
+        }
+        $http.get(url)
         .success(function(data) {
               $scope.formatterSelected = null;
               loadFormatter();
@@ -279,9 +293,12 @@
       $scope.$watch('selectedFile', function() {
         if ($scope.selectedFile) {
           var params = {
-            id: $scope.formatterSelected,
+            id: $scope.formatterSelected.id,
             fname: $scope.selectedFile['@path']
           };
+          if ($scope.formatterSelected.schema) {
+            params.schema = $scope.formatterSelected.schema;
+          }
           $http({
             url: 'md.formatter.edit@json',
             method: 'POST',
@@ -319,9 +336,12 @@
       };
 
       $scope.testFormatter = function(mode) {
-        var service = 'md.formatter.' + (mode == 'HTML' ? 'html' : 'xml');
+        var service = 'md.format.' + (mode == 'HTML' ? 'html' : 'xml');
         var url = service + '?id=' + $scope.metadataId +
-            '&xsl=' + $scope.formatterSelected;
+            '&xsl=' + $scope.formatterSelected.id;
+        if ($scope.formatterSelected.schema) {
+          url += '&schema=' + $scope.formatterSelected.schema;
+        }
 
         if (mode == 'DEBUG') {
           url += '&debug=true';

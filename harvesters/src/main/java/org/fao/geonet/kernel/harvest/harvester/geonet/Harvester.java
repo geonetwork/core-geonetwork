@@ -28,7 +28,11 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.*;
+import org.fao.geonet.exceptions.BadServerResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -43,29 +47,33 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, GeonetParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeonetParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -86,22 +94,23 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		//--- login
 
-		if (params.useAccount)
+		if (params.isUseAccount())
 		{
 			
 			try {
-				log.info("Login into : "+ params.name);
-				req.setCredentials(params.username, params.password);
+				log.info("Login into : "+ params.getName());
+				req.setCredentials(params.getUsername(), params.getPassword());
                 req.setPreemptiveBasicAuth(true);
-				req.setAddress(params.getServletPath()+"/srv/eng/xml.info");
-                req.addParam("type", "me");
+			req.setAddress(params.getServletPath() + "/" + params.getNode()
+					+ "/eng/xml.info");
+            req.addParam("type", "me");
 
 				Element response = req.execute();
 				if(!response.getName().equals("info") || response.getChild("me") == null) {
 					pre29Login(req);
 				} else if(!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
-                    log.warning("Authentication failed for user: " + params.username);
-                    throw new UserNotFoundEx(params.username);
+                    log.warning("Authentication failed for user: " + params.getUsername());
+                    throw new UserNotFoundEx(params.getUsername());
 				}
 			} catch (Exception e) {
 				pre29Login(req);
@@ -112,7 +121,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_INFO);
+		req.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/en/" + Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -127,6 +137,10 @@ class Harvester implements IHarvester<HarvestResult> {
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         for (Search s : params.getSearches()) {
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
             try {
                 records.addAll(search(req, s));
             } catch (Exception t) {
@@ -163,7 +177,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		//--- align local node
 
-		Aligner      aligner = new Aligner(log, context, req, params, remoteInfo);
+		Aligner      aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
 		HarvestResult result  = aligner.align(records, errors);
 
 		Map<String, String> sources = buildSources(remoteInfo);
@@ -173,16 +187,16 @@ class Harvester implements IHarvester<HarvestResult> {
 	}
 
 	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
-		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.name);
+		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.getName());
 		// try old authentication
-		req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
-		req.addParam("username", params.username);
-		req.addParam("password", params.password);
+		req.setAddress(params.getServletPath() + "/" + params.getNode() + "/en/"+ Geonet.Service.XML_LOGIN);
+		req.addParam("username", params.getUsername());
+		req.addParam("password", params.getPassword());
 		
 		Element response = req.execute();
 		
 		if (!response.getName().equals("ok")) {
-			throw new UserNotFoundEx(params.username);
+			throw new UserNotFoundEx(params.getUsername());
 		}
 	}
 
@@ -194,6 +208,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		for (Object o : doSearch(request, s).getChildren("metadata"))
 		{
+
+            if (cancelMonitor.get()) {
+                return Collections.emptySet();
+            }
+
             try {
                 Element md = (Element) o;
                 Element info = md.getChild("info", Edit.NAMESPACE);
@@ -228,11 +247,12 @@ class Harvester implements IHarvester<HarvestResult> {
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_SEARCH);
+		request.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/eng/" + Geonet.Service.XML_SEARCH);
 		request.clearParams();
 		try
 		{
-			log.info("Searching on : "+ params.name);
+			log.info("Searching on : "+ params.getName());
 			Element response = request.execute(s.createRequest());
             if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 
@@ -244,7 +264,7 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (BadXmlResponseEx e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.name + ". Excepted XML, returned: "
+                    + params.getName() + ". Excepted XML, returned: "
                     + e.getMessage());
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
@@ -252,14 +272,14 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (IOException e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.name + ". ");
+                    + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch(Exception e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription("Error while searching on "
-                    + params.name + ". ");
+                    + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             log.warning("Raised exception when searching : "+ e);
@@ -300,7 +320,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	private void updateSources(Set<RecordInfo> records,
 										Map<String, String> remoteSources) throws SQLException, MalformedURLException
 	{
-		log.info("Aligning source logos from for : "+ params.name);
+		log.info("Aligning source logos from for : "+ params.getName());
 
 		//--- collect all different sources that have been harvested
 
@@ -325,7 +345,7 @@ class Harvester implements IHarvester<HarvestResult> {
 					Resources.copyUnknownLogo(context, sourceUuid);
 				}
 
-                Source source = new Source(sourceUuid, sourceName, false);
+                Source source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                 context.getBean(SourceRepository.class).save(source);
             }
         }
@@ -339,7 +359,7 @@ class Harvester implements IHarvester<HarvestResult> {
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "/images/logos/" + logo);
 
-        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
+        Path logoFile = Resources.locateLogosDir(context).resolve(logo);
 
         try {
             req.executeLarge(logoFile);
@@ -348,7 +368,7 @@ class Harvester implements IHarvester<HarvestResult> {
             context.warning("  (C) Logo  : " + logo);
             context.warning("  (C) Excep : " + e.getMessage());
 
-            IO.delete(logoFile, false, Geonet.GEONETWORK);
+            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }

@@ -19,10 +19,10 @@
 
     <xsl:choose>
       <xsl:when test="$sectionName">
-        <fieldset>
+        <fieldset data-gn-field-highlight="">
           <!-- Get translation for labels.
           If labels contains ':', search into labels.xml. -->
-          <legend>
+          <legend data-gn-slide-toggle="">
             <xsl:value-of
               select="if (contains($sectionName, ':')) 
                 then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label 
@@ -409,8 +409,11 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
-  
-  
+
+  <xsl:template mode="form-builder" match="section[@template]">
+    <saxon:call-template name="{@template}"/>
+  </xsl:template>
+
   <xsl:template mode="form-builder" match="action[@type='add']">
     <xsl:param name="base" as="node()"/>
     <!-- Match any gn:child nodes from the metadocument which

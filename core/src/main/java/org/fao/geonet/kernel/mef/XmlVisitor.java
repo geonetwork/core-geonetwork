@@ -27,7 +27,7 @@ import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Import an XML file and create a temporary information file before passing the
@@ -36,14 +36,14 @@ import java.io.File;
  */
 public class XmlVisitor implements IVisitor {
 
-	public void visit(File xmlFile, IMEFVisitor v) throws Exception {
+	public void visit(Path xmlFile, IMEFVisitor v) throws Exception {
 		handleXml(xmlFile, v);
 	}
 
 	/**
 	 * Load an XML file and pass it to a MEF visitor.
 	 */
-	public Element handleXml(File xmlFile, IMEFVisitor v) throws Exception {
+	public Element handleXml(Path xmlFile, IMEFVisitor v) throws Exception {
 
 		Element md;
 		md = Xml.loadFile(xmlFile);
@@ -59,7 +59,7 @@ public class XmlVisitor implements IVisitor {
 		return info;
 	}
 
-	public void handleBin(File mefFile, IMEFVisitor v, Element info, int index)
+	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
 			throws Exception {
 	}
 }

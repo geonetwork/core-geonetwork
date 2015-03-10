@@ -1,7 +1,62 @@
-@import "../lib/style/bootstrap-3.0.1/bootstrap.less";
-@import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
-@import "../lib/ol.css";
+// GN Styles
+@import "../lib/style/font-awesome/less/font-awesome.less";
+@import "gn_bootstrap.less";
+
+@import (less) "../lib/ol.css";
+@import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
+@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
+// import the css files as less files so they are included in the final output of wro4j
+@import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
+@import (less) "../lib/style/datetimepicker.css";
 @import "gn_doc.less";
+@import "gn_icons.less";
+
+@fa-version: '4.3.0';
+@fa-font-path: '../catalog/lib/style/font-awesome/fonts';
+
+
+.gn-pager {
+  .pager {
+    margin: 0;
+    text-align: left;
+    display: inline-block;
+    li > a {
+      padding: 2px 5px;
+      border-radius: 6px;
+      font-size: 120%;
+    }
+    em {
+      font-style: normal;
+    }
+  }
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
 
 
 /* An update to 3.2 could provide responsive class
@@ -11,6 +66,11 @@
   Display button label in top tool bar using inline mode.
  */
 .gn-top-bar {
+    border-radius: 0px;
+    padding: 0 20px;
+    .navbar-collapse {
+ //       padding-right: 5px;
+    }
   .visible-lg {
     display: none !important;
   }
@@ -19,18 +79,23 @@
       display: inline !important;
     }
   }
-  .hidden-xs {
-    display: inline !important;
-  }
   @media (max-width: 767px) {
     .hidden-xs {
       display: none !important;
+    }
+  }
+  .gn-account {
+    a {
     }
   }
 }
 
 a {
   word-wrap: break-word;
+}
+.gn-break {
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 
@@ -74,7 +139,7 @@ a {
  * Logo in nav bar can't be big
  */
 .gn-logo {
-  max-height: 20px;
+  max-height: 23px;
 }
 
 /**
@@ -138,7 +203,7 @@ div.gn-scroll-spy {
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: 800px;
+  max-height: ~"calc(100% - 89px)";
   z-index: 2000;
 
   .gn-share-grid {
@@ -177,7 +242,7 @@ min-height: 40px;
 }
 .gn-layers-grid-container {
 overflow:auto;
-height:200px;
+max-height:200px;
 font-size: small;
 }
 .gn-layers-grid-container tr {
@@ -268,4 +333,126 @@ font-size: small;
 
 span.twitter-typeahead {
   display: block !important;
+}
+
+.row {
+    margin: auto 0px;
+}
+
+@gn-popup-max-height: 400px;
+
+[gn-popup] {
+  display: none;
+  min-width: 200px;
+  max-width: 600px;
+  min-height: 100px;
+  max-height: ~"calc(100% - 89px)";
+  z-index: 2000;
+
+  @media (max-width: @screen-tablet) {
+    z-index: 1500;
+    left: 2%;
+    right: 2%;
+    top: 2%;
+    bottom: 2%;
+    max-height: none;
+    max-width: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: @screen-phone) {
+    position: fixed !important;
+    overflow: hidden;
+  }
+}
+
+.gn-popup-content {
+  overflow: auto;
+  max-width: inherit;
+  max-height: ~"calc(100% - 149px)";
+  font-size: 12px;
+  @media (max-width: @screen-phone) {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    position: absolute;
+    top: 36px;
+    bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    table {
+      width: 100% !important;
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+}
+.fileupload-buttonbar .btn, .fileupload-buttonbar .toggle {
+  margin-bottom: 5px;
+}
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+input[type=file] {
+  display: block;
+}
+
+/* alerts */
+.gn-alerts {
+  position: absolute;
+  top: 1em;
+  left: 50%;
+  width: 300px;
+  margin-left: -150px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.gn-recordtype-n:before { content: @fa-var-file-text }
+.gn-recordtype-s:before { content: @fa-var-bookmark-o }
+.gn-recordtype-y:before { content: @fa-var-file-o }
+
+[data-gn-slide-toggle] {
+  padding-left: 20px;
+  cursor: pointer;
+}
+[data-gn-slide-toggle]:before {
+  content: "\f0d7";
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  position: absolute;
+  margin-left: -14px;
+  font-size: 16px;
+}
+[data-gn-slide-toggle].collapsed:before {
+  content: "\f0da"
+}
+legend[data-gn-slide-toggle] {
+  border: none;
+  color: #333333;
+}
+legend[data-gn-slide-toggle]:before {
+  margin-top: 3px;
+}
+
+i.fa-times.delete {
+  vertical-align: top;
+}
+i.fa-times.delete:hover {
+    color:  #a94442;
 }

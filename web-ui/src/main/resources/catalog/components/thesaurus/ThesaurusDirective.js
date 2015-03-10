@@ -36,6 +36,7 @@
              elementRef: '@',
              domId: '@',
              selectorOnly: '@',
+             transformation: '@',
              // Comma separated values of thesaurus keys
              include: '@'
            },
@@ -50,6 +51,10 @@
                  scope.include ? (
                      scope.include.indexOf(',') !== -1 ?
                       scope.include.split(',') : [scope.include]) : [];
+
+             scope.allowFreeTextKeywords =
+             (attrs.allowFreeTextKeywords === undefined) ||
+             (attrs.allowFreeTextKeywords == 'true');
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
@@ -79,12 +84,13 @@
                  scope.$parent.thesaurusKey = scope.thesaurusKey =
                          thesaurusIdentifier;
                } else {
+                 gnCurrentEdit.working = true;
                  gnThesaurusService
-                         .getXML(thesaurusIdentifier).then(
+                         .getXML(thesaurusIdentifier,  null,
+                                 attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form
-                   scope.snippet = gnEditorXMLService.
-                                 buildXML(scope.elementName, data);
+                   scope.snippet = data;
                    scope.snippetRef = gnEditor.
                                  buildXMLFieldName(
                                    scope.elementRef,
@@ -137,6 +143,9 @@
              keywords: '@',
              transformations: '@',
              currentTransformation: '@',
+             lang: '@',
+             textgroupOnly: '@',
+
              // Max number of tags allowed. Use 1 to restrict to only
              // on keyword.
              maxTags: '@'
@@ -159,6 +168,13 @@
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
+
+             //Get langs of metadata
+             var langs = [];
+             for (var p in JSON.parse(scope.lang)) {
+               langs.push(p);
+             }
+             scope.langs = langs.join(',');
 
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
@@ -289,11 +305,16 @@
 
                    // When clicking the element trigger input
                    // to show autocompletion list.
-                   field.on('click', function() {
-                     if (field.val() == '') {
-                       field.val('*').trigger('input');
+                   // https://github.com/twitter/typeahead.js/issues/798
+                   field.on('typeahead:opened', function() {
+                     var initial = field.val(),
+                     ev = $.Event('keydown');
+                     ev.keyCode = ev.which = 40;
+                     field.trigger(ev);
+                     if (field.val() != initial) {
                        field.val('');
                      }
+                     return true;
                    });
                  });
                });
@@ -355,7 +376,8 @@
              var getSnippet = function() {
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
-               getKeywordIds(), scope.currentTransformation).then(
+               getKeywordIds(), scope.currentTransformation, scope.langs,
+                   scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;
                });
@@ -441,12 +463,16 @@
 
             // When clicking the element trigger input
             // to show autocompletion list.
-            element.on('click', function() {
-              if (element.val() == '') {
-                element.val('*').trigger('input');
-                // FIXME : does not properly reset value
+            // https://github.com/twitter/typeahead.js/issues/798
+            element.on('typeahead:opened', function() {
+              var initial = element.val(),
+                  ev = $.Event('keydown');
+              ev.keyCode = ev.which = 40;
+              element.trigger(ev);
+              if (element.val() != initial) {
                 element.val('');
               }
+              return true;
             });
             initialized = true;
           };

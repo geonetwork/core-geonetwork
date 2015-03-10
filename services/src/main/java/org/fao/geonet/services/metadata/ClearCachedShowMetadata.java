@@ -8,6 +8,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Clear the context of a cached metadata as placed by Show
  * @author jeichar
@@ -15,7 +17,7 @@ import org.jdom.Element;
  */
 public class ClearCachedShowMetadata implements Service {
 
-    public void init( String appPath, ServiceConfig params ) throws Exception {
+    public void init( Path appPath, ServiceConfig params ) throws Exception {
     }
 
     public Element exec( Element params, ServiceContext context ) throws Exception {

@@ -1,0 +1,10 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <ul class="container-list">
+        <li fmt-repeat="(type, words) in keywords">
+            <strong>{{type}}</strong>
+            <ul class="md-value-list">
+                <li fmt-repeat="word in words">{{word}}</li>
+            </ul>
+        </li>
+    </ul>
+</div>

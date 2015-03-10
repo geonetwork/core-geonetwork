@@ -1,0 +1,51 @@
+<table class="table">
+  <tr data-ng-repeat="md in searchResults.records">
+    <td>
+        <input data-gn-selection-md type="checkbox"
+               data-ng-model="md['geonet:info'].selected"
+               data-ng-change="change()"/>
+      <i class="fa text-muted" data-ng-class="'gn-recordtype-' + md.isTemplate"
+         data-ng-show="user.isReviewerOrMore()"
+         title="{{('isTemplate' + md.isTemplate) | translate}}"></i>
+      <a href=""
+           data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
+           title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+
+      <i class="fa text-muted"
+         data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
+    </td>
+    <td>
+      <!-- TODO: subtemplate link for editing is different -->
+      <a class="btn btn-link"
+         data-ng-show="user.canEditRecord(md)"
+         data-ng-href="#/metadata/{{md['geonet:info'].id}}"
+         title="{{'edit' | translate}}">
+        <i class="fa fa-pencil"></i>
+      </a>
+    </td>
+    <td>
+      <a class="btn btn-link"
+         data-ng-show="user.canEditRecord(md)"
+         data-gn-click-and-spin="deleteRecord(md)"
+         title="{{'delete' | translate}}">
+
+        <i class="fa fa-trash-o text-danger"></i>
+      </a>
+    </td>
+    <td>
+      <a class="btn btn-link"
+             data-ng-href="#/create?from={{md['geonet:info'].id}}"
+             title="{{'duplicate' | translate}}">
+        <i class="fa fa-copy text-muted"></i>
+      </a>
+    </td>
+    <td>
+      <a class="btn btn-link"
+         data-ng-show="user.canEditRecord(md)"
+         data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
+         title="{{'createChild' | translate}}">
+        <i class="fa fa-sitemap text-muted"></i>
+      </a>
+    </td>
+  </tr>
+</table>

@@ -10,12 +10,30 @@ import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will
@@ -27,11 +45,12 @@ import java.util.Set;
  * @author Jesse
  */
 @Entity
-@Table(name = "Metadata")
+@Table(name = Metadata.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
 @SequenceGenerator(name=Metadata.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Metadata extends GeonetEntity {
+    public static final String TABLENAME = "Metadata";
     static final String ID_SEQ_NAME = "metadata_id_seq";
 
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
@@ -80,7 +99,7 @@ public class Metadata extends GeonetEntity {
      *
      * @return the uuid of the metadata.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Nonnull
     public String getUuid() {
         return _uuid;
@@ -113,7 +132,19 @@ public class Metadata extends GeonetEntity {
     }
 
     /**
-     * Set the metadata data as a string (typically XML)
+     * Set the metadata data as a string (typically XML).
+     *
+     * Warning: Do not use it when the user is not authenticated.
+     *
+     * When using this method be sure that
+     * the data to be persisted are the complete metadata
+     * record. For example, if the current user in session
+     * is not authenticated and element filters are applied
+     * (eg. withheld), do not set the data with the response
+     * of {@link org.fao.geonet.kernel.DataManager#getMetadata}
+     * in such case as the original content may be altered.
+     *
+     * Use XmlSerializer instead in an authenticated session.
      *
      * @param data the data for this metadata record.
      * @return this metadata entity.
@@ -125,6 +156,10 @@ public class Metadata extends GeonetEntity {
 
     /**
      * Set the data and convert all the end of line characters to be only a \n character.
+     *
+     * Warning: Do not use it when the user is not authenticated.
+     *
+     * Use XmlSerializer instead in an authenticated session.
      *
      * @param xml the data as XML.
      * @return this entity.

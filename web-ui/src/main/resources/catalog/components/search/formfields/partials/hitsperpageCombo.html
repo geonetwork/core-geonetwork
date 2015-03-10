@@ -1,0 +1,7 @@
+<div class="dynamic-list" >
+  <select class="form-control" data-ng-model="pagination.hitsPerPage" data-ng-change="updatePagination()">
+    <option data-ng-repeat="v in ::values" data-ng-selected="v == pagination.hitsPerPage" value="{{v}}">
+      {{v}} <span data-translate>per page</span>
+    </option>
+  </select>
+</div>

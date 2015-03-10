@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -40,7 +41,7 @@ import java.io.File;
 
 public class GetImportXSLs implements Service
 {
-	private String appPath;
+	private Path appPath;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -48,7 +49,7 @@ public class GetImportXSLs implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		this.appPath = appPath;
 	}
@@ -61,7 +62,7 @@ public class GetImportXSLs implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String dir = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+		String dir = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS;
 
 		String sheets[] = new File(dir).list();
 

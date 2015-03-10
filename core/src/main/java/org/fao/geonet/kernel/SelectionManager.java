@@ -11,15 +11,11 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +25,6 @@ import javax.annotation.Nonnull;
 public class SelectionManager {
 
 	private Hashtable<String, Set<String>> selections = null;
-	private UserSession session = null;
 
 	public static final String SELECTION_METADATA = "metadata";
 
@@ -37,19 +32,17 @@ public class SelectionManager {
 	public static final int DEFAULT_MAXHITS = 1000;
 
     private static final String ADD_ALL_SELECTED = "add-all";
-	private static final String REMOVE_ALL_SELECTED = "remove-all";
+	public static final String REMOVE_ALL_SELECTED = "remove-all";
 	private static final String ADD_SELECTED = "add";
 	private static final String REMOVE_SELECTED = "remove";
 	private static final String CLEAR_ADD_SELECTED = "clear-add";
 
-	private SelectionManager(UserSession session) {
+	private SelectionManager() {
 		selections = new Hashtable<String, Set<String>>(0);
 
 		Set<String> MDSelection = Collections
 				.synchronizedSet(new HashSet<String>(0));
 		selections.put(SELECTION_METADATA, MDSelection);
-
-		this.session = session;
 	}
 
 	/**
@@ -119,13 +112,18 @@ public class SelectionManager {
 	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
 
 		// Get ID of the selected/deselected metadata
-		String paramid = params.getChildText(Params.ID);
+		List<Element> listOfIdentifiersElement = params.getChildren(Params.ID);
+		List<String> listOfIdentifiers = new ArrayList<>(listOfIdentifiersElement.size());
+		for (Element e : listOfIdentifiersElement) {
+			listOfIdentifiers.add(e.getText());
+		}
+
 		String selected = params.getChildText(Params.SELECTED);
 
 		// Get the selection manager or create it
 		SelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, paramid);
+		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
 	}
 
 	/**
@@ -138,12 +136,16 @@ public class SelectionManager {
 	 * @param context
      * @param selected
 	 *            true, false, single, all, none
-	 * @param paramid
-	 *            id of the selected element
+	 * @param listOfIdentifiers
+	 *            Array of UUIDs
 	 * 
 	 * @return number of selected element
 	 */
-	public int updateSelection(String type, ServiceContext context, String selected, String paramid) {
+	public int updateSelection(String type,
+							   ServiceContext context,
+							   String selected,
+							   List<String> listOfIdentifiers,
+							   UserSession session) {
 
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
@@ -154,16 +156,22 @@ public class SelectionManager {
 
         if (selected != null) {
             if (selected.equals(ADD_ALL_SELECTED))
-                this.selectAll(type, context);
+                this.selectAll(type, context, session);
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
-            else if (selected.equals(ADD_SELECTED) && (paramid != null))
-                selection.add(paramid);
-            else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-                selection.remove(paramid);
-            else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
+            else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+				for (String paramid : listOfIdentifiers) {
+					selection.add(paramid);
+				}
+			} else if (selected.equals(REMOVE_SELECTED) && listOfIdentifiers.size() > 0) {
+				for (String paramid : listOfIdentifiers) {
+					selection.remove(paramid);
+				}
+			} else if (selected.equals(CLEAR_ADD_SELECTED) && listOfIdentifiers.size() > 0) {
                 this.close(type);
-                selection.add(paramid);
+				for (String paramid : listOfIdentifiers) {
+					selection.add(paramid);
+				}
             }
         }
 
@@ -191,7 +199,7 @@ public class SelectionManager {
 	public static SelectionManager getManager(UserSession session) {
 		SelectionManager manager = (SelectionManager) session.getProperty(Geonet.Session.SELECTED_RESULT);
 		if (manager == null) {
-			manager = new SelectionManager(session);
+			manager = new SelectionManager();
 			session.setProperty(Geonet.Session.SELECTED_RESULT, manager);
 		}
 		return manager;
@@ -206,7 +214,7 @@ public class SelectionManager {
 	 * @param context
 	 * 
 	 */
-	public void selectAll(String type, ServiceContext context) {
+	public void selectAll(String type, ServiceContext context, UserSession session) {
 		Set<String> selection = selections.get(type);
 		SettingInfo si = context.getBean(SettingInfo.class);
 		int maxhits = DEFAULT_MAXHITS;
@@ -231,7 +239,7 @@ public class SelectionManager {
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				SearchManager searchMan = gc.getBean(SearchManager.class);
 				try {
-					searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+					searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 					ServiceConfig sc = new ServiceConfig();
 					((LuceneSearcher)searcher).search(context, request, sc);
 				} catch (Exception e) {

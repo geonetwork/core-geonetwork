@@ -32,33 +32,50 @@
         templateUrl: '../../catalog/components/common/share/partials/' +
             'panel.html',
         scope: {
-          id: '=gnShare'
+          id: '=gnShare',
+          batch: '@gnShareBatch'
         },
         link: function(scope) {
-          scope.lang = scope.$parent.lang;
-          scope.user = scope.$parent.user;
 
-          scope.internalOperations = gnShareConstants.internalOperations;
-          scope.internalGroups = gnShareConstants.internalGroups;
-          scope.internalGroupsProfiles =
-              gnShareConstants.internalGroupsProfiles;
+          angular.extend(scope, {
+            batch: scope.batch === 'true',
+            lang: scope.$parent.lang,
+            user: scope.$parent.user,
+            internalOperations: gnShareConstants.internalOperations,
+            internalGroups: gnShareConstants.internalGroups,
+            internalGroupsProfiles: gnShareConstants.internalGroupsProfiles
+          });
 
-          var loadPrivileges = function() {
-            gnShareService.loadPrivileges(scope.id, scope.user.profile).then(
-                function(data) {
-                  scope.groups = data.groups;
-                  scope.operations = data.operations;
-                  scope.isAdminOrReviewer = data.isAdminOrReviewer;
-                }
-            );
+          if (angular.isUndefined(scope.id)) {
+            scope.alertMsg = true;
+          }
+
+          var loadPrivileges;
+          var fillGrid = function(data) {
+            scope.groups = data.groups;
+            scope.operations = data.operations;
+            scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
-          scope.$watch('id', loadPrivileges);
+          if (!scope.batch) {
+            loadPrivileges = function() {
+              gnShareService.loadPrivileges(scope.id, scope.user.profile).then(
+                  fillGrid);
+            };
+            scope.$watch('id', loadPrivileges);
+          }
+          else {
+            loadPrivileges = function() {
+              gnShareService.loadPrivileges(undefined, scope.user.profile).then(
+                  fillGrid);
+            };
+            loadPrivileges();
+          }
 
           scope.checkAll = function(group) {
             angular.forEach(group.privileges, function(p) {
               if (!p.disabled) {
-                p.value = group.isCheckedAll === false;
+                p.value = group.isCheckedAll === true;
               }
             });
           };

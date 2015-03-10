@@ -38,6 +38,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class UpdateCategories extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
     /**
      *

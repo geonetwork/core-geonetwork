@@ -455,6 +455,9 @@
                 this.datums = [];
                 this.trie = newNode();
             },
+            all: function all() {
+                return this.datums.slice(0);
+            },
             serialize: function serialize() {
                 return {
                     datums: this.datums,
@@ -680,7 +683,13 @@
                 var that = this, matches = [], cacheHit = false;
                 matches = this.index.get(query);
                 matches = this.sorter(matches).slice(0, this.limit);
-                matches.length < this.limit ? cacheHit = this._getFromRemote(query, returnRemoteMatches) : this._cancelLastRemoteRequest();
+                if (query === '' && !this.remote) {
+                    matches = this.index.all();
+                } else {
+                    matches = this.index.get(query);
+                    matches.length < this.limit ? cacheHit = this._getFromRemote(query, returnRemoteMatches) : this._cancelLastRemoteRequest();
+                }
+                matches = this.sorter(matches).slice(0, this.limit);
                 if (!cacheHit) {
                     (matches.length > 0 || !this.transport) && cb && cb(matches);
                 }
@@ -1240,7 +1249,7 @@
                 this.canceled = false;
                 this.source(query, render);
                 function render(suggestions) {
-                    if (!that.canceled && query === that.query) {
+                    if (!that.canceled && query === that.query || query == '') {
                         that._render(query, suggestions);
                     }
                 }
@@ -1508,6 +1517,9 @@
                 this._updateHint();
             },
             _onOpened: function onOpened() {
+                if (this.minLength === 0 && this.input.getQuery() === '') {
+                    this.dropdown.update('');
+                }
                 this._updateHint();
                 this.eventBus.trigger("opened");
             },
@@ -1516,7 +1528,18 @@
                 this.eventBus.trigger("closed");
             },
             _onFocused: function onFocused() {
+                var query;
                 this.isActivated = true;
+                this.dropdown.empty();
+
+                if (this.minLength === 0) {
+                    query = this.input.getQuery();
+
+                    this.input.clearHint();
+
+                    this.dropdown.update(query);
+                    this._setLanguageDirection();
+                }
                 this.dropdown.open();
             },
             _onBlurred: function onBlurred() {

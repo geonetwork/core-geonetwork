@@ -31,30 +31,37 @@ import org.fao.geonet.csw.common.CswOperation;
 import org.fao.geonet.csw.common.CswServer;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import javax.annotation.Nonnull;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
-
-import javax.annotation.Nonnull;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 //=============================================================================
@@ -67,8 +74,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, CswServer server, CswParams params) throws OperationAbortedEx
-	{
+	public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, CswServer server, CswParams params) throws OperationAbortedEx
+	{   super(cancelMonitor);
 		this.log        = log;
 		this.context    = sc;
 		this.params     = params;
@@ -86,33 +93,35 @@ public class Aligner extends BaseAligner
 
 		// Use the preferred HTTP method and check one exist.
 		if (oper.getGetUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
-			request.setUrl(oper.getGetUrl());
+			request.setUrl(context, oper.getGetUrl());
 			request.setMethod(GET);
 		} else if (oper.getPostUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
-			request.setUrl(oper.getPostUrl());
+			request.setUrl(context, oper.getPostUrl());
 			request.setMethod(POST);
 		} else {
 			if (oper.getGetUrl() != null) {
-				request.setUrl(oper.getGetUrl());
+				request.setUrl(context, oper.getGetUrl());
 				request.setMethod(GET);
 			} else if (oper.getPostUrl() != null) {
-				request.setUrl(oper.getPostUrl());
+				request.setUrl(context, oper.getPostUrl());
 				request.setMethod(POST);
 			} else {
 				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
 			}
 		}
 
-		if(oper.getPreferredOutputSchema() != null) {
-			request.setOutputSchema(oper.getPreferredOutputSchema());
+        if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
+            request.setOutputSchema(this.params.outputSchema);
+        } else if(oper.getPreferredOutputSchema() != null) {
+            request.setOutputSchema(oper.getPreferredOutputSchema());
 		}
 
         if(oper.getPreferredServerVersion() != null) {
 			request.setServerVersion(oper.getPreferredServerVersion());
 		}
 
-		if (params.useAccount) {
-			request.setCredentials(params.username, params.password);
+		if (params.isUseAccount()) {
+			request.setCredentials(params.getUsername(), params.getPassword());
 		}	
 		
 	}
@@ -125,7 +134,11 @@ public class Aligner extends BaseAligner
 
 	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
-		log.info("Start of alignment for : "+ params.name);
+        if (cancelMonitor.get()) {
+            return result;
+        }
+
+        log.info("Start of alignment for : "+ params.getName());
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -133,11 +146,11 @@ public class Aligner extends BaseAligner
 
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
-        Pair<String, Map<String, String>> filter =
+        Pair<String, Map<String, Object>> filter =
                 HarvesterUtil.parseXSLFilter(params.xslfilter, log);
         processName = filter.one();
         processParams = filter.two();
@@ -145,26 +158,33 @@ public class Aligner extends BaseAligner
         //-----------------------------------------------------------------------
 		//--- remove old metadata
 
-		for (String uuid : localUuids.getUUIDs())
-			if (!exists(records, uuid))
-			{
-				String id = localUuids.getID(uuid);
+		for (String uuid : localUuids.getUUIDs()) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
 
-                if(log.isDebugEnabled())
-                    log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(context, id);
+            if (!exists(records, uuid)) {
+                String id = localUuids.getID(uuid);
+
+                if (log.isDebugEnabled())
+                    log.debug("  - Removing old metadata with local id:" + id);
+                dataMan.deleteMetadata(context, id);
 
                 dataMan.flush();
 
                 result.locallyRemoved++;
-			}
+            }
+        }
 
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		for(RecordInfo ri : records)
-		{
-		    try{
+		for(RecordInfo ri : records) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            try{
     
     			String id = dataMan.getMetadataId(ri.uuid);
     
@@ -173,14 +193,14 @@ public class Aligner extends BaseAligner
                 result.totalMetadata++;
 		    }catch(Throwable t) {
 		        errors.add(new HarvestError(t, log));
-                log.error("Unable to process record from csw (" + this.params.name + ")");
+                log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid + ". Error is: " + t.getMessage());
 		    } finally {
 		        result.originalMetadata++;
 		    }
 		}
 
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 
 		return result;
 	}
@@ -193,7 +213,11 @@ public class Aligner extends BaseAligner
 
 	private void addMetadata(RecordInfo ri) throws Exception
 	{
-		Element md = retrieveMetadata(ri.uuid);
+        if (cancelMonitor.get()) {
+            return;
+        }
+
+        Element md = retrieveMetadata(ri.uuid);
 
 		if (md == null) {
             return;
@@ -221,38 +245,39 @@ public class Aligner extends BaseAligner
         //
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
         final int ownerId;
-        if (params.ownerId == null) {
+        if (params.getOwnerId() == null) {
             if (context.getUserSession() != null) {
                 ownerId = context.getUserSession().getUserIdAsInt();
             } else {
                 ownerId = 1;
             }
         } else {
-            ownerId = Integer.parseInt(params.ownerId);
+            ownerId = Integer.parseInt(params.getOwnerId());
         }
-        String id = dataMan.insertMetadata(context, schema, md, ri.uuid,
-                ownerId, group, params.uuid,
-                isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setChangeDate(new ISODate(ri.changeDate)).
+                setCreateDate(new ISODate(ri.changeDate));
+        metadata.getSourceInfo().
+                setSourceId(params.getUuid()).
+                setOwner(ownerId);
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.getUuid());
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(Integer.parseInt(id), new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
 
-        dataMan.flush();
-
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 		result.addedMetadata++;
 	}
 
@@ -267,7 +292,7 @@ public class Aligner extends BaseAligner
 
 		if (date == null) {
             if(log.isDebugEnabled()) {
-                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+                log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
             }
 		} else {
 			if (!ri.isMoreRecentThan(date)) {
@@ -297,7 +322,7 @@ public class Aligner extends BaseAligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -305,11 +330,11 @@ public class Aligner extends BaseAligner
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, false);
+                dataMan.indexMetadata(id, true);
 				result.updatedMetadata++;
 			}
 		}
@@ -373,15 +398,15 @@ public class Aligner extends BaseAligner
 			response = list.get(0);
 			response = (Element) response.detach();
 
-            // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(response))  {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
-                    result.doesNotValidate++;
-                    return null;
-                }
+
+            try {
+                params.getValidate().validate(dataMan, context, response);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
             }
-            
+
             if(params.rejectDuplicateResource) {
                 if (foundDuplicateForResource(uuid, response)) {
                     return null;
@@ -483,5 +508,5 @@ public class Aligner extends BaseAligner
     private GetRecordByIdRequest request;
 
     private String processName;
-    private Map<String, String> processParams = new HashMap<String, String>();
+    private Map<String, Object> processParams = new HashMap<String, Object>();
 }

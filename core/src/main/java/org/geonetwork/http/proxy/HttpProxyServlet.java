@@ -1,39 +1,42 @@
 package org.geonetwork.http.proxy;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.geonetwork.http.proxy.util.RequestUtil;
+import org.geonetwork.http.proxy.util.ServletConfigUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.http.*;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.fao.geonet.Constants;
-import org.fao.geonet.utils.Log;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.geonetwork.http.proxy.util.RequestUtil;
-import org.geonetwork.http.proxy.util.ServletConfigUtil;
 
 /**
  * Http proxy for ajax calls
@@ -41,6 +44,9 @@ import org.geonetwork.http.proxy.util.ServletConfigUtil;
  * @author Jose Garcia
  */
 public class HttpProxyServlet extends HttpServlet {
+
+    protected transient AutowireCapableBeanFactory ctx;
+
     private static final long serialVersionUID = 1L;
 
     // Url to proxy
@@ -105,16 +111,94 @@ public class HttpProxyServlet extends HttpServlet {
     }
 
     @Override
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpHead method = null;
+
+        try {
+
+            String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
+            String host = url.split("/")[2];
+            final String uri = createURI(request, url);
+
+
+            // Get the proxy parameters
+            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
+//            String proxyHost = System.getProperty("http.proxyHost");
+//            String proxyPort = System.getProperty("http.proxyPort");
+
+            // Checks if allowed host
+            if (!isAllowedHost(host)) {
+                //throw new ServletException("This proxy does not allow you to access that location.");
+                response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "This proxy does not allow you to access " +
+                                                                                            "that location.");
+                return;
+            }
+
+            if (url.startsWith("http://") || url.startsWith("https://")) {
+                method = new HttpHead(uri);
+
+                ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                        (getServletContext());
+
+                SettingManager sm = applicationContext.getBean(SettingManager.class);
+
+                final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+
+                // Added support for proxy
+                Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+
+                HttpClient client = clientBuilder.build();
+
+                final HttpResponse httpResponse = client.execute(method);
+
+                if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    Header contentType = httpResponse.getLastHeader(HEADER_CONTENT_TYPE);
+                    String[] contentTypesReturned = contentType.getValue().split(";");
+                    if (!isValidContentType(contentTypesReturned[0])) {
+                        contentTypesReturned = contentType.getValue().split(" ");
+                        if (!isValidContentType(contentTypesReturned[0])) {
+                            response.sendError(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, "Status: 415 Unsupported media type");
+                            return;
+                        }
+                    }
+
+                    // Sets response contentType
+                    response.setContentType(getResponseContentType(contentTypesReturned));
+
+                    final String bodyAsString = IOUtils.toString(httpResponse.getEntity().getContent(), Constants.ENCODING).trim();
+                    if (bodyAsString != null) {
+                        String responseBody = bodyAsString.trim();
+
+                        PrintWriter out = response.getWriter();
+                        out.print(responseBody);
+
+                        out.flush();
+                        out.close();
+                    }
+
+                } else {
+                    returnExceptionMessage(response,
+                            httpResponse.getStatusLine().getStatusCode(),
+                            "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
+                    );
+                }
+
+            } else {
+                //throw new ServletException("only HTTP(S) protocol supported");
+                response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "only HTTP(S) protocol supported");
+            }
+        } catch (Exception e) {
+            response.sendError(org.springframework.http.HttpStatus.NOT_FOUND.value(), "Some unexpected error occurred. Error text was: " + e.getMessage());
+        } finally {
+            if (method != null) method.releaseConnection();
+        }
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpGet httpGet = null;
 
         try {
-
-            // Get the proxy parameters
-            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
-
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
             final String uri = createURI(request, url);
@@ -128,11 +212,19 @@ public class HttpProxyServlet extends HttpServlet {
             }
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
-                HttpClient client = HttpClients.createDefault();
-                httpGet = new HttpGet(uri);
+                ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                        (getServletContext());
+
+                SettingManager sm = applicationContext.getBean(SettingManager.class);
+
+                final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
 
                 // Added support for proxy
-                configureProxy(httpGet, proxyHost, proxyPort);
+                Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+
+                HttpClient client = clientBuilder.build();
+
+                httpGet = new HttpGet(uri);
 
                 final HttpResponse httpResponse = client.execute(httpGet);
 
@@ -149,7 +241,7 @@ public class HttpProxyServlet extends HttpServlet {
                     // Sets response contentType
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
-                    String responseBody = IOUtils.toString(httpResponse.getEntity().getContent(), Constants.ENCODING).trim();
+                    String responseBody = IOUtils.toString(httpResponse.getEntity().getContent(), response.getCharacterEncoding()).trim();
 
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
@@ -206,13 +298,6 @@ public class HttpProxyServlet extends HttpServlet {
         return url;
     }
 
-    private void configureProxy(HttpRequestBase httpGet, String proxyHost, String proxyPort) {
-        if (proxyHost != null && proxyPort != null) {
-            final RequestConfig.Builder copy = RequestConfig.custom();
-            copy.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
-            httpGet.setConfig(copy.build());
-        }
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -221,11 +306,6 @@ public class HttpProxyServlet extends HttpServlet {
         try {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
-
-            // Get the proxy parameters
-            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
 
             String uri = createURI(request, url);
 
@@ -239,17 +319,28 @@ public class HttpProxyServlet extends HttpServlet {
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 httpPost = new HttpPost(uri );
 
+                ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                        (getServletContext());
+
+                SettingManager sm = applicationContext.getBean(SettingManager.class);
+
+                final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+
+                // Added support for proxy
+                Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+
+                HttpClient client = clientBuilder.build();
+
                 // Transfer bytes from in to out
                 PrintWriter out = response.getWriter();
                 String body = RequestUtil.inputStreamAsString(request);
 
-                configureProxy(httpPost, proxyHost, proxyPort);
                 final ContentType contentType1 = ContentType.create(request.getContentType(),
                         request.getCharacterEncoding());
                 StringEntity entity = new StringEntity(body, contentType1);
                 httpPost.setEntity(entity);
 
-                final CloseableHttpResponse httpResponse = HttpClients.createDefault().execute(httpPost);
+                final HttpResponse httpResponse = client.execute(httpPost);
 
                 if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     Header contentType = httpResponse.getLastHeader(HEADER_CONTENT_TYPE);

@@ -1,0 +1,23 @@
+{
+    "abstract": "요약",
+    "associated-link": "연결",
+    "children-link": "자식",
+    "complete": "완전한",
+    "dataset-link": "데이터셋",
+    "datasets-link": "데이터셋",
+    "fcat-link": "피처 카탈로그",
+    "hassource-link": "원본을 가짐",
+    "hierarchy": "계층",
+    "links": "링크",
+    "noUuidInLink": "링크에 UUID가 없습니다",
+    "overview": "개요",
+    "parent": "부모",
+    "parent-link": "부모",
+    "related-link": "연관",
+    "service-link": "서비스",
+    "services-link": "서비스",
+    "sibling-link": "형제",
+    "source-link": "원본",
+    "testString": "이 문자열은 테스트용입니다, 삭제하시 마십시오",
+    "xml": "XML"
+}

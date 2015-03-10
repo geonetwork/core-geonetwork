@@ -44,6 +44,19 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     AtomicInteger _inc = new AtomicInteger();
 
     @Test
+    public void testIncrementPopularity() throws Exception {
+        final Metadata template = newMetadata();
+        template.getDataInfo().setPopularity(32);
+        Metadata metadata = _repo.save(template);
+
+        _repo.incrementPopularity(metadata.getId());
+        _entityManager.flush();
+        _entityManager.clear();
+
+        assertEquals(33, _repo.findOne(metadata.getId()).getDataInfo().getPopularity());
+    }
+
+    @Test
     public void testFindByUUID() throws Exception {
         Metadata metadata = _repo.save(newMetadata());
 
@@ -225,7 +238,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         int val = inc.incrementAndGet();
         Metadata metadata = new Metadata().setUuid("uuid" + val).setData("<md>metadata" + val + "</md>");
         metadata.getDataInfo().setSchemaId("customSchema" + val);
-        metadata.getSourceInfo().setSourceId("source" + val);
+        metadata.getSourceInfo().setSourceId("source" + val).setOwner(1);
         metadata.getHarvestInfo().setUuid("huuid" + val);
         metadata.getHarvestInfo().setHarvested(val % 2 == 0);
         return metadata;

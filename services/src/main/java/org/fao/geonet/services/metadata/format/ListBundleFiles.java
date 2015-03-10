@@ -23,30 +23,38 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.ServiceConfig;
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
  * 
  * @author jeichar
  */
-public class ListBundleFiles extends AbstractFormatService {
+public class ListBundleFiles extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, Params.ID);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        Path schemaDir = null;
+        if (schema != null) {
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
+        }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid).getCanonicalFile();
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir).toRealPath();
 
         Element result = new Element("bundleFiles");
         makeTree("", formatDir, result);
@@ -54,50 +62,43 @@ public class ListBundleFiles extends AbstractFormatService {
         return result;
     }
 
-    private void makeTree(String parentId, File dir, Element result) throws UnsupportedEncodingException {
-
-        File[] files = dir.listFiles();
-        if (files == null)
-            return;
-
-        for (File f : files) {
-            String name = URLEncoder.encode(f.getName(), Constants.ENCODING);
-            Element element;
-            String id = parentId + "/" + f.getName();
-            if (f.isDirectory() && legalFile(f)) {
-                element = new Element("dir");
-                makeTree(id, f, element);
-                if (element.getChildren().size() > 0) {
-                    element.setAttribute("leaf", "false");
-                    element.setAttribute("text", f.getName()).setAttribute("path", id).setAttribute("name", name);
+    private void makeTree(String parentId, Path dir, Element result) throws IOException {
+        try (DirectoryStream<Path> files = Files.newDirectoryStream(dir)) {
+            for (Path file : files) {
+                String name = URLEncoder.encode(file.getFileName().toString(), Constants.ENCODING);
+                Element element;
+                String id = parentId + "/" + file.getFileName();
+                if (Files.isDirectory(file) && legalFile(file)) {
+                    element = new Element("dir");
+                    makeTree(id, file, element);
+                    if (element.getChildren().size() > 0) {
+                        element.setAttribute("leaf", "false");
+                        element.setAttribute("text", file.getFileName().toString()).setAttribute("path", id).setAttribute("name", name);
+                        result.addContent(element);
+                    }
+                } else if (isEditibleFileType(file) && legalFile(file)) {
+                    element = new Element("file");
+                    element.setAttribute("leaf", "true");
+                    element.setAttribute("text", file.getFileName().toString()).setAttribute("path", id).setAttribute("name", name);
                     result.addContent(element);
                 }
-            } else if (isEditibleFileType(f) && legalFile(f)) {
-                element = new Element("file");
-                element.setAttribute("leaf", "true");
-                element.setAttribute("text", f.getName()).setAttribute("path", id).setAttribute("name", name);
-                result.addContent(element);
             }
         }
     }
 	private final static String[] extensions = {"properties", "xml", "xsl", "css", ".js"};
 
-    private boolean isEditibleFileType(File f) {
-		String fileName = f.getName();
+    private boolean isEditibleFileType(Path f) {
+		Path fileName = f.getFileName();
 		for (String ext : extensions) {
 			if(fileName.endsWith("."+ext)) return true;
 		}
 		
-		return fileName.equalsIgnoreCase("README");
+		return fileName.toString().equalsIgnoreCase("README");
 	}
 
-	private boolean legalFile(File f) {
-        return !f.getName().startsWith(".") && !f.isHidden() && f.canRead() && f.canWrite();
+	private boolean legalFile(Path f) throws IOException {
+        return !f.getFileName().startsWith(".") && !Files.isHidden(f) && Files.isReadable(f) && Files.isWritable(f);
     }
 
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
 
 }

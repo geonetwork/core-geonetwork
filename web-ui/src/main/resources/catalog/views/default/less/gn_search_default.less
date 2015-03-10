@@ -1,0 +1,500 @@
+@import "../../../style/gn_search.less";
+@import "../../../style/gn_metadata.less";
+
+/* Hide the tabset selector because tab
+   switch is available in the top tool bar */
+#main-tabset > ul:nth-child(1) {
+  display: none;
+}
+
+
+.navbar {
+  margin-bottom: 14px;
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    font-size: 16px;
+  }
+}
+
+.jumbotron {
+  h1 {
+    font-size: 36px;
+  }
+}
+
+
+/* Pagination */
+.gn-pager {
+  /* Hide the first/last page button */
+  .gn-pager-start {
+    li:nth-child(1) {
+      display: none;
+    }
+  }
+  .gn-pager-end {
+    li:nth-child(2) {
+      display: none;
+    }
+  }
+
+
+  /* Button on the right, current page info on the left */
+  .btn-group {
+    float: left;
+
+    /* Drop down to select hits is a simple link */
+    button {
+      .btn-link();
+    }
+
+    /* Inline hits options */
+    li {
+      a {
+        padding: 2px 10px;
+      }
+      display: inline-block;
+    }
+    li.dropdown-header {
+      display: block;
+    }
+  }
+}
+
+
+
+.gn-sort-by {
+  .btn-group > button {
+    .btn-link();
+  }
+}
+.gn-search-page {
+  .gn-md-view {
+    padding: 0 20px;
+  }
+  .badge {
+      margin-right: 5px;
+    }
+  .nav-pills {
+    margin-bottom: 1em;
+    text-align: center;
+    li {
+      display: inline-block;
+      float: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .badge {
+      margin-right: 5px;
+    }
+  }
+}
+
+ul.gn-resultview {
+  @thumbnail-width: 170px;
+  margin-right: -15px;
+
+  .metadata {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    width: 100%;
+    height: 100%;
+    z-index: 2050;
+  }
+  li.list-group-item {
+    margin-right: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: none;
+    &:hover {
+      background-color: rgba(10, 10, 10, 0.05);
+      cursor: default;
+    }
+
+    .gn-md-thumbnail {
+      .gn-img-thumbnail {
+        max-width: @thumbnail-width;
+        max-height: 140px;
+        min-height: 40px;
+        height: auto;
+      }
+    }
+    .media {
+      a {
+        margin-left: 0;
+        &.gn-md-edit-btn {
+          width: 12px;
+          margin-left: 10px;
+          
+        }
+      }
+      h4 {
+        margin-top: 0;
+        font-weight: 700;
+        a {
+          color: rgb(51, 51, 51);
+        }
+      }
+    }
+  }
+
+  li.gn-grid {
+    @grid-bottom-margin: 2px;
+
+    float: left;
+    border: 1px solid @list-group-border;
+    min-width: 300px;
+    width: calc(~"100% - 15px");
+    height: 268px;
+    padding: 18px;
+    .gn-md-details {
+      //margin-left: @thumbnail-width;
+      color: #6a6a6a;
+      max-height: 50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Properly align category icons */
+    .fa img {
+      vertical-align: text-bottom;
+    }
+    .gn-md-title {
+      margin-top: -2px;
+
+      h3 {
+        
+        /* Leave space for selection checkbox */
+        //padding-left: 20px;
+        margin-top: 0px;
+        a {
+          //text-transform: uppercase;
+          font-weight: normal;
+          //font-size: 120%;
+          color: #333333;
+          max-height: 82px;
+          text-overflow: ellipsis; 
+          overflow: hidden;
+          display: block;
+        }
+        a:hover {
+          color: #428bca;
+          text-decoration: none;
+        }
+      }
+    }
+    .gn-source-logo {
+      //position: absolute;
+      //right: 0px;
+      margin: @grid-bottom-margin;
+      z-index: 10;
+      //border-radius: 50%;
+      //max-width: 24px;
+      height: 24px;
+      width: auto;
+      float: right;
+    }
+    .gn-md-thumbnail {
+      //position: absolute;
+      //top: 82px;
+      //opacity: .8;
+      overflow: hidden;
+      .gn-img-thumbnail {
+        max-width: @thumbnail-width;
+        max-height: 140px;
+        min-height: 40px;
+        //margin: @grid-bottom-margin;
+        height: auto;
+      }
+    }
+    .gn-md-links {
+      //position: absolute;
+      //bottom: @grid-bottom-margin;
+      background: none;
+      margin-top: 15px;
+    }
+    input {
+      float: left;
+    }
+    .gn-md-category {
+      display: block;
+      float: left;
+      margin-left: 18px;
+    }
+  }
+}
+
+.gn-md-view {
+  .gn-md-side {
+    .gn-img-thumbnail,
+    .gn-img-extent {
+      width: 100%;
+    }
+  }
+  .view-header {
+    border-bottom: 2px solid #e5e5e5;
+  }
+  .entry {
+    margin-left: 1em;
+    border-left: 2px solid #eeeeee;
+    padding-left: 5px;
+    dl {
+      padding-bottom: 5px;
+    }
+  }
+  input[readonly] {
+    background:#fff;
+  }
+  .extent{
+    display:inline-block;position:relative;margin:2em 0 0 90px;
+  }
+  .coord{
+    position:absolute;width:100px;
+  }
+  .coord-north{
+    top:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-south{
+    bottom:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-east{
+    right:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+  .coord-west{
+    left:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+}
+[data-ng-search-form] {
+  .gn-top-search {
+    border-bottom: 1px solid @panel-default-border;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    [typeahead] {
+      width: 300px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    [typeahead-popup] {
+      text-align: left;
+      width: 300px;
+    }
+    .inner-spinner {
+      position: absolute;
+      top: 1.75em;
+      left: 50%;
+      margin-left: 64px;
+    }
+    .gn-form-any {
+      max-width: 45vw;
+    }
+  }
+  .loading {
+    position: absolute;
+    top: 1.8em;
+    font-size: 40px;
+    left: 46%;
+    text-shadow: 0 0 1px white;
+    z-index: 200;
+    background: rgba(255,255,255,.7);
+    border-radius: 1em;
+    padding: .2em;
+  }
+}
+
+.gn-search-filter {
+  padding: 5px;
+  .nav-pills li {
+    display: block;
+  }
+  div {
+    ul, div.tab-content {
+      float: left;
+    }
+    ul.nav {
+      width: 10vw;
+    }
+    div.tab-content {
+      width: 84vw;
+
+    }
+  }
+}
+
+[ngeo-map] {
+  height: 86vh;
+  &.gn-search-map {
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    right: 0;
+    bottom: 0;
+    position: fixed !important;
+    z-index: 99;
+    width: 200px !important;
+    heigth: 200px !important;
+    margin: 5px;
+    .btn {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      z-index: 10;
+    }
+  }
+}
+.gn-row-main {}
+
+.gn-row-info {}
+
+.gn-row-filters {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+
+  .gn-flfilter {
+
+  }
+  .gn-flfilter-icon {
+    text-align: center;
+    li {
+      list-style: none;
+      float: left;
+      width: 100px;
+    }
+    i {
+      //    .@{fa-css-prefix}-4x;
+      font-size: 4em;
+      width: 70px;
+      img {
+        width: 70px;
+      }
+    }
+  }
+}
+
+.gn-results-switch {
+  float: left;
+}
+
+/*
+  List of records
+ */
+.gn-info-list {
+  padding: 5px 0px;
+  margin: auto -10px;
+  li {
+    width: 33.3%;
+    zoom: 1;
+    list-style: none;
+    float: left;
+    padding: 10px;
+    > div {
+      margin: 0px;
+      padding: 15px;
+      height: 125px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-bottom: 2px solid #337ab7;
+      cursor: pointer;
+      > div.gn-md-thumbnail {
+        float:left;
+        width: 90px;
+        height: 90px;
+        margin-right: 15px;
+        background-image: url(../catalog/views/default/images/no-thumbnail.png);
+        .gn-img-thumbnail {
+          max-height: 90px;
+          max-width: 90px;
+          margin-right: 15px;
+        }
+      }
+      > div.gn-md-title {
+        a {
+          color: #333333;
+          font-size: 120%;
+        }
+      }
+    }
+    div:nth-child(2) {
+      overflow: hidden;
+      max-height: 100%;
+      text-overflow: ellipsis;
+    }
+  }
+  li.gn-more {
+    position: relative;
+    float:right;
+  }
+}
+/*
+    Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
+*/
+.gn-bottom-bar {
+  bottom:0;
+  height:50px;
+  position:absolute;
+  overflow:hidden;
+  width:100%;
+  margin-bottom:0px;
+  border-radius: 0px;
+}
+.gn-search-page {
+  padding-bottom:70px;
+}
+
+.cookie-warning {
+  .alert;
+  .alert-info;
+}
+
+.gn-full {
+  min-height: 100%;
+  position: relative;
+}
+
+html, body {
+  height:100%;
+}
+
+.navbar-form {
+  border:none;
+}
+
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min) {
+  ul.gn-resultview li.gn-grid {
+    width: calc(~"100% - 15px");
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min) {
+  
+  ul.gn-resultview li.gn-grid {
+    width: calc(~"50% - 15px");
+  }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: @screen-lg-min) {
+  
+  ul.gn-resultview li.gn-grid {
+    //width: calc(~"33% - 15px");
+  }
+}
+@import "gn_view.less";

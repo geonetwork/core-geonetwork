@@ -23,9 +23,10 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.fao.geonet.GeonetContext;
+import org.apache.log4j.Priority;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -40,10 +41,13 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -64,6 +68,8 @@ public abstract class XmlSerializer {
 
     @Autowired
     protected SettingManager _settingManager;
+    @Autowired
+    protected AccessManager accessManager;
     @Autowired
     protected DataManager _dataManager;
     @Autowired
@@ -105,6 +111,18 @@ public abstract class XmlSerializer {
 		}
 	}
 
+    public boolean isLoggingEmptyWithHeld() {
+        if (_settingManager == null) {
+            return false;
+        }
+
+        String enableLogging = _settingManager.getValue("system/hidewithheldelements/enableLogging");
+        if (enableLogging != null) {
+            return enableLogging.equals("true");
+        } else {
+            return false;
+        }
+    }
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
      *
@@ -120,10 +138,14 @@ public abstract class XmlSerializer {
 		if (metadata == null)
 			return null;
 
-		String xmlData = metadata.getData();
-		Element metadataXml = Xml.loadString(xmlData, false);
+        return removeHiddenElements(isIndexingTask, metadata);
+	}
 
-		if (!isIndexingTask) {
+    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+        String id = String.valueOf(metadata.getId());
+        Element metadataXml = metadata.getXmlData(false);
+
+        if (!isIndexingTask) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -133,26 +155,24 @@ public abstract class XmlSerializer {
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
             boolean filterEditOperationElements = editXpathFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
-            if(context != null) {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                AccessManager am = gc.getBean(AccessManager.class);
+            if (context != null) {
                 if (editXpathFilter != null) {
-                    boolean canEdit = am.canEdit(context, id);
-                    if(canEdit) {
+                    boolean canEdit = accessManager.canEdit(context, id);
+                    if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
-                    boolean canDownload = am.canDownload(context, id);
-                    if(!canDownload) {
+                    boolean canDownload = accessManager.canDownload(context, id);
+                    if (!canDownload) {
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
                 Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
-                    boolean canDynamic = am.canDynamic(context, id);
-                    if(!canDynamic) {
+                    boolean canDynamic = accessManager.canDynamic(context, id);
+                    if (!canDynamic) {
                       removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
                     }
                 }
@@ -161,25 +181,9 @@ public abstract class XmlSerializer {
                 removeFilteredElement(metadataXml, editXpathFilter, namespaces);
             }
 		}
-		return (Element) metadataXml.detach();
+        return metadataXml;
 	}
 
-    private void xpath(StringBuilder buffer, Element next) {
-		if(next.getParentElement() != null) {
-			xpath(buffer, next.getParentElement());
-			buffer.append("/");
-		}
-		
-		String name = next.getName();
-		Namespace namespace = next.getNamespace();
-		buffer.append(namespace.getPrefix()).append(":").append(name);
-		if(next.getParentElement() != null) {
-			List<?> children = next.getParentElement().getChildren(name, namespace);
-			if(children.size() > 1) {
-				buffer.append('[').append(children.indexOf(next)+1).append(']');
-			}
-		}
-	}
 
     public static void removeFilteredElement(Element metadata,
                                              final Pair<String, Element> xPathAndMarkedElement,
@@ -255,8 +259,7 @@ public abstract class XmlSerializer {
 	protected void updateDb(final String id, final Element xml, final String changeDate, final String root,
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
-
-		if (resolveXLinks()) Processor.removeXLink(xml);
+        if (resolveXLinks()) Processor.removeXLink(xml);
 
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);

@@ -57,7 +57,9 @@
               $routeParams.id,
               $routeParams.group,
               fullPrivileges,
-              $routeParams.template);
+              $routeParams.template,
+              false,
+              $routeParams.tab);
         } else {
 
           // Metadata creation could be on a template
@@ -157,7 +159,7 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
-        gnMetadataManager.create(
+        return gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
             isPublic || false,

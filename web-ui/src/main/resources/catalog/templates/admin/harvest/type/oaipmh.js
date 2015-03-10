@@ -9,9 +9,10 @@ var gnHarvesteroaipmh = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
@@ -20,7 +21,7 @@ var gnHarvesteroaipmh = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "searches": [{
@@ -39,7 +40,7 @@ var gnHarvesteroaipmh = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
@@ -48,7 +49,8 @@ var gnHarvesteroaipmh = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -67,7 +69,8 @@ var gnHarvesteroaipmh = {
                 + '  </searches>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '  </options>' 
                 + '  <content>'
                 + '  </content>' 

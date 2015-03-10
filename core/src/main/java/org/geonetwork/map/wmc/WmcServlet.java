@@ -8,17 +8,24 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fao.geonet.Constants;
 import org.geonetwork.http.proxy.util.RequestUtil;
-import org.pvalsecc.misc.FileUtilities;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class WmcServlet extends HttpServlet {
@@ -236,7 +243,7 @@ public class WmcServlet extends HttpServlet {
             final OutputStream response = httpServletResponse.getOutputStream();
             httpServletResponse.setContentType(WMC_CONTENT_TYPE);
             httpServletResponse.setHeader("Content-disposition", "attachment; filename=" + tempFile.getName());
-            FileUtilities.copyStream(pdf, response);
+            IOUtils.copy(pdf, response);
             response.close();
         } finally {
             if(pdf != null) {

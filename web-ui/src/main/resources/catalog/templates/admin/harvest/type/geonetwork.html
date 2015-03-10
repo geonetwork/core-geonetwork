@@ -13,6 +13,8 @@
             <label class="control-label" data-translate="">geonetwork-host</label>
             <input type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
             <p class="help-block" data-translate="">geonetwork-hostHelp</p>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.node"/>
+            <p class="help-block" data-translate="">geonetwork-nodeHelp</p>
         </div>
 
         <fieldset class="form-horizontal">
@@ -103,6 +105,15 @@
 
         <div>
             <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.site.useChangeDateForUpdate 
+                                                        || harvesterSelected.site.useChangeDateForUpdate == 'true'"/>
+                <span data-translate="">geonetwork-useChangeDateForUpdate</span>
+            </label>
+            <p class="help-block" data-translate="">geonetwork-useChangeDateForUpdateHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label">
                 <input type="checkbox" data-ng-model="harvesterSelected.site.createRemoteCategory"/>
                 <span data-translate="">geonetwork-createRemoteCategory</span>
             </label>
@@ -120,9 +131,9 @@
 
         <div>
             <label class="control-label">
-                <input type="checkbox" data-ng-model="harvesterSelected.content.validate"/>
                 <span data-translate="">harvesterValidate</span>
             </label>
+            <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
             <p class="help-block" data-translate="">harvesterValidateHelp</p>
         </div>
     </fieldset>

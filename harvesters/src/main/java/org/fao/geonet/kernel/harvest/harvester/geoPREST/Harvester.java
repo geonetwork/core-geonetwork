@@ -23,20 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
@@ -53,20 +40,37 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 
 //=============================================================================
 
 class Harvester implements IHarvester<HarvestResult>
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, GeoPRESTParams params)
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params)
 	{
+
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -79,18 +83,20 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest(Logger log) throws Exception
-	{
+	public HarvestResult harvest(Logger log) throws Exception {
 
 	    this.log = log;
 		//--- perform all searches
 
 		XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/find/document"));
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
-
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         for (Search s : params.getSearches()) {
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+
             try {
                 records.addAll(search(request, s));
             } catch (Exception t) {
@@ -127,7 +133,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, params);
+		Aligner aligner = new Aligner(cancelMonitor, log, context, params);
 
 		return aligner.align(records, errors);
 	}
@@ -164,7 +170,11 @@ class Harvester implements IHarvester<HarvestResult>
         List<Element> list = channel.getChildren();
 
 		for (Element record :list) {
-			if (!record.getName().equals("item")) continue; // skip all the other crap
+            if (cancelMonitor.get()) {
+                return Collections.emptySet();
+            }
+
+            if (!record.getName().equals("item")) continue; // skip all the other crap
 			RecordInfo recInfo = getRecordInfo((Element)record.clone());
 			if (recInfo != null) records.add(recInfo);
 		}
@@ -178,7 +188,7 @@ class Harvester implements IHarvester<HarvestResult>
 
     private Element doSearch(XmlRequest request) throws OperationAbortedEx {
         try {
-            log.info("Searching on : " + params.name);
+            log.info("Searching on : " + params.getName());
             Element response = request.execute();
             if (log.isDebugEnabled()) {
                 log.debug("Sent request " + request.getSentData());

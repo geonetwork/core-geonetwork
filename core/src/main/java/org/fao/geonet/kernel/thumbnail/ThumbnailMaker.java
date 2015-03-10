@@ -23,26 +23,30 @@
 
 package org.fao.geonet.kernel.thumbnail;
 
-import com.lowagie.text.DocumentException;
 import jeeves.server.context.ServiceContext;
+import org.dom4j.DocumentException;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.mapfish.print.MapPrinter;
-import org.mapfish.print.output.PrintParams;
 import org.mapfish.print.output.OutputFormat;
+import org.mapfish.print.output.PrintParams;
 import org.mapfish.print.utils.PJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
+import java.awt.Graphics2D;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /**
  * Use MapFish print module to generate thumbnail.
@@ -99,22 +103,18 @@ public class ThumbnailMaker {
         return mapPrinter;
     }
 
-    public File generateThumbnail(String jsonConfig, Integer rotationAngle)
-            throws IOException, DocumentException {
+    public Path generateThumbnail(String jsonConfig, Integer rotationAngle)
+            throws IOException, DocumentException, com.itextpdf.text.DocumentException {
 
         PJsonObject specJson = MapPrinter.parseSpec(jsonConfig);
         if (Log.isDebugEnabled(LOGGER_NAME)) {
-            Log.debug(LOGGER_NAME, "Generating thumbnail from config: " +
-                jsonConfig);
+            Log.debug(LOGGER_NAME, "Generating thumbnail from config: " + jsonConfig);
         }
-        final OutputFormat outputFormat =
-                getMapPrinter().getOutputFormat(specJson);
+        final OutputFormat outputFormat = getMapPrinter().getOutputFormat(specJson);
 
-        File tempFile = File.createTempFile("thumbnail",
-                "." + outputFormat.getFileSuffix());
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(tempFile);
+        Path tempFile = Files.createTempFile("thumbnail", "." + outputFormat.getFileSuffix());
+
+        try (OutputStream out = Files.newOutputStream(tempFile)) {
             PrintParams params = new PrintParams(
                     getMapPrinter().getConfig(),
                     configFile.getParentFile(),
@@ -122,14 +122,8 @@ public class ThumbnailMaker {
                     out,
                     new HashMap<String, String>());
             outputFormat.print(params);
-        } catch (IOException e) {
-            throw e;
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                out.close();
-            }
+            Log.error(Geonet.GEONETWORK, "Error creating a thumbnail", e);
         }
 
         if (rotationAngle != null) {
@@ -138,33 +132,26 @@ public class ThumbnailMaker {
         return tempFile;
     }
 
-    public static void rotate(File imageFile, String extension, int angle) {
-        BufferedImage originalImage = null;
+    public static void rotate(Path imageFile, String extension, int angle) {
+        BufferedImage originalImage;
         try {
-            originalImage = readImage(imageFile.getCanonicalPath());
+            originalImage = readImage(imageFile);
             BufferedImage rotatedImage = rotate(originalImage, angle);
-            writeImage(rotatedImage, imageFile.getCanonicalPath(), extension);
+            writeImage(rotatedImage, imageFile, extension);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static BufferedImage readImage(String fileLocation) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File(fileLocation));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static BufferedImage readImage(Path fileLocation) throws IOException {
+        BufferedImage img;
+        try (InputStream in = IO.newInputStream(fileLocation)) {
+            img = ImageIO.read(in);
         }
         return img;
     }
-    public static void writeImage(BufferedImage img, String fileLocation,
-                                  String extension) {
-        try {
-            BufferedImage bi = img;
-            File outputfile = new File(fileLocation);
-            ImageIO.write(bi, extension, outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void writeImage(BufferedImage img, Path fileLocation, String extension) throws IOException {
+        try (OutputStream out = Files.newOutputStream(fileLocation)) {
+            ImageIO.write(img, extension, out);
         }
     }
 

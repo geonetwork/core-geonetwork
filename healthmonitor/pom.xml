@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>geonetwork</artifactId>
 		<groupId>org.geonetwork-opensource</groupId>
-		<version>2.11.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -12,11 +12,6 @@
     	<name>GeoNetwork health monitor</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.geonetwork-opensource</groupId>
@@ -25,8 +20,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>csw-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harvesters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../bootstrap/assets/ico/favicon.ico">
+
+    <title>GN</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../../bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+
+    <!-- <link href="//ol3js.org/en/master/build/ol.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <link href="app.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+
+      <div id="map"></div>
+
+      <div class="search-container">
+        <input type="search" class="form-control" placeholder="Recherche">
+      </div>
+
+      <div class="tools">
+        <button class="btn btn-default" type="submit" rel="#layers">
+<<<<<<< HEAD
+          <span class="glyphicon glyphicon-tasks"></span>
+          <span role="tooltip">Couches</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#measures">
+          <span class="glyphicon glyphicon-pencil"></span>
+          <span role="tooltip">Mesures</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#contexts">
+          <span class="glyphicon glyphicon-book"></span>
+          <span role="tooltip">Contextes</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#print">
+          <span class="glyphicon glyphicon-print"></span>
+=======
+          <span class="fa fa-tasks"></span>
+          <span role="tooltip">Couches</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#measures">
+          <span class="fa fa-pencil"></span>
+          <span role="tooltip">Mesures</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#contexts">
+          <span class="fa fa-book"></span>
+          <span role="tooltip">Contextes</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#print">
+          <span class="fa fa-print"></span>
+>>>>>>> origin/viewer
+          <span role="tooltip">Impression</span>
+        </button>
+      </div>
+
+      <div class="tools control-tools">
+        <button class="btn btn-default" type="submit">
+<<<<<<< HEAD
+          <span class="glyphicon glyphicon-plus"></span>
+          <span role="tooltip">Zoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-minus"></span>
+          <span role="tooltip">Dézoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-map-marker"></span>
+=======
+          <span class="fa fa-plus"></span>
+          <span role="tooltip">Zoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="fa fa-minus"></span>
+          <span role="tooltip">Dézoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="fa fa-map-marker"></span>
+>>>>>>> origin/viewer
+          <span role="tooltip">Localisation</span>
+        </button>
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="layers">
+
+        <div class="layers">
+          <div class="panel-body">
+            <button type="button" class="btn btn-default close">
+              &times;
+            </button>
+            <h5>Couches thématiques</h5>
+          </div>
+
+          <ul class="list-group">
+            <li class="list-group-item">
+<<<<<<< HEAD
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+          </ul>
+      </div>
+
+        <div class="panel-body">
+            <button type="button" class="btn btn-default unfold">
+                <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+          <h5>Ajouter une couche</h5>
+
+          <div class="btn-group">
+=======
+              <button class="btn btn-cog">
+                <span class="ge fa fa-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                Cartes mensuelles moyennes de Chlorophylle-a réalisées sur la période 2003-2010 - Février
+              </label>
+              <div class="details">
+                <div class="btn-group">
+                <div class="btn btn-default">
+                  <label>Transparence <input type="range"></label>
+                </div>
+                <button class="btn btn-default btn-xs">
+                  <span class="fa fa-trash"></span>
+                  Supprimer
+                </button></div>
+                <h6>Légende</h6>
+                <p>
+                  <img src="https://www.ifremer.fr/sextant_doc/atlas_satellite/legende/legende_chla.png"/>
+                </p>
+                <h6>Source</h6>
+                <p><em>CEFREM, Université de Perpignan Via Domitia, 1986</em></p>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-cog">
+                <span class="ge fa fa-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                Percentile 90 de la Chlorophylle (MODIS)
+              </label>
+              <div class="details">
+                <p>Source : CEFREM, Université de Perpignan Via Domitia, 1986</p>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-cog">
+                <span class="ge fa fa-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                REPHY Phytoplancton et Physico-Chimie - Area
+              </label>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-cog">
+                <span class="ge fa fa-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                REPHY Phytoplancton et Physico-Chimie - Area (lieux historiques)
+              </label>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-cog">
+                <span class="ge fa fa-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                SRN Suivi Régional des Nutriments (lieux historiques)
+              </label>
+            </li>
+          </ul>
+
+          <div class="btn-group baselayer">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Fond de plan : Sextant <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Sextant</a></li>
+              <li><a href="#">OpenStreetMap</a></li>
+              <li><a href="#">Bing Satellite</a></li>
+            </ul>
+          </div>
+
+      </div>
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default unfold">
+            <span class="fa fa-chevron-down"></span>
+          </button>
+
+          <h5>Ajouter une couche</h5>
+          <div class="btn-group flux">
+>>>>>>> origin/viewer
+            <button type="button" class="btn btn-default">Flux WMS</button>
+            <button type="button" class="btn btn-default">Flux WMTS</button>
+            <button type="button" class="btn btn-default">Fichier KML</button>
+          </div>
+
+          <div class="layerTree collapsed">
+            <form role="form">
+              <div class="form-group">
+<<<<<<< HEAD
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-globe"></span>
+                  </span>
+                  <input type="text" class="form-control" placeholder="Service URL">
+                </div>
+=======
+                <input type="text" class="input-sm form-control" placeholder="Service URL">
+>>>>>>> origin/viewer
+              </div>
+            </form>
+
+            <ul class="list-group">
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+<<<<<<< HEAD
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label>
+=======
+              <label><input type="checkbox"> trop long bien trop long bien trop long bien trop long ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item group">
+              <label><span class="fa fa-plus-square-o"></span> ainta nret auie</label>
+>>>>>>> origin/viewer
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+<<<<<<< HEAD
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+=======
+                <li class="list-group-item group">
+                  <label><span class="fa fa-plus-square-o"></span> ainta nret auie</label>
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                    <label><input type="checkbox"> ainta nret auie</label></li>
+                  </ul></li>
+>>>>>>> origin/viewer
+                <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+              </ul>
+              </li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+            </ul>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="contexts">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Contextes de carte</h5>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">
+<<<<<<< HEAD
+              <span class="glyphicon glyphicon-save"></span>
+              Sauvegarder
+            </button>
+            <button type="button" class="btn btn-default">
+              <span class="glyphicon glyphicon-open"></span>
+=======
+              <span class="fa fa-save"></span>
+              Sauvegarder
+            </button>
+            <button type="button" class="btn btn-default">
+              <span class="fa fa-open"></span>
+>>>>>>> origin/viewer
+              Restaurer
+            </button>
+          </div>
+          <p>
+            ou <a href="truite">exporter au Format KML</a>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="measures">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Mesures</h5>
+        </div>
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="print">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Impression</h5>
+        </div>
+
+      </div>
+
+      <!-- <div class="panel panel-default" id="results"> -->
+
+      <!--   <div class="panel-body"> -->
+      <!--   </div> -->
+
+      <!-- </div> -->
+
+
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<<<<<<< HEAD
+    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
+=======
+    <script src="../lib/style/bootstrap/dist/js/bootstrap.min.js"></script>
+>>>>>>> origin/viewer
+    <script src="//ol3js.org/en/master/build/ol.js"></script>
+    <script>
+      var map = new ol.Map({
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        target: 'map',
+<<<<<<< HEAD
+        view: new ol.View2D({
+=======
+        view: new ol.View({
+>>>>>>> origin/viewer
+          center: [1, 0],
+          zoom: 2
+        })
+      });
+      $('.tools:not(.control-tools) .btn').click(function() {
+        if ($(this).hasClass('active')) {
+          $(this).removeClass('active');
+          $($(this).attr('rel')).addClass('force-hide')
+        } else {
+          $('.btn').removeClass('active');
+          $(this).addClass('active');
+          $('.panel-tools').addClass('force-hide');
+          $($(this).attr('rel')).removeClass('force-hide')
+        }
+      });
+<<<<<<< HEAD
+      $('#layers .btn-group button').click(function(){
+        $('#layers .btn-group button').removeClass('active');
+=======
+      $('#layers .flux button').click(function(){
+        $('#layers .flux button').removeClass('active');
+>>>>>>> origin/viewer
+        $(this).addClass('active');
+        $('.layers').addClass('collapsed');
+        $('.layerTree').removeClass('collapsed');
+        $('.unfold').css('opacity',1);
+      });
+      $('.unfold').click(function(){
+<<<<<<< HEAD
+        $('#layers .btn-group button').removeClass('active');
+=======
+        $('#layers .flux button').removeClass('active');
+>>>>>>> origin/viewer
+        $('.layers').removeClass('collapsed');
+        $('.layerTree').addClass('collapsed');
+        $('.unfold').css('opacity',0);
+      });
+      $('.close').click(function(){
+        var t = $(this).parents('.panel-tools');
+        t.addClass('force-hide');
+        $('[rel=#'+t.attr('id')+']').removeClass('active');
+      });
+<<<<<<< HEAD
+=======
+      $('.list-group-item .btn-cog').click(function() {
+        var current = $(this).parents('.list-group-item');
+        current.toggleClass('active');
+        //current.removeClass('collapsed');
+        $(this).parents('.list-group').find('.list-group-item').each(function(i, item) {
+          if (item == current[0]) return;
+          //$(item).toggleClass('collapsed', current.hasClass('active'));
+          $(item).removeClass('active');
+        });
+      });
+      $('.layerTree .list-group-item:has(label .fa)').click(function(){
+        $(this).find('.fa').first().toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
+        $(this).children('ul').toggle();
+        return false;
+      });
+>>>>>>> origin/viewer
+    </script>
+  </body>
+</html>

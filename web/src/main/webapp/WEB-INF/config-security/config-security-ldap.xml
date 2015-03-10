@@ -18,8 +18,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
 		<constructor-arg ref="ldapAuthProvider"/>
 	</bean>
-	
-	
+
+  <bean id="ldapUtils" class="org.fao.geonet.kernel.security.ldap.LDAPUtils"/>
+
     <!-- LDAP configuration-->
     <bean id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
@@ -27,6 +28,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <!-- For non anonymous binding -->
         <property name="userDn" value="${ldap.security.principal}"/>
         <property name="password" value="${ldap.security.credentials}"/>
+    </bean>
+
+    <bean class="org.fao.geonet.kernel.security.ldap.LDAPUtils">
     </bean>
     
     <bean id="ldapAuthProvider"
@@ -71,8 +75,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="profileMapping">
             <map/>
         </property>
+        <property name="ldapBaseDn" value="${ldap.base.dn}"/>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         <property name="contextSource" ref="contextSource" />
     </bean>
     
@@ -89,6 +96,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         </property>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+        
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         
         <property name="privilegePattern" value="${ldap.privilege.pattern}" />
         <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
@@ -108,7 +118,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             <map/>
         </property>
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+		<property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+        
+		<property name="ldapManager" ref="ldapUserDetailsService" />
         
         <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
         <property name="groupObject" value="${ldap.privilege.search.group.object}"/>
@@ -158,5 +171,79 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
             </list>
         </property>
     </bean>
+    
+    <bean id="ldapUserDetailsService"
+		class="org.fao.geonet.kernel.security.ldap.LdapUserDetailsManager">
+		<constructor-arg ref="contextSource" />
+		<constructor-arg name="groupMemberAttributeName" 
+			value="${ldap.privilege.search.group.queryprop}" />
+		<constructor-arg name="query" 
+			value="${ldap.privilege.search.group.query}" />
+		<property name="groupSearchBase" 
+			value="${ldap.privilege.search.group.object}" />
+		<property name="usernameMapper" ref="usernameMapper" />
+		<property name="userDetailsMapper" ref="ldapUserContextMapper"/>
+	</bean>
+
+	<bean id="usernameMapper"
+		class="org.springframework.security.ldap.DefaultLdapUsernameToDnMapper">
+		<constructor-arg index="0" type="java.lang.String"
+			name="userDnBase" value="${ldap.base.search.base}" />
+		<constructor-arg index="1" type="java.lang.String"
+			name="usernameAttribute" value="${ldap.sync.user.search.attribute}" />
+	</bean>
+
+
+    <!-- Uncomment if you want to automatically create groups in LDAP 
+    when creating groups on geoNetwork. -->
+    <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoCreateGroups">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
+    
+    <!-- Uncomment if you want to sync additions in user group relations with LDAP -->
+    <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroups">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
+       
+    <!-- Uncomment if you want to sync removal in user group relations with LDAP -->
+        <!-- <bean class="org.fao.geonet.kernel.security.ldap.AutoUpdateUserGroupsOnRemove">
+        <property name="contextSource" ref="contextSource"/>
+        Where should groups be stored.
+        <property name="baseDn" value="${ldap.privilege.search.group.object}"/>
+        Identifier property for groups
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        Should we create a set of groups to define profiles on LDAP?
+        <property name="withProfiles" value="true"/>
+        Used only when withProfiles is true. 0 is the profile, 1 is the group name
+        <property name="profilePattern" value="{1}_{0}"/>
+        Map role names with role identifiers
+        <property name="profileMapping">
+            <map/>
+        </property>
+    </bean> -->
 
 </beans>

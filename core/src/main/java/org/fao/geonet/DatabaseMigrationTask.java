@@ -13,5 +13,5 @@ import org.fao.geonet.kernel.setting.SettingManager;
  * @author jeichar
  */
 public interface DatabaseMigrationTask {
-	void update(Statement statement) throws SQLException;
+	void update(Connection connection) throws SQLException;
 }

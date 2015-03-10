@@ -23,6 +23,7 @@
 
 package org.fao.geonet.guiservices.metadata;
 
+import java.nio.file.Path;
 import java.util.Map;
 
 import jeeves.constants.Jeeves;
@@ -30,6 +31,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.GeonetContext;
@@ -62,7 +64,7 @@ public class GetLatestUpdated implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		String sMaxItems           = config.getValue("maxItems",           "10");
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
@@ -98,7 +100,7 @@ public class GetLatestUpdated implements Service
 
 			// perform the search and return the results read from the index
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
-			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+			MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 			searcher.search(context, _request, _config);
 			Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(context, _maxItems);
 			for (Integer id : allMdInfo.keySet()) {

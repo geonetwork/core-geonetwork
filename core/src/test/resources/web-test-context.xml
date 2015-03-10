@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gns="http://www.fao.org/geonetwork/spring"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd">
+
+    <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
+
+    <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true">
+        <constructor-arg ref="facets"/>
+        <constructor-arg ref="summaryTypes"/>
+    </bean>
+
+    <bean id="regionKeywordClassifier" class="org.fao.geonet.kernel.search.classifier.TermLabel" lazy-init="true">
+        <constructor-arg name="finder" ref="ThesaurusManager"/>
+        <constructor-arg name="conceptScheme" value="http://geonetwork-opensource.org/regions"/>
+        <constructor-arg name="langCode" value="eng"/>
+    </bean>
+
+    <gns:facets>
+        <gns:facet name="regionKeyword" indexKey="keyword" label="Region" classifier="regionKeywordClassifier"/>
+        <gns:facet name="keyword" indexKey="keyword" label="keywords"/>
+        <gns:facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
+        <gns:facet name="denominator" label="denominators" indexKey="denominator"/>
+        <gns:facet name="spatialRepresentationType" indexKey="spatialRepresentationType" label="spatialRepresentationTypes"/>
+        <gns:facet name="orgName" indexKey="orgName" label="orgNames"/>
+        <gns:facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
+        <gns:facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
+        <gns:facet name="type" indexKey="type" label="types"/>
+        <gns:facet name="createDateYear" indexKey="createDateYear" label="createDateYears"/>
+    </gns:facets>
+
+    <gns:summaryTypes>
+        <gns:summaryType name="region_keyword" format="DIMENSION">
+            <gns:item facet="regionKeyword" max="100" translator="term:http://geonetwork-opensource.org/regions"/>
+        </gns:summaryType>
+        <gns:summaryType name="hits">
+            <gns:item facet="keyword" max="15"/>
+            <gns:item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+            <gns:item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+            <gns:item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <gns:item facet="orgName" max="15"/>
+            <gns:item facet="metadataPOC" max="15"/>
+            <gns:item facet="serviceType"/>
+            <gns:item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+            <gns:item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+        </gns:summaryType>
+    </gns:summaryTypes>
+
+</beans>

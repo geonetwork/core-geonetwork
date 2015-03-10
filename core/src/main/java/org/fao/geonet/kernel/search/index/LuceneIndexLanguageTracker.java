@@ -2,9 +2,14 @@ package org.fao.geonet.kernel.search.index;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.constants.Geonet;
@@ -14,9 +19,16 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,27 +39,33 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Keeps track of the lucene indexes that currently exist so that we don't have
  * to keep polling filesystem
- *
+ * 
  * @author jeichar
  */
 public class LuceneIndexLanguageTracker {
-    private final Map<String, Directory> dirs = new HashMap<String, Directory>();
-    private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
-    private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
-    private final LuceneConfig luceneConfig;
-    private final DirectoryFactory _directoryFactory;
-    private Timer commitTimer = null;
-    private TaxonomyIndexTracker taxonomyIndexTracker;
-    private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
-    private AtomicBoolean initialized = new AtomicBoolean(false);
-    private Lock lock = new ReentrantLock();
-    private AtomicInteger _openReaderCounter = new AtomicInteger(0);
-
+	private final Map<String, Directory> dirs = new HashMap<String, Directory>();
+	private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
+	private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
     @Autowired
-    public LuceneIndexLanguageTracker(DirectoryFactory directoryFactory, LuceneConfig luceneConfig)
-            throws Exception {
-        this.luceneConfig = luceneConfig;
+	private LuceneConfig luceneConfig;
+    @Autowired
+    private DirectoryFactory _directoryFactory;
+    @Qualifier("timerThreadPool")
+    @Autowired
+    private ScheduledThreadPoolExecutor timer;
+
+	private TaxonomyIndexTracker taxonomyIndexTracker;
+	private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
+	private AtomicBoolean initialized = new AtomicBoolean(false);
+	private Lock lock = new ReentrantLock();
+	private AtomicInteger _openReaderCounter = new AtomicInteger(0);
+
+    public LuceneIndexLanguageTracker() {
+        // used by spring
+    }
+    public LuceneIndexLanguageTracker(FSDirectoryFactory directoryFactory, LuceneConfig luceneConfig) {
         this._directoryFactory = directoryFactory;
+        this.luceneConfig = luceneConfig;
     }
 
     private void lazyInit() {
@@ -56,11 +74,11 @@ public class LuceneIndexLanguageTracker {
             try {
                 this.taxonomyIndexTracker = new TaxonomyIndexTracker(_directoryFactory, luceneConfig);
                 init();
-                this.commitTimer = new Timer("Lucene index commit timer", true);
-                commitTimer.scheduleAtFixedRate(new CommitTimerTask(), TimeUnit.SECONDS.toMillis(30), TimeUnit.SECONDS.toMillis(30));
-                commitTimer.scheduleAtFixedRate(new PurgeExpiredSearchersTask(), TimeUnit.SECONDS.toMillis(30),
-                        TimeUnit.SECONDS.toMillis(30));
 
+                if (timer != null) {
+                    timer.scheduleAtFixedRate(new CommitTimerTask(), 30, 30, TimeUnit.SECONDS);
+                    timer.scheduleAtFixedRate(new PurgeExpiredSearchersTask(), 30, 30, TimeUnit.SECONDS);
+                }
                 initialized.set(true);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
@@ -123,6 +141,17 @@ public class LuceneIndexLanguageTracker {
         if (locale == null) {
             locale = "none";
         }
+        locale = locale.toLowerCase();
+        switch (locale) {
+            case "deu":
+                locale = "ger";
+                break;
+            case "fra":
+                locale = "fre";
+                break;
+            default:
+                // do nothing
+        }
         return locale;
     }
 
@@ -145,7 +174,7 @@ public class LuceneIndexLanguageTracker {
 
 
             long finalVersion = versionToken;
-            Map<AcquireResult, GeonetworkNRTManager> searchers = new HashMap<AcquireResult, GeonetworkNRTManager>(
+            Map<AcquireResult, GeonetworkNRTManager> searchers = new HashMap<>(
                     (int) (searchManagers.size() * 1.5));
             IndexReader[] readers = new IndexReader[searchManagers.size()];
             int i = 1;
@@ -197,7 +226,7 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    void commit() throws IOException {
+    public void commit() throws IOException {
         lock.lock();
         try{
             lazyInit();
@@ -224,21 +253,22 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    public void addDocument(String language, Document doc, Collection<CategoryPath> categories)
+    public void addDocument(IndexInformation info)
             throws IOException {
         lock.lock();
         try{
             lazyInit();
+            final String language = normalize(info.language);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + language + " index");
             }
             open(language);
             // Add taxonomy first
-            Document docAfterFacetBuild = doc;
-            docAfterFacetBuild = taxonomyIndexTracker.addDocument(doc, categories);
+            Document docAfterFacetBuild = info.document;
+            docAfterFacetBuild = taxonomyIndexTracker.addDocument(info.document, info.taxonomy);
             // Index the document returned after the facets are built by the taxonomy writer
             if (docAfterFacetBuild == null) {
-                trackingWriters.get(language).addDocument(doc);
+                trackingWriters.get(language).addDocument(info.document);
             } else {
                 trackingWriters.get(language).addDocument(docAfterFacetBuild);
             }
@@ -395,7 +425,8 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    private class CommitTimerTask extends TimerTask {
+
+    private class CommitTimerTask implements Runnable {
 
         @Override
         public void run() {
@@ -426,7 +457,7 @@ public class LuceneIndexLanguageTracker {
 
     }
 
-    private class PurgeExpiredSearchersTask extends TimerTask {
+    private class PurgeExpiredSearchersTask implements Runnable {
         @Override
         public void run() {
             lock.lock();

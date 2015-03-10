@@ -27,14 +27,14 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 //==============================================================================
 
@@ -67,7 +67,7 @@ class ElementEntry
 
 	//---------------------------------------------------------------------------
 
-	public ElementEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	public ElementEntry(Element el, Path file, String targetNS, String targetNSPrefix)
 	{
 		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
 	}

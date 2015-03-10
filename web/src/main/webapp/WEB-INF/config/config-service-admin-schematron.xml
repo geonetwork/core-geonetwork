@@ -94,22 +94,6 @@
               <param name="action" value="LIST"/>
           </class>
       </service>
-      <service name="admin.schematroncriteria.exists">
-          <documentation>
-              <![CDATA[
-              Check for the existence of a SchematronCriteria
-
-              Parameters are:
-                 * id: The id of a schematron to check
-
-              Return is:
-              <response>true</response>
-              ]]>
-          </documentation>
-          <class name=".services.metadata.schema.SchematronCriteriaService">
-              <param name="action" value="EXISTS"/>
-          </class>
-      </service>
       <service name="admin.schematroncriteria.add">
           <documentation>
               <![CDATA[

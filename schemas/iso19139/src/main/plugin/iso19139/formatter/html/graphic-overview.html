@@ -1,0 +1,12 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <div class="row">
+        <div fmt-repeat="g in graphics" class="col-md-3">
+            <div class="dropdown">
+                <a data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                    <img class="graphic-overview" src="{{g.src}}"></img>
+                </a>
+                <img class="graphic-overview dropdown-menu large" role="menu" src="{{g.src}}"></img>
+            </div>
+        </div>
+    </div>
+</div>

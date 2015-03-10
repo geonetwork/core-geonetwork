@@ -26,16 +26,18 @@ package org.fao.geonet.kernel.oaipmh;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,9 +55,9 @@ public class Lib
 	//---
 	//---------------------------------------------------------------------------
 
-	public static boolean existsConverter(String schemaDir, String prefix) {
-		 File f = new File(schemaDir + "convert/" + prefix + ".xsl");
-		 return f.exists();
+	public static boolean existsConverter(Path schemaDir, String prefix) {
+		 Path f = schemaDir.resolve("convert").resolve(prefix + ".xsl");
+		 return Files.exists(f);
 	}
 
 	//--------------------------------------------------------------------------
@@ -77,7 +79,7 @@ public class Lib
 
 	//--------------------------------------------------------------------------
 
-	public static Element transform(String schemaDir, Element env, Element md, String targetFormat) throws Exception {
+	public static Element transform(Path schemaDir, Element env, Element md, String targetFormat) throws Exception {
 
 		//--- setup root element
 
@@ -87,7 +89,7 @@ public class Lib
 
 		//--- do an XSL transformation
 
-		String styleSheet = schemaDir + "/convert/" + targetFormat;
+		Path styleSheet = schemaDir.resolve("convert").resolve(targetFormat);
 
 		return Xml.transform(root, styleSheet);
 	}
@@ -99,7 +101,7 @@ public class Lib
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getBean(SearchManager.class);
 
-		MetaSearcher searcher = sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
         if(context.isDebugEnabled()) context.debug("Searching with params:\n"+ Xml.getString(params));
 

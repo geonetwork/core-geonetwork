@@ -127,12 +127,13 @@
    * and online resource list are refreshed.
    */
    .directive('gnAddThumbnail', ['$http', '$rootScope', '$translate',
+        '$timeout', '$q',
         'gnOnlinesrc',
         'gnEditor',
         'gnCurrentEdit',
         'gnConfig',
         'gnMap',
-        function($http, $rootScope, $translate,
+        function($http, $rootScope, $translate, $timeout, $q,
                  gnOnlinesrc, gnEditor, gnCurrentEdit,
                  gnConfig, gnMap) {
           return {
@@ -147,9 +148,9 @@
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
-              scope.action = 'md.thumbnail.upload@json';
+              scope.action = 'md.thumbnail.upload';
 
-              // the form params that will be submited
+              // the form params that will be submitted
               scope.params = {};
 
               scope.popupid = attrs['gnPopupid'];
@@ -157,11 +158,15 @@
               scope.loaded = false;
               scope.layers = null;
               scope.gnCurrentEdit = gnCurrentEdit;
-
-              scope.processing = false;
               scope.map = null;
 
               function loadLayers() {
+                if (!angular.isArray(scope.map.getSize()) ||
+                    scope.map.getSize().indexOf(0) >= 0) {
+                  $timeout(function() {
+                    scope.map.updateSize();
+                  });
+                }
 
                 // Reset map
                 angular.forEach(scope.map.getLayers(), function(layer) {
@@ -183,12 +188,15 @@
                         })
                       }));
                     });
-                if (angular.isArray(scope.gnCurrentEdit.extent)) {
-                  scope.map.getView().fitExtent(
-                      gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
-                      'EPSG:4326', gnMap.getMapConfig().projection),
-                      scope.map.getSize());
-                }
+
+                $timeout(function() {
+                  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                    scope.map.getView().fitExtent(
+                        gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
+                        'EPSG:4326', gnMap.getMapConfig().projection),
+                        scope.map.getSize());
+                  }
+                });
               };
 
               var init = function() {
@@ -223,12 +231,22 @@
                 return scope.params.version = gnCurrentEdit.version;
               };
 
+              var resetForm = function() {
+                if (scope.params) {
+                  scope.params.url = '';
+                  scope.params.thumbnail_url = '';
+                  scope.params.thumbnail_desc = '';
+                }
+                scope.clear(scope.queue);
+              };
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata form.
                * Callback of the submit().
                */
-              var uploadOnlinesrcDone = function(evt, data) {
+              var uploadThumbnailDone = function(evt, data) {
+                resetForm();
                 gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
                 $(scope.popupid).modal('hide');
@@ -237,14 +255,17 @@
               /**
                * Onlinesrc uploaded with error, broadcast it.
                */
-              var uploadOnlineSrcError = function(data) {
+              var uploadThumbnailError = function(data) {
               };
 
               // upload directive options
-              scope.onlinesrcUploadOptions = {
+              scope.thumbnailUploadOptions = {
                 autoUpload: false,
-                done: uploadOnlinesrcDone,
-                fail: uploadOnlineSrcError
+                url: 'md.thumbnail.upload',
+                //maxNumberOfFiles: 1,
+                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
+                done: uploadThumbnailDone,
+                fail: uploadThumbnailError
               };
 
               /**
@@ -255,23 +276,25 @@
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
                   getVersion();
-                  gnEditor.save(false, true)
+                  return gnEditor.save(false, true)
                   .then(function(data) {
                         scope.submit();
                       });
                 } else if (scope.mode == 'thumbnailMaker') {
                   getVersion();
-                  scope.processing = true;
+                  var deferred = $q.defer();
+
                   gnEditor.save(false, true)
                     .then(function(data) {
-                        scope.action = 'md.thumbnail.generate@json';
-                        $http.post('md.thumbnail.generate@json',
-                            $('#gn-upload-onlinesrc').serialize(), {
+                        scope.action =
+                            'md.thumbnail.generate?_content_type=json&';
+                        $http.post(scope.action,
+                            $('#gn-upload-thumbnail').serialize(), {
                               headers: {'Content-Type':
                                     'application/x-www-form-urlencoded'}
                             }).success(function(data) {
-                          uploadOnlinesrcDone();
-                          scope.processing = false;
+                          uploadThumbnailDone();
+                          deferred.resolve(data);
                         }).error(function(data, status, headers, config) {
                           $rootScope.$broadcast('StatusUpdated', {
                             title: $translate('thumbnailCreationError'),
@@ -283,11 +306,15 @@
                             },
                             timeout: 0,
                             type: 'danger'});
-                          scope.processing = false;
+                          deferred.resolve(data);
                         });
                       });
+                  return deferred.promise;
                 } else {
-                  gnOnlinesrc.addThumbnailByURL(scope.params, scope.popupid);
+                  return gnOnlinesrc.addThumbnailByURL(scope.params,
+                      scope.popupid).then(function() {
+                    resetForm();
+                  });
                 }
               };
 
@@ -354,12 +381,22 @@
 
               scope.onlinesrcService = gnOnlinesrc;
 
+              var resetForm = function() {
+                if (scope.params) {
+                  scope.params.desc = '';
+                  scope.params.url = '';
+                  scope.params.name = '';
+                  scope.params.protocol = '';
+                }
+                scope.clear(scope.queue);
+              };
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(data) {
-                scope.clear(scope.queue);
+                resetForm();
                 gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
                 $(scope.popupid).modal('hide');
@@ -373,7 +410,8 @@
 
               scope.onlinesrcUploadOptions = {
                 autoUpload: false,
-                //        TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+                url: 'resource.upload.and.link',
+                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                 done: uploadOnlinesrcDone,
                 fail: uploadOnlineSrcError
               };
@@ -385,9 +423,12 @@
                */
               scope.addOnlinesrc = function() {
                 if (scope.mode == 'upload') {
-                  scope.submit();
+                  return scope.submit();
                 } else {
-                  gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid);
+                  return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
+                      then(function() {
+                        resetForm();
+                      });
                 }
               };
 
@@ -405,9 +446,14 @@
                */
               scope.loadWMSCapabilities = function() {
                 if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getCapabilities(scope.params.url)
-                  .then(function(layers) {
-                        scope.layers = layers;
+                  gnOwsCapabilities.getWMSCapabilities(scope.params.url)
+                  .then(function(capabilities) {
+                        scope.layers = [];
+                        angular.forEach(capabilities.layers, function(l) {
+                          if (angular.isDefined(l.Name)) {
+                            scope.layers.push(l);
+                          }
+                        });
                       });
                 }
               };
@@ -471,83 +517,92 @@
             scope: {},
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linkServiceToDataset.html',
-            link: function(scope, element, attrs) {
+            compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope) {
+                  scope.searchObj = {
+                    params: {}
+                  };
+                },
+                post: function postLink(scope, iElement, iAttrs) {
+                  scope.mode = iAttrs['gnLinkServiceToDataset'];
+                  scope.popupid = '#linkto' + scope.mode + '-popup';
 
-              scope.mode = attrs['gnLinkServiceToDataset'];
-              scope.popupid = '#linkto' + scope.mode + '-popup';
+                  gnOnlinesrc.register(scope.mode, function() {
+                    $(scope.popupid).modal('show');
 
-              gnOnlinesrc.register(scope.mode, function() {
-                $(scope.popupid).modal('show');
+                    // parameters of the online resource form
+                    scope.srcParams = {};
 
-                // parameters of the online resource form
-                scope.srcParams = {};
+                    var searchParams = {
+                      type: scope.mode
+                    };
+                    scope.$broadcast('resetSearch', searchParams);
+                    scope.layers = [];
+                  });
 
-                var searchParams = {
-                  type: scope.mode
-                };
-                scope.$broadcast('resetSearch', searchParams);
-                scope.layers = [];
-              });
+                  // This object is used to share value between this
+                  // directive and the SearchFormController scope that
+                  // is contained by the directive
+                  scope.stateObj = {};
 
-              // This object is used to share value between this
-              // directive and the SearchFormController scope that is contained
-              // by the directive
-              scope.stateObj = {};
+                  /**
+                   * loadWMSCapabilities
+                   *
+                   * Call WMS capabilities on the service metadata URL.
+                   * Update params.layers scope value, that will be also
+                   * passed to the layers grid directive.
+                   */
+                  scope.loadWMSCapabilities = function(url) {
+                    gnOwsCapabilities.getWMSCapabilities(url)
+                        .then(function(layers) {
+                          scope.layers = layers;
+                        });
+                  };
 
-              /**
-               * loadWMSCapabilities
-               *
-               * Call WMS capabilities on the service metadata URL.
-               * Update params.layers scope value, that will be also
-               * passed to the layers grid directive.
-               */
-              scope.loadWMSCapabilities = function(url) {
-                gnOwsCapabilities.getCapabilities(url)
-                .then(function(layers) {
-                      scope.layers = layers;
-                    });
-              };
+                  /**
+                   * Watch the result metadata selection change.
+                   * selectRecords is a value of the SearchFormController scope.
+                   * On service metadata selection, check if the service has
+                   * a WMS URL and send request if yes (then display
+                   * layers grid).
+                   */
+                  scope.$watchCollection('stateObj.selectRecords', function() {
+                    if (!angular.isUndefined(scope.stateObj.selectRecords) &&
+                        scope.stateObj.selectRecords.length > 0) {
+                      var md = new Metadata(scope.stateObj.selectRecords[0]);
+                      var links = md.getLinksByType('OGC:WMS');
 
-              /**
-               * Watch the result metadata selection change.
-               * selectRecords is a value of the SearchFormController scope.
-               * On service metadata selection, check if the service has
-               * a WMS URL and send request if yes (then display layers grid).
-               */
-              scope.$watchCollection('stateObj.selectRecords', function() {
-                if (!angular.isUndefined(scope.stateObj.selectRecords) &&
-                    scope.stateObj.selectRecords.length > 0) {
-                  var md = new Metadata(scope.stateObj.selectRecords[0]);
-                  var links = md.getLinksByType('OGC:WMS');
+                      if (scope.mode == 'service') {
 
-                  if (scope.mode == 'service') {
-
-                    if (angular.isArray(links) && links.length == 1) {
-                      scope.loadWMSCapabilities(links[0].url);
-                      scope.srcParams.uuidSrv = md.getUuid();
-                      scope.srcParams.uuidDS = gnCurrentEdit.uuid;
+                        if (angular.isArray(links) && links.length == 1) {
+                          scope.loadWMSCapabilities(links[0].url);
+                          scope.srcParams.uuidSrv = md.getUuid();
+                          scope.srcParams.uuidDS = gnCurrentEdit.uuid;
+                        }
+                      }
+                      else {
+                        scope.layers = links;
+                        scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+                      }
                     }
-                  }
-                  else {
-                    scope.layers = links;
-                    scope.srcParams.uuidDS = md.getUuid();
-                    scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
-                  }
-                }
-              });
+                  });
 
-              /**
-               * Call 2 services:
-               *  - link a dataset to a service
-               *  - link a service to a dataset
-               * Hide modal on success.
-               */
-              scope.linkTo = function() {
-                if (scope.mode == 'service') {
-                  gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
-                }
-                else {
-                  gnOnlinesrc.linkToDataset(scope.srcParams, scope.popupid);
+                  /**
+                   * Call 2 services:
+                   *  - link a dataset to a service
+                   *  - link a service to a dataset
+                   * Hide modal on success.
+                   */
+                  scope.linkTo = function() {
+                    if (scope.mode == 'service') {
+                      gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
+                    }
+                    else {
+                      gnOnlinesrc.linkToDataset(scope.srcParams, scope.popupid);
+                    }
+                  };
                 }
               };
             }
@@ -582,43 +637,58 @@
             scope: {},
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linkToMd.html',
-            link: function(scope, element, attrs) {
-              scope.mode = attrs['gnLinkToMetadata'];
-              scope.popupid = '#linkto' + scope.mode + '-popup';
-              scope.btn = {};
-
-              /**
-               * Register a method on popup open to reset
-               * the search form and trigger a search.
-               */
-              gnOnlinesrc.register(scope.mode, function() {
-                $(scope.popupid).modal('show');
-                var searchParams = {};
-                if (scope.mode == 'fcats') {
-                  searchParams = {
-                        _schema: 'iso19110'
+            compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope) {
+                  scope.searchObj = {
+                    params: {}
                   };
-                  scope.btn = {
+                },
+                post: function postLink(scope, iElement, iAttrs) {
+                  scope.mode = iAttrs['gnLinkToMetadata'];
+                  scope.popupid = '#linkto' + scope.mode + '-popup';
+                  scope.btn = {};
+
+                  /**
+                   * Register a method on popup open to reset
+                   * the search form and trigger a search.
+                   */
+                  gnOnlinesrc.register(scope.mode, function() {
+                    $(scope.popupid).modal('show');
+                    var searchParams = {};
+                    if (scope.mode == 'fcats') {
+                      searchParams = {
+                        _schema: 'iso19110'
+                      };
+                      scope.btn = {
                         icon: 'fa-table',
                         label: $translate('linkToFeatureCatalog')
-                  };
-                }
-                else if (scope.mode == 'parent') {
-                  scope.btn = {
+                      };
+                    }
+                    else if (scope.mode == 'parent') {
+                      searchParams = {
+                        hitsPerPage: 10
+                      };
+                      scope.btn = {
                         icon: 'fa-sitemap',
                         label: $translate('linkToParent')
-                  };
-                }
-                else if (scope.mode == 'source') {
-                  scope.btn = {
+                      };
+                    }
+                    else if (scope.mode == 'source') {
+                      searchParams = {
+                        hitsPerPage: 10
+                      };
+                      scope.btn = {
                         icon: 'fa-sitemap fa-rotate-180',
                         label: $translate('linkToSource')
-                  };
-                }
-                scope.$broadcast('resetSearch', searchParams);
-              });
+                      };
+                    }
+                    scope.$broadcast('resetSearch', searchParams);
+                  });
 
-              scope.gnOnlinesrc = gnOnlinesrc;
+                  scope.gnOnlinesrc = gnOnlinesrc;
+                }
+              };
             }
           };
         }])
@@ -636,7 +706,7 @@
    * to be able to add a metadata to his selection. The process alow a multiple
    * selection.
    *
-   * On submit, the metadata is saved, the thumbnail is added, then the form
+   * On submit, the metadata is saved, the resource is associated, then the form
    * and online resource list are refreshed.
    */
   .directive('gnLinkToSibling', ['gnOnlinesrc',
@@ -646,87 +716,96 @@
             scope: {},
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linktosibling.html',
-            link: function(scope, element, attrs) {
+            compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope) {
+                  scope.searchObj = {
+                    params: {}
+                  };
+                },
+                post: function postLink(scope, iElement, iAttrs) {
+                  scope.popupid = iAttrs['gnLinkToSibling'];
 
-              scope.popupid = attrs['gnLinkToSibling'];
+                  /**
+                   * Register a method on popup open to reset
+                   * the search form and trigger a search.
+                   */
+                  gnOnlinesrc.register('sibling', function() {
+                    $(scope.popupid).modal('show');
 
-              /**
-               * Register a method on popup open to reset
-               * the search form and trigger a search.
-               */
-              gnOnlinesrc.register('sibling', function() {
-                $(scope.popupid).modal('show');
-                scope.$broadcast('resetSearch');
-                scope.selection = [];
-              });
+                    scope.$broadcast('resetSearch');
+                    scope.selection = [];
+                  });
 
-              /**
-               * Search a metada record into the selection.
-               * Return the index or -1 if not present.
-               */
-              var findObj = function(md) {
-                for (i = 0; i < scope.selection.length; ++i) {
-                  if (scope.selection[i].md == md) {
-                    return i;
-                  }
+                  /**
+                   * Search a metada record into the selection.
+                   * Return the index or -1 if not present.
+                   */
+                  var findObj = function(md) {
+                    for (i = 0; i < scope.selection.length; ++i) {
+                      if (scope.selection[i].md == md) {
+                        return i;
+                      }
+                    }
+                    return -1;
+                  };
+
+                  /**
+                   * Add the result metadata to the selection.
+                   * Add it only it associationType & initiativeType are set.
+                   * If the metadata alreay exists, it override it with the new
+                   * given associationType/initiativeType.
+                   */
+                  scope.addToSelection =
+                      function(md, associationType, initiativeType) {
+                        if (associationType) {
+                          var idx = findObj(md);
+                          if (idx < 0) {
+                            scope.selection.push({
+                              md: md,
+                              associationType: associationType,
+                              initiativeType: initiativeType || ''
+                            });
+                          }
+                          else {
+                            angular.extend(scope.selection[idx], {
+                              associationType: associationType,
+                              initiativeType: initiativeType || ''
+                            });
+                          }
+                        }
+                      };
+
+                  /**
+                   * Remove a record from the selection
+                   */
+                  scope.removeFromSelection = function(obj) {
+                    var idx = findObj(obj.md);
+                    if (idx >= 0) {
+                      scope.selection.splice(idx, 1);
+                    }
+                  };
+
+                  /**
+                   * Call the batch process to add the sibling
+                   * to the current edited metadata.
+                   */
+                  scope.linkToResource = function() {
+                    var uuids = [];
+                    for (i = 0; i < scope.selection.length; ++i) {
+                      var obj = scope.selection[i];
+                      uuids.push(obj.md['geonet:info'].uuid + '#' +
+                          obj.associationType + '#' +
+                          obj.initiativeType);
+                    }
+                    var params = {
+                      initiativeType: scope.initiativeType,
+                      associationType: scope.associationType,
+                      uuids: uuids.join(',')
+                    };
+                    gnOnlinesrc.linkToSibling(params, scope.popupid);
+                  };
                 }
-                return -1;
-              };
-
-              /**
-               * Add the result metadata to the selection.
-               * Add it only it associationType & initiativeType are set.
-               * If the metadata alreay exists, it override it with the new
-               * given associationType/initiativeType.
-               */
-              scope.addToSelection =
-                  function(md, associationType, initiativeType) {
-                if (associationType && initiativeType) {
-                  var idx = findObj(md);
-                  if (idx < 0) {
-                    scope.selection.push({
-                      md: md,
-                      associationType: associationType,
-                      initiativeType: initiativeType
-                    });
-                  }
-                  else {
-                    angular.extend(scope.selection[idx], {
-                      associationType: associationType,
-                      initiativeType: initiativeType
-                    });
-                  }
-                }
-              };
-
-              /**
-               * Remove a record from the selection
-               */
-              scope.removeFromSelection = function(obj) {
-                var idx = findObj(obj.md);
-                if (idx >= 0) {
-                  scope.selection.splice(idx, 1);
-                }
-              };
-
-              /**
-               * Call the batch process to add the sibling
-               * to the current edited metadata.
-               */
-              scope.linkToResource = function() {
-                var uuids = [];
-                for (i = 0; i < scope.selection.length; ++i) {
-                  var obj = scope.selection[i];
-                  uuids.push(obj.md['geonet:info'].uuid + '#' +
-                      obj.associationType + '#' +
-                      obj.initiativeType);
-                }
-                var params = {
-                  initiativeType: scope.initiativeType,
-                  associationType: scope.associationType,
-                  uuids: uuids.join(',')
-                };
-                gnOnlinesrc.linkToSibling(params, scope.popupid);
               };
             }
           };

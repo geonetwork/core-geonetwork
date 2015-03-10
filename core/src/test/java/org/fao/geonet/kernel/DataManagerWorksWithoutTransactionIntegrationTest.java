@@ -6,12 +6,13 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.UUID;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -25,12 +26,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
-    DataManager _dataManager;
+    MetadataRepository metadataRepository;
     @Autowired
-    MetadataRepository _metadataRepository;
+    DataManager dataManager;
 
     @Autowired
-    PlatformTransactionManager _tm;
+    MetadataCategoryRepository metadataCategoryRepository;
 
     @Test
     public void testDataManagerCutpoints() throws Exception {
@@ -41,17 +42,20 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         final ServiceContext serviceContext = createServiceContext();
                         loginAsAdmin(serviceContext);
 
+                        final String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
                         final Element sampleMetadataXml = getSampleMetadataXml();
                         final UserSession userSession = serviceContext.getUserSession();
                         final int userIdAsInt = userSession.getUserIdAsInt();
-                        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19139", sampleMetadataXml,
-                                "uuid" + _inc.incrementAndGet(), userIdAsInt, "2", "source",
-                                MetadataType.METADATA.codeString, null, "maps", new ISODate().getDateAndTime(),
+                        final DataManager dm = DataManagerWorksWithoutTransactionIntegrationTest.this.dataManager;
+                        String schema = dm.autodetectSchema(sampleMetadataXml);
+                        final String mdId = dm.insertMetadata(serviceContext, schema, sampleMetadataXml,
+                                UUID.randomUUID().toString(), userIdAsInt, "2", "source",
+                                MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
                                 new ISODate().getDateAndTime(), false, false);
-                        Element newMd = new Element("MD_Metadata", GMD).addContent(new Element("fileIdentifier",
+                        Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",
                                 GMD).addContent(new Element("CharacterString", GCO)));
 
-                        Metadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
+                        Metadata updateMd = dm.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                                 new ISODate().getDateAndTime(), false);
                         assertNotNull(updateMd);
                         final boolean hasNext = updateMd.getCategories().iterator().hasNext();
@@ -60,6 +64,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                 });
 
     }
+
 
     @Test
     public void testSetHarvesterData() throws Exception {
@@ -74,7 +79,8 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                                 DataManagerWorksWithoutTransactionIntegrationTest.this;
                         final int metadataId =  DataManagerIntegrationTest.importMetadata(test, serviceContext);
 
-                        DataManagerIntegrationTest.doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
+                        final DataManager dm = DataManagerWorksWithoutTransactionIntegrationTest.this.dataManager;
+                        DataManagerIntegrationTest.doSetHarvesterDataTest(DataManagerWorksWithoutTransactionIntegrationTest.this.metadataRepository, dm, metadataId);
                     }
                 });
 

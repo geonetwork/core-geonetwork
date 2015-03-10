@@ -125,4 +125,17 @@ public final class OperationAllowedSpecs {
         };
     }
 
+    /**
+     * A specification that selects all the operations allowed for all the operation ids provided.
+     * @param operationIds the ids of all the operations
+     */
+    public static Specification<OperationAllowed> hasOperationIdIn(final Collection<Integer> operationIds) {
+        return new Specification<OperationAllowed>() {
+            @Override
+            public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId).in(operationIds);
+            }
+        };
+    }
+
 }

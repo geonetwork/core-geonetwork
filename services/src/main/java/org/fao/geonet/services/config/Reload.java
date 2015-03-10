@@ -32,11 +32,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
+import java.nio.file.Path;
 
 public class Reload implements Service {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	public Element exec(Element params, ServiceContext context)

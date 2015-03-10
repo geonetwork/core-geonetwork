@@ -2,14 +2,15 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.io.Serializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 
 /**
  * Methods common to all Geonetwork repositories.
@@ -122,6 +123,36 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      */
     @Nonnull
     Element findAllAsXml(@Nullable Sort sort);
+    /**
+     * Load all entities that satisfy the criteria provided and convert each to XML of the form:
+     * <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     *
+     * @param specification A specification of the criteria that must be satisfied for entity to be selected.
+     * @param pageable      The paging/sorting strategy
+     * @return all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml(@Nullable Specification<T> specification, @Nullable Pageable pageable);
+
+    /**
+     * Load all entities that satisfy the criteria provided and convert each to XML of the form:
+     * <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     *
+     * @param pageable      The paging/sorting strategy
+     * @return all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml(@Nullable Pageable pageable);
 
     /**
      * Delete all the metadata selected by the specification.

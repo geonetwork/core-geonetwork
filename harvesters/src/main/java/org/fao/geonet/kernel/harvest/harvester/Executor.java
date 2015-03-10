@@ -33,7 +33,7 @@ class Executor extends Thread
 	//---
 	//---------------------------------------------------------------------------
 
-	public Executor(AbstractHarvester ah)
+	public Executor(AbstractHarvester<?> ah)
 	{
 		terminate  = false;
 		status     = WAITING;
@@ -125,7 +125,7 @@ class Executor extends Thread
 	private int     status;
 	private int     timeout;
 
-	private AbstractHarvester harvester;
+	private AbstractHarvester<?> harvester;
 }
 
 //=============================================================================

@@ -37,13 +37,24 @@
     <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
     
+    <xsl:variable name="escapedName">
+      <xsl:choose>
+        <xsl:when test="matches($name, '.*CHOICE_ELEMENT.*')">
+          <xsl:value-of select="substring-before($name, 'CHOICE_ELEMENT')"/>
+        </xsl:when>
+        <xsl:when test="matches($name, '.*GROUP_ELEMENT.*')">
+          <xsl:value-of select="substring-before($name, 'GROUP_ELEMENT')"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="$name"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     
     <!-- Name with context in current schema -->
     <xsl:variable name="schemaLabelWithContext"
-      select="$labels/element[@name=$name and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+      select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
     
     <!-- Name in current schema -->
-    <xsl:variable name="schemaLabel" select="$labels/element[@name=$name and not(@context)]"/>
+    <xsl:variable name="schemaLabel" select="$labels/element[@name=$escapedName and not(@context)]"/>
 
     <xsl:choose>
       <xsl:when test="$schemaLabelWithContext">
@@ -61,7 +72,7 @@
           <xsl:otherwise>
             <element>
               <label>
-                <xsl:value-of select="$name"/>
+                <xsl:value-of select="$escapedName"/>
               </label>
             </element>
             <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
@@ -289,17 +300,19 @@
   <!-- Return the directive to use for add control if a custom one 
   is defined. Eg. Adding from a thesaurus propose a list of available
   thesaurus. -->
-  <xsl:function name="gn-fn-metadata:getFieldAddDirective" as="xs:string">
+  <xsl:function name="gn-fn-metadata:getFieldAddDirective" as="node()">
     <xsl:param name="configuration" as="node()"/>
     <xsl:param name="name" as="xs:string"/>
     
-    <xsl:variable name="type" select="normalize-space($configuration/editor/fields/for[@name = $name]/@addDirective)"/>
-    
-    <xsl:value-of
-      select="if ($type != '')
-      then $type 
-      else ''"
-    />
+    <xsl:variable name="type" select="$configuration/editor/fields/for[@name = $name and @addDirective]"/>
+    <xsl:choose>
+      <xsl:when test="$type">
+        <xsl:copy-of select="$type" copy-namespaces="no"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
   <xsl:function name="gn-fn-metadata:getFieldAddDirectiveAttributes"
@@ -332,6 +345,15 @@
     <xsl:value-of select="gn-fn-metadata:getXPath($node, false())"/>
   </xsl:function>
 
+  <xsl:function name="gn-fn-metadata:positionOfType" as="xs:string">
+    <xsl:param name="node" as="node()"/>
+    <xsl:variable name="nodePosition" select="$node/position()" />
+    <xsl:variable name="allPrecedingSiblings" select="$node/preceding-sibling::*[name() = name($node)]" />
+    <xsl:message select="concat('-------------##$$%% ', $node/name(), ' -- ', count($node/preceding-sibling::*), ' -----------------------------------')" />
+    <!--<xsl:value-of select="count($node/../*[name = name($node) and position() &lt; $nodePosition]) + 1"/>-->
+    <xsl:value-of select="count($allPrecedingSiblings) + 1"/>
+  </xsl:function>
+
   <!-- 
     Return the xpath of a node.
   -->
@@ -349,7 +371,7 @@
     <xsl:variable name="xpath">
       <xsl:for-each select="$ancestors[position() != $untilIndex]">
         <xsl:value-of select="if ($withPosition) 
-          then concat($xpathSeparator, name(.), '[', position(), ']')
+          then concat($xpathSeparator, name(.), '[', gn-fn-metadata:positionOfType(.), ']')
           else concat($xpathSeparator, name(.))"/>
       </xsl:for-each>
     </xsl:variable>
@@ -358,7 +380,7 @@
       select="if ($isAttribute) 
       then concat($xpath, $xpathSeparator, '@', $elementName) 
       else if ($withPosition) 
-        then concat($xpath, $xpathSeparator, $elementName, '[', $node/position(), ']')
+        then concat($xpath, $xpathSeparator, $elementName, '[', gn-fn-metadata:positionOfType($node), ']')
         else concat($xpath, $xpathSeparator, $elementName)
       "
     />

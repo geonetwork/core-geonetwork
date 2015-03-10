@@ -88,11 +88,12 @@ public class MetadataNotifierClient {
 
             method.setConfig(configBuilder.build());
 
+            final String requestHost = method.getURI().getHost();
             ClientHttpResponse response = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
                 @Nullable
                 @Override
                 public Void apply(@Nullable HttpClientBuilder input) {
-                    final CredentialsProvider provider = Lib.net.setupProxy(settingManager, input);
+                    final CredentialsProvider provider = Lib.net.setupProxy(settingManager, input, requestHost);
                     if (authenticationEnabled) {
                         System.out.println("webUpdate: SET USER");
                         provider.setCredentials( AuthScope.ANY, new UsernamePasswordCredentials(notifier.getUsername(), String.copyValueOf(notifier.getPassword())));

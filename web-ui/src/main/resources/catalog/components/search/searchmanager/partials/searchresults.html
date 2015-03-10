@@ -25,10 +25,16 @@
   <!-- Results List -->
   <div>
     <div class="list-group fixed">
-      <a class="list-group-item gn-record" data-ng-repeat="md in searchResults.records"
+      <li class="list-group-item gn-record" data-ng-repeat="md in searchResults.records"
         id="gn-record-{{md['geonet:info'].uuid}}" href=""
         data-ng-class="isSelected(md) ? 'active' : ''" data-ng-click="onClick(md)">
-        <div data-ng-if="options.mode == 'title'"> {{md.title || md.defaultTitle}} </div>
+        <div data-ng-if="options.mode == 'title'">
+          {{md.title || md.defaultTitle}}
+          <!--<span>{{md.title || md.defaultTitle}}</span>
+          <a class="pull-right" data-ng-href="../../?uuid={{md['geonet:info'].uuid}}">
+            <i class="fa fa-eye"/>
+          </a>-->
+        </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-3">
             <p>{{md.type}}</p>
@@ -40,7 +46,7 @@
             <p class="small">{{md.abstract | characters:250}}</p>
           </div>
         </div>
-      </a>
+      </li>
     </div>
   </div>
   <div data-gn-pagination="paginationInfo"/>

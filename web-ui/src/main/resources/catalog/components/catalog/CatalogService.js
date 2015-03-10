@@ -69,8 +69,9 @@
            */
         copy: function(id, groupId, withFullPrivileges, 
             isTemplate, isChild) {
-          var url = gnUrlUtils.append('md.create@json',
+          var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
+                _content_type: 'json',
                 group: groupId,
                 id: id,
                 template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
@@ -94,7 +95,7 @@
            */
         importMd: function(data) {
           return $http({
-            url: 'md.insert@json',
+            url: 'md.insert?_content_type=json',
             method: 'POST',
             data: $.param(data),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -120,6 +121,24 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnMetadataManager#importFromXml
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Import records from a xml string.
+         *
+         * @param {Object} data Params to send to md.insert service
+         * @return {HttpPromise} Future object
+         */
+        importFromXml: function(data) {
+          return $http.post('md.insert?_content_type=json', data, {
+            headers: {'Content-Type':
+                  'application/x-www-form-urlencoded'}
+          });
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#create
            * @methodOf gnMetadataManager
@@ -136,10 +155,14 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild) {
-          this.copy(id, groupId, withFullPrivileges,
+            isTemplate, isChild, tab) {
+          return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-            $location.path('/metadata/' + data.id);
+            var path = '/metadata/' + data.id;
+            if (tab) {
+              path += '/tab/' + tab;
+            }
+            $location.path(path);
           });
           // TODO : handle creation error
         }
@@ -210,9 +233,9 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
-    mdCreate: 'md.create@json',
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
+    mdDeleteBatch: 'md.delete.batch',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',
@@ -221,11 +244,24 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
+    mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
+
+    mdGetPDF: 'pdf',
+    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
+    mdGetRDF: 'rdf.metadata.get',
+    mdGetMEF: 'mef.export',
+    mdGetXML19139: 'xml_iso19139',
+    csv: 'csv.search',
+
+    mdPrivileges: 'md.privileges.update@json',
+    mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    publish: 'md.publish',
+    unpublish: 'md.unpublish',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
-    processXml: 'xml.metadata.processing@json', // TODO: CHANGE
+    processXml: 'xml.metadata.processing',
 
     info: 'info@json',
 
@@ -234,15 +270,18 @@
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
 
+    suggest: 'suggest',
 
     edit: 'md.edit',
-    search: 'qi@json',
+    search: 'q',
+    internalSearch: 'qi',
     subtemplate: 'subtemplate',
     lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
-
+    geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
+    suggest: 'suggest',
+    facetConfig: 'search/facet/config'
   });
 
   /**
@@ -312,6 +351,15 @@
             };
             angular.extend(config, httpConfig);
             return $http(config);
+          },
+
+          /**
+           * Return service url for a given key
+           * @param {string} serviceKey
+           * @return {*}
+           */
+          getService: function(serviceKey) {
+            return gnHttpServices[serviceKey];
           }
         };
       }];
@@ -348,6 +396,7 @@
   module.value('gnConfig', {
     key: {
       isXLinkEnabled: 'system.xlinkResolver.enable',
+      isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
@@ -434,15 +483,24 @@
    */
   module.factory('Metadata', function() {
     function Metadata(k) {
-      this.props = $.extend(true, {}, k);
+      $.extend(true, this, k);
+      var listOfArrayFields = ['topicCat', 'category'];
+      var record = this;
+      $.each(listOfArrayFields, function(idx) {
+        var field = listOfArrayFields[idx];
+        if (angular.isDefined(record[field]) &&
+            !angular.isArray(record[field])) {
+          record[field] = [record[field]];
+        }
+      });
     };
 
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
-        name: linkInfos[1],
+        name: linkInfos[0],
         url: linkInfos[2],
-        desc: linkInfos[0],
+        desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4]
       };
@@ -453,20 +511,106 @@
 
     Metadata.prototype = {
       getUuid: function() {
-        return this.props['geonet:info'].uuid;
+        return this['geonet:info'].uuid;
+      },
+      getId: function() {
+        return this['geonet:info'].id;
+      },
+      isPublished: function() {
+        return this['geonet:info'].isPublishedToAll === 'true';
+      },
+      publish: function() {
+        this['geonet:info'].isPublishedToAll = this.isPublished() ?
+            'false' : 'true';
       },
       getLinks: function() {
-        return this.props.link;
+        return this.link;
       },
-      getLinksByType: function(type) {
+      getLinksByType: function() {
         var ret = [];
-        angular.forEach(this.props.link, function(link) {
+        var types = Array.prototype.splice.call(arguments, 0);
+        angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          if (linkInfo.protocol.indexOf(type) >= 0) {
-            ret.push(linkInfo);
-          }
+          types.forEach(function(type) {
+            if (type.substr(0, 1) == '#') {
+              if (linkInfo.protocol == type.substr(1, type.length - 1)) {
+                ret.push(linkInfo);
+              }
+            }
+            else {
+              if (linkInfo.protocol.indexOf(type) >= 0) {
+                ret.push(linkInfo);
+              }
+            }
+          });
         });
         return ret;
+      },
+      getThumbnails: function() {
+        if (angular.isArray(this.image)) {
+          var images = {list: []};
+          for (var i = 0; i < this.image.length; i++) {
+            var s = this.image[i].split('|');
+            var insertFn = 'push';
+            if (s[0] === 'thumbnail') {
+              images.small = s[1];
+              var insertFn = 'unshift';
+            } else if (s[0] === 'overview') {
+              images.big = s[1];
+            }
+            images.list[insertFn]({url: s[1], label: s[2]});
+          }
+        }
+        return images;
+      },
+      getContacts: function() {
+        if (angular.isArray(this.responsibleParty)) {
+          var ret = {};
+          for (var i = 0; i < this.responsibleParty.length; i++) {
+            var s = this.responsibleParty[i].split('|');
+            if (s[1] === 'resource') {
+              ret.resource = s[2];
+            } else if (s[1] === 'metadata') {
+              ret.metadata = s[2];
+            }
+          }
+        }
+        return ret;
+      },
+      getBoxAsPolygon: function() {
+        // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
+        if (this.geoBox) {
+          var coords = this.geoBox.split('|');
+          return 'Polygon((' +
+              coords[0] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[1] + '))';
+        } else {
+          return null;
+        }
+      },
+      getOwnername: function() {
+        if (this.userinfo) {
+          var userinfo = this.userinfo.split('|');
+          try {
+            if (userinfo[2] !== userinfo[1]) {
+              return userinfo[2] + ' ' + userinfo[1];
+            } else {
+              return userinfo[1];
+            }
+          } catch (e) {
+            return '';
+          }
+        } else {
+          return '';
+        }
       }
     };
     return Metadata;

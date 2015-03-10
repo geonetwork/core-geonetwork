@@ -287,7 +287,7 @@ GeoNetwork.app = function () {
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
-        var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, '../images/default/category/', true);
+        var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, '../../apps/images/default/category/', true);
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
         var spatialTypes = GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null, true);
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
@@ -336,6 +336,7 @@ GeoNetwork.app = function () {
                 new GeoNetwork.form.OpenSearchSuggestionTextField({
                     hideLabel: true,
                     minChars: 2,
+                    suggestionField: 'anylight',
                     loadingText: '...',
                     hideTrigger: true,
                     url: catalogue.services.opensearchSuggest

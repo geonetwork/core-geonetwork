@@ -1,0 +1,67 @@
+<div class="container gn-metadata-view">
+    <script type="application/javascript" fmt-if="isHTML">
+        //<![CDATA[
+        document.title="{{pageTitle}}";
+        var headEl = $("head");
+        var iconLink = headEl.children("link[rel='shortcut icon']");
+        if (iconLink.length > 0) {
+            iconLink.attr("href", "{{logo}}");
+        } else {
+            headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+        }
+        //]]>
+    </script>
+    <h1>
+        <img fmt-if="logo" class="logo" src="{{logo | escapeXmlAttrs}}"></img>
+        <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
+        <span class="title">{{title | escapeXmlContent}}</span>
+    </h1>
+    <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
+        <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
+        <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
+        <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">
+            <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
+            <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName | escapeXmlContent}}</a>
+        </li>
+        <li fmt-if="showNavOverflow" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li fmt-repeat="item in navBarOverflow">
+                    <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
+                    <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName | escapeXmlContent}}</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="entry overview">
+        <h3 class="view-header">
+            <button type="button" class="btn btn-default toggler">
+                <i class="fa fa-arrow-circle-down"></i>
+            </button>
+            <span fmt-translate="">overview</span>
+        </h3>
+
+        <div class="entry target">
+            <img fmt-if="thumbnail" class="thumbnail" src="{{thumbnail | escapeXmlAttrs}}"></img>
+            <div fmt-if="abstract" class="entry abstract">
+                <h3>
+                    <button type="button" class="btn btn-default toggler">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </button>
+                    <span fmt-translate="">abstract</span>
+                </h3>
+
+                <dd class="target">
+                    {{abstract}}
+                </dd>
+            </div>
+            {{keywords}}
+            {{formats}}
+            {{extents}}
+
+            <div fmt-include="html/links.html" fmt-include-replace="true"/>
+        </div>
+    </div>
+
+    {{content}}
+</div>

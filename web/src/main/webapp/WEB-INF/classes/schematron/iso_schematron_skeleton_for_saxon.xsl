@@ -1448,7 +1448,9 @@ which require a preprocess.
 			<!-- the following select statement assumes that
 			@id | iso:title returns node-set in document order:
 			we want the title if it is there, otherwise the @id attribute -->
-			<xsl:with-param name="name" select="(@id | iso:title )[last()]"/>
+      <xsl:with-param name="name" select="(@id | iso:title )[last()]"/>
+      <!-- Multilingual title -->
+      <xsl:with-param name="titles" select="iso:title"/>
 			<xsl:with-param name="is-a" select="''"/>
 			
 					<!-- "Rich" properties -->
@@ -2058,6 +2060,7 @@ which require a preprocess.
 	<xsl:template name="process-pattern">
 		<xsl:param name="id" />
 		<xsl:param name="name" />
+		<xsl:param name="titles" />
 		<xsl:param name="is-a" />
 
 		<!-- "Rich" parameters -->

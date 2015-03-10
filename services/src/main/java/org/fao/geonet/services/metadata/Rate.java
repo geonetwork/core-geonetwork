@@ -48,6 +48,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
@@ -67,7 +68,7 @@ public class Rate extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -99,7 +100,7 @@ public class Rate extends NotInReadOnlyModeService {
 
 		int rating = Integer.parseInt(rat);
 
-		if (rating < 1 || rating > 5)
+		if (rating < 0 || rating > 5)
 			throw new BadParameterEx(Params.RATING, rat);
 
 		String harvUuid = getHarvestingUuid(context, id);
@@ -157,7 +158,7 @@ public class Rate extends NotInReadOnlyModeService {
 
 		Lib.net.setupProxy(context, req);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_METADATA_RATE);
+		req.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_METADATA_RATE);
 		req.clearParams();
 		req.addParam("uuid",   uuid);
 		req.addParam("rating", rating);

@@ -1,0 +1,21 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData">
+    <ul class="container-list">
+        <li fmt-repeat="f in formats">
+            <strong>{{f.name}} ({{f.version}})</strong>
+            <ul class="md-value-list">
+                <li fmt-if="f.amendmentNumber">
+                    <dt fmt-translate="node">gmd:amendmentNumber</dt><dd>{{f.amendmentNumber}}</dd>
+                </li>
+                <li fmt-if="f.specification">
+                    <dt fmt-translate="node">gmd:specification</dt><dd>{{f.specification}}</dd>
+                </li>
+                <li fmt-if="f.fileDecompressionTechnique">
+                    <dt fmt-translate="node">gmd:fileDecompressionTechnique</dt><dd>{{f.fileDecompressionTechnique}}</dd>
+                </li>
+                <li fmt-if="f.formatDistributor">
+                    {{f.formatDistributor}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

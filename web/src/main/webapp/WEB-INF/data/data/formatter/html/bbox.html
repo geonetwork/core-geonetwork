@@ -1,0 +1,31 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData">
+  <div class="thumbnail extent">
+    <span fmt-if="!pdfOutput">
+      <div class="input-group coord coord-north">
+        <input type="text" class="form-control" value="{{n}}" readonly=""/>
+        <span class="input-group-addon">N</span>
+      </div>
+      <div class="input-group coord coord-south">
+        <input type="text" class="form-control" value="{{s}}" readonly=""/>
+        <span class="input-group-addon">S</span>
+      </div>
+      <div class="input-group coord coord-east">
+        <input type="text" class="form-control" value="{{e}}" readonly=""/>
+        <span class="input-group-addon">E</span>
+      </div>
+      <div class="input-group coord coord-west">
+        <input type="text" class="form-control" value="{{w}}" readonly=""/>
+        <span class="input-group-addon">W</span>
+      </div>
+    </span>
+    <span fmt-if="pdfOutput">
+      <div class="input-group coord coord-north">{{n}} N</div>
+      <div class="input-group coord coord-south">{{s}} S</div>
+      <div class="input-group coord coord-east">{{e}} E</div>
+      <div class="input-group coord coord-west">{{w}} W</div>
+    </span>
+    <img src="region.getmap.png?mapsrs={{mapconfig.mapproj}}&amp;amp;width={{mapconfig.width}}&amp;amp;background={{mapconfig.background}}&amp;amp;geom=Polygon(({{w}}%20{{n}},{{e}}%20{{n}},{{e}}%20{{s}},{{w}}%20{{s}},{{w}}%20{{n}}))&amp;amp;geomsrs={{geomproj}}"
+         style="width:{{minwidth}}; min-height:{{minheight}};"
+         alt=""/>
+  </div>
+</div>

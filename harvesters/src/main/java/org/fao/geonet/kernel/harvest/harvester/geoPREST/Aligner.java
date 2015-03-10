@@ -24,28 +24,34 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
@@ -57,7 +63,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
+	public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
+        super(cancelMonitor);
 		this.log        = log;
 		this.context    = sc;
 		this.params     = params;
@@ -79,7 +86,7 @@ public class Aligner extends BaseAligner
 	//--------------------------------------------------------------------------
 
 
-	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.name);
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.getName());
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -87,7 +94,7 @@ public class Aligner extends BaseAligner
 
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
@@ -95,7 +102,11 @@ public class Aligner extends BaseAligner
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs()) {
-			if (!exists(records, uuid)) {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            if (!exists(records, uuid)) {
 				String id = localUuids.getID(uuid);
 
 				if(log.isDebugEnabled())
@@ -112,7 +123,11 @@ public class Aligner extends BaseAligner
 		//--- insert/update new metadata
 
 		for (RecordInfo ri : records) {
-		    try {
+            if (cancelMonitor.get()) {
+                return result;
+            }
+
+            try {
     			String id = dataMan.getMetadataId(ri.uuid);
     
     			if (id == null)	addMetadata(ri);
@@ -121,12 +136,12 @@ public class Aligner extends BaseAligner
                 
 		    }catch (Throwable t) {
                 errors.add(new HarvestError(t, log));
-                log.error("Unable to process record from csw (" + this.params.name + ")");
+                log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid); 
 		    }
 		}
 
-		log.info("End of alignment for : "+ params.name);
+		log.info("End of alignment for : "+ params.getName());
 
 		return result;
 	}
@@ -159,26 +174,29 @@ public class Aligner extends BaseAligner
 		// insert metadata
 		//
 		int userid = 1;
-		String group = null, isTemplate = null, docType = null, title = null, category = null;
-		boolean ufo = false, indexImmediate = false;
-		String id = dataMan.insertMetadata(context, schema, md, ri.uuid, userid, group, params.uuid, isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setChangeDate(new ISODate(ri.changeDate)).
+                setCreateDate(new ISODate(ri.changeDate));
+        metadata.getSourceInfo().
+                setSourceId(params.getUuid()).
+                setOwner(userid);
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.getUuid());
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
 
-        dataMan.flush();
-
-        dataMan.indexMetadata(id, false);
+        dataMan.indexMetadata(id, true);
 		result.addedMetadata++;
 	}
 
@@ -194,7 +212,7 @@ public class Aligner extends BaseAligner
 
 		if (date == null) {
 			if (log.isDebugEnabled()) {
-				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
+				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
 			}
 		} else {
 			if (log.isDebugEnabled()) {
@@ -227,10 +245,10 @@ public class Aligner extends BaseAligner
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, false);
+                dataMan.indexMetadata(id, true);
 				result.updatedMetadata++;
 			}
 		}
@@ -293,19 +311,18 @@ public class Aligner extends BaseAligner
                 log.debug("Record got:\n" + Xml.getString(response));
             }
 
-			// validate it here if requested
-			if (params.validate) {
-				if(!dataMan.validate(response))  {
-					log.info("Ignoring invalid metadata with uuid " + uuid);
-					result.doesNotValidate++;
-					return null;
-				}
-			}
+            try {
+                params.getValidate().validate(dataMan, context, response);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
+            }
 
 			// transform it here if requested
-			if (!params.importXslt.equals("none")) {
-				String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
-				thisXslt = thisXslt + params.importXslt;
+			if (!params.getImportXslt().equals("none")) {
+				Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
+                        resolve(params.getImportXslt());
 				try {
 					response = Xml.transform(response, thisXslt);
 				} catch (Exception e) {

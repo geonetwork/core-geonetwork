@@ -199,8 +199,7 @@
          
         Proportion is the proportion of the world that the geometry
         covers (bounds of WGS84)/(bounds of geometry in WGS84)
-        
-        
+
         Named backgrounds allow the background parameter to be a simple key 
         and the complete URL will be looked up from this list of named backgrounds 
         The name of the child elements is the key and the text is the url
@@ -215,6 +214,7 @@
         <param name="format" value="png"/>
         <!--  -->
         <param name="namedBackgrounds">
+           <osm>http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</osm>
           <!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
         </param>
       </class>

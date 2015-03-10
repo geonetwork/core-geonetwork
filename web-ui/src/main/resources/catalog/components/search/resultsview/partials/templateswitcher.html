@@ -1,0 +1,25 @@
+<div class="btn-group">
+  <!--
+  TODO: Here we should loop on the config
+  and not hardcode the list to 2 templates.
+
+  BTW, this does not work
+  <label type="button"
+         data-ng-repeat="t in tpls"
+         data-ng-model="templateUrl"
+         btn-radio="'{{t.tplUrl}}'"
+         or
+         btn-radio="t.tplUrl"
+         class="btn btn-default" >
+    <i class="fa" data-ng-class="t.icon"></i>
+  </label>
+  -->
+  <label type="button" ng-model="templateUrl" btn-radio="tpls[0].tplUrl"
+         class="btn btn-default" >
+    <i class="fa" data-ng-class="tpls[0].icon"></i>
+  </label>
+  <label type="button" ng-model="templateUrl" btn-radio="tpls[1].tplUrl"
+         class="btn btn-default" >
+    <i class="fa" data-ng-class="tpls[1].icon"></i>
+  </label>
+</div>

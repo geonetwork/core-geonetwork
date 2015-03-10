@@ -36,6 +36,10 @@ import java.util.List;
  * TODO javadoc.
  */
 public final class Geonet {
+	
+	//FIXME When we migrate everything and get rid of Jeeves, just use this one
+	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+	
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
@@ -115,6 +119,7 @@ public final class Geonet {
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
 		public static final String SHOWVALIDATIONERRORS   = "showvalidationerrors";
+        public static final String TOC_INDEX = "tocIndex";
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";
@@ -140,18 +145,18 @@ public final class Geonet {
 		public static final String SCHEMAS            = Jeeves.Path.XML + "schemas/";
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
-		public static final String STYLESHEETS        = "/xsl";
-        public static final String XSLT_FOLDER        = java.io.File.separator + "xslt";
+		public static final String STYLESHEETS        = "xsl";
+        public static final String XSLT_FOLDER        = "xslt";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
-		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";
-		public static final String DIF_STYLESHEETS    = "/convert/ThreddsDIFToISO";
-		public static final String TDS_STYLESHEETS    = "/convert/ThreddsToFragments";
-		public static final String ISO19119TOJZKIT_STYLESHEET = "/convert/19119ToJZKitRepository.xsl";
-		public static final String OGC_STYLESHEETS    = "/convert/OGCWxSGetCapabilitiesto19119";
-		public static final String CONVERT_STYLESHEETS       = "/convert/";
-		public static final String LOGOS              = "/images/logos/";
-		public static final String DIF_STYLESHEET     = "/convert/DIFToISO.xsl";
+		public static final String WFS_STYLESHEETS    = "convert/WFSToFragments";
+		public static final String DIF_STYLESHEETS    = "convert/ThreddsDIFToISO";
+		public static final String TDS_STYLESHEETS    = "convert/ThreddsToFragments";
+		public static final String ISO19119TOJZKIT_STYLESHEET = "convert/19119ToJZKitRepository.xsl";
+		public static final String OGC_STYLESHEETS    = "convert/OGCWxSGetCapabilitiesto19119";
+		public static final String CONVERT_STYLESHEETS       = "convert/";
+		public static final String LOGOS              = "images/logos/";
+		public static final String DIF_STYLESHEET     = "convert/DIFToISO.xsl";
 		public static final String XML                = Jeeves.Path.XML;
 	}
 
@@ -498,6 +503,7 @@ public final class Geonet {
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
 		public static final String CONFIG_DIR = "configDir";
 		public static final String UPLOAD_DIR = "uploadDir";
+		public static final String FORMATTER_PATH = "formatterPath";
 		public static final String RESOURCES_DIR = "resources";
 		public static final String SYSTEM_DATA_DIR = "geonetworkDataDir";
 		public static final String HIDE_WITHHELD_ELEMENTS = "hidewithheldelements";
@@ -577,7 +583,10 @@ public final class Geonet {
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
+    // key for inspire atom log
+    public static final String ATOM    = GEONETWORK + ".atom";
     public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
+    public static final String CLASSIFIER = GEONETWORK + ".classifier";
     /**
      * Services.
      */
@@ -600,11 +609,45 @@ public final class Geonet {
 		public static final Namespace OASIS_CATALOG = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
 		public static final Namespace SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 		public static final Namespace XLINK = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+		public static final Namespace XSL = Namespace.getNamespace("xsl", "http://www.w3.org/1999/XSL/Transform");
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+    }
+
+    public static class IndexFieldNames {
+
+        public static final String HASXLINKS = "_hasxlinks";
+        public static final String XLINK = "_xlink";
+        public static final String ROOT = "_root";
+        public static final String SCHEMA = "_schema";
+        public static final String DATABASE_CREATE_DATE = "_createDate";
+        public static final String DATABASE_CHANGE_DATE = "_changeDate";
+        public static final String SOURCE = "_source";
+        public static final String IS_TEMPLATE = "_isTemplate";
+        public static final String UUID = "_uuid";
+        public static final String IS_HARVESTED = "_isHarvested";
+        public static final String OWNER = "_owner";
+        public static final String DUMMY = "_dummy";
+        public static final String POPULARITY = "_popularity";
+        public static final String RATING = "_rating";
+        public static final String DISPLAY_ORDER = "_displayOrder";
+        public static final String EXTRA = "_extra";
+        public static final String USERINFO = "_userinfo";
+        public static final String GROUP_OWNER = "_groupOwner";
+        public static final String GROUP_WEBSITE = "_groupWebsite";
+        public static final String LOGO = "_logo";
+        public static final String OP_PREFIX = "_op";
+        public static final String GROUP_PUBLISHED = "_groupPublished";
+        public static final String CAT = "_cat";
+        public static final String STATUS = "_status";
+        public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String VALID = "_valid";
+        public static final String ID = "_id";
+        public static final String ANY = "any";
+        public static final String LOCALE = "locale";
     }
 }

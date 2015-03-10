@@ -32,7 +32,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -47,7 +50,7 @@ public class SearchUnused implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 	}
 
@@ -75,7 +78,7 @@ public class SearchUnused implements Service
 
 		context.info("Creating UnusedSearcher");
 
-		MetaSearcher searcher = searchMan.newSearcher(SearchManager.UNUSED, Geonet.File.SEARCH_LUCENE);
+		MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, params, null);
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);

@@ -1,26 +1,50 @@
 (function() {
   goog.provide('gn_search');
 
-  goog.require('gn');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  goog.require('gn_map_field_directive');
+  goog.require('gn_mdactions');
+  goog.require('gn_mdview');
+  goog.require('gn_module');
+  goog.require('gn_resultsview');
+  goog.require('gn_search_controller');
+  goog.require('gn_viewer');
 
   var module = angular.module('gn_search', [
-    'gn'
+    'gn_module',
+    'gn_resultsview',
+    'gn_map_field_directive',
+    'gn_search_controller',
+    'gn_viewer',
+    'gn_mdview',
+    'gn_mdactions',
+    'ui.bootstrap.buttons',
+    'ui.bootstrap.tabs',
+    'ngeo'
   ]);
 
-  //Define the translation files to load
-  module.constant('$LOCALES', ['core']);
+  module.constant('gnSearchSettings', {});
+  module.constant('gnViewerSettings', {});
 
-  module.config(['$translateProvider', '$LOCALES',
-                 function($translateProvider, $LOCALES) {
-      $translateProvider.useLoader('localeLoader', {
-        locales: $LOCALES,
-        prefix: '../../catalog/locales/',
-        suffix: '.json'
-      });
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('search');
+  }]);
 
-
-      var lang = location.href.split('/')[5].substring(0, 2) || 'en';
-      $translateProvider.preferredLanguage(lang);
-      moment.lang(lang);
-    }]);
 })();

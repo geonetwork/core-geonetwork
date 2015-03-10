@@ -40,6 +40,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -65,7 +66,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -119,8 +120,8 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		for (Element el : list) {
 			String name  = el.getName();
 
-			if (name.startsWith("_"))
-			{
+			if (name.startsWith("_") &&
+                    !Params.CONTENT_TYPE.equals(name)) {
 				StringTokenizer st = new StringTokenizer(name, "_");
 
 				String groupId = st.nextToken();

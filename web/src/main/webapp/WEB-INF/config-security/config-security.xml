@@ -16,6 +16,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <!-- <import resource="config-security-cas.xml"/>
     <import resource="config-security-cas-ldap.xml"/> -->
     <!-- <import resource="config-security-cas-database.xml"/> -->
+    <!-- <import resource="config-security-shibboleth.xml"/>  -->
     <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="100"/>
 
 </beans>

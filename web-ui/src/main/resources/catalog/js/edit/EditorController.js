@@ -29,10 +29,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
   goog.require('gn_import_controller');
+  goog.require('gn_mdactions_service');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_share');
@@ -44,7 +55,8 @@
        'gn_import_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
+       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
+       'ngRoute', 'gn_mdactions_service']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -66,6 +78,9 @@
             templateUrl: tplFolder + 'new-metadata.html',
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/tab/:tab', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group/template/:template', {
@@ -95,20 +110,14 @@
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout', '$location',
-    'gnEditor',
-    'gnSearchManagerService',
-    'gnConfigService',
-    'gnUtilityService',
-    'gnCurrentEdit',
-    'gnConfig',
+    'gnEditor', 'gnSearchManagerService',
+    'gnConfigService', 'gnUtilityService',
+    'gnCurrentEdit', 'gnConfig', 'gnMetadataActions',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
-        gnEditor, 
-        gnSearchManagerService, 
-        gnConfigService,
-            gnUtilityService, 
-            gnCurrentEdit,
-            gnConfig) {
+        gnEditor, gnSearchManagerService,
+        gnConfigService, gnUtilityService,
+        gnCurrentEdit, gnConfig, gnMetadataActions) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -138,90 +147,107 @@
           }
         }
       };
-
       // Controller initialization
       var init = function() {
         gnConfigService.load().then(function(c) {
           // Config loaded
+          if ($routeParams.id) {
+            // Check requested metadata exists
+            gnSearchManagerService.gnSearch({
+              _id: $routeParams.id,
+              _content_type: 'json',
+              _isTemplate: 'y or n or s',
+              fast: 'index'
+            }).then(function(data) {
+              $scope.metadataFound = data.count !== '0';
+              $scope.metadataNotFoundId = $routeParams.id;
+
+              $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+              $scope.mdCategories = [];
+              var categories = data.metadata[0].category;
+              if (categories) {
+                if (angular.isArray(categories)) {
+                  $scope.mdCategories = categories;
+                } else {
+                  $scope.mdCategories.push(categories);
+                }
+              }
+
+              $scope.groupOwner = data.metadata[0].groupOwner;
+              $scope.mdTitle = data.metadata[0].title ||
+                  data.metadata[0].defaultTitle;
+
+              if ($scope.mdSchema === 'fgdc-std' ||
+                  $scope.mdSchema === 'iso19115') {
+                $scope.unsupportedSchema = true;
+                return;
+              }
+
+              // Set default schema configuration in case none is defined
+              var config =
+                  gnConfig['metadata.editor.schemaConfig'][$scope.mdSchema];
+              if (!config) {
+                config = {
+                  displayToolTip: false
+                };
+              }
+              // Get the schema configuration for the current record
+              gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig = config;
+
+
+
+              var defaultTab = 'default';
+              if (gnCurrentEdit.schemaConfig &&
+                  gnCurrentEdit.schemaConfig.defaultTab) {
+                defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
+              }
+
+              if ($scope.metadataFound) {
+                // TODO: Set metadata title in page HEAD ?
+                $scope.layout.hideTopToolBar = true;
+
+                angular.extend(gnCurrentEdit, {
+                  id: $routeParams.id,
+                  formId: '#gn-editor-' + $routeParams.id,
+                  tab: $routeParams.tab || defaultTab,
+                  displayAttributes: $routeParams.displayAttributes === 'true',
+                  displayTooltips:
+                      gnCurrentEdit.schemaConfig.displayToolTip === true,
+                  compileScope: $scope,
+                  formScope: $scope.$new(),
+                  sessionStartTime: moment(),
+                  formLoadExtraFn: setViewMenuInTopToolbar,
+                  working: false
+                });
+
+                $scope.gnCurrentEdit = gnCurrentEdit;
+                $scope.tocIndex = null;
+
+
+                // Create URL for loading the metadata form
+                // appending a random int in order to avoid
+                // caching by route.
+                $scope.editorFormUrl = gnEditor
+                  .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes&' +
+                    '_random=' + Math.floor(Math.random() * 10000);
+
+                window.onbeforeunload = function() {
+                  // TODO: could be better to provide
+                  // cancelAndClose and saveAndClose button
+                  return $translate('beforeUnloadEditor',
+                      {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
+                };
+              }
+            });
+          }
         });
-
-        if ($routeParams.id) {
-          // Check requested metadata exists
-          gnSearchManagerService.gnSearch({
-            _id: $routeParams.id,
-            _isTemplate: 'y or n or s',
-            fast: 'index'
-          }).then(function(data) {
-            $scope.metadataFound = data.count !== '0';
-            $scope.metadataNotFoundId = $routeParams.id;
-
-            $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
-            $scope.groupOwner = data.metadata[0].groupOwner;
-            $scope.mdTitle = data.metadata[0].title ||
-                data.metadata[0].defaultTitle;
-
-            if ($scope.mdSchema === 'fgdc-std' ||
-                $scope.mdSchema === 'iso19115') {
-              $scope.unsupportedSchema = true;
-              return;
-            }
-
-            // Set default schema configuration in case none is defined
-            var config =
-                gnConfig['metadata.editor.schemaConfig'][$scope.mdSchema];
-            if (!config) {
-              config = {
-                displayToolTip: false
-              };
-            }
-            // Get the schema configuration for the current record
-            gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig = config;
-
-
-
-            var defaultTab = 'default';
-            if (gnCurrentEdit.schemaConfig &&
-                gnCurrentEdit.schemaConfig.defaultTab) {
-              defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
-            }
-
-            if ($scope.metadataFound) {
-              // TODO: Set metadata title in page HEAD ?
-              $scope.layout.hideTopToolBar = true;
-
-              angular.extend(gnCurrentEdit, {
-                id: $routeParams.id,
-                formId: '#gn-editor-' + $routeParams.id,
-                tab: $routeParams.tab || defaultTab,
-                displayAttributes: $routeParams.displayAttributes === 'true',
-                displayTooltips:
-                    gnCurrentEdit.schemaConfig.displayToolTip === true,
-                compileScope: $scope,
-                formScope: $scope.$new(),
-                sessionStartTime: moment(),
-                formLoadExtraFn: setViewMenuInTopToolbar
-              });
-
-              $scope.gnCurrentEdit = gnCurrentEdit;
-
-              // Create URL for loading the metadata form
-              // appending a random int in order to avoid
-              // caching by route.
-              $scope.editorFormUrl = gnEditor
-                .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes&' +
-                  '_random=' + Math.floor(Math.random() * 10000);
-
-
-              window.onbeforeunload = function() {
-                // TODO: could be better to provide
-                // cancelAndClose and saveAndClose button
-                return $translate('beforeUnloadEditor',
-                    {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
-              };
-            }
-          });
-        }
       };
+
+      $scope.$watch('gnCurrentEdit.isMinor', function() {
+        if ($('#minor')[0]) {
+          $('#minor')[0].value = $scope.gnCurrentEdit.isMinor;
+        }
+      });
 
       /**
        * When the form is loaded, this function is called.
@@ -230,6 +256,18 @@
        */
       $scope.onFormLoad = function() {
         gnEditor.onFormLoad();
+        $scope.isMinor = gnCurrentEdit.isMinor;
+        $scope.$watch('tocIndex', function(newValue, oldValue) {
+          if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
+            $timeout(function() {
+              $scope.switchToTab(gnCurrentEdit.tab);
+            });
+          }
+        });
+      };
+
+      $scope.startVersioning = function() {
+        return gnMetadataActions.startVersioning(gnCurrentEdit.id);
       };
 
       /**
@@ -261,6 +299,7 @@
       $scope.isTemplate = function() {
         return gnCurrentEdit.isTemplate === 'y';
       };
+
 
       /**
        * Display or not attributes editor.
@@ -330,10 +369,13 @@
         gnEditor.removeAttribute(gnCurrentEdit.id, ref);
         return false;
       };
+      $scope.switchTypeAndSave = function(refreshForm) {
+        $scope.setTemplate(!$scope.isTemplate());
+        return $scope.save(refreshForm);
+      };
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
-
-        gnEditor.save(refreshForm)
+        var promise = gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = false;
@@ -348,7 +390,7 @@
                 type: 'danger'});
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
+        return promise;
       };
       var closeEditor = function() {
         $scope.layout.hideTopToolBar = false;
@@ -364,7 +406,8 @@
       };
 
       $scope.cancel = function(refreshForm) {
-        gnEditor.cancel(refreshForm)
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return gnEditor.cancel(refreshForm)
           .then(function(form) {
               // Refresh editor form after cancel
               //  $scope.savedStatus = gnCurrentEdit.savedStatus;
@@ -381,12 +424,10 @@
                 timeout: 0,
                 type: 'danger'});
             });
-        $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
       };
 
       $scope.close = function() {
-        gnEditor.save(false)
+        var promise = gnEditor.save(false)
           .then(function(form) {
               closeEditor();
             }, function(error) {
@@ -396,8 +437,8 @@
                 timeout: 0,
                 type: 'danger'});
             });
-
-        return false;
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
+        return promise;
       };
       $scope.getSaveStatus = function() {
         if (gnCurrentEdit.savedTime) {
@@ -414,26 +455,14 @@
         }
       };
 
-      $scope.$on('AddElement', function(event, ref, name, 
+      $scope.$on('AddElement', function(event, ref, name,
           insertRef, position, attribute) {
             $scope.add(ref, name, insertRef, position, attribute);
           });
 
-
-
       $scope.validate = function() {
         $('#showvalidationerrors')[0].value = 'true';
-        $scope.save(true);
-      };
-
-
-      $scope.highlightRemove = function(ref) {
-        var target = $('#gn-el-' + ref);
-        target.addClass('text-danger');
-      };
-      $scope.unhighlightRemove = function(ref) {
-        var target = $('#gn-el-' + ref);
-        target.removeClass('text-danger');
+        return $scope.save(true);
       };
 
       init();

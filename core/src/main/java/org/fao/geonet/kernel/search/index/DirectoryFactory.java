@@ -50,5 +50,5 @@ public interface DirectoryFactory {
      *
      * @return the ids
      */
-    Set<String> listIndices();
+    Set<String> listIndices() throws IOException;
 }

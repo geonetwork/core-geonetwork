@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlElementReader;
 import org.fao.geonet.utils.XmlRequest;
@@ -51,16 +52,20 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.xml.stream.FactoryConfigurationError;
 
 //=============================================================================
 /** 
@@ -118,19 +123,23 @@ import java.util.*;
  */
 class Harvester implements IHarvester<HarvestResult>
 {
-	
-	
-	//---------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+
+
+    //---------------------------------------------------------------------------
 	/** 
      * Constructor
      *  
-     * @param log		
-     * @param context									Jeeves context
-     * @param params	harvesting configuration for the node
-     * 
+     *
+     * @param cancelMonitor
+     * @param log
+     * @param context                                    Jeeves context
+     * @param params    harvesting configuration for the node
+     *
      * @return null
      */
-	public Harvester(Logger log, ServiceContext context, WfsFeaturesParams params) {
+	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
+        this.cancelMonitor = cancelMonitor;
 		this.log    = log;
 		this.context= context;
 		this.params = params;
@@ -190,11 +199,11 @@ class Harvester implements IHarvester<HarvestResult>
 	public HarvestResult harvest(Logger log) throws Exception {
 
 	    this.log = log;
-		log.info("Retrieving metadata fragments for : " + params.name);
+		log.info("Retrieving metadata fragments for : " + params.getName());
         
 		//--- collect all existing metadata uuids before we update
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        localUuids = new UUIDMapper(metadataRepository, params.uuid);
+        localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
 		//--- parse the xml query from the string - TODO: default should be 
 		//--- get everything
@@ -209,7 +218,7 @@ class Harvester implements IHarvester<HarvestResult>
 		}
 
 		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
-		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, getFragmentHarvesterParams());
+		FragmentHarvester fragmentHarvester = new FragmentHarvester(cancelMonitor, log, context, getFragmentHarvesterParams());
 
 		if (params.streamFeatures) {
 			harvestFeatures(wfsQuery, fragmentHarvester);
@@ -239,9 +248,9 @@ class Harvester implements IHarvester<HarvestResult>
 	    //--- apply stylesheet from output schema - stylesheet can be optional
 			//--- in case the server can do XSL transformations for us (eg. deegree 
 			//--- 2.2)
-			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
+			stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
 	    if (!params.stylesheet.trim().equals("")) {
-	    	xml = Xml.transform(xml, stylesheetDirectory + "/" + params.stylesheet, ssParams);
+	    	xml = Xml.transform(xml, stylesheetDirectory.resolve(params.stylesheet), ssParams);
 	    }
 	   
 		 	log.info("Applying "+stylesheetDirectory + "/" + params.stylesheet);
@@ -255,39 +264,45 @@ class Harvester implements IHarvester<HarvestResult>
 	
 	private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
             throws FactoryConfigurationError, Exception {
-		
-		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
-		req.setRequest(xmlQuery);
-		Lib.net.setupProxy(context, req);
-		
-		File tempFile = File.createTempFile("temp-", ".xml");
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
+        req.setRequest(xmlQuery);
+        Lib.net.setupProxy(context, req);
 
-		try {
-			// Read response into temporary file 
-			req.executeLarge(tempFile);
+        Path tempFile = Files.createTempFile("temp-", ".xml");
 
-	    	List<Namespace> namespaces = new ArrayList<Namespace>();
-	    	namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
-	    	
-	        XmlElementReader reader = new XmlElementReader(new FileInputStream(tempFile), "gml:featureMembers/*", namespaces);
-					if (!reader.hasNext()) {
-	    			namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
-						reader = new XmlElementReader(new FileInputStream(tempFile), "wfs:FeatureCollection/gml:featureMember", namespaces);
-					}
-	        
-	        while (reader.hasNext()) {
-						stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema) + Geonet.Path.WFS_STYLESHEETS;
-	    			Element records = Xml.transform(reader.next(), stylesheetDirectory + "/" + params.stylesheet, ssParams);
-	
-	    			harvest(records, fragmentHarvester);
-	        }
-		} finally {
-	        if (!tempFile.delete() && tempFile.exists()) {
-	            log.warning("Unable to delete tempFile: "+tempFile);
-	        }
+        // Read response into temporary file
+        req.executeLarge(tempFile);
 
-		}
-				
+        List<Namespace> namespaces = new ArrayList<Namespace>();
+        namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
+
+        XmlElementReader reader;
+        try (InputStream fin = IO.newInputStream(tempFile)) {
+            reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
+        }
+
+        if (cancelMonitor.get()) {
+            return;
+        }
+
+        if (!reader.hasNext()) {
+            namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
+            try (InputStream fin = IO.newInputStream(tempFile)) {
+                reader = new XmlElementReader(fin, "wfs:FeatureCollection/gml:featureMember", namespaces);
+
+            }
+        }
+
+        while (reader.hasNext()) {
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
+            Element records = Xml.transform(reader.next(), stylesheetDirectory.resolve(params.stylesheet), ssParams);
+
+            harvest(records, fragmentHarvester);
+        }
     }
 
 	/** 
@@ -296,21 +311,21 @@ class Harvester implements IHarvester<HarvestResult>
 	
 	private void harvest(Element xml, FragmentHarvester fragmentHarvester)
             throws Exception {
-		
-	    HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
 
-			deleteOrphanedMetadata(fragmentResult.updatedMetadata);
-	    	
-	    result.fragmentsReturned += fragmentResult.fragmentsReturned;
-	    result.fragmentsUnknownSchema += fragmentResult.fragmentsUnknownSchema;
-	    result.subtemplatesAdded += fragmentResult.fragmentsAdded;
-	    result.fragmentsMatched += fragmentResult.fragmentsMatched;
-	    result.recordsBuilt += fragmentResult.recordsBuilt;
-	    result.recordsUpdated += fragmentResult.recordsUpdated;
-	    result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
+        HarvestSummary fragmentResult = fragmentHarvester.harvest(xml, params.url);
 
-	    result.totalMetadata = result.subtemplatesAdded + result.addedMetadata;
-	    result.originalMetadata = result.fragmentsReturned;
+        deleteOrphanedMetadata(fragmentResult.updatedMetadata);
+
+        result.fragmentsReturned += fragmentResult.fragmentsReturned;
+        result.fragmentsUnknownSchema += fragmentResult.fragmentsUnknownSchema;
+        result.subtemplatesAdded += fragmentResult.fragmentsAdded;
+        result.fragmentsMatched += fragmentResult.fragmentsMatched;
+        result.recordsBuilt += fragmentResult.recordsBuilt;
+        result.recordsUpdated += fragmentResult.recordsUpdated;
+        result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
+
+        result.totalMetadata = result.subtemplatesAdded + result.addedMetadata;
+        result.originalMetadata = result.fragmentsReturned;
     }
 
 	/** 
@@ -365,8 +380,8 @@ class Harvester implements IHarvester<HarvestResult>
 		fragmentParams.isoCategory = params.recordsCategory;
 		fragmentParams.privileges = params.getPrivileges();
 		fragmentParams.templateId = params.templateId;
-		fragmentParams.uuid = params.uuid;
-		fragmentParams.owner = params.ownerId;
+		fragmentParams.uuid = params.getUuid();
+		fragmentParams.owner = params.getOwnerId();
 		return fragmentParams;
     }
 
@@ -389,8 +404,8 @@ class Harvester implements IHarvester<HarvestResult>
 	private HarvestResult   result;
 	private UUIDMapper     localUuids;
 	private String	 		metadataGetService;
-	private String	 		 stylesheetDirectory;
-	private Map<String,String> ssParams = new HashMap<String,String>();
+	private Path stylesheetDirectory;
+	private Map<String,Object> ssParams = new HashMap<String,Object>();
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */

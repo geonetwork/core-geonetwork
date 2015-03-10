@@ -24,21 +24,22 @@
 package org.fao.geonet.services.util.z3950;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -49,7 +50,7 @@ import java.util.List;
 public class Repositories
 {
 
-	private static String configPath;
+	private static Path configPath;
 
 	//--------------------------------------------------------------------------
 
@@ -57,19 +58,20 @@ public class Repositories
 	  */
 	public static boolean build(URL cfgUrl, ServiceContext context) 
 	{
-
+        String configPathString;
 		try
 		{
 		    if (cfgUrl == null) {
 		        context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
 		        return false;
 		    } else {
-		        configPath = URLDecoder.decode(cfgUrl.getFile(), Constants.ENCODING);
+                configPathString = URLDecoder.decode(cfgUrl.getFile(), Constants.ENCODING);
 		    }
 			//--- build repositories file from template repositories file
 
-			String realRepo = StringUtils.substringBefore(configPath,".tem");
-			String tempRepo = configPath;
+			Path realRepo = IO.toPath(StringUtils.substringBefore(configPathString, ".tem"));
+            configPath = IO.toPath(configPathString);
+			Path tempRepo = configPath;
 
 			buildRepositoriesFile(tempRepo, realRepo);
 
@@ -90,13 +92,15 @@ public class Repositories
 	  */
 	public static boolean clearTemplate(ServiceContext context) 
 	{
-		String tempRepo = configPath; 
-		String backRepo = tempRepo + ".backup"; 
+		Path tempRepo = configPath;
+        Path backRepo = getBackupPath(tempRepo);
 
 		boolean copied = false;
 
 		try {
-		    BinaryFile.copy(new File(tempRepo), new File(backRepo));
+            java.nio.file.Files.copy(tempRepo, backRepo);
+            copied = true;
+
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
 			@SuppressWarnings("unchecked")
@@ -105,17 +109,17 @@ public class Repositories
 				if (child.getName().equals("Repository") && child.getAttributeValue("className").equals("org.jzkit.search.provider.z3950.Z3950Origin")) continue;
 				copy.addContent((Content)child.clone());
 			}
+             try (OutputStream os = java.nio.file.Files.newOutputStream(tempRepo)) {
+                 Xml.writeResponse(new Document(copy), os);
+             }
 
-			FileOutputStream os = new FileOutputStream(tempRepo);
-			Xml.writeResponse(new Document(copy), os);
-			os.close();
 		} catch (Exception e) {
 			context.warning("Cannot clear Z39.50 repositories template : "+ e.getMessage());
 			e.printStackTrace();
 			// restore the backup copy
 			if (copied) {
 				try {
-				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
+                    java.nio.file.Files.copy(backRepo, tempRepo);
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();
@@ -126,21 +130,28 @@ public class Repositories
 		return true;
 	}
 
-	//--------------------------------------------------------------------------
+    protected static Path getBackupPath(Path tempRepo) {
+        String backupName = tempRepo.getFileName().toString() + ".backup";
+        return tempRepo.getParent().resolve(backupName);
+    }
+
+    //--------------------------------------------------------------------------
 
 	/** Add a <Repository> element to the template file or replace one that
 	  * is already present
 	  */
 	public static boolean addRepo(ServiceContext context, String code, Element repo) 
 	{
-		String tempRepo = configPath; 
-		String backRepo = tempRepo + ".backup"; 
+		Path tempRepo = configPath;
+        Path backRepo = getBackupPath(tempRepo);
 
 		boolean copied = false;
 		boolean replaced = false;
 
 		try {
-			BinaryFile.copy(new File(tempRepo), new File(backRepo));
+            java.nio.file.Files.copy(tempRepo, backRepo);
+            copied = true;
+
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
 			@SuppressWarnings("unchecked")
@@ -155,16 +166,16 @@ public class Repositories
 			}
 			if (!replaced) copy.addContent(repo); // just add it
 
-			FileOutputStream os = new FileOutputStream(tempRepo);
-			Xml.writeResponse(new Document(copy), os);
-			os.close();
+            try (OutputStream os = Files.newOutputStream(tempRepo)) {
+                Xml.writeResponse(new Document(copy), os);
+            }
 		} catch (Exception e) {
 			context.warning("Cannot add Z39.50 repository " + Xml.getString(repo) + " : "+ e.getMessage());
 			e.printStackTrace();
 			// restore the backup copy
 			if (copied) {
 				try {
-				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
+				    Files.copy(backRepo, tempRepo);
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();
@@ -181,7 +192,7 @@ public class Repositories
 	//---
 	//--------------------------------------------------------------------------
 
-	private static void buildRepositoriesFile(String src, String des) throws Exception
+	private static void buildRepositoriesFile(Path src, Path des) throws Exception
 	{
 		Element root  = Xml.loadFile(src);
 
@@ -190,10 +201,10 @@ public class Repositories
 		"It is AUTOMATICALLY GENERATED by GeoNetwork each time it starts up \n"+
 		"from the contents of "+src+".\n"));
 
-		//--- now output the repositories file
-		FileOutputStream os = new FileOutputStream(des);
-		Xml.writeResponse(new Document(root), os);
-		os.close();
+        //--- now output the repositories file
+        try (OutputStream os = Files.newOutputStream(des)) {
+            Xml.writeResponse(new Document(root), os);
+        }
 	}
 
 }

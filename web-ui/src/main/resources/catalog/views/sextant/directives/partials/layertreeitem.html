@@ -1,0 +1,47 @@
+<li class="" data-ng-class="{'active': member.showInfo}">
+  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="fa fa-minus-square-o"></i>&nbsp;<span>{{member.name}}</span></div>
+  <div ng-if="!isParentNode()">
+
+    <!--Drop down button for layer actions-->
+    <div class="btn-group pull-right">
+      <button data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle pull-right btn btn-default btn-xs" type="button">
+        <span class="fa fa-cog"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+
+        <!--Zoom To layer-->
+        <li><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
+          <i class="fa fa-arrows-alt"></i>&nbsp;<span translate="">layerExtentZoom</span>
+        </a></li>
+
+        <!--Open metadata-->
+        <li><a href="" data-ng-click="showMetadata()">
+          <i class="fa fa-file"></i>&nbsp;<span translate="">showMetadata</span>
+        </a></li>
+
+        <!--Remove layer-->
+        <li><a href="" data-ng-click="map.removeLayer(member)">
+          <i class="fa fa-trash-o"></i>&nbsp;<span translate="">remove</span>
+        </a></li>
+
+        <!--opacity-->
+        <li><label><span translate="">opacity</span>
+            <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
+        </label></li>
+
+        <!--NCWMS-->
+        <li data-ng-if="member.ncInfo"><a href="" data-ng-click="setNCWMS(member)">
+          <i class="fa fa-anchor"></i>&nbsp;<span translate="">ncwms</span>
+        </a></li>
+
+      </ul>
+    </div>
+
+    <!-- Visibility check box & Layer title-->
+    <label>
+      <input type="checkbox" ng-model="member.visible" title="{{'layerVisible'|translate}}" />
+      {{member.get('label')}}
+    </label>
+
+  </div>
+</li>

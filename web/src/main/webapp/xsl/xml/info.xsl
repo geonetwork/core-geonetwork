@@ -21,15 +21,15 @@
 				<source id="{id}">
 					<uuid><xsl:value-of select="id"/></uuid>
 					<xsl:copy-of select="name"/>
+					<xsl:copy-of select="label"/>
 				</source>
 			</xsl:for-each>
 		</sources>
 	</xsl:template>
 	
-    <xsl:template match="isolanguages">
+    <xsl:template match="isolanguage">
         <xsl:copy>
             <xsl:for-each select="record">
-                <xsl:sort select="name" order="ascending"/>
                 <isolanguage id="{id}">
                     <xsl:copy-of select="code"/>
                     <xsl:copy-of select="label"/>
@@ -38,6 +38,20 @@
         </xsl:copy>
     </xsl:template>
 	
+    <xsl:template match="language">
+        <defaultlanguage><xsl:value-of select="record[defaultlanguage = 'true']/id" /></defaultlanguage>
+        <xsl:copy>
+            <xsl:for-each select="record">
+                <xsl:sort select="name" order="ascending"/>
+                <language>
+                    <xsl:copy-of select="id"/>
+                    <xsl:copy-of select="inspire"/>
+                    <xsl:copy-of select="name"/>
+                </language>
+            </xsl:for-each>
+        </xsl:copy>
+    </xsl:template>
+
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="metadatacategory">
@@ -175,6 +189,10 @@
 		<xsl:for-each select="settings/setting">
 			<xsl:element name="{replace(@name, '/', '.')}"><xsl:value-of select="@value"/></xsl:element>
 		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="systemInfo">
+		<xsl:copy-of select="." />
 	</xsl:template>
 
 </xsl:stylesheet>

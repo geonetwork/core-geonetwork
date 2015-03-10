@@ -23,59 +23,91 @@
 
 package org.fao.geonet.services.logo;
 
+import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.Util;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
+import org.fao.geonet.utils.IO;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-public class Add implements Service {
-	private volatile String logoDirectory;
+@Controller("admin.logo.upload")
+public class Add implements ApplicationContextAware {
+	private volatile Path logoDirectory;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	private ApplicationContext context;
+
+	public synchronized void setApplicationContext(ApplicationContext context) {
+		this.context = context;
 	}
 
-	public Element exec(Element params, ServiceContext context)
+	@RequestMapping(value = "/{lang}/admin.logo.upload",
+			consumes = { MediaType.ALL_VALUE }, 
+			produces = { MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody
+	StatusResponse execJSON(@RequestParam("fname") MultipartFile fname)
 			throws Exception {
-	    if(logoDirectory == null) {
-    	    synchronized (this) {
-    	        if(logoDirectory == null) {
-    	            logoDirectory = Resources.locateHarvesterLogosDir(context);
-    	        }
-            }
-	    }
-		String file = Util.getParam(params, Params.FNAME);
-		
-		if (file.contains("..")) {
-			throw new BadParameterEx("Invalid character found in resource name.", file);
-		}
-		
-		if ("".equals(file)) {
-			throw new Exception("Logo name is not defined.");
-		}
-		
-		File inFile = new File(context.getUploadDir(), file);
-		File outFile = new File(logoDirectory, file);
+		return exec(fname);
+	}
+
+	@RequestMapping(value = "/{lang}/admin.logo.upload", produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody
+	StatusResponse exec(@RequestParam("fname") MultipartFile fname)
+			throws Exception {
 
 		try {
-			BinaryFile.moveTo(inFile, outFile, "Copy Logo");
+            Path logoDir;
+            synchronized (this) {
+                if(this.logoDirectory == null) {
+                    this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(context);
+                }
+                logoDir = this.logoDirectory;
+            }
+
+			if (fname.getName().contains("..")) {
+				throw new BadParameterEx(
+						"Invalid character found in resource name.",
+						fname.getName());
+			}
+
+			if ("".equals(fname.getName())) {
+				throw new Exception("Logo name is not defined.");
+			}
+
+			Path serverFile = logoDir.resolve(fname.getOriginalFilename());
+			if (Files.exists(serverFile)) {
+                IO.deleteFile(serverFile, true, "Deleting server file");
+				serverFile = logoDir.resolve(fname.getOriginalFilename());
+			}
+
+            serverFile = Files.createFile(serverFile);
+
+			try (OutputStream stream = Files.newOutputStream(serverFile)) {
+
+                int read;
+                byte[] bytes = new byte[1024];
+
+                InputStream is = fname.getInputStream();
+
+                while ((read = is.read(bytes)) != -1) {
+                    stream.write(bytes, 0, read);
+                }
+            }
 		} catch (Exception e) {
-			IO.delete(inFile, false, Geonet.RESOURCES);
-			throw new Exception(
-					"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
+			return new StatusResponse(e.getMessage());
 		}
 
-		Element response = new Element("response");
-		response.addContent(new Element("status").setText("Logo added."));
-		return response;
+		return new StatusResponse("Logo added.");
 	}
 }

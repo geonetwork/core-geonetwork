@@ -5,6 +5,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.jdom.Element;
 import org.junit.Before;
@@ -24,6 +25,8 @@ import static org.junit.Assert.assertTrue;
 public class ServiceManagerIntegratedTest extends AbstractCoreIntegrationTest {
     @Autowired
     ServiceManager _serviceManager;
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
 
     private static final String SERVICE_NAME = "mockService";
@@ -37,7 +40,8 @@ public class ServiceManagerIntegratedTest extends AbstractCoreIntegrationTest {
         serviceElem.setAttribute("name", SERVICE_NAME);
         serviceElem.addContent(new Element("class").setAttribute("name", MockService.class.getName()));
 
-        ServiceInfo serviceInfo = _serviceManager.addService(MockService.class.getPackage().getName(), serviceElem);
+        ServiceInfo serviceInfo = _serviceManager.addService(MockService.class.getPackage().getName(), serviceElem,
+                dataDirectory.getWebappDir());
         this._service = (MockService) serviceInfo.getServices().get(0);
 
     }

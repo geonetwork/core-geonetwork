@@ -17,7 +17,7 @@ CREATE TABLE Address
 	id			  int 			not null,
 	address       varchar(128),
 	city          varchar(128),
-	state         varchar(32),
+	state         varchar(64),
 	zip           varchar(16),
 	country       varchar(128),
 	primary key(id)

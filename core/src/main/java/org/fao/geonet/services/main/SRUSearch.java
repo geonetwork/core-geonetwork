@@ -46,6 +46,7 @@ import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 
+import java.nio.file.Path;
 import java.util.*;
 
 //=============================================================================
@@ -104,7 +105,7 @@ public class SRUSearch implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
         if(Log.isDebugEnabled(Geonet.SRU))
             Log.debug(Geonet.SRU,"SRUsearch::init");

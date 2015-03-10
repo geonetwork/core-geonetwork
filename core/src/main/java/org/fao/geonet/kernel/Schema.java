@@ -6,6 +6,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +116,7 @@ public class Schema {
 		this.schemaInfo = schemaInfo;
 	}
 
-	private String dir;
+	private Path dir;
 
 	/**
 	 * Get file system directory in which schema resides - used by methods that need to access xslt files in the schema
@@ -123,7 +124,7 @@ public class Schema {
 	 *
      * @return
      */
-	public String getDir() { return dir; }
+	public Path getDir() { return dir; }
 
 	/**
 	 * Set file system directory in which schema resides.
@@ -131,7 +132,7 @@ public class Schema {
 	 * @param dir file system directory in which schema resides
 	 *
 	 */
-	public void setDir(String dir) { 
+	public void setDir(Path dir) {
 		this.dir = dir; 
 	}
 
@@ -225,7 +226,7 @@ public class Schema {
 	/**
 	 * Set List of XML elements whose text values are the names of schemas that this schema depends upon.
 	 *
-	 * @param  dependList of JDOM elements
+	 * @param  dependElements of JDOM elements
 	 *
 	 */
 	public void setDependElements(List<Element> dependElements) { 

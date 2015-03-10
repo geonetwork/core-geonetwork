@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+
+
+	<ctx:property-override
+		location="WEB-INF/config-security/config-security-shibboleth-overrides.properties"
+		ignore-resource-not-found="true" />
+
+	<!-- the shibboleth authentication filter -->
+	<bean id="shibbolethPreAuthFilter"
+		class="org.fao.geonet.kernel.security.shibboleth.ShibbolethPreAuthFilter">
+		<property name="utils" ref="shibbolethUserUtils" />
+		<property name="configuration" ref="shibbolethConfiguration" />
+		<!--<property name="requestCache" ref="requestCache" /> -->
+	</bean>
+
+	<bean id="shibbolethUserUtils"
+		class="org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils">
+		<property name="_userRepository" ref="userRepository" />
+		<property name="_groupRepository" ref="groupRepository" />
+		<property name="authProvider" ref="geonetworkAuthenticationProvider" />
+		<!-- <property name="userDetailsManager" ref="ldapUserDetailsService" /> -->
+		<!-- <property name="udetailsmapper" ref="ldapUserContextMapper"/> -->
+	</bean>
+
+	<!-- Configuration bean -->
+	<!-- You may customize the following values by editing the file config-security-shibboleth-overrides.properties -->
+	<bean id="shibbolethConfiguration"
+		class="org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration">
+		<property name="firstnameKey" value="${shibbolethConfiguration.firstnameKey}" />
+		<property name="surnameKey" value="${shibbolethConfiguration.surnameKey}" />
+		<property name="usernameKey" value="${shibbolethConfiguration.usernameKey}" />
+		<property name="profileKey" value="${shibbolethConfiguration.profileKey}" />
+		<property name="groupKey" value="${shibbolethConfiguration.groupKey}" />
+
+		<property name="updateGroup" value="${shibbolethConfiguration.updateGroup}" />
+		<property name="updateProfile" value="${shibbolethConfiguration.updateProfile}" />
+	</bean>
+
+	<!-- replace the default entry point -->
+	<bean id="shibAuthenticationEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<property name="loginFormUrl" value="/login.jsp" /> 
+	</bean>
+
+	<alias name="shibAuthenticationEntryPoint" alias="authenticationEntryPoint" />
+
+	<!-- The filter chain for the shib.user.login service -->
+	<alias name="shibFilterChainImplementation" alias="shibFilterChainPlaceholder" />
+
+	<bean id="shibFilterChainImplementation"
+		class="org.springframework.security.web.DefaultSecurityFilterChain">
+		<constructor-arg>
+			<bean class="org.springframework.security.web.util.AntPathRequestMatcher">
+				<constructor-arg value="/srv/???/shib.user.login" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="filterChainFilters" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="filterChainFilters" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<!--<ref bean="requestCacheFilter" /> -->
+				<ref bean="logoutFilter" />
+
+				<ref bean="shibbolethPreAuthFilter" />
+
+				<ref bean="basicAuthenticationFilter" />
+				<ref bean="requestCacheFilter" />
+				<ref bean="anonymousFilter" />
+				<ref bean="sessionMgmtFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="filterSecurityInterceptor" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+</beans>

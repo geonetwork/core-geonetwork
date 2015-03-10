@@ -23,34 +23,48 @@
 
 package org.fao.geonet.services.metadata;
 
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import com.google.common.collect.Lists;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 // FIXME: this class could be moved to DataManager
 
@@ -59,57 +73,9 @@ import java.util.concurrent.*;
  * Import all metadata found inside a given directory.
  */
 public class ImportFromDir extends NotInReadOnlyModeService {
-	private FilenameFilter filter = new FilenameFilter()
-	{
-		public boolean accept(File dir, String name)
-		{
-			if (name.equals(CONFIG_FILE))
-				return false;
-
-			return !name.startsWith(".");
-		}
-	};
-
 	//--------------------------------------------------------------------------
 
-	/**
-	 * Filter xml or mef files.
-	 */
-	public static class BatchImportFilenameFilter implements FilenameFilter {
-	    
-	    private boolean acceptDirectories = false;
-	    
-	    public static final boolean ACCEPT_DIRECTORIES = true;
-	    
-	    public BatchImportFilenameFilter(boolean acceptDirectories) {
-	        this.acceptDirectories = acceptDirectories;
-	    }
-	    
-	    public BatchImportFilenameFilter() {}
-	    
-	    public boolean accept(File dir, String name) {
-	        if(acceptDirectories) {
-	            File f = new File(dir + File.separator + name);
-	            return f.isDirectory() || checkFile(name);
-	        }
-	        return checkFile(name);
-	    }
-
-        private boolean checkFile(String name) {
-            if (name.equals(CONFIG_FILE))
-                return false;
-            if (name.toLowerCase().endsWith(".xml") ||
-                    name.toLowerCase().endsWith(".mef") ||
-                    name.toLowerCase().endsWith(".zip"))
-                return true;
-            else
-                return false;
-        }
-	}
-
-	//--------------------------------------------------------------------------
-
-	private String stylePath;
+	private Path stylePath;
     private Map<String, Exception> exceptions = new HashMap<String, Exception>();
     private boolean failOnError;
 	private static final String CONFIG_FILE = "import-config.xml";
@@ -120,9 +86,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
-		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+		this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
 	}
 
 	//--------------------------------------------------------------------------
@@ -149,7 +115,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	{
 		String dir  = Util.getParam(params, Params.DIR);
 		failOnError = Util.getParam(params, Params.FAIL_ON_ERROR, "off").equals("on");
-		File   file = new File(dir +"/"+ CONFIG_FILE);
+		Path file = IO.toPath(dir).resolve(CONFIG_FILE);
 
 		//-----------------------------------------------------------------------
 
@@ -157,8 +123,11 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 		int result;
 
-		if (file.exists())	result = configImport(params, context, file);
-			else 					result = standardImport(params, context);
+		if (Files.exists(file)){
+            result = configImport(params, context, file);
+        } else{
+            result = standardImport(params, context);
+        }
 
 		long end = System.currentTimeMillis();
 		long duration = (end - start) / 1000;
@@ -198,17 +167,17 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 
 	public static final class ImportCallable implements Callable<HashMap<String, Exception>> {
-		private final File files[];
+		private final List<Path> files;
 		private final int beginIndex, count;
 		private final Element params;
-		private final String stylePath;
+		private final Path stylePath;
 		private final boolean failOnError;
 		private final ServiceContext context;
 		private final int userId;
 		private final String userName;
 		private final Profile userProfile;
 
-		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
+		ImportCallable(List<Path> files, int beginIndex, int count, Element params, ServiceContext context, Path stylePath, boolean failOnError) {
 			this.files = files;
 			this.beginIndex = beginIndex;
 			this.count = count;
@@ -231,34 +200,45 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			HashMap<String, Exception> exceptions = new HashMap<String, Exception>();
 			
 			login();
-			
-			for(int i=beginIndex; i<beginIndex+count; i++) {
+
+            for (Path file : files) {
 				try {
-                    MEFLib.doImport(params, context, files[i], stylePath);
+                    MEFLib.doImport(params, context, file, stylePath);
                 } catch (Exception e) {
 					if (failOnError)
 						throw e;
 					
-					exceptions.put(files[i].getName(), e);
+					exceptions.put(file.toString(), e);
 				}
 			}
 			return exceptions;
 		}
 	}
 
-	public class ImportMetadataReindexer extends MetadataIndexerProcessor {
+    private static class MefOrXmlFileFilter implements DirectoryStream.Filter<Path> {
+        @Override
+        public boolean accept(Path file) throws IOException {
+            String name = file.getFileName().toString();
+            return (name.toLowerCase().endsWith(".xml") ||
+                    name.toLowerCase().endsWith(".mef") ||
+                    name.toLowerCase().endsWith(".zip"));
+        }
+    }
+
+    public class ImportMetadataReindexer extends MetadataIndexerProcessor {
 		Element params;
-		File files[];
-		String stylePath;
+        List<Path> files;
+		Path stylePath;
 		ServiceContext context;
         HashMap<String, Exception> exceptions = new HashMap<String, Exception>();
 
 
-		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
+		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<Path> fileList, Path stylePath,
+                                       boolean failOnError) {
 			super (dm);
 			this.params = params;
 			this.context = context;
-			this.files = fileList.toArray(new File[fileList.size()]);
+			this.files = fileList;
 			this.stylePath = stylePath;
 		}
 
@@ -268,15 +248,15 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
 			int perThread;
-			if (files.length < threadCount) perThread = files.length;
-			else perThread = files.length / threadCount;
+			if (files.size() < threadCount) perThread = files.size();
+			else perThread = files.size() / threadCount;
 			int index = 0;
 
 			List<Future<HashMap<String, Exception>>> submitList =
                     new ArrayList<Future<HashMap<String, Exception>>>();
-			while(index < files.length) {
+			while(index < files.size()) {
 				int start = index;
-				int count = Math.min(perThread,files.length-start);
+				int count = Math.min(perThread,files.size() - start);
 				// create threads to process this chunk of files
 				Callable<HashMap<String, Exception>> worker =
                         new ImportCallable(files, start, count, params, context, stylePath, failOnError);
@@ -316,7 +296,25 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		String dir      = Util.getParam(params, Params.DIR);
 		boolean recurse = Util.getParam(params, Params.RECURSE, "off").equals("on");
 		
-		List<File> files = IO.getFilesInDirectory(new File(dir), recurse, new BatchImportFilenameFilter(recurse));
+		final List<Path> files = Lists.newArrayList();
+        final MefOrXmlFileFilter predicate = new MefOrXmlFileFilter();
+        if (recurse) {
+            Files.walkFileTree(IO.toPath(dir), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (predicate.accept(file)) {
+                        files.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } else {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(IO.toPath(dir), predicate)) {
+                for (Path file : paths) {
+                    files.add(file);
+                }
+            }
+        }
 
 		if (files.size() == 0)
 			throw new Exception("No XML or MEF file found in " + dir);
@@ -334,7 +332,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	private int configImport(Element params, ServiceContext context, File configFile) throws Exception
+	private int configImport(Element params, ServiceContext context, Path configFile) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
@@ -347,54 +345,42 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
-		File sites[] = new File(dir).listFiles(filter);
+        int counter = 0;
+        ArrayList<ImportInfo> alImport = new ArrayList<ImportInfo>();
 
-		if (sites == null)
-			throw new Exception("Directory not found : " + dir);
-
-		int counter = 0;
-
-		ArrayList<ImportInfo> alImport = new ArrayList<ImportInfo>();
-
-		for(int i=0; i<sites.length; i++)
-		{
-            if(context.isDebugEnabled())
-                context.debug("Scanning site : "+sites[i]);
-
-			File categs[] = sites[i].listFiles(filter);
-
-			if (categs == null)
-				throw new Exception("Cannot scan categories in : " + sites[i].getPath());
-
-			for(int j=0; j<categs.length; j++)
-			{
+        try (DirectoryStream<Path> sites = Files.newDirectoryStream(IO.toPath(dir))) {
+            for (Path site : sites) {
                 if(context.isDebugEnabled())
-                    context.debug("   Scanning category : "+categs[j]);
+                    context.debug("Scanning site : " + site);
 
-				String catDir  = categs[j].getName();
-				File   files[] = categs[j].listFiles(new BatchImportFilenameFilter());
+                try (DirectoryStream<Path> categs = Files.newDirectoryStream(site)) {
+                    for (Path categ : categs) {
+                        if(context.isDebugEnabled()) {
+                            context.debug("   Scanning category : " + categ);
+                        }
 
-				if (files == null)
-					throw new Exception("Cannot scan files in : " + categs[j].getPath());
+                        try (DirectoryStream<Path> paths = Files.newDirectoryStream(categ, new MefOrXmlFileFilter())) {
+                            for (Path file : paths) {
+                                Element xml = Xml.loadFile(file);
 
-				for(int k=0; k<files.length; k++)
-				{
-					Element xml = Xml.loadFile(files[k]);
+                                if (!style.equals("_none_"))
+                                    xml = Xml.transform(xml, stylePath.resolve(style));
 
-					if (!style.equals("_none_"))
-						xml = Xml.transform(xml, stylePath +"/"+ style);
+                                String category = config.mapCategory(categ.toString());
+                                String schema   = config.mapSchema(categ.toString());
 
-					String category = config.mapCategory(catDir);
-					String schema   = config.mapSchema(catDir);
+                                if (validate)
+                                    dm.validate(schema, xml);
 
-					if (validate)
-						dm.validate(schema, xml);
+                                alImport.add(new ImportInfo(schema, category, xml));
+                                counter++;
+                            }
+                        }
+                    }
+                }
 
-					alImport.add(new ImportInfo(schema, category, xml));
-					counter++;
-				}
-			}
-		}
+            }
+        }
 
 		//--- step 2 : insert metadata
 
@@ -485,7 +471,7 @@ class ImportConfig
 	//---
 	//--------------------------------------------------------------------------
 
-	public ImportConfig(File configFile, ServiceContext context) throws Exception
+	public ImportConfig(Path configFile, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);

@@ -1,0 +1,5 @@
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="wro-sources.xsd" >
+    <include file="classpath:web-ui-wro-sources.xml" />
+    <include file="classpath:web-client-wro-sources.xml" />
+</sources>

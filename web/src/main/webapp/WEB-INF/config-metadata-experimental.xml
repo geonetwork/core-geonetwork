@@ -16,13 +16,6 @@
       <class name=".services.metadata.GetSuggestion"/>
     </service>
 
-
-    <service name="metadata.thumbnail.set.new">
-      <class name=".services.thumbnail.Set"/>
-      <!-- FIXME : this is a default success response XSL -->
-      <output sheet="admin-logo-add.xsl"/>
-    </service>
-
     <service name="metadata.thumbnail.unset.new">
       <class name=".services.thumbnail.Unset"/>
       <output sheet="admin-logo-add.xsl"/>
@@ -90,31 +83,6 @@
       </output>
     </service>
 
-
-    <service name="metadata.processing.new">
-      <class name=".services.metadata.XslProcessing"/>
-      <output forward="edit"/>
-    </service>
-    
-    <service name="resource.upload.and.link">
-      <class name=".services.resources.UploadAndProcess"/>
-      
-      <!-- FIXME : this is a default success response XSL -->
-      <output sheet="admin-logo-add.xsl"/>
-      
-      <error sheet="error-modal.xsl">
-        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
-      </error>
-    </service>
-    
-    <service name="resource.del.and.detach">
-      <class name=".services.resources.RemoveAndProcess"/>
-      
-      <error sheet="error-modal.xsl">
-        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
-      </error>
-    </service>
-    
     <service name="metadata.create.new">
       <class name=".services.metadata.Create">
         <param name="editTab" value="true"/>
@@ -123,12 +91,10 @@
       <output forward="edit"/>
     </service>
 
-
-
     <service name="resources.del.new">
       <class name=".services.resources.Remove"/>
 
-      <error id="file-not-found" sheet="error.xsl" statusCode="404">
+      <error id="file-not-found" sheet="../xslt/common/error.xsl" statusCode="404">
         <xml name="error" file="xml/file-not-found-error.xml"/>
       </error>
 
@@ -140,7 +106,7 @@
 
       <output forward="edit"/>
 
-      <error id="client" sheet="metadata-error.xsl"/>
+      <error id="client" sheet="../xslt/error/error-xml.xsl"/>
     </service>
 
     <service name="resources.upload.new">
@@ -163,7 +129,7 @@
 
       <output forward="edit"/>
 
-      <error id="client" sheet="metadata-error.xsl"/>
+      <error id="client" sheet="../xslt/error/error-xml.xsl"/>
     </service>
 
 

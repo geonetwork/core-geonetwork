@@ -63,14 +63,14 @@ public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 		params.create(node);
 
 		// --- force the creation of a new uuid
-		params.uuid = UUID.randomUUID().toString();
+		params.setUuid(UUID.randomUUID().toString());
 
 		String id = settingMan.add("harvesting", "node", getType());
 
 		storeNode(params, "id:" + id);
-        Source source = new Source(params.uuid, params.name, true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 		
 		return id;
 	}
@@ -92,10 +92,10 @@ public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 		// --- we update a copy first because if there is an exception CswParams
 		// --- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.uuid, copy.name, true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon,
-				copy.uuid);
+                copy.getUuid());
 
 		params = copy;
         super.setParams(params);
@@ -194,7 +194,7 @@ public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 	}
 
 	public void doHarvest(Logger log) throws Exception {
-		Harvester h = new Harvester(log, context, params);
+		Harvester h = new Harvester(cancelMonitor, log, context, params);
 		serverResults = h.harvest(log);
 	}
 

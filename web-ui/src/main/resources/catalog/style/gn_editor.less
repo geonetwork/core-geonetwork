@@ -1,7 +1,8 @@
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
-@import "../lib/style/ol.css";
-@import "../lib/style/datetimepicker.css";
-@import "../lib/jquery.ext/jquery.fileupload-ui.css";
+// import the css files as less files so they are included in the final output of wro4j
+@import (less) "../lib/style/ol.css";
+@import (less) "../lib/style/datetimepicker.css";
+@import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
 
 body {
@@ -58,7 +59,7 @@ input[type=text], input[type=number], select {
 
 
 .gn-editor-container {
-  padding: 10px;
+  padding: 20px 5px;
   margin-top: 45px;
 }
 
@@ -82,7 +83,7 @@ form.gn-editor {
    */
   fieldset > div.form-group.gn-field,
   fieldset > div.row.gn-field {
-    border-top: 1px solid #EEE;
+//    border-top: 1px solid #EEE;
 //    padding-left:  (@grid-gutter-width / 2);
     padding-top: 5px;
   }
@@ -106,7 +107,7 @@ form.gn-editor {
   }
   
   .form-group {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
   }
   
   legend {
@@ -121,7 +122,7 @@ form.gn-editor {
   
   .gn-autocomplete-list {
     position: absolute;
-    margin-top: 4px;
+    margin-top: 35px;
     width: inherit;
     z-index: 999;
 
@@ -137,15 +138,19 @@ form.gn-editor {
   }
   
   .control-label {
-    color: #858585;
+      color: #6a6a6a;
+      font-weight: 200;
+      padding-top: 0px;
+      line-height: 1em;
+
   }
   
   .gn-required > label {
-    color: #333333;
+ //   color: #333333;
   }
   
   .gn-move {
-    .pull-right();
+//    .pull-right();
   }
   
   legend > div.gn-move {
@@ -161,7 +166,7 @@ form.gn-editor {
   
   .gn-has-xlink {
     label, fieldset > legend {
-      opacity: .7;
+  //    opacity: .7;
     }
   }
   
@@ -174,6 +179,9 @@ form.gn-editor {
     .label {
       line-height: 2;
       font-size: 8px;
+    }
+    .no-data a {
+      color: @gray-light;
     }
   }
 
@@ -239,6 +247,54 @@ form.gn-editor {
       display: none !important;
     }
   }
+
+  /* Avoid to apply img logo css to fieldset in editor */
+  fieldset.gn-logo {
+    max-height: inherit;
+  }
+  fieldset {
+      padding: 5px;
+      border: 1px solid #ebebeb;
+      border-radius: 3px;
+  }
+  .gn-field {
+      border-radius: 3px;
+      margin: 0px;
+      padding: 5px;
+  }
+  .field-bg {
+      background-color: #f7f7f7;
+  }
+  .gn-move {
+      border: none;
+  }
+  i.btn.fa-times.text-danger {
+      visibility: hidden;
+      padding: 5px;
+  }
+  .show {
+      visibility: visible;
+  } 
+  .gn-value .col-xs-8 {
+      padding-left: 0px;
+  }
+  .gn-value .col-xs-4 {
+      padding-right: 0px;
+  }
+
+  .gn-required > label:after {
+      content: "*";
+      font-size: 2.5em;
+      margin: 7px 0 0 7px;
+      position: absolute;
+      color: #a94442;
+      font-weight: normal;
+  }
+  .form-horizontal .form-group {
+      margin-left: 0px;
+      margin-right: 0px;
+  }
+
 }
 
 form.gn-tab-inspire {
@@ -258,7 +314,10 @@ form.gn-tab-inspire {
     overflow: auto;
   }
   .list-group.fixed {
-    height: 400px;
+    min-height: 100px;
+    li.active {
+        background-color: #428bca;
+    }
   }
 }
 
@@ -285,4 +344,7 @@ form.gn-tab-inspire {
 
 .gn-schematron-title {
   word-wrap: break-word;
+}
+.navbar-collapse {
+  padding-right: 0px;
 }

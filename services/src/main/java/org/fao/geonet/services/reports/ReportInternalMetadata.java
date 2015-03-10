@@ -12,6 +12,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ import java.util.Set;
  * @author Jose García
  */
 public class ReportInternalMetadata implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // --------------------------------------------------------------------------

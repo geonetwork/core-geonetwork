@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.AddressEntityListenerManager;
 
 import javax.persistence.*;
@@ -151,19 +152,19 @@ public class Address extends GeonetEntity implements Serializable {
      * @param mergeNullData if true then also set null values from other address. If false then only merge non-null data
      */
     public void mergeAddress(final Address otherAddress, final boolean mergeNullData) {
-        if (mergeNullData || otherAddress.getAddress() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherAddress.getAddress())) {
             setAddress(otherAddress.getAddress());
         }
-        if (mergeNullData || otherAddress.getCity() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherAddress.getCity())) {
             setCity(otherAddress.getCity());
         }
-        if (mergeNullData || otherAddress.getState() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherAddress.getState())) {
             setState(otherAddress.getState());
         }
-        if (mergeNullData || otherAddress.getZip() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherAddress.getZip())) {
             setZip(otherAddress.getZip());
         }
-        if (mergeNullData || otherAddress.getCountry() != null) {
+        if (mergeNullData || StringUtils.isNotBlank(otherAddress.getCountry())) {
             setCountry(otherAddress.getCountry());
         }
     }

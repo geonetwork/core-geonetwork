@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.11.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
 
 
@@ -40,20 +40,17 @@
       </dependency>
 
     <dependency>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr-runtime</artifactId>
+          <version>3.5.2</version>
+      </dependency>
+    <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-dom</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jfree</groupId>
-      <artifactId>jfreechart</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jfree</groupId>
-      <artifactId>jcommon</artifactId>
     </dependency>
     <dependency>
       <groupId>org.openrdf</groupId>
@@ -77,10 +74,6 @@
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
-          <artifactId>spring-aop</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
           <artifactId>spring-orm</artifactId>
       </dependency>
       <dependency>
@@ -97,6 +90,29 @@
          <artifactId>spring-web</artifactId>
          <version>${spring.version}</version>
       </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-test</artifactId>
+         <version>${spring.version}</version>
+          <scope>compile</scope>
+      </dependency>
+
+ 	<!-- This is to avoid 406 error with spring -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	   <version>2.1.2</version>
+	</dependency>
+ 	<dependency>  
+        <groupId>javax.xml.bind</groupId>  
+        <artifactId>jaxb-api</artifactId>  
+        <version>2.2.11</version>  
+    </dependency> 
+     <dependency>
+		<groupId>com.sun.xml.bind</groupId>
+		<artifactId>jaxb-impl</artifactId>
+		<version>2.2.7</version>
+	</dependency>
  
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
@@ -111,7 +127,7 @@
       <groupId>marc4j</groupId>
       <artifactId>marc4j</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
@@ -147,6 +163,10 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.jdbc</groupId>
+      <artifactId>gt-jdbc-postgis</artifactId>
     </dependency>
 
     <dependency>
@@ -281,11 +301,6 @@
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>jeeves</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
@@ -322,6 +337,12 @@
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>health-monitor</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>inspire-atom</artifactId>
           <version>${project.version}</version>
       </dependency>
 
@@ -418,27 +439,6 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-    
-    <dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-core</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf-itext5</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-test</artifactId>
-      </dependency>
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>domain</artifactId>
@@ -465,7 +465,33 @@
           <artifactId>wro4j</artifactId>
           <version>${project.version}</version>
       </dependency>
-	</dependencies>
+
+      <dependency>
+          <groupId>ro.isdc.wro4j</groupId>
+          <artifactId>wro4j-maven-plugin</artifactId>
+          <version>${wro.version}</version>
+          <scope>test</scope>
+      </dependency>
+
+      <!-- Add dependencies to schema plugin
+      having a custom Bean to be loaded. -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19139</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19110</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-dublin-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+  </dependencies>
 
   
   <build>
@@ -510,18 +536,6 @@
                    <directory>${basedir}/src/main/webResources</directory>
                    <filtering>true</filtering>
                    <targetPath>${build.webapp.resources}</targetPath>
-                   <excludes>
-                     <exclude>**/.svn</exclude>
-                   </excludes>
-                 </resource>
-                 <resource>
-                   <directory>${basedir}/src/main/webapp/scripts/lib/</directory>
-                   <filtering>false</filtering>
-                   <targetPath>${build.webapp.resources}/scripts/lib/</targetPath>
-                   <excludes>
-                     <exclude>**/.svn</exclude>
-                     <exclude>**/*.js</exclude>
-                   </excludes>
                  </resource>
                </resources>
                <filters>
@@ -530,12 +544,45 @@
                <overwrite>true</overwrite>
              </configuration>
            </execution>
+          <execution>
+            <id>copy-schemas</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <overwrite>true</overwrite>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <!-- Copy the schema folder to the webapp folder source directory
+                in order to be loaded by the application when running mvn jetty:run.
+                -->
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/dublin-core/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
          </executions>
       </plugin>
       <plugin> 
         <groupId>org.codehaus.mojo</groupId> 
         <artifactId>buildnumber-maven-plugin</artifactId> 
-        <version>1.0</version> 
+        <version>1.3</version>
         <executions> 
           <execution> 
             <phase>validate</phase> 
@@ -547,7 +594,8 @@
         <configuration> 
           <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat> 
           <doCheck>false</doCheck> 
-          <doUpdate>false</doUpdate> 
+          <doUpdate>false</doUpdate>
+          <revisionOnScmFailure>true</revisionOnScmFailure>
         </configuration> 
       </plugin>
 
@@ -559,7 +607,14 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
-                <directory>${project.basedir}/../web-client/src/main/resources</directory>
+              <directory>${project.basedir}/../schemas</directory>
+              <includes>
+                <include>**/src/main/plugin/*</include>
+              </includes>
+              <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
+            </resource>
+            <resource>
+              <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
             <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
@@ -643,9 +698,19 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
+            <resourcesAsCSV>
+              ${project.basedir}/src/main/webapp,
+              ${rootProjectDir}/web-ui/src/main/resources/,
+              ${build.webapp.resources},
+              ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
+          <systemProperties>
+            <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+              <value>500000</value>
+            </systemProperty>
+          </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
         </configuration>
@@ -669,80 +734,6 @@
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>findbugs-maven-plugin</artifactId>
 		  </plugin>
-
-            <!--
-                The following plugin is the maven configuration for:
-                Web Resource Optimizer For Java (WRO4J)  https://code.google.com/p/wro4j/wiki/Introduction
-
-                The output files are unimportant because the purpose of the maven plugin (in our usage) is to
-                only check that the javascript and css file can be correctly compiled, linted, compressed, etc...
-
-                There is a Servlet filter (see web.xml) that does the actual compilation,linting,compression at runtime.
-                The filter allows a developer to be able to make live modifications and automatically have the
-                compiling/linting/compression done during the development rather than just at build time.
-
-                WRO4J intelligently caches minified files (and automatically handles gzipping)
-            -->
-            <plugin>
-                <groupId>ro.isdc.wro4j</groupId>
-                <artifactId>wro4j-maven-plugin</artifactId>
-                <version>${wro.version}</version>
-                <executions>
-                    <execution>
-                        <id>test-javascript-optimization</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- The targetGroups are the groups to test for existence.  if they are not found then
-                         an error is raised.  Currently the groups from web-ui, web-client and web are listed
-                         here.  If web-client (for example) is removed then remove the group below
-
-                         Note:  all groups must be on the same line with not whitespace.
-                    -->
-                    <targetGroups>gn,gn_admin,gn_login,lib,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
-                    <minimize>true</minimize>
-                    <destinationFolder>${wro4jOutput}</destinationFolder>
-                    <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
-                    <jsDestinationFolder>${wro4jOutput}/js</jsDestinationFolder>
-                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
-                    <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
-                    <extraConfigFile>${build.webapp.resources}/WEB-INF/wro.properties</extraConfigFile>
-                    <incrementalBuildEnabled>false</incrementalBuildEnabled>
-                    <parallelProcessing>true</parallelProcessing>
-                    <options>sub</options>
-                    <failFast>true</failFast>
-                    <failNever>false</failNever>
-                    <failThreshold>0</failThreshold>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>wro4j</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>web-ui</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>geonetwork-client</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.sommeri</groupId>
-                        <artifactId>less4j</artifactId>
-                        <version>1.2.1</version>
-                    </dependency>
-                </dependencies>
-
-            </plugin>
         </plugins>
 		</build>
 	</profile>

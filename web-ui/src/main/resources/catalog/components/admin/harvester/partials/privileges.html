@@ -4,24 +4,27 @@
       <label class="btn btn-primary" data-ng-click="visibleTo('all')" id="gn-harvester-visible-all">
         <input type="radio" name="options"/>
         <i class="fa fa-unlock"></i>
-        <span data-translate="">visibleToAll</span>
+        {{"visibleToAll"|translate}}
       </label>
       <label class="btn btn-primary" data-ng-click="visibleTo('none')" id="gn-harvester-visible-none">
         <input type="radio" name="options"/>
         <i class="fa fa-lock"></i>
-        <span data-translate="">visibleToNobody</span>
+        {{"visibleToNobody"|translate}}
       </label>
   </span>
   <ul class="list-group">
-    <li class="list-group-item"><span class="input-group-btn">
-      <i class="fa" type="button"
+    <li class="list-group-item"><div class="input-group">
+	  <div class="input-group-btn"> 
+	  <button class="btn btn-default" title="{{'SelectAllorNone'|translate}}">
+      <i class="fa"
         data-ng-class="allGroup == true ? 'fa-check-square-o' : 'fa-square-o'"
         data-ng-click="visibleTo('allGroup');">
       </i>
-      <label>
-        <input class="form-control" data-ng-model="groupSearch.$"
+	  </button>
+	</div>	  
+       <input class="form-control" data-ng-model="groupSearch.$"
            placeholder="{{'filter' | translate}}"/>
-      </label>
+	</div>
     </li>
     <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'" class="list-group-item">
       <input type="checkbox" id="group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>

@@ -34,8 +34,10 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 
 //=============================================================================
@@ -50,7 +52,7 @@ public class SelectionSearch implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
 	}
@@ -118,7 +120,7 @@ public class SelectionSearch implements Service
 
 		context.info("Creating searchers");
 
-		searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+		searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, params, _config);
 

@@ -33,9 +33,12 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class WebDavRetriever implements RemoteRetriever {
 
@@ -45,6 +48,7 @@ class WebDavRetriever implements RemoteRetriever {
 
     private List<RemoteFile> files = new ArrayList<RemoteFile>();
     private Sardine sardine;
+    private AtomicBoolean cancelMonitor;
 
     //--------------------------------------------------------------------------
     //---
@@ -52,7 +56,8 @@ class WebDavRetriever implements RemoteRetriever {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(Logger log, ServiceContext context, WebDavParams params) {
+    public void init(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WebDavParams params) {
+        this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
@@ -63,10 +68,10 @@ class WebDavRetriever implements RemoteRetriever {
     public List<RemoteFile> retrieve() throws Exception {
 
         final HttpClientBuilder clientBuilder = context.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
-        Lib.net.setupProxy(context, clientBuilder);
+        Lib.net.setupProxy(context, clientBuilder, new URL(params.url).getHost());
 
-        if (params.useAccount) {
-            this.sardine = new SardineImpl(clientBuilder, params.username, params.password);
+        if (params.isUseAccount()) {
+            this.sardine = new SardineImpl(clientBuilder, params.getUsername(), params.getPassword());
         } else {
             this.sardine = new SardineImpl(clientBuilder);
         }
@@ -81,15 +86,23 @@ class WebDavRetriever implements RemoteRetriever {
         }
 
         final List<DavResource> resources = open(url);
-        url = calculateBaseURL(url, resources);
+        url = calculateBaseURL(cancelMonitor, url, resources);
         for (DavResource resource : resources) {
+            if (cancelMonitor.get()) {
+                return Collections.emptyList();
+            }
+
             retrieveFile(url, resource);
         }
         return files;
     }
 
-    static String calculateBaseURL(String url, List<DavResource> resources) throws IOException {
+    static String calculateBaseURL(AtomicBoolean cancelMonitor, String url, List<DavResource> resources) throws IOException {
         for (Iterator<DavResource> iterator = resources.iterator(); iterator.hasNext(); ) {
+            if (cancelMonitor.get()) {
+                return "";
+            }
+
             DavResource next = iterator.next();
             if (url.endsWith(next.getPath())) {
                 // this is the directory we just searched for so remove it and use it to calculate the base URL.
@@ -123,7 +136,7 @@ class WebDavRetriever implements RemoteRetriever {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Connecting to webdav url for node : " + params.name + " URL: " + params.url);
+            log.debug("Connecting to webdav url for node : " + params.getName() + " URL: " + params.url);
         }
 
         final List<DavResource> davResources = sardine.list(url, 1, false);
@@ -135,8 +148,12 @@ class WebDavRetriever implements RemoteRetriever {
     }
 
     private void retrieveFile(String baseURL, DavResource davResource) throws IOException {
+        if (this.cancelMonitor.get()) {
+            files.clear();
+            return;
+        }
 
-		String path = davResource.getPath();
+        String path = davResource.getPath();
         int startSize = files.size();
 
         if (davResource.isDirectory()) {
@@ -175,15 +192,13 @@ class WebDavRetriever implements RemoteRetriever {
             }
         }
 
-
-			int endSize = files.size();
-			int added = endSize - startSize;
-			if (added == 0) {
-                if(log.isDebugEnabled()) log.debug("No xml files found in path : "+ path);
-			}
-			else {
-                if(log.isDebugEnabled()) log.debug("Found "+ added +" xml file(s) in path : "+ path);
-			}
+        int endSize = files.size();
+        int added = endSize - startSize;
+        if (added == 0) {
+            if (log.isDebugEnabled()) log.debug("No xml files found in path : " + path);
+        } else {
+            if (log.isDebugEnabled()) log.debug("Found " + added + " xml file(s) in path : " + path);
+        }
     }
 
 }

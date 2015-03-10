@@ -79,14 +79,14 @@ public class Geonet20Harvester extends AbstractHarvester
 		params.create(node);
 
 		//--- force the creation of a new uuid
-		params.uuid = UUID.randomUUID().toString();
+		params.setUuid(UUID.randomUUID().toString());
 
 		String id = settingMan.add("harvesting", "node", getType());
 
 		storeNode(params, "id:"+id);
-        Source source = new Source(params.uuid, params.name, true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.uuid);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.getUuid());
         
 		return id;
 	}
@@ -116,7 +116,7 @@ public class Geonet20Harvester extends AbstractHarvester
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.uuid, copy.name, true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
 
         params = copy;
@@ -227,34 +227,41 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		Lib.net.setupProxy(context, req);
 
-		String name = getParams().name;
+		String name = getParams().getName();
 
 		//--- login
 
-		if (params.useAccount)
+		if (params.isUseAccount())
 		{
 			log.info("Login into : "+ name);
 
 			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_LOGIN);
-			req.addParam("username", params.username);
-			req.addParam("password", params.password);
+			req.addParam("username", params.getUsername());
+			req.addParam("password", params.getPassword());
 
 			Element response = req.execute();
 
 			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(params.username);
+				throw new UserNotFoundEx(params.getUsername());
 		}
+        if (cancelMonitor.get()) {
+            return ;
+        }
 
-		//--- search
+        //--- search
 
 		result = new GeonetResult();
 
-		Aligner aligner = new Aligner(log, req, params, dataMan, context,
+		Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
 												localCateg);
 
 		for(Search s : params.getSearches())
 		{
-			log.info("Searching on : "+ name +"/"+ s.siteId);
+            if (cancelMonitor.get()) {
+                return;
+            }
+
+            log.info("Searching on : "+ name +"/"+ s.siteId);
 
 			req.setAddress(servletName +"/srv/en/"+ Geonet.Service.XML_SEARCH);
 
@@ -271,7 +278,7 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		//--- logout
 
-		if (params.useAccount)
+		if (params.isUseAccount())
 		{
 			log.info("Logout from : "+ name);
 

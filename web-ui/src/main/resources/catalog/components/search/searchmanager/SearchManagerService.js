@@ -18,7 +18,10 @@
        */
       var format = function(data) {
         // Retrieve facet and add name as property and remove @count
-        var facets = {}, results = -1;
+        var facets = {}, results = -1,
+            listOfArrayFields = ['image', 'link',
+              'format', 'keyword', 'otherConstr',
+              'Constraints', 'SecurityConstraints'];
 
         // When using summaryOnly=true, the facet is the root element
         if (data[0] && data[0]['@count']) {
@@ -43,12 +46,15 @@
               (!$.isArray(data.metadata) && i < 1); i++) {
             var metadata =
                 $.isArray(data.metadata) ? data.metadata[i] : data.metadata;
-            // Fix thumbnail, link which might be string or array of string
-            if (typeof metadata.image === 'string') {
-              metadata.image = [metadata.image];
-            }
-            if (typeof metadata.link === 'string') {
-              metadata.link = [metadata.link];
+
+            // Fix all fields which are arrays and are returned as string
+            // when only one value returned.
+            for (var property in metadata) {
+              if (metadata.hasOwnProperty(property) &&
+                  listOfArrayFields.indexOf(property) != -1 &&
+                  typeof metadata[property] === 'string') {
+                metadata[property] = [metadata[property]];
+              }
             }
 
             // Parse selected to boolean
@@ -119,7 +125,7 @@
               function(key, value) {
                 filter += '&' + key + '=' + value;
               });
-          search('q@json?fast=index' +
+          search('q?_content_type=json&fast=index' +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
@@ -168,7 +174,7 @@
 
       var _select = function(uuid, andClearSelection, action) {
         var defer = $q.defer();
-        $http.get('metadata.select@json?' +
+        $http.get('metadata.select?_content_type=json&' +
             (uuid ? 'id=' + uuid : '') +
                   (andClearSelection ? '' : '&selected=' + action)).
             success(function(data, status) {

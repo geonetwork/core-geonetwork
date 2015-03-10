@@ -1,0 +1,49 @@
+<div class="navbar navbar-default gn-top-bar" role="navigation"
+     data-ng-include="'../../catalog/templates/top-toolbar.html'"
+     xmlns="http://www.w3.org/1999/html">
+</div>
+
+<div data-gn-alert-manager=""></div>
+
+<div class="gn-search-page"
+     data-ng-controller="GnSearchController">
+  <cookiewarning></cookiewarning>
+  <div class=""
+       data-ng-controller="gnsDefault">
+    <div data-ng-include="'../../catalog/views/default/templates/home.html'"
+         data-ng-show="activeTab == '/home'"/>
+    <div data-ng-include="'../../catalog/views/default/templates/results.html'"
+         data-ng-show="activeTab == '/search'"/>
+    <div data-ng-if="isMapViewerEnabled" 
+         data-ng-include="'../../catalog/views/default/templates/map.html'"
+         data-ng-show="activeTab == '/map'"/>
+    <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
+         data-ng-show="activeTab == '/metadata'"/>
+  </div>
+</div>
+
+<div class="navbar navbar-default gn-bottom-bar">
+  <ul class="nav navbar-nav">
+    <li><a href="http://geonetwork-opensource.org/">
+      <i class="fa fa-fw"></i>
+      <span data-translate="">about</span>
+    </a></li>
+    <li class="hidden-sm"><a href="#">
+      <i class="fa fa-twitter"></i>
+      <span data-translate="">twitter</span></a></li>
+    <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
+      <i class="fa fa-github"></i>
+      <span data-translate="">github</span></a></li>
+    <li>
+      <a data-translate=""
+         data-translate-values="{platform: '{{info.site.platform.name}}', version: '{{info.site.platform.version}}', subversion: '{{info.site.platform.subVersion}}'}">
+        versionDetails</a>
+    </li>
+    <li>
+      <a href="rss.search?sortBy=changeDate&georss=simplepoint"
+              title="{{'lastRecords' | translate}}">
+        <i class="fa fa-rss"/>
+      </a>
+    </li>
+  </ul>
+</div>

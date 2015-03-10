@@ -34,8 +34,11 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -49,19 +52,19 @@ public class XmlSearch implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
 	}
 
 	/**
 	 * Run a search and return results as XML.
-	 * 
+	 *
 	 * @param params	All search parameters defined in {@link LuceneIndexField}.
 	 * <br/>
-	 * To return only results summary, set summaryOnly parameter to 1. 
+	 * To return only results summary, set summaryOnly parameter to 1.
 	 * Default is 0 (ie.results and summary).
-	 * 
+	 *
 	 */
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -80,9 +83,9 @@ public class XmlSearch implements Service
 		context.info("Creating searchers");
 		
         if(remote) {
-			searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
+			searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
         } else {
-			searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+			searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
         }
 		
 		try {

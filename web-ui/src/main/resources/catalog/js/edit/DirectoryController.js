@@ -2,10 +2,10 @@
   goog.provide('gn_directory_controller');
 
   goog.require('gn_catalog_service');
-  goog.require('gn_facets_directive');
+  goog.require('gn_facets');
 
   var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets_directive']);
+      ['gn_catalog_service', 'gn_facets']);
 
   /**
    * Controller to create new metadata record.
@@ -32,14 +32,14 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      $scope.subtemplateFilter = {
+      $scope.searchObj = {params: {
         _isTemplate: 's',
         any: '*',
         _root: '',
         sortBy: 'title',
         sortOrder: 'reverse',
         resultType: 'subtemplates'
-      };
+      }};
 
       $scope.paginationInfo = {
         pages: -1,
@@ -52,6 +52,7 @@
       // A map of icon to use for each types
       var icons = {
         'gmd:CI_ResponsibleParty': 'fa-user',
+        'cit:CI_Responsibility': 'fa-user',
         'gmd:MD_Distribution': 'fa-link'
       };
 
@@ -70,7 +71,7 @@
       };
 
       var init = function() {
-        $http.get('admin.group.list@json', {cache: true}).
+        $http.get('admin.group.list?_content_type=json', {cache: true}).
             success(function(data) {
               $scope.groups = data !== 'null' ? data : null;
 
@@ -85,7 +86,7 @@
 
       var searchEntries = function() {
         $scope.tpls = null;
-        gnSearchManagerService.search('qi@json?' +
+        gnSearchManagerService.search('qi?_content_type=json&' +
             'template=s&fast=index&summaryOnly=true&resultType=subtemplates').
             then(function(data) {
               $scope.$broadcast('setPagination', $scope.paginationInfo);
@@ -101,7 +102,11 @@
               $scope.mdTypes = types;
 
               // Select the default one or the first one
-              if (defaultType && $.inArray(defaultType, $scope.mdTypes)) {
+              if ($scope.activeType &&
+                  $.inArray($scope.activeType, $scope.mdTypes) !== -1) {
+                $scope.selectType($scope.activeType);
+              } else if (defaultType &&
+                  $.inArray(defaultType, $scope.mdTypes) !== -1) {
                 $scope.selectType(defaultType);
               } else if ($scope.mdTypes[0]) {
                 $scope.selectType($scope.mdTypes[0]);
@@ -116,9 +121,9 @@
        */
       $scope.getEntries = function(type) {
         if (type) {
-          $scope.subtemplateFilter._root = type;
+          $scope.searchObj.params._root = type;
         }
-        $scope.$broadcast('resetSearch', $scope.subtemplateFilter);
+        $scope.$broadcast('resetSearch', $scope.searchObj.params);
         return false;
       };
 
@@ -257,7 +262,13 @@
       $scope.startImportEntry = function() {
         $scope.selectEntry(null);
         $scope.isImporting = true;
-        $scope.importData.group = $scope.groups[0].id;
+        $scope.importData = {
+          data: null,
+          insert_mode: 0,
+          template: 's',
+          fullPrivileges: 'y',
+          group: $scope.groups[0].id
+        };
       };
 
       $scope.importEntry = function(formId) {

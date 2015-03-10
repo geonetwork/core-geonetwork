@@ -1,0 +1,18 @@
+<div class="gn-sort-by">
+  <div class="btn-group">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-sort"/>&nbsp;
+      <span data-translate=""
+            data-translate-values="{field: '{{params.sortBy | translate}}'}">sortedBy</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li data-ng-repeat="v in ::values"
+          data-ng-class="v.sortBy === params.sortBy ? 'disabled' : ''">
+        <a data-ng-click="sortBy(v)">{{v.sortBy | translate}}</a></li>
+    </ul>
+  </div>
+</div>

@@ -42,6 +42,8 @@ import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /**
@@ -55,7 +57,7 @@ public class DoActions implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

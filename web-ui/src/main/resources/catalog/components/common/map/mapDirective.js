@@ -1,13 +1,16 @@
 (function() {
   goog.provide('gn_map_directive');
+  goog.require('gn_owscontext_service');
 
-  angular.module('gn_map_directive', [])
+  angular.module('gn_map_directive',
+      ['gn_owscontext_service'])
 
     .directive(
       'gnDrawBbox',
       [
        'gnMap',
-       function(gnMap) {
+       'gnOwsContextService',
+       function(gnMap, gnOwsContextService) {
          return {
            restrict: 'A',
            replace: true,
@@ -126,6 +129,13 @@
                })
              });
 
+             //Uses configuration from database
+             if (gnMap.getMapConfig().context) {
+               gnOwsContextService.
+                   loadContextFromUrl(gnMap.getMapConfig().context,
+                       map, true);
+             }
+
              var dragbox = new ol.interaction.DragBox({
                style: boxStyle,
                condition: function() {
@@ -173,6 +183,7 @@
                }
                feature.setGeometry(geom);
                feature.getGeometry().setCoordinates(coordinates);
+               scope.extent.map = geom.getExtent();
              };
 
              /**
@@ -221,7 +232,7 @@
                    parseFloat(region.south),
                    parseFloat(region.east),
                    parseFloat(region.north)];
-
+                 scope.location = region.name;
                  reprojExtent('md', 'map');
                  reprojExtent('md', 'form');
                  setDcOutput();

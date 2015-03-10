@@ -1,0 +1,1 @@
+new dublincore.Handlers(handlers, f, env).addDefaultHandlers()

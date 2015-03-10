@@ -3,7 +3,7 @@
     <button type="button"
       class="btn btn-default dropdown-toggle"
       data-toggle="dropdown">
-      {{region.label}} <span class="caret"></span>
+      {{regionType.label}} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
       <li data-ng-repeat="regionObj in gnRegionService.regionsList">
@@ -16,6 +16,5 @@
   <!-- /btn-group -->
   <input type="text" name="regionpicker" class="form-control"
     data-gn-region-picker-input=""
-    data-type="{{region}}"
     placeholder="{{'chooseRegion' | translate}}"/>
 </div>

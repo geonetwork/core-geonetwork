@@ -1,0 +1,44 @@
+<li class="list-group-item">
+  <button type="button" class="close" ng-click="del(md, form)">&times;</button>
+  <h4>{{md.title || md.defaultTitle}}</h4>
+  <div class="well">
+    <h5>Limites d'utilisation :</h5>
+    <small>{{md.Constraints[1]}}</small>
+    <h5>Contraintes d'accès :</h5>
+    <small>{{md.Constraints[0]}}</small>
+    <h5>Contraintes d'utilisation :</h5>
+    <small>copyright</small>
+    <h5>Autres contraintes :</h5>
+    <small>{{md.Constraints[2]}}</small>
+    <small>{{md.Constraints[3]}}</small>
+  </div>
+
+  <div class="row">
+
+    <!--Panier Form-->
+    <div class="col-md-7 form-horizontal">
+      <div class="form-group">
+        <label for="projectionPF" class="col-md-3 col-sm-9 control-label">projection</label>
+        <div class="dynamic-list col-sm-6" >
+          <select class="form-control input-sm" id="projectionPF" data-ng-model="form.projection">
+            <option data-ng-repeat="p in settings.projs" value="{{p.value}}"
+                    data-ng-selected="p.value == form.projection">{{p.label}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="formatPF" class="col-md-3 col-sm-9 control-label">format</label>
+        <div class="dynamic-list col-sm-6" >
+          <select class="form-control input-sm col-sm-6" id="formatPF" data-ng-model="form.format">
+              <option data-ng-repeat="f in settings.formats" value="{{f.value}}"
+                      data-ng-selected="f.value == form.format">{{f.label}}</option>
+            </select>
+          </div>
+      </div>
+    </div>
+
+    <!--Map Draw Extent-->
+    <div class="col-md-5" gn-map-field="map" class=""
+         gn-map-field-geom="form.extent" gn-map-field-extent="extentCoords"></div>
+  </div>
+</li>

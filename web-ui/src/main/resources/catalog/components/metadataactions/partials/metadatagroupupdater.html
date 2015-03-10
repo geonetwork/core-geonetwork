@@ -1,0 +1,21 @@
+<div class="btn-group">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-ng-mouseover="init()"
+          data-toggle="dropdown">
+    <i class="fa fa-group"></i>&nbsp;<span class="caret"></span>&nbsp;
+  </button>
+  <ul class="dropdown-menu pull-right"
+      role="menu">
+    <li role="presentation" class="dropdown-header"
+        data-translate="">setMetadataGroup</li>
+    <li data-ng-repeat="g in groups | orderBy:sortByLabel"
+        data-ng-class="g['@id'] !== groupOwner ? 'disabled' : ''">
+      <a
+          data-ng-click="assignGroup(g, $event)"
+          href="">
+        <span data-translate="">{{g.label[lang]}}</span>
+      </a>
+    </li>
+  </ul>
+</div>

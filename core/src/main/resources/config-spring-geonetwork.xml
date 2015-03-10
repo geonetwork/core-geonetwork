@@ -2,22 +2,30 @@
 <beans
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
     " >
 
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <tx:annotation-driven proxy-target-class="true"/>
+    <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
+    <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
+    <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>
+    <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
+    <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
+    <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
+
 
     <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
     <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
     <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />
     <bean id="Iso19139ExportFormat" class="org.fao.geonet.kernel.mef.Iso19139ExportFormat" lazy-init="true"/>
-    <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true"/>
+
+    <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true">
+        <constructor-arg ref="facets"/>
+        <constructor-arg ref="summaryTypes"/>
+    </bean>
+
+    <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
+
     <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
     <bean id="LuceneIndexLanguageTracker" class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
     <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager" lazy-init="true"/>
@@ -25,6 +33,8 @@
     <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
     <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager" lazy-init="true"/>
     <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
+    <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
+    <bean id="TranslatorCache" class="org.fao.geonet.kernel.search.TranslatorCache" lazy-init="false" scope="singleton"/>
 
 
     <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>

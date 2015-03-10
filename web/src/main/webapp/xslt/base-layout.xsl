@@ -3,9 +3,11 @@
   The main entry point for all user interface generated
   from XSLT. 
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                exclude-result-prefixes="#all">
 
-  <xsl:output omit-xml-declaration="yes" method="html" doctype-public="html" indent="yes"
+  <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
     encoding="UTF-8"/>
 
   <xsl:include href="common/base-variables.xsl"/>
@@ -13,7 +15,7 @@
   <xsl:include href="base-layout-cssjs-loader.xsl"/>
 
   <xsl:template match="/">
-    <html ng-app="{$angularApp}" lang="{$lang}" id="ng-app">
+    <html ng-app="{$angularModule}" lang="{$lang}" id="ng-app">
       <head>
         <title>
           <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
@@ -29,9 +31,9 @@
 
         <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif"/>
         <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-          title="{{concat($env/system/site/name, ' - ', $env/system/site/organization)}}"/>
+          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
         <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-          title="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>
+          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
       </head>
@@ -51,18 +53,18 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <!-- AngularJS application -->
-            <div data-ng-cloak="" class="ng-cloak">
-              <div class="navbar navbar-default gn-top-bar"
-                   data-ng-hide="layout.hideTopToolBar"
-                   data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>
+
+              <!-- AngularJS application -->
+              <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer'">
+                <div class="navbar navbar-default gn-top-bar"
+                     data-ng-hide="layout.hideTopToolBar"
+                     data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>              </xsl:if>
 
               <xsl:apply-templates mode="content" select="."/>
 
               <xsl:if test="$isJsEnabled">
                 <xsl:call-template name="javascript-load"/>
               </xsl:if>
-            </div>
             <xsl:if test="$isJsEnabled">
               <xsl:call-template name="no-js-alert"/>
             </xsl:if>

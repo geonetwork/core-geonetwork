@@ -1,9 +1,15 @@
 (function() {
+
   goog.provide('gn_login_controller');
 
-  var module = angular.module('gn_login_controller', []);
 
-  module.constant('$LOCALES', ['core']);
+  goog.require('gn_catalog_service');
+  goog.require('gn_utility');
+
+  var module = angular.module('gn_login_controller', [
+    'gn_utility',
+    'gn_catalog_service'
+  ]);
 
   /**
    *    Take care of login action, reset and update password.
@@ -25,6 +31,7 @@
           $scope.passwordUpdated = false;
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
 
           function initForm() {

@@ -36,21 +36,25 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
 public class Z3950Config
 {
-	//--------------------------------------------------------------------------
+    private final AtomicBoolean cancelMonitor;
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public Z3950Config(Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params)
+	public Z3950Config(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req, Z3950ConfigParams params)
 	{
+        this.cancelMonitor = cancelMonitor;
 		this.log     = log;
 		this.context = context;
 		this.request = req;
@@ -69,7 +73,7 @@ public class Z3950Config
 
 	public HarvestResult config(Set<RecordInfo> records) throws Exception
 	{
-		log.info("Start of Z3950 Config Harvest for : "+ params.name);
+		log.info("Start of Z3950 Config Harvest for : "+ params.getName());
 
 		if (params.clearConfig) clearZ3950Config();
 
@@ -78,13 +82,17 @@ public class Z3950Config
 		//--- JZKitConfig.xml.tem
 
 		for(RecordInfo ri : records) {
-			result.totalMetadata++;
+            if (cancelMonitor.get()) {
+                return this.result;
+            }
+
+            result.totalMetadata++;
 
 			// get metadata from remote geonetwork machine (assume local for now)
 			addServerToZ3950Config(ri.uuid);
 		}
 
-		log.info("End of Z3950 Config Harvest for : "+ params.name);
+		log.info("End of Z3950 Config Harvest for : "+ params.getName());
 
 		return result;
 	}
@@ -117,9 +125,9 @@ public class Z3950Config
 		// detect the schema
 		String schema = schemaMan.autodetectSchema(md);
 
-		String convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema) + Geonet.Path.ISO19119TOJZKIT_STYLESHEET;
+		Path convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema).resolve(Geonet.Path.ISO19119TOJZKIT_STYLESHEET);
 
-		if (new File(convert19119ToJZKitRepo).exists()) {
+		if (Files.exists(convert19119ToJZKitRepo)) {
 			Element repoElem = Xml.transform(md, convert19119ToJZKitRepo);
 			if (repoElem.getName().equals("Repository")) {
 				Repositories.addRepo(context, uuid, repoElem);

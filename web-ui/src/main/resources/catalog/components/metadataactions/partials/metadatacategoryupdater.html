@@ -1,0 +1,20 @@
+<div class="btn-group"
+        data-ng-show="categories.length > 0">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown">
+    <i class="fa fa-tags"></i>&nbsp;<span class="caret"></span>&nbsp;
+  </button>
+  <ul class="dropdown-menu pull-right"
+      role="menu">
+    <li role="presentation" class="dropdown-header"
+        data-translate="">setMetadataCategories</li>
+    <li data-ng-repeat="c in categories | orderBy:sortByLabel"
+        data-ng-class="ids.indexOf(c['@id']) === -1 ? 'disabled' : ''">
+      <a data-ng-click="assign(c, $event)" href="">
+		<span class="fa gn-icon-{{c.name}}"></span>
+        {{c.label[lang] | translate}}
+      </a>
+    </li>
+  </ul>
+</div>

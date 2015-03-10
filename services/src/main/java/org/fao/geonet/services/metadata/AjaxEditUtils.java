@@ -141,7 +141,7 @@ public class AjaxEditUtils extends EditUtils {
                 continue;
             }
 
-            if (updatedLocalizedTextElement(md, ref, value, editLib)) {
+            if (updatedLocalizedTextElement(md, schema, ref, value, editLib)) {
                 continue;
             }
 
@@ -630,7 +630,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, false);
+        dataManager.indexMetadata(id, true);
 
         return true;
 	}
@@ -686,7 +686,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, false);
+        dataManager.indexMetadata(id, true);
 
         return true;
 	}

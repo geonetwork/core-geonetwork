@@ -12,6 +12,10 @@
         <property name="defaultNode" value="true" />
     </bean>
 
+    <bean id="systemInfo" class="org.fao.geonet.SystemInfo" factory-method="createForTesting">
+        <constructor-arg value="development" />
+    </bean>
+
     <bean id="IS_DEFAULT_CONTEXT_BEAN" class="java.lang.Boolean">
         <constructor-arg index="0" value="true"/>
     </bean>
@@ -38,17 +42,17 @@
     </bean>
 
     <util:map id="jpaPropertyMap">
-        <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>
-        <entry key="javax.persistence.lock.timeout" value="30000"/>
-        <entry key="org.hibernate.flushMode" value="AUTO"/>
-        <entry key="access" value="PROPERTY"/>
-        <entry key="hibernate.id.new_generator_mappings" value="true"/>
-        <entry key="hibernate.cache.use_second_level_cache" value="true"/>
-        <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/>-->
-        <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
-        <entry key="hibernate.jdbc.batch_size" value="3"/>
-        <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
-        <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
+        <entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
+        <entry key="javax.persistence.lock.timeout" value="30000" />
+        <entry key="org.hibernate.flushMode" value="AUTO" />
+        <entry key="access" value="PROPERTY" />
+        <entry key="hibernate.id.new_generator_mappings" value="true" />
+        <entry key="hibernate.cache.use_second_level_cache" value="true" />
+        <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
+        <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+        <entry key="hibernate.jdbc.batch_size" value="3" />
+        <entry key="hibernate.jdbc.batch_versioned_data" value="true" />
+        <entry key="hibernate.enable_lazy_load_no_trans" value="true" />
     </util:map>
 
 </beans>

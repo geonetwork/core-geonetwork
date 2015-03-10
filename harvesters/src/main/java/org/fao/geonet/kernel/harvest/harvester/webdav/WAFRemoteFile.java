@@ -31,6 +31,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ class WAFRemoteFile implements RemoteFile {
 	private Element getMdFromService(String url, SchemaManager  schemaMan) throws Exception
 	{
 		Element el = null;
-		String styleSheet = getStyleSheet(url, schemaMan);
+		Path styleSheet = getStyleSheet(url, schemaMan);
 		if(styleSheet == null) {
             return null;
         }
@@ -91,26 +92,23 @@ class WAFRemoteFile implements RemoteFile {
         // md5 the full capabilities URL
         String uuid = Sha1Encoder.encodeString (url); // is the service identifier
 
-        Map<String, String> param = new HashMap<String, String>();
+        Map<String, Object> param = new HashMap<String, Object>();
         param.put("uuid", uuid);
 
         el = Xml.transform (xml, styleSheet, param);
 		return el;
 	}
 	
-	private String getStyleSheet(String url, SchemaManager  schemaMan)
+	private Path getStyleSheet(String url, SchemaManager  schemaMan)
 	{
-		String serviceType = getServiceType(url);
-		if(serviceType == null)
-			return null;
-		String styleSheet = schemaMan.getSchemaDir(outputSchema) + 
-			Geonet.Path.CONVERT_STYLESHEETS
-			+ "/OGCWxSGetCapabilitiesto19119/" 
-			+ "/OGC"
-			+ serviceType
-			+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
-		return styleSheet;
-	}
+        String serviceType = getServiceType(url);
+        if (serviceType == null)
+            return null;
+        return schemaMan.getSchemaDir(outputSchema).
+                resolve(Geonet.Path.CONVERT_STYLESHEETS).
+                resolve("OGCWxSGetCapabilitiesto19119").
+                resolve("OGC" + serviceType + "GetCapabilities-to-ISO19119_ISO19139.xsl");
+    }
 	
 	//---------------------------------------------------------------------------
 	//---

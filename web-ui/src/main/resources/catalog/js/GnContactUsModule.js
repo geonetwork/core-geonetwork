@@ -1,11 +1,12 @@
 (function() {
   goog.provide('gn_contact_us');
 
-  goog.require('gn');
+
   goog.require('gn_contact_us_controller');
+  goog.require('gn_module');
 
   var module = angular.module('gn_contact_us', [
-    'gn',
+    'gn_module',
     'gn_contact_us_controller'
   ]);
 

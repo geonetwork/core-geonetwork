@@ -24,48 +24,50 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
-import java.io.File;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 
 /**
  * Allows a user to set the xsl used for displaying metadata
  * 
  * @author jeichar
  */
-public class UpdateFile extends AbstractFormatService {
+public class UpdateFile extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
         String fileName = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
         String xslid = Util.getParam(params, Params.ID);
         String data =  Util.getParam(params, Params.DATA);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        Path schemaDir = null;
+        if (schema != null) {
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
+        }
+
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        Path toUpdate = formatDir.resolve(fileName);
         
-        File toUpdate = new File(formatDir, fileName.replaceAll("/", File.separator));
-        
-        FileUtils.write(toUpdate, data);
+        Files.write(toUpdate, Collections.singleton(data), Constants.CHARSET);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         elResp.addContent(new Element(Geonet.Elem.ID).setText(xslid));
         elResp.addContent(new Element(Params.FNAME).setText(fileName));
 
         return elResp;
-    }
-
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
     }
 
 }

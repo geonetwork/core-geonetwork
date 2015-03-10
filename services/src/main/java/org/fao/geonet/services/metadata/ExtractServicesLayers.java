@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +55,7 @@ public class ExtractServicesLayers  implements Service {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
