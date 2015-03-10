@@ -1,10 +1,12 @@
 (function() {
   goog.provide('gn_mdactions_service');
+
+  goog.require('gn_category');
   goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share'
+    'gn_share', 'gn_category'
   ]);
 
   module.service('gnMetadataActions', [
@@ -182,6 +184,12 @@
           title: 'privileges',
           content: '<div gn-share="" gn-share-batch="true"></div>'
         }, scope, 'PrivilegesUpdated');
+      };
+      this.openCategoriesBatchPanel = function(scope) {
+        openModal({
+          title: 'categories',
+          content: '<div gn-batch-categories=""></div>'
+        }, scope, 'CategoriesUpdated');
       };
 
       /**
