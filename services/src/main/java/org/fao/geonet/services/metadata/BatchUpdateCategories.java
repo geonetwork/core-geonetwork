@@ -28,7 +28,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
@@ -67,11 +69,20 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dm = gc.getBean(DataManager.class);
+        String mode = Util.getParam(params, "mode", "replace");
+
+        DataManager dm = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession us = context.getUserSession();
 
@@ -99,7 +110,9 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 			} else {
 
 				//--- remove old operations
-                info.getCategories().clear();
+                if (!"replace".equals(mode)) {
+                    info.getCategories().clear();
+                }
 
 				//--- set new ones
 				@SuppressWarnings("unchecked")
@@ -109,7 +122,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
                 for (Element el : list) {
 					String name = el.getName();
 
-					if (name.startsWith("_"))  {
+					if (name.startsWith("_") && !name.equals(Params.CONTENT_TYPE))  {
                         final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
                         if (category != null) {
                             info.getCategories().add(category);
