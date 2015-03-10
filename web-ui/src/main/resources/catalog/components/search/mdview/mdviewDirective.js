@@ -65,21 +65,19 @@
         },
 
         link: function(scope, element, attrs, controller) {
+          var loaded = false;
           scope.$watch('md', function() {
             scope.rate = scope.md ? scope.md.rating : null;
           });
 
-          if (!scope.readonly) {
-            scope.$watch('rate', function(value, oldValue) {
-              if (value) {
-                return $http.get('md.rate?_content_type=json&' +
-                    'uuid=' + scope.md['geonet:info'].uuid +
-                    '&rating=' + value).success(function(data) {
-                  scope.rate = data[0];
-                });
-              }
+
+          scope.rateForRecord = function () {
+            return $http.get('md.rate?_content_type=json&' +
+            'uuid=' + scope.md['geonet:info'].uuid +
+            '&rating=' + scope.rate).success(function(data) {
+              scope.rate = data[0];
             });
-          }
+          };
         }
       };
     }]
