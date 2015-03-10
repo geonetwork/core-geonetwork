@@ -14,6 +14,14 @@ public class Key {
     public final String formatterId;
     public final boolean hideWithheld;
 
+    /**
+     * Constructor.
+     * @param mdId the id of the metadata
+     * @param lang the current ui language
+     * @param formatType the content type of the output
+     * @param formatterId the formatter used to create the output
+     * @param hideWithheld if true then elements in the metadata with the attribute gco:nilreason="withheld" are being hidden
+     */
     public Key(int mdId, String lang, FormatType formatType, String formatterId, boolean hideWithheld) {
         this.mdId = mdId;
         this.lang = lang;
