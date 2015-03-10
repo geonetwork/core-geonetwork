@@ -28,4 +28,13 @@ public class Functions {
     def isoTextEl(node, text) {
         return commonHandlers.func.textEl(f.nodeLabel(node), XmlEscapers.xmlContentEscaper().escape(text))
     }
+    /**
+     * A shortcut for: commonHandlers.func.textEl(node), text))
+     * @return
+     */
+    def isoUrlEl(node, href, text) {
+        return commonHandlers.func.urlEl(f.nodeLabel(node),
+                XmlEscapers.xmlAttributeEscaper().escape(href),
+                XmlEscapers.xmlContentEscaper().escape(text))
+    }
 }
