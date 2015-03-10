@@ -180,11 +180,10 @@
           };
 
           this.getLabel = function(type) {
-            return this.map[type].label ||
-               this.map['DEFAULT'].label;
+            return this.map[type || 'DEFAULT'].label;
           };
           this.getAction = function(type) {
-            return this.map[type].action || this.map['DEFAULT'].action;
+            return this.map[type || 'DEFAULT'].action;
           };
 
           this.doAction = function(type, parameters, uuid) {
@@ -193,30 +192,27 @@
           };
 
           this.getType = function(resource) {
-            if ((resource.protocol && resource.protocol.contains('WMS')) ||
+            var containsFn = resource.protocol && resource.protocol.contains;
+
+            if ((containsFn && containsFn('WMS')) ||
                 (resource.serviceType && resource.serviceType
                           .contains('WMS'))) {
               return 'WMS';
-            } else if ((resource.protocol &&
-                        resource.protocol.contains('WMTS')) ||
+            } else if ((containsFn && containsFn('WMTS')) ||
                 (resource.serviceType && resource.serviceType
                     .contains('WMTS'))) {
               return 'WMTS';
-            } else if ((resource.protocol && resource.protocol
-                      .contains('WFS')) ||
+            } else if ((containsFn && containsFn('WFS')) ||
                (resource.serviceType && resource.serviceType
                           .contains('WFS'))) {
               return 'WFS';
-            } else if ((resource.protocol && resource.protocol
-                      .contains('KML')) ||
+            } else if ((containsFn && containsFn('KML')) ||
                (resource.serviceType && resource.serviceType
                           .contains('KML'))) {
               return 'KML';
-            } else if (resource.protocol &&
-               resource.protocol.contains('DOWNLOAD')) {
+            } else if (containsFn && containsFn('DOWNLOAD')) {
               return 'LINKDOWNLOAD';
-            } else if (resource.protocol &&
-                    resource.protocol.contains('LINK')) {
+            } else if (containsFn && containsFn('LINK')) {
               return 'LINK';
             } else if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
