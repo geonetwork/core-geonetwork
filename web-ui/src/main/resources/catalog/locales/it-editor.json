@@ -23,7 +23,6 @@
     "assignToCatalog": "Assign to current catalog",
     "assignToCategory": "Assign to category",
     "assignToGroup": "Assign to group",
-    "associatedResources": "Associated resources",
     "associationType": "Association type",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "cancel": "Cancel",

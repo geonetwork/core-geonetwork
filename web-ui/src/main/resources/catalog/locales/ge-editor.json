@@ -23,7 +23,6 @@
     "assignToCatalog": "dem aktuellen Katalog zuweisen",
     "assignToCategory": "Der Kategorie zuweisen",
     "assignToGroup": "Einer Gruppe zuweisen ",
-    "associatedResources": "Zugehörige Quellen",
     "associationType": "Art der Beziehung",
     "beforeUnloadEditor": "Eventuell wurden Änderungen seit der letzten Speicherung nicht mehr abgespeichert {{timeAgo}}.",
     "cancel": "abbrechen",
