@@ -65,7 +65,6 @@
         },
 
         link: function(scope, element, attrs, controller) {
-          var loaded = false;
           scope.$watch('md', function() {
             scope.rate = scope.md ? scope.md.rating : null;
           });
