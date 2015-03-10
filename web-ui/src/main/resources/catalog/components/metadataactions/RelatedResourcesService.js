@@ -192,27 +192,26 @@
           };
 
           this.getType = function(resource) {
-            var containsFn = resource.protocol && resource.protocol.contains;
+            var protocolFn = angular.isFunction(resource.protocol &&
+                                                resource.protocol.contains);
+            var serviceFn = angular.isFunction(resource.serviceType &&
+                                                resource.serviceType.contains);
 
-            if ((containsFn && containsFn('WMS')) ||
-                (resource.serviceType && resource.serviceType
-                          .contains('WMS'))) {
+            if ((protocolFn && resource.protocol.contains('WMS')) ||
+                (serviceFn && resource.serviceType.contains('WMS'))) {
               return 'WMS';
-            } else if ((containsFn && containsFn('WMTS')) ||
-                (resource.serviceType && resource.serviceType
-                    .contains('WMTS'))) {
+            } else if ((protocolFn && resource.protocol.contains('WMTS')) ||
+              (serviceFn && resource.serviceType.contains('WMTS'))) {
               return 'WMTS';
-            } else if ((containsFn && containsFn('WFS')) ||
-               (resource.serviceType && resource.serviceType
-                          .contains('WFS'))) {
+            } else if ((protocolFn && resource.protocol.contains('WFS')) ||
+              (serviceFn && resource.serviceType.contains('WFS'))) {
               return 'WFS';
-            } else if ((containsFn && containsFn('KML')) ||
-               (resource.serviceType && resource.serviceType
-                          .contains('KML'))) {
+            } else if ((protocolFn && resource.protocol.contains('KML')) ||
+              (serviceFn && resource.serviceType.contains('KML'))) {
               return 'KML';
-            } else if (containsFn && containsFn('DOWNLOAD')) {
+            } else if (protocolFn && resource.protocol.contains('DOWNLOAD')) {
               return 'LINKDOWNLOAD';
-            } else if (containsFn && containsFn('LINK')) {
+            } else if (protocolFn && resource.protocol.contains('LINK')) {
               return 'LINK';
             } else if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
