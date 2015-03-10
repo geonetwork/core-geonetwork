@@ -3,6 +3,8 @@ package org.fao.geonet.wro4j;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Priority;
+import org.fao.geonet.utils.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,12 +40,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import static org.fao.geonet.wro4j.GeonetworkWrojManagerFactory.WRO4J_LOG;
 
 /**
  * Creates model of views to javascript and css.
@@ -53,8 +55,6 @@ import javax.xml.parsers.ParserConfigurationException;
  * Time: 8:28 AM
  */
 public class GeonetWroModelFactory implements WroModelFactory {
-    private static final Logger LOG = Logger.getLogger("org.fao.geonet.wro4j."+GeonetWroModelFactory.class.getSimpleName());
-
     public static final String WRO_SOURCES_KEY = "wroSources";
     public static final String JS_SOURCE_EL = "jsSource";
     public static final String INCLUDE_EL = "include";
@@ -111,7 +111,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             throw new RuntimeException(e);
         } finally {
             stopWatch.stop();
-            LOG.info(stopWatch.prettyPrint());
+            Log.info(WRO4J_LOG, stopWatch.prettyPrint());
         }
     }
 
@@ -165,7 +165,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             } catch (Exception e) {
                 errors.add(e);
                 e.printStackTrace();
-                LOG.log(Level.SEVERE, "Error while loading wro4j model", e);
+                Log.error(WRO4J_LOG, "Error while loading wro4j model", e);
             } finally {
                 if (streams != null) {
                     for (IncludesStream stream : streams) {
@@ -265,7 +265,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     return Collections.singleton(new IncludesStream(new FileInputStream(absolute), absolute.getAbsolutePath()));
                 }
             } catch (Throwable t) {
-                System.out.println();
                 // try relative file then...
             }
             try {
@@ -390,7 +389,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private void logModel(WroModel model) {
-        if (LOG.isLoggable(Level.INFO)) {
+        if (Log.isEnabledFor(WRO4J_LOG, Priority.INFO_INT)) {
             StringBuilder builder = new StringBuilder();
             final int uriLength = 60;
             for (Group group : model.getGroups()) {
@@ -407,13 +406,13 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 }
                 builder.append("\n\n");
             }
-            LOG.info(builder.toString());
+            Log.info(WRO4J_LOG, builder.toString());
         }
 
         if (!errors.isEmpty()) {
-            LOG.severe("Errors were encountered");
+            Log.error(WRO4J_LOG, "Errors were encountered");
             for (Throwable error : errors) {
-                LOG.log(Level.SEVERE, "error", error);
+                Log.error(WRO4J_LOG, "error", error);
             }
         }
     }

@@ -16,6 +16,7 @@ import java.util.Properties;
  * Time: 8:35 AM
  */
 public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory {
+    public static final String WRO4J_LOG = "geonetwork.wro4j";
     private static final String CACHE_PROP_KEY = "cacheStrategy";
     private static final java.lang.String SIZE_PROP_KEY = "lruSize";
 

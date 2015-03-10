@@ -1,14 +1,18 @@
 package org.fao.geonet.wro4j;
 
 import com.google.common.base.Joiner;
+import org.fao.geonet.utils.IO;
 import ro.isdc.wro.WroRuntimeException;
 import ro.isdc.wro.cache.CacheKey;
 import ro.isdc.wro.cache.CacheStrategy;
 import ro.isdc.wro.cache.CacheValue;
 import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
+import ro.isdc.wro.config.Context;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,7 +29,7 @@ import java.util.UUID;
  */
 public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Closeable {
     public static final String NAME = "disk-memory";
-    public static final java.lang.String DB_PROP_KEY = "cacheDB";
+    public static final String DB_PROP_KEY = "cacheDB";
     private static final String TABLE = "cache";
     private static final String SQL_CLEAR = "DELETE FROM " + TABLE;
     private static final String GROUPNAME = "groupname";
@@ -41,6 +45,19 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     private final Connection dbConnection;
 
     public DiskbackedCache(int lruSize, String path) throws SQLException {
+
+        if (!path.startsWith("mem:")) {
+            final Path dbPath = IO.toPath(path);
+            if (!Files.isWritable(dbPath.getParent()) && Context.get() != null && Context.get().getServletContext() != null) {
+                final String[] split = dbPath.toAbsolutePath().toString().split("WEB-INF/", 2);
+                if (split.length == 2) {
+                    final String resolved = Context.get().getServletContext().getRealPath("/WEB-INF/" + split[1]);
+                    if (resolved != null) {
+                        path = resolved;
+                    }
+                }
+            }
+        }
         this.defaultCache = new LruMemoryCacheStrategy<>(lruSize);
         try {
             Class.forName("org.h2.Driver");
