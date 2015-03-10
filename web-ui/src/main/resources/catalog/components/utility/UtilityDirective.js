@@ -4,6 +4,24 @@
   var module = angular.module('gn_utility_directive', [
   ]);
 
+  module.directive('gnConfirmClick', [
+    function(){
+      return {
+        priority: -1,
+        restrict: 'A',
+        link: function(scope, element, attrs){
+          element.bind('click', function(e){
+            var message = attrs.gnConfirmClick;
+            if(message && !confirm(message)){
+              e.stopImmediatePropagation();
+              e.preventDefault();
+            }
+          });
+        }
+      }
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker

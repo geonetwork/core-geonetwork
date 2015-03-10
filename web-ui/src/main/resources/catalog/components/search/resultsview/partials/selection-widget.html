@@ -49,7 +49,8 @@
       <a href="" ng-click="mdService.openCategoriesBatchPanel(getCatScope())">
       <i class="fa fa-folder-o"></i>&nbsp;<span translate>updateCategories</span></a></li>
     <li ng-if="user.isEditorOrMore()">
-      <a href="" ng-click="mdService.deleteMd()" >
+      <a href="" ng-click="mdService.deleteMd()"
+         data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
       <i class="fa fa-trash-o"></i>&nbsp;<span translate>delete</span></a></li>
   </ul>
 </div>

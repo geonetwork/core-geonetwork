@@ -55,9 +55,10 @@
     <a class="gn-md-delete-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
        data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+       data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
        title="{{'delete' | translate}}">
 
-      <i class="fa fa-trash-o" data-ng-class="deletingRecord ? 'fa-spin' : ''"></i>
+      <i class="fa fa-trash-o"></i>
     </a>
     <a class="gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
