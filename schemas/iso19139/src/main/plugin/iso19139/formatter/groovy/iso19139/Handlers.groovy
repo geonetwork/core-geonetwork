@@ -39,6 +39,7 @@ public class Handlers {
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
+        handlers.add name: 'Dataset URI', select: 'gmd:dataSetURI', isoDatasetUriEl
         handlers.add select: 'gmd:language', group: false, isoLanguageEl
         handlers.add select: matchers.isCiOnlineResourceParent, group: true, onlineResourceEls
         handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, { elems ->
@@ -80,7 +81,8 @@ public class Handlers {
     }
 
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
-    def isoUrlEl = { isofunc.isoTextEl(it, isofunc.isoUrlText(it))}
+    def isoUrlEl = { isofunc.isoUrlEl(it, isofunc.isoUrlText(it), isofunc.isoUrlText(it))}
+    def isoDatasetUriEl = { isofunc.isoUrlEl(it, isofunc.isoText(it), isofunc.isoText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
     def isoBasicType = {isofunc.isoTextEl(it, it.'*'.text())}
     def isoSimpleTextEl = { isofunc.isoTextEl(it, it.text()) }
@@ -139,12 +141,12 @@ public class Handlers {
         def links = []
 
         els.each {it.'gmd:CI_OnlineResource'.each { link ->
-                links << [
-                        href : isofunc.isoUrlText(link.'gmd:linkage'),
-                        name : isofunc.isoText(link.'gmd:name'),
-                        desc : isofunc.isoText(link.'gmd:description')
-                ]
-            }
+            links << [
+                    href : isofunc.isoUrlText(link.'gmd:linkage'),
+                    name : isofunc.isoText(link.'gmd:name'),
+                    desc : isofunc.isoText(link.'gmd:description')
+            ]
+        }
         }
 
         handlers.fileResult('html/online-resource.html', [
@@ -340,13 +342,13 @@ public class Handlers {
         }
 
         return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
-          e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
-          s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-          n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-          geomproj: "EPSG:4326",
-          minwidth: mapConfig.getWidth() / 4,
-          minheight: mapConfig.getWidth() / 4,
-          mapconfig: mapConfig
+                 e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+                 s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+                 n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
+                 geomproj: "EPSG:4326",
+                 minwidth: mapConfig.getWidth() / 4,
+                 minheight: mapConfig.getWidth() / 4,
+                 mapconfig: mapConfig
         ]
     }
     def rootPackageEl = {
