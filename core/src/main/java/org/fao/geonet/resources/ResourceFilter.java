@@ -63,15 +63,15 @@ public class ResourceFilter implements Filter {
             if(extIdx > 0) {
                 ext = filename.substring(extIdx+1);
             } else {
-                ext = "gif"; 
+                ext = "png"; 
             }
             HttpServletResponse httpServletResponse = (HttpServletResponse)response;
             // TODO : other type of resources html
             httpServletResponse.setContentType("image/"+ext);
             httpServletResponse.addHeader("Cache-Control", "max-age="+SIX_HOURS+", public");
-            if(filename.equals("images/logos/favicon.gif")) {
+            if(filename.equals("images/logos/GN3.ico")) {
             	synchronized (this) {
-            		favicon = Resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/favicon.gif", favicon.one(), favicon.two());
+            		favicon = Resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico", favicon.one(), favicon.two());
             	}
             	
                 httpServletResponse.setContentLength(favicon.one().length);
@@ -82,12 +82,12 @@ public class ResourceFilter implements Filter {
                 if(loadResource.two() == -1) {
 
                 	synchronized (this) {
-                        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", defaultImage.one(), defaultImage.two());
+                        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/GN3.ico", defaultImage.one(), defaultImage.two());
     				}
 
                 	// Return HTTP 404 ? TODO
                     Log.warning(Geonet.RESOURCES, "Resource not found, default resource returned: "+servletPath);
-                    httpServletResponse.setContentType("image/gif");
+                    httpServletResponse.setContentType("image/png");
                     httpServletResponse.setHeader("Cache-Control", "no-cache");
                 }
                 httpServletResponse.setContentLength(loadResource.one().length);
@@ -104,8 +104,8 @@ public class ResourceFilter implements Filter {
 
         resourcesDir = Resources.locateResourcesDir(config.getServletContext(), applicationContext);
 
-        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);
-        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage.one(), -1);
+        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/GN3.png", new byte[0], -1);
+        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/GN3.ico", defaultImage.one(), -1);
     }
 
     private boolean isGet(ServletRequest request) {
