@@ -31,6 +31,28 @@ public class FormatterCacheTest {
     }
 
     @Test
+    public void testClear() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key2 = new Key(2, "eng", FormatType.html, "full_view", hideWithheld);
+
+        formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
+        formatterCache.get(key2, new ChangeDateValidator(changeDate), new TestLoader("result1", changeDate, false), true);
+
+        formatterCache.clear();
+
+        assertArrayEquals("newVal1".getBytes(Constants.CHARSET), formatterCache.get(key, new ChangeDateValidator(changeDate),
+                new TestLoader("newVal1", changeDate, false), true));
+        assertArrayEquals("newVal2".getBytes(Constants.CHARSET), formatterCache.get(key2, new ChangeDateValidator(changeDate),
+                new TestLoader("newVal2", changeDate, false), true));
+    }
+
+    @Test
     public void testTypesToCache() throws Exception {
         final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
         final ConfigurableCacheConfig config = new ConfigurableCacheConfig();
@@ -70,7 +92,7 @@ public class FormatterCacheTest {
         });
         assertEquals("result", result);
 
-        final long updatedChangeDate = changeDate + 100;
+        final long updatedChangeDate = changeDate + 600;
         result = getAsString(key, updatedChangeDate, new TestLoader("newVal", updatedChangeDate, false));
         assertEquals("newVal", result);
         info = persistentStore.get(key);
@@ -99,7 +121,7 @@ public class FormatterCacheTest {
 
         assertNull(formatterCache.getPublished(key));
 
-        formatterCache.get(key, new ChangeDateValidator(changeDate + 100), new TestLoader("published", changeDate, true), true);
+        formatterCache.get(key, new ChangeDateValidator(changeDate + 600), new TestLoader("published", changeDate, true), true);
         assertArrayEquals("published".getBytes(Constants.CHARSET), formatterCache.getPublished(key));
 
         formatterCache.get(key, new ChangeDateValidator(changeDate + 1000), new TestLoader("lastResult", changeDate, false), true);
@@ -161,6 +183,11 @@ public class FormatterCacheTest {
             @Override
             public void setPublished(int metadataId, boolean published) {
                 throw new UnsupportedOperationException("not yet implemented");
+            }
+
+            @Override
+            public void clear() {
+                // ignore
             }
         }, 100, 5000);
 

@@ -500,6 +500,24 @@
             });
       };
 
+      $scope.clearFormatterCache = function() {
+        return $http.get('admin.format.clear')
+            .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('formatterCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('formatCacheClearFailure'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
 
 
 

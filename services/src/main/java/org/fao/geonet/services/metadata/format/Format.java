@@ -211,6 +211,12 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
     }
 
+    @RequestMapping(value = "/{lang}/admin.format.clear")
+    @ResponseBody
+    public void clear() throws Exception {
+        this.formatterCache.clear();
+    }
+
     @RequestMapping(value = "/{lang}/xml.format.{type}")
     @ResponseBody
     public void execXml(

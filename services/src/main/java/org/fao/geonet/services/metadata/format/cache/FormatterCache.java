@@ -212,6 +212,9 @@ public class FormatterCache {
         this.persistentStore.setPublished(metadataId, published);
     }
 
+    /**
+     * Remove all cached values related to the metadataId.
+     */
     public synchronized void removeAll(int metadataId) throws IOException, SQLException {
         Collection<Pair<Key, StoreInfoAndData>> storeInfoAndDatas = this.mdIdIndex.removeAll(metadataId);
         for (Pair<Key, StoreInfoAndData> storeInfoAndData : storeInfoAndDatas) {
@@ -219,6 +222,14 @@ public class FormatterCache {
             this.memoryCache.invalidate(key);
             this.persistentStore.remove(key);
         }
+    }
+
+    /**
+     * Clear all records from the cache and backing persistent cache.
+     */
+    public void clear() throws IOException, SQLException {
+        this.memoryCache.invalidateAll();
+        this.persistentStore.clear();
     }
 
     private class RemoveFromIndexListener implements RemovalListener<Key, StoreInfoAndData> {
