@@ -208,6 +208,10 @@
 			<xsl:for-each select="*/gmd:EX_Extent">
 				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
+        <xsl:for-each select="gmd:description/gco:CharacterString[normalize-space(.) != '']">
+          <Field name="extentDesc" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
 					<Field name="geoDescCode" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
@@ -378,6 +382,10 @@
 				<xsl:for-each select="gmd:distance/gco:Distance/@uom">
 					<Field name="distanceUom" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
+
+        <xsl:for-each select="gmd:distance/gco:Distance">
+          <Field name="resolution" string="{concat(string(.), @uom)}" store="true" index="true"/>
+        </xsl:for-each>
 			</xsl:for-each>
 			
 		  <xsl:for-each select="gmd:spatialRepresentationType">
@@ -395,22 +403,27 @@
             </xsl:for-each>
 
 
-			<xsl:for-each select="gmd:resourceConstraints">
-				<xsl:for-each select="//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue">
-					<Field name="accessConstr" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-				<xsl:for-each select="//gmd:otherConstraints/gco:CharacterString">
-					<Field name="otherConstr" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-				<xsl:for-each select="//gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
-					<Field name="classif" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-				<xsl:for-each select="//gmd:useLimitation/gco:CharacterString">
-					<Field name="conditionApplyingToAccessAndUse" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-			</xsl:for-each>
-			
-			
+      <xsl:for-each select="gmd:resourceConstraints/*">
+        <xsl:variable name="fieldPrefix" select="local-name()"/>
+        <xsl:for-each select="gmd:accessConstraints/gmd:MD_RestrictionCode/
+                                @codeListValue[codeListValue != 'otherRestrictions']">
+          <Field name="{$fieldPrefix}AccessConstraints"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:otherConstraints/gco:CharacterString">
+          <Field name="{$fieldPrefix}OtherConstraints"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
+          <Field name="classification"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:useLimitation/gco:CharacterString">
+          <Field name="{$fieldPrefix}UseLimitation"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:for-each>
+
 			<!-- Index aggregation info and provides option to query by type of association
 				and type of initiative
 			
