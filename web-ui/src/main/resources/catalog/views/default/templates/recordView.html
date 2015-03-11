@@ -42,7 +42,7 @@
       <ul class="dropdown-menu" role="menu">
         <li class="dropdown-header" data-translate="">chooseAView</li>
         <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
-          <a href="" data-ng-click="format()">default</a>
+          <a href="" data-ng-click="format()" data-translate="">defaultView</a>
         </li>
         <li data-ng-repeat="f in formatter.list"
             data-ng-class="f === currentFormatter ? 'disabled' : ''">
@@ -78,7 +78,7 @@
 
       <div class="col-md-8 gn-record">
         <h1>
-          <i class="fa gn-icon-{{mdView.current.record.type | split}}"/>
+          <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
         </h1>
 
@@ -126,16 +126,28 @@
             <tr data-ng-if="mdView.current.record.keyword">
               <th data-translate="">keywords</th>
               <td>
-                <span class="badge" data-ng-repeat="k in mdView.current.record.keyword track by $index">{{k}}</span>
+
+                <ul>
+                  <li data-ng-repeat="k in mdView.current.record.keyword track by $index">
+                    {{k}}
+                  </li>
+                </ul>
+                <!--<span class="badge" data-ng-repeat="k in mdView.current.record.keyword track by $index">{{k}}</span>-->
               </td>
             </tr>
             <tr data-ng-if="mdView.current.record.datasetLang">
               <th data-translate="">language</th>
-              <td>{{mdView.current.record.datasetLang | translate}}</td>
+              <td>
+                <ul>
+                  <li data-ng-repeat="l in mdView.current.record.datasetLang">
+                    {{l | translate}}
+                  </li>
+                </ul>
+              </td>
             </tr>
-            <tr data-ng-if="mdView.current.record.classification">
+            <tr data-ng-if="mdView.current.record.classification_text">
               <th data-translate="">classification</th>
-              <td>{{mdView.current.record.classification | translate}}</td>
+              <td>{{mdView.current.record.classification_text}}</td>
             </tr>
             <tr data-ng-if="mdView.current.record.legalConstraints">
               <th data-translate="">legalConstraints</th>
@@ -172,7 +184,7 @@
               <td>{{mdView.current.record.credit}}</td>
             </tr>
             <tr data-ng-if="mdView.current.record.status_text">
-              <th data-translate="">status</th>
+              <th data-translate="">resourceStatus</th>
               <td>{{mdView.current.record.status_text}}</td>
             </tr>
           </tbody>
@@ -193,7 +205,11 @@
           <tbody>
             <tr data-ng-if="mdView.current.record.updateFrequency">
               <th data-translate="">updateFrequency</th>
-              <td>{{mdView.current.record.updateFrequency}}</td>
+              <td>{{mdView.current.record.maintenanceAndUpdateFrequency_text}}</td>
+            </tr>
+            <tr data-ng-if="mdView.current.record.spatialRepresentationType">
+              <th data-translate="">spatialRepresentationType</th>
+              <td>{{mdView.current.record.spatialRepresentationType_text}}</td>
             </tr>
             <tr data-ng-if="mdView.current.record.denominator">
               <th data-translate="">scale</th>
@@ -266,7 +282,13 @@
           </tr>
           <tr>
             <th data-translate="">metadataLanguage</th>
-            <td>{{mdView.current.record.language | translate}}</td>
+            <td>
+              <ul>
+                <li data-ng-repeat="l in mdView.current.record.mdLanguage">
+                  {{l | translate}}
+                </li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <th data-translate="">uuid</th>
