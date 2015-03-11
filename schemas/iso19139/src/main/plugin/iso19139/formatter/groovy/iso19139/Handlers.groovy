@@ -316,7 +316,7 @@ public class Handlers {
 
             if (xpath != null) {
                 def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
-                        "         style=\"width:${width/4}; min-height:${width/4};\" />"
+                        "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
