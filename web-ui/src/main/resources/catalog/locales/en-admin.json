@@ -807,6 +807,7 @@
     "system/server/port": "Port",
     "system/server/protocol": "Preferred Protocol",
     "system/server/securePort": "Secure Port",
+    "system/server/log": "Log level",
     "system/shib": "Shibboleth",
     "system/shib/attrib": "Shibboleth attribute mapping",
     "system/shib/defaultGroup": "Default group",
