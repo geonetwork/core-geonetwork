@@ -321,7 +321,7 @@
           <blockquote>
             {{mdView.current.record.contacts.resource}}
           </blockquote>
-        </section>
+        </section></br>
 
         <section data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
@@ -334,17 +334,14 @@
           </ul>
           </p>
           <!-- TODO: use map config -->
-<<<<<<< HEAD
           <img class="gn-img-extent"
                data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
       </section></br>
-=======
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
-        </section>
->>>>>>> 72d30e07a32e226b90bf4796ad121d54f4c2d37a
+        </section></br>
 
         <section data-ng-if="mdView.current.record.creationDate ||
                              mdView.current.record.publicationDate ||
@@ -382,8 +379,7 @@
               </dd>
             </dl>
           </p>
-        </section>
-
+        </section></br>
 
         <section>
           <h4>
@@ -405,7 +401,7 @@
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-twitter"></i></a>
           <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-facebook"></i></a>
-        </section>
+        </section></br>
 
         <section>
           <h4>
