@@ -225,6 +225,7 @@
               return 'MDSOURCE';
             } else if (resource['@type'] &&
                (resource['@type'] === 'associated' ||
+               resource['@type'] === 'services' ||
                resource['@type'] === 'hasfeaturecat' ||
                resource['@type'] === 'datasets')) {
               return 'MD';

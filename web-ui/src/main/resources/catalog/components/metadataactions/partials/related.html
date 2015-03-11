@@ -30,7 +30,7 @@
 
 			<p class="text-muted"
 				 data-ng-if="mainType.indexOf('MD') == 0">
-				{{r['abstract']}}
+        {{(r['abstract'] || r.defaultAbstract) | striptags | characters:150}}
 			</p>
 			<p class="text-muted"
 				 data-ng-if="mainType === 'WMS'">
