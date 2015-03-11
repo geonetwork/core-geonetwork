@@ -486,7 +486,8 @@
       $.extend(true, this, k);
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox'];
+        'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'mdLanguage', 'datasetLang'];
       var record = this;
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
