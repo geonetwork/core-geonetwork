@@ -193,7 +193,7 @@
             <fo:block>
               <fo:external-graphic content-width="35pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')"
+                    select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.png')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
             </fo:block>
@@ -399,7 +399,7 @@
               padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat( /root/gui/env/server/protocol, '://', /root/gui/env/server/host,':', /root/gui/env/server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
+                    select="concat( /root/gui/env/server/protocol, '://', /root/gui/env/server/host,':', /root/gui/env/server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.png')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of

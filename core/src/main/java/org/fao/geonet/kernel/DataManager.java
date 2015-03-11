@@ -624,7 +624,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".gif", true, false));
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
                 }
             }
 

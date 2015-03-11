@@ -52,7 +52,7 @@
     </div>
 
 
-    <a class="gn-md-delete-btn pull-right"
+    <a class="btn btn-danger gn-md-delete-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
        data-gn-click-and-spin="deleteRecord(mdView.current.record)"
        data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
@@ -60,7 +60,7 @@
 
       <i class="fa fa-trash-o"></i>
     </a>
-    <a class="gn-md-edit-btn pull-right"
+    <a class="btn btn-primary gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
        data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
        title="{{'edit' | translate}}">
@@ -302,7 +302,7 @@
 
         <section data-ng-if="mdView.current.record.overviews.length > 0">
           <h4>
-            <i class="fa fa-image"></i>
+            <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
           </h4>
           <!-- TODO caroussel on each thumbnails-->
@@ -311,21 +311,21 @@
                alt="{{img.label}}"
                data-ng-src="{{img.url}}"/>
           </p>
-        </section>
+        </section></br>
 
         <section data-ng-if="mdView.current.record.contacts.resource">
           <h4>
-            <i class="fa fa-envelope"></i>
+            <i class="fa fa-fw fa-envelope"></i>
             <span data-translate="">contact</span>
           </h4>
           <blockquote>
             {{mdView.current.record.contacts.resource}}
           </blockquote>
-        </section>
+        </section></br>
 
         <section data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
-            <i class="fa fa-map-marker"></i>
+            <i class="fa fa-fw fa-map-marker"></i>
             <span data-translate="">extent</span>
           </h4>
           <p data-ng-if="mdView.current.record.geoDesc">
@@ -338,7 +338,7 @@
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
-        </section>
+        </section></br>
 
         <section data-ng-if="mdView.current.record.creationDate ||
                              mdView.current.record.publicationDate ||
@@ -346,7 +346,7 @@
                              mdView.current.record.tempExtentBegin ||
                              mdView.current.record.tempExtentEnd">
           <h4>
-            <i class="fa fa-clock-o"></i>
+            <i class="fa fa-fw fa-clock-o"></i>
             <span data-translate="">tempExtent</span>
           </h4>
 
@@ -376,30 +376,29 @@
               </dd>
             </dl>
           </p>
-        </section>
-
+        </section></br>
 
         <section>
           <h4>
-            <i class="fa fa-fw"></i>
+            <i class="fa fa-fw fa-cog"></i>
             <span data-translate="">sourceCatalog</span>
           </h4>
-          <img ng-src="../../images/logos/{{mdView.current.record.source}}.gif"
+          <img ng-src="../../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
-        </section>
+        </section></br>
 
         <section>
           <h4>
-            <i class="fa fa-share-square"></i>
+            <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
           </h4>
           <a data-ng-href="https://plus.google.com/share?url={{mdView.current.record.encodedUrl}}"
-             class="btn btn-link"><i class="fa fa-google-plus"></i></a>
+             class="btn btn-lg btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
           <a data-ng-href="https://twitter.com/share?url={{mdView.current.record.encodedUrl}}"
-             class="btn btn-link"><i class="fa fa-twitter"></i></a>
+             class="btn btn-lg btn-default"><i class="fa fa-fw fa-twitter"></i></a>
           <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
-             class="btn btn-link"><i class="fa fa-facebook"></i></a>
-        </section>
+             class="btn btn-lg btn-default"><i class="fa fa-fw fa-facebook"></i></a>
+        </section></br>
 
         <section>
           <h4>
