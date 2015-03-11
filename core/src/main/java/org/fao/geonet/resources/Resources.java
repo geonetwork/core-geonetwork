@@ -432,7 +432,7 @@ public class Resources {
 	 * @param icon
 	 *            a relative path from images directory (
 	 *            {@linkplain #locateResourcesDir(ServiceContext)}) for example
-	 *            harvesting/defaultHarvester.gif
+	 *            harvesting/defaultHarvester.png
 	 * @param destName
 	 *            the name of the final image (in logos directory) so just the
 	 *            name.
@@ -474,7 +474,7 @@ public class Resources {
 	 *            the filename prefix to copy the unknown logo to.
 	 */
 	public static void copyUnknownLogo(ServiceContext context, String destName) {
-		copyLogo(context, "unknown-logo.gif", destName);
+		copyLogo(context, "unknown-logo.png", destName);
 	}
 
 	/**
