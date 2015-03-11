@@ -586,16 +586,16 @@
         if (this.geoBox[i]) {
           var coords = this.geoBox[i].split('|');
           return 'Polygon((' +
-            coords[0] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[1] + '))';
+              coords[0] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[1] + '))';
         } else {
           return null;
         }

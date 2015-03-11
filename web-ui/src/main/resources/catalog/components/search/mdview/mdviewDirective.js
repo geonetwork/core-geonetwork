@@ -70,10 +70,10 @@
           });
 
 
-          scope.rateForRecord = function () {
+          scope.rateForRecord = function() {
             return $http.get('md.rate?_content_type=json&' +
-            'uuid=' + scope.md['geonet:info'].uuid +
-            '&rating=' + scope.rate).success(function(data) {
+                'uuid=' + scope.md['geonet:info'].uuid +
+                '&rating=' + scope.rate).success(function(data) {
               scope.rate = data[0];
             });
           };
