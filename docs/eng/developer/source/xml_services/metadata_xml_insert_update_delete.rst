@@ -67,13 +67,13 @@ Insert metadata request example::
     <group>2</group>
     <category>_none_</category>
     <styleSheet>_none_</styleSheet>
-    <data><![CDATA[
+    <data>
       <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       ...
          </gmd:DQ_DataQuality>
         </gmd:dataQualityInfo>
-      </gmd:MD_Metadata>]]>
+      </gmd:MD_Metadata>
     </data>
   </request>
 
@@ -200,7 +200,7 @@ Request
 
 Parameters:
 
-- **id** or **uuid**: (mandatory) Identifier of the metadata to update
+- **id** Identifier of the metadata to update
 
 - **version**: (mandatory) This parameter
   is used by the GeoNetwork editor to avoid concurrent updates to the same
