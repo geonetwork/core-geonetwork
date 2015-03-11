@@ -174,8 +174,6 @@
 				<!-- fields used to search for metadata in paper or digital format -->
 
 				<xsl:for-each select="gmd:presentationForm">
-					<Field name="presentationForm" string="{gmd:CI_PresentationFormCode/@codeListValue}" store="true" index="true"/>
-					
 					<xsl:if test="contains(gmd:CI_PresentationFormCode/@codeListValue, 'Digital')">
 						<Field name="digital" string="true" store="false" index="true"/>
 					</xsl:if>
@@ -387,20 +385,12 @@
           <Field name="resolution" string="{concat(string(.), @uom)}" store="true" index="true"/>
         </xsl:for-each>
 			</xsl:for-each>
-			
-		  <xsl:for-each select="gmd:spatialRepresentationType">
-		    <Field name="spatialRepresentationType" string="{gmd:MD_SpatialRepresentationTypeCode/@codeListValue}" store="true" index="true"/>
-		  </xsl:for-each>
 
 			<xsl:for-each select="gmd:resourceMaintenance/
 				gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/
 				gmd:MD_MaintenanceFrequencyCode/@codeListValue[. != '']">
 				<Field name="updateFrequency" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
-
-			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue[. != '']">
-                <Field name="status" string="{string(.)}" store="true" index="true"/>			
-            </xsl:for-each>
 
 
       <xsl:for-each select="gmd:resourceConstraints/*">
@@ -412,10 +402,6 @@
         </xsl:for-each>
         <xsl:for-each select="gmd:otherConstraints/gco:CharacterString">
           <Field name="{$fieldPrefix}OtherConstraints"
-                 string="{string(.)}" store="true" index="true"/>
-        </xsl:for-each>
-        <xsl:for-each select="gmd:classification/gmd:MD_ClassificationCode/@codeListValue">
-          <Field name="classification"
                  string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
         <xsl:for-each select="gmd:useLimitation/gco:CharacterString">
@@ -495,11 +481,6 @@
 					<Field  name="operatesOnName" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
-			
-			<xsl:for-each select="//srv:SV_CouplingType/@codeListValue">
-				<Field  name="couplingType" string="{string(.)}" store="true" index="true"/>
-			</xsl:for-each>
-			
 			
 			<xsl:for-each select="gmd:graphicOverview/gmd:MD_BrowseGraphic">
 				<xsl:variable name="fileName"  select="gmd:fileName/gco:CharacterString"/>
@@ -719,6 +700,7 @@
 			|gmd:language/gmd:LanguageCode/@codeListValue
 			|gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
 			<Field name="language" string="{string(.)}" store="true" index="true"/>
+			<Field name="mdLanguage" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -808,26 +790,20 @@
         </xsl:for-each>
       </xsl:attribute>
     </Field>
-		<!--<xsl:apply-templates select="." mode="codeList"/>-->
-		
-	</xsl:template>
 
-	<!-- ========================================================================================= -->
-	<!-- codelist element, indexed, not stored nor tokenized -->
-	
-	<xsl:template match="*[./*/@codeListValue]" mode="codeList">
-		<xsl:param name="name" select="name(.)"/>
-		
-		<Field name="{$name}" string="{*/@codeListValue}" store="false" index="true"/>		
-	</xsl:template>
-	
-	<!-- ========================================================================================= -->
-	
-	<xsl:template match="*" mode="codeList">
-		<xsl:apply-templates select="*" mode="codeList"/>
-	</xsl:template>
-	
-	
+
+    <!-- Index all codelist -->
+    <xsl:for-each select=".//*[*/@codeListValue != '']">
+      <Field name="{local-name()}"
+             string="{*/@codeListValue}"
+             store="true" index="true"/>
+      <Field name="{concat(local-name(), '_text')}"
+             string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
+             store="true" index="true"/>
+    </xsl:for-each>
+  </xsl:template>
+
+
 	<!-- ========================================================================================= -->
 
 	<!-- inspireThemes is a nodeset consisting of skos:Concept elements -->
