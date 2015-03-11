@@ -58,7 +58,7 @@
                    data-ng-click="openRecord($index, md, searchResults.records)"
                    title="{{md.title || md.defaultTitle}}">
 
-                  <i class="fa gn-icon-{{md.type}}" title="{{md.type | translate}}"/>
+                  <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
                   {{md.title || md.defaultTitle}}</a>
               </h3>
           </div>

@@ -305,7 +305,10 @@ public final class XslUtil
                         (String) codelist);
                 translation = t.translate(codeListValue);
             } catch (Exception e) {
-                Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
+                Log.error(
+                    Geonet.GEONETWORK,
+                    String.format("Failed to translate codelist value '%s' in language '%s'. Error is %s",
+                            codeListValue, langCode, e.getMessage()));
             }
             return translation;
         } else {

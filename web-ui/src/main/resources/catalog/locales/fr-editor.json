@@ -23,7 +23,6 @@
     "assignToCatalog": "Affecter à ce catalogue",
     "assignToCategory": "Affecter à cette catégorie",
     "assignToGroup": "Affecter à ce groupe",
-    "associatedResources": "Ressources associées",
     "associationType": "Type d'association",
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
     "cancel": "Annuler",

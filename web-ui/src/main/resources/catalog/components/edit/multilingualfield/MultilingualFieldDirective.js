@@ -32,7 +32,7 @@
           var formFieldsSelector = 'input,textarea';
 
           // Some input should be displayed in Right-To-Left direction
-          var rtlLanguages = ['ara'];
+          var rtlLanguages = ['AR'];
 
           // Get languages from attributes (could be grab from the
           // form field ? FIXME)

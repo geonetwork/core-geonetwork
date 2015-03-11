@@ -13,13 +13,13 @@ public class ChangeDateValidatorTest {
         StoreInfoAndData info = new StoreInfoAndData((byte[]) null, date, false);
         assertTrue(new ChangeDateValidator(date).isCacheVersionValid(info));
 
-        info = new StoreInfoAndData((byte[]) null, date + 100, false);
+        info = new StoreInfoAndData((byte[]) null, date + 600, false);
         assertFalse(new ChangeDateValidator(date).isCacheVersionValid(info));
 
-        info = new StoreInfoAndData((byte[]) null, date - 100, false);
+        info = new StoreInfoAndData((byte[]) null, date - 600, false);
         assertFalse(new ChangeDateValidator(date).isCacheVersionValid(info));
 
-        info = new StoreInfoAndData((byte[]) null, date - 9, false);
+        info = new StoreInfoAndData((byte[]) null, date - 99, false);
         assertTrue(new ChangeDateValidator(date).isCacheVersionValid(info));
     }
 }

@@ -23,7 +23,16 @@
 
 package org.fao.geonet.kernel.harvest;
 
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -52,12 +61,6 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * TODO Javadoc.
  *
@@ -79,6 +82,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
     private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
     private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
+    
+    private final List<String> summaryHarvesterSettings =
+            Arrays.asList("harvesting", "node", "site", "name", "uuid",
+                    "url", "capabUrl", "baseUrl", "host", "useAccount",
+                    "ogctype", "options", "status", "info", "lastRun");
+    
+    private Element SettingsCache = null;
 
 	//---------------------------------------------------------------------------
 	//---              searchProfiles
@@ -103,7 +113,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		AbstractHarvester.getScheduler().getListenerManager().addJobListener(
 		        HarversterJobListener.getInstance(this));
 		
-        final Element harvesting = settingMan.get("harvesting", -1);
+        final Element harvesting = settingMan.getList(null);
         if (harvesting != null) {
             Element entries = harvesting.getChild("children");
 
@@ -188,15 +198,26 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
 	@Override
     public Element get(String id, ServiceContext context, String sort) throws Exception {
-		Element result = (id == null)
-									? settingMan.get("harvesting", -1)
-									: settingMan.get("harvesting/id:"+id, -1);
+		Element result = null;
+		if (id == null) {
+			result = settingMan.getList(null);
+		} else if (id.equals("-1")) { 
+			// use list of names to get only necessary parameters
+			result = settingMan.getList(summaryHarvesterSettings);
+		} else {
+			result = settingMan.get("harvesting/id:"+id, -1);
+		}
+
 		if (result == null) {
             return null;
         }
+		
+		// TODO use a parameter in mask to avoid call again in base
+		// and use it for call settingMan.get
+		// don't forget to clean parameter when update or delete
 
         Profile profile = context.getUserSession().getProfile();
-		if (id != null) {
+		if (id != null && !id.equals("-1")) {
             // you're an Administrator
             if (profile == Profile.Administrator) {
 			    result = transform(result);
@@ -216,8 +237,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             }
 		} else {
 
-            // id is null: return all (visible) nodes
-            Element nodes = result.getChild("children");
+            // id is null or -1: return all (visible) nodes
+            Element nodes = (Element) result.getChild("children");
 			result = new Element("nodes");
 			if (nodes != null) {
                 // you're Administrator: all nodes are visible

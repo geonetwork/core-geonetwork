@@ -52,4 +52,9 @@ public class MemoryPersistentStore implements PersistentStore {
             dataMap.put(dataEntry.getKey(), new StoreInfoAndData(data, changeDate, true));
         }
     }
+
+    @Override
+    public void clear() {
+        this.dataMap.clear();
+    }
 }

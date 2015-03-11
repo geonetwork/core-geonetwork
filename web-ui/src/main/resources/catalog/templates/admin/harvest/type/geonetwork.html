@@ -105,6 +105,15 @@
 
         <div>
             <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.site.useChangeDateForUpdate 
+                                                        || harvesterSelected.site.useChangeDateForUpdate == 'true'"/>
+                <span data-translate="">geonetwork-useChangeDateForUpdate</span>
+            </label>
+            <p class="help-block" data-translate="">geonetwork-useChangeDateForUpdateHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label">
                 <input type="checkbox" data-ng-model="harvesterSelected.site.createRemoteCategory"/>
                 <span data-translate="">geonetwork-createRemoteCategory</span>
             </label>

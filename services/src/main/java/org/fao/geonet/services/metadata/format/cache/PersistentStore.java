@@ -56,4 +56,9 @@ public interface PersistentStore {
      * @param published  mark all cached values for this metadata
      */
     void setPublished(int metadataId, boolean published) throws IOException;
+
+    /**
+     * Remove all cached elements from the cache.
+     */
+    void clear() throws SQLException, IOException;
 }

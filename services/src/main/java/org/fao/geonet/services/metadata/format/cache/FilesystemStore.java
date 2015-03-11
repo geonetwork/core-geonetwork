@@ -56,6 +56,8 @@ public class FilesystemStore implements PersistentStore {
     private static final String QUERY_REMOVE = "DELETE FROM " + INFO_TABLE + " WHERE " + KEY + "=?";
     public static final String QUERY_SETCURRENT_SIZE = "MERGE INTO "+STATS_TABLE + " (" + NAME + ", " + VALUE + ") VALUES ('" + CURRENT_SIZE + "', ?)";
     public static final String QUERY_GETCURRENT_SIZE = "SELECT "+VALUE+" FROM " + STATS_TABLE + " WHERE "+NAME+" = '"+CURRENT_SIZE+"'";
+    private static final String QUERY_CLEAR_INFO = "DELETE FROM " + INFO_TABLE;
+    private static final String QUERY_CLEAR_STATS = "DELETE FROM " + STATS_TABLE;
 
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDir;
@@ -272,6 +274,37 @@ public class FilesystemStore implements PersistentStore {
                         Files.deleteIfExists(publicPath);
                     }
                     return super.visitFile(privatePath, attrs);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void clear() throws SQLException, IOException {
+        init();
+        try (Statement statement = this.metadataDb.createStatement()) {
+            statement.execute(QUERY_CLEAR_INFO);
+            statement.execute(QUERY_CLEAR_STATS);
+            currentSize = 0;
+            Files.walkFileTree(getBaseCacheDir(), new SimpleFileVisitor<Path>(){
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    try {
+                        Files.delete(file);
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                    return super.visitFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    try {
+                        Files.delete(dir);
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                    return super.postVisitDirectory(dir, exc);
                 }
             });
         }

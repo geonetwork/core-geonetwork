@@ -23,11 +23,61 @@
         templateUrl: '../../catalog/components/category/partials/' +
             'category.html',
         link: function(scope, element, attrs) {
-          $http.get('info@json?type=categories').success(function(data) {
-            scope.categories = data.metadatacategory;
-          }).error(function(data) {
-            // TODO
-          });
+          $http.get('info?_content_type=json&type=categories', {cache: true}).
+              success(function(data) {
+                scope.categories = data.metadatacategory;
+              }).error(function(data) {
+                // TODO
+              });
+        }
+      };
+    }]);
+
+  module.directive('gnBatchCategories', [
+    '$http', '$translate', '$q',
+    function($http, $translate, $q) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        templateUrl: '../../catalog/components/category/partials/' +
+            'batchcategory.html',
+        link: function(scope, element, attrs) {
+          scope.report = null;
+
+          $http.get('info?_content_type=json&type=categories', {cache: true}).
+              success(function(data) {
+                scope.categories = data.metadatacategory;
+              }).error(function(data) {
+                // TODO
+              });
+
+          scope.save = function(replace) {
+            scope.report = null;
+            var defer = $q.defer();
+            var params = {};
+            var url = 'md.category.batch.update?_content_type=json';
+
+            if (replace) {
+              url += '&mode=add';
+            }
+
+            angular.forEach(scope.categories, function(c) {
+              if (c.checked === true) {
+                params['_' + c['@id']] = 'on';
+              }
+            });
+            $http.get(url, {params: params})
+              .success(function(data) {
+                  scope.report = data;
+                  defer.resolve(data);
+                }).error(function(data) {
+                  scope.report = data;
+                  defer.reject(data);
+                });
+            return defer.promise;
+          };
         }
       };
     }]);

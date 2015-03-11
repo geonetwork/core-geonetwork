@@ -13,6 +13,7 @@
 	<xsl:template match="*" mode="site">
 		<host><xsl:value-of    select="host/value" /></host>
 	    <node><xsl:value-of    select="node/value" /></node>
+        <useChangeDateForUpdate><xsl:value-of    select="useChangeDateForUpdate/value" /></useChangeDateForUpdate>
 	    <createRemoteCategory><xsl:value-of select="createRemoteCategory/value"/></createRemoteCategory>
 	    <mefFormatFull><xsl:value-of select="mefFormatFull"/></mefFormatFull>
 		<xslfilter><xsl:value-of select="xslfilter"/></xslfilter>

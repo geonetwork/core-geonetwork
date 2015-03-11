@@ -27,8 +27,8 @@
       <a class="btn btn-link"
          data-ng-show="user.canEditRecord(md)"
          data-gn-click-and-spin="deleteRecord(md)"
+         data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
          title="{{'delete' | translate}}">
-
         <i class="fa fa-trash-o text-danger"></i>
       </a>
     </td>

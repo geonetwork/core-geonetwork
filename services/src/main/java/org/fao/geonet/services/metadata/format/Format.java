@@ -211,6 +211,12 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
     }
 
+    @RequestMapping(value = "/{lang}/admin.format.clear")
+    @ResponseBody
+    public void clear() throws Exception {
+        this.formatterCache.clear();
+    }
+
     @RequestMapping(value = "/{lang}/xml.format.{type}")
     @ResponseBody
     public void execXml(
@@ -579,7 +585,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
                             try {
                                 final String fileName = getNameWithoutExtension(file.getFileName().toString());
                                 final String[] nameParts = fileName.split("-", 2);
-                                String lang = isoLanguagesMapper.iso639_1_to_iso639_2(nameParts[0].toLowerCase());
+                                String lang = isoLanguagesMapper.iso639_1_to_iso639_2(nameParts[0].toLowerCase(), nameParts[0]);
                                 final JSONObject json = new JSONObject(new String(Files.readAllBytes(file), Constants.CHARSET));
                                 Element fileElements = new Element(nameParts[1]);
                                 final Iterator keys = json.keys();

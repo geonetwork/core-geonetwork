@@ -484,7 +484,10 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      var listOfArrayFields = ['topicCat', 'category'];
+      var listOfArrayFields = ['topicCat', 'category',
+        'securityConstraints', 'resourceConstraints', 'legalConstraints',
+        'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
@@ -577,21 +580,22 @@
         }
         return ret;
       },
-      getBoxAsPolygon: function() {
+      getBoxAsPolygon: function(i) {
         // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
-        if (this.geoBox) {
-          var coords = this.geoBox.split('|');
+        var bboxes = [];
+        if (this.geoBox[i]) {
+          var coords = this.geoBox[i].split('|');
           return 'Polygon((' +
-              coords[0] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[1] + '))';
+            coords[0] + ' ' +
+            coords[1] + ',' +
+            coords[2] + ' ' +
+            coords[1] + ',' +
+            coords[2] + ' ' +
+            coords[3] + ',' +
+            coords[0] + ' ' +
+            coords[3] + ',' +
+            coords[0] + ' ' +
+            coords[1] + '))';
         } else {
           return null;
         }

@@ -21,7 +21,8 @@
            data-translate="">none</a></li>
   </ul>
 </div>
-<div class="btn-group gn-selection-actions" ng-if="searchResults.selectedCount > 0 && !withoutActionMenu">
+<div class="btn-group gn-selection-actions"
+     ng-if="searchResults.selectedCount > 0 && !withoutActionMenu">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <span translate>selected</span>
     <span class="caret"></span>
@@ -33,23 +34,23 @@
       <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>exportPDF</span></a></li>
     <li><a href="" ng-click="mdService.exportCSV()">
       <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>exportCSV</span></a></li>
-    <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-send-o"></i>&nbsp;<span translate>sendMail</span></a></li>
-    <li ng-if="user.isReviewerOrMore()" class="disabgit led"><a ng-click="mdService.publish(undefined, 'on')" >
-      <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span></a></li>
-    <li ng-if="user.isReviewerOrMore()" class="disabgit led"><a ng-click="mdService.publish(undefined, 'off')" >
-      <i class="fa fa-lock"></i>&nbsp;<span translate>unpublish</span></a></li>
-    <li ng-if="user.isEditorOrMore()" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-folder-o"></i>&nbsp;<span translate>updateCategories</span></a></li>
-    <li ng-if="user.isEditorOrMore()"><a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())" >
+    <li class="divider" data-ng-if="user.isConnected()"></li>
+    <li ng-if="user.isEditorOrMore()">
+      <a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())">
       <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span></a></li>
-    <li ng-if="user.isEditorOrMore()"><a href="" ng-click="mdService.deleteMd()" >
+    <li ng-if="user.isReviewerOrMore()" class="disabgit led">
+      <a ng-click="mdService.publish(undefined, 'on')" >
+      <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span></a></li>
+    <li ng-if="user.isReviewerOrMore()" class="disabgit led">
+      <a ng-click="mdService.publish(undefined, 'off')" >
+      <i class="fa fa-lock"></i>&nbsp;<span translate>unpublish</span></a></li>
+    <li class="divider" data-ng-if="user.isConnected()"></li>
+    <li ng-if="user.isEditorOrMore()">
+      <a href="" ng-click="mdService.openCategoriesBatchPanel(getCatScope())">
+      <i class="fa fa-folder-o"></i>&nbsp;<span translate>updateCategories</span></a></li>
+    <li ng-if="user.isEditorOrMore()">
+      <a href="" ng-click="mdService.deleteMd()"
+         data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
       <i class="fa fa-trash-o"></i>&nbsp;<span translate>delete</span></a></li>
-    <li ng-if="user.isAdministratorOrMore()" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-table"></i>&nbsp;<span translate>index</span></a></li>
-    <!--
-    TODO: Not available on server side. CSV is not enough ?
-    <li ng-if="authenticated" class="disabled"><a href="" ng-click="" >
-      <i class="fa fa-share-square-o"></i>&nbsp;<span translate>exportSummary</span></a></li>-->
   </ul>
 </div>

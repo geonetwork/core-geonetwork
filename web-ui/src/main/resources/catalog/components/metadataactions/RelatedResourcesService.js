@@ -180,11 +180,10 @@
           };
 
           this.getLabel = function(type) {
-            return this.map[type].label ||
-               this.map['DEFAULT'].label;
+            return this.map[type || 'DEFAULT'].label;
           };
           this.getAction = function(type) {
-            return this.map[type].action || this.map['DEFAULT'].action;
+            return this.map[type || 'DEFAULT'].action;
           };
 
           this.doAction = function(type, parameters, uuid) {
@@ -193,30 +192,26 @@
           };
 
           this.getType = function(resource) {
-            if ((resource.protocol && resource.protocol.contains('WMS')) ||
-                (resource.serviceType && resource.serviceType
-                          .contains('WMS'))) {
+            var protocolFn = angular.isFunction(resource.protocol &&
+                                                resource.protocol.contains);
+            var serviceFn = angular.isFunction(resource.serviceType &&
+                                                resource.serviceType.contains);
+
+            if ((protocolFn && resource.protocol.contains('WMS')) ||
+                (serviceFn && resource.serviceType.contains('WMS'))) {
               return 'WMS';
-            } else if ((resource.protocol &&
-                        resource.protocol.contains('WMTS')) ||
-                (resource.serviceType && resource.serviceType
-                    .contains('WMTS'))) {
+            } else if ((protocolFn && resource.protocol.contains('WMTS')) ||
+              (serviceFn && resource.serviceType.contains('WMTS'))) {
               return 'WMTS';
-            } else if ((resource.protocol && resource.protocol
-                      .contains('WFS')) ||
-               (resource.serviceType && resource.serviceType
-                          .contains('WFS'))) {
+            } else if ((protocolFn && resource.protocol.contains('WFS')) ||
+              (serviceFn && resource.serviceType.contains('WFS'))) {
               return 'WFS';
-            } else if ((resource.protocol && resource.protocol
-                      .contains('KML')) ||
-               (resource.serviceType && resource.serviceType
-                          .contains('KML'))) {
+            } else if ((protocolFn && resource.protocol.contains('KML')) ||
+              (serviceFn && resource.serviceType.contains('KML'))) {
               return 'KML';
-            } else if (resource.protocol &&
-               resource.protocol.contains('DOWNLOAD')) {
+            } else if (protocolFn && resource.protocol.contains('DOWNLOAD')) {
               return 'LINKDOWNLOAD';
-            } else if (resource.protocol &&
-                    resource.protocol.contains('LINK')) {
+            } else if (protocolFn && resource.protocol.contains('LINK')) {
               return 'LINK';
             } else if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
@@ -230,6 +225,7 @@
               return 'MDSOURCE';
             } else if (resource['@type'] &&
                (resource['@type'] === 'associated' ||
+               resource['@type'] === 'services' ||
                resource['@type'] === 'hasfeaturecat' ||
                resource['@type'] === 'datasets')) {
               return 'MD';

@@ -66,7 +66,8 @@ public class GeonetParams extends AbstractParams
 
 		host    = Util.getParam(site, "host",    "");
 
-		this.setNode(Util.getParam(site, "node",    "srv"));
+        this.setNode(Util.getParam(site, "node",    "srv"));
+        this.setUseChangeDateForUpdate(Util.getParam(site, "useChangeDateForUpdate", false));
 
 		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
 		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
@@ -92,7 +93,8 @@ public class GeonetParams extends AbstractParams
 		Element policy   = node.getChild("groupsCopyPolicy");
 
 		host    = Util.getParam(site, "host",    host);
-		this.setNode(Util.getParam(site, "node",    this.getNode()));
+		this.setNode(Util.getParam(site, "node",    this.getNode())); 
+		this.setUseChangeDateForUpdate(Util.getParam(site, "useChangeDateForUpdate", false));
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
@@ -143,6 +145,7 @@ public class GeonetParams extends AbstractParams
 
 		copy.host    = host;
 		copy.node    = node;
+		copy.useChangeDateForUpdate = useChangeDateForUpdate;
 		copy.createRemoteCategory = createRemoteCategory;
 		copy.mefFormatFull = mefFormatFull;
 		copy.xslfilter = xslfilter;
@@ -212,10 +215,25 @@ public class GeonetParams extends AbstractParams
 		this.node = node;
 	}
 
-	public String  host;
+	public boolean useChangeDateForUpdate() {
+	    if(this.useChangeDateForUpdate == null) {
+	        this.setUseChangeDateForUpdate(false);
+	    }
+        return useChangeDateForUpdate;
+    }
+
+    public void setUseChangeDateForUpdate(Boolean useChangeDateForUpdate) {
+        if(useChangeDateForUpdate == null) {
+            useChangeDateForUpdate = false;
+        }
+        this.useChangeDateForUpdate = useChangeDateForUpdate;
+    }
+
+    public String  host;
 	private String node;
 	public boolean createRemoteCategory;
 	public boolean mefFormatFull;
+	private Boolean useChangeDateForUpdate;
 	
 	/**
 	 * The filter is a process (see schema/process folder) which depends on the schema.

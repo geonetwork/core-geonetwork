@@ -78,6 +78,11 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
 
     <profiles>
