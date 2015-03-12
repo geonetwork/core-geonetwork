@@ -95,7 +95,10 @@
                   toolId = panel && panel.attr('id');
               if (toolId) {
                 $timeout(function() {
-                  $('*[rel=#' + toolId + ']').click();
+                  var menu = $('*[rel=#' + toolId + ']');
+                  if (!menu.hasClass('active')) {
+                    menu.click();
+                  }
                 });
               }
             }
