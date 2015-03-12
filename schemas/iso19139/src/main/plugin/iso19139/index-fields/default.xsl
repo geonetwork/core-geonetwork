@@ -794,10 +794,10 @@
 
     <!-- Index all codelist -->
     <xsl:for-each select=".//*[*/@codeListValue != '']">
-      <Field name="{local-name()}"
+      <Field name="cl_{local-name()}"
              string="{*/@codeListValue}"
              store="true" index="true"/>
-      <Field name="{concat(local-name(), '_text')}"
+      <Field name="cl_{concat(local-name(), '_text')}"
              string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
              store="true" index="true"/>
     </xsl:for-each>

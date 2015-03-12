@@ -60,7 +60,7 @@
         <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
-        <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
+        <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>

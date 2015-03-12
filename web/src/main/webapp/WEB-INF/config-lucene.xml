@@ -126,7 +126,7 @@
       <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
       <field name="credit" tagName="credit"/>
-      <field name="status_text" tagName="status_text" multilingualSortField="true"/>
+      <field name="cl_status_text" tagName="status_text" multilingualSortField="true"/>
       <field name="updateFrequency" tagName="updateFrequency"/>
       <field name="lineage" tagName="lineage"/>
       <field name="responsibleParty" tagName="responsibleParty"/>
@@ -134,9 +134,9 @@
       <field name="MD_LegalConstraintsUseLimitation" tagName="legalConstraints"/>
       <field name="MD_SecurityConstraintsUseLimitation" tagName="securityConstraints"/>
       <field name="MD_ConstraintsUseLimitation" tagName="resourceConstraints"/>
-      <field name="classification_text" tagName="classification_text"/>
-      <field name="maintenanceAndUpdateFrequency_text" tagName="maintenanceAndUpdateFrequency_text"/>
-      <field name="spatialRepresentationType_text" tagName="spatialRepresentationType_text"/>
+      <field name="cl_classification_text" tagName="classification_text"/>
+      <field name="cl_maintenanceAndUpdateFrequency_text" tagName="maintenanceAndUpdateFrequency_text"/>
+      <field name="cl_spatialRepresentationType_text" tagName="spatialRepresentationType_text"/>
       <field name="datasetLang" tagName="datasetLang"/>
       <field name="mdLanguage" tagName="mdLanguage"/>
       <field name="serviceType" tagName="serviceType"/>
