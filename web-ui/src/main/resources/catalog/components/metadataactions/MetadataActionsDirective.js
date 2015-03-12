@@ -96,7 +96,7 @@
                 success(function(data) {
                   scope.categories =
                      data !== 'null' ? data.metadatacategory : null;
-                 if (angular.isDefined(scope.currentCategories)) {
+                  if (angular.isDefined(scope.currentCategories)) {
                     angular.forEach(scope.categories, function(c) {
                       if (scope.currentCategories.indexOf(c.name) !== -1) {
                         scope.ids.push(c['@id']);
@@ -124,7 +124,8 @@
                   scope.currentCategories.push(c.name);
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('assignCategoryError', {category: c.name}),
+                    title: $translate('assignCategoryError',
+                        {category: c.name}),
                     error: response.error,
                     timeout: 0,
                     type: 'danger'});

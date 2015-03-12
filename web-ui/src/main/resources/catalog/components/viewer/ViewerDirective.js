@@ -42,16 +42,16 @@
               };
               scope.zoomToMaxExtent = function(map) {
                 map.getView().fitExtent(map.getView().
-                  getProjection().getExtent(), map.getSize());
+                    getProjection().getExtent(), map.getSize());
               };
               scope.zoomToYou = function(map) {
                 if (navigator.geolocation) {
                   navigator.geolocation.getCurrentPosition(function(position) {
                     var position = new ol.geom.Point([
-                                      position.coords.longitude,
-                                      position.coords.latitude]);
+                      position.coords.longitude,
+                      position.coords.latitude]);
                     map.getView().setCenter(
-                      position.transform(
+                        position.transform(
                         'EPSG:4326',
                         map.getView().getProjection()).getFirstCoordinate()
                     );

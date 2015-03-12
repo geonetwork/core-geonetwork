@@ -77,26 +77,27 @@
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
-        $http.get('admin.group.list?_content_type=json').success(function(data) {
-          $scope.groups = data !== 'null' ? data : null;
-          $scope.isLoadingGroups = false;
-        }).error(function(data) {
-          // TODO
-          $scope.isLoadingGroups = false;
-        }).then(function() {
-          // Search if requested group in location is
-          // in the list and trigger selection.
-          // TODO: change route path when selected (issue - controller is
-          // reloaded)
-          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
-            angular.forEach($scope.groups, function(u) {
-              if (u.name === $routeParams.userOrGroup ||
-                  $routeParams.userOrGroupId === u.id.toString()) {
-                $scope.selectGroup(u);
+        $http.get('admin.group.list?_content_type=json').
+            success(function(data) {
+              $scope.groups = data !== 'null' ? data : null;
+              $scope.isLoadingGroups = false;
+            }).error(function(data) {
+              // TODO
+              $scope.isLoadingGroups = false;
+            }).then(function() {
+              // Search if requested group in location is
+              // in the list and trigger selection.
+              // TODO: change route path when selected (issue - controller is
+              // reloaded)
+              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+                angular.forEach($scope.groups, function(u) {
+                  if (u.name === $routeParams.userOrGroup ||
+                      $routeParams.userOrGroupId === u.id.toString()) {
+                    $scope.selectGroup(u);
+                  }
+                });
               }
             });
-          }
-        });
       }
       function loadUsers() {
         $scope.isLoadingUsers = true;
@@ -183,7 +184,8 @@
                   (data.profile === 'Administrator');
 
               // Load user group and then select user
-              $http.get('admin.usergroups.list?_content_type=json&id=' + u.value.id)
+              $http.get('admin.usergroups.list?_content_type=json&id=' +
+                  u.value.id)
               .success(function(groups) {
                     $scope.userGroups = groups;
                   }).error(function(data) {

@@ -45,8 +45,8 @@
           scope.mapFileName = $translate('mapFileName');
           scope.save = function($event) {
             scope.mapFileName = $translate('mapFileName') +
-            '-z' + scope.map.getView().getZoom() +
-            '-c' + scope.map.getView().getCenter().join('-');
+                '-z' + scope.map.getView().getZoom() +
+                '-c' + scope.map.getView().getCenter().join('-');
 
             var xml = gnOwsContextService.writeContext(scope.map);
             var str = new XMLSerializer().serializeToString(xml);
