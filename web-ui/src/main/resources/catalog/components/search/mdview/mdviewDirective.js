@@ -45,6 +45,9 @@
             //TODO: is the scope destroyed ?
           };
 
+          if (gnSearchSettings.dismissMdView) {
+            scope.dismiss = gnSearchSettings.dismissMdView;
+          }
           scope.$on('closeMdView', function() {
             scope.dismiss();
           });
