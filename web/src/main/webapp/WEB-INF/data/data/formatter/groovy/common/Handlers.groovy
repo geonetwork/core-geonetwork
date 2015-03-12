@@ -136,7 +136,7 @@ public class Handlers {
         def uuid = this.env.metadataUUID
         def id = this.env.metadataId
 
-        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-sitemap")
+        LinkBlock hierarchy = new LinkBlock("associated-link", "fa fa-sitemap")
         def bean = this.env.getBean(GetRelated.class)
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
@@ -157,9 +157,14 @@ public class Handlers {
             def md = rel.getChild("metadata")
 
             def mdEl, relUuid;
+
+            def relInfo = rel.getChild("info", Geonet.Namespaces.GEONET)
             if (md != null) {
                 relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
                 mdEl = md;
+            } else if (rel.getChild("info", Geonet.Namespaces.GEONET) != null && relInfo.getChildText("uuid") != null) {
+                relUuid  = relInfo.getChildText("uuid")
+                mdEl = rel;
             } else {
                 relUuid = rel.getChildText("uuid")
                 mdEl = rel
@@ -170,10 +175,6 @@ public class Handlers {
                 def title = mdEl.getChildText("title")
                 if (title == null || title.isEmpty()) {
                     title = mdEl.getChildText("defaultTitle")
-                }
-
-                if (title != null && title.length() > 60) {
-                    title = title.substring(0, 57) + "...";
                 }
 
                 if (title == null || title.isEmpty()) {

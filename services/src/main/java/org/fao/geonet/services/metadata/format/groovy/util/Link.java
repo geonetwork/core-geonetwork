@@ -8,10 +8,16 @@ package org.fao.geonet.services.metadata.format.groovy.util;
 public class Link {
     private final String href;
     private final String text;
+    private final String tip;
 
     public Link(String href, String text) {
         this.href = href;
+        this.tip = text;
+        if (text != null && text.length() > 60) {
+            text = text.substring(0, 57) + "...";
+        }
         this.text = text;
+
     }
 
     public String getHref() {
@@ -20,6 +26,10 @@ public class Link {
 
     public String getText() {
         return text == null ? null : text;
+    }
+
+    public String getTip() {
+        return tip;
     }
 
     @Override
