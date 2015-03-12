@@ -67,6 +67,7 @@ import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -477,8 +478,8 @@ public class Geonetwork implements ApplicationHandler {
                         final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
-                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                    Boolean.TRUE.toString(), false, new ServletWebRequest(servletRequest, response));
+                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), formatterName,
+                                    Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
                         } catch (Throwable t) {
                             Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
                         }

@@ -416,7 +416,7 @@
           var deleteLogo = $scope.groupSelected.logo === null ?
               '&deleteLogo=true' : '';
           $http.get('admin.group.update?' + $(formId).serialize() + deleteLogo)
-          .success(uploadImportMdDone())
+          .success(uploadImportMdDone)
           .error(uploadImportMdError);
         }
       };

@@ -263,9 +263,9 @@
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
 
-    info: 'info@json',
+    info: 'info?_content_type=json',
 
-    country: 'regions.list@json?categoryId=' +
+    country: 'regions.list?_content_type=json&categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
