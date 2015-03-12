@@ -104,6 +104,13 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
+    div[gn-layermanager-item] {
+      .fa-arrows-alt,.gn-layer-ordering {
+        opacity: 0;
+        transition: opacity @transition-params;
+      }
+    }
+
     .list-group-item {
       background: inherit;
       transition: max-height @transition-params;
@@ -113,10 +120,6 @@
         margin-top: -.5em;
         background: inherit;
         padding: 6px 8px;
-      }
-      .fa-arrows-alt, .gn-layer-ordering {
-        opacity: 0;
-        transition: opacity @transition-params;
       }
       &:hover {
         .fa-arrows-alt, .gn-layer-ordering {
