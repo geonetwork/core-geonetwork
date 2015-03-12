@@ -377,6 +377,12 @@
             }).then(function() {
               closePopup(popupid);
             });
+          }, function(error) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate('linkToServiceError'),
+              msg: error.statusText,
+              timeout: 0,
+              type: 'danger'});
           });
         },
 

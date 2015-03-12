@@ -21,6 +21,10 @@
         data-select-records="stateObj.selectRecords"
         data-pagination-info="paginationInfo">
       </div>
+
+      <p class="alert alert-warning"
+         data-ng-show="alertMsg">{{alertMsg}}</p>
+
       <div data-gn-layers-grid 
         data-gn-selection-mode="multiple"
         data-layers="layers"

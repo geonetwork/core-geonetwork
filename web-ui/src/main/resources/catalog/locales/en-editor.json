@@ -29,6 +29,8 @@
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
     "cancelling": "Cancelling ...",
     "check": "Check",
+    "linkToServiceWithoutURLError": "No WMS URL found in that service. Choose a service with a WMS URL to be able to choose a layer.",
+    "linkToServiceError": "An error occurred when linking the dataset with the service",
     "chooseAProj": "Select the projection to use to display coordinates (note: coordinates are always saved in the metadata record in WGS84).",
     "chooseAType": "Choose a type",
     "chooseOnlinesrc": "Choose or drop resource here",
