@@ -51,6 +51,7 @@
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search') then 'gn_search'
+    else if ($service = 'md.viewer') then 'gn_formatter_viewer'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>

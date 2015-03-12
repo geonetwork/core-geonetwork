@@ -33,7 +33,7 @@
   );
 
   module.directive('gnMetadataDisplay', [
-    'gnMdView', function(gnMdView) {
+    'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'mdpanel.html',
@@ -45,6 +45,9 @@
             //TODO: is the scope destroyed ?
           };
 
+          if (gnSearchSettings.dismissMdView) {
+            scope.dismiss = gnSearchSettings.dismissMdView;
+          }
           scope.$on('closeMdView', function() {
             scope.dismiss();
           });
