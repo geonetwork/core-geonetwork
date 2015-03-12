@@ -201,6 +201,7 @@
   "LayerWCS":"Layer WCS",
   "LayerSOS":"Layer SOS",
   "LayerKML":"KML",
+  "mapFileName": "map",
   "LayerJSON":"Json file",
   "LayerRSS":"GeoRSS service",
   "LayerAtom":"Atom service",
