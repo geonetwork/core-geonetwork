@@ -17,11 +17,9 @@ $.ajax('md.format.xml?xsl=hierarchy_view&id={{metadataId}}', {
 
     if (linkBlockClass.find("table").children().length > 0) {
       linkBlockClass.find(".toggler").on('click', formatterSectionTogglersEventHandler);
-
-      $('a[rel = ".container > .associated"]').removeAttribute('disabled');
     } else {
       linkBlockClass.hide();
-      console.log($('a[rel = ".container > .associated"]').length)
+      $('a[rel = ".container > .associated"]').attr('disabled', 'disabled');
     }
   },
   error: function (req, status, error) {

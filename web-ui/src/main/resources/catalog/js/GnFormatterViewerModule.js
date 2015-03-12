@@ -4,6 +4,7 @@
 
   goog.require('gn');
   goog.require('gn_catalog_service');
+  goog.require('gn_utility_directive');
 
 
 
@@ -13,7 +14,7 @@
 
 
 
-  var module = angular.module('gn_formatter_viewer', ['ngRoute', 'gn', 'gn_catalog_service']);
+  var module = angular.module('gn_formatter_viewer', ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core']);

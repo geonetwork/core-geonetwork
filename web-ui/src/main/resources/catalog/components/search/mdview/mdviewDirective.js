@@ -33,7 +33,7 @@
   );
 
   module.directive('gnMetadataDisplay', [
-    'gnMdView', function(gnMdView) {
+    'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'mdpanel.html',
