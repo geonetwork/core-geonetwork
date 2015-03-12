@@ -114,18 +114,14 @@ abstract class AbstractFormatService {
         return formatDir;
     }
 
-    protected String resolveId(String id, String uuid) throws Exception {
+    protected String resolveId(String id) throws Exception {
         String resolvedId;
-        if (id == null) {
-            resolvedId = dataManager.getMetadataId(uuid);
-        } else {
             try {
                 Integer.parseInt(id);
                 resolvedId = id;
             } catch (NumberFormatException e) {
                 resolvedId = dataManager.getMetadataId(id);
             }
-        }
         return resolvedId;
     }
 }

@@ -85,6 +85,7 @@ public class FunctionsTest {
 
         final IsoLanguagesMapper languagesMapper = Mockito.mock(IsoLanguagesMapper.class);
         Mockito.when(languagesMapper.iso639_1_to_iso639_2("en")).thenReturn("eng");
+        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en", "en")).thenReturn("eng");
         fparams.format.setIsoLanguagesMapper(languagesMapper);
 
         Environment env = Mockito.mock(Environment.class);

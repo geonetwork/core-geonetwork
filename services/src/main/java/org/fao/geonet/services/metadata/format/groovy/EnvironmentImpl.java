@@ -22,6 +22,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,10 +50,12 @@ public class EnvironmentImpl implements Environment {
     private final Element jdomMetadata;
     private final ServiceContext serviceContext;
     private final WebRequest webRequest;
+    private final FormatterWidth width;
     private Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         jdomMetadata = fparams.metadata;
+        this.width = fparams.width;
         this.lang3 = fparams.context.getLanguage();
         this.lang2 = mapper.iso639_2_to_iso639_1(lang3, "en");
 
@@ -155,6 +158,11 @@ public class EnvironmentImpl implements Environment {
     @Override
     public FormatType getFormatType() {
         return this.formatType;
+    }
+
+    @Override
+    public FormatterWidth getEmbeddingWidth() {
+        return this.width;
     }
 
     @Override

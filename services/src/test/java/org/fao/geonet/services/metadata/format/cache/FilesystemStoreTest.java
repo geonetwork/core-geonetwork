@@ -6,6 +6,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class FilesystemStoreTest {
     @Test
     public void testGet() throws Exception {
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, false);
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", true);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         final StoreInfoAndData loaded = store.get(key);
 
@@ -65,7 +66,7 @@ public class FilesystemStoreTest {
     @Test
     public void testGetInfo() throws Exception {
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, false);
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", true);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         final StoreInfo loaded = store.getInfo(key);
 
@@ -79,14 +80,14 @@ public class FilesystemStoreTest {
     public void testGetPublic() throws Exception {
 
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, false);
-        Key key = new Key(1, "eng", FormatType.html, "full_view", true);
+        Key key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         assertNull(store.getPublished(key));
         assertEquals(1, countFiles(store.getPrivatePath(key)));
         assertEquals(0, countFiles(store.getPublicPath(key)));
 
         data = new StoreInfoAndData("two", 10000, true);
-        Key key2 = new Key(2, "eng", FormatType.html, "full_view", true);
+        Key key2 = new Key(2, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key2, data);
 
         assertNotNull(store.getPublished(key2));
@@ -110,7 +111,7 @@ public class FilesystemStoreTest {
     public void testDoNotPublishMdWithWithheld() throws IOException, SQLException {
 
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, true);
-        Key key = new Key(1, "eng", FormatType.html, "full_view", false);
+        Key key = new Key(1, "eng", FormatType.html, "full_view", false, FormatterWidth._100);
         store.put(key, data);
         assertNull(store.getPublished(key));
 
@@ -118,7 +119,7 @@ public class FilesystemStoreTest {
         assertNull(store.getPublished(key));
 
         data = new StoreInfoAndData("result", 10000, true);
-        key = new Key(1, "eng", FormatType.html, "full_view", true);
+        key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         assertNotNull(store.getPublished(key));
 
@@ -128,7 +129,7 @@ public class FilesystemStoreTest {
 
     @Test
     public void testPublicPrivatePath() throws Exception {
-        Key key = new Key(2, "eng", FormatType.html, "full_view", true);
+        Key key = new Key(2, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         assertFalse(this.store.getPrivatePath(key).equals(this.store.getPublicPath(key)));
     }
 
@@ -198,12 +199,12 @@ public class FilesystemStoreTest {
 
     private Key[] prepareDiskSizeRestrictionTests() throws IOException, SQLException {
         this.store.setMaxSizeKb(1);
-        Key[] keys = {new Key(0, "eng", FormatType.html, "full_view", true),
-                new Key(1, "eng", FormatType.html, "full_view", true),
-                new Key(2, "eng", FormatType.html, "full_view", true),
-                new Key(3, "eng", FormatType.html, "full_view", true),
-                new Key(4, "eng", FormatType.html, "full_view", true),
-                new Key(5, "eng", FormatType.html, "full_view", true)};
+        Key[] keys = {new Key(0, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+                new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+                new Key(2, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+                new Key(3, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+                new Key(4, "eng", FormatType.html, "full_view", true, FormatterWidth._100),
+                new Key(5, "eng", FormatType.html, "full_view", true, FormatterWidth._100)};
 
         store.put(keys[0], new StoreInfoAndData(new byte[200], 0, false));
         assertStoreContains(keys, keys[0]);
@@ -238,7 +239,7 @@ public class FilesystemStoreTest {
     @Test
     public void testRemove() throws Exception {
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, true);
-        Key key = new Key(1, "eng", FormatType.html, "full_view", true);
+        Key key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         assertNotNull(store.get(key));
         assertNotNull(store.getPublished(key));
@@ -254,7 +255,7 @@ public class FilesystemStoreTest {
         assertEquals(0, countFiles(store.getPublicPath(key)));
 
         data = new StoreInfoAndData("result", 10000, false);
-        key = new Key(1, "eng", FormatType.html, "full_view", true);
+        key = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         store.put(key, data);
         assertEquals(1, countFiles(store.getPrivatePath(key)));
         assertEquals(0, countFiles(store.getPublicPath(key)));
@@ -272,11 +273,11 @@ public class FilesystemStoreTest {
     @Test
     public void testSetPublished() throws Exception {
         StoreInfoAndData data = new StoreInfoAndData("result", 10000, true);
-        Key key1 = new Key(1, "eng", FormatType.html, "full_view", true);
-        Key key2 = new Key(1, "fre", FormatType.html, "full_view", true);
-        Key key3 = new Key(1, "fre", FormatType.xml, "full_view", true);
-        Key key4 = new Key(1, "fre", FormatType.html, "xml_view", true);
-        Key key5 = new Key(1, "fre", FormatType.html, "xml_view", true);
+        Key key1 = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
+        Key key2 = new Key(1, "fre", FormatType.html, "full_view", true, FormatterWidth._100);
+        Key key3 = new Key(1, "fre", FormatType.xml, "full_view", true, FormatterWidth._100);
+        Key key4 = new Key(1, "fre", FormatType.html, "xml_view", true, FormatterWidth._100);
+        Key key5 = new Key(1, "fre", FormatType.html, "xml_view", true, FormatterWidth._100);
         store.put(key1, data);
         store.put(key2, data);
         store.put(key3, data);

@@ -25,6 +25,7 @@ public class FormatterParams {
     public Metadata metadataInfo;
     public FormatType formatType;
     public boolean formatterInSchemaPlugin;
+    public FormatterWidth width;
 
     public String param(String paramName, String defaultVal) {
         String[] values = webRequest.getParameterMap().get(paramName);
