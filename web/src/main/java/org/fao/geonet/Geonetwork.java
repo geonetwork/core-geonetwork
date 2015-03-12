@@ -104,6 +104,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+import java.lang.reflect.InvocationTargetException;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.fao.geonet.services.metadata.StatusActions;
 
 /**
  * This is the main class, it handles http connections and inits the system.
@@ -175,9 +180,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		setProps(path, handlerConfig);
 
-		// Status actions class - load it
-		String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS); 
-		Class statusActionsClass = Class.forName(statusActionsClassName);
+		Class statusActionsClass = setupStatusActions(handlerConfig);
 
         String languageProfilesDir = handlerConfig
                 .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
@@ -477,6 +480,43 @@ public class Geonetwork implements ApplicationHandler {
         }
 		return gnContext;
 	}
+
+    /**
+     * Init StatusActions.
+     * 
+     */        
+    private Class setupStatusActions(ServiceConfig handlerConfig) throws ClassNotFoundException {
+        // Status actions class - load it
+        String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
+        Class statusActionsClass = Class.forName(statusActionsClassName);
+        
+        String useHtml5uiParam = handlerConfig.getValue(Geonet.Config.USE_HTML5_GUI);
+        boolean useHtml5ui;
+        if(useHtml5uiParam != null) {
+            useHtml5ui = BooleanUtils.isTrue(BooleanUtils.toBooleanObject(useHtml5uiParam));
+        } else {
+            logger.info("Parameter " + Geonet.Config.USE_HTML5_GUI + " not found. Default to true.");
+            useHtml5ui = true;
+        }
+
+        // init html5 value if possible
+        try {
+            final String HTML5_PROP_NAME = "useHtml5ui";
+
+            StatusActions statusActionsImpl = (StatusActions) statusActionsClass.newInstance();
+            
+            if(PropertyUtils.isWriteable(statusActionsImpl, HTML5_PROP_NAME)) {
+                BeanUtils.setProperty(statusActionsImpl, HTML5_PROP_NAME, useHtml5ui);
+                logger.info(Geonet.Config.USE_HTML5_GUI + " set to " + useHtml5ui);
+            } else {
+                logger.warning("Could not find setter for " + Geonet.Config.USE_HTML5_GUI);
+            }
+        } catch (Exception ex) {
+            logger.warning("Could not inject " + Geonet.Config.USE_HTML5_GUI + " value: " + ex.getMessage() );
+        }
+        
+        return statusActionsClass;
+    }
 
     /**
      * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it can't, GeoNetwork will

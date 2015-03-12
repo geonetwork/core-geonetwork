@@ -374,6 +374,7 @@
 		<!-- Define the class to use when metadata status change
 		-->
         <param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
+		<param name="useHtml5ui" value="true"/>
 	</appHandler>
 
 	<!-- ====================================================================== -->

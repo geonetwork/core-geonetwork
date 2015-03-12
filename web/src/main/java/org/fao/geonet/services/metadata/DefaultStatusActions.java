@@ -54,7 +54,7 @@ public class DefaultStatusActions implements StatusActions {
 	private String siteUrl;
 	private UserSession session;
 	private boolean emailNotes = true;
-	private boolean html5ui = true;
+	private static boolean html5ui = true;
 
 	private String allGroup = "1";
 
@@ -313,4 +313,9 @@ public class DefaultStatusActions implements StatusActions {
 			return siteUrl+"/main.search?"+suffix;
 		}
 	}
+
+	public void setUseHtml5ui(boolean html5ui) {
+		DefaultStatusActions.html5ui = html5ui;
+	}
+        
 }

@@ -497,6 +497,7 @@ public final class Geonet {
 		public static final String USE_SUBVERSION  = "useSubversion";
 		public static final String SUBVERSION_PATH = "subversionPath";
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
+		public static final String USE_HTML5_GUI = "useHtml5ui";
 		public static final String CONFIG_DIR = "configDir";
 		public static final String UPLOAD_DIR = "uploadDir";
 		public static final String RESOURCES_DIR = "resources";
