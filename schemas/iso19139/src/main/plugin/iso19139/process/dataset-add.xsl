@@ -22,8 +22,7 @@ attached it to the metadata for data.
 	<!-- ============================================================================= -->
 
 	<xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
-	<xsl:message>JE PASSEE</xsl:message>
-	
+
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:copy-of
@@ -156,7 +155,7 @@ attached it to the metadata for data.
 							// the service metadata record.
 							-->
 							<srv:operatesOn uuidref="{$uuidref}"
-								xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
+								xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
 
 						</srv:SV_ServiceIdentification>
 					</gmd:identificationInfo>
