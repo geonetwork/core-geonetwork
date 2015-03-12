@@ -59,6 +59,7 @@
     "drawRectangle": "Draw rectangle",
     "error": "Error",
     "errors": "Error(s)",
+    "serviceDetachedToCurrentRecord": "Service detached to current record",
     "featureCatalog": "Feature catalog",
     "file": "File",
     "fileType": "Type of file",
