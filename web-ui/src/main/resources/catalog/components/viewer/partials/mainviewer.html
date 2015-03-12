@@ -42,15 +42,19 @@
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)">
       <span class="fa fa-plus"></span>
-      <span role="tooltip" data-translate="">Zoom</span>
+      <span role="tooltip" data-translate="">ZoomIn</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
       <span class="fa fa-minus"></span>
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+      <span class="fa fa-arrows-alt"></span>
+      <span role="tooltip" data-translate="">ZoomToMapMaxExtent</span>
+    </button>
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
       <span class="fa fa-map-marker"></span>
-      <span role="tooltip" data-translate="">Localisation</span>
+      <span role="tooltip" data-translate="">ZoomToYourLocation</span>
     </button>
   </div>
 

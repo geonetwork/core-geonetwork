@@ -41,9 +41,25 @@
                 gnMap.zoom(map, delta);
               };
               scope.zoomToMaxExtent = function(map) {
-                map.getView().setResolution(gnMapConfig.maxResolution);
+                map.getView().fitExtent(map.getView().
+                  getProjection().getExtent(), map.getSize());
               };
+              scope.zoomToYou = function(map) {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(function(position) {
+                    var position = new ol.geom.Point([
+                                      position.coords.longitude,
+                                      position.coords.latitude]);
+                    map.getView().setCenter(
+                      position.transform(
+                        'EPSG:4326',
+                        map.getView().getProjection()).getFirstCoordinate()
+                    );
+                  });
+                } else {
 
+                }
+              };
               var div = document.createElement('div');
               div.className = 'overlay';
               var overlay = new ol.Overlay({
