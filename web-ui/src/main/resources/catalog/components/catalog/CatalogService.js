@@ -486,7 +486,8 @@
       $.extend(true, this, k);
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox'];
+        'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
@@ -585,16 +586,16 @@
         if (this.geoBox[i]) {
           var coords = this.geoBox[i].split('|');
           return 'Polygon((' +
-            coords[0] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[1] + ',' +
-            coords[2] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[3] + ',' +
-            coords[0] + ' ' +
-            coords[1] + '))';
+              coords[0] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[1] + ',' +
+              coords[2] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[3] + ',' +
+              coords[0] + ' ' +
+              coords[1] + '))';
         } else {
           return null;
         }

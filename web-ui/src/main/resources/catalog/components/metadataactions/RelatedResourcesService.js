@@ -192,28 +192,24 @@
           };
 
           this.getType = function(resource) {
-            var protocolFn = angular.isFunction(resource.protocol &&
-                                                resource.protocol.contains);
-            var serviceFn = angular.isFunction(resource.serviceType &&
-                                                resource.serviceType.contains);
+            var protocolOrType = resource.protocol + resource.serviceType;
+            if (angular.isString(protocolOrType)) {
+              if (protocolOrType.match(/wms/i)) {
+                return 'WMS';
+              } else if (protocolOrType.match(/wmts/i)) {
+                return 'WMTS';
+              } else if (protocolOrType.match(/wfs/i)) {
+                return 'WFS';
+              } else if (protocolOrType.match(/kml/i)) {
+                return 'KML';
+              } else if (protocolOrType.match(/download/i)) {
+                return 'LINKDOWNLOAD';
+              } else if (protocolOrType.match(/link/i)) {
+                return 'LINK';
+              }
+            }
 
-            if ((protocolFn && resource.protocol.contains('WMS')) ||
-                (serviceFn && resource.serviceType.contains('WMS'))) {
-              return 'WMS';
-            } else if ((protocolFn && resource.protocol.contains('WMTS')) ||
-              (serviceFn && resource.serviceType.contains('WMTS'))) {
-              return 'WMTS';
-            } else if ((protocolFn && resource.protocol.contains('WFS')) ||
-              (serviceFn && resource.serviceType.contains('WFS'))) {
-              return 'WFS';
-            } else if ((protocolFn && resource.protocol.contains('KML')) ||
-              (serviceFn && resource.serviceType.contains('KML'))) {
-              return 'KML';
-            } else if (protocolFn && resource.protocol.contains('DOWNLOAD')) {
-              return 'LINKDOWNLOAD';
-            } else if (protocolFn && resource.protocol.contains('LINK')) {
-              return 'LINK';
-            } else if (resource['@type'] &&
+            if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
                     resource['@type'] === 'children')) {
               return 'MDFAMILY';
@@ -225,6 +221,7 @@
               return 'MDSOURCE';
             } else if (resource['@type'] &&
                (resource['@type'] === 'associated' ||
+               resource['@type'] === 'services' ||
                resource['@type'] === 'hasfeaturecat' ||
                resource['@type'] === 'datasets')) {
               return 'MD';

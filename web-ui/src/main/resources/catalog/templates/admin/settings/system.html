@@ -53,7 +53,6 @@
                 translate}}</label>
               <!-- According to entry -->
               <div class="col-sm-8" data-ng-switch="s['@name']">
-
                 <!-- List of user to be used as CSW contact -->
                 <select data-ng-switch-when="system/csw/contactId" class="form-control"
                   name="{{s.formName}}">
@@ -108,6 +107,15 @@
                           ng-selected="'http' == s['#text']">http</option>
                   <option value="https"
                           ng-selected="'https' == s['#text']">https</option>
+                </select>
+                <select data-ng-switch-when="system/server/log" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="log4j"
+                          ng-selected="'log4j' == s['#text']">PROD</option>
+                  <option value="log4j-jeeves"
+                          ng-selected="'log4j-jeeves' == s['#text']">TEST</option>
+                  <option value="log4j-dev"
+                          ng-selected="'log4j-dev' == s['#text']">DEV</option>
                 </select>
                 <select data-ng-switch-when="system/oai/mdmode" class="form-control"
                       name="{{s.formName}}">

@@ -5,20 +5,20 @@
   ]);
 
   module.directive('gnConfirmClick', [
-    function(){
+    function() {
       return {
         priority: -1,
         restrict: 'A',
-        link: function(scope, element, attrs){
-          element.bind('click', function(e){
+        link: function(scope, element, attrs) {
+          element.bind('click', function(e) {
             var message = attrs.gnConfirmClick;
-            if(message && !confirm(message)){
+            if (message && !confirm(message)) {
               e.stopImmediatePropagation();
               e.preventDefault();
             }
           });
         }
-      }
+      };
     }
   ]);
 

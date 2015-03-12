@@ -40,8 +40,8 @@
 	</xsl:template>
 
 	<xsl:template name="myheader">
-	  <link href="{$baseurl}/images/logos/favicon.gif" rel="shortcut icon" type="image/x-icon" />
-	  <link href="{$baseurl}/images/logos/favicon.gif" rel="icon" type="image/x-icon" />
+	  <link href="{$baseurl}/images/logos/favicon.png" rel="shortcut icon" type="image/x-icon" />
+	  <link href="{$baseurl}/images/logos/favicon.png" rel="icon" type="image/x-icon" />
 	  
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{$baseurl}/geonetwork.css"/>

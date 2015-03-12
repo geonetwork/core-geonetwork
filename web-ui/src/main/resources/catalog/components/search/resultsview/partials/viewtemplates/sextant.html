@@ -10,9 +10,9 @@
       </div>
 
       <!-- Icon for types -->
-      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="gn-md-type pull-right fa fa-database " title="dataset"></span>
-      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="gn-md-type pull-right fa fa-hdd-o" title="software"></span>
-      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="gn-md-type pull-right fa fa-globe" title="geodata"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('dataset')>=0" class="gn-md-type pull-right fa fa-database " title="dataset"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('software')>=0" class="gn-md-type pull-right fa fa-hdd-o" title="software"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('basicgeodata')>=0" class="gn-md-type pull-right fa fa-globe" title="geodata"></span>
 
       <div class="media-body">
         <h4>
