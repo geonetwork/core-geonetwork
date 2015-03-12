@@ -166,6 +166,7 @@
     "tur": "Türkçe",
     "types": "Type of resources",
     "until": "Until",
+    "assignCategoryError": "An error occurred while assigning category '{{category}}'.",
     "updatePassword": "Update",
     "upload": "Upload",
     "uuid": "Identifier",
