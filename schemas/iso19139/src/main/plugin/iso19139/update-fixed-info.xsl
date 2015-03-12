@@ -286,7 +286,7 @@
             <xsl:choose>
                 <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
                     <xsl:attribute name="xlink:href">
-                        <xsl:value-of select="concat($serviceUrl,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+                        <xsl:value-of select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
                     </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
