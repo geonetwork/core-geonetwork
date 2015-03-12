@@ -207,7 +207,7 @@ public class Handlers {
             if (thesaurusName.isEmpty()) {
                 def keywordTypeCode = k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode'
                 if (!keywordTypeCode.isEmpty()) {
-                    thesaurusName = f.codelistValueLabel(keywordTypeCode)
+                    thesaurusName = f.translate("uncategorizedKeywords")
                 }
             }
 

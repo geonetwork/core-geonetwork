@@ -18,6 +18,9 @@
     </h1>
     <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
         <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
+        <li fmt-if="associated">
+            <a href="" rel=".container > .associated"><span fmt-translate="">associated-link</span>&amp;nbsp; <i class="fa fa-circle-o-notch fa-spin associated-spinner"></i></a>
+        </li>
         <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
         <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">
             <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
@@ -64,4 +67,7 @@
     </div>
 
     {{content}}
+    <div class="entry associated">
+        <div fmt-include="html/associated.html" fmt-include-replace="true"/>
+    </div>
 </div>
