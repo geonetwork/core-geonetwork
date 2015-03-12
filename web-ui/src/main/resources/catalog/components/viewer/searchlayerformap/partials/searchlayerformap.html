@@ -29,45 +29,40 @@
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"></div>
-
+<!--
       <div class="pull-right"
            data-sortby-combo=""
            data-params="searchObj.params"
-           data-gn-sortby-values="searchObj.sortbyValues"></div>
+           data-gn-sortby-values="searchObj.sortbyValues"></div>-->
     </div>
     <br/>
     <br/>
 
 
-    <ul class="list-group layerTree">
-      <li class="list-group-item"
+    <ul class="list-group">
+      <li class="list-group-item gn-searchlayer"
           data-ng-repeat="m in searchResults.records"
           data-ng-init="md = getMetadata(m)">
-        <div class="row">
-          <div class="col-md-12">
-            <label data-ng-repeat="link in md.relevantLinks"
-                   title="{{md.title || md.defaultTitle}}">
-              {{link.desc || link.name}}
-              <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-default"
-                        data-ng-click="zoomToLayer(md)"
-                        title="{{'layerExtentZoom' | translate}}">
-                  <i class="fa fa-fw fa-arrows-alt"/>
-                </a>
-                <a class="btn btn-default"
-                        href=""
-                        data-ng-click="addToMap(link)"
-                        title="{{'addToMap' | translate}}">
-                  <i class="fa fa-fw fa-plus"/>
-                </a>
-                <a class="btn btn-default"
-                        data-ng-href="#/metadata/{{md.getUuid()}}"
-                        title="{{'openRecord' | translate}}">
-                  <i class="fa fa-fw fa-info-circle"/>
-                </a>
-              </div>
-            </label>
-          </div>
+        <div data-ng-repeat="link in md.relevantLinks">
+          <label
+                 title="{{md.title || md.defaultTitle}}">
+            {{link.desc || link.name}}
+          </label>
+          <button class="btn btn-cog"
+                  data-ng-click="zoomToLayer(md)"
+                  title="{{'layerExtentZoom' | translate}}">
+            <i class="fa fa-fw fa-arrows-alt"/>
+          </button>
+          <button class="btn btn-cog"
+                  data-ng-click="addToMap(link)"
+                  title="{{'addToMap' | translate}}">
+            <i class="fa fa-fw fa-plus"/>
+          </button>
+          <a class="btn btn-cog"
+                  data-ng-href="#/metadata/{{md.getUuid()}}"
+                  title="{{'openRecord' | translate}}">
+            <i class="fa fa-fw fa-info-circle"/>
+          </a>
         </div>
       </li>
     </ul>

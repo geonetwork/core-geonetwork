@@ -110,16 +110,25 @@
         transition: opacity @transition-params;
       }
     }
-
+    .gn-searchlayer {
+      label {
+        font-size: 90%;
+        max-width: 68%;
+      }
+    }
     .list-group-item {
       background: inherit;
       transition: max-height @transition-params;
       .btn-cog {
-        float: right;
-        margin-right: -.6em;
-        margin-top: -.5em;
-        background: inherit;
-        padding: 6px 8px;
+         float: right;
+         margin-right: -.6em;
+         margin-top: -.5em;
+         background: inherit;
+         padding: 6px 8px;
+       }
+      .btn-cog-left {
+        float: left;
+        padding: 6px 14px;
       }
       &:hover {
         .fa-arrows-alt, .gn-layer-ordering {
@@ -131,7 +140,7 @@
       }
       & > label {
         font-size: 90%;
-        max-width: 82%;
+        max-width: 72%;
       }
       &.active {
         background: rgba(255,255,255,.6);

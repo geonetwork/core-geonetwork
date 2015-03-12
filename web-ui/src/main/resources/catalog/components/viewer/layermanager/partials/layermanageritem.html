@@ -1,4 +1,9 @@
  <div>
+   <button class="btn btn-cog btn-cog-left"
+           ng-click="map.removeLayer(layer)"
+           title="{{'layerDelete'|translate}}">
+     <span class="fa fa-trash-o"></span>
+   </button>
    <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'layerInfo'|translate}}">
      <span class="fa fa-cog"></span>
    </button>
@@ -17,10 +22,6 @@
      <button class="metadata" ng-if="layer.get('metadataUrl')" data-ng-click="showMetadata(layer.get('metadataUrl'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
        <span class="fa fa-file"></span>
        {{'layerMetadata'|translate}}
-     </button>
-     <button class="btn btn-default delete" ng-click="map.removeLayer(layer)" title="{{'layerDelete'|translate}}">
-       <span class="fa fa-trash-o"></span>
-        {{'layerDelete'|translate}}
      </button>
      <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
      <h6 ng-if="layer.get('legend')" data-translate="">Legend</h6>
