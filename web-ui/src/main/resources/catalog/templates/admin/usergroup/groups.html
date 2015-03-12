@@ -35,7 +35,7 @@
   <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
     <div class="panel panel-default" data-ng-search-form="">
       <div class="panel-heading"
-        title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
+        title="{{searchResults.count > 0 ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <strong>{{groupSelected.name}}</strong>
@@ -46,7 +46,8 @@
             <i class="fa fa-save"></i> <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
-            data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0"
+            data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
             <i class="fa fa-trash-o"></i> <span data-translate="">deleteGroup</span>
           </button>

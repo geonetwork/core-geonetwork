@@ -77,7 +77,7 @@
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
-        $http.get('admin.group.list@json').success(function(data) {
+        $http.get('admin.group.list?_content_type=json').success(function(data) {
           $scope.groups = data !== 'null' ? data : null;
           $scope.isLoadingGroups = false;
         }).error(function(data) {
@@ -100,7 +100,7 @@
       }
       function loadUsers() {
         $scope.isLoadingUsers = true;
-        $http.get('admin.user.list@json').success(function(data) {
+        $http.get('admin.user.list?_content_type=json').success(function(data) {
           $scope.users = data.users;
           $scope.isLoadingUsers = false;
         }).error(function(data) {
@@ -176,14 +176,14 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
 
-        $http.get('admin.user@json?id=' + u.value.id)
+        $http.get('admin.user?_content_type=json&id=' + u.value.id)
           .success(function(data) {
               $scope.userSelected = data;
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
 
               // Load user group and then select user
-              $http.get('admin.usergroups.list@json?id=' + u.value.id)
+              $http.get('admin.usergroups.list?_content_type=json&id=' + u.value.id)
               .success(function(groups) {
                     $scope.userGroups = groups;
                   }).error(function(data) {
