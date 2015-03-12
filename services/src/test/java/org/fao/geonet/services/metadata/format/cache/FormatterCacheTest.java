@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.junit.After;
 import org.junit.Test;
 
@@ -38,8 +39,8 @@ public class FormatterCacheTest {
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
 
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
-        final Key key2 = new Key(2, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key2 = new Key(2, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
 
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
         formatterCache.get(key2, new ChangeDateValidator(changeDate), new TestLoader("result1", changeDate, false), true);
@@ -61,7 +62,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
         assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
     }
@@ -72,7 +73,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         final TestLoader loader = new TestLoader("result", changeDate, false);
         String result = getAsString(key, changeDate, loader);
         assertEquals("result", result);
@@ -116,7 +117,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
 
         assertNull(formatterCache.getPublished(key));
@@ -134,8 +135,8 @@ public class FormatterCacheTest {
         this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
 
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", false);
-        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", false, FormatterWidth._100);
+        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
 
         formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndDataLoadResult>() {
             @Override
@@ -194,7 +195,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result",changeDate, false), true);
         assertEquals(true, persistentStoreHit.get());
 
@@ -231,7 +232,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld);
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), false);
         waitForStartPut.set(true);
         assertNull(persistentStore.get(key));

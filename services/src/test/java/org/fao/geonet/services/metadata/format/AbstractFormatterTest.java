@@ -22,6 +22,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.metadata.format.cache.Key;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Handler;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
@@ -112,9 +113,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
 
     protected Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
         final ServletWebRequest webRequest = new ServletWebRequest(request);
-
-        return this.formatService.loadMetadataAndCreateFormatterAndParams(getUILang(), getOutputType(),
-                id, formatterId, false, webRequest);
+        Key key = new Key(id, getUILang(), getOutputType(), formatterId, false, FormatterWidth._100);
+        return this.formatService.loadMetadataAndCreateFormatterAndParams(key, webRequest);
     }
 
     protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {
@@ -122,7 +122,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         TestFunction testFunction = new TestFunction() {
             @Override
             public void exec() throws Exception{
-                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, webRequest);
+                formatService.exec(getUILang(), getOutputType().name(), "" + id, formatterId, "true", false, FormatterWidth._100,
+                        webRequest);
             }
         };
 

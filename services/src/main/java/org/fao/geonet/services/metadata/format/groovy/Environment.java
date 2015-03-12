@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
@@ -47,6 +48,11 @@ public interface Environment extends CurrentLanguageHolder {
      * Get the Format output type of this request. (html, xml, pdf, etc...)
      */
     public FormatType getFormatType();
+    /**
+     * Get the approximate size of the element that the formatter output will be embedded in compared to the full device
+     * width.  Allowed options are the enum values: {@link org.fao.geonet.services.metadata.format.FormatterWidth}
+     */
+    public FormatterWidth getEmbeddingWidth();
     /**
      * Return the map of all parameters passed to the Format service.
      */
