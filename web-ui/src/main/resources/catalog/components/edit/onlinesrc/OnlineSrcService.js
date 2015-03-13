@@ -519,20 +519,21 @@
             uuidref: gnCurrentEdit.uuid
           }, service = this;
 
-          gnBatchProcessing.runProcessMdXml(setParams('services-remove', params)).
-            then(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('serviceDetachedToCurrentRecord'),
-              timeout: 3
+          gnBatchProcessing.runProcessMdXml(
+              setParams('services-remove', params)).
+              then(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('serviceDetachedToCurrentRecord'),
+                  timeout: 3
+                });
+                service.reload = true;
+              }, function(error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('removeServiceError'),
+                  error: error,
+                  timeout: 0,
+                  type: 'danger'});
               });
-              service.reload = true;
-          }, function(error) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('removeServiceError'),
-              error: error,
-              timeout: 0,
-              type: 'danger'});
-          });
         },
 
         /**
