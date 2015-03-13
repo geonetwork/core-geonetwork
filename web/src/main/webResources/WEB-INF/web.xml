@@ -60,6 +60,46 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <!-- url rewrite filter -->
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <!-- set the amount of seconds the conf file will be checked for reload. can be a valid integer (0 denotes
+            check every time, empty/not set denotes no reload check) -->
+        <!--<init-param>-->
+            <!--<param-name>confReloadCheckInterval</param-name>-->
+            <!--<param-value>0</param-value>-->
+        <!--</init-param>-->
+
+
+        <!-- sets up log level (will be logged to context log). Can be: TRACE, DEBUG, INFO (default), WARN, ERROR,
+            FATAL, log4j, commons, sysout:{level} (ie, sysout:DEBUG). If you are having trouble using normal levels use
+            sysout:DEBUG -->
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>WARN</param-value>
+        </init-param>
+
+        <!-- you can disable status page if desired. Can be: true, false (default true) -->
+        <init-param>
+            <param-name>statusEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <!-- you can change status path so that it does not conflict with your installed apps (note: defaults to
+            /rewrite-status). Note: must start with / -->
+        <init-param>
+            <param-name>statusPath</param-name>
+            <param-value>/rewritestatus</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
 
     <!-- Resources servlet -->
     <filter>
