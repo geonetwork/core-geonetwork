@@ -27,11 +27,11 @@
 	<property name="appName" value="geonetwork" />
 	<property name="version" value="3.0.0" />
     <property name="subVersion" value="SNAPSHOT" />
-	<property name="javaVersion" value="1.6.0" /> <!-- Minimum version required -->
-	<property name="jre_url" value="http://java.sun.com/javase/downloads" />
+	<property name="javaVersion" value="1.7.0" /> <!-- Minimum version required -->
+	<property name="jre_url" value="http://openjdk.java.net/" />
 	<property name="OS" value="Compiled on ${os.name} (${osys})" />
 	<property name="propsdir" value="../.props" />
-	<property name="ant.build.javac.target" value="1.5"/>
+	<property name="ant.build.javac.target" value="1.7"/>
 	<property name="debugOn" value="on"/> <!-- on off true false yes no -->
     <property name="thesaurusUrl" value="https://raw.github.com/geonetwork/util-gemet/master/thesauri" />
 
