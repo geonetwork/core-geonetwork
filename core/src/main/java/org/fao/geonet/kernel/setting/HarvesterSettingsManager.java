@@ -335,6 +335,10 @@ public class HarvesterSettingsManager {
      * @return
      */
     private Element buildFromMap(HarvesterSetting s, HashMap<Integer, List<HarvesterSetting>> mapSettings) {
+        if(s == null) {
+            return null;
+        }
+        
     	// construct tree from HashMap and begin with root found
     	Element el = new Element(s.getName());
 		el.setAttribute("id", Integer.toString(s.getId()));
