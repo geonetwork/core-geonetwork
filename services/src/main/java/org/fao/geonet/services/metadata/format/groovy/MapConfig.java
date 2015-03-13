@@ -1,5 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import org.fao.geonet.services.region.GetMap;
+
 /**
  * Encapsulates the map parameters used when making {@link org.fao.geonet.services.region.GetMap} requests.
  *
@@ -23,7 +25,7 @@ public class MapConfig {
      * when rendering extents and geometries.
      */
     public String getBackground() {
-        return background;
+        return background.toLowerCase().startsWith("http://") ? GetMap.SETTING_BACKGROUND : background;
     }
 
     public void setBackground(String background) {

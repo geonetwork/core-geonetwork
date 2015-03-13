@@ -23,6 +23,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
+import org.fao.geonet.services.region.GetMap;
 import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -204,10 +205,10 @@ public class EnvironmentImpl implements Environment {
     @Override
     public MapConfig getMapConfiguration() {
         final SettingManager settingManager = this.serviceContext.getBean(SettingManager.class);
-        final String background = settingManager.getValue("region/getmap/background");
-        final String mapproj = settingManager.getValue("region/getmap/mapproj");
-        final Integer width = settingManager.getValueAsInt("region/getmap/width");
-        final Integer thumbnailWidth = settingManager.getValueAsInt("region/getmap/summaryWidth");
+        final String background = settingManager.getValue(GetMap.REGION_GETMAP_BACKGROUND);
+        final String mapproj = settingManager.getValue(GetMap.REGION_GETMAP_MAPPROJ);
+        final Integer width = settingManager.getValueAsInt(GetMap.REGION_GETMAP_WIDTH);
+        final Integer thumbnailWidth = settingManager.getValueAsInt(GetMap.REGION_GETMAP_SUMMARY_WIDTH);
         return new MapConfig(background, mapproj, width, thumbnailWidth);
     }
 

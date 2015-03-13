@@ -34,6 +34,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -110,9 +111,16 @@ public class GetMap{
     public static final String BACKGROUND_PARAM = "background";
     public static final String OUTPUT_FILE_NAME = "outputFileName";
 	private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
+    public static final String SETTING_BACKGROUND = "settings";
+    public static final String REGION_GETMAP_BACKGROUND = "region/getmap/background";
+    public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
+    public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
+    public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
 
     @Autowired
     private ServiceManager serviceManager;
+    @Autowired
+    private SettingManager settingManager;
     @Autowired
     private ApplicationContext context;
     private Map<String, String> regionGetMapBackgroundLayers;
@@ -227,7 +235,10 @@ public class GetMap{
         Exception error = null;
         if (background != null) {
 
-            if (this.regionGetMapBackgroundLayers.containsKey(background)) {
+            if (background.equalsIgnoreCase(SETTING_BACKGROUND) &&
+                settingManager.getValue(REGION_GETMAP_BACKGROUND).startsWith("http://")) {
+                background = settingManager.getValue(REGION_GETMAP_BACKGROUND);
+            } else if (this.regionGetMapBackgroundLayers.containsKey(background)) {
                 background = this.regionGetMapBackgroundLayers.get(background);
             }
 
