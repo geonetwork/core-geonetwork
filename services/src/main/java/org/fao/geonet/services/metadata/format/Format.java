@@ -32,12 +32,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
@@ -52,8 +46,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -349,32 +341,22 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
+        ISODate changeDate = searchManager.getDocChangeDate(resolvedId);
+
         Validator validator;
-
-        Query query= new TermQuery(new Term(LuceneIndexField.ID, resolvedId));
-        try (final IndexAndTaxonomy indexReader = searchManager.getIndexReader(lang, -1)) {
-            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
-            final TopDocs search = searcher.search(query, 1);
-            if (search.totalHits == 0) {
-                throw new NoSuchFieldException("There is no metadata with id/uuid/fileIdentifier = " + id);
-            }
-
-            Document doc = searcher.doc(search.scoreDocs[0].doc, FIELDS_TO_LOAD);
-
-            if (doc != null) {
-                final long changeDate = new ISODate(doc.get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)).toDate().getTime();
-                long roundedChangeDate = changeDate / 1000 * 1000;
-                if (request.checkNotModified(roundedChangeDate) && cacheConfig.allowCaching(key)) {
-                    if (!skipPopularityBool) {
-                        this.dataManager.increasePopularity(context, resolvedId);
-                    }
-                    return;
+        if (changeDate != null) {
+            final long changeDateAsTime = changeDate.toDate().getTime();
+            long roundedChangeDate = changeDateAsTime / 1000 * 1000;
+            if (request.checkNotModified(roundedChangeDate) && cacheConfig.allowCaching(key)) {
+                if (!skipPopularityBool) {
+                    this.dataManager.increasePopularity(context, resolvedId);
                 }
-
-                validator = new ChangeDateValidator(changeDate);
-            } else {
-                validator = new NoCacheValidator();
+                return;
             }
+
+            validator = new ChangeDateValidator(changeDateAsTime);
+        } else {
+            validator = new NoCacheValidator();
         }
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 

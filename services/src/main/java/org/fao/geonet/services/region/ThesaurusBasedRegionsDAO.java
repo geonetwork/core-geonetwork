@@ -17,10 +17,13 @@ import org.fao.geonet.kernel.region.Request;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     
@@ -33,6 +36,9 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         }
     };
     private static final String CATEGORY_ID_CACHE_KEY = "CATEGORY_ID_CACHE_KEY";
+
+    @Autowired
+    private ThesaurusManager thesaurusManager;
 
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
@@ -84,7 +90,24 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         return geometry;
     }
 
-	@Override
+    @Override
+    public boolean canHandleId(ServiceContext context, String id) throws Exception {
+        return createSearchRequest(context).id(id).get() != null;
+    }
+
+    @Nullable
+    @Override
+    public Long getLastModified(@Nonnull String id) {
+        final Thesaurus thesaurus = thesaurusManager.getThesaurusByName(this.thesaurusName);
+
+        if (thesaurus != null) {
+            return thesaurus.getLastModifiedTime().toMillis();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
 	public Collection<String> getRegionCategoryIds(final ServiceContext context) throws Exception{
 	    return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY, new Callable<Collection<String>>(){
 

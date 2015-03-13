@@ -54,10 +54,15 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
@@ -128,6 +133,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.PreDestroy;
+
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
 
 /**
  * Indexes metadata using Lucene.
@@ -995,6 +1002,25 @@ public class SearchManager {
 		}
 	}
 
+    public ISODate getDocChangeDate(String mdId) throws Exception {
+        Query query= new TermQuery(new Term(LuceneIndexField.ID, mdId));
+        try (final IndexAndTaxonomy indexReader = getIndexReader(Geonet.DEFAULT_LANGUAGE, -1)) {
+            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+            final TopDocs search = searcher.search(query, 1);
+            if (search.totalHits == 0) {
+                throw new NoSuchFieldException("There is no metadata with id/uuid/fileIdentifier = " + mdId);
+            }
+
+            Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(DATABASE_CHANGE_DATE));
+
+            if (doc != null) {
+                return new ISODate(doc.get(DATABASE_CHANGE_DATE));
+            }
+
+            return null;
+        }
+    }
+
     /**
      * TODO javadoc.
      *
@@ -1334,12 +1360,12 @@ public class SearchManager {
 		}
 	}
 
-    public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
-        return _tracker.acquire(preferedLang, versionToken);
+    public IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException {
+        return _tracker.acquire(preferredLang, versionToken);
     }
-    public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
+    public IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
-       return getIndexReader(preferedLang, -1L);
+       return getIndexReader(preferredLang, -1L);
     }
 	public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
 	    reader.indexReader.releaseToNRTManager();

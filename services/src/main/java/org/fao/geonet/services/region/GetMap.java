@@ -63,6 +63,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -189,15 +190,25 @@ public class GetMap{
         if (id != null) {
             Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
             for (RegionsDAO regionsDAO : daos) {
-                geom = regionsDAO.getGeom(context, id, false, srs);
-                if (geom != null) {
-                    break;
+                if (regionsDAO.canHandleId(context, id)) {
+                    final Long lastModified = regionsDAO.getLastModified(id);
+                    if (lastModified != null && request.checkNotModified(lastModified)) {
+                        return null;
+                    }
+                    geom = regionsDAO.getGeom(context, id, false, srs);
+                    if (geom != null) {
+                        break;
+                    }
                 }
             }
             if (geom == null) {
                 throw new RegionNotFoundEx(id);
             }
         } else {
+            if (request.checkNotModified(geomParam + srs + background)) {
+                return null;
+            }
+
             GeomFormat format = GeomFormat.find(geomType);
             geom = format.parse(geomParam);
             if (!geomSrs.equals(srs)) {
@@ -211,7 +222,7 @@ public class GetMap{
         Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
         double expandFactor = calculateExpandFactor(bboxOfImage, srs);
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
-        Dimension imageDimenions = calculateImageSize(bboxOfImage, width, height);
+        Dimension imageDimensions = calculateImageSize(bboxOfImage, width, height);
 
         Exception error = null;
         if (background != null) {
@@ -226,11 +237,11 @@ public class GetMap{
             String maxy = Double.toString(bboxOfImage.getMaxY());
             background = background.replace("{minx}", minx).replace("{maxx}", maxx).replace("{miny}", miny)
                     .replace("{maxy}", maxy).replace("{srs}", srs)
-                    .replace("{width}", Integer.toString(imageDimenions.width))
-                    .replace("{height}", Integer.toString(imageDimenions.height)).replace("{MINX}", minx)
+                    .replace("{width}", Integer.toString(imageDimensions.width))
+                    .replace("{height}", Integer.toString(imageDimensions.height)).replace("{MINX}", minx)
                     .replace("{MAXX}", maxx).replace("{MINY}", miny).replace("{MAXY}", maxy).replace("{SRS}", srs)
-                    .replace("{WIDTH}", Integer.toString(imageDimenions.width))
-                    .replace("{HEIGHT}", Integer.toString(imageDimenions.height));
+                    .replace("{WIDTH}", Integer.toString(imageDimensions.width))
+                    .replace("{HEIGHT}", Integer.toString(imageDimensions.height));
 
             InputStream in = null;
             try {
@@ -238,7 +249,7 @@ public class GetMap{
                 in = imageUrl.openStream();
                 image = ImageIO.read(in);
             } catch (IOException e) {
-                image = new BufferedImage(imageDimenions.width, imageDimenions.height, BufferedImage.TYPE_INT_ARGB);
+                image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
                 error = e;
             }finally {
                 if(in != null) {
@@ -247,16 +258,16 @@ public class GetMap{
 
             }
         } else {
-            image = new BufferedImage(imageDimenions.width, imageDimenions.height, BufferedImage.TYPE_INT_ARGB);
+            image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
         }
 
         Graphics2D graphics = image.createGraphics();
         try {
             if(error != null) {
-                graphics.drawString(error.getMessage(), 0, imageDimenions.height/2);
+                graphics.drawString(error.getMessage(), 0, imageDimensions.height/2);
             }
             ShapeWriter shapeWriter = new ShapeWriter();
-            AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
+            AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
             Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom));
             graphics.setColor(Color.yellow);
             graphics.draw(shape);
@@ -273,7 +284,12 @@ public class GetMap{
             ImageIO.write(image, imageFormat, out);
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
-            headers.add("Cache-Control", "no-cache");
+            if (id != null) {
+                headers.add("Cache-Control", "no-cache");
+            } else {
+                headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
+
+            }
             headers.add("Content-Type", "image/"+imageFormat);
             return new HttpEntity<>(out.toByteArray(), headers);
         }

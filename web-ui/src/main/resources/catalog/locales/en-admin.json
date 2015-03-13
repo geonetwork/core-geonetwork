@@ -1012,7 +1012,7 @@
     "map/proj4js": "List of CRS",
     "region": "Region API",
     "region/getmap": "GetMap request",
-    "region/getmap/background": "Background map",
+    "region/getmap/background": "Background map, URL or Named Layer ID",
     "region/getmap/mapproj": "Map projection",
     "region/getmap/summaryWidth": "Summary width",
     "region/getmap/width": "Width",
