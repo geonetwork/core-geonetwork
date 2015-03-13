@@ -77,7 +77,6 @@ public class ArcSDEParams extends AbstractParams {
 		password = Util.getParam(site, "password", "");
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams create: " + server + ":" + port + " " + username + " " + password + " " + database);
 	}
 
 	//---------------------------------------------------------------------------
@@ -95,7 +94,6 @@ public class ArcSDEParams extends AbstractParams {
 		password = Util.getParam(site, "password", "");
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams update: " + server + ":" + port + " " + username + " " + password + " " + database);
 	}
 	
 	//---------------------------------------------------------------------------
