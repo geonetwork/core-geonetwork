@@ -9,7 +9,7 @@ public class Handlers {
     protected org.fao.geonet.services.metadata.format.groovy.Functions f
     protected Environment env
     Matchers matchers
-    Functions isofunc
+    iso19139.Functions isofunc
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
@@ -19,7 +19,7 @@ public class Handlers {
         this.f = f
         this.env = env
         commonHandlers = new common.Handlers(handlers, f, env)
-        isofunc = new Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
+        isofunc = new iso19139.Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
         matchers =  new Matchers(handlers: handlers, f:f, env:env)
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
@@ -42,6 +42,7 @@ public class Handlers {
         handlers.add name: 'Dataset URI', select: 'gmd:dataSetURI', isoDatasetUriEl
         handlers.add select: 'gmd:language', group: false, isoLanguageEl
         handlers.add select: matchers.isCiOnlineResourceParent, group: true, onlineResourceEls
+        handlers.add select: 'srv:coupledResource', group: true, coupledResourceEls
         handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, { elems ->
             def listItems = elems.findAll{!it.text().isEmpty()}.collect {f.codelistValueLabel("MD_TopicCategoryCode", it.text())};
             handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
@@ -155,6 +156,49 @@ public class Handlers {
         ])
     }
 
+    def coupledResourceEls = { els ->
+        def resources = com.google.common.collect.ArrayListMultimap.create()
+
+        def resolveResource = { el ->
+            def resource = el.'srv:SV_CoupledResource'
+            if (resource.isEmpty()) {
+                resource = el
+            }
+            resource
+        }
+
+        els.each {el ->
+            def resource = resolveResource(el)
+            def opName = resource.'srv:operationName'.text()
+            def identifier = resource.'srv:identifier'.text()
+            def scopedName = resource.'gco:ScopedName'.text()
+
+            def tip, href, cls;
+            if (identifier.trim().isEmpty()) {
+                href = "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
+                tip = this.f.translate("noUuidInLink")
+                cls = 'text-muted'
+            } else {
+                href = env.localizedUrl + 'md.viewer#/full_view/' + identifier
+                tip = href
+            }
+            def category = opName.trim().isEmpty() ? 'uncategorized' : opName
+            resources.put(category, [
+                    href : href,
+                    tip : tip,
+                    name : scopedName.trim().isEmpty() ? identifier : scopedName,
+                    class: cls
+                ]);
+        }
+
+        def label = f.nodeLabel("srv:SV_CoupledResource", null)
+        if (!els.isEmpty()) {
+            label = f.nodeLabel(els[0])
+        }
+
+        def model = [label: label, resources: resources.asMap()]
+        handlers.fileResult("html/coupled-resources.html", model)
+    }
     def formatEls = { els ->
         def formats = [] as Set
 

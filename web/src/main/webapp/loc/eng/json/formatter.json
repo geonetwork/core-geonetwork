@@ -20,5 +20,6 @@
     "source-link": "Sources",
     "testString": "This String is here for testing don't delete",
     "xml": "XML",
-    "uncategorizedKeywords" : "Uncategorized"
+    "uncategorizedKeywords" : "Uncategorized",
+    "uncategorized" : "Uncategorized"
 }

@@ -181,7 +181,8 @@ public class Handlers {
                     title = relUuid;
                 }
 
-                hierarchy.put(linkType, new Link(href, title))
+                def cls = uuid.trim().isEmpty() ? "text-muted" : ''
+                hierarchy.put(linkType, new Link(href, title, cls))
             }
         }
 
@@ -192,7 +193,7 @@ public class Handlers {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "md.viewer#/full_view/" + URLEncoder.encode(uuid, "UTF-8")
         }
     }
 

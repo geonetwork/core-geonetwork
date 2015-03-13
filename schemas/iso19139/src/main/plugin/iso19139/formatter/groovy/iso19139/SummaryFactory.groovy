@@ -124,6 +124,7 @@ class SummaryFactory {
                 if (title.trim().isEmpty()) {
                     title = href;
                 }
+                def linkClass = href.trim().isEmpty() ? 'text-muted' : '';
 
                 def imagesDir = "../../images/formatter/"
                 def type;
@@ -149,7 +150,7 @@ class SummaryFactory {
                 }
 
                 def linkType = new LinkType(type, icon, iconClasses)
-                linkBlock.put(linkType, new Link(href, title))
+                linkBlock.put(linkType, new Link(href, title, linkClass))
             }
         }
 
