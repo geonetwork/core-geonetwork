@@ -24,8 +24,9 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
+import org.springframework.http.HttpEntity;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -36,7 +37,7 @@ public interface IResourceDownloadHandler {
      *
      * @throws ResourceHandlerException
      */
-    public BinaryFile onDownload(ServiceContext context, Element params, int metadataId,
+    public HttpEntity<byte[]> onDownload(ServiceContext context, NativeWebRequest request, int metadataId,
                               String fileName, Path file) throws ResourceHandlerException;
 
     public Element onDownloadMultiple(ServiceContext context, Element params, int metadataId,

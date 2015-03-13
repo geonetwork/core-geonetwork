@@ -35,12 +35,12 @@ public class GeonetContext {
 
     // ---------------------------------------------------------------------------
     /* package */GeonetContext(ApplicationContext springAppContext, boolean readOnly,
-                               Class<StatusActions> statusActionsClass, ThreadPool threadPool) {
+                               Class<StatusActions> statusActionsClass) {
         this._springAppContext = springAppContext;
         this.nodeInfo = springAppContext.getBean(NodeInfo.class);
         nodeInfo.setReadOnly(readOnly);
         this._statusActionsClass = statusActionsClass;
-        this._threadPool = threadPool;
+        this._threadPool = springAppContext.getBean(ThreadPool.class);
     }
 
 

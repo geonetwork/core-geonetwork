@@ -163,19 +163,6 @@
 			<output file="true" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.get">
-			<class name=".services.resources.Download" />
-
-			<error id="file-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output file="true" />
-		</service>
-
-
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->

@@ -70,7 +70,6 @@ import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
-import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -121,7 +120,6 @@ public class Geonetwork implements ApplicationHandler {
     private Path appPath;
     private SearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
-    private ThreadPool threadPool;
     private ConfigurableApplicationContext _applicationContext;
 
     //---------------------------------------------------------------------------
@@ -192,13 +190,6 @@ public class Geonetwork implements ApplicationHandler {
         // force caches to be config'd so shutdown hook works correctly
         JeevesJCS.getInstance(Processor.XLINK_JCS);
         JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
-
-        //------------------------------------------------------------------------
-        //--- initialize thread pool
-
-        logger.info("  - Thread Pool...");
-
-        threadPool = new ThreadPool();
 
         //------------------------------------------------------------------------
         //--- initialize settings subsystem
@@ -367,7 +358,7 @@ public class Geonetwork implements ApplicationHandler {
         OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass, threadPool);
+        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -648,10 +639,6 @@ public class Geonetwork implements ApplicationHandler {
             logger.error("  Message   : " + e.getMessage());
             logger.error("  Stack     : " + Util.getStackTrace(e));
         }
-
-
-        logger.info("  - ThreadPool ...");
-        threadPool.shutDown();
 
         logger.info("  - MetadataNotifier ...");
         try {
