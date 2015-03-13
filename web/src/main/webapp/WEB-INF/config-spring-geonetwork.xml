@@ -1,78 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-" >
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+">
 
-	<import resource="config-spring-env.xml" />
-	<import resource="config-security/config-security.xml" />
-	<import resource="config-summary.xml" />
-	<import resource="classpath:JZkitApplicationContext.xml" />
+  <import resource="config-spring-env.xml" />
+  <import resource="config-security/config-security.xml" />
+  <import resource="config-summary.xml" />
+  <import resource="classpath:JZkitApplicationContext.xml" />
 
-	<import resource="config-db/initial_data.xml" />
-	<import resource="config-print/config-spring-print.xml" />
-
-
-    <!-- Uncomment if you want to use a non-shapefile datastore -->
-	<!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
-	<!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
-
-	<!-- Import the versioning configuration (subversion etc...) -->
-	<import resource="config-versioning.xml" />
+  <import resource="config-db/initial_data.xml" />
+  <import resource="config-print/config-spring-print.xml" />
 
 
-	<bean id="scheduler"
-		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
-	</bean>
+  <!-- Uncomment if you want to use a non-shapefile datastore -->
+  <!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
+  <!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
 
-	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
-		lazy-init="true" />
-
-    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
-        <property name="numberOfConcurrentRequests" value="30" />
-    </bean>
-
-    <bean id="defaultLanguage" class="java.lang.String">
-        <constructor-arg index="0" value="eng" />
-    </bean>
-	<!-- Define the languages in the UI. Seems like these should come from database 
-		at some point but at the moment they are needed here. -->
-    <util:set id="languages" value-type="java.lang.String">
-		<value>ara</value>
-		<value>cat</value>
-		<value>chi</value>
-		<value>dut</value>
-        <value>eng</value>
-		<value>fin</value>
-        <value>fre</value>
-        <value>ger</value>
-        <value>ita</value>
-		<value>nor</value>
-		<value>pol</value>
-		<value>por</value>
-		<value>rus</value>
-		<value>spa</value>
-		<value>tur</value>
-    </util:set>
+  <!-- Import the versioning configuration (subversion etc...) -->
+  <import resource="config-versioning.xml" />
 
 
-    <util:map id="jpaPropertyMap">
-		<entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
-		<entry key="javax.persistence.lock.timeout" value="30000" />
-		<entry key="org.hibernate.flushMode" value="AUTO" />
-		<entry key="access" value="PROPERTY" />
-		<entry key="hibernate.id.new_generator_mappings" value="true" />
-		<entry key="hibernate.cache.use_second_level_cache" value="true" />
-		<!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
-		<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
-		<entry key="hibernate.jdbc.batch_size" value="3" />
-		<entry key="hibernate.jdbc.batch_versioned_data" value="true" />
-		<entry key="hibernate.enable_lazy_load_no_trans" value="true" />
+  <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="applicationContextSchedulerContextKey" value="applicationContext" />
+  </bean>
+
+  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true" />
+
+  <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+    <property name="numberOfConcurrentRequests" value="30" />
+  </bean>
+
+  <bean id="defaultLanguage" class="java.lang.String">
+    <constructor-arg index="0" value="eng" />
+  </bean>
+  <!-- Define the languages in the UI. Seems like these should come from database
+    at some point but at the moment they are needed here. -->
+  <util:set id="languages" value-type="java.lang.String">
+    <value>ara</value>
+    <value>cat</value>
+    <value>chi</value>
+    <value>dut</value>
+    <value>eng</value>
+    <value>fin</value>
+    <value>fre</value>
+    <value>ger</value>
+    <value>ita</value>
+    <value>nor</value>
+    <value>pol</value>
+    <value>por</value>
+    <value>rus</value>
+    <value>spa</value>
+    <value>tur</value>
+  </util:set>
+
+
+  <util:map id="jpaPropertyMap">
+    <entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
+    <entry key="javax.persistence.lock.timeout" value="30000" />
+    <entry key="org.hibernate.flushMode" value="AUTO" />
+    <entry key="access" value="PROPERTY" />
+    <entry key="hibernate.id.new_generator_mappings" value="true" />
+    <entry key="hibernate.cache.use_second_level_cache" value="true" />
+    <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
+    <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+    <entry key="hibernate.jdbc.batch_size" value="3" />
+    <entry key="hibernate.jdbc.batch_versioned_data" value="true" />
+    <entry key="hibernate.enable_lazy_load_no_trans" value="true" />
     <!-- If a specific schema has to be used
     <entry key="hibernate.default_schema" value="catalog"/>
 
@@ -82,34 +79,47 @@
     In that case you may want to use a custom dialect
     <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
     -->
-	</util:map>
+  </util:map>
 
-    <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String" >
-        <value>lib.js</value>
-        <value>nv.d3.css</value>
-        <value>gn_search_default.css</value>
-        <value>gn_search_default.js</value>
-        <value>gn_editor_default.css</value>
-        <value>gn_editor.js</value>
-        <value>gn_admin_default.css</value>
-        <value>gn_admin.js</value>
-        <value>gn_login_default.css</value>
-        <value>srv_custom_style.css</value>
-        <value>gn_login.js</value>
-    </util:list>
+  <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String">
+    <value>lib.js</value>
+    <value>nv.d3.css</value>
+    <value>gn_search_default.css</value>
+    <value>gn_search_default.js</value>
+    <value>gn_editor_default.css</value>
+    <value>gn_editor.js</value>
+    <value>gn_admin_default.css</value>
+    <value>gn_admin.js</value>
+    <value>gn_login_default.css</value>
+    <value>srv_custom_style.css</value>
+    <value>gn_login.js</value>
+  </util:list>
 
-    <util:list id="formattersToInitialize" value-type="java.lang.String" >
-        <value>full_view</value>
-        <value>xml_view</value>
-        <value>hierarchy_view</value>
-    </util:list>
+  <util:list id="formattersToInitialize" value-type="java.lang.String">
+    <value>full_view</value>
+    <value>xml_view</value>
+    <value>hierarchy_view</value>
+  </util:list>
 
-    <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
-    </util:set>
-    <bean id="threadResources" class="org.mapfish.print.ThreadResources">
-        <property name="connectionTimeout" value="30000"/>
-        <property name="socketTimeout" value="30000" />
-        <property name="globalParallelFetches" value="50"/>
-        <property name="perHostParallelFetches" value="10" />
-    </bean>
+  <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String"></util:set>
+  <bean id="threadResources" class="org.mapfish.print.ThreadResources">
+    <property name="connectionTimeout" value="30000" />
+    <property name="socketTimeout" value="30000" />
+    <property name="globalParallelFetches" value="50" />
+    <property name="perHostParallelFetches" value="10" />
+  </bean>
+
+  <util:set id="regionGetMapExpandFactors" set-class="java.util.TreeSet">
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".0005" p:factor="2"/>
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".01" p:factor=".5"/>
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".015" p:factor=".2"/>
+  </util:set>
+
+  <util:map id="regionGetMapBackgroundLayers">
+    <entry key="osm" value="http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png"/>
+  </util:map>
+
 </beans>
