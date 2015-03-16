@@ -19,7 +19,6 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -37,9 +36,11 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,12 +77,12 @@ import static org.junit.Assert.assertTrue;
     protected UserRepository _userRepo;
 
     @Before
-    public void setup() throws Exception {
+    public final void setup() throws Exception {
         testFixture.setup(this);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public final void tearDown() throws Exception {
         testFixture.tearDown();
     }
 
@@ -133,13 +134,7 @@ import static org.junit.Assert.assertTrue;
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, new ThreadPool(){
-            @Override
-            public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
-                task.run();
-            }
-        });
-
+        GeonetContext gc = new GeonetContext(_applicationContext, false, null);
 
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
@@ -205,7 +200,11 @@ import static org.junit.Assert.assertTrue;
 
     public static File getClassFile(Class<?> cl) {
         final String testClassName = cl.getSimpleName();
-        return new File(cl.getResource(testClassName + ".class").getFile());
+        try {
+            return new File(URLDecoder.decode(cl.getResource(testClassName + ".class").getFile(), Constants.ENCODING));
+        } catch (UnsupportedEncodingException e) {
+            throw new Error(e);
+        }
     }
 
     public User loginAsAdmin(ServiceContext context) {

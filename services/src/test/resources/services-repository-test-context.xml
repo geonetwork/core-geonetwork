@@ -35,4 +35,8 @@
         <value>tur</value>
     </util:set>
 
+    <bean id="formatterCache"
+      class="org.fao.geonet.services.metadata.format.cache.NoCachingStore">
+    </bean>
+
 </beans>

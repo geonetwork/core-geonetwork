@@ -54,10 +54,15 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
@@ -128,6 +133,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.PreDestroy;
+
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
 
 /**
  * Indexes metadata using Lucene.
@@ -995,6 +1002,25 @@ public class SearchManager {
 		}
 	}
 
+    public ISODate getDocChangeDate(String mdId) throws Exception {
+        Query query= new TermQuery(new Term(LuceneIndexField.ID, mdId));
+        try (final IndexAndTaxonomy indexReader = getIndexReader(Geonet.DEFAULT_LANGUAGE, -1)) {
+            final IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+            final TopDocs search = searcher.search(query, 1);
+            if (search.totalHits == 0) {
+                throw new NoSuchFieldException("There is no metadata with id/uuid/fileIdentifier = " + mdId);
+            }
+
+            Document doc = searcher.doc(search.scoreDocs[0].doc, Collections.singleton(DATABASE_CHANGE_DATE));
+
+            if (doc != null) {
+                return new ISODate(doc.get(DATABASE_CHANGE_DATE));
+            }
+
+            return null;
+        }
+    }
+
     /**
      * TODO javadoc.
      *
@@ -1334,12 +1360,12 @@ public class SearchManager {
 		}
 	}
 
-    public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
-        return _tracker.acquire(preferedLang, versionToken);
+    public IndexAndTaxonomy getIndexReader(String preferredLang, long versionToken) throws IOException {
+        return _tracker.acquire(preferredLang, versionToken);
     }
-    public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
+    public IndexAndTaxonomy getNewIndexReader(String preferredLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
-       return getIndexReader(preferedLang, -1L);
+       return getIndexReader(preferredLang, -1L);
     }
 	public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
 	    reader.indexReader.releaseToNRTManager();
@@ -1591,12 +1617,12 @@ public class SearchManager {
 				field = new FloatField(name, f, fieldType);
 			}
             else if ("long".equals(paramType)) {
-				long l = Long.valueOf(string);
+				long l = Long.parseLong(string);
 				fieldType.setNumericType(NumericType.LONG);
 				field = new LongField(name, l, fieldType);
 			}
             else {
-				int i = Integer.valueOf(string);
+				int i = Integer.parseInt(string);
 				fieldType.setNumericType(NumericType.INT);
 				field = new IntField(name, i, fieldType);
 			}
@@ -1623,14 +1649,14 @@ public class SearchManager {
         {
             Map<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
             try {
-                types.put(Geonet.SearchResult.Relation.ENCLOSES, constructor(ContainsFilter.class));
-                types.put(Geonet.SearchResult.Relation.CROSSES, constructor(CrossesFilter.class));
-                types.put(Geonet.SearchResult.Relation.OUTSIDEOF, constructor(IsFullyOutsideOfFilter.class));
-                types.put(Geonet.SearchResult.Relation.EQUAL, constructor(EqualsFilter.class));
-                types.put(Geonet.SearchResult.Relation.INTERSECTION, constructor(IntersectionFilter.class));
-                types.put(Geonet.SearchResult.Relation.OVERLAPS, constructor(OverlapsFilter.class));
-                types.put(Geonet.SearchResult.Relation.TOUCHES, constructor(TouchesFilter.class));
-                types.put(Geonet.SearchResult.Relation.WITHIN, constructor(WithinFilter.class));
+                types.put(Geonet.SearchResult.Relation.ENCLOSES.toLowerCase(), constructor(ContainsFilter.class));
+                types.put(Geonet.SearchResult.Relation.CROSSES.toLowerCase(), constructor(CrossesFilter.class));
+                types.put(Geonet.SearchResult.Relation.OUTSIDEOF.toLowerCase(), constructor(IsFullyOutsideOfFilter.class));
+                types.put(Geonet.SearchResult.Relation.EQUAL.toLowerCase(), constructor(EqualsFilter.class));
+                types.put(Geonet.SearchResult.Relation.INTERSECTION.toLowerCase(), constructor(IntersectionFilter.class));
+                types.put(Geonet.SearchResult.Relation.OVERLAPS.toLowerCase(), constructor(OverlapsFilter.class));
+                types.put(Geonet.SearchResult.Relation.TOUCHES.toLowerCase(), constructor(TouchesFilter.class));
+                types.put(Geonet.SearchResult.Relation.WITHIN.toLowerCase(), constructor(WithinFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
             }

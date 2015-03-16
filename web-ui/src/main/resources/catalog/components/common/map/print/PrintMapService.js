@@ -143,8 +143,12 @@
             var encStyle = {
               id: styleId
             };
+
+            var hasLayerStyleFunction = !!(feature.getStyleFunction &&
+                feature.getStyleFunction());
+
             var styles = (hasLayerStyleFunction) ?
-                layer.getStyleFunction()(feature) :
+                feature.getStyleFunction()(feature) :
                 ol.feature.defaultStyleFunction(feature);
 
 
@@ -156,7 +160,7 @@
               feature = new ol.Feature(polygon);
             }
 
-            var encJSON = format.writeFeature(feature);
+            var encJSON = format.writeFeatureObject(feature);
             if (!encJSON.properties) {
               encJSON.properties = {};
 
@@ -274,32 +278,34 @@
               call(this, layer);
           var source = layer.getSource();
           var tileGrid = source.getTileGrid();
-          var matrixSet = 'EPSG:3857';
+          var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
+            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
+                getExtent()) /tileGrid.getTileSize()) /
+                tileGrid.getResolutions()[z];
             matrixIds[z] = {
               identifier: tileGrid.getMatrixIds()[z],
               resolution: tileGrid.getResolutions()[z],
               tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
               topLeftCorner: tileGrid.getOrigin(),
-              matrixSize: [Math.pow(2, z), Math.pow(2, z)]
+              matrixSize: [mSize, mSize]
             };
           }
 
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: 'http://visi-sextant.ifremer.fr:8080/' +
-                'geowebcache/service/wmts?',
-            layer: 'Sextant',
-            version: '1.0.0',
+            baseURL: layer.get('url'),
+            layer: source.getLayer(),
+            version: source.getVersion(),
             requestEncoding: 'KVP',
-            format: 'image/png',
-            style: 'default',
+            format: source.getFormat(),
+            style: source.getStyle(),
             matrixSet: matrixSet,
             matrixIds: matrixIds
           });
 
-          return enc;
+    return enc;
         }
       },
       'legends' : {
@@ -452,13 +458,15 @@
         var fontValues = textStyle.getFont().split(' ');
         literal.fontColor = toHexa(fillColor);
         // Fonts managed by print server: COURIER, HELVETICA, TIMES_ROMAN
-        literal.fontFamily = fontValues[2].toUpperCase();
-        literal.fontSize = parseInt(fontValues[1]);
-        literal.fontWeight = fontValues[0];
+        literal.fontFamily = fontValues[1].toUpperCase();
+        literal.fontSize = parseInt(fontValues[0].substring(0,2));
+        literal.fontWeight = 'normal'; //fontValues[0];
         literal.label = textStyle.getText();
         literal.labelAlign = textStyle.getTextAlign();
         literal.labelOutlineColor = toHexa(strokeColor);
         literal.labelOutlineWidth = textStyle.getStroke().getWidth();
+        literal.fillOpacity = 0.0;
+        literal.pointRadius = 0;
       }
 
       return literal;

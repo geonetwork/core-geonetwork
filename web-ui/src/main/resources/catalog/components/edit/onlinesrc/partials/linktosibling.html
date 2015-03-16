@@ -38,7 +38,7 @@
             <ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="md in searchResults.records"><a
                 href="" data-ng-click="addToSelection(md, associationType, initiativeType)"
-                > {{md.title}} </a></li>
+                > {{md.title || md.defaultTitle}} </a></li>
             </ul>
           </div>
         </div>

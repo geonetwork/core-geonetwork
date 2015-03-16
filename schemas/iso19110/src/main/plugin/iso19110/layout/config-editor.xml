@@ -6,6 +6,7 @@
   <fields>
     <for name="gfc:scope" use="textarea"/>
     <for name="gfc:fieldOfApplication" use="textarea"/>
+    <for name="gfc:definition" use="textarea"/>
     <for name="gmx:scope" use="textarea"/>
     <for name="gmx:fieldOfApplication" use="textarea"/>
     

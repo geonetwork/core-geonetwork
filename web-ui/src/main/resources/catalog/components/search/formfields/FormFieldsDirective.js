@@ -221,13 +221,28 @@
             }
             $http.get(url, {cache: true}).
                 success(function(data) {
-                  scope.groups = data !== 'null' ? data.group : null;
+
+                  //data-ng-if is not correctly updating groups.
+                  //So we do the filter here
+                  if (scope.excludeSpecialGroups) {
+                    scope.groups = [];
+                    angular.forEach(data.group, function(g) {
+                      if (g['@id'] > 1) {
+                        scope.groups.push(g);
+                      }
+                    });
+                  } else {
+                    scope.groups = data !== 'null' ? data.group : null;
+                  }
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
                       scope.ownerGroup === '') && data.group) {
                     scope.ownerGroup = data.group[0]['@id'];
                   }
+
+
+
                 });
           }
 

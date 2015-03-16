@@ -1,0 +1,12 @@
+<div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData" >
+    <ul class="container-list">
+        <li fmt-repeat="(opName, links) in resources">
+            <strong>{{opName}}</strong>
+            <ul class="md-value-list">
+                <li fmt-repeat="link in links">
+                    <span fmt-include="html/single-resource.html" fmt-include-replace="true"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

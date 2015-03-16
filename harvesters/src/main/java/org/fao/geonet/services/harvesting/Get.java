@@ -85,7 +85,7 @@ public class Get implements Service {
             Element node = harvestManager.get(id, context, sortField);
 
             if (node != null) {
-                if (idEls.isEmpty()) {
+                if (idEls.isEmpty() || id.equals("-1")) {
                     result = node;
                 } else {
                     result.addContent(node.detach());

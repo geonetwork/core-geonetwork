@@ -6,6 +6,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
 import org.fao.geonet.utils.Xml
+import org.jdom.Element
 
 public class Handlers {
     private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -135,11 +136,17 @@ public class Handlers {
         def uuid = this.env.metadataUUID
         def id = this.env.metadataId
 
-        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-sitemap")
+        LinkBlock hierarchy = new LinkBlock("associated-link", "fa fa-sitemap")
         def bean = this.env.getBean(GetRelated.class)
-        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
+        def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
-        def related = Xml.transform(new org.jdom.Element("root").addContent(raw), relatedXsl);
+        def withGui = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                        new Element("language").setText(env.lang3),
+                        new Element("locUrl").setText(env.getLocalizedUrl())
+                )),
+                raw));
+        def related = Xml.transform(withGui, relatedXsl);
 
         related.getChildren("relation").each { rel ->
             def type = rel.getAttributeValue("type")
@@ -150,9 +157,14 @@ public class Handlers {
             def md = rel.getChild("metadata")
 
             def mdEl, relUuid;
+
+            def relInfo = rel.getChild("info", Geonet.Namespaces.GEONET)
             if (md != null) {
                 relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
                 mdEl = md;
+            } else if (rel.getChild("info", Geonet.Namespaces.GEONET) != null && relInfo.getChildText("uuid") != null) {
+                relUuid  = relInfo.getChildText("uuid")
+                mdEl = rel;
             } else {
                 relUuid = rel.getChildText("uuid")
                 mdEl = rel
@@ -165,15 +177,12 @@ public class Handlers {
                     title = mdEl.getChildText("defaultTitle")
                 }
 
-                if (title != null && title.length() > 60) {
-                    title = title.substring(0, 57) + "...";
-                }
-
                 if (title == null || title.isEmpty()) {
                     title = relUuid;
                 }
 
-                hierarchy.put(linkType, new Link(href, title))
+                def cls = uuid.trim().isEmpty() ? "text-muted" : ''
+                hierarchy.put(linkType, new Link(href, title, cls))
             }
         }
 
@@ -184,7 +193,7 @@ public class Handlers {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "md.viewer#/full_view/" + URLEncoder.encode(uuid, "UTF-8")
         }
     }
 

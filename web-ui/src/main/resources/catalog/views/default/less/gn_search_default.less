@@ -297,6 +297,12 @@ ul.gn-resultview {
     }
     .gn-form-any {
       max-width: 45vw;
+      input[type="text"], button {
+        height: 36px;
+      }
+      button.btn-lg, input[type="text"].input-lg {
+        height: 46px;
+      }
     }
   }
   .loading {
@@ -436,6 +442,10 @@ ul.gn-resultview {
     position: relative;
     float:right;
   }
+}
+
+[gn-main-viewer] {
+  margin-top: -20px;
 }
 /*
     Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm

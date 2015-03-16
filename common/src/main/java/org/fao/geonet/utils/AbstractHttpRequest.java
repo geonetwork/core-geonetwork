@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -22,6 +23,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -62,6 +64,7 @@ public class AbstractHttpRequest {
     private String postData;
     private boolean preemptiveBasicAuth;
     private HttpClientContext httpClientContext;
+    private CookieStore cookieStore;
     private UsernamePasswordCredentials credentials;
     private UsernamePasswordCredentials proxyCredentials;
     private String fragment;
@@ -401,6 +404,19 @@ public class AbstractHttpRequest {
 
     public String getQuery() {
         return query;
+    }
+
+    public CookieStore getCookieStore() {
+        return cookieStore;
+    }
+
+    public void setCookieStore(CookieStore cookieStore) {
+        this.cookieStore = cookieStore;
+        HttpContext context = getHttpClientContext();
+        if (context == null) {
+            httpClientContext = HttpClientContext.create();
+        }
+        httpClientContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
     }
 
     public enum Method {GET, POST}

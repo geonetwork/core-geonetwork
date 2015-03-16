@@ -70,6 +70,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
@@ -221,15 +222,21 @@ public class GetRelated implements Service, RelatedMetadata {
         id = md.getId();
         uuid = md.getUuid();
 
-        Element raw = new Element("root").addContent(getRelated(context, id, uuid, type, from, to, fast));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
+        Element raw = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                    new Element("language").setText(lang),
+                    new Element("url").setText(context.getBaseUrl())
+                )),
+                getRelated(context, id, uuid, type, from, to, fast)
+        ));
+        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
         final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
 
         byte[] response;
         String contentType;
-        if (acceptContentType == null ||
+        if (acceptContentType.isEmpty() ||
             acceptsType(acceptContentType, "xml") ||
             acceptContentType.contains("*/*")||
             acceptContentType.contains("text/plain")) {

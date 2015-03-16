@@ -130,7 +130,9 @@
               <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
               <xsl:attribute name="data-expanded" select="$toggleLang"/>
             </xsl:if>
-            
+
+            <xsl:variable name="mainLangCode" select="upper-case(java-xsl-util:twoCharLangCode($metadataLanguage, substring($metadataLanguage,0,2)))"/>
+
             <xsl:choose>
               <xsl:when test="$isMultilingual">
                 <xsl:for-each select="$value/values/value">
@@ -147,6 +149,7 @@
                     <xsl:with-param name="editInfo" select="$editInfo"/>
                     <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
                     <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                    <xsl:with-param name="checkDirective" select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
                   </xsl:call-template>
                 </xsl:for-each>
               </xsl:when>
@@ -686,7 +689,8 @@
     <xsl:param name="isDisabled"/>
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo"/>
-    <!-- 
+    <xsl:param name="checkDirective" select="$isRequired"/>
+    <!--
         May contain a codelist or a helper list.
         -->
     <xsl:param name="listOfValues" select="''"/>
@@ -709,6 +713,9 @@
           data-gn-autogrow="">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
+          </xsl:if>
+          <xsl:if test="$isDisabled">
+            <xsl:attribute name="disabled" select="'disabled'"/>
           </xsl:if>
           <xsl:if test="$tooltip">
             <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
@@ -851,6 +858,8 @@
             </xsl:if>
             <xsl:if test="$isRequired">
               <xsl:attribute name="required" select="'required'"/>
+            </xsl:if>
+            <xsl:if test="$checkDirective">
               <xsl:attribute name="data-gn-check" select="concat('#gn-el-', $editInfo/@ref)"/>
             </xsl:if>
             <xsl:if test="$isDisabled">

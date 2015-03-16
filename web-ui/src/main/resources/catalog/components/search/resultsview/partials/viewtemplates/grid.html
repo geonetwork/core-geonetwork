@@ -13,10 +13,11 @@
                data-ng-change="change()"/>
                
         <!--Source catalog Logo-->
-        <a ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
+        <a data-ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
             <img ng-src="../..{{md.logo}}" class="gn-source-logo"/>
         </a>
-        <img ng-if="!md.groupWebsite" ng-src="../..{{md.logo}}" class="gn-source-logo"/>
+        <img data-ng-if="!md.groupWebsite"
+             data-ng-src="../..{{md.logo}}" class="gn-source-logo"/>
 
         <div class="gn-md-category"
              data-ng-class="md.category.length > 0 ||
@@ -35,7 +36,9 @@
             </i>
           </a>
         </div>
-      
+        <div data-gn-metadata-rate="md"
+             data-readonly="true"
+             class="pull-right"/>
       </div>
       <!--end top row-->
       <div style="clear: both;"></div>
@@ -55,7 +58,7 @@
                    data-ng-click="openRecord($index, md, searchResults.records)"
                    title="{{md.title || md.defaultTitle}}">
 
-                  <i class="fa gn-icon-{{md.type}}" title="{{md.type | translate}}"/>
+                  <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
                   {{md.title || md.defaultTitle}}</a>
               </h3>
           </div>
@@ -137,7 +140,7 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li ng-repeat="layer in ::layers">
-          <a href="" data-ng-click="addToMap(layer)">
+          <a href="" data-ng-click="addToMap(layer, md)">
             <span class="fa fa-google"
                   data-ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
             <span class="fa fa-globe"

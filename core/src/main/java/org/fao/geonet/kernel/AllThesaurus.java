@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.util.Assert;
 import org.fao.geonet.Constants;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -48,7 +47,6 @@ public class AllThesaurus extends Thesaurus {
     private final IsoLanguagesMapper isoLangMapper;
     private final String downloadUrl;
     private final String keywordUrl;
-    private String date = new ISODate().getDateAndTime();
 
     public AllThesaurus(ThesaurusFinder thesaurusFinder, IsoLanguagesMapper isoLangMapper, String siteUrl) {
         this.thesaurusFinder = thesaurusFinder;
@@ -56,7 +54,6 @@ public class AllThesaurus extends Thesaurus {
 
         this.downloadUrl = buildDownloadUrl(FNAME, TYPE, DNAME, siteUrl);
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
-
     }
 
     @VisibleForTesting
@@ -107,7 +104,7 @@ public class AllThesaurus extends Thesaurus {
 
     @Override
     public String getDate() {
-        return this.date;
+        return "";
     }
 
     @Override

@@ -667,7 +667,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                     setUuid(params.getUuid()).
                     setUri(params.url);
             if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
-                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOneByName(params.datasetCategory);
+                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOne(Integer.parseInt(params.datasetCategory));
 
                 if (metadataCategory == null) {
                     throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);

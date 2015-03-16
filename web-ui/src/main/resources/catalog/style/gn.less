@@ -93,6 +93,10 @@
 a {
   word-wrap: break-word;
 }
+.gn-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
 
 
 /**
@@ -106,6 +110,10 @@ a {
 [ng-cloak],
 .ng-cloak{
   display:none !important;
+}
+
+[gn-img-modal], [data-gn-img-modal] {
+  cursor: pointer;
 }
 
 /**
@@ -297,7 +305,7 @@ font-size: small;
 
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
-  background-color: #0097cf;
+  background-color: #428bca;
 
 }
 
@@ -314,8 +322,8 @@ font-size: small;
 
 .tt-suggestion.tt-cursor {
   color: #fff;
-  background-color: #0097cf;
-
+  background-color: #428bca;
+  cursor: pointer;
 }
 
 .bootstrap-tagsinput {

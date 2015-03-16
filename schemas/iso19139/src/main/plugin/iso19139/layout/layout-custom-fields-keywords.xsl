@@ -78,7 +78,6 @@
     <xsl:variable name="thesaurusTitle"
       select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
 
-    <xsl:message><xsl:copy-of select="."></xsl:copy-of><xsl:value-of select="$thesaurusTitle"></xsl:value-of> </xsl:message>
 
     <xsl:variable name="isTheaurusAvailable"
       select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>

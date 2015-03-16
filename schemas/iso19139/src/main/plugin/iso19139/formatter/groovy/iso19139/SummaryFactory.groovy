@@ -56,9 +56,9 @@ class SummaryFactory {
          * TODO fix the xslt transform required by loadHierarchyLinkBlocks when running tests.
          */
         if (env.formatType == FormatType.pdf/* || env.formatType == FormatType.testpdf */) {
-            summary.links.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
+            summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
         } else {
-            createDynamicHierarchyHtml(summary)
+            summary.associated.add(createDynamicAssociatedHtml(summary))
         }
 
         def toNavBarItem = {s ->
@@ -124,10 +124,7 @@ class SummaryFactory {
                 if (title.trim().isEmpty()) {
                     title = href;
                 }
-
-                if (title != null && title.length() > 60) {
-                    title = title.substring(0, 57) + "...";
-                }
+                def linkClass = href.trim().isEmpty() ? 'text-muted' : '';
 
                 def imagesDir = "../../images/formatter/"
                 def type;
@@ -153,17 +150,17 @@ class SummaryFactory {
                 }
 
                 def linkType = new LinkType(type, icon, iconClasses)
-                linkBlock.put(linkType, new Link(href, title))
+                linkBlock.put(linkType, new Link(href, title, linkClass))
             }
         }
 
     }
 
-    void createDynamicHierarchyHtml(Summary summary) {
-        def hierarchy = "hierarchy"
+    LinkBlock createDynamicAssociatedHtml(Summary summary) {
+        def associated = "associated"
 
         def jsVars = [
-                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + hierarchy,
+                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + associated,
                 metadataId: this.env.metadataId
         ]
         def js = this.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
@@ -172,12 +169,12 @@ class SummaryFactory {
 //<![CDATA[
 $js
 //]]></script>
-<div><i class="fa fa-circle-o-notch fa-spin pad-right"></i>Loading...</div>
+<div><i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i>Loading...</div>
 """
 
-        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-sitemap")
+        LinkBlock linkBlock = new LinkBlock(associated, "fa fa-sitemap")
         linkBlock.html = html
-        summary.links.add(linkBlock)
+        return linkBlock;
     }
 
     private static void configureThumbnails(metadata, header) {

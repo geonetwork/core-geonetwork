@@ -15,8 +15,11 @@
   <xsl:include href="layout.xsl"/>
   <xsl:include href="evaluate.xsl"/>
 
+  <xsl:template name="get-iso19110-is-service">
+    <xsl:value-of select="false()"/>
+  </xsl:template>
 
-  <!-- 
+  <!--
     Load the schema configuration for the editor.
       -->
   <xsl:template name="get-iso19110-configuration">

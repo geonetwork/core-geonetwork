@@ -87,6 +87,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -136,6 +137,8 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -180,7 +183,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  */
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
-public class DataManager {
+public class DataManager implements ApplicationEventPublisherAware {
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
@@ -215,6 +218,7 @@ public class DataManager {
 
 
     private String baseURL;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     //--------------------------------------------------------------------------
     //---
@@ -505,9 +509,11 @@ public class DataManager {
         } finally {
             indexLock.unlock();
         }
+        Metadata fullMd;
+
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.valueOf(metadataId);
+            int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
@@ -528,7 +534,7 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            final Metadata fullMd = _metadataRepository.findOne(id$);
+            fullMd = _metadataRepository.findOne(id$);
 
             final String  schema     = fullMd.getDataInfo().getSchemaId();
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
@@ -552,8 +558,8 @@ public class DataManager {
 
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CREATE_DATE,  createDate,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CHANGE_DATE,  changeDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE,      source,      true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID,        uuid,        true, true));
@@ -618,7 +624,7 @@ public class DataManager {
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".gif", true, false));
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
                 }
             }
 
@@ -679,6 +685,7 @@ public class DataManager {
             searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            fullMd = null;
         } finally {
             indexLock.lock();
             try {
@@ -686,6 +693,9 @@ public class DataManager {
             } finally {
                 indexLock.unlock();
             }
+        }
+        if (fullMd != null) {
+            applicationEventPublisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
     }
 
@@ -1446,15 +1456,10 @@ public class DataManager {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
-            Integer iId = Integer.valueOf(id);
-            _metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata entity) {
-                    final MetadataDataInfo dataInfo = entity.getDataInfo();
-                    int popularity = dataInfo.getPopularity();
-                    dataInfo.setPopularity(popularity + 1);
-                }
-            });
+            int iId = Integer.parseInt(id);
+            _metadataRepository.incrementPopularity(iId);
+            _entityManager.flush();
+            _entityManager.clear();
 
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);
@@ -2291,7 +2296,7 @@ public class DataManager {
         //--- remove operations
         deleteMetadataOper(context, id, false);
 
-        int intId = Integer.valueOf(id);
+        int intId = Integer.parseInt(id);
         _applicationContext.getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataStatusRepository.class).deleteAllById_MetadataId(intId);
@@ -2358,9 +2363,9 @@ public class DataManager {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         
         if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(metadataId), ReservedGroup.intranet.getId());
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
         } else {
-            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.valueOf(metadataId));
+            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
     }
 
@@ -2591,7 +2596,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, ReservedOperation op) throws Exception {
-        setOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId), op.getId());
+        setOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId), op.getId());
     }
 
     /**
@@ -2604,7 +2609,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        setOperation(context, Integer.valueOf(mdId), Integer.valueOf(grpId), Integer.valueOf(opId));
+        setOperation(context, Integer.parseInt(mdId), Integer.parseInt(grpId), Integer.valueOf(opId));
     }
 
     /**
@@ -2717,7 +2722,7 @@ public class DataManager {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, ReservedOperation opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),opId.getId());
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),opId.getId());
     }
 
     /**
@@ -2729,7 +2734,7 @@ public class DataManager {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),Integer.valueOf(opId));
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),Integer.valueOf(opId));
     }
 
     /**
@@ -3253,7 +3258,7 @@ public class DataManager {
 
 
         // Add validity information
-        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.valueOf(id));
+        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.parseInt(id));
         if (validationInfo == null || validationInfo.size() == 0) {
             addElement(info, Edit.Info.Elem.VALID, "-1");
         } else {
@@ -3519,5 +3524,10 @@ public class DataManager {
         _metadataRepository.deleteAll(specification);
 
         return idsOfMetadataToDelete.size();
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

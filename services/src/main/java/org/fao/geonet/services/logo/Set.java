@@ -97,14 +97,14 @@ public class Set implements Service {
             BufferedImage source = ImageIO.read(logoFile);
 
             if ("1".equals(asFavicon)) {
-                createFavicon(source, nodeLogoDirectory + File.separator + "favicon.gif");
+                createFavicon(source, nodeLogoDirectory + File.separator + "favicon.png");
             } else {
-                String logo = nodeLogoDirectory + File.separator + nodeUuid + ".gif";
-                String defaultLogo = nodeLogoDirectory + File.separator + "logo.gif";
+                String logo = nodeLogoDirectory + File.separator + nodeUuid + ".png";
+                String defaultLogo = nodeLogoDirectory + File.separator + "logo.png";
     
-                if (!file.endsWith(".gif")) {
-                    ImageIO.write(source, "gif", new File(logo));
-                    ImageIO.write(source, "gif", new File(defaultLogo));
+                if (!file.endsWith(".png")) {
+                    ImageIO.write(source, "png", new File(logo));
+                    ImageIO.write(source, "png", new File(defaultLogo));
                 } else {
                     copyLogo(logoFilePath, logo);
                     copyLogo(logoFilePath, defaultLogo);
@@ -134,9 +134,9 @@ public class Set implements Service {
     }
 
     private void createFavicon(Image img, String outFile) throws IOException {
-        int width = 16;
-        int height = 16;
-        String type = "gif";
+        int width = 32;
+        int height = 32;
+        String type = "png";
 
         Image thumb = img.getScaledInstance(width, height,
                 BufferedImage.SCALE_SMOOTH);

@@ -55,4 +55,5 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     </bean>
 
     <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
+    <bean id="threadPool" class="org.fao.geonet.TestThreadPool"/>
 </beans>

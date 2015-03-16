@@ -9,7 +9,7 @@
             data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
       <label>
         <input data-ng-checked="isInSearch(f['@name'])" type="checkbox">
-        <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
+        <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>&nbsp;
         <span class="count">({{f['@count']}})</span>
       </label>
     </div>

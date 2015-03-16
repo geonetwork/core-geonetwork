@@ -66,7 +66,7 @@
         <facet name="inspireTheme_en" indexKey="inspireTheme_en" label="inspireThemes_en"/>
         <facet name="inspireTheme_fr" indexKey="inspireTheme_fr" label="inspireThemes_fr"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
-        <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
+        <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
@@ -110,11 +110,11 @@
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
+            <item facet="publishedForGroup"/>
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
-            <item facet="_groupPublished" max="99" sortBy="value"/>
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
@@ -169,7 +169,7 @@
             <item facet="inspireTheme_fr" max="35"/>
             <item facet="inspireTheme_en" max="35"/>
             <item facet="sextantTheme" max="300"/>
-            <item facet="_groupPublished" max="300"/>
+            <item facet="publishedForGroup" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P01" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>

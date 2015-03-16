@@ -18,7 +18,7 @@
         scope: {
           panier: '=sxtPanier'
         },
-        templateUrl: '../../catalog/components/panier/' +
+        templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panier.html',
         controller: ['$scope', function($scope) {
           this.del = function(md) {
@@ -48,7 +48,7 @@
           formObj: '=sxtPanierElt',
           md: '=sxtPanierEltMd'
         },
-        templateUrl: '../../catalog/components/panier/' +
+        templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panierelement.html',
         compile: function compile(tElement, tAttrs, transclude) {
           return {

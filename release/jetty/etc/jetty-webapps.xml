@@ -18,8 +18,7 @@
                 <Set name="defaultsDescriptor"><Property name="jetty.home" default="."/>/etc/webdefault.xml</Set>
                 <Set name="scanInterval">1</Set>
                 <Set name="contextXmlDir"><Property name="jetty.home" default="." />/contexts</Set>
-				<Set name="extractWars">true</Set>
-				<!-- <Set name="parentLoaderPriority">true</Set> --> <!-- uncomment in case of a JAI usage attempt with a "sealing violation" exception -->
+		<Set name="extractWars">true</Set>
               </New>
             </Arg>
           </Call>

@@ -1,0 +1,23 @@
+{
+    "abstract": "Abstrakt",
+    "associated-link": "Associerad",
+    "children-link": "Barn",
+    "complete": "Komplett",
+    "dataset-link": "Dataset",
+    "datasets-link": "Datasets",
+    "fcat-link": "Feature Catalog",
+    "hassource-link": "Has Source",
+    "hierarchy": "Hierarchy",
+    "links": "Links",
+    "noUuidInLink": "No uuid in link",
+    "overview": "Overview",
+    "parent": "Parent",
+    "parent-link": "Parent",
+    "related-link": "Related",
+    "service-link": "Service",
+    "services-link": "Services",
+    "sibling-link": "Siblings",
+    "source-link": "Sources",
+    "testString": "This String is here for testing don't delete",
+    "xml": "XML"
+}

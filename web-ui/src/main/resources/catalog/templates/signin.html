@@ -1,7 +1,7 @@
 <div class="container" data-ng-controller="GnLoginController">
   <div class="col-lg-6">
-    <form class="form-horizontal" name="gnSigninForm" action="../../j_spring_security_check"
-      method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
+      <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
+            method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
       <div class="form-group">
         <label class="col-sm-3 control-label"
                for="inputUsername" data-translate="">username</label>

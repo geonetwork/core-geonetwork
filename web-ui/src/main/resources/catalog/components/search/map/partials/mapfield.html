@@ -3,9 +3,6 @@
     <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
       <i class="fa fa-plus"></i>
     </button>
-    <button class="btn btn-default" data-ng-click="locService.setMap()">
-      <i class="fa fa-globe"></i>
-    </button>
     <button class="btn btn-default" data-ng-click="maxExtent()">
       <i class="fa fa-arrows-alt"></i>
     </button>
@@ -17,4 +14,15 @@
           gn-draw-bbox-extent="{{gnDrawBboxExtent}}" gi-btn data-ng-model="interaction.active">
     <i class="fa fa-pencil"></i>
   </button>
+  <div class="dropdown" ng-if="relations && currentExtent">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+      <span translate="" data-ng-if="!searchObj.params.relation">intersectWith</span>
+      <span translate="" data-ng-if="searchObj.params.relation">{{searchObj.params.relation}}</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+      <li role="presentation"><a role="menuitem" ng-click="setRelation()" href="" translate>intersectWith</a></li>
+      <li data-ng-repeat="r in relations" role="presentation"><a role="menuitem" ng-click="setRelation(r)" href="">{{r}}</a></li>
+    </ul>
+  </div>
 </div>

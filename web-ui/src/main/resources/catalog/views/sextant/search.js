@@ -25,7 +25,7 @@
   module.value('sxtGlobals', {});
 
   module.config(['$LOCALES', function($LOCALES) {
-    $LOCALES.push('sextant');
+    //$LOCALES.push('sextant');
   }]);
 
   module.controller('gnsSextant', [
@@ -187,6 +187,11 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
+          if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+
           var group, theme = md.sextantTheme;
           if(angular.isArray(sxtGlobals.sextantTheme)) {
             for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
@@ -198,12 +203,21 @@
             }
           }
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
+
+            if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
+                link.name, link.url)) {
+              return;
+            }
+
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
             layerInfo.group = group;
             var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
                 layerInfo);
             layer.set('md', md);
+
+          }, function(response) {
+            console.warn('Error loading: ' + link.url);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
@@ -219,25 +233,37 @@
     }]);
 
   module.controller('gnsSextantSearchForm', [
-    '$scope', 'suggestService', 'gnSearchSettings',
-    function($scope, suggestService, searchSettings) {
+    '$scope', 'gnSearchSettings',
+    function($scope, searchSettings) {
 
       $scope.categorytreeCollapsed = true;
-      $scope.groupPublishedOptions = {
-        mode: 'remote',
-        remote: {
-          url: suggestService.getUrl('QUERY', '_groupPublished',
-              'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+
+      // Run search on bbox draw
+      $scope.$watch('searchObj.params.geometry', function(v){
+        if(angular.isDefined(v)) {
+          $scope.triggerSearch();
         }
-      };
+      });
 
       // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
-      }
+
+      $scope.mapfieldOpt = {
+        relations: ['within']
+      };
+
+      // Disable/enable reset button
+      var defaultSearchParams = ['sortBy', 'from', 'to', 'fast',
+        '_content_type'];
+      $scope.$watch('searchObj.params', function(v) {
+        for (var p in v) {
+          if(defaultSearchParams.indexOf(p) < 0) {
+            $scope.searchObj.canReset = true;
+            return;
+          }
+        }
+        $scope.searchObj.canReset = false;
+      });
     }]);
 
   module.directive('sxtFixMdlinks', [

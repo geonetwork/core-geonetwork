@@ -392,7 +392,10 @@ public final class XslUtil
                         (String) codelist);
                 translation = t.translate(codeListValue);
             } catch (Exception e) {
-                Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
+                Log.error(
+                    Geonet.GEONETWORK,
+                    String.format("Failed to translate codelist value '%s' in language '%s'. Error is %s",
+                            codeListValue, langCode, e.getMessage()));
             }
             return translation;
         } else {
@@ -407,7 +410,16 @@ public final class XslUtil
      * @return The related 3 iso lang code
      */
     public static @Nonnull String twoCharLangCode(String iso3LangCode) {
-    	if(iso3LangCode==null || iso3LangCode.length() == 0) {
+        return twoCharLangCode(iso3LangCode, twoCharLangCode(Geonet.DEFAULT_LANGUAGE, null));
+    }
+    /**
+     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     *
+     * @param iso3LangCode   The 2 iso lang code
+     * @return The related 3 iso lang code
+     */
+    public static @Nonnull String twoCharLangCode(String iso3LangCode, String defaultValue) {
+        if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
     	} else {
             String iso2LangCode = null;

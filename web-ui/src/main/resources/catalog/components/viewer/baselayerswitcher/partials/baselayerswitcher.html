@@ -1,5 +1,6 @@
 <div class="btn-group baselayer"
-        data-ng-show="layers.length > 1">
+     data-ng-class="dropup ? 'dropup' : ''"
+     data-ng-show="layers.length > 1">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <span data-translate="">backgroundMap</span>&nbsp;{{map.getLayers().item(0).get('title')}} <span class="caret"></span>
   </button>

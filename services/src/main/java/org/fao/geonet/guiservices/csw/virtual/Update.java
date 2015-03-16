@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -52,6 +51,15 @@ public class Update {
     @Autowired
     private ServiceRepository serviceRepository;
 
+    private static String[] noneFilterParameters = {
+            Params.ID,
+            Params.OPERATION,
+            Params.SERVICENAME,
+            Params.CLASSNAME,
+            Params.SERVICEDESCRIPTION,
+            "_content_type"
+    };
+
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.update", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
@@ -60,28 +68,13 @@ public class Update {
                  @RequestParam(Params.SERVICENAME) String serviceName,
                  @RequestParam(Params.CLASSNAME) String className,
                  @RequestParam(value=Params.SERVICEDESCRIPTION, defaultValue="", required=false) String serviceDescription,
-                 @RequestParam(value=Params.FILTER_ANY, defaultValue="", required=false) String filterAny,
-                 @RequestParam(value=Params.FILTER_TITLE, defaultValue="", required=false) String filterTitle,
-                 @RequestParam(value=Params.FILTER_SUBJECT, defaultValue="", required=false) String filterSubject,
-                 @RequestParam(value=Params.FILTER_KEYWORD, defaultValue="", required=false) String filterKeyword,
-                 @RequestParam(value=Params.FILTER_DENOMINATOR, defaultValue="", required=false) String filterDenominator,
-                 @RequestParam(value=Params.FILTER_TYPE, defaultValue="", required=false) String filterType,
-                 @RequestParam(value=Params.FILTER_CATALOG, defaultValue="", required=false) String filterCatalog,
-                 @RequestParam(value=Params.FILTER_GROUP, defaultValue="", required=false) String filterGroup,
-                 @RequestParam(value=Params.FILTER_CATEGORY, defaultValue="", required=false) String filterCategory
+                 @RequestParam Map<String, String> filters
                  )
             throws Exception {
 
-        HashMap<String, String> filters = new HashMap<String, String>();
-        filters.put(Params.FILTER_ANY, filterAny);
-        filters.put(Params.FILTER_TITLE, filterTitle);
-        filters.put(Params.FILTER_SUBJECT, filterSubject);
-        filters.put(Params.FILTER_KEYWORD, filterKeyword);
-        filters.put(Params.FILTER_DENOMINATOR,filterDenominator);
-        filters.put(Params.FILTER_TYPE, filterType);
-        filters.put(Params.FILTER_CATALOG, filterCatalog);
-        filters.put(Params.FILTER_GROUP, filterGroup);
-        filters.put(Params.FILTER_CATEGORY, filterCategory);
+        for (String p : noneFilterParameters) {
+            filters.remove(p);
+        }
 
         if (operation.equals(Params.Operation.NEWSERVICE)) {
             Service service = serviceRepository.findOneByName(serviceName);
@@ -109,7 +102,7 @@ public class Update {
             service.setClassName(className);
             service.setName(serviceName);
             service.setDescription(serviceDescription);
-
+            service.getParameters().clear();
             for (Map.Entry<String, String> filter : filters.entrySet()) {
                 service.getParameters().put(filter.getKey(), filter.getValue());
             }

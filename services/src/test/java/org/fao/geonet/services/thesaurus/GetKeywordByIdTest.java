@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
@@ -45,9 +47,8 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
     @Autowired
     private IsoLanguageRepository languageRepository;
 
-    @Override
     @After
-    public void tearDown() throws Exception {
+    public void tearDown2() throws Exception {
         settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, false);
     }
 
@@ -114,6 +115,30 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
         assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
                 ISO19139Namespaces.GMD)).size() > 0);
+    }
+    @Test
+    public void testExecMD_KeywordsAsXlinkAllThesaurus() throws Exception {
+        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, true);
+        final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
+        final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
+
+        String uri1 = keywordBeans.get(0).getUriCode();
+        String uri2 = keywordBeans.get(1).getUriCode();
+
+        final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
+            @Nullable
+            @Override
+            public Void apply(Element input) {
+                input.addContent(new Element("transformation").setText("to-iso19139-keyword-as-xlink"));
+                input.addContent(new Element("textgroupOnly").setText(""));
+                input.getChild("lang").setText("ger,fre,eng,ita");
+                return null;
+            }
+        });
+
+        assertEquals("gmd:descriptiveKeywords", keywordXml.getQualifiedName());
+        assertEquals(0, keywordXml.getChildren().size());
+        assertNotNull(keywordXml.getAttributeValue("href", Geonet.Namespaces.XLINK));
     }
 
     private Element getKeywordsById(String uri1, String uri2, String thesaurusKey,

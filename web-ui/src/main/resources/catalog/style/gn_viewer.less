@@ -28,7 +28,7 @@
     .dropdown-menu {
       width: 100%;
       top: ~"calc(100% - 3px)";
-      background: rgba(255,255,255,.8);
+      background: rgba(255,255,255,.9);
       padding: 0 0 1em;
       h5 {
         padding: 0 1em;
@@ -104,19 +104,31 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
+    div[gn-layermanager-item] {
+      .fa-arrows-alt,.gn-layer-ordering {
+        opacity: 0;
+        transition: opacity @transition-params;
+      }
+    }
+    .gn-searchlayer {
+      label {
+        font-size: 90%;
+        max-width: 68%;
+      }
+    }
     .list-group-item {
       background: inherit;
       transition: max-height @transition-params;
       .btn-cog {
-        float: right;
-        margin-right: -.6em;
-        margin-top: -.5em;
-        background: inherit;
-        padding: 6px 8px;
-      }
-      .fa-arrows-alt, .gn-layer-ordering {
-        opacity: 0;
-        transition: opacity @transition-params;
+         float: right;
+         margin-right: -.6em;
+         margin-top: -.5em;
+         background: inherit;
+         padding: 6px 8px;
+       }
+      .btn-cog-left {
+        float: left;
+        padding: 6px 14px;
       }
       &:hover {
         .fa-arrows-alt, .gn-layer-ordering {
@@ -128,7 +140,7 @@
       }
       & > label {
         font-size: 90%;
-        max-width: 82%;
+        max-width: 72%;
       }
       &.active {
         background: rgba(255,255,255,.6);
@@ -153,7 +165,7 @@
       }
     }
     .flux, .context {
-      margin: 2em 0 1em;
+      margin: .2em;
     }
     .baselayer {
       margin: 0 15px;
@@ -242,7 +254,7 @@
     overflow-x: hidden;
   }
   .panel-carousel-container {
-    width: 300%;
+    width: 400%;
     position: relative;
     left: 0;
     transition: left @transition-params;

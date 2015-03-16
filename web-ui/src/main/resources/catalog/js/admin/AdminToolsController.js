@@ -136,13 +136,13 @@
 
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
-        'partials/viewtemplates/titlewithselection.html',
+            'partials/viewtemplates/titlewithselection.html',
         tooltip: 'List',
         icon: 'fa-list'
       }];
 
       gnSearchSettings.resultTemplate =
-        gnSearchSettings.resultViewTpls[0].tplUrl;
+          gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
 
@@ -321,7 +321,7 @@
                 type: 'success'});
               $scope.processing = false;
 
-              angular.forEach($scope.processReport.changed, function (c) {
+              angular.forEach($scope.processReport.changed, function(c) {
                 if (c.change && !angular.isArray(c.change)) {
                   c.change = [c.change];
                   delete c.changedval;
@@ -500,6 +500,24 @@
             });
       };
 
+      $scope.clearFormatterCache = function() {
+        return $http.get('admin.format.clear')
+            .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('formatterCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('formatCacheClearFailure'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
 
 
 
@@ -534,9 +552,10 @@
             $scope.replacer.replacements.indexOf(replacement), 1);
       };
 
-      $scope.loadReplacementConfig = function () {
+      $scope.loadReplacementConfig = function() {
         try {
-          $scope.replacer.replacements = angular.fromJson($scope.data.replacementsConfig);
+          $scope.replacer.replacements =
+              angular.fromJson($scope.data.replacementsConfig);
         } catch (e) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('error'),

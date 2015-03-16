@@ -70,6 +70,11 @@
               }
             }
           });
+
+          scope.removeFailed = function(layer) {
+            var fl = scope.map.get('failedLayers')
+            fl.splice(fl.indexOf(layer), 1);
+          };
         }
       };
     }]);
@@ -124,10 +129,7 @@
           scope.setNCWMS = controller.setNCWMS;
 
           scope.showMetadata = function() {
-            var md = scope.member.get('md');
-            if(md) {
-              gnMdView.feedMd(0, md, [md]);
-            }
+            gnMdView.openMdFromLayer(scope.member);
           };
         }
       };

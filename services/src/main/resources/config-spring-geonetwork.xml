@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans default-lazy-init="true"
-	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
@@ -10,27 +8,43 @@
     ">
 
 
-	<context:component-scan base-package="org.fao.geonet" />
+  <context:component-scan base-package="org.fao.geonet" />
 
-	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
-		<constructor-arg ref="languages" />
-		<property name="cacheAllRegionsInMemory" value="true" />
-		<property name="thesaurusName" value="external.place.regions" />
-	</bean>
-	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
-		<property name="cacheAllRegionsInMemory" value="false" />
-	</bean>
+  <bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
+    <constructor-arg ref="languages" />
+    <property name="cacheAllRegionsInMemory" value="true" />
+    <property name="thesaurusName" value="external.place.regions" />
+  </bean>
+  <bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
+    <property name="cacheAllRegionsInMemory" value="false" />
+  </bean>
 
-	<bean id="resourceUploadHandler"
-		class="org.fao.geonet.services.resources.handlers.DefaultResourceUploadHandler" />
+  <bean id="resourceUploadHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceUploadHandler" />
 
-	<bean id="resourceDownloadHandler"
-		class="org.fao.geonet.services.resources.handlers.DefaultResourceDownloadHandler" />
+  <bean id="resourceDownloadHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceDownloadHandler" />
 
-	<bean id="resourceRemoveHandler"
-		class="org.fao.geonet.services.resources.handlers.DefaultResourceRemoveHandler" />
+  <bean id="resourceRemoveHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceRemoveHandler" />
 
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	</bean>
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+  <bean id="formatterCache" lazy-init="true" class="org.fao.geonet.services.metadata.format.cache.FormatterCache">
+    <constructor-arg index="0" ref="fsStore" />
+    <constructor-arg index="1" value="500000" />
+    <constructor-arg index="2" value="5000" />
+  </bean>
+  <bean id="fsStore" class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" lazy-init="true">
+    <property name="maxSizeGb" value="500" />
+  </bean>
+  <bean id="formatterCacheConfig" class="org.fao.geonet.services.metadata.format.cache.ConfigurableCacheConfig" lazy-init="true">
+    <!--This class allows you to configure which formatters, languages, content/type etc... to cache-->
+    <!--Simply add the properties.  -->
+    <!--By default everything is cached except pdf-->
+    <property name="formatterExceptions">
+      <set>
+        <value>hierarchy_view</value>
+      </set>
+    </property>
+  </bean>
+  <bean id="formatterCachePublishListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCachePublishListener" />
+  <bean id="formatterCacheDeletionListener" class="org.fao.geonet.services.metadata.format.cache.FormatterCacheDeletionListener" />
 </beans>

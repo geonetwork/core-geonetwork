@@ -1,4 +1,11 @@
-<form class="" >
+<form>
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">mapTitle</label>
+    <div class="">
+      <input class="form-control" type="text" data-ng-model="mapTitle"/>
+    </div>
+  </div>
   <div class="form-group">
     <label class="control-label"
            data-translate="">print_layout</label>
@@ -25,5 +32,16 @@
               data-ng-options="l.name for l in config.scales"></select>
     </div>
   </div>
-  <button class="btn btn-default" data-ng-click="submit()"><i class="fa fa-print"></i> {{'Print'|translate}} </button>
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">mapComment</label>
+    <div class="">
+      <textarea class="form-control" data-ng-model="mapComment"></textarea>
+    </div>
+  </div>
+  <button class="btn btn-default btn-block"
+          data-ng-click="submit()">
+    <i class="fa fa-print"></i>&nbsp;
+    {{'Print'|translate}}
+  </button>
 </form>

@@ -36,19 +36,21 @@
       $scope.action = 'xml.mef.import.ui';
       var uploadImportMdDone = function(evt, data) {
         $scope.importing = false;
-        $scope.report = {
+        var report = {
           id: data.jqXHR.responseJSON.id,
           success: data.jqXHR.responseJSON.success,
           message: data.jqXHR.responseJSON.msg
         };
+        $scope.reports.push(report);
       };
       var uploadImportMdError = function(evt, data, o) {
         $scope.importing = false;
         var response = new DOMParser().parseFromString(
             data.jqXHR.responseText, 'text/xml');
-        $scope.report = {
+        var report = {
           message: response.getElementsByTagName('message')[0].innerHTML
         };
+        $scope.reports.push(report);
       };
 
       // upload directive options
@@ -65,6 +67,8 @@
           $scope.report.exceptions.exception =
               [$scope.report.exceptions.exception];
         }
+
+        $scope.reports.push($scope.report);
       };
       var onSuccessFn = function(response) {
         $scope.importing = false;
@@ -72,20 +76,20 @@
           $scope.report = response.data;
           formatExceptionArray();
         } else {
-          $scope.report = response.data;
+          $scope.reports.push(response.data);
         }
-        $scope.report.success = parseInt($scope.report.records) -
-            parseInt(($scope.report.exceptions &&
-            $scope.report.exceptions['@count']) || 0);
+        $scope.reports.push({success: parseInt(response.data.records) -
+              parseInt((response.data.exceptions &&
+              response.data.exceptions['@count']) || 0)});
       };
       var onErrorFn = function(error) {
         $scope.importing = false;
-        $scope.report = error.data;
+        $scope.reports = [error.data];
         formatExceptionArray();
       };
 
       $scope.importRecords = function(formId) {
-        $scope.report = null;
+        $scope.reports = [];
         $scope.error = null;
 
         if ($scope.importMode == 'uploadFile') {
@@ -95,9 +99,9 @@
             uploadScope.submit();
           }
           else {
-            $scope.report = {
+            $scope.reports = [{
               message: 'noFileSelected'
-            };
+            }];
           }
         } else if ($scope.importMode == 'importFromDir') {
           $scope.importing = true;

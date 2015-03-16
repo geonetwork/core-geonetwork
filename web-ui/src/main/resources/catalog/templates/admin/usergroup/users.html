@@ -36,7 +36,7 @@
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
     <div class="panel panel-default" >
       <div class="panel-heading"
-        title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
+        title="{{searchResults.count > 0 ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>

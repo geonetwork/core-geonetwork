@@ -4,6 +4,24 @@
   var module = angular.module('gn_utility_directive', [
   ]);
 
+  module.directive('gnConfirmClick', [
+    function() {
+      return {
+        priority: -1,
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.bind('click', function(e) {
+            var message = attrs.gnConfirmClick;
+            if (message && !confirm(message)) {
+              e.stopImmediatePropagation();
+              e.preventDefault();
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker
@@ -701,7 +719,7 @@
         scope.collapsed = attrs['gnCollapse'] == 'true';
         var next = element.next();
         element.on('click', function(e) {
-          scope.$apply(function(){
+          scope.$apply(function() {
             scope.collapsed = !scope.collapsed;
           });
           next.collapse('toggle');
@@ -767,7 +785,7 @@
       }
     };
   }]);
-  module.filter('newlines', function () {
+  module.filter('newlines', function() {
     return function(text) {
       if (text) {
         return text.replace(/(\r)?\n/g, '<br/>');
@@ -800,6 +818,34 @@
         ngModel.$parsers.push(into);
         ngModel.$formatters.push(out);
 
+      }
+    };
+  });
+  module.directive('gnImgModal', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attr, ngModel) {
+
+        element.bind('click', function() {
+          var md = scope.$eval(attr['gnImgModal']);
+          var imgs = md.getThumbnails();
+          var img = imgs.big || imgs.small;
+
+          if (img) {
+            var modalElt = angular.element('' +
+                '<div class="modal fade in">' +
+                '<div class="modal-dialog in">' +
+                '    <img src="' + img + '">' +
+                '</div>' +
+                '</div>');
+
+            $(document.body).append(modalElt);
+            modalElt.modal();
+            modalElt.on('hidden.bs.modal', function() {
+              modalElt.remove();
+            });
+          }
+        });
       }
     };
   });

@@ -1,89 +1,79 @@
 <html>
-
 <head>
-	<title>GeoNetwork opensource readme</title>
-<style type="text/css">
-<!--
-.style1 {font-size: 9px}
--->
-</style></head>
+  <title>GeoNetwork opensource readme</title>
+  <style type="text/css">
+    <!--
+    .style1 {
+      font-size: 9px
+    }
+
+    -->
+  </style>
+</head>
 
 <body>
-	<div align="right"><span class="style1">GeoNetwork opensource V@version@ @subVersion@ Date: @day@</span></div>
-	<h1>GeoNetwork opensource - Getting started</h1>
+<div align="right"><span class="style1">
+    GeoNetwork opensource V@version@ @subVersion@ Date: @day@</span></div>
+<h1>GeoNetwork opensource - Getting started</h1>
 
-	<h2>Running the application</h2>
-	
-	<p>
-		GeoNetwork opensource is a web based Spatial Data Catalog. To use it you first have to start the embedded web server.</p>
-	<p><strong>On Windows</strong>, navigate to the <em>GeoNetwork opensource</em> folder in the <em>start-menu</em> that was created during installation and <strong>launch "Start server"</strong>. You can then open the GeoNetwork application in your browser.
-	</p>
-	<p>
-		By default this should be at <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>
-	</p>
-	<p>
-		<font color="#FF0000"><strong>IMPORTANT!!</strong></font> After opening the GeoNetwork homepage, log on as Administrator. 
-		You should use the username <font color="#FF0000"><code><b>admin</b></code></font> and password <font color="#FF0000"><code><b>admin</b></code></font>.
-		In the Administration section you can then <strong>modify your account</strong>.
-	</p>
-	<p>Online documentation is available from the GeoNetwork homepage. Select <b><a href="http://localhost:8080/geonetwork/docs/index.html">Help</a></b> from the menu bar. A link to the printable PDF version can be found at the bottom of the help page.</p>
+<h2>Running the application</h2>
 
-	<p>You can also start the Jetty webserver of GeoNetwork using the scripts located into the $INSTALL_PATH/bin directory.</p>
+<p>
+  GeoNetwork opensource is a web based Spatial Data Catalog.
+  To use it you first have to start the embedded web server.</p>
 
-	<p>On a Windows platform they are:
-	<br>
-	<ul>
-		<li><code>start-geonetwork.bat</code></li>
-		<li><code>stop-geonetwork.bat</code></li>
-	</ul>
-	On a Linux or OSX platform they are:
-	<br>
-	<ul>
-		<li><code>start-geonetwork.sh</code></li>
-		<li><code>stop-geonetwork.sh</code></li>
-	</ul>
- 	</p>
- 	<p>
-		<cite>Note: A Java Runtime Environment (JRE) <em>@javaVersion@ Standard Edition</em> (download from <a href="@jre_url@">http://java.sun.com)</a> is required to run GeoNetwork opensource. See the Troubleshooting sections if normal 
-		installation or start up fails.</cite>
-	</p>
-	
-	<h2>Loading (sample) data</h2>
-	<p>
-	The catalog comes with metadata templates loaded, so you can create new metadata using the online metadata editor.
-	</p>
-	<p>
-	If you want to load data and metadata, you have a number of options. These include batch import of XML files from the local system, WebDav harvesting, direct XML insert through an online form in the Administrative panel and by using the MEF format.
-	</p>
-	<p>Probably <em>the most convenient method</em> is to use the <em>MEF</em> format that was specifically developed to exchange metadata <em>and</em> data, preview images and basic access privileges between GeoNetwork nodes. You can find sample MEF files in the <code>\gast\setup\sample-data</code> folder. The file format has been described in Chapter 3 of the server-reference manual (in <code>\docs\manuals\</code>. This format will also become available in other geospatial applications.
-	<br>To import or export metadata and data into or from GeoNetwork, you have to start the GeoNetwork Administrator Survival Tool (<em>GAST</em>) tool.
-	<br>
-	<ul>
-		<li>First configure your GeoNetwork connection by providing server and account details in the <code>Options => Config</code> menu. <cite>Note: You require an editor or administrator account for this function to work.</cite></li>
-		<li>To load sample metadata and data, select the <em>Sample data</em> option in the Database section and press Import</li>
-		<li>To load other <code>MEF</code> formatted data, select Import in the Management options. Select the folder containing the <code>MEF</code> files and click on the Import button.</li>
-	</ul>
-	</p>
+<p><strong>On Windows</strong>, navigate to the <em>GeoNetwork opensource</em>
+  folder in the <em>start-menu</em> that was created during installation and
+  <strong>launch "Start server"</strong>. You can then open the GeoNetwork
+  application in your browser.
+</p>
 
-	<h2>System configuration</h2>
+<p>
+  By default this should be at
+  <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>
+</p>
 
-	<h3>Web server</h3>
-	<p>
-		The application comes with an embedded <a href="http://jetty.mortbay.org/">Jetty</a> web server. You can use <a href="http://jakarta.apache.org/tomcat">Jakarta Tomcat</a> version 5.5 instead if required. You have to setup new contexts in Tomcat that point to the applications in the <code>web</code> folder of the GeoNetwork installation.
-	</p>
-	
-	<h3>Database system </h3>
+<p>
+  <font color="#FF0000"><strong>IMPORTANT!!</strong></font> After opening
+  the GeoNetwork homepage, log on as Administrator.
+  You should use the username <font
+        color="#FF0000"><code><b>admin</b></code></font> and
+  password <font color="#FF0000"><code><b>admin</b></code></font>.
+  In the Administration section you can then <strong>modify your
+  account</strong>.
+</p>
 
-	<p>GeoNetwork desktop comes with an internal DBMS server, the <a href="http://www.h2database.com">H2</a> Java SQL database.</p>
-	
-	<p>If you plan to use another DBMS you can simply change the database connection using GAST. The tables will automatically be created in the new database schema if it is still empty. If you are upgrading a GeoNetwork instance, the required changes to tables will also automatically be applied on startup of GeoNetwork.</p>
+<p>Online documentation is available
+  <a href="http://geonetwork-opensource.org/docs.html">here</a>.
 
-	<p>Select the DBMS using the GAST tool. Oracle, MySQL and PostgreSQL are currently supported. GeoNetwork uses the JDBC interface to work with the DBMS, so other DBMS systems may also work.</p>
-	
-	<p>You can also configure the DBMS manually, although this is more complex (See the community website for details)</p>
+<p>You can also start the Jetty webserver of GeoNetwork using the scripts
+  located into the $INSTALL_PATH/bin directory.</p>
 
-	<h2>More information at <a href="http://geonetwork-opensource.org">http://geonetwork-opensource.org</a></h2>
-	
-	<strong>Enjoy!</strong>
+<p>On a Windows platform they are:
+  <br>
+<ul>
+  <li><code>startup.bat</code></li>
+  <li><code>shutdown.bat</code></li>
+</ul>
+On a Linux or OSX platform they are:
+<br>
+<ul>
+  <li><code>startup.sh</code></li>
+  <li><code>shutdown.sh</code></li>
+</ul>
+</p>
+<p>
+  <cite>Note: A Java Runtime Environment (JRE)
+    <em>@javaVersion@ Standard Edition</em>
+    (download from <a href="@jre_url@">here</a>
+    is required to run GeoNetwork opensource.
+    See the Troubleshooting sections if normal
+    installation or start up fails.</cite>
+</p>
+
+<h2>More information at <a href="http://geonetwork-opensource.org">http://geonetwork-opensource.org</a>
+</h2>
+
+<strong>Enjoy!</strong>
 </body>
 </html>

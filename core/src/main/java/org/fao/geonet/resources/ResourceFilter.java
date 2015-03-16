@@ -6,9 +6,11 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -48,46 +50,57 @@ public class ResourceFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if(isGet(request)) {
-            synchronized(this) {
-                if(resourcesDir == null) {
+            synchronized (this) {
+                if (resourcesDir == null) {
                     initFields();
                 }
             }
             String servletPath = ((HttpServletRequest) request).getServletPath();
 
             Log.info(Geonet.RESOURCES, "Handling resource request: " + servletPath);
-            
+
             String filename = servletPath.substring(CONTEXT_PATH_PREFIX).replaceAll("/+", "/");
             int extIdx = filename.lastIndexOf('.');
             String ext;
-            if(extIdx > 0) {
-                ext = filename.substring(extIdx+1);
+            if (extIdx > 0) {
+                ext = filename.substring(extIdx + 1);
             } else {
-                ext = "gif"; 
+                ext = "png";
             }
-            HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            FileTime lastModified = Resources.getLastModified(resourcesDir, servletContext, appPath, filename);
+            if (lastModified != null &&
+                new ServletWebRequest((HttpServletRequest) request, httpServletResponse).checkNotModified(lastModified.toMillis())) {
+                return;
+            }
+
+
             // TODO : other type of resources html
-            httpServletResponse.setContentType("image/"+ext);
-            httpServletResponse.addHeader("Cache-Control", "max-age="+SIX_HOURS+", public");
-            if(filename.equals("images/logos/favicon.gif")) {
-            	synchronized (this) {
-            		favicon = Resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/favicon.gif", favicon.one(), favicon.two());
-            	}
-            	
+            httpServletResponse.setContentType("image/" + ext);
+            httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+            if (filename.equals("images/logos/GN3.ico")) {
+                synchronized (this) {
+                    favicon = Resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico",
+                            favicon.one(), favicon.two());
+                }
+
                 httpServletResponse.setContentLength(favicon.one().length);
-                httpServletResponse.addHeader("Cache-Control", "max-age="+FIVE_DAYS+", public");
+                httpServletResponse.addHeader("Cache-Control", "max-age=" + FIVE_DAYS + ", public");
                 response.getOutputStream().write(favicon.one());
             } else {
-                Pair<byte[], Long> loadResource = Resources.loadResource(resourcesDir, servletContext, appPath, filename, defaultImage.one(), -1);
-                if(loadResource.two() == -1) {
+                Pair<byte[], Long> loadResource = Resources.loadResource(resourcesDir, servletContext, appPath, filename, defaultImage
+                        .one(), -1);
+                if (loadResource.two() == -1) {
 
-                	synchronized (this) {
-                        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", defaultImage.one(), defaultImage.two());
-    				}
+                    synchronized (this) {
+                        defaultImage = Resources.loadResource(resourcesDir,
+                                config.getServletContext(), appPath, "images/logos/GN3.ico",
+                                defaultImage.one(), defaultImage.two());
+                    }
 
-                	// Return HTTP 404 ? TODO
-                    Log.warning(Geonet.RESOURCES, "Resource not found, default resource returned: "+servletPath);
-                    httpServletResponse.setContentType("image/gif");
+                    // Return HTTP 404 ? TODO
+                    Log.warning(Geonet.RESOURCES, "Resource not found, default resource returned: " + servletPath);
+                    httpServletResponse.setContentType("image/png");
                     httpServletResponse.setHeader("Cache-Control", "no-cache");
                 }
                 httpServletResponse.setContentLength(loadResource.one().length);
@@ -97,15 +110,15 @@ public class ResourceFilter implements Filter {
         }
     }
 
-	private void initFields() throws IOException {
+    private void initFields() throws IOException {
         servletContext = config.getServletContext();
         this.applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(config.getServletContext());
         appPath = this.applicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
 
         resourcesDir = Resources.locateResourcesDir(config.getServletContext(), applicationContext);
 
-        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);
-        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage.one(), -1);
+        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/GN3.png", new byte[0], -1);
+        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/GN3.ico", defaultImage.one(), -1);
     }
 
     private boolean isGet(ServletRequest request) {

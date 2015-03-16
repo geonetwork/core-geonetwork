@@ -70,7 +70,7 @@
               color: 'rgba(255, 255, 255, 0.6)'
             },
             stroke: {
-              color: 'red',
+              color: '#ff0000',
               width: 1
             },
             image: {
@@ -93,8 +93,15 @@
           };
 
 
-          var textFeatStyleFn = function(resolution) {
-            var text = this.get('name');
+          var textFeatStyleFn = function(feature) {
+            var f;
+            if(feature instanceof ol.Feature) {
+              f = feature;
+            }
+            else {
+              f = this;
+            }
+            var text = f.get('name');
             if (!txtStyleCache[text]) {
               txtStyleCache[text] = [new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -292,8 +299,19 @@
           getType: '&gnStyleType'
         },
         link: function(scope, element, attrs) {
-          scope.colors = ['red', 'orange', 'blue', 'white', 'black', 'gray',
-            'yellow', 'green', 'pink', 'purple', 'brown'];
+          scope.colors = {
+            red: '#FF0000',
+            orange: '#FFA500',
+            blue: '#0000FF',
+            white: '#FFFFFF',
+            black: '#000000',
+            gray: '#BEBEBE',
+            yellow: '#FFFF00',
+            green: '#008000',
+            pink: '#FFC0CB',
+            purple: '#800080',
+            brown: '#A52A2A'
+          };
         }
       };
     }]);

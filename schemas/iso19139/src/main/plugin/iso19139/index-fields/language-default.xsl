@@ -3,6 +3,7 @@
 <xsl:stylesheet version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gml="http://www.opengis.net/gml"
+    xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:util="java:org.fao.geonet.util.XslUtil"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
@@ -165,12 +166,6 @@
                 <Field name="abstract" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-            <xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue[. != '']">
-                 <Field name="status_text" 
-                    string="{util:getCodelistTranslation('gmd:MD_ProgressCode', string(.), string($isoLangId))}" 
-                    store="true" index="true"/>          
-            </xsl:for-each>
-            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             
             <xsl:for-each select="*/gmd:EX_Extent">
                 <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
@@ -262,12 +257,6 @@
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-            <xsl:for-each select="gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode/@codeListValue">
-                <Field name="spatialRepresentationType" string="{string(.)}" store="true" index="true"/>
-            </xsl:for-each>
-
-            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
             <xsl:for-each select="gmd:spatialResolution/gmd:MD_Resolution">
                 <xsl:for-each select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer">
                     <Field name="denominator" string="{string(.)}" store="true" index="true"/>
@@ -344,11 +333,24 @@
                 </xsl:for-each>
             </xsl:for-each>
 
-            <xsl:for-each select="//srv:SV_CouplingType/srv:code/@codeListValue">
-                <Field  name="couplingType" string="{string(.)}" store="true" index="true"/>
-            </xsl:for-each>
-
         </xsl:for-each>
+
+        <xsl:variable name="identification" select="." />
+        <Field name="anylight" store="false" index="true">
+          <xsl:attribute name="string">
+            <xsl:for-each
+              select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:abstract/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:credit/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification//gmd:organisationName/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:supplementalInformation/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+              <xsl:value-of select="concat(., ' ')"/>
+            </xsl:for-each>
+          </xsl:attribute>
+        </Field>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Distribution === -->
@@ -438,23 +440,17 @@
             </xsl:attribute>
         </Field>
 
-        <xsl:apply-templates select="." mode="codeList"/>
 
+      <!-- Index all codelist -->
+      <xsl:for-each select=".//*[*/@codeListValue != '']">
+        <Field name="cl_{local-name()}"
+               string="{*/@codeListValue}"
+               store="true" index="true"/>
+        <Field name="cl_{concat(local-name(), '_text')}"
+               string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
+               store="true" index="true"/>
+      </xsl:for-each>
     </xsl:template>
 
-    <!-- ========================================================================================= -->
-    <!-- codelist element, indexed, not stored nor tokenized -->
-
-    <xsl:template match="*[./*/@codeListValue]" mode="codeList">
-        <xsl:param name="name" select="name(.)"/>
-
-        <Field name="{$name}" string="{*/@codeListValue}" store="false" index="true"/>
-    </xsl:template>
-
-    <!-- ========================================================================================= -->
-
-    <xsl:template match="*" mode="codeList">
-        <xsl:apply-templates select="*" mode="codeList"/>
-    </xsl:template>
 
 </xsl:stylesheet>

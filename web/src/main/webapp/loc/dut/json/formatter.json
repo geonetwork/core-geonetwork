@@ -1,0 +1,23 @@
+{
+    "abstract": "Korte omschrijving",
+    "associated-link": "Geassocieerd",
+    "children-link": "Kinderen",
+    "complete": "Compleet",
+    "dataset-link": "Dataset",
+    "datasets-link": "Datasets",
+    "fcat-link": "Feature Catalogus",
+    "hassource-link": "Heeft Bron",
+    "hierarchy": "Hiërarchie",
+    "links": "Links",
+    "noUuidInLink": "Geen UUID in link",
+    "overview": "Overzicht",
+    "parent": "Ouder",
+    "parent-link": "Ouder",
+    "related-link": "Gerelateerd",
+    "service-link": "Service",
+    "services-link": "Services",
+    "sibling-link": "Nakomelingen",
+    "source-link": "Bronnen",
+    "testString": "Deze Regel is hier om te testen. Niet verwijderen",
+    "xml": "XML"
+}

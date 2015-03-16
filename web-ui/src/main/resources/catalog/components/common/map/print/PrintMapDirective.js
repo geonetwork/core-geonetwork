@@ -169,7 +169,8 @@
       var proj = view.getProjection();
       var lang = $translate.uses();
       var defaultPage = {
-        comment: ''
+        comment: $scope.mapComment || '',
+        title: $scope.mapTitle || ''
       };
       defaultPage['lang' + lang] = true;
       var encLayers = [];
@@ -237,7 +238,6 @@
         }
       });
       http.error(function() {
-        gaWaitCursor.remove();
       });
     };
 
