@@ -721,16 +721,6 @@ public class Thesaurus {
         this.title = defaultTitle;
 
         try {
-            this.lastModifiedTime = Files.getLastModifiedTime(thesaurusFile);
-            this.date = new ISODate(lastModifiedTime.toMillis(), false).toString();
-        } catch (IOException e) {
-            final ISODate isoDate = new ISODate();
-
-            this.lastModifiedTime = FileTime.fromMillis(isoDate.toDate().getTime());
-            this.date = isoDate.toString();
-        }
-
-        try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
@@ -774,7 +764,26 @@ public class Thesaurus {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 this.date = df.format(thesaususDate);
             }
-            
+
+            if (this.date != null) {
+                try {
+                    this.lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toDate().getTime());
+                } catch (IOException e) {
+                    Log.warning(Geonet.THESAURUS, "Unable to parse " + this.date + " into an actual java.util.Date object", e);
+                }
+            }
+
+            if (this.lastModifiedTime == null) {
+                try {
+                    this.lastModifiedTime = Files.getLastModifiedTime(thesaurusFile);
+                } catch (IOException e) {
+                    this.lastModifiedTime = FileTime.fromMillis(new Date().getTime());
+                }
+                if (this.date == null) {
+                    this.date = new ISODate(lastModifiedTime.toMillis(), true).toString();
+                }
+            }
+
             if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
                 Log.debug(Geonet.THESAURUS_MAN, "Thesaurus information: " + this.title + " (" + this.date + ")");
             }
