@@ -30,11 +30,14 @@
               icon: 'fa-archive',
               href: '#/metadata/metadata-and-template'
             },{
-              type: 'template-sort',
-              label: 'sortTemplate',
-              icon: 'fa-sort',
-              href: '#/metadata/template-sort'
-            },{
+            // Template sorting is not use by the Angular application
+            // Hide it for the time being.
+            // See https://github.com/geonetwork/core-geonetwork/issues/878
+            //  type: 'template-sort',
+            //  label: 'sortTemplate',
+            //  icon: 'fa-sort',
+            //  href: '#/metadata/template-sort'
+            //},{
               type: 'formatter',
               label: 'metadataFormatter',
               icon: 'fa-print',
