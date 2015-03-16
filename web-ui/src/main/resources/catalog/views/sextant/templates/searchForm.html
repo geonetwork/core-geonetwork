@@ -12,8 +12,8 @@
           <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
             <i class="fa fa-search"></i>
           </button>
-          <button type="submit" data-ng-click="resetSearch()" class="btn btn-default">
-           <span class="close">x</span>
+          <button type="submit" data-ng-click="resetSearch()" class="btn btn-default" data-ng-disabled="!searchObj.canReset">
+           <span class="fa fa-times"></span>
           </button>
         </span>
     </div>

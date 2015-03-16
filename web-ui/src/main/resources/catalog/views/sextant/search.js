@@ -241,6 +241,18 @@
         relations: ['within']
       };
 
+      // Disable/enable reset button
+      var defaultSearchParams = ['sortBy', 'from', 'to', 'fast',
+        '_content_type'];
+      $scope.$watch('searchObj.params', function(v) {
+        for (var p in v) {
+          if(defaultSearchParams.indexOf(p) < 0) {
+            $scope.searchObj.canReset = true;
+            return;
+          }
+        }
+        $scope.searchObj.canReset = false;
+      });
     }]);
 
   module.directive('sxtFixMdlinks', [
