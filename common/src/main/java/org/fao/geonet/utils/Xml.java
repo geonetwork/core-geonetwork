@@ -80,7 +80,6 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -505,7 +504,7 @@ public final class Xml
 
          boolean isFile;
          try {
-             final Path file = Paths.get(new URI(s.getSystemId()));
+             final Path file = IO.toPath(new URI(s.getSystemId()));
              isFile = Files.isRegularFile(file);
          } catch (Exception e) {
              isFile = false;

@@ -36,9 +36,11 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -198,7 +200,11 @@ import static org.junit.Assert.assertTrue;
 
     public static File getClassFile(Class<?> cl) {
         final String testClassName = cl.getSimpleName();
-        return new File(cl.getResource(testClassName + ".class").getFile());
+        try {
+            return new File(URLDecoder.decode(cl.getResource(testClassName + ".class").getFile(), Constants.ENCODING));
+        } catch (UnsupportedEncodingException e) {
+            throw new Error(e);
+        }
     }
 
     public User loginAsAdmin(ServiceContext context) {

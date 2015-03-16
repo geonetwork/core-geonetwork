@@ -33,7 +33,13 @@ public class SchemaPluginUrlRewrite implements ResolverRewriteDirective {
                     rewrites.add(new PrefixUrlRewrite(prefix, replacement));
                 }
             } catch (Exception e) {
-                // don't add because it is not a path
+                try {
+                    if (Files.exists(IO.toPath(replacement))) {
+                        rewrites.add(new PrefixUrlRewrite(prefix, IO.toPath(replacement).toUri().toString()));
+                    }
+                } catch (Exception e2) {
+                    // don't add because it is not a path
+                }
             }
         }
     }

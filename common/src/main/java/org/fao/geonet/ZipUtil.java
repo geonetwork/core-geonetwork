@@ -5,6 +5,7 @@ import org.fao.geonet.utils.IO;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -45,7 +46,7 @@ public class ZipUtil {
      * FileSystem must be closed when done.  This method should always be called in a try (resource) {} block
      */
     public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
-        URI uri = new URI("jar:" + path.toUri());
+        URI uri = new URI("jar:" + URLEncoder.encode(path.toUri().toString(), "UTF-8"));
         return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
     }
 
