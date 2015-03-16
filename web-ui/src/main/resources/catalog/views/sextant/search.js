@@ -204,6 +204,9 @@
             var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
                 layerInfo);
             layer.set('md', md);
+            console.log('success' + link.url);
+          }, function(response) {
+            console.log('Error loading: ' + link.url);
           });
           $scope.mainTabs.map.titleInfo += 1;
 

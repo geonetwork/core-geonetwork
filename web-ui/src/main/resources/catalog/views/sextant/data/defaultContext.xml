@@ -6,7 +6,20 @@
         </ows:BoundingBox>
     </ows-context:General>
     <ows-context:ResourceList>
-      <ows-context:Layer queryable="false" name="{type=wmts,name=sextant}" hidden="false" opacity="1" group="Background layers">
+        <ows-context:Layer queryable="false" name="turbidity_2003_2010_03" hidden="false" opacity="1">
+            <ows-context:Server service="urn:ogc:serviceType:WMS">
+                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ifremer.frp/services/wms/oceanographie_physique?"/>
+            </ows-context:Server>
+            <ows-context:StyleList/>
+        </ows-context:Layer>
+        <ows-context:Layer queryable="false" name="test2" hidden="false" opacity="1">
+            <ows-context:Server service="urn:ogc:serviceType:WMS">
+                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ifremer.frp/services/wms/oceanographie_physique?"/>
+            </ows-context:Server>
+            <ows-context:StyleList/>
+        </ows-context:Layer>
+
+        <ows-context:Layer queryable="false" name="{type=wmts,name=sextant}" hidden="false" opacity="1" group="Background layers">
         <ows:Title xmlns:ows="http://www.opengis.net/ows">Sextant</ows:Title>
         <ows-context:Server service="urn:ogc:serviceType:WMS">
           <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?"/>
