@@ -83,10 +83,24 @@
     }]);
 
   module.directive('gnFacetMultiselect', [
+    '$q',
+    '$filter',
     'gnFacetService',
     'gnFacetConfigService',
-    function(gnFacetService, gnFacetConfigService) {
+    'gnHttp',
+    function($q, $filter, gnFacetService, gnFacetConfigService, gnHttp) {
 
+      var updateLabelFromInfo = function(facets, groups, lang) {
+        angular.forEach(facets, function(f) {
+          for(var i=0;i<groups.length;i++) {
+            var o = groups[i];
+            if(o.name == f['@name']) {
+              f['@name'] = o.label[lang];
+            }
+            f['name'] = f['@name'];
+          }
+        });
+      };
 
       return {
         restrict: 'A',
@@ -100,38 +114,53 @@
 
               var delimiter = ' or ';
               var oldParams;
+              var groups;
 
               scope.name = attrs.gnFacetMultiselect;
               scope.contentCollapsed =
                   attrs.gnFacetMultiselectCollapsed == 'true';
 
-              gnFacetConfigService.loadConfig('hits').then(function(data) {
-                if (angular.isArray(data)) {
-                  for (var i = 0; i < data.length; i++) {
-                    if (data[i].name == scope.name) {
-                      scope.facetConfig = data[i];
-                      break;
-                    }
-                  }
-                }
-              }).then(function() {
-                scope.$watch('searchResults.facet', function(v) {
-                  /*
-                  if (oldParams &&
-                      oldParams !=
-                      scope.searchObj.params[scope.facetConfig.key]) {
-                  }
-                  else if (v) {
-                    oldParams = scope.searchObj.params[scope.facetConfig.key];
-                    scope.facetObj = v[scope.facetConfig.label];
-                  }
-                  */
-                  if (v && scope.facetConfig && scope.facetConfig.label) {
-                    scope.facetObj = v[scope.facetConfig.label];
-                  }
-                });
-              });
+              gnFacetConfigService.loadConfig('hits').
 
+                  // Load facets global config from cache
+                  then(function(data) {
+                    if (angular.isArray(data)) {
+                      for (var i = 0; i < data.length; i++) {
+                        if (data[i].name == scope.name) {
+                          scope.facetConfig = data[i];
+                          break;
+                        }
+                      }
+                    }
+                  }).then(function() {
+                    var promises = [];
+
+                    // Load groups label for 'publishedForGroup'
+                    if(scope.facetConfig.label == 'publishedForGroup') {
+                      promises.push(gnHttp.callService('info', {
+                        type: 'groups'}).
+                            success(function(data){
+                              groups = data.group;
+                            }));
+                    }
+
+                    // When everything is loaded, watch the summary response
+                    // to update the multi facet list
+                    $q.all(promises).then(function() {
+                      scope.$watch('searchResults.facet', function(v) {
+                        if (v && scope.facetConfig && scope.facetConfig.label) {
+                          var facets = v[scope.facetConfig.label];
+
+                          if(scope.facetConfig.label == 'publishedForGroup') {
+                            updateLabelFromInfo(facets, groups, scope.lang);
+                            facets = $filter('orderBy')(facets, 'name');
+
+                          }
+                          scope.facetObj = facets;
+                        }
+                      });
+                    });
+                  });
 
               /**
                * Check if the facet item is checked or not, depending if the
