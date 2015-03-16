@@ -278,7 +278,6 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          console.log('link searchFormDirective');
           scope.resetSearch = function(htmlQuery) {
             scope.controller.resetSearch();
             //TODO: remove geocat ref
