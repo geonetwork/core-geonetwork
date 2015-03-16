@@ -305,9 +305,9 @@
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
           </h4>
-          <!-- TODO caroussel on each thumbnails-->
           <p data-ng-repeat="img in mdView.current.record.overviews">
-          <img class="gn-img-thumbnail img-thumbnail"
+          <img data-gn-img-modal="md"
+               class="gn-img-thumbnail img-thumbnail"
                alt="{{img.label}}"
                data-ng-src="{{img.url}}"/>
           </p>
