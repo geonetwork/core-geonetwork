@@ -222,15 +222,15 @@
             $http.get(url, {cache: true}).
                 success(function(data) {
 
-                  //data-ng-if is not correctly updating groups. 
+                  //data-ng-if is not correctly updating groups.
                   //So we do the filter here
-                  if(scope.excludeSpecialGroups){
+                  if (scope.excludeSpecialGroups) {
                     scope.groups = [];
                     angular.forEach(data.group, function(g) {
-                      if(g['@id'] > 1) {
+                      if (g['@id'] > 1) {
                         scope.groups.push(g);
                       }
-                    });  
+                    });
                   } else {
                     scope.groups = data !== 'null' ? data.group : null;
                   }
@@ -240,9 +240,9 @@
                       scope.ownerGroup === '') && data.group) {
                     scope.ownerGroup = data.group[0]['@id'];
                   }
-                  
 
-                  
+
+
                 });
           }
 

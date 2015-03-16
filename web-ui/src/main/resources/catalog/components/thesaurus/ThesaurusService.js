@@ -64,7 +64,7 @@
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
               angular.forEach(data[0], function(k) {
-                if(k.value['#text']) {
+                if (k.value['#text']) {
                   listOfKeywords.push(new Keyword(k));
                 }
               });

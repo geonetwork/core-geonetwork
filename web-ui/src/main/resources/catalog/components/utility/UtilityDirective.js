@@ -826,12 +826,12 @@
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
 
-        element.bind('click', function(){
+        element.bind('click', function() {
           var md = scope.$eval(attr['gnImgModal']);
           var imgs = md.getThumbnails();
           var img = imgs.big || imgs.small;
 
-          if(img) {
+          if (img) {
             var modalElt = angular.element('' +
                 '<div class="modal fade in">' +
                 '<div class="modal-dialog in">' +

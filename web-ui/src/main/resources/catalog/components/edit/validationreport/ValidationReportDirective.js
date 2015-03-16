@@ -43,7 +43,9 @@
                     ruleType.error = parseInt(ruleType.error);
                     ruleType.expanded = false;
 
-                    scope.hasRequiredErrors = scope.hasRequiredErrors || (ruleType.requirement === 'REQUIRED' && ruleType.error > 0);
+                    scope.hasRequiredErrors = scope.hasRequiredErrors ||
+                        (ruleType.requirement === 'REQUIRED' &&
+                        ruleType.error > 0);
                     scope.hasErrors = scope.hasErrors || ruleType.error > 0;
                     angular.forEach(ruleType.patterns, function(pat) {
                       scope.numberOfRules +=
@@ -79,7 +81,8 @@
                     return scope.hasRequiredErrors ?
                         'fa-thumbs-o-down' : 'fa-thumbs-o-up';
                   }
-                  return scope.hasRequiredErrors ? 'panel-danger' : 'panel-success';
+                  return scope.hasRequiredErrors ?
+                      'panel-danger' : 'panel-success';
                 }
                 if (type === 'icon') {
                   return 'fa-check';

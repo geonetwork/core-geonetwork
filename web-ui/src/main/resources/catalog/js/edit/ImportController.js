@@ -67,7 +67,7 @@
           $scope.report.exceptions.exception =
               [$scope.report.exceptions.exception];
         }
-        
+
         $scope.reports.push($scope.report);
       };
       var onSuccessFn = function(response) {
@@ -78,9 +78,9 @@
         } else {
           $scope.reports.push(response.data);
         }
-        $scope.reports.push({success : parseInt(response.data.records) -
-            parseInt((response.data.exceptions &&
-                response.data.exceptions['@count']) || 0)});
+        $scope.reports.push({success: parseInt(response.data.records) -
+              parseInt((response.data.exceptions &&
+              response.data.exceptions['@count']) || 0)});
       };
       var onErrorFn = function(error) {
         $scope.importing = false;
