@@ -42,7 +42,6 @@
             <Set name="Acceptors">2</Set>
             <Set name="statsOn">false</Set>
             <Set name="confidentialPort">8443</Set>
-						<Set name="requestHeaderSize">16384</Set>
 	    <Set name="lowResourcesConnections">20000</Set>
 	    <Set name="lowResourcesMaxIdleTime">5000</Set>
           </New>

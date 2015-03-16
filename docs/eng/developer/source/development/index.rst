@@ -43,7 +43,7 @@ The software is run in different ways depending on the servlet container you are
 using:
 
 - **Tomcat** - GeoNetwork is available as a WAR file which you can put into the Tomcat webapps directory. Tomcat will deploy the WAR file when it is started. You can then use the Tomcat manager web application to stop/start GeoNetwork. You can also use the startup.* and shutdown.* scripts located in the Tomcat bin directory (.* means .sh or .bat depending on your OS) but if you have other web applications in the tomcat container, then they will also be affected. 
-- **Jetty** - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are start-geonetwork.* and stop-geonetwork.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
+- **Jetty** - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are startup.* and shutdown.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
 
 Tools
 -----

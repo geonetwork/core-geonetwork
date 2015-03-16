@@ -204,7 +204,7 @@ Specific Database Issues
 Oracle
 ''''''
 
-ORACLE on Linux (x86_64): if your connection with the database takes a long time to establish or frequently times out then adding `-Djava.security.egd=file:/dev/../dev/urandom` to your JAVA_OPTS environment variable (for tomcat) or the start-geonetwork.sh script may help. For more information on this see https://kr.forums.oracle.com/forums/thread.jspa?messageID=3699989.
+ORACLE on Linux (x86_64): if your connection with the database takes a long time to establish or frequently times out then adding `-Djava.security.egd=file:/dev/../dev/urandom` to your JAVA_OPTS environment variable (for tomcat) or the startup.sh script may help. For more information on this see https://kr.forums.oracle.com/forums/thread.jspa?messageID=3699989.
 
 ORACLE returns `ORA-01000: maximum open cursors exceeded` whilst filling the tables in a newly created GeoNetwork database. This occurs because you have enabled the prepared statement pool in either the container database configuration or the GeoNetwork database configuration in `WEB-INF/config.xml`. Until the database fill statements used by GeoNetwork are refactored, you will not be able to use a prepared statement cache with ORACLE if you are creating and filling a new GeoNetwork database so you should set the DBCP maxOpenPreparedStatements parameter to -1. *However*, after the database has been created and filled, you *can* use a prepared statement cache so, you should stop GeoNetwork and configure the prepared statement cache as described above before restarting.
 

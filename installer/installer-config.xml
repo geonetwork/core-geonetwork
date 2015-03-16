@@ -99,8 +99,8 @@
 			<!-- Update the config-gui.xml to reflect the selected GUI -->
 			<parsable targetfile="$INSTALL_PATH/web/geonetwork/WEB-INF/config-gui.xml" />
 				
-			<executable targetfile="$INSTALL_PATH/bin/start-geonetwork.sh" />
-			<executable targetfile="$INSTALL_PATH/bin/stop-geonetwork.sh" />
+			<executable targetfile="$INSTALL_PATH/bin/startup.sh" />
+			<executable targetfile="$INSTALL_PATH/bin/shutdown.sh" />
 		</pack>
 
 

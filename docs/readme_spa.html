@@ -1,93 +1,77 @@
 <html>
 
 <head>
-	<title>GeoNetwork opensource leeme</title>
-<style type="text/css">
-<!--
-.style1 {font-size: 9px}
--->
-</style></head>
+  <title>GeoNetwork opensource leeme</title>
+  <style type="text/css">
+    <!--
+    .style1 {
+      font-size: 9px
+    }
+
+    -->
+  </style>
+</head>
 
 <body>
-	<div align="right"><span class="style1">GeoNetwork V@version@ @subVersion@ / Date: @day@</span></div>
-	<h1>GeoNetwork - Comenzando </h1>
+<div align="right"><span class="style1">GeoNetwork V@version@ @subVersion@ / Date: @day@</span>
+</div>
+<h1>GeoNetwork - Comenzando </h1>
 
-	<h2>Ejecutar la aplicaci&oacute;n</h2>
+<h2>Ejecutar la aplicaci&oacute;n</h2>
 
-    <p>
-		GeoNetwork opensource es un Cat&aacute;logo de Datos Espaciales. Para utilizarlo debe iniciar previamente el servidor web incluido.</p>
-	<p><strong>En Windows</strong>, abrir a la carpeta <em>GeoNetwork opensource</em>, en el <em>men&uacute; de inicio</em>, que se crea durante la instalaci&oacute;n y <strong>ejecutar "Start server"</strong>. Entonces puede abrir GeoNetwork en su navegador web.
-	</p>
-	<p>
-		Por defecto, ha de acceder a <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>
-	</p>
-   <p>
-		<font color="#FF0000"><strong>IMPORTANTE!!</strong></font> Despu&eacute;s de abrir la p&aacute;gina de inicio de GeoNetwork, validese como Administrador.
-		Debe de usar el nombre de usuario <font color="#FF0000"><code><b>admin</b></code></font> y la clave de acceso <font color="#FF0000"><code><b>admin</b></code></font>.
-		En el m&oacute;dulo de administraci&oacute;n puede <strong>modificar su cuenta de usuario</strong>.
-	</p>
-	<p>La documentaci&oacute;n online est&aacute; disponible desde la p&aacute;gina de inicio de GeoNetwork. Seleccione <b><a href="http://localhost:8080/geonetwork/docs/index.html">Ayuda</a></b> en la barra de men&uacute;. Un enlace a la versi&oacute;n imprimible en formato PDF se puede encontrar al final de la p&aacute;gina de ayuda.</p>
+<p>
+  GeoNetwork opensource es un Cat&aacute;logo de Datos Espaciales. Para
+  utilizarlo debe iniciar previamente el servidor web incluido.</p>
 
-	<p>Puede iniciar/parar el servidor web Jetty de GeoNetwork usando los scripts ubicados en el directorio $INSTALL_PATH/bin.</p>
+<p><strong>En Windows</strong>, abrir a la carpeta <em>GeoNetwork
+  opensource</em>, en el <em>men&uacute; de inicio</em>, que se crea durante la
+  instalaci&oacute;n y <strong>ejecutar "Start server"</strong>. Entonces puede
+  abrir GeoNetwork en su navegador web.
+</p>
 
-	<p>En Windows:
-	<br>
-	<ul>
-		<li><code>start-geonetwork.bat</code></li>
-		<li><code>stop-geonetwork.bat</code></li>
-	</ul>
-	En Linux o OSX:
-	<br>
-	<ul>
-		<li><code>start-geonetwork.sh</code></li>
-		<li><code>stop-geonetwork.sh</code></li>
-	</ul>
- 	</p>
-    <p>
-            <cite>Nota: El entorno de ejecución de Java (JRE) <em>@javaVersion@ Standard Edition</em> (descargar de <a href="@jre_url@">http://java.sun.com)</a> se requiere para poder ejecutar GeoNetwork opensource. Vea las secciones de resoluci&oacute;n de problemas si la instalaci&oacute;n
-            o el inicio de GeoNetwork falla.</cite>
-        </p>
+<p>
+  Por defecto, ha de acceder a <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>
+</p>
 
-        <h2>Cargando metadatos</h2>
-        <p>
-        El cat&aacute;logo incluye plantillas de metadatos, de forma que pueda crear nuevos metadatos usando el editor de metadatos de Geonetwork.
-        </p>
-        <p>
-        Si quiere cargar metadatos, dispone de diversas opciones:
-            <ul>
-                <li>Importación de ficheros XML desde el módulo de administraci&oacute;n del catalogo</li>
-                <li>Importar de ficheros MEF desde GAST o desde el módulo de administraci&oacute;n del catalogo</li>
-                <li>Harvesting</li>
-            </ul>
-        </p>
-        <p>Probablemente <em>el m&eacute;todo m&aacute;s conveniente </em> es usar el formato <em>MEF</em> cuyo prop&oacute;sito es el intercambio de metadatos <em>y</em> datos, imagenes de vista previa y privilegios b&aacute;sicos de acceso entre nodos de Geonetwork. Puede encontrar ejemplos de ficheros MEF en el directorio <code>\gast\setup\sample-data</code>. El formato del fichero se describe en el Cap&iacute;tulo 3 del manual de referencia del servidor (en <code>\docs\manuals\</code>). Este formato ser&aacute; soportado por otras aplicaciones geoespaciales.
-        <br>Para importar y exportar metadatos en Geonetwork, debe iniciar la aplicaci&oacute;n GeoNetwork Administrator Survival Tool (<em>GAST</em>).
-        <br>
-        <ul>
-            <li>Inicialmente configure su conexi&oacute;n en GeoNetwork configurando los datos del servidor y los detalles de la cuenta de acceso en el men&uacute; <code>Options => Config</code>. <cite>Nota: Se requiere una cuenta de editor o administrador para que funcione correctamente.</cite></li>
-            <li>Para cargar los metadatos de ejemplo, seleccione la opci&oacute;n <em>Sample data</em> en la secci&oacute;n <em>Database</em> y pulse el bot&oacute;n Import.</li>
-            <li>Para cargar datos en formato <code>MEF</code>, seleccione la opci&oacute;n <em>Import</em> en la secci&oacute;n <em>Management</em>. Seleccione la carpeta que contiene el fichero <code>MEF</code> y pulse
-                el bot&oacute;n <em>Import</em>.</li>
-        </ul>
-        </p>
+<p>
+  <font color="#FF0000"><strong>IMPORTANTE!!</strong></font> Despu&eacute;s de
+  abrir la p&aacute;gina de inicio de GeoNetwork, validese como Administrador.
+  Debe de usar el nombre de usuario <font
+        color="#FF0000"><code><b>admin</b></code></font> y la clave de acceso
+  <font color="#FF0000"><code><b>admin</b></code></font>.
+  En el m&oacute;dulo de administraci&oacute;n puede <strong>modificar su cuenta
+  de usuario</strong>.
+</p>
 
-        <h2>Configuraci&oacute;n del sistema</h2>
+<p>Puede iniciar/parar el servidor web Jetty de GeoNetwork usando los scripts
+  ubicados en el directorio $INSTALL_PATH/bin.</p>
 
-        <h3>Servidor web</h3>
-        <p>
-            GeoNetwork incluye el servidor web <a href="http://jetty.mortbay.org/">Jetty</a>. Si lo requiere, puede usar adicionalmente <a href="http://jakarta.apache.org/tomcat">Jakarta Tomcat</a> version 5.5 . Debe configurar nuevos contextos en Tomcat que enlacen con las aplicaciones en la carpeta <code>web</code> de Geonetwork.
-        </p>
+<p>En Windows:
+  <br>
+<ul>
+  <li><code>startup.bat</code></li>
+  <li><code>shutdown.bat</code></li>
+</ul>
+En Linux o OSX:
+<br>
+<ul>
+  <li><code>startup.sh</code></li>
+  <li><code>shutdown.sh</code></li>
+</ul>
+</p>
+<p>
+  <cite>Nota: El entorno de ejecuciï¿½n de Java (JRE)
+    <em>@javaVersion@ Standard Edition</em> (descargar de
+    <a href="@jre_url@">@jre_url@</a>) se requiere para poder ejecutar
+    GeoNetwork opensource. Vea las secciones de resoluci&oacute;n de problemas
+    si la instalaci&oacute;n
+    o el inicio de GeoNetwork falla.</cite>
+</p>
 
-        <h3>Base de datos</h3>
+<h2>Puede encontrar m&aacute;s informaci&oacute;n en <a
+        href="http://geonetwork-opensource.org">http://geonetwork-opensource.org</a>
+</h2>
 
-        <p>GeoNetwork incluye un servidor de base de datos interno, <a href="http://mckoi.com/database/">McKoi</a> SQL.</p>
-
-        <p>Si require utilizar otra base de datos puede usar GAST para configurarla y migrar el contenido de la base de datos McKoi. Asegurese que la base de datos est&aacute; ejecutandose, con un schema y un usuario configurados. Seleccione la base de datos usando la herramienta GAST. Oracle, MySQL y PostgreSQL est&aacute;n actualmente soportadas. GeoNetwork usa JDBC para acceder a la base de datos, por lo que otras bases de datos deben de funcionar tambi&eacute;n.</p>
-
-        <p>Puede configurar tambi&eacute;n la base de datos manualmente, aunque es m&aacute;s complejo (Acceda al sitio web de la comunidad GeoNetwork para obtener m&aacute;s detalles)</p>
-
-        <h2>Puede encontrar m&aacute;s informaci&oacute;n en <a href="http://geonetwork-opensource.org">http://geonetwork-opensource.org</a></h2>
-
-        <strong>Disfrutelo!</strong>
+<strong>Disfrutelo!</strong>
 </body>
 </html>

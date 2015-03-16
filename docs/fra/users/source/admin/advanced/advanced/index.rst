@@ -522,11 +522,11 @@ Tous les sous-répertoires peuvent être configurés séparément. Par exemple, 
 
 Exemple:
 
- - Ajouter les variables d'environnement Java au script de lancement start-geonetwork.sh ::
+ - Ajouter les variables d'environnement Java au script de lancement startup.sh ::
     
     java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -Dgeonetwork.dir=/app/geonetwork_data_dir -Dgeonetwork.lucene.dir=/ssd/geonetwork_lucene_dir
 
- - Ajouter les variables systèmes au script de lancement start-geonetwork.sh ::
+ - Ajouter les variables systèmes au script de lancement startup.sh ::
 
     # Set custom data directory location using system property
     export geonetwork_dir=/app/geonetwork_data_dir
