@@ -187,6 +187,11 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
+          if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+
           var group, theme = md.sextantTheme;
           if(angular.isArray(sxtGlobals.sextantTheme)) {
             for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
@@ -198,15 +203,21 @@
             }
           }
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
+
+            if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
+                link.name, link.url)) {
+              return;
+            }
+
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                 link.name, capObj);
             layerInfo.group = group;
             var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
                 layerInfo);
             layer.set('md', md);
-            console.log('success' + link.url);
+
           }, function(response) {
-            console.log('Error loading: ' + link.url);
+            console.warn('Error loading: ' + link.url);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
