@@ -66,6 +66,7 @@ public class OgcWxSParams extends AbstractParams
 		createThumbnails= Util.getParam(opt, "createThumbnails",  false);
 		useLayer  		= Util.getParam(opt, "useLayer",  false);
 		useLayerMd		= Util.getParam(opt, "useLayerMd",  false);
+        identifierType  = Util.getParam(opt, "identifierType",  "MD-ID");
 		datasetCategory	= Util.getParam(opt, "datasetCategory",  "");
 		outputSchema	= Util.getParam(opt, "outputSchema",  "");
 	}
@@ -92,6 +93,7 @@ public class OgcWxSParams extends AbstractParams
 		createThumbnails= Util.getParam(opt, "createThumbnails",  createThumbnails);
 		useLayer  		= Util.getParam(opt, "useLayer",  useLayer);
 		useLayerMd		= Util.getParam(opt, "useLayerMd",  useLayerMd);
+        identifierType  = Util.getParam(opt, "identifierType",  "MD-ID");
 		datasetCategory = Util.getParam(opt, "datasetCategory",  datasetCategory);
 		outputSchema 	= Util.getParam(opt, "outputSchema",  outputSchema);
 	}
@@ -115,6 +117,7 @@ public class OgcWxSParams extends AbstractParams
 		copy.createThumbnails 	= createThumbnails;
 		copy.useLayer 			= useLayer;
 		copy.useLayerMd 		= useLayerMd;
+        copy.identifierType     = identifierType;
 		copy.datasetCategory    = datasetCategory;
 		copy.outputSchema    	= outputSchema;
 		return copy;
@@ -134,6 +137,7 @@ public class OgcWxSParams extends AbstractParams
 	public boolean createThumbnails;
 	public boolean useLayer;
 	public boolean useLayerMd;
+    public String identifierType;
 	public String datasetCategory;
 	public String outputSchema;
 }

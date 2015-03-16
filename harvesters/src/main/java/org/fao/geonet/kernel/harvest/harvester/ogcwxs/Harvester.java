@@ -24,7 +24,10 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
@@ -44,6 +47,9 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -468,7 +474,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		
 				// Add operatesOn element at the end of identification section.
 				Element op = new Element ("operatesOn", srv);
-				op.setAttribute("uuidref", layer.uuid);
+
+                if (params.ogctype.startsWith("WMS")) {
+                    if (params.identifierType.equalsIgnoreCase("DS-ID")) {
+                        op.setAttribute("uuidref", layer.dsUuid + "");
+                    } else {
+                        op.setAttribute("uuidref", layer.uuid);
+                    }
+                } else {
+                    op.setAttribute("uuidref", layer.uuid);
+                }
 
                 String hRefLink =  context.getBean(SettingManager.class).getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
@@ -511,10 +526,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilitiesLayer-to-19139.xsl");
 		Element xml 		= null;
 
-        boolean exist;
+        boolean exist = false;
         boolean loaded = false;
 
-        if (params.ogctype.substring(0,3).equals("WMS")) {
+        boolean isWMSService = (params.ogctype.substring(0,3).equals("WMS"));
+
+        if (isWMSService) {
 			Element name;
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
 				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
@@ -545,12 +562,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
 	
 		//--- Trying loading metadataUrl element
-		if (params.useLayerMd && !params.ogctype.substring(0,3).equals("WMS")) {
+		if (params.useLayerMd && !isWMSService) {
 			log.info("  - MetadataUrl harvester only supported for WMS layers.");
 		}
 		
-		if (params.useLayerMd && params.ogctype.substring(0,3).equals("WMS")) {
-			
+		if (params.useLayerMd && isWMSService) {
 			Namespace xlink 	= Namespace.getNamespace ("http://www.w3.org/1999/xlink");
 			
 			// Get metadataUrl xlink:href
@@ -570,7 +586,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             // Check if metadataUrl in WMS 1.3.0 format
             if (onLineSrc == null) {
-                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and " + dummyNsPrefix + "Format='text/xml']/" + dummyNsPrefix + "OnlineResource");
+                mdUrl 		= XPath.newInstance ("./" + dummyNsPrefix + "MetadataURL[@type='ISO19115:2003' and (" + dummyNsPrefix + "Format='text/xml' or " +  dummyNsPrefix + "Format='application/xml')]/" + dummyNsPrefix + "OnlineResource");
                 if (addNsPrefix) mdUrl.addNamespace("x", layer.getNamespace().getURI());
                 onLineSrc 	= (Element) mdUrl.selectSingleNode (layer);
             }
@@ -626,8 +642,72 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				loaded = false;
 			}
 		}
-		
-		
+
+        // If the layer metadata has not been loaded from the MetadataURL, check the layer Identifier
+        // to verify if the metadata already exists in the metadata.
+		if (!loaded && isWMSService) {
+            boolean useDatasetIdentifier = params.identifierType.equalsIgnoreCase("DS-ID");
+
+            String dummyNsPrefix = "";
+            boolean addNsPrefix = !layer.getNamespace().equals(Namespace.NO_NAMESPACE);
+            if (addNsPrefix) dummyNsPrefix = "x:";
+
+            // Layer Identifier
+            XPath mdIdentifier = XPath.newInstance ("./" + dummyNsPrefix + "Identifier");
+            if (addNsPrefix) mdIdentifier.addNamespace("x", layer.getNamespace().getURI());
+            Element identifierRef = (Element) mdIdentifier.selectSingleNode (layer);
+
+            if (identifierRef != null) {
+                String layerIdentifier = identifierRef.getText();
+
+                try {
+                    // Check if exists in gmd:MD_DataIdentification
+                    String mdLayerIdentifierUuid = searchMetadataUuidByDatasetIdentifier(layerIdentifier);
+
+                    if (StringUtils.isNotEmpty(mdLayerIdentifierUuid)) {
+                        log.warning("    Metadata with MD_Identifier " + mdLayerIdentifierUuid + "  already exist in the catalogue. Using Capabilities Layer Identifier information.");
+                        result.layerUuidExist ++;
+                        reg.uuid = mdLayerIdentifierUuid;
+                        if (useDatasetIdentifier) {
+                            reg.dsUuid = layerIdentifier;
+                        }
+
+                        return reg;
+                    }
+
+                    // Check if exists in gmd:fileIdentifier
+                    if (!exist) {
+                        exist = dataMan.existsMetadataUuid(layerIdentifier);
+
+                        if (exist) {
+                            log.warning("    Metadata uuid already exist in the catalogue. Using Capabilities Layer Identifier information.");
+                            result.layerUuidExist ++;
+                            reg.uuid = layerIdentifier;
+
+                            if (useDatasetIdentifier) {
+                                String mdId = dataMan.getMetadataId(layerIdentifier);
+                                String mdSchema = dataMan.getMetadataSchema(mdId);
+
+                                // Retrieve MD and extract DS-IDENTIFIER
+                                Element layerMd = dataMan.getMetadata(mdId);
+
+                                String dsIdentifier = dataMan.extractDatasetIdentifier(mdSchema, layerMd);
+                                reg.dsUuid = dsIdentifier;
+                            }
+
+                            return reg;
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    log.warning("  - Failed to check layer using Identifier attribute : " + e.getMessage());
+                    loaded = false;
+                }
+
+            }
+        }
+
 		//--- using GetCapabilities document
 		if (!loaded && params.useLayer){
 			try {
@@ -938,6 +1018,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	
 	private static class WxSLayerRegistry {
 		public String uuid;
+        public String dsUuid = "";
 		public String id;
 		public String name;
 		public Double minx = -180.0;
@@ -954,5 +1035,38 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    private String searchMetadataUuidByDatasetIdentifier(String layerIdentifier) throws Exception {
+        String mdUuid = "";
+
+        Element parameters = new Element(Jeeves.Elem.REQUEST);
+        parameters.addContent(new Element("identifier").setText(layerIdentifier));
+
+        parameters.addContent(new Element("fast").addContent("index"));
+        parameters.addContent(new Element("sortBy").addContent("title"));
+        parameters.addContent(new Element("sortOrder").addContent("reverse"));
+
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager searchMan = gc.getBean(SearchManager.class);
+
+        MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+        try {
+            ServiceConfig config = new ServiceConfig();
+            searcher.search(context, parameters, config);
+
+            Element results = searcher.present(context, parameters, config).getChild("metadata");
+
+            if (results != null) {
+                mdUuid = results.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid");
+            }
+
+            return mdUuid;
+        } finally {
+            searcher.close();
+        }
+
+    }
 
 }

@@ -65,6 +65,27 @@
         </div>
 
         <div>
+          <fieldset>
+            <legend class="subfield" data-translate="">ogcwxs-identifier</legend>
+            <div class="radio">
+              <label>
+                <input type="radio" name="identifierRadios"
+                       data-ng-model="harvesterSelected.options.identifierType" value="MD-ID" checked=""/>
+                <span data-translate="">ogcwxs-MD</span>
+              </label>
+            </div>
+
+            <div class="radio">
+              <label>
+                <input type="radio" name="identifierRadios"
+                       data-ng-model="harvesterSelected.options.identifierType" value="DS-ID" checked=""/>
+                <span data-translate="">ogcwxs-DS</span>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div>
             <label class="control-label" data-translate="">ogcwxs-topicCategory</label>
             <div
                data-schema-info-combo="codelist"
