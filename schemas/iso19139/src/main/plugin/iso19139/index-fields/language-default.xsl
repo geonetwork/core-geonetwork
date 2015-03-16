@@ -3,6 +3,7 @@
 <xsl:stylesheet version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gml="http://www.opengis.net/gml"
+    xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:util="java:org.fao.geonet.util.XslUtil"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
@@ -333,6 +334,23 @@
             </xsl:for-each>
 
         </xsl:for-each>
+
+        <xsl:variable name="identification" select="." />
+        <Field name="anylight" store="false" index="true">
+          <xsl:attribute name="string">
+            <xsl:for-each
+              select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:abstract/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:credit/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification//gmd:organisationName/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:supplementalInformation/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:LocalisedCharacterString[@locale=$langId]|
+                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+              <xsl:value-of select="concat(., ' ')"/>
+            </xsl:for-each>
+          </xsl:attribute>
+        </Field>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Distribution === -->
