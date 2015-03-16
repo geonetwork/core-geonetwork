@@ -10,7 +10,7 @@
     <div class="form-group">
       <label>{{'drawColor'|translate}}
         <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.image.fill.color">
-          <option data-ng-repeat="c in colors | orderBy" style="background-color:{{c}}">{{c|translate}}</option>
+          <option data-ng-repeat="(c, code) in colors | orderBy" style="background-color:{{c}}" value="{{code}}">{{c|translate}}</option>
         </select>
       </label>
     </div>
@@ -26,7 +26,7 @@
     <div class="form-group">
       <label>{{'drawColor'|translate}}
         <select type="text" class="form-control input-sm" placeholder="{{'drawColor'|translate}}" data-ng-model="style.stroke.color">
-          <option data-ng-repeat="c in colors | orderBy" style="background-color:{{c}}">{{c|translate}}</option>
+          <option data-ng-repeat="(c, code) in colors | orderBy" value="{{code}}" style="background-color:{{c}}">{{c|translate}}</option>
         </select>
       </label>
     </div>
@@ -42,7 +42,7 @@
     <div class="form-group">
       <label>{{'drawStrokeColor'|translate}}
         <select type="text" class="form-control input-sm" placeholder="{{'drawStrokeColor'|translate}}" data-ng-model="style.stroke.color">
-          <option data-ng-repeat="c in colors | orderBy">{{c|translate}}</option>
+          <option data-ng-repeat="(c, code) in colors | orderBy" value="{{code}}">{{c|translate}}</option>
         </select>
       </label>
     </div>
@@ -68,14 +68,14 @@
     <div class="form-group">
       <label>{{'textStrokeColor'|translate}}
         <select type="text" class="form-control input-sm" placeholder="{{'textStrokeColor'|translate}}" data-ng-model="style.text.stroke.color">
-          <option data-ng-repeat="c in colors | orderBy" style="background-color:{{c}}">{{c|translate}}</option>
+          <option data-ng-repeat="(c, code) in colors | orderBy" value="{{code}}" style="background-color:{{c}}">{{c|translate}}</option>
         </select>
       </label>
     </div>
     <div class="form-group">
       <label>{{'textFillColor'|translate}}
         <select type="text" class="form-control input-sm" placeholder="{{'textFillColor'|translate}}" data-ng-model="style.text.fill.color">
-          <option data-ng-repeat="c in colors | orderBy" style="background-color:{{c}}">{{c|translate}}</option>
+          <option data-ng-repeat="(c, code) in colors | orderBy" value="{{code}}" style="background-color:{{c}}">{{c|translate}}</option>
         </select>
       </label>
     </div>
