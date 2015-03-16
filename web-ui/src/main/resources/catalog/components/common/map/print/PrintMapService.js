@@ -274,18 +274,34 @@
               call(this, layer);
           var source = layer.getSource();
           var tileGrid = source.getTileGrid();
-          var matrixSet = 'EPSG:3857';
+          var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
+            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
+                getExtent()) /tileGrid.getTileSize()) /
+                tileGrid.getResolutions()[z];
             matrixIds[z] = {
               identifier: tileGrid.getMatrixIds()[z],
               resolution: tileGrid.getResolutions()[z],
               tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
               topLeftCorner: tileGrid.getOrigin(),
-              matrixSize: [Math.pow(2, z), Math.pow(2, z)]
+              matrixSize: [mSize, mSize]
             };
           }
-          return enc;
+
+          angular.extend(enc, {
+            type: 'WMTS',
+            baseURL: layer.get('url'),
+            layer: source.getLayer(),
+            version: source.getVersion(),
+            requestEncoding: 'KVP',
+            format: source.getFormat(),
+            style: source.getStyle(),
+            matrixSet: matrixSet,
+            matrixIds: matrixIds
+          });
+
+    return enc;
         }
       },
       'legends' : {

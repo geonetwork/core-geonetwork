@@ -238,7 +238,6 @@
         }
       });
       http.error(function() {
-        gaWaitCursor.remove();
       });
     };
 
