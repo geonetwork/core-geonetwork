@@ -7,7 +7,6 @@ import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
 import ro.isdc.wro.manager.factory.ConfigurableWroManagerFactory;
 import ro.isdc.wro.model.factory.WroModelFactory;
 
-import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -36,12 +35,7 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
         int lruSize = Integer.parseInt(properties.getProperty(SIZE_PROP_KEY, "128"));
         switch (properties.getProperty(CACHE_PROP_KEY, "lru")) {
             case DiskbackedCache.NAME:
-                String path = properties.getProperty(DiskbackedCache.DB_PROP_KEY);
-                try {
-                    return new DiskbackedCache(lruSize, path);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                return new DiskbackedCache(lruSize, null);
             default:
                 return new LruMemoryCacheStrategy<>(lruSize);
         }

@@ -44,12 +44,12 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     private Connection dbConnection;
     private boolean destroyed;
 
-    public DiskbackedCache(int lruSize, String dbPathString) throws SQLException {
+    public DiskbackedCache(int lruSize, String dbPathString) {
         this.defaultCache = new LruMemoryCacheStrategy<>(lruSize);
         this.dbPathString = dbPathString;
     }
 
-    DiskbackedCache(int lruSize) throws SQLException {
+    DiskbackedCache(int lruSize) {
         this(lruSize, "mem:" + UUID.randomUUID());
     }
 
