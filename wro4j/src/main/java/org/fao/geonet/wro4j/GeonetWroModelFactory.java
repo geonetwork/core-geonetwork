@@ -552,6 +552,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 } else {
                     path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
                     path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
+                    if (path.startsWith("//")) { // horrible hack!!!
+                        path = path.substring(1);
+                    }
                 }
                 depManager.addFile(path, file, notMinimized);
             }
