@@ -25,7 +25,7 @@
   module.value('sxtGlobals', {});
 
   module.config(['$LOCALES', function($LOCALES) {
-    $LOCALES.push('sextant');
+    //$LOCALES.push('sextant');
   }]);
 
   module.controller('gnsSextant', [
