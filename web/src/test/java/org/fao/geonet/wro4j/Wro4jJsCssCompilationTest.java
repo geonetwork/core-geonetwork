@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Jesse on 11/20/2014.
  */
-public class TestWro4jJsCssCompilation {
+public class Wro4jJsCssCompilationTest {
     private static WroModel wro4jModel;
     private static WroManager wro4jManager;
 
@@ -40,7 +40,7 @@ public class TestWro4jJsCssCompilation {
     public static void createModel() throws IOException {
 
         GeonetworkMavenWrojManagerFactory managerFactory = new GeonetworkMavenWrojManagerFactory();
-        Path webDir = AbstractCoreIntegrationTest.getWebappDir(TestWro4jJsCssCompilation.class);
+        Path webDir = AbstractCoreIntegrationTest.getWebappDir(Wro4jJsCssCompilationTest.class);
         final Charset cs = Charset.forName(Constants.ENCODING);
         final List<String> configuration = Files.readAllLines(webDir.resolve("../webResources/WEB-INF/wro.properties"), cs);
 
