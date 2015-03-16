@@ -104,7 +104,7 @@
       <field name="_valid_xsd" tagName="valid_xsd"/>
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
-      <field name="_status" tagName="status"/>
+      <field name="_status" tagName="mdStatus"/>
       <field name="_edit" tagName="edit"/>
       <field name="_root" tagName="root"/>
       <field name="_title" tagName="title" multilingualSortField="true"/>
@@ -123,24 +123,27 @@
       <field name="link" tagName="link"/>
       <field name="format" tagName="format"/>
       <field name="denominator" tagName="denominator"/>
+      <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
       <field name="credit" tagName="credit"/>
-      <field name="status" tagName="status"/>
-      <field name="status_text" tagName="status_text" multilingualSortField="true"/>
+      <field name="cl_status_text" tagName="status_text" multilingualSortField="true"/>
       <field name="updateFrequency" tagName="updateFrequency"/>
       <field name="lineage" tagName="lineage"/>
       <field name="responsibleParty" tagName="responsibleParty"/>
-      <field name="accessConstr" tagName="Constraints"/>
-      <field name="otherConstr" tagName="Constraints"/>
-      <field name="classif" tagName="SecurityConstraints"/>
-      <field name="conditionApplyingToAccessAndUse" tagName="Constraints"/>
+      <field name="MD_LegalConstraintsOtherConstraints" tagName="legalConstraints"/>
+      <field name="MD_LegalConstraintsUseLimitation" tagName="legalConstraints"/>
+      <field name="MD_SecurityConstraintsUseLimitation" tagName="securityConstraints"/>
+      <field name="MD_ConstraintsUseLimitation" tagName="resourceConstraints"/>
+      <field name="cl_classification_text" tagName="classification_text"/>
+      <field name="cl_maintenanceAndUpdateFrequency_text" tagName="maintenanceAndUpdateFrequency_text"/>
+      <field name="cl_spatialRepresentationType_text" tagName="spatialRepresentationType_text"/>
       <field name="datasetLang" tagName="datasetLang"/>
-      <field name="language" tagName="language"/>
-      <field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
+      <field name="mdLanguage" tagName="mdLanguage"/>
       <field name="serviceType" tagName="serviceType"/>
       <field name="tempExtentBegin" tagName="tempExtentBegin"/>
       <field name="tempExtentEnd" tagName="tempExtentEnd"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="extentDesc" tagName="geoDesc"/>
       <field name="geoDescCode" tagName="geoDescCode"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>

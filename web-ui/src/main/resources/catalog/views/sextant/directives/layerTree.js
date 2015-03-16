@@ -70,6 +70,11 @@
               }
             }
           });
+
+          scope.removeFailed = function(layer) {
+            var fl = scope.map.get('failedLayers')
+            fl.splice(fl.indexOf(layer), 1);
+          };
         }
       };
     }]);

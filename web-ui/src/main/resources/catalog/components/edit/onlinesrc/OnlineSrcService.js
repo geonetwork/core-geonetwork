@@ -377,6 +377,12 @@
             }).then(function() {
               closePopup(popupid);
             });
+          }, function(error) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate('linkToServiceError'),
+              msg: error.statusText,
+              timeout: 0,
+              type: 'danger'});
           });
         },
 
@@ -511,9 +517,23 @@
           var params = {
             uuid: onlinesrc['geonet:info'].uuid,
             uuidref: gnCurrentEdit.uuid
-          };
-          runProcess(this,
-              setParams('services-remove', params));
+          }, service = this;
+
+          gnBatchProcessing.runProcessMdXml(
+              setParams('services-remove', params)).
+              then(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('serviceDetachedToCurrentRecord'),
+                  timeout: 3
+                });
+                service.reload = true;
+              }, function(error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('removeServiceError'),
+                  error: error,
+                  timeout: 0,
+                  type: 'danger'});
+              });
         },
 
         /**

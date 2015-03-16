@@ -511,7 +511,10 @@
         'Metadata',
         'gnOwsCapabilities',
         'gnCurrentEdit',
-        function(gnOnlinesrc, Metadata, gnOwsCapabilities, gnCurrentEdit) {
+        '$rootScope',
+        '$translate',
+        function(gnOnlinesrc, Metadata, gnOwsCapabilities,
+                 gnCurrentEdit, $rootScope, $translate) {
           return {
             restrict: 'A',
             scope: {},
@@ -527,6 +530,7 @@
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
+                  scope.alertMsg = null;
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -554,9 +558,15 @@
                    * passed to the layers grid directive.
                    */
                   scope.loadWMSCapabilities = function(url) {
+                    scope.alertMsg = null;
                     gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(layers) {
-                          scope.layers = layers;
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          scope.layers.push(capabilities.Layer[0]);
+                          angular.forEach(scope.layers[0].Layer, function(l) {
+                            scope.layers.push(l);
+                            // TODO: We may have more than one level
+                          });
                         });
                   };
 
@@ -571,14 +581,19 @@
                     if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
-                      var links = md.getLinksByType('OGC:WMS');
+                      var links = [];
+                      links = links.concat(md.getLinksByType('OGC:WMS'));
+                      links = links.concat(md.getLinksByType('wms'));
 
                       if (scope.mode == 'service') {
+                        scope.srcParams.uuidSrv = md.getUuid();
+                        scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
                         if (angular.isArray(links) && links.length == 1) {
                           scope.loadWMSCapabilities(links[0].url);
-                          scope.srcParams.uuidSrv = md.getUuid();
-                          scope.srcParams.uuidDS = gnCurrentEdit.uuid;
+                        } else {
+                          scope.alertMsg =
+                              $translate('linkToServiceWithoutURLError');
                         }
                       }
                       else {

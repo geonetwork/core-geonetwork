@@ -3,8 +3,11 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.MetadataRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -21,6 +24,10 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XS
  * @author jeichar
  */
 abstract class AbstractFormatService {
+    @Autowired
+    protected DataManager dataManager;
+    @Autowired
+    protected MetadataRepository metadataRepository;
 
     protected static final DirectoryStream.Filter<Path> FORMATTER_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -36,26 +43,11 @@ abstract class AbstractFormatService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    protected Metadata loadMetadata(MetadataRepository metadataRepository, String id, String uuid) {
-        Metadata md = null;
-        if (id != null) {
-            try {
-                md = metadataRepository.findOne(Integer.parseInt(id));
-            } catch (NumberFormatException e) {
-                md = metadataRepository.findOneByUuid(id);
-                if (md != null) {
-                    uuid = id;
-                }
-            }
-        }
-
-        if (md == null && uuid != null) {
-            md = metadataRepository.findOneByUuid(uuid);
-        }
+    protected Metadata loadMetadata(MetadataRepository metadataRepository, int id) {
+        Metadata md = metadataRepository.findOne(id);
 
         if (md == null) {
-            throw new IllegalArgumentException("No metadata found. id = " + id + ", uuid = " + uuid + ".  One of them must find a " +
-                                               "metadata");
+            throw new IllegalArgumentException("No metadata found. id = " + id);
         }
         return md;
     }
@@ -123,5 +115,21 @@ abstract class AbstractFormatService {
             }
         }
         return formatDir;
+    }
+
+    protected String resolveId(String id) throws Exception {
+        String resolvedId;
+            try {
+                Integer.parseInt(id);
+                resolvedId = id;
+            } catch (NumberFormatException e) {
+                try {
+                    resolvedId = dataManager.getMetadataId(id);
+                } catch (Exception e2) {
+                    throw new ResourceNotFoundEx("Metadata with id: id");
+                }
+            }
+
+        return resolvedId;
     }
 }

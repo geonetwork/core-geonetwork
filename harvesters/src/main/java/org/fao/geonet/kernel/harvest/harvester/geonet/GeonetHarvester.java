@@ -122,7 +122,8 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult>
         super.setParams(params);
 
         settingMan.add("id:"+siteId, "host",    params.host);
-		settingMan.add("id:" + siteId, "node", params.getNode());
+        settingMan.add("id:"+siteId, "node", params.getNode());
+        settingMan.add("id:"+siteId, "useChangeDateForUpdate", params.useChangeDateForUpdate());
 		settingMan.add("id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
 		settingMan.add("id:"+siteId, "mefFormatFull", params.mefFormatFull);
 		settingMan.add("id:"+siteId, "xslfilter", params.xslfilter);

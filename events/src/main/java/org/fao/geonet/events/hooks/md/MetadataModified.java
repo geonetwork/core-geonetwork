@@ -38,8 +38,6 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#handleEvent(org.fao.geonet.entitylistener.PersistentEventType,
      *      java.lang.Object)
-     * @param arg0
-     * @param arg1
      */
     @Override
     public void handleEvent(PersistentEventType type, Metadata entity) {

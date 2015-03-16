@@ -45,11 +45,12 @@ import javax.persistence.Transient;
  * @author Jesse
  */
 @Entity
-@Table(name = "Metadata")
+@Table(name = Metadata.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
 @SequenceGenerator(name=Metadata.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Metadata extends GeonetEntity {
+    public static final String TABLENAME = "Metadata";
     static final String ID_SEQ_NAME = "metadata_id_seq";
 
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";

@@ -73,8 +73,8 @@
    * categories.
    */
   module.directive('gnMetadataCategoryUpdater', [
-    'gnMetadataActions', '$translate', '$http',
-    function(gnMetadataActions, $translate, $http) {
+    'gnMetadataActions', '$translate', '$http', '$rootScope',
+    function(gnMetadataActions, $translate, $http, $rootScope) {
 
       return {
         restrict: 'A',
@@ -96,12 +96,13 @@
                 success(function(data) {
                   scope.categories =
                      data !== 'null' ? data.metadatacategory : null;
-
-                  angular.forEach(scope.categories, function(c) {
-                    if (scope.currentCategories.indexOf(c.name) !== -1) {
-                      scope.ids.push(c['@id']);
-                    }
-                  });
+                  if (angular.isDefined(scope.currentCategories)) {
+                    angular.forEach(scope.categories, function(c) {
+                      if (scope.currentCategories.indexOf(c.name) !== -1) {
+                        scope.ids.push(c['@id']);
+                      }
+                    });
+                  }
                 });
           };
 
@@ -121,10 +122,11 @@
             gnMetadataActions.assignCategories(scope.metadataId, scope.ids)
               .then(function() {
                   scope.currentCategories.push(c.name);
-                }, function(error) {
+                }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('changeGroupError'),
-                    error: error,
+                    title: $translate('assignCategoryError',
+                        {category: c.name}),
+                    error: response.error,
                     timeout: 0,
                     type: 'danger'});
                 });

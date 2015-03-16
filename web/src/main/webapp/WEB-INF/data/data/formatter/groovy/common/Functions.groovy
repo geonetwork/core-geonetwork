@@ -21,6 +21,16 @@ public class Functions {
         return handlers.fileResult("html/text-el.html", ["label": label, "text" : text])
     }
 
+    /**
+     * Creates the default html for a label -> text pair.  This is the element for primitive/simple data.
+     * This does not return a function it is returns the actual html and thus can be used within handlers/functions to
+     * directly get the html
+     */
+    def urlEl(label, href, text) {
+        return handlers.fileResult("html/url-el.html", ["label": label, "href" : href, "text" :
+                text.length() > 50 ? (text.substring(0, 50) + "...") : text])
+    }
+
     def textColEl(content, cols) {
         return '<div class="col-md-' + cols + '">' + content + '</div>'
     }

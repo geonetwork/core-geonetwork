@@ -40,7 +40,7 @@
         </xsl:attribute>
       </Url>
       <Image height="16" width="16" type="image/x-icon">
-        <xsl:value-of select="concat($fullURLForWebapp, '/images/logos/favicon.gif')"/>
+        <xsl:value-of select="concat($fullURLForWebapp, '/images/logos/favicon.png')"/>
       </Image>
     </OpenSearchDescription>
   </xsl:template>

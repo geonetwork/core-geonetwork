@@ -3,16 +3,22 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.region.metadata.MetadataRegionSearchRequest;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Collections;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A Regions DAO that fetches geometries from a metadata.  The geometry ids are structured as follows:
@@ -29,7 +35,13 @@ public class MetadataRegionDAO extends RegionsDAO {
     public static final String CATEGORY_NAME = "metadata";
     private final Parser parser = new Parser(new GMLConfiguration());
     private final GeometryFactory factory = new GeometryFactory();
-    
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private SearchManager searchManager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+
     @Override
     public Collection<String> getRegionCategoryIds(ServiceContext context) throws Exception {
         return Collections.singleton(CATEGORY_NAME);
@@ -54,5 +66,28 @@ public class MetadataRegionDAO extends RegionsDAO {
     @Override
     public boolean includeInListing() {
         return false;
+    }
+
+    @Override
+    public boolean canHandleId(ServiceContext context, String id) throws Exception {
+        return id.startsWith(MetadataRegionSearchRequest.PREFIX);
+    }
+
+    @Nullable
+    @Override
+    public Long getLastModified(@Nonnull String id) throws Exception {
+        if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
+            String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
+
+            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
+
+            if (mdId != null) {
+                final ISODate docChangeDate = searchManager.getDocChangeDate(mdId);
+                if (docChangeDate != null) {
+                    return docChangeDate.toDate().getTime();
+                }
+            }
+        }
+        return null;
     }
 }

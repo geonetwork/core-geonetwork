@@ -38,13 +38,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -142,7 +142,7 @@ public class MetadataNotifierManager {
                 return _metadataNotifierRepository.findAllByEnabled(true);
             } catch (Exception ex) {
                 Log.error("MetadataNotifierManager", "loadNotifiers: " + ex.getMessage(), ex);
-                throw new MetadataNotifierException(ex.getMessage());
+                throw new MetadataNotifierException(ex.getMessage(), ex);
             }
     }
 
@@ -150,6 +150,10 @@ public class MetadataNotifierManager {
     static final class MetadataNotifierException extends Exception {
         public MetadataNotifierException(String newMessage) {
             super(newMessage);
+        }
+
+        public MetadataNotifierException(String message, Exception ex) {
+            super(message, ex);
         }
     }
 

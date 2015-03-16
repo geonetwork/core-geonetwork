@@ -25,7 +25,6 @@
     "assignToCatalog": "Asignar al catálogo actual",
     "assignToCategory": "Asignar a categoría",
     "assignToGroup": "Asignar a grupo",
-    "associatedResources": "Recursos relacionados",
     "associationType": "Tipo de relación",
     "beforeUnloadEditor": "Puede que tengas cambios sin salvar desde la última vez: {{timeAgo}}.",
     "cancel": "Cancelar",

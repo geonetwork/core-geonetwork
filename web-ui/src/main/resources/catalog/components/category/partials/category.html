@@ -5,7 +5,8 @@
         <option></option>
         <option data-ng-repeat="c in categories" value="{{c['@id']}}" 
             data-ng-selected="c['@id'] == element">
-			<span class="fa gn-icon-{{c.name}}"></span>
-            {{c.label[lang] | translate}}</option>
+           <span class="fa gn-icon-{{c.name}}"></span>
+           {{c.label[lang] | translate}}
+        </option>
     </select>
 </div>

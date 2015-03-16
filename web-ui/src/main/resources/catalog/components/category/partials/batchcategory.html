@@ -1,0 +1,42 @@
+<div class="dynamic-list" data-ng-hide="categories.length === 0">
+  <div>
+    <div class="row">
+      <div class="col-lg-8">
+        <div data-ng-repeat="c in categories">
+          <label>
+            <input type="checkbox"
+                   name="cat"
+                   data-ng-model="c.checked"/>&nbsp;
+            <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
+            {{c.label[lang] | translate}}
+          </label>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <p class="help-block"
+             data-translate="">categoriesBatchAlert</p>
+      </div>
+    </div>
+
+    <div class="btn-toolbar">
+      <button type="button" class="btn btn-primary pull-right"
+              data-gn-click-and-spin="save()">
+        <i class="fa fa-save"></i>&nbsp;
+        <span data-translate="">addThoseCategories</span>
+      </button>
+      <button type="button" class="btn btn-primary pull-right"
+              data-gn-click-and-spin="save(true)">
+        <i class="fa fa-eraser"></i>&nbsp;
+        <span data-translate="">replaceByThoseCategories</span>
+      </button>
+    </div>
+  </div>
+  <br/>
+  <div data-ng-show="report !== null" class="alert alert-info">
+    <ul>
+      <li data-ng-repeat="(key, value) in report">
+        <span data-translate>{{key}}</span>: {{value}}
+      </li>
+    </ul>
+  </div>
+</div>

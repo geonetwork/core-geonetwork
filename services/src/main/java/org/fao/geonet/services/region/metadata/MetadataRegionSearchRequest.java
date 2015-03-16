@@ -11,6 +11,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -29,6 +30,7 @@ import java.util.List;
 
 public class MetadataRegionSearchRequest extends Request {
 
+    public static final String PREFIX = "metadata:";
     private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
             new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
     private String id;
@@ -61,7 +63,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     @Override
     public Collection<Region> execute() throws Exception {
-        if(label==null && id==null || (id!=null && !id.startsWith("metadata:")) ) {
+        if(label==null && id==null || (id!=null && !id.startsWith(PREFIX)) ) {
             return Collections.emptySet();
         }
         List<Region> regions = new ArrayList<Region>();
@@ -169,12 +171,13 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
-        String mdId = id.getMdId(context);
+        final DataManager dataManager = context.getBean(DataManager.class);
+        String mdId = id.getMdId(context.getBean(SearchManager.class), dataManager);
         try {
             if (context.getBean(MetadataRepository.class).exists(Integer.parseInt(mdId))) {
                 Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
-                return context.getBean(DataManager.class).getMetadata(context, mdId, includeEditData, false, true);
+                return dataManager.getMetadata(context, mdId, includeEditData, false, true);
             } else {
                 return null;
             }
@@ -202,13 +205,13 @@ public class MetadataRegionSearchRequest extends Request {
         /**
          * Convert ID to the id for looking up the metadata in the database
          */
-        abstract String getMdId(ServiceContext context) throws Exception;
+        public abstract String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception;
         /**
          * Strip the identifier from the id and return the id
          */
         abstract String getId();
         
-        static Id create(String id) {
+        public static Id create(String id) {
             if(id.toLowerCase().startsWith(MdId.PREFIX)) {
                 return new MdId(id);
             } else if(id.toLowerCase().startsWith(Uuid.PREFIX)) {
@@ -231,12 +234,11 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) throws Exception {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            String mdId = Utils.lookupMetadataIdFromFileId(gc, id);
+        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
+            String mdId = Utils.lookupMetadataIdFromFileId(id, searchManager);
             
             if (mdId == null) {
-                mdId = gc.getBean(DataManager.class).getMetadataId(id);
+                mdId = dataManager.getMetadataId(id);
             }
             return mdId;
         }
@@ -254,7 +256,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) {
+        public String getMdId(SearchManager searchManager, DataManager dataManager) {
             return id;
         }
 
@@ -272,9 +274,8 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) throws Exception {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            return gc.getBean(DataManager.class).getMetadataId(id);
+        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
+            return dataManager.getMetadataId(id);
         }
 
         @Override

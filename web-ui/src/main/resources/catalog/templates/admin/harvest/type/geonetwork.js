@@ -17,7 +17,8 @@ var gnHarvestergeonetwork = {
           "password": ""
         },
         "host": [],
-              "node": "srv",
+        "node": "srv",
+        "useChangeDateForUpdate": false,
         "createRemoteCategory": false,
         "mefFormatFull": false,
         "xslfilter": []
@@ -69,7 +70,8 @@ var gnHarvestergeonetwork = {
       + $scope.buildTranslations(h)
       + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
       + '    <node>' + h.site.node + '</node>'
-     + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
+      + '    <useChangeDateForUpdate>' + h.site.useChangeDateForUpdate + '</useChangeDateForUpdate>'
+      + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
       + '    <icon>' + h.site.icon + '</icon>'
       + '    <mefFormatFull>' + h.site.mefFormatFull + '</mefFormatFull>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'

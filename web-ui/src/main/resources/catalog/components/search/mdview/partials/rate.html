@@ -2,9 +2,10 @@
      data-ng-model="rate"
      data-max="5"
      data-readonly="readonly"
-     data-state-on="'fa fa-star'"
-     data-state-off="'fa fa-star-o'"
+     data-state-on="'fa fa-fw fa-star'"
+     data-state-off="'fa fa-fw fa-star-o'"
      data-on-hover="hoveringOver(value)"
      data-on-leave="overStar = null"
+     data-ng-click="rateForRecord(rate)"
      class="text-muted"
      title="{{readonly ? '' : ('clickToRate' | translate)}}"/>

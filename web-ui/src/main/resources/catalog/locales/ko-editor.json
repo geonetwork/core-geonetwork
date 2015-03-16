@@ -23,7 +23,6 @@
     "assignToCatalog": "현재 카탈로그에 할당",
     "assignToCategory": "카테고리에 할당",
     "assignToGroup": "그룹에 할당",
-    "associatedResources": "연관 자원",
     "associationType": "연결 유형",
     "beforeUnloadEditor": "마지막 저장 {{timeAgo}} 이후로 변경 내용을 저장하지 않았습니다.",
     "cancel": "취소",

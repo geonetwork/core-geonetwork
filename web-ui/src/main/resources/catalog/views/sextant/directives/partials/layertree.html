@@ -1,2 +1,12 @@
 <sxt-layertree-col collection="layerTree.nodes" map='map'>
 </sxt-layertree-col>
+<ul>
+  <li data-ng-repeat="l in map.get('failedLayers')">
+    <span class="pull-right gn-close-btn" ng-click="removeFailed(l)">
+      x
+    </span>
+    <i class="fa fa-warning text-warning"></i>
+    &nbsp;
+    {{l}}
+  </li>
+</ul>

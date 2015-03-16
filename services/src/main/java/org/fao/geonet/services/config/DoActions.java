@@ -23,19 +23,23 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.server.JeevesProxyInfo;
+import java.net.URL;
+
 import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
+import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.ProxyInfo;
-import org.fao.geonet.utils.Xml;
+
+import org.apache.log4j.xml.DOMConfigurator;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.ProxyInfo;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -89,6 +93,22 @@ public class DoActions implements Service
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
+		}
+		
+		try {
+			// Set Level log
+			String log4jProp = settingMan.getValue(SettingManager.SYSTEM_SERVER_LOG);
+			URL url = DoActions.class.getResource("/"+log4jProp + ".xml");
+			if (url != null) {
+				DOMConfigurator.configure(url);
+				
+			} else {
+				throw new OperationAbortedEx("Parameters saved but cannot set level log: file \""+log4jProp+".xml\" doesn't exist.");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new OperationAbortedEx("Parameters saved but cannot set level log: "+e.getMessage());
 		}
 
         try {

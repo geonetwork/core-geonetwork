@@ -285,20 +285,6 @@
               matrixSize: [Math.pow(2, z), Math.pow(2, z)]
             };
           }
-
-          angular.extend(enc, {
-            type: 'WMTS',
-            baseURL: 'http://visi-sextant.ifremer.fr:8080/' +
-                'geowebcache/service/wmts?',
-            layer: 'Sextant',
-            version: '1.0.0',
-            requestEncoding: 'KVP',
-            format: 'image/png',
-            style: 'default',
-            matrixSet: matrixSet,
-            matrixIds: matrixIds
-          });
-
           return enc;
         }
       },

@@ -94,7 +94,7 @@
 
 <div class="col-md-9 gn-record">
   <h2>
-    <i class="fa gn-icon-{{mdView.current.record.type | split}}"/>
+    <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
     {{mdView.current.record.title || mdView.current.record.defaultTitle}}
   </h2>
 
@@ -283,14 +283,16 @@
     </blockquote>
   </section>
 
-  <section data-ng-if="mdView.current.record.getBoxAsPolygon()">
+  <section data-ng-if="mdView.current.record.geoBox.length > 0"">
     <h4>
       <i class="fa fa-map-marker"></i>
       <span data-translate="">extent</span>
     </h4>
     <!-- TODO: use map config -->
-    <img class="gn-img-extent"
-         data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon()}}"/>
+    <p data-ng-repeat="bbox in mdView.current.record.geoBox">
+      <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+           data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+    </p>
   </section>
 
   <section data-ng-if="mdView.current.record.creationDate ||
@@ -337,7 +339,7 @@
       <i class="fa fa-fw"></i>
       <span data-translate="">sourceCatalog</span>
     </h4>
-    <img ng-src="../../images/logos/{{mdView.current.record.source}}.gif"
+    <img ng-src="../../images/logos/{{mdView.current.record.source}}.png"
          class="gn-source-logo"/>
   </section>
 

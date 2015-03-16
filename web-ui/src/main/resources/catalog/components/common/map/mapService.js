@@ -259,12 +259,12 @@
               cextent: options.extent
             });
 
-            if(options.metadata) {
+            if (options.metadata) {
               olLayer.set('metadataUrl', options.metadata);
               var params = gnUrlUtils.parseKeyValue(
                   options.metadata.split('?')[1]);
               var uuid = params.uuid || params.id;
-              if(uuid) {
+              if (uuid) {
                 olLayer.set('metadataUuid', uuid);
               }
             }

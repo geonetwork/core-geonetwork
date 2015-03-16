@@ -17,7 +17,7 @@ public class MetadataRegion extends Region {
     private Geometry geometry;
 
     public MetadataRegion(Id mdId, String id, Geometry geometry) {
-        super("metadata"+mdId.getIdentifiedId()+":"+id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME, 
+        super("metadata"+mdId.getIdentifiedId()+":"+id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
                 Collections.<String, String>emptyMap(), true, 
                 new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84));
         this.geometry = geometry;

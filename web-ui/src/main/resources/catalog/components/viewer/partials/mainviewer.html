@@ -7,23 +7,33 @@
 
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
-    <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
+    <button class="btn btn-default" ng-model="activeTools.addLayers" type="submit"
+            rel="#addLayers" gi-btn gnv-tools-btn>
+      <span class="fa fa-plus"></span>
+      <span role="tooltip" data-translate="">addLayers</span>
+    </button>
+    <button class="btn btn-default" ng-model="activeTools.layers" type="submit"
+            rel="#layers" gi-btn gnv-tools-btn>
       <span class="fa fa-tasks"></span>
       <span role="tooltip" data-translate="">Layers</span>
     </button>
-    <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
+    <button class="btn btn-default" ng-model="activeTools.contexts" type="submit"
+            rel="#contexts" gi-btn gnv-tools-btn>
       <span class="fa fa-book"></span>
       <span role="tooltip" data-translate="">Contexts</span>
     </button>
-    <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
+    <button class="btn btn-default" ng-model="activeTools.print" type="submit"
+            rel="#print" gi-btn gnv-tools-btn>
       <span class="fa fa-print"></span>
       <span role="tooltip" data-translate="">Print</span>
     </button>
-    <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
+    <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active"
+            rel="#measures" gnv-tools-btn>
       <span class="fa fa-expand"></span>
       <span role="tooltip" data-translate="">Measure</span>
     </button>
-    <button gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
+    <button gi-btn class="btn btn-default" type="submit"
+            rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
       <span class="fa fa-pencil"></span>
       <span role="tooltip" data-translate="">Annotations</span>
     </button>
@@ -32,49 +42,53 @@
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)">
       <span class="fa fa-plus"></span>
-      <span role="tooltip" data-translate="">Zoom</span>
+      <span role="tooltip" data-translate="">ZoomIn</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
       <span class="fa fa-minus"></span>
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
     <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+      <span class="fa fa-arrows-alt"></span>
+      <span role="tooltip" data-translate="">ZoomToMapMaxExtent</span>
+    </button>
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
       <span class="fa fa-map-marker"></span>
-      <span role="tooltip" data-translate="">Localisation</span>
+      <span role="tooltip" data-translate="">ZoomToYourLocation</span>
     </button>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn="true">
 
-    <div class="layers">
-      <div class="panel-body">
+  <div class="panel panel-default force-hide panel-tools"
+       id="addLayers"
+       gnv-layermanager-btn="false">
+    <div class="panel-heading">
+      <h3>{{'AddALayer' | translate}}
         <button type="button" class="btn btn-default close">
           &times;
         </button>
-        <h5 data-translate="">ThemeLayers</h5>
-      </div>
-
-      <div gn-layermanager="" gn-layermanager-map="map"></div>
-
-      <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
-
+      </h3>
     </div>
-
     <div class="panel-body">
-      <button type="button" class="btn btn-default unfold">
-        <span class="fa fa-chevron-down"></span>
-      </button>
-      <h5 data-translate="">AddALayer</h5>
-
       <div class="btn-group flux">
-        <button data-gn-import-button="WMS" type="button" class="btn btn-default" data-translate="">LayerWMS</button>
-        <button data-gn-import-button="WMTS" type="button" class="btn btn-default" data-translate="">LayerWMTS</button>
-        <button data-gn-import-button="KML" type="button" class="btn btn-default" data-translate="">LayerKML</button>
+        <button data-gn-import-button="SEARCH" type="button"
+                class="btn btn-default" data-translate="">SearchLayer</button>
+        <button data-gn-import-button="WMS" type="button"
+                class="btn btn-default active" data-translate="">LayerWMS</button>
+        <button data-gn-import-button="WMTS" type="button"
+                class="btn btn-default" data-translate="">LayerWMTS</button>
+        <button data-gn-import-button="KML" type="button"
+                class="btn btn-default" data-translate="">LayerKML</button>
       </div>
 
       <div class="panel-carousel-window">
         <div class="panel-carousel-container">
-          <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
+          <div class="panel-carousel"
+               data-gn-search-layer-for-map="map"></div>
+          <div class="panel-carousel"
+               gn-wms-import="wms"
+               gn-wms-import-map="map"
+               services-list-from-catalog="true"></div>
           <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
           <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
         </div>
@@ -82,24 +96,53 @@
     </div>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="contexts">
 
+  <div class="panel panel-default force-hide panel-tools"
+       id="layers"
+       gnv-layermanager-btn="false">
+    <div class="panel-heading">
+      <h3>{{'ManageLayers' | translate}}
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+      </h3>
+    </div>
+    <div class="panel-body layers">
+    </div>
+
+    <div gn-layermanager="" gn-layermanager-map="map"></div>
+
+    <div gn-baselayerswitcher=""
+         gn-baselayerswitcher-map="map"
+         data-dropup=""></div>
+    <br/>
+  </div>
+
+
+  <div class="panel panel-default force-hide panel-tools" id="contexts">
+    <div class="panel-heading">
+      <h3>{{'MapContexts' | translate}}
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+      </h3>
+    </div>
     <div class="panel-body">
-      <button type="button" class="btn btn-default close">
-        &times;
-      </button>
-      <h5 data-translate="">MapContexts</h5>
       <div gn-ows-context="" map="map"></div>
     </div>
   </div>
 
+
   <!--Measure Info Panel-->
   <div class="panel panel-default force-hide panel-tools" id="measures">
+    <div class="panel-heading">
+      <h3>{{'Measures' | translate}}
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+      </h3>
+    </div>
     <div class="panel-body panel-sm">
-      <button type="button" class="btn btn-default close">
-        &times;
-      </button>
-      <h5 data-translate="">Measures</h5>
       <div class="gn-measure-text">
         <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
         <dl class="dl-horizontal">
@@ -112,25 +155,32 @@
     </div>
   </div>
 
+
   <!--Draw Panel-->
   <div class="panel panel-default force-hide panel-tools" id="draw">
+    <div class="panel-heading">
+      <h3>{{'Annotations' | translate}}
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+      </h3>
+    </div>
     <div class="panel-body">
-      <button type="button" class="btn btn-default close">
-        &times;
-      </button>
-      <h5 data-translate="">Annotations</h5>
       <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
       </div>
     </div>
   </div>
 
-  <div class="panel panel-default force-hide panel-tools" id="print">
 
+  <div class="panel panel-default force-hide panel-tools" id="print">
+    <div class="panel-heading">
+      <h3>{{'PrintTheMap' | translate}}
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+      </h3>
+    </div>
     <div class="panel-body">
-      <button type="button" class="btn btn-default close">
-        &times;
-      </button>
-      <h5 data-translate="">Print</h5>
       <div gn-mapprint="" print-active="activeTools.print" map="map"></div>
     </div>
   </div>

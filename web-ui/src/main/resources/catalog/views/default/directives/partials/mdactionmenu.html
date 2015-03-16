@@ -24,6 +24,12 @@
         <span data-translate="">edit</span>
       </a>
     </li>-->
+    <li><a data-ng-href=""
+           data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+           data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
+      <i class="fa fa-key"></i>&nbsp;
+      <span data-translate="">privileges</span>
+    </a></li>
     <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"
@@ -32,12 +38,6 @@
         <span data-ng-if="!md.isPublished()" data-translate="">publish</span>
       </a>
     </li>
-    <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
-           data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
-      <i class="fa fa-key"></i>&nbsp;
-      <span data-translate="">privileges</span>
-    </a></li>
     <!-- TODO: Some installation only allows status update
     based on current status. -->
     <li><a data-ng-href=""
@@ -55,7 +55,6 @@
       <span data-translate="">enableWorkflow</span>
     </a></li>
     <li class="divider" data-ng-if="user.isConnected()"></li>
-    <!-- TODO: rating -->
     <li><a data-ng-href=""
            data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.duplicate(md)">
@@ -74,6 +73,16 @@
       <i class="fa fa-link"/>&nbsp;
       <span data-translate="">permalink</span>
     </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.metadataMEF(md.getUuid())">
+      <i class="fa fa-file-zip-o"></i>&nbsp;
+      <span data-translate="">exportMEF</span>
+    </a></li>
+    <li><a data-ng-href=""
+           data-ng-click="mdService.metadataPrint(md.getUuid())">
+      <i class="fa fa-file-pdf-o"></i>&nbsp;
+      <span data-translate="">exportPDF</span>
+    </a></li>
     <li><a data-ng-href="xml.metadata.get?uuid={{md.getUuid()}}"
            target="_blank">
       <i class="fa fa-file-code-o"></i>&nbsp;
@@ -83,16 +92,6 @@
            data-ng-click="mdService.metadataRDF(md.getUuid())">
       <i class="fa fa-share-alt"></i>&nbsp;
       <span data-translate="">exportRDF</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.metadataPrint(md.getUuid())">
-      <i class="fa fa-file-pdf-o"></i>&nbsp;
-      <span data-translate="">exportPDF</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.metadataMEF(md.getUuid())">
-      <i class="fa fa-file-zip-o"></i>&nbsp;
-      <span data-translate="">exportMEF</span>
     </a></li>
   </ul>
 </div>

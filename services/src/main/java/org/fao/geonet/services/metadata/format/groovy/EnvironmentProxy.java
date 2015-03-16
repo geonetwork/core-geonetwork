@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
@@ -76,6 +77,11 @@ public class EnvironmentProxy implements Environment {
     @Override
     public FormatType getFormatType() {
         return get().getFormatType();
+    }
+
+    @Override
+    public FormatterWidth getEmbeddingWidth() {
+        return get().getEmbeddingWidth();
     }
 
     @Override

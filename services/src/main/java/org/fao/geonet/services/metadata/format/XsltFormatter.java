@@ -96,10 +96,10 @@ public class XsltFormatter implements FormatterImpl {
         // an xsl:param should be defined
         // eg. <xsl:param name="view"/>
         Map<String, Object> requestParameters = new HashMap<String, Object>();
-        Iterator<String> iterator = fparams.servletRequest.getParameterMap().keySet().iterator();
+        Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            requestParameters.put(key, fparams.servletRequest.getParameterMap().get(key));
+            requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
 

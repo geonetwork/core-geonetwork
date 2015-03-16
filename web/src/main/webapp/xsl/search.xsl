@@ -58,7 +58,7 @@
 
                 </xsl:if>
 
-				<link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
+				<link rel="icon" type="image/gif" href="../../images/logos/favicon.png" />
 				<link rel="alternate" type="application/rss+xml" title="{$siteName} - RSS" href="{$rssUrl}"/>
 				<link rel="search" href="{$serviceUrl}/portal.opensearch" type="application/opensearchdescription+xml" 
 					title="{$siteName}"/>

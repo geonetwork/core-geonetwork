@@ -313,10 +313,15 @@
             l.setOpacity(layer.opacity);
             l.setVisible(!layer.hidden);
             defer.resolve({ol: l, ctx: layer});
+          }, function() {
+            console.warn('Failed to load layer from : ' + res.href
+            + 'during capabilities reading.');
+            defer.reject(layer.name)
           });
         }
         return defer.promise;
       };
+
       /**
        * Adds a WMS layer to map
        * @param {Object} layer layer
@@ -325,6 +330,10 @@
       this.addLayer = function(layer, map) {
         this.createLayer(layer, map).then(function(l) {
           map.addLayer(l.ol);
+        }, function(layerName) {
+          var failedLoadingLayers = map.get('failedLayers') || [];
+          failedLoadingLayers.push(layerName);
+          map.set('failedLayers', failedLoadingLayers);
         });
       };
     }

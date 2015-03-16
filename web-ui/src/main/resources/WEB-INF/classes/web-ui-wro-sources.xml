@@ -3,9 +3,9 @@
   <require pathOnDisk="web-ui/src/main/resources" >
       <jsSource webappPath="/catalog/js/" />
       <jsSource webappPath="/catalog/views/" />
-      <jsSource webappPath="/catalog/components/" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
-      <cssSource webappPath="/catalog/views/" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
-      <cssSource webappPath="/catalog/style/" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+      <jsSource webappPath="/catalog/components/" />
+      <cssSource webappPath="/catalog/views/" />
+      <cssSource webappPath="/catalog/style/" />
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js"/>
