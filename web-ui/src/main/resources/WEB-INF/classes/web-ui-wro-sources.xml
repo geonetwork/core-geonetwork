@@ -1,11 +1,11 @@
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../../../../../../web/src/main/webapp/WEB-INF/wro-sources.xsd" >
   <require pathOnDisk="web-ui/src/main/resources" >
-      <jsSource webappPath="/catalog/js/" />
-      <jsSource webappPath="/catalog/views/" />
-      <jsSource webappPath="/catalog/components/" />
-      <cssSource webappPath="/catalog/views/" />
-      <cssSource webappPath="/catalog/style/" />
+      <jsSource webappPath="catalog/js/" />
+      <jsSource webappPath="catalog/views/" />
+      <jsSource webappPath="catalog/components/" />
+      <cssSource webappPath="catalog/views/" />
+      <cssSource webappPath="catalog/style/" />
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js"/>
