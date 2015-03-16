@@ -32,7 +32,7 @@
   <property name="debugOn" value="on"/>
   <!-- on off true false yes no -->
   <property name="thesaurusUrl"
-            value="https://raw.github.com/geonetwork/util-gemet/master/thesauri"/>
+            value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
 
   <!-- =================================================================================== -->
 
