@@ -48,7 +48,9 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
 
         if (!path.startsWith("mem:")) {
             final Path dbPath = IO.toPath(path);
-            if (!Files.isWritable(dbPath.getParent()) && Context.get() != null && Context.get().getServletContext() != null) {
+            final Path containingDir = dbPath.getParent();
+            final boolean notWriteableDir = containingDir == null || !Files.isWritable(containingDir);
+            if (notWriteableDir && Context.get() != null && Context.get().getServletContext() != null) {
                 final String[] split = dbPath.toAbsolutePath().toString().split("WEB-INF/", 2);
                 if (split.length == 2) {
                     final String resolved = Context.get().getServletContext().getRealPath("/WEB-INF/" + split[1]);

@@ -513,7 +513,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.valueOf(metadataId);
+            int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
@@ -2296,7 +2296,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- remove operations
         deleteMetadataOper(context, id, false);
 
-        int intId = Integer.valueOf(id);
+        int intId = Integer.parseInt(id);
         _applicationContext.getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataStatusRepository.class).deleteAllById_MetadataId(intId);
@@ -2363,9 +2363,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         
         if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(metadataId), ReservedGroup.intranet.getId());
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
         } else {
-            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.valueOf(metadataId));
+            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
     }
 
@@ -2596,7 +2596,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, ReservedOperation op) throws Exception {
-        setOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId), op.getId());
+        setOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId), op.getId());
     }
 
     /**
@@ -2609,7 +2609,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        setOperation(context, Integer.valueOf(mdId), Integer.valueOf(grpId), Integer.valueOf(opId));
+        setOperation(context, Integer.parseInt(mdId), Integer.parseInt(grpId), Integer.valueOf(opId));
     }
 
     /**
@@ -2722,7 +2722,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, ReservedOperation opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),opId.getId());
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),opId.getId());
     }
 
     /**
@@ -2734,7 +2734,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),Integer.valueOf(opId));
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),Integer.valueOf(opId));
     }
 
     /**
@@ -3258,7 +3258,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
 
         // Add validity information
-        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.valueOf(id));
+        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.parseInt(id));
         if (validationInfo == null || validationInfo.size() == 0) {
             addElement(info, Edit.Info.Elem.VALID, "-1");
         } else {

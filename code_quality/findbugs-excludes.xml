@@ -105,6 +105,11 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="serviceSpecificExec"/>
 	</Match>
+	<Match>
+		<Class name="org.fao.geonet.kernel.search.SearchManager" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+		<Method name="getDocChangeDate"/>
+	</Match>
     <Match>
         <Class name="org.fao.geonet.DatabaseMigration" />
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
@@ -166,6 +171,11 @@
     <Match>
         <Class name="org.fao.geonet.kernel.AllQueryResultsTable" />
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+    </Match>
+
+    <Match>
+        <Class name="org.fao.geonet.wro4j.DiskbackedCache" />
+        <Bug pattern="DMI_EMPTY_DB_PASSWORD" />
     </Match>
 
 

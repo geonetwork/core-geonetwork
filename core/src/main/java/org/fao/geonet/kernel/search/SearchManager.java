@@ -1617,12 +1617,12 @@ public class SearchManager {
 				field = new FloatField(name, f, fieldType);
 			}
             else if ("long".equals(paramType)) {
-				long l = Long.valueOf(string);
+				long l = Long.parseLong(string);
 				fieldType.setNumericType(NumericType.LONG);
 				field = new LongField(name, l, fieldType);
 			}
             else {
-				int i = Integer.valueOf(string);
+				int i = Integer.parseInt(string);
 				fieldType.setNumericType(NumericType.INT);
 				field = new IntField(name, i, fieldType);
 			}
