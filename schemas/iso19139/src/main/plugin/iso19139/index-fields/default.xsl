@@ -396,7 +396,7 @@
       <xsl:for-each select="gmd:resourceConstraints/*">
         <xsl:variable name="fieldPrefix" select="local-name()"/>
         <xsl:for-each select="gmd:accessConstraints/gmd:MD_RestrictionCode/
-                                @codeListValue[codeListValue != 'otherRestrictions']">
+                                @codeListValue[string(.) != 'otherRestrictions']">
           <Field name="{$fieldPrefix}AccessConstraints"
                  string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
