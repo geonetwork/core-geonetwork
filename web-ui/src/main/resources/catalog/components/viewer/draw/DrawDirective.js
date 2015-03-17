@@ -282,6 +282,10 @@
             else if (scope.drawPolygon.active) return 'polygon';
             else if (scope.drawText.active) return 'text';
           };
+
+          scope.$on('owsContextReseted', function() {
+            source.clear();
+          });
         }
       };
     }]);

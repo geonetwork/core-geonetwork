@@ -33,7 +33,8 @@
     'gnViewerSettings',
     'gnOwsContextService',
     '$translate',
-    function(gnViewerSettings, gnOwsContextService, $translate) {
+    '$rootScope',
+    function(gnViewerSettings, gnOwsContextService, $translate, $rootScope) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
@@ -55,6 +56,7 @@
           };
 
           scope.reset = function() {
+            $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
                 scope.map);
