@@ -143,8 +143,9 @@ public class Geonetwork implements ApplicationHandler {
      */
     public Object start(Element config, ServiceContext context) throws Exception {
         context.setAsThreadLocal();
-        logger = context.getLogger();
         this._applicationContext = context.getApplicationContext();
+        ApplicationContextHolder.set(this._applicationContext);
+        logger = context.getLogger();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
