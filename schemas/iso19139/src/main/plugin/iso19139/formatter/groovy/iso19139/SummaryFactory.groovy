@@ -157,7 +157,7 @@ class SummaryFactory {
     }
 
     LinkBlock createDynamicAssociatedHtml(Summary summary) {
-        def associated = "associated"
+        def associated = "associated-link"
 
         def jsVars = [
                 linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + associated,
