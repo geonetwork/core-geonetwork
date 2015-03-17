@@ -441,6 +441,8 @@ public class Geonetwork implements ApplicationHandler {
             @Override
             public void run() {
                 final ServletContext servletContext = context.getServlet().getServletContext();
+                context.setAsThreadLocal();
+                ApplicationContextHolder.set(_applicationContext);
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
