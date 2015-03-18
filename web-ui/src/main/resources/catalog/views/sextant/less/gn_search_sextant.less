@@ -2,6 +2,9 @@
 @import "gn_mapviewer_sextant.less";
 @import "../../../style/gn_metadata";
 
+@sxt-orange: #F28033;
+@results-toolbar-height: 2.8em;
+
 @media (min-width: @screen-lg-min) {
   html, body,
   body > div,
@@ -20,7 +23,7 @@
   }
   [search-results]
   {
-    height: 100%;
+    height: calc(~"100% - "@results-toolbar-height);
     overflow: auto;
   }
   .gn-searchform
@@ -237,8 +240,8 @@
     }
   }
   .panel-heading {
-    height: 2.8em;
-    line-height: 2.8em;
+    height: @results-toolbar-height;
+    line-height: @results-toolbar-height;
     [data-gn-pagination] > li > a {
       background-color: transparent;
       border: none;
