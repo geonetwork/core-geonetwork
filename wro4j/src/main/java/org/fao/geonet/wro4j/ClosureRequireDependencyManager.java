@@ -178,7 +178,13 @@ public class ClosureRequireDependencyManager {
                 }
             }
             if (id == null) {
-                throw new IllegalArgumentException("No 'goog.provide' command was declared in javascript file: " + path);
+                final int index1 = path.lastIndexOf('/');
+                final int index2 = path.lastIndexOf('\\');
+                if (Math.max(index1, index2) < 0) {
+                    return path;
+                } else {
+                    return path.substring(Math.max(index1, index2) + 1);
+                }
             }
             return id;
         }
