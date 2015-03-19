@@ -476,12 +476,12 @@
     <xsl:variable name="p02" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords/gmd:MD_Keywords
                 [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'NVS.P02')]/gmd:keyword/*, ' - ')"/>
+                'NVS.P02')]/gmd:keyword/*, ' | ')"/>
 
 		<xsl:variable name="p01" select="string-join(ancestor::gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords/gmd:MD_Keywords
                 [contains(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'NVS.P01')]/gmd:keyword/*, ' - ')"/>
+                'NVS.P01')]/gmd:keyword/*, ' | ')"/>
 
    <!-- <xsl:variable name="dataProvider" select="ancestor::gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
     							gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']/
@@ -498,7 +498,7 @@
                   gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
 
     <xsl:copy>
-      <xsl:value-of select="concat($p02, ' - ', $p01, ' - ', $edmoProvider, ' - ', $dataSetName)"/>
+      <xsl:value-of select="concat($p02, ' | ', $p01, ' | ', $edmoProvider, ' | ', $dataSetName)"/>
     </xsl:copy>
   </xsl:template>
 
