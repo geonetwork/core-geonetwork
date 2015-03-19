@@ -127,6 +127,9 @@
               </gmd:code>
             </gmd:MD_Identifier>
           </gmd:identifier>
+          <gmd:otherCitationDetails>
+            <gco:CharacterString></gco:CharacterString>
+          </gmd:otherCitationDetails>
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
