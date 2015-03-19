@@ -96,8 +96,10 @@
   <timeCoverage>Time coverage</timeCoverage>
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
-  <edmerpName>EDMERP name</edmerpName>
-  <edmoName>EDMO name*</edmoName>
+  <edmerpName>Program identification in EDMERP</edmerpName>
+  <edmoName>Data provider identification in EDMO*</edmoName>
+  <edmoProducerName>Data producer identification in EDMO</edmoProducerName>
+  <datasourceAcronym>Data source acronym</datasourceAcronym>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
   <serviceExtent>Service extent</serviceExtent>
@@ -118,7 +120,7 @@
   <minDepth>Min depth (meters)</minDepth>
   <maxDepth>Max depth (meters)</maxDepth>
   <verticalResolution>Vertical resolution (meters)</verticalResolution>
-  <listOfObservationLevel>List of observations level</listOfObservationLevel>
+  <listOfObservationLevel>Vertical observation levels (meters > 0 above sea level)</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>

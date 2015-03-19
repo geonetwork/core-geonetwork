@@ -910,7 +910,7 @@
 		<description>Ground sample distance</description>
 		<condition>Provide a distance if no equivalent Scale is documented</condition>
 		<helper relAtt="uom">
-			<option value="1" title="second">seconds</option>
+			<option value="1" title="Arc seconds (North)">Arc seconds (North)</option>
 			<option value="1" title="meter">meters</option>
 		</helper>
 		<!--<helper relAtt="uom">
