@@ -107,7 +107,7 @@
 	</Match>
 	<Match>
 		<Class name="org.fao.geonet.kernel.search.SearchManager" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
 		<Method name="getDocChangeDate"/>
 	</Match>
     <Match>
