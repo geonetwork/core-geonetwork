@@ -126,6 +126,9 @@
   <dataPolicy>Data policy*</dataPolicy>
   <otherP01>Other parameter Usage Vocabulary</otherP01>
   <costBasis>Cost basis*</costBasis>
+  <visibility>Visibility</visibility>
+  <readyness>Readyness</readyness>
+  <losi>Level of service information</losi>
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>
   <responsiveness>Responsiveness*</responsiveness>

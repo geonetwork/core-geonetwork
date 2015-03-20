@@ -112,6 +112,8 @@
   <p03>Agreed Parameter Groups (P03)</p03>
   <p01>Parameter Usage Vocabulary (P01)</p01>
   <production-mode>Production mode</production-mode>
+  <readyness>Readyness</readyness>
+  <losi>Level of service information</losi>
   <level-of-characteristics>Processing level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of production*</providerSpecification>
   <processStepReference>Production specifications reference</processStepReference>
@@ -129,6 +131,8 @@
   <dataPolicy>Data policy*</dataPolicy>
   <otherP01>Other parameter Usage Vocabulary</otherP01>
   <costBasis>Cost basis*</costBasis>
+  <visibility>Visibility</visibility>
+  <policyVisibility>Policy visibility</policyVisibility>
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>
   <responsiveness>Responsiveness*</responsiveness>
