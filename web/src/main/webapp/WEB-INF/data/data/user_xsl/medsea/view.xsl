@@ -156,7 +156,7 @@
               href="{root/url}/apps/sextant/css/schema/medsea.css"/>
         <div class="tpl-emodnet">
           <div class="ui-layout-content mdshow-tabpanel">
-            <a id="md-print-btn" class="file-pdf" title="Export PDF" href="{/root/url}/srv/eng/pdf?uuid={$identifier}"></a>
+            <!--<a id="md-print-btn" class="file-pdf" title="Export PDF" href="{/root/url}/srv/eng/pdf?uuid={$identifier}"></a>-->
             <a id="md-xml-btn" class="file-xml" title="Export XML" href="{/root/url}/srv/eng/xml.metadata.get?uuid={$identifier}"></a>
 
              <xsl:for-each
