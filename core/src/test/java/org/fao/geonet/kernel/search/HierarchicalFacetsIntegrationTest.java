@@ -83,7 +83,7 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
         luceneSearcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
     }
 
-    @Test @Ignore
+    @Test @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
     public void searchReturnsHierarchicalFacetCounts() throws Exception {
         Element request = new Element("request")
         .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
@@ -97,7 +97,7 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
         assertEquals(loadExpectedResult("search-returns-hierarchical-facet-counts.xml"), getSummary(result));
     }
 
-    @Test @Ignore
+    @Test @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
     public void searchReturnsInternationalisedHierarchicalFacetCounts() throws Exception {
         Element request = new Element("request")
         .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))

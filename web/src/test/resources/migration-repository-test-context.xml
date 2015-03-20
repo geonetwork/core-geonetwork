@@ -9,6 +9,19 @@
     <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
     <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
     <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
+    <bean id="facets" class="org.fao.geonet.kernel.search.facet.Facets">
+      <constructor-arg index="0">
+        <list></list>
+      </constructor-arg>
+    </bean>
+    <bean id="summaryTypes" class="org.fao.geonet.kernel.search.facet.SummaryTypes">
+      <constructor-arg index="0">
+        <list></list>
+      </constructor-arg>
+    </bean>
+    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager">
+    </bean>
+
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
     <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext">
         <property name="testClass" value="org.fao.geonet.DatabaseMigrationTest" />

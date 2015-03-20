@@ -29,7 +29,13 @@
     </licenses>
 
     <dependencies>
-        <dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+      </dependency>
+
+      <dependency>
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
