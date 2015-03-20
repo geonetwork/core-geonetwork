@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility">
+    <dc:title>Visibility</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2015-03-20</dcterms:issued>
+    <dcterms:modified>2015-03-20</dcterms:modified>
+  </skos:ConceptScheme>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility#cited-in-litterature">
+    <skos:prefLabel xml:lang="en">Cited in literature but no information about data access</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Cited in literature but no information about data access</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility#info-on-request">
+    <skos:prefLabel xml:lang="en">Information upon request to the data provider</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Information upon request to the data provider</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility#in-social-netword">
+    <skos:prefLabel xml:lang="en">Information available through social networks, organizations where one should know were data are or in directories such as EDMERP, EDMED...</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Information available through social networks, organizations where one should know were data are or in directories such as EDMERP, EDMED...</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility#in-search-engine">
+    <skos:prefLabel xml:lang="en">Easy to identify with search engine (using data set name or characteristic category)</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Easy to identify with search engine (using data set name or characteristic category)</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/visibility#in-reference-catalogue">
+    <skos:prefLabel xml:lang="en">Identified in reference catalogues (MyOcean, GEOSS, Geoportal...)</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Identified in reference catalogues (MyOcean, GEOSS, Geoportal...)</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+
+</rdf:RDF>
