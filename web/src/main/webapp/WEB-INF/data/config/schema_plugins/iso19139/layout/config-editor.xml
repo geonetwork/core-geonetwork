@@ -1459,6 +1459,8 @@
 
       <thesaurusList>
         <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.visibility" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.policy.visibility" maxtags="1"/>
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
         <thesaurus key="local.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="local.theme.medsea.production.mode" maxtags="1"/>
@@ -1776,13 +1778,6 @@
                     gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
 
           <field
-                  name="serviceExtent"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'theme.medsea.service.extent')]"/>
-
-          <field
                   name="medseaDataSourceIdentifier"
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                       gmd:transferOptions/gmd:MD_DigitalTransferOptions/
@@ -1928,6 +1923,18 @@
       <tab id="accessibility">
         <section>
 
+          <field name="visibility"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.visibility')]"/>
+
+          <field
+                  name="serviceExtent"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.service.extent')]"/>
 
           <field name="dataDelivery"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
@@ -1935,6 +1942,11 @@
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Data delivery mechanism')]"/>
 
+          <field name="policyVisibility"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.policy.visibility')]"/>
 
           <field
               name="dataPolicy"
@@ -1998,12 +2010,19 @@
             </template>
           </action>
 
+
+          <field name="readyness"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.readyness')]"/>
+
           <field name="responsiveness"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
-          <field name="reliability"
+          <field name="losi"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Reliability']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
