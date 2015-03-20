@@ -23,25 +23,23 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import java.nio.file.Path;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-
+import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.Map;
 
 //=============================================================================
 
@@ -100,22 +98,22 @@ public class GetLatestUpdated implements Service
 
 			// perform the search and return the results read from the index
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
-			MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-			searcher.search(context, _request, _config);
-			Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(context, _maxItems);
-			for (Integer id : allMdInfo.keySet()) {
-				try {
-					boolean forEditing = false;
-					boolean withValidationErrors = false;
-					boolean keepXlinkAttributes = false;
-					Element md = dataMan.getMetadata(context, id+"", forEditing, withValidationErrors, keepXlinkAttributes);
-					_response.addContent(md);
-				} catch (Exception e) {
-					Log.error(Geonet.SEARCH_ENGINE, "Exception in latest update searcher "+e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			searcher.close();
+			try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+                searcher.search(context, _request, _config);
+                Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, _maxItems);
+                for (Integer id : allMdInfo.keySet()) {
+                    try {
+                        boolean forEditing = false;
+                        boolean withValidationErrors = false;
+                        boolean keepXlinkAttributes = false;
+                        Element md = dataMan.getMetadata(context, id + "", forEditing, withValidationErrors, keepXlinkAttributes);
+                        _response.addContent(md);
+                    } catch (Exception e) {
+                        Log.error(Geonet.SEARCH_ENGINE, "Exception in latest update searcher " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
 
 			_lastUpdateTime = System.currentTimeMillis();
 		}

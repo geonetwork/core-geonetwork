@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.JDOMException;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,13 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
     }
 
     protected abstract String[] doSearch(String lang) throws Exception;
+
+    @After
+    public void tearDownResources() throws Exception {
+        if (this._luceneSearcher != null) {
+            this._luceneSearcher.close();
+        }
+    }
 
     @Test
     public void freTitleSearch_RequestLangNotSorted_AllLanguagesAllowed() throws Exception {

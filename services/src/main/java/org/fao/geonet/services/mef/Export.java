@@ -214,35 +214,35 @@ public class Export implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager searchMan = gc.getBean(SearchManager.class);
-		MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-		Set<String> uuids = new HashSet<String>();
+            Set<String> uuids = new HashSet<>();
 
-		// perform the search
-		searcher.search(context, request, _config);
+            // perform the search
+            searcher.search(context, request, _config);
 
-		// If element type found, then get their uuid
-		if (searcher.getSize() != 0) {
-            if(Log.isDebugEnabled(Geonet.MEF))
-                Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: " + uuid);
-			Element elt = searcher.present(context, request, _config);
+            // If element type found, then get their uuid
+            if (searcher.getSize() != 0) {
+                if (Log.isDebugEnabled(Geonet.MEF))
+                    Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: " + uuid);
+                Element elt = searcher.present(context, request, _config);
 
-			// Get ISO records only
-			@SuppressWarnings("unchecked")
-            List<Element> isoElt = elt.getChildren();
-			for (Element md : isoElt) {
-				// -- Only metadata record should be processed
-				if (!md.getName().equals("summary")) {
-					String mdUuid = md.getChild(Edit.RootChild.INFO,
-							Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-                    if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
-					uuids.add(mdUuid);
-				}
-			}
-		}
-		searcher.close();
-		Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+                // Get ISO records only
+                @SuppressWarnings("unchecked")
+                List<Element> isoElt = elt.getChildren();
+                for (Element md : isoElt) {
+                    // -- Only metadata record should be processed
+                    if (!md.getName().equals("summary")) {
+                        String mdUuid = md.getChild(Edit.RootChild.INFO,
+                                Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
+                        if (Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+                        uuids.add(mdUuid);
+                    }
+                }
+            }
+            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
 
-		return uuids;
+            return uuids;
+        }
 	}
 }

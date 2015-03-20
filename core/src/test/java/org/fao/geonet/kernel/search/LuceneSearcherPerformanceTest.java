@@ -83,17 +83,18 @@ public class LuceneSearcherPerformanceTest extends AbstractCoreIntegrationTest {
 
             @Override
             public void exec() throws Exception {
-                final MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+                try (MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-                Element request = new Element("request").addContent(Arrays.asList(
-                        new Element("fast").setText("index"),
-                        new Element("from").setText("1"),
-                        new Element("to").setText("10")
-                ));
+                    Element request = new Element("request").addContent(Arrays.asList(
+                            new Element("fast").setText("index"),
+                            new Element("from").setText("1"),
+                            new Element("to").setText("10")
+                    ));
 
-                searcher.search(context, request, new ServiceConfig());
-                final Element results = searcher.present(context, request, new ServiceConfig());
+                    searcher.search(context, request, new ServiceConfig());
+                    final Element results = searcher.present(context, request, new ServiceConfig());
 //                System.out.println(results.getChild("summary").getAttributeValue("count"));
+                }
             }
         };
     }

@@ -397,6 +397,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private String makePathReplacements(String path) {
+        if (ApplicationContextHolder.get() == null) {
+            // testing
+            return path;
+        }
+
         final GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         final Matcher matcher = PATH_REPLACEMENT_MATCHER.matcher(path);
 

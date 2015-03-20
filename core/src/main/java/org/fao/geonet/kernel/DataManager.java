@@ -3039,10 +3039,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             env.addContent(new Element("uuid").setText(uuid));
 
             final boolean allThesaurusIsEnabled = this.settingMan.getValueAsBool(SettingManager.ENABLE_ALL_THESAURUS, false);
-            if (allThesaurusIsEnabled) {
-                final ThesaurusManager thesaurusManager = this._applicationContext.getBean(ThesaurusManager.class);
-                env.addContent(thesaurusManager.buildResultfromThTable(context));
-            }
+            final ThesaurusManager thesaurusManager = this._applicationContext.getBean(ThesaurusManager.class);
+            env.addContent(thesaurusManager.buildResultfromThTable(context));
+
             Element schemaLoc = new Element("schemaLocation");
             schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
             env.addContent(schemaLoc);

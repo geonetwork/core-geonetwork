@@ -427,9 +427,8 @@ public class GetRelated implements Service, RelatedMetadata {
         // perform the search
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
-        MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-        try {
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             // Creating parameters for search, fast only to retrieve uuid
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             if ("children".equals(type))
@@ -459,8 +458,6 @@ public class GetRelated implements Service, RelatedMetadata {
             Element relatedElement = searcher.present(context, parameters, _config);
             response.addContent(relatedElement);
             return response;
-        } finally {
-            searcher.close();
         }
     }
 
