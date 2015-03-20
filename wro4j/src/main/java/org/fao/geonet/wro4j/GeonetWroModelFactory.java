@@ -635,7 +635,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
             if (pathOnDisk.isAbsolute() && pathOnDisk.exists()) {
                 desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
             } else {
-                desc.finalPath = new File(_geonetworkRootDirectory + desc.pathOnDisk, desc.relativePath).getPath();
+                final File relativePath = new File(desc.relativePath);
+                if (relativePath.isAbsolute() && relativePath.exists()) {
+                    desc.finalPath = desc.relativePath;
+                } else {
+                    desc.finalPath = new File(_geonetworkRootDirectory + desc.pathOnDisk, desc.relativePath).getPath();
+                }
             }
             if (!new File(desc.finalPath).exists()) {
                 throw new AssertionError("Neither '" + desc.finalPath + "' nor '" + new File(desc.pathOnDisk,
