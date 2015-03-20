@@ -1529,9 +1529,6 @@
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Production mode')]"/>
-
-          <field name="medseaHierarchyLevel"
-                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
         </section>
       </tab>
       <tab id="datasources">
@@ -1712,7 +1709,56 @@
           </field>
           <text ref="dataProvider-help"/>
 
+          <!-- edmoProducerName -->
+          <field name="edmoProducerName" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'author']">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gn:copy select="gmd:electronicMailAddress"/>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
 
+
+
+          <field name="medseaHierarchyLevel"
+                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+
+          <field
+                  name="datasourceAcronym"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:otherCitationDetails"/>
           <text ref="dataCollection-help"/>
 
           <field
