@@ -537,7 +537,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
         Resource resource = new Resource();
         resource.setMinimize(dep.isMinimized);
         resource.setType(ResourceType.JS);
-        resource.setUri(dep.path);
+        final Path path = IO.toPath(dep.path);
+        if (Files.exists(path)) {
+            resource.setUri(path.toUri().toString());
+        } else {
+            resource.setUri(dep.path);
+        }
         return resource;
     }
 
@@ -584,7 +589,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     path = file.getAbsoluteFile().toURI().toString();
                 } else {
                     path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
-                    path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
+                    if (!Files.exists(IO.toPath(path))) {
+                        path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
+                    }
                     if (path.startsWith("//")) { // horrible hack!!!
                         path = path.substring(1);
                     }
