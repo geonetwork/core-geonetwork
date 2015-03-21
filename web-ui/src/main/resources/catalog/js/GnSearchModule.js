@@ -24,6 +24,7 @@
   goog.require('gn_mdview');
   goog.require('gn_module');
   goog.require('gn_resultsview');
+  goog.require('gn_formatter_lib');
   goog.require('gn_search_controller');
   goog.require('gn_viewer');
 

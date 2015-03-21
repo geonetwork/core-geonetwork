@@ -1,3 +1,54 @@
 <div fmt-repeat="linkBlock in associated" class="summary-links summary-links-{{linkBlock.name | escapeXmlAttrs}}" >
-    <div fmt-include="html/single-link.html" fmt-include-replace="true"/>
+    <div fmt-if="isPDF">
+        <div fmt-include="html/single-link.html" fmt-include-replace="true"/>
+    </div>
+    <div fmt-if="!isPDF" >
+        <h3>
+            <button type="button" class="btn btn-default toggler">
+                <i class="fa fa-arrow-circle-down"></i>
+            </button>
+            <i fmt-if="linkBlock.iconClasses" class="{{linkBlock.iconClasses}} pad-right"></i><span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
+        </h3>
+        <table class="table row target">
+            <tr fmt-repeat="link in linkBlock.links" class="row">
+                <td class="col-md-2 link-block-title">
+                    <h3>
+                        <button type="button" class="btn btn-default toggler" toggle-ancestor="2" toggle-selector="div">
+                            <i class="fa fa-arrow-circle-down"></i>
+                        </button>
+                        <i fmt-if="link.type.iconClasses" class="{{link.type.iconClasses}} pad-right"></i>
+                        <img fmt-if="link.type.icon" src="{{link.type.icon}}" class="icon pad-right"></img>
+                        <span fmt-translate="">{{link.type.name}}-link</span>
+                    </h3>
+                </td>
+                <td class="col-md-10 target">
+                    <div fmt-repeat="link in link.links">
+                        <a onclick="gnFormatter.loadAssociated('div#associated-{{link.metadataId}}', '{{link.metadataId}}');" title="{{link.tip}}" class="toggler {{link.cls}}" toggle-ancestor="0">{{link.text | escapeXmlContent}}</a>
+                        <a href="{{link.href}}" target="_blank" title="{{link.href}}" class="{{link.cls}}">
+                            <i class="fa fa-external-link"></i>
+                        </a>
+
+                        <div class="target" style="display: none;">
+                            <img class="logo" src="{{link.logo}}" fmt-if="link.logo"/>
+                            <p class="text-justify">{{link.abstract}}</p>
+
+
+                            <div id="associated-{{link.metadataId}}">
+                                <h3 class="view-header">
+                                    <button type="button" class="btn btn-default toggler">
+                                        <i class="fa fa-arrow-circle-down"></i>
+                                    </button>
+                                    <span fmt-translate="">associated-link</span>
+                                </h3>
+                                <div class="target">
+                                    <div><i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i>Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <span fmt-if="linkBlock.html">{{linkBlock.html}}</span>
+        </table>
+    </div>
 </div>
