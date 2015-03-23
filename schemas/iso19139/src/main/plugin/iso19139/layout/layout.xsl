@@ -164,8 +164,12 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="excluded"
-                  select="count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 or
-                    $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
+                  select="(
+                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 and
+                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@ancestor) and
+                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@child) and
+                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/parent)) or
+                      $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
 
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
