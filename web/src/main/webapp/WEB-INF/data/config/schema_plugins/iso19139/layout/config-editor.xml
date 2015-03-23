@@ -1755,7 +1755,7 @@
             </template>
           </field>
           <action type="add"
-                  name="edmoProducerName"
+                  name="edmoProducerNameSearch"
                   forceLabel="true"
                   addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
@@ -1767,7 +1767,37 @@
                     data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
           </action>
-
+          <action type="add" name="producerName"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']) = 0">
+            <template>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName gco:nilReason="missing">
+                      <gco:CharacterString/>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                                       codeListValue="originator"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </action>
 
 
           <field name="medseaHierarchyLevel"

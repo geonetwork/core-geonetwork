@@ -101,7 +101,9 @@
   <programName>Program name</programName>
   <edmerpName>Program identification in EDMERP</edmerpName>
   <edmoName>Data provider identification in EDMO*</edmoName>
-  <edmoProducerName>Data producer identification in EDMO</edmoProducerName>
+  <edmoProducerName>Data producer identification</edmoProducerName>
+  <edmoProducerNameSearch>Search data producer in EDMO</edmoProducerNameSearch>
+  <producerName>or add a data producer</producerName>
   <datasourceAcronym>Data source acronym</datasourceAcronym>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
