@@ -1630,7 +1630,7 @@
           <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']"
                  del="."
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']) != 0">
             <template>
               <values readonlyIf="true()">
                 <key label="organisationName"
@@ -1714,7 +1714,9 @@
           <!-- edmoProducerName -->
           <field name="edmoProducerName" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'author']">
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']) != 0">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
@@ -1752,16 +1754,30 @@
               </snippet>
             </template>
           </field>
+          <action type="add"
+                  name="edmoProducerName"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']) = 0">
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
+          </action>
 
 
 
           <field name="medseaHierarchyLevel"
                  xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
 
+          <text ref="dataCollection-help"/>
+
           <field
                   name="datasourceAcronym"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:otherCitationDetails"/>
-          <text ref="dataCollection-help"/>
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:otherCitationDetails"/>
 
           <field
               name="medseaTitle"
