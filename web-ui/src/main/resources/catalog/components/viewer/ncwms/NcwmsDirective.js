@@ -172,7 +172,7 @@
           scope.setAutoColorranges = function(evt) {
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
-                ol.proj.transform(map.getView().calculateExtent(map.getSize()),
+                ol.proj.transformExtent(map.getView().calculateExtent(map.getSize()),
                     map.getView().getProjection(), 'EPSG:4326').join(',')).
                 success(function(data) {
                   scope.colorscalerange = [data.min, data.max];
