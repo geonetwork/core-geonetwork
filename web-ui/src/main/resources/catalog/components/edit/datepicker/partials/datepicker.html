@@ -1,5 +1,5 @@
 <div class="form-group gn-field"
-     data-ng-class="isValidDate ? '' : 'has-error'">
+     data-ng-class="{'has-error': !isValidDate, 'gn-required': required}">
   <label class="control-label col-sm-2" data-ng-if="label">{{label}}</label>
   <div data-ng-class="label ? 'col-sm-9' : 'col-sm-12'">
     <!-- The hidden field with the value. -->

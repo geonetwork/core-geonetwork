@@ -5,10 +5,9 @@
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core" 
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-  xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
@@ -285,6 +284,21 @@
                 match="*[gco:Date|gco:DateTime]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="editInfo" required="no"/>
+    <xsl:param name="parentEditInfo" required="no"/>
+
+    <xsl:variable name="isRequired" as="xs:boolean">
+      <xsl:choose>
+        <xsl:when
+                test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
@@ -292,7 +306,8 @@
     <div data-gn-date-picker="{gco:Date|gco:DateTime}"
          data-label="{$labelConfig/label}"
          data-element-name="{name(gco:Date|gco:DateTime)}"
-         data-element-ref="{concat('_X', gn:element/@ref)}">
+         data-element-ref="{concat('_X', gn:element/@ref)}"
+         data-required="{$isRequired}">
     </div>
   </xsl:template>
 
