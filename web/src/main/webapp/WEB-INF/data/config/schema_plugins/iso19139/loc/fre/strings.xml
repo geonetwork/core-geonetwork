@@ -148,6 +148,7 @@
   <projectTitle>Project title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
+  <associatedResources>Associated resources</associatedResources>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
     <div class="row">
