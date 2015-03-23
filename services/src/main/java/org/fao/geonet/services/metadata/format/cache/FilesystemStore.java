@@ -367,7 +367,7 @@ public class FilesystemStore implements PersistentStore {
     }
 
     public void setMaxSizeMb(int maxSize) {
-        setMaxSizeKb(maxSize * 1024);
+        setMaxSizeKb(((long) maxSize) * 1024);
     }
 
     public void setMaxSizeGb(int maxSize) {

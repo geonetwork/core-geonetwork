@@ -329,9 +329,12 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.16</version>
+            <version>2.18</version>
             <configuration>
                 <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M</argLine>
+                <rerunFailingTestsCount>5</rerunFailingTestsCount>
+                <runOrder>alphabetical</runOrder>
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 <forkCount>4</forkCount>
                 <excludes>
                     <exclude>**/*PerformanceTest.java</exclude>

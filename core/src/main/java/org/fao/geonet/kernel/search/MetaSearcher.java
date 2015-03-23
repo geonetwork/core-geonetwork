@@ -31,13 +31,14 @@ import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import java.io.Closeable;
 import java.util.List;
 
 //--------------------------------------------------------------------------------
 // interface to search metadata
 //--------------------------------------------------------------------------------
 
-public abstract class MetaSearcher
+public abstract class MetaSearcher implements Closeable
 {
 	private int     _from, _to;
 	private boolean _valid = false;
@@ -56,7 +57,7 @@ public abstract class MetaSearcher
 	public abstract Element getSummary() throws Exception;
 
 	public abstract void close();
-	
+
 	//--------------------------------------------------------------------------------
 	// utilities
 	

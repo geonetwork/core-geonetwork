@@ -37,7 +37,10 @@ public class ZipUtil {
         for (Path root : zipFile.getRootDirectories()) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
                 for (Path path : paths) {
-                    IO.copyDirectoryOrFile(path, toDir.resolve(path.getFileName().toString()), false);
+                    final Path fileName = path.getFileName();
+                    if (fileName != null) {
+                        IO.copyDirectoryOrFile(path, toDir.resolve(fileName.toString()), false);
+                    }
                 }
             }
         }
@@ -48,11 +51,16 @@ public class ZipUtil {
      */
     public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
         try {
-            URI uri = new URI("jar:" + URLDecoder.decode(path.toUri().toString(), Constants.ENCODING));
+            URI uri = new URI("jar:" + path.toUri().toString());
             return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
-        } catch (Exception e) {
-            URI uri = new URI("jar:" + URLEncoder.encode(path.toUri().toString(), Constants.ENCODING));
-            return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
+        } catch (Throwable e) {
+            try {
+                URI uri = new URI("jar:" + URLDecoder.decode(path.toUri().toString(), Constants.ENCODING));
+                return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
+            } catch (Throwable e2) {
+                URI uri = new URI("jar:" + URLEncoder.encode(path.toUri().toString(), Constants.ENCODING));
+                return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
+            }
         }
     }
 

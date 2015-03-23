@@ -397,6 +397,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private String makePathReplacements(String path) {
+        if (ApplicationContextHolder.get() == null) {
+            // testing
+            return path;
+        }
+
         final GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         final Matcher matcher = PATH_REPLACEMENT_MATCHER.matcher(path);
 
@@ -532,7 +537,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
         Resource resource = new Resource();
         resource.setMinimize(dep.isMinimized);
         resource.setType(ResourceType.JS);
-        resource.setUri(dep.path);
+        final Path path = IO.toPath(dep.path);
+        if (Files.exists(path)) {
+            resource.setUri(path.toUri().toString());
+        } else {
+            resource.setUri(dep.path);
+        }
         return resource;
     }
 
@@ -579,7 +589,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     path = file.getAbsoluteFile().toURI().toString();
                 } else {
                     path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
-                    path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
+                    if (!Files.exists(IO.toPath(path))) {
+                        path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
+                    }
                     if (path.startsWith("//")) { // horrible hack!!!
                         path = path.substring(1);
                     }
@@ -630,7 +642,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
             if (pathOnDisk.isAbsolute() && pathOnDisk.exists()) {
                 desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
             } else {
-                desc.finalPath = new File(_geonetworkRootDirectory + desc.pathOnDisk, desc.relativePath).getPath();
+                final File relativePath = new File(desc.relativePath);
+                if (relativePath.isAbsolute() && relativePath.exists()) {
+                    desc.finalPath = desc.relativePath;
+                } else {
+                    desc.finalPath = new File(_geonetworkRootDirectory + desc.pathOnDisk, desc.relativePath).getPath();
+                }
             }
             if (!new File(desc.finalPath).exists()) {
                 throw new AssertionError("Neither '" + desc.finalPath + "' nor '" + new File(desc.pathOnDisk,

@@ -104,6 +104,7 @@ public class Handlers {
     <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
     <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>
     <script src="../../static/lib.js$minimize"></script>
+    <script src="../../static/gn_formatter_lib.js$minimize"></script>
 </head>
 <body>
 """
@@ -116,7 +117,7 @@ public class Handlers {
         def required = """
 <script type="text/javascript">
 //<![CDATA[
-        ${handlers.fileResult("js/std-footer.js", [:])}
+    gnFormatter.formatterOnComplete();
 //]]>
 </script>"""
         if (func.isHtmlOutput()) {
@@ -159,6 +160,7 @@ public class Handlers {
             def mdEl, relUuid;
 
             def relInfo = rel.getChild("info", Geonet.Namespaces.GEONET)
+
             if (md != null) {
                 relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
                 mdEl = md;
@@ -170,7 +172,7 @@ public class Handlers {
                 mdEl = rel
             }
 
-            if (relUuid != null) {
+            if (relUuid != null && env.metadataUUID != relUuid) {
                 def href = createShowMetadataHref(relUuid)
                 def title = mdEl.getChildText("title")
                 if (title == null || title.isEmpty()) {
@@ -182,7 +184,13 @@ public class Handlers {
                 }
 
                 def cls = uuid.trim().isEmpty() ? "text-muted" : ''
-                hierarchy.put(linkType, new Link(href, title, cls))
+
+                def link = new AssociatedLink(href, title, cls)
+                link.setAbstract(rel.getChildText('abstract'));
+                link.setLogo(rel.getChildText('logo'));
+                link.metadataId = relUuid;
+
+                hierarchy.put(linkType, link)
             }
         }
 

@@ -29,87 +29,103 @@
         <Method name="init" />
         <Bug pattern="DM_EXIT" />
     </Match>
- 	<Match>
-		<Class name="jeeves.server.dispatchers.ServiceManager" />
-		<Method name="dispatch" />
-		<Bug pattern="BC_UNCONFIRMED_CAST" />
-	</Match>
+    <Match>
+      <Class name="jeeves.server.dispatchers.ServiceManager" />
+      <Method name="dispatch" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
 
-	<!--              Geonetwork main exceptions                 -->
- 	<Match>
-		<Class name="org.fao.geonet.kernel.rdf.Query$QueryResults" />
-		<Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-		<Method name="presentDocuments" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.Thesaurus" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-		<Method name="retrieveThesaurusTitle" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
-		<Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE" />
-		<Method name="extractGeometriesFrom" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.DataManager" />
-		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
-		<Method name="autodetectSchema" params="org.jdom.Element"/>
-	</Match>
- 	<Match>
-		<Or>
-			<Class name="org.fao.geonet.kernel.schema.ComplexTypeEntry" />
-			<Class name="org.fao.geonet.kernel.schema.AttributeEntry" />
-		</Or>
-		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-		<Method name="harvest" />
-	</Match>
-  <Match>
-    <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
-    <Bug pattern="IS2_INCONSISTENT_SYNC"/>
-  </Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
-		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
-		<Method name="getFragmentHarvesterParams"/>
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester" />
-		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
-		<Method name="processServices"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-		<Method name="processCQLTermNode"/>
-	</Match>
-	<Match>
-		<Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.metadata.BatchVersion" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-		<Method name="exec"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.metadata.Version" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-		<Method name="serviceSpecificExec"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.kernel.search.SearchManager" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-		<Method name="getDocChangeDate"/>
-	</Match>
+    <!--              Geonetwork main exceptions                 -->
+    <Match>
+      <Class name="org.fao.geonet.kernel.rdf.Query$QueryResults" />
+      <Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
+      <Bug pattern="REC_CATCH_EXCEPTION" />
+      <Method name="presentDocuments" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.Thesaurus" />
+      <Bug pattern="REC_CATCH_EXCEPTION" />
+      <Method name="retrieveThesaurusTitle" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
+      <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE" />
+      <Method name="extractGeometriesFrom" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.DataManager" />
+      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+      <Method name="autodetectSchema" params="org.jdom.Element"/>
+    </Match>
+    <Match>
+      <Or>
+        <Class name="org.fao.geonet.kernel.schema.ComplexTypeEntry" />
+        <Class name="org.fao.geonet.kernel.schema.AttributeEntry" />
+      </Or>
+      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
+      <Bug pattern="REC_CATCH_EXCEPTION" />
+      <Method name="harvest" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+      <Bug pattern="IS2_INCONSISTENT_SYNC"/>
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
+      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
+      <Method name="getFragmentHarvesterParams"/>
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester" />
+      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
+      <Method name="processServices"/>
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+      <Method name="processCQLTermNode"/>
+    </Match>
+    <Match>
+      <Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.services.metadata.BatchVersion" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+      <Method name="exec"/>
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.services.metadata.Version" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+      <Method name="serviceSpecificExec"/>
+    </Match>
+    <Match>
+      <Class name="org.fao.geonet.services.metadata.format.cache.StoreInfoAndData" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+      <Or>
+        <Class name="org.fao.geonet.monitor.health.NoIndexErrorsHealthCheck$1" />
+        <Class name="org.fao.geonet.kernel.harvest.harvester.z3950.Harvester" />
+        <Class name="org.fao.geonet.kernel.search.SearchManager" />
+        <Class name="org.fao.geonet.kernel.oaipmh.Lib" />
+        <Class name="org.fao.geonet.services.main.Info" />
+        <Class name="org.fao.geonet.guiservices.metadata.GetRelated" />
+        <Class name="org.fao.geonet.guiservices.templates.Get" />
+        <Class name="org.fao.geonet.services.mef.Export" />
+        <Class name="org.fao.geonet.services.metadata.SearchUnused" />
+        <Class name="org.fao.geonet.services.metadata.SearchUnused" />
+        <Class name="org.fao.geonet.utils.Xml" />
+        <Class name="org.fao.geonet.services.thumbnail.Set" />
+      </Or>
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+    </Match>
     <Match>
         <Class name="org.fao.geonet.DatabaseMigration" />
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
@@ -155,15 +171,6 @@
         <Class name="org.fao.geonet.utils.NioPathAwareCatalogResolver" />
         <Bug pattern="REC_CATCH_EXCEPTION" />
     </Match>
-	<Match>
-        <Class name="org.fao.geonet.utils.Xml" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
-    </Match>
-	<Match>
-        <Class name="org.fao.geonet.services.thumbnail.Set" />
-        <Method name="getImage"/>
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
-    </Match>
     <Match>
         <Class name="v280.MoveHarvesterSettingsToHigherNumber$HarvesterSetting" />
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
@@ -174,7 +181,10 @@
     </Match>
 
     <Match>
-        <Class name="org.fao.geonet.wro4j.DiskbackedCache" />
+        <Or>
+          <Class name="org.fao.geonet.wro4j.DiskbackedCache" />
+          <Class name="org.fao.geonet.services.metadata.format.cache.FilesystemStore" />
+        </Or>
         <Bug pattern="DMI_EMPTY_DB_PASSWORD" />
     </Match>
 
