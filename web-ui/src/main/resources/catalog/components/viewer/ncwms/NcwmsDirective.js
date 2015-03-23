@@ -154,6 +154,7 @@
               min: ncInfo.scaleRange[0],
               max: ncInfo.scaleRange[1]
             };
+            scope.colorscalerange = [scope.colorRange.min, scope.colorRange.max];
             scope.timeSeries = {};
             scope.elevations = ncInfo.zaxis.values;
             scope.styles = gnNcWms.parseStyles(ncInfo);
