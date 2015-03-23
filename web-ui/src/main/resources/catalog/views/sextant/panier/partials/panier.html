@@ -2,8 +2,8 @@
   <div class="alert alert-warning" role="alert">
     <ng-pluralize count="panier.length"
                   when="{'0': ('nolayer' | translate),
-                            '1': '1 ' +  ('layer' | translate),
-                            'other': '{} ' +  ('layers' | translate)}">
+                          '1': '1 ' +  ('layer' | translate),
+                          'other': '{} ' +  ('layers' | translate)}">
 
     </ng-pluralize>
     <span translate>inbasket</span>.
@@ -14,5 +14,85 @@
     </li>
   </ul>
 
-  <label data-ng-show="panier.length > 0" class="btn btn-primary" ng-click="extract()">Télécharger</label>
+  <button type="button" data-ng-show="panier.length > 0" class="btn btn-primary"
+    data-toggle="modal" data-target="#panierModal">Télécharger</button>
+
+  <div class="modal fade" id="panierModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Télécharger</h4>
+        </div>
+
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="inputNom" class="col-sm-2 control-label" translate>Nom</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputNom" placeholder="Nom" ng-value="user.name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPrenom" class="col-sm-2 control-label" translate>Prénom</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputPrenom" placeholder="Prenom" ng-value="user.surname">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-sm-2 control-label" translate>Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-value="user.email[0]">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputOrganisme" class="col-sm-2 control-label" translate>Organisme</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputOrganisme" placeholder="Organisme">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputUse" class="col-sm-2 control-label" translate>Utilisation</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputUse" placeholder="Utilisation des données">
+              </div>
+            </div>
+          </form>
+          <h4>Valider les limites/contraintes d'utilisation</h4>
+          <ul class="list-group">
+            <li ng-repeat="elt in panier" class="list-group-item">
+              <label>
+                <input type="checkbox" ng-model="elt.validated" ng-change="validateDownload()"/>
+                {{elt.md.title || elt.md.defaultTitle}}
+              </label>
+              <a class="btn btn-link" data-toggle="collapse" data-target="#w{{elt.md.getUuid()}}" aria-expanded="false">
+                <i class="fa fa-angle-double-down"></i>
+              </a>
+              <div class="well collapse" id="w{{elt.md.getUuid()}}">
+                <h5>Limites d'utilisation :</h5>
+                <small>{{md.Constraints[1]}}</small>
+                <h5>Contraintes d'accès :</h5>
+                <small>{{md.Constraints[0]}}</small>
+                <h5>Contraintes d'utilisation :</h5>
+                <small>copyright</small>
+                <h5>Autres contraintes :</h5>
+                <small>{{md.Constraints[2]}}</small>
+                <small>{{md.Constraints[3]}}</small>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link" data-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" ng-click="extract()" ng-disabled="downloadDisabled">Télécharger</button>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 </div>

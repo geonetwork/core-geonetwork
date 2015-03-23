@@ -16,7 +16,8 @@
         restrict: 'A',
         replace: true,
         scope: {
-          panier: '=sxtPanier'
+          panier: '=sxtPanier',
+          user: '=sxtPanierUser'
         },
         templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panier.html',
@@ -31,6 +32,15 @@
           scope.extract = function() {
             scope.panier = [];
           };
+
+          scope.downloadDisabled = true;
+          scope.validateDownload = function() {
+            var enable = true;
+            $.each(scope.panier, function(i, elt) {
+              enable = enable && elt.validated;
+            });
+            scope.downloadDisabled = !enable;
+          }
         }
       };
     }]);
