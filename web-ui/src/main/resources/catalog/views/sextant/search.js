@@ -10,6 +10,7 @@
   goog.require('gn_legendpanel_directive');
   goog.require('sxt_directives');
   goog.require('sxt_panier_directive');
+  goog.require('sxt_interceptors');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -19,7 +20,8 @@
     'gn_legendpanel_directive',
     'gn_thesaurus',
     'sxt_directives',
-    'sxt_panier_directive'
+    'sxt_panier_directive',
+    'sxt_interceptors'
   ]);
 
   module.value('sxtGlobals', {});
