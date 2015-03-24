@@ -11,9 +11,13 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnMap',
+    'gnGlobalSettings', 'gnMap',
 
-    function(searchSettings, viewerSettings, gnPanierSettings, gnMap) {
+    function(searchSettings, viewerSettings, gnPanierSettings,
+             gnGlobalSettings, gnMap) {
+
+      gnGlobalSettings.isMapViewerEnabled =
+          gnGlobalSettings.isMapViewerEnabled || true;
 
       /** *************************************
        * Define mapviewer background layers
