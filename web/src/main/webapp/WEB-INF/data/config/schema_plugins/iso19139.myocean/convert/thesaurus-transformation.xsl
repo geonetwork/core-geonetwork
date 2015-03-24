@@ -45,7 +45,7 @@
 	
 	
 	<!-- Convert a concept to an ISO19139 keywords.
-	If no keyword is provided, only thesaurus section is adaded.
+	If no keyword is provided, only thesaurus section is added.
 	-->
 	<xsl:template name="to-iso19139.myocean-keyword-with-anchor">
 		<xsl:param name="withAnchor" select="true()"/>
@@ -53,7 +53,7 @@
 		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
 		It's recommended to use it in order to have the thesaurus widget inline editor
 		which use the thesaurus identifier for initialization. -->
-		<xsl:param name="withThesaurusAnchor" select="false()"/>
+		<xsl:param name="withThesaurusAnchor" select="true()"/>
 		<gmd:descriptiveKeywords>
 			<xsl:choose>
 				<xsl:when test="$withXlink">
