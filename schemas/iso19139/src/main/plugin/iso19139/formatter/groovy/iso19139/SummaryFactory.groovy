@@ -157,17 +157,12 @@ class SummaryFactory {
     }
 
     LinkBlock createDynamicAssociatedHtml(Summary summary) {
-        def associated = "associated"
+        def associated = "associated-link"
 
-        def jsVars = [
-                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + associated,
-                metadataId: this.env.metadataId
-        ]
-        def js = this.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
         def html = """
 <script type="text/javascript">
 //<![CDATA[
-$js
+    gnFormatter.loadAssociated('${LinkBlock.CSS_CLASS_PREFIX + associated}', '${this.env.metadataId}');
 //]]></script>
 <div><i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i>Loading...</div>
 """

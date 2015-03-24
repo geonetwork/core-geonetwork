@@ -143,8 +143,9 @@ public class Geonetwork implements ApplicationHandler {
      */
     public Object start(Element config, ServiceContext context) throws Exception {
         context.setAsThreadLocal();
-        logger = context.getLogger();
         this._applicationContext = context.getApplicationContext();
+        ApplicationContextHolder.set(this._applicationContext);
+        logger = context.getLogger();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
@@ -440,6 +441,8 @@ public class Geonetwork implements ApplicationHandler {
             @Override
             public void run() {
                 final ServletContext servletContext = context.getServlet().getServletContext();
+                context.setAsThreadLocal();
+                ApplicationContextHolder.set(_applicationContext);
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")

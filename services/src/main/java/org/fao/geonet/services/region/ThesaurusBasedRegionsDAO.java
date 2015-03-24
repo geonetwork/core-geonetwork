@@ -97,7 +97,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 
     @Nullable
     @Override
-    public Long getLastModified(@Nonnull String id) {
+    public synchronized Long getLastModified(@Nonnull String id) {
         final Thesaurus thesaurus = thesaurusManager.getThesaurusByName(this.thesaurusName);
 
         if (thesaurus != null) {

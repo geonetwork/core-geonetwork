@@ -71,7 +71,7 @@ public class ClosureRequireDependencyManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoRequireString() throws Exception {
-        _depManager.addFile("abc", "goog.require()", Collections.<String>emptySet());
+        _depManager.addFile("abc", "goog.require('qrt)", Collections.<String>emptySet());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -91,9 +91,10 @@ public class ClosureRequireDependencyManagerTest {
         _depManager.validateGraph();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAddFileNoProvide() throws Exception {
-        _depManager.addFile("abc", "goog.require('ab2'", Collections.<String>emptySet());
+        final ClosureRequireDependencyManager.Node abc = _depManager.addFile("qrt/abc.js", "goog.require('ab2'", Collections.<String>emptySet());
+        assertEquals("abc", abc.id);
     }
 
     @Test(expected = IllegalArgumentException.class)

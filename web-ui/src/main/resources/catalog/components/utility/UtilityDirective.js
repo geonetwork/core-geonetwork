@@ -835,14 +835,23 @@
             var modalElt = angular.element('' +
                 '<div class="modal fade in">' +
                 '<div class="modal-dialog in">' +
+                '  <button type=button class="btn btn-default ' +
+                'gn-btn-modal-img">&times</button>' +
                 '    <img src="' + img + '">' +
                 '</div>' +
                 '</div>');
+            modalElt.find('img').on('load', function() {
+              var w = this.clientWidth;
+              modalElt.find('.modal-dialog').css('width', w + 'px');
+            });
 
             $(document.body).append(modalElt);
             modalElt.modal();
             modalElt.on('hidden.bs.modal', function() {
               modalElt.remove();
+            });
+            modalElt.find('.gn-btn-modal-img').on('click', function() {
+              modalElt.modal('hide');
             });
           }
         });

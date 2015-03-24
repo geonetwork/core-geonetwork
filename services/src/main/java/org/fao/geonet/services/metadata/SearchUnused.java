@@ -78,14 +78,15 @@ public class SearchUnused implements Service
 
 		context.info("Creating UnusedSearcher");
 
-		MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE);
+		try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.UNUSED, Geonet.File.SEARCH_LUCENE)) {
 
-		searcher.search(context, params, null);
-		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+            searcher.search(context, params, null);
+            session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-		context.info("Getting unused summary");
+            context.info("Getting unused summary");
 
-		return searcher.getSummary();
+            return searcher.getSummary();
+        }
 	}
 }
 

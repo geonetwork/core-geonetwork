@@ -300,7 +300,7 @@
                   var l = gnMap.createOlWMTSFromCap(map, info, capObj);
                   l.setOpacity(layer.opacity);
                   l.setVisible(!layer.hidden);
-                  if(layer.title) {
+                  if (layer.title) {
                     l.set('title', layer.title);
                     l.set('label', layer.title);
                   }
@@ -316,7 +316,7 @@
             var l = gnMap.createOlWMSFromCap(map, info);
             l.setOpacity(layer.opacity);
             l.setVisible(!layer.hidden);
-            if(layer.title) {
+            if (layer.title) {
               l.set('title', layer.title);
               l.set('label', layer.title);
             }

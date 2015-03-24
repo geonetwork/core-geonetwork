@@ -77,8 +77,7 @@ public class Delete implements Service {
 		Element searchParams = new Element("parameters");
     searchParams.addContent(new Element("_schema").setText(schema));
 
-   	MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-		try {
+		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
    		searcher.search(context, searchParams, config);
 			int results = searcher.getSize();
 			if (results == 0) { // check for templates
@@ -100,8 +99,6 @@ public class Delete implements Service {
       response.setAttribute("status", "error");
       response.setAttribute("message", errStr);
       return response;
-		} finally {
-   		searcher.close();
 		}
 
 		// check for any schemas that may be dependent on the schema to be deleted

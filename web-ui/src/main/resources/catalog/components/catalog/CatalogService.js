@@ -498,6 +498,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
+      this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
         if (angular.isDefined(record[field]) &&
@@ -541,6 +542,10 @@
       getLinksByType: function() {
         var ret = [];
         var types = Array.prototype.splice.call(arguments, 0);
+        var key = types.join('|');
+        if (this.linksCache[key]) {
+          return this.linksCache[key];
+        }
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           types.forEach(function(type) {
@@ -556,6 +561,7 @@
             }
           });
         });
+        this.linksCache[key] = ret;
         return ret;
       },
       getThumbnails: function() {

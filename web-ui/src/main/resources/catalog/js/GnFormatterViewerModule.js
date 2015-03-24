@@ -4,6 +4,7 @@
 
   goog.require('gn');
   goog.require('gn_catalog_service');
+  goog.require('gn_formatter_lib');
   goog.require('gn_utility_directive');
 
 

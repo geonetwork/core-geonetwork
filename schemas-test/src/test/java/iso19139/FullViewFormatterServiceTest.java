@@ -19,6 +19,7 @@ public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest 
 
     protected List<String> excludes() {
         return Lists.newArrayList(
+            "> gmd:MD_Metadata > gmd:parentIdentifier > gco:CharacterString > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:citation > gmd:CI_Citation > gmd:edition > gco:CharacterString > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:graphicOverview > gmd:MD_BrowseGraphic > gmd:fileDescription > gco:CharacterString > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:graphicOverview > gmd:MD_BrowseGraphic > gmd:fileType > gco:CharacterString > Text",
@@ -26,6 +27,8 @@ public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest 
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:thesaurusName > gmd:CI_Citation > gmd:identifier > gmd:MD_Identifier > gmd:code > gmx:Anchor > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:aggregationInfo > gmd:MD_AggregateInformation > gmd:aggregateDataSetIdentifier > gmd:RS_Identifier > gmd:code > gmx:FileName > Text",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > srv:serviceType > gco:LocalName > Text",
+            "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > srv:containsOperations > srv:SV_OperationMetadata > srv:connectPoint > gmd:CI_OnlineResource > gmd:protocol > gco:CharacterString > Text",
+            "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > srv:containsOperations > srv:SV_OperationMetadata > srv:connectPoint > gmd:CI_OnlineResource > gmd:function > gmd:CI_OnLineFunctionCode> @codeListValue",
             "> gmd:MD_Metadata > gmd:identificationInfo > srv:SV_ServiceIdentification > gmd:descriptiveKeywords > gmd:MD_Keywords > gmd:type > gmd:MD_KeywordTypeCode> @codeListValue"
          );
     }

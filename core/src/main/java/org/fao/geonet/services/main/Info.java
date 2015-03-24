@@ -524,18 +524,16 @@ public class Info implements Service {
 		ServiceConfig config = new ServiceConfig();
 
 		SearchManager searchMan = gc.getBean(SearchManager.class);
-		MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-		searcher.search(context, params, config);
+            searcher.search(context, params, config);
 
-		params.addContent(new Element("from").setText("1"));
-		params.addContent(new Element("to").setText(searcher.getSize() +""));
+            params.addContent(new Element("from").setText("1"));
+            params.addContent(new Element("to").setText(searcher.getSize() + ""));
 
-		Element result = searcher.present(context, params, config);
+            return searcher.present(context, params, config);
+        }
 
-		searcher.close();
-
-		return result;
 	}
 
 	//--------------------------------------------------------------------------

@@ -15,10 +15,7 @@
   <import resource="config-db/initial_data.xml" />
   <import resource="config-print/config-spring-print.xml" />
 
-
-  <!-- Uncomment if you want to use a non-shapefile datastore -->
-  <!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
-  <!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
+  <!-- For database configuration look in the config-node configuration files (config-node/srv.xml) -->
 
   <!-- Import the versioning configuration (subversion etc...) -->
   <import resource="config-versioning.xml" />

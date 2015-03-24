@@ -95,7 +95,7 @@
 
           var textFeatStyleFn = function(feature) {
             var f;
-            if(feature instanceof ol.Feature) {
+            if (feature instanceof ol.Feature) {
               f = feature;
             }
             else {
@@ -282,6 +282,10 @@
             else if (scope.drawPolygon.active) return 'polygon';
             else if (scope.drawText.active) return 'text';
           };
+
+          scope.$on('owsContextReseted', function() {
+            source.clear();
+          });
         }
       };
     }]);

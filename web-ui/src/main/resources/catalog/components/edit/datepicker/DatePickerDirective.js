@@ -25,7 +25,8 @@
              elementRef: '@',
              id: '@',
              tagName: '@',
-             indeterminatePosition: '@'
+             indeterminatePosition: '@',
+             required: '@'
            },
            templateUrl: '../../catalog/components/edit/datepicker/partials/' +
            'datepicker.html',
