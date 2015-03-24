@@ -835,13 +835,14 @@
             var modalElt = angular.element('' +
                 '<div class="modal fade in">' +
                 '<div class="modal-dialog in">' +
-                '  <button type=button class="btn btn-default gn-btn-modal-img">&times</button>' +
+                '  <button type=button class="btn btn-default ' +
+                'gn-btn-modal-img">&times</button>' +
                 '    <img src="' + img + '">' +
                 '</div>' +
                 '</div>');
             modalElt.find('img').on('load', function() {
               var w = this.clientWidth;
-              modalElt.find('.modal-dialog').css('width', w+'px');
+              modalElt.find('.modal-dialog').css('width', w + 'px');
             });
 
             $(document.body).append(modalElt);

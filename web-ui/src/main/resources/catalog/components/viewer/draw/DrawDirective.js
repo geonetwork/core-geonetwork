@@ -95,7 +95,7 @@
 
           var textFeatStyleFn = function(feature) {
             var f;
-            if(feature instanceof ol.Feature) {
+            if (feature instanceof ol.Feature) {
               f = feature;
             }
             else {

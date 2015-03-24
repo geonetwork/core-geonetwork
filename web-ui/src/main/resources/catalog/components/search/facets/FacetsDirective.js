@@ -92,9 +92,9 @@
 
       var updateLabelFromInfo = function(facets, groups, lang) {
         angular.forEach(facets, function(f) {
-          for(var i=0;i<groups.length;i++) {
+          for (var i = 0; i < groups.length; i++) {
             var o = groups[i];
-            if(o.name == f['@name']) {
+            if (o.name == f['@name']) {
               f['@name'] = o.label[lang];
             }
             f['name'] = f['@name'];
@@ -136,12 +136,12 @@
                     var promises = [];
 
                     // Load groups label for 'publishedForGroup'
-                    if(scope.facetConfig.label == 'publishedForGroup') {
+                    if (scope.facetConfig.label == 'publishedForGroup') {
                       promises.push(gnHttp.callService('info', {
                         type: 'groups'}).
-                            success(function(data){
-                              groups = data.group;
-                            }));
+                          success(function(data) {
+                            groups = data.group;
+                          }));
                     }
 
                     // When everything is loaded, watch the summary response
@@ -151,7 +151,7 @@
                         if (v && scope.facetConfig && scope.facetConfig.label) {
                           var facets = v[scope.facetConfig.label];
 
-                          if(scope.facetConfig.label == 'publishedForGroup') {
+                          if (scope.facetConfig.label == 'publishedForGroup') {
                             updateLabelFromInfo(facets, groups, scope.lang);
                             facets = $filter('orderBy')(facets, 'name');
 
