@@ -133,7 +133,7 @@ public class Create extends NotInReadOnlyModeService {
             groupName = group.getName();
         }
 
-        if (groupName.toLowerCase().contains("myocean-core-products")||groupName.toLowerCase().contains("seadatanet")||groupName.toLowerCase().contains("medcheckpoint")) {
+        if (groupName.equals("MYOCEAN-CORE-PRODUCTS")||groupName.equals("SEADATANET")||groupName.equals("EMODNET_Chemistry")) {
             // TODO : trigger another indexing
             dm.setStatus(context, Integer.valueOf(newId),
                     Integer.valueOf(Params.Status.DRAFT),
