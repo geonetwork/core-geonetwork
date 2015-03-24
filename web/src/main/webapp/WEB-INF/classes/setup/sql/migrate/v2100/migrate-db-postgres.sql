@@ -1,4 +1,4 @@
--- Spring security
+﻿-- Spring
 ALTER TABLE Users ADD security varchar(128) default '';
 ALTER TABLE Users ADD authtype varchar(32);
 ALTER TABLE users ALTER "password" TYPE character varying(120);
@@ -14,7 +14,7 @@ ALTER TABLE UserGroups ADD PRIMARY KEY (userid, profile, groupid);
 
 ALTER TABLE Metadata ALTER harvestUri TYPE varchar(512);
 
-ALTER TABLE HarvestHistory ADD elapsedTime int;
+-- ALTER TABLE HarvestHistory ADD elapsedTime int;
 
 CREATE TABLE Services
   (

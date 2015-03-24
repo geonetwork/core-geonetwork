@@ -17,7 +17,7 @@
 
 
   <!-- Uncomment if you want to use a non-shapefile datastore -->
-  <!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
+  <import resource="config-db/postgres.xml"/>
   <!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
 
   <!-- Import the versioning configuration (subversion etc...) -->
@@ -70,15 +70,17 @@
     <entry key="hibernate.jdbc.batch_size" value="3" />
     <entry key="hibernate.jdbc.batch_versioned_data" value="true" />
     <entry key="hibernate.enable_lazy_load_no_trans" value="true" />
-    <!-- If a specific schema has to be used
-    <entry key="hibernate.default_schema" value="catalog"/>
+      <entry key="hibernate.default_schema" value="ngr"/>
 
-    Note: If using more than one catalog in different schema
-    hibernate may failed to create sequence
-    (https://hibernate.atlassian.net/browse/HHH-5538).
-    In that case you may want to use a custom dialect
-    <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
-    -->
+      <!-- If a specific schema has to be used
+      <entry key="hibernate.default_schema" value="catalog"/>
+
+      Note: If using more than one catalog in different schema
+      hibernate may failed to create sequence
+      (https://hibernate.atlassian.net/browse/HHH-5538).
+      In that case you may want to use a custom dialect
+      <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
+      -->
   </util:map>
 
   <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String">
