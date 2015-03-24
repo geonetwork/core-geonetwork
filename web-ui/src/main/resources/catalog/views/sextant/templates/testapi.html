@@ -1,0 +1,39 @@
+<!DOCTYPE html SYSTEM "html">
+<html ng-app="gn_search_sextant" lang="eng" id="ng-app">
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Sextant - Ifremer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <link rel="icon" type="image/gif" href="/geonetwork/images/logos/favicon.gif">
+  <link rel="shortcut icon" type="image/x-icon" href="/geonetwork/images/logos/favicon.ico">
+  <link href="/geonetwork/static/gn_search_sextant.css" rel="stylesheet" media="screen">
+  <link href="/geonetwork/static/srv_custom_style.css" rel="stylesheet" media="screen">
+</head>
+
+<body data-ng-controller="GnCatController">
+<div data-ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
+</body>
+
+
+<script>var geonet={provide:function(s){},require:function(s){}}</script>
+<script src="/geonetwork/static/lib.js"></script>
+<script src="/geonetwork/static/gn_search_sextant.js"></script>
+
+<script type="text/javascript">
+  var module = angular.module('gn_cat_controller');
+
+  module.config(['gnGlobalSettings',
+    function(gnGlobalSettings) {
+      gnGlobalSettings.locale = {
+        lang: 'en'
+      };
+      gnGlobalSettings.gnUrl = '/geonetwork/srv/eng/';
+    }]);
+</script>
+</html>
