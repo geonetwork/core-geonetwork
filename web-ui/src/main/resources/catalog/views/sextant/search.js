@@ -27,7 +27,7 @@
   module.value('sxtGlobals', {});
 
   module.config(['$LOCALES', function($LOCALES) {
-    //$LOCALES.push('sextant');
+    $LOCALES.push('sextant');
   }]);
 
   module.controller('gnsSextant', [
@@ -141,15 +141,6 @@
         });
       };
 
-      $scope.$watch('searchObj.advancedMode', function(val) {
-        if (val && (searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0)) {
-          setTimeout(function() {
-            searchMap.updateSize();
-          }, 0);
-        }
-      });
-
       /** Manage metadata view */
       $scope.mdView = mdView;
       gnMdView.initMdView();
@@ -238,7 +229,9 @@
     '$scope', 'gnSearchSettings',
     function($scope, searchSettings) {
 
-      $scope.categorytreeCollapsed = true;
+      $scope.isFacetsCollapse = function(facetKey) {
+        return !$scope.searchObj.params[facetKey];
+      };
 
       // Run search on bbox draw
       $scope.$watch('searchObj.params.geometry', function(v){

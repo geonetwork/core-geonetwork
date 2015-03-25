@@ -1,6 +1,6 @@
 {
   "sextantThemes" : "Thèmes Sextant",
-  "_groupPublished" : "Catalogue",
+  "publishedForGroup" : "Catalogue",
   "fullView": "Métadonnées complètes",
   "simpleView": "Métadonnées essentielles"
 }

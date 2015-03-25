@@ -1,8 +1,11 @@
 (function() {
   goog.provide('sxt_categorytree');
 
-  var module = angular.module('sxt_categorytree', [
-  ]);
+  var module = angular.module('sxt_categorytree', []);
+
+  var delimiter = ' or ';
+  var indexField = 'sextantTheme';
+  var themesInSearch;
 
   var findChild = function(node, name) {
     var n;
@@ -15,21 +18,22 @@
       }
     }
   };
-  var createNode = function(node, g, index) {
+  var createNode = function(node, g, index, t) {
     var group = g[index];
     if (group) {
       var newNode = findChild(node, group);
       if (!newNode) {
         newNode = {
           name: group,
-          selected: false
+          selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
         };
         if (!node.nodes) node.nodes = [];
         node.nodes.push(newNode);
       }
-      createNode(newNode, g, index + 1);
+      createNode(newNode, g, index + 1, t);
     } else {
-      node.key = g.join('/');
+      node.key = t['@name'];
+      node.count = t['@count'];
     }
   };
 
@@ -41,6 +45,11 @@
         restrict: 'A',
         template: '<gn-categorytree-col class="list-group" ' +
             'collection="member.nodes"></gn-categorytree-col>',
+        controller: ['$scope', '$timeout', function($scope, $timeout) {
+          this.updateSearch = function() {
+            $timeout($scope.triggerSearch, 100);
+          }
+        }],
         link: function(scope, element, attr) {
 
           var conf = scope.$eval(attr['sxtCategoryTreeConf']);
@@ -64,55 +73,41 @@
          * @param {Array} ts
          */
           var processThemes = function(ts) {
-            var labels = [];
             scope.member = {
               nodes: []
             };
+            themesInSearch = scope.searchObj.params[indexField] ?
+              scope.searchObj.params[indexField].split(delimiter) : [];
 
             angular.forEach(ts, function(t) {
+              var key = t['@name'], name;
               if (conf.labelFromThesaurus) {
-                t = findLabel(t);
+                name = findLabel(key);
               }
-              if (t) {
-                if (conf.tree) {
-                  var g = t.split('/');
-                  createNode(scope.member, g, 1);
-                }
-                else {
-                  scope.member.nodes.push({
-                    name: t,
-                    key: t,
-                    selected: false
-                  });
-                }
+              if (name) {
+                  var g = name.split('/');
+                  createNode(scope.member, g, 1, t);
               }
             });
           };
 
-          /**
-         * Reload thesaurus depending on the Catalog field (_groupPublished)
-         */
-          scope.$watch('searchObj.params._groupPublished', function(val, old) {
-            gnHttp.callService('suggest', {
-              field: conf.field,
-              threshold: 1,
-              origin: 'RECORDS_FIELD_VALUES',
-              groupPublished: val
-            }).success(function(data) {
+          scope.$watch('searchResults.facet', function(v) {
+
+            if (v) {
+              var facets = v['sextantThemes'];
+
               if (angular.isArray(sxtGlobals.sextantTheme)) {
-                processThemes(data[1]);
+                processThemes(facets);
               } else {
-                scope.$on('sextantThemeLoaded', function(evt) {
-                  processThemes(data[1]);
+                scope.$on('sextantThemeLoaded', function (evt) {
+                  processThemes(facets);
                 });
               }
-            }).error(function(){
-              scope.member = {
-                nodes: []
-              };
-              console.warn('Could not load thesaurus: ' + conf.id);
+            }
+          });
 
-            });
+          scope.$on('categorytree:changeda', function(v) {
+            scope.triggerSearch();
           });
 
           /**
@@ -137,7 +132,7 @@
           scope.$on('beforesearch', function(e) {
             var nodesSelected = [];
             getNodesSelected(scope.member, nodesSelected);
-            scope.searchObj.params[conf.field] = nodesSelected.join(' or ');
+            scope.searchObj.params[conf.field] = nodesSelected.join(delimiter);
           });
         }
       };
@@ -170,24 +165,19 @@
         scope: {
           member: '='
         },
-        require: '^gnCategorytreeCol',
+        require: ['^gnCategorytreeCol','^sxtCategoryTree'],
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/categorytreeitem.html',
-        link: function(scope, element, attrs, controller) {
+        link: function(scope, element, attrs, controllers) {
           var el = element;
-          if (angular.isArray(scope.member.nodes)) {
-            element.append("<gn-categorytree-col class='list-grou' " +
-                "collection='member.nodes' map='map'></gn-categorytree-col>");
-            $compile(element.contents())(scope);
-          }
+
           scope.toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-minus-square-o')
                 .toggleClass('fa-plus-square-o');
             el.children('ul').toggle();
-            evt.preventDefault();
+            !evt || evt.preventDefault();
             return false;
           };
-
 
           /**
            * If a checkbox is set to true, then set its prent
@@ -196,7 +186,7 @@
           scope.$watch('member.selected', function(val, old) {
             if (angular.isDefined(old)) {
               if (scope.member.selected) {
-                controller.updateParentSelected();
+                controllers[0].updateParentSelected();
               }
               scope.$emit('categorytree:changed');
             }
@@ -218,12 +208,38 @@
           };
 
           /**
+           * If a checkbox is set to true, then set its prent
+           * to true too (recursive)
+           */
+          scope.$on('beforeSearchReset', function() {
+            scope.member.selected = false;
+          });
+
+          /**
            * Check if it is a root node
            * @return {*|boolean}
            */
           scope.isParentNode = function() {
             return angular.isDefined(scope.member.nodes);
           };
+
+          scope.onClick = function() {
+            controllers[1].updateSearch();
+          }
+
+          if (angular.isArray(scope.member.nodes)) {
+            element.append("<gn-categorytree-col class='list-grou' " +
+                "collection='member.nodes' map='map'></gn-categorytree-col>");
+            $compile(element.contents())(scope);
+
+          }
+
+          if(scope.member.selected && scope.isParentNode()) {
+            el.children('ul').toggle();
+            scope.selectedOnInit = true;
+          }
+
+
         }
       };
     }]);
