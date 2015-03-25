@@ -229,6 +229,9 @@
     };
 
     this.resetSearch = function(searchParams) {
+
+      $scope.$broadcast('beforeSearchReset');
+
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
