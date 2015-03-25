@@ -53,6 +53,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -159,14 +160,22 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     }
                 }
 
+                String defaultLanguageId = context.getLanguage();
+                try {
+                    Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
 
-                Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
-
-                if (StringUtils.isEmpty(currentLanguage)) {
-                    currentLanguage = defaultLanguage.getId();
+                    if (StringUtils.isEmpty(currentLanguage)) {
+                        currentLanguage = defaultLanguage.getId();
+                        defaultLanguageId = defaultLanguage.getId();
+                    }
+                } catch (EmptyResultDataAccessException e) {
+                    Log.error(Geonet.CSW, "No default language set in database languages table. " +
+                            "You MUST set one default language (using isDefault column). " +
+                            "Using session language as default. Error is: " + e.getMessage());
+                    currentLanguage = context.getLanguage();
                 }
 
-                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguage.getId());
+                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguageId);
             } else {
                 currentLanguage = context.getLanguage();
             }
