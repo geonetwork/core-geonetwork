@@ -141,8 +141,8 @@
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
   <medseaDataSourceDOI>Dataset URL</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
-  <acronym>Project acronym</acronym>
-  <projectTitle>Project title</projectTitle>
+  <acronym>Program acronym</acronym>
+  <projectTitle>Program title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
   <associatedResources>Associated resources</associatedResources>
