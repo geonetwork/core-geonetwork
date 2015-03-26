@@ -2359,7 +2359,7 @@
       <option value="Distribution cost charge">Distribution cost charge</option>
       <option value="Collection cost charge">Collection cost charge</option>
       <option value="Commercial cost charge">Commercial cost charge</option>
-      <option value="Cost charge depends on intented use and category of users">Cost charge depends on intented use and category of users</option>
+      <option value="Cost charge depends on intended use and category of users">Cost charge depends on intended use and category of users</option>
       <option value="Not documented">Not documented</option>
     </helper>
     <helper>
