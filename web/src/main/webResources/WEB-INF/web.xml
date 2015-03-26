@@ -111,7 +111,7 @@
         -->
         <init-param>
             <param-name>jeeves.configuration.overrides.file</param-name>
-            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
         </init-param>
     </filter>
     <filter>
@@ -269,7 +269,7 @@
         -->
         <init-param>
             <param-name>jeeves.configuration.overrides.file</param-name>
-            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
         </init-param>
 
         <!--
