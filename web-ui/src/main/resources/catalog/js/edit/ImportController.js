@@ -78,14 +78,17 @@
         } else {
           $scope.reports.push(response.data);
         }
-        $scope.reports.push({success: parseInt(response.data.records) -
+        if(response.data.records) {
+          $scope.reports.push({success: parseInt(response.data.records) -
               parseInt((response.data.exceptions &&
-              response.data.exceptions['@count']) || 0)});
+                  response.data.exceptions['@count']) || 0)});
+        }
       };
       var onErrorFn = function(error) {
         $scope.importing = false;
-        $scope.reports = [error.data];
-        formatExceptionArray();
+        $scope.reports = [{
+            exception: error.data
+        }];
       };
 
       $scope.importRecords = function(formId) {
