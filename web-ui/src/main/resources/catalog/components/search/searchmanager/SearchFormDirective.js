@@ -230,7 +230,10 @@
 
     this.resetSearch = function(searchParams) {
 
-      $scope.$broadcast('beforeSearchReset');
+      // Only if it is a real reset
+      if(!searchParams) {
+        $scope.$broadcast('beforeSearchReset');
+      }
 
       if (searchParams) {
         $scope.searchObj.params = searchParams;
