@@ -389,7 +389,27 @@
 			</td>
 			<xsl:choose>
 				<xsl:when test="gmd:protocol/gco:CharacterString/text()='OGC:WMS'">
-					<xsl:variable name="WMS_URL" select="concat('http://oceanbrowser.net/emodnet/?server=',gmd:linkage/gmd:URL/text(),'&amp;layers=',gmd:name/gco:CharacterString/text())"/>
+					<xsl:variable name="WMS_URL">
+						<xsl:choose>
+							<!-- SDN viewer -->
+							<xsl:when
+								test="//gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString/text()='ISO 19115:2003/19139, SeadataNet product profile'">
+								<xsl:value-of
+									select="concat('http://oceanbrowser.net/web-vis/?server=',gmd:linkage/gmd:URL/text(),'&amp;layers=',gmd:name/gco:CharacterString/text())" />
+							</xsl:when>
+							<!-- emodnet-chimie -->
+							<xsl:when
+								test="//gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString/text()='ISO 19115:2003/19139 - EMODNET - CHEMISTRY'">
+								<xsl:value-of
+									select="concat('http://oceanbrowser.net/emodnet/?server=',gmd:linkage/gmd:URL/text(),'&amp;layers=',gmd:name/gco:CharacterString/text())" />
+							</xsl:when>
+							<!-- default -->
+							<xsl:otherwise>
+								<xsl:value-of
+									select="concat('http://oceanbrowser.net/emodnet/?server=',gmd:linkage/gmd:URL/text(),'&amp;layers=',gmd:name/gco:CharacterString/text())" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
 					<td class="print_data">
 						<xsl:element name="a">
 							<xsl:attribute name="href">
