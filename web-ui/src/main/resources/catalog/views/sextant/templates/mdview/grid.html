@@ -61,6 +61,11 @@
 
       <div class="sx-md-footer">
 
+        <div class="gn-md-relations">
+          <div gn-related="{{md.getUuid()}}" types="parent|children"
+               template="../../catalog/views/sextant/templates/related.html"></div>
+         </div>
+
         <div class="gn-md-links">
 
           <div class="btn-group pull-right" ng-if="links.length > 0">

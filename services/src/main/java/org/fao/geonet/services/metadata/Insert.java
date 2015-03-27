@@ -111,7 +111,7 @@ public class Insert extends NotInReadOnlyModeService {
         //--- if the uuid does not exist and is not a template we generate it
 
         String uuid;
-        if (metadataType == MetadataType.TEMPLATE) {
+        if (metadataType == MetadataType.METADATA) {
             uuid = dataMan.extractUUID(schema, xml);
             if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
         } else uuid = UUID.randomUUID().toString();

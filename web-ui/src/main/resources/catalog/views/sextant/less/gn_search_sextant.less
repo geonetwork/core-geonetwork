@@ -403,6 +403,19 @@ ul.gn-resultview {
       position: static;
       float: right;
       margin: 7px 4px 0 0;
+      .btn-group, button {
+        width: 46px;
+        margin: 0 3px 0 0;
+      }
+    }
+    .gn-md-relations {
+      float: left;
+      margin: 7px 0 0 4px;
+      .dropdown-menu {
+        max-width: 100%;
+      }
+    }
+    .gn-md-relations, .gn-md-links {
       .dropdown-menu {
         max-width: 300px;
         font-size: 12px;
@@ -412,10 +425,6 @@ ul.gn-resultview {
           line-height: normal;
           .text-overflow();
         }
-      }
-      .btn-group, button {
-        width: 46px;
-        margin: 0 3px 0 0;
       }
     }
     .md-actions {

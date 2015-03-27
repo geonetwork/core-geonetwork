@@ -80,6 +80,9 @@
        */
       this.removeLocationUuid = function() {
         gnSearchLocation.path(gnMdViewObj.from || gnSearchLocation.SEARCH);
+        if (gnSearchLocation.isSearch()) {
+          gnSearchLocation.setSearch(lastSearchParams);
+        }
       };
 
       /**
