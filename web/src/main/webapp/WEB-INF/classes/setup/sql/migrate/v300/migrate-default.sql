@@ -19,5 +19,3 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j',0,250,'y');
 
-ALTER TABLE ServiceParameters ADD COLUMN occur varchar(1) default '+';
-UPDATE ServiceParameters SET occur='+';
