@@ -23,25 +23,36 @@
 
 package org.fao.geonet.services.region;
 
+import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.Util;
 
 import org.fao.geonet.kernel.region.RegionParams;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
 
 //=============================================================================
 
 /**
  * Returns a specific region and coordinates given its id
  */
-
+@Controller
 public class List implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -53,24 +64,64 @@ public class List implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        String labelParam = Util.getParam(params, RegionParams.LABEL_SEARCH, null);
-        String categoryIdParam = Util.getParam(params, RegionParams.CATEGORY_SEARCH, null);
-        int maxRecordsParam = Util.getParam(params, RegionParams.MAX_RECORDS, -1);
+    @Autowired
+    private ServiceManager serviceManager;
 
+    /**
+     *
+     * Example Response
+     * <pre><code>
+     * &amp;regions count="1">
+     *   &amp;region id="country.1" hasGeom="true" categoryId="country">
+     *     &amp;label>
+     *       &amp;eng>France</eng>
+     *     &amp;/label>
+     *     &amp;category>
+     *       &amp;fre>Pays</fre>
+     *       &amp;eng>Country</eng>
+     *     &amp;/category>
+     *     &amp;/region>
+     * &amp;/regions>
+     * </code></pre>
+     * @throws Exception
+     *
+     * @param categoryId only return labels contained in the given category - optional
+     * @param label searches the labels for regions that contain the text in this parameters - optional
+     * @param maxRecords limit the number of results returned - optional
+     */
+
+    @RequestMapping(value = "/{lang}/regions.list", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public Element exec(@PathVariable String lang,
+                        @RequestParam(required = false) String label,
+                        @RequestParam(required = false) String categoryId,
+                        @RequestParam(defaultValue = "-1") int maxRecords,
+                        NativeWebRequest webRequest) throws Exception {
+
+        final HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+        ServiceContext context = serviceManager.createServiceContext("regions.list", lang, nativeRequest);
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
-        Element regions = null;
+
+        Collection<RegionsDAO> applicableDAOs = Lists.newArrayList();
         for (RegionsDAO dao : daos) {
             if (dao.includeInListing()) {
+                dao.
+            }
+        }
+
+        Element regions = null;
+        for (RegionsDAO dao : applicableDAOs) {
+            if (dao.includeInListing()) {
                 Request request = dao.createSearchRequest(context);
-                if (labelParam != null) {
-                    request.label(labelParam);
+                if (label != null) {
+                    request.label(label);
                 }
-                if (categoryIdParam != null) {
-                    request.categoryId(categoryIdParam);
+                if (categoryId != null) {
+                    request.categoryId(categoryId);
                 }
-                if (maxRecordsParam > 0) {
-                    request.maxRecords(maxRecordsParam);
+                if (maxRecords > 0) {
+                    request.maxRecords(maxRecords);
                 }
                 Element tmp = request.xmlResult();
                 if (regions != null) {

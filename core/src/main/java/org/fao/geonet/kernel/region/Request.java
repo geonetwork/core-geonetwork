@@ -69,7 +69,7 @@ public abstract class Request {
      */
     public Element xmlResult() throws Exception {
         Collection<Region> regions = execute();
-        Element result = new Element(REGIONS_EL);
+        Element result = new Element(REGIONS_EL).setAttribute("class", "array");
         result.setAttribute(COUNT_ATT, Integer.toString(regions.size()));
         for (Region region : regions) {
             result.addContent(region.toElement());

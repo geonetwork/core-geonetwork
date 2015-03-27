@@ -123,34 +123,6 @@
       <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
     </service>
 
-    <service name="regions.list">
-      <documentation>
-        <![CDATA[
-        
-        Parameters:
-        * category - only return labels contained in the given category - optional
-        * label - searches the labels for regions that contain the text in this parameters - optional
-        * maxRecords - limit the number of results returned - optional
-        
-        Example Response
-        ```
-        <regions count="1">
-          <region id="country.1" hasGeom="true" categoryId="country">
-            <label>
-              <eng>France</eng>
-            </label>
-            <category>
-                 <fre>Pays</fre>
-                 <eng>Country</eng>
-            </category>
-          </region>
-        </regions>
-        ```
-]]>
-      </documentation>
-      <class name=".services.region.List"/>
-    </service>
-
     <service name="regions.category.list">
       <documentation>
         <![CDATA[
