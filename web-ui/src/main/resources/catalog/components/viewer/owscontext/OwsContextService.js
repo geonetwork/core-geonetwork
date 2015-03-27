@@ -24,8 +24,9 @@
     'gnViewerSettings',
     '$translate',
     '$q',
+    '$filter',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q) {
+             $translate, $q, $filter) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -74,7 +75,7 @@
               if (type != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type);
                 if (olLayer) {
-                  bgLayers.push(olLayer);
+                  bgLayers.push({layer:olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
                   olLayer.set('group', 'Background layers');
@@ -82,11 +83,11 @@
                 }
               }
               else {
-                promises.push(this.createLayer(layer, map).then(
+                promises.push(this.createLayer(layer, map, i).then(
                     function(o) {
                       var olLayer = o.ol;
                       var ctxLayer = o.ctx;
-                      bgLayers.push(olLayer);
+                      bgLayers.push({layer:olLayer, idx: o.idx});
                       olLayer.displayInLayerManager = false;
                       olLayer.background = true;
                       olLayer.set('group', 'Background layers');
@@ -119,11 +120,13 @@
             gnViewerSettings.bgLayers.length = 0;
 
             var firstVisibleBgLayer = true;
+            bgLayers = $filter('orderBy')(bgLayers, 'idx');
+
             $.each(bgLayers, function(index, item) {
-              gnViewerSettings.bgLayers.push(item);
+              gnViewerSettings.bgLayers.push(item.layer);
               // the first visible bg layer wins and get displayed in the map
-              if (item.getVisible() && firstVisibleBgLayer) {
-                map.getLayers().insertAt(0, item);
+              if (item.layer.getVisible() && firstVisibleBgLayer) {
+                map.getLayers().insertAt(0, item.layer);
                 firstVisibleBgLayer = false;
               }
             });
@@ -277,8 +280,10 @@
        * Create a WMS ol.Layer from context object
        * @param {Object} layer layer
        * @param {ol.map} map map
+       * @param {numeric} bgIdx if it is a background layer, index in the
+       * dropdown
        */
-      this.createLayer = function(layer, map) {
+      this.createLayer = function(layer, map, bgIdx) {
 
         var defer = $q.defer();
 
@@ -304,7 +309,7 @@
                     l.set('title', layer.title);
                     l.set('label', layer.title);
                   }
-                  defer.resolve({ol: l, ctx: layer});
+                  defer.resolve({ol: l, ctx: layer, idx:bgIdx});
                 });
           }
         }
@@ -321,7 +326,7 @@
               l.set('label', layer.title);
             }
 
-            defer.resolve({ol: l, ctx: layer});
+            defer.resolve({ol: l, ctx: layer, idx:bgIdx});
           }, function() {
             console.warn('Failed to load layer from : ' + res.href +
                 'during capabilities reading.');
