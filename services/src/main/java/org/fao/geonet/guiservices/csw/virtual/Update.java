@@ -25,6 +25,7 @@ package org.fao.geonet.guiservices.csw.virtual;
 import jeeves.server.JeevesEngine;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParam;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,7 @@ public class Update {
             Params.SERVICENAME,
             Params.CLASSNAME,
             Params.SERVICEDESCRIPTION,
+            Params.SERVICED_EXPLICIT_QUERY,
             "_content_type"
     };
 
@@ -68,6 +70,7 @@ public class Update {
                  @RequestParam(Params.SERVICENAME) String serviceName,
                  @RequestParam(Params.CLASSNAME) String className,
                  @RequestParam(value=Params.SERVICEDESCRIPTION, defaultValue="", required=false) String serviceDescription,
+                 @RequestParam(value=Params.SERVICED_EXPLICIT_QUERY, defaultValue="", required=false) String explicitQuery,
                  @RequestParam Map<String, String> filters
                  )
             throws Exception {
@@ -92,7 +95,7 @@ public class Update {
 
             for (Map.Entry<String, String> filter : filters.entrySet()) {
                 if (filter.getValue() != null && !filter.getValue().equals("")) {
-                    service.getParameters().put(filter.getKey(), filter.getValue());
+                    service.addParameter(new ServiceParam(filter.getKey(), filter.getValue()));
                 }
             }
             serviceRepository.save(service);
@@ -102,9 +105,10 @@ public class Update {
             service.setClassName(className);
             service.setName(serviceName);
             service.setDescription(serviceDescription);
-            service.getParameters().clear();
+            service.setExplicitQuery(explicitQuery);
+            service.clearParameters();
             for (Map.Entry<String, String> filter : filters.entrySet()) {
-                service.getParameters().put(filter.getKey(), filter.getValue());
+                service.addParameter(new ServiceParam(filter.getKey(), filter.getValue()));
             }
 
             serviceRepository.save(service);

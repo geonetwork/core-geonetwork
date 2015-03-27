@@ -44,6 +44,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParam;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.ServiceRepository;
@@ -637,15 +638,26 @@ public class JeevesEngine {
                     Element srv = new Element("service");
                     Element cls = new Element("class");
 
-                    Map<String, String> paramList = service.getParameters();
-                    
-                    for (Map.Entry<String, String> serviceParam : paramList.entrySet()) {
-                        if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
-                            cls.addContent(new Element("param").setAttribute("name", "filter").setAttribute("value",
-                                    "+" + serviceParam.getKey() + ":" + serviceParam.getValue()));
+                    List<ServiceParam> paramList = service.getParameters();
+                    StringBuilder filter = new StringBuilder();
+                    if (!service.getExplicitQuery().isEmpty()) {
+                        filter.append(service.getExplicitQuery());
+                    }
+                    for (ServiceParam serviceParam : paramList) {
+                        if (serviceParam.getId().getValue() != null && !serviceParam.getId().getValue().trim().isEmpty()) {
+                            filter.append(" ");
+                            if (serviceParam.getOccur() == null ) {
+                                filter.append("+");
+                            } else {
+                                filter.append(serviceParam.getOccur());
+                            }
+                            filter.append(serviceParam.getId().getName()).append(":").append(serviceParam.getId().getValue());
                         }
                     }
-    
+                    cls.addContent(new Element("param").
+                            setAttribute("name", "filter").
+                            setAttribute("value", filter.toString().trim()));
+
                     srv.setAttribute("name", service.getName())
                             .addContent(
                                     cls.setAttribute("name",
@@ -656,7 +668,7 @@ public class JeevesEngine {
 
             _dbServices.add(eltServices);
 
-            for(int i=0; i< _dbServices.size(); i++){
+            for (int i=0; i< _dbServices.size(); i++){
                 initServices(_dbServices.get(i));
             }
         } catch (Exception e) {
