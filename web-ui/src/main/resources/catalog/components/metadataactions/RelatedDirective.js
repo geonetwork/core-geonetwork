@@ -63,6 +63,21 @@
               scope.$watch('uuid', function() {
                 scope.updateRelations();
               });
+
+              /**
+               * Return an array of all relations of the given types
+               * @returns {Array}
+               */
+              scope.getByTypes = function() {
+                var res = [];
+                var types = Array.prototype.splice.call(arguments, 0);
+                angular.forEach(scope.relations, function(rel) {
+                  if(types.indexOf(rel['@type']) >= 0 ){
+                    res.push(rel);
+                  }
+                });
+                return res;
+              };
             }
           };
         }]);
