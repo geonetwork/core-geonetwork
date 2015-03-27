@@ -27,6 +27,8 @@
       $scope.categoriesFilter = {};
       $scope.newFilterField = null;
       $scope.newFilterValue = null;
+      $scope.occurs = ['+',' ','-'];
+      $scope.showExplicitQuery = false;
       $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
         'denominator', '_source', '_cat', '_groupPublished'];
 
@@ -76,10 +78,11 @@
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
               $scope.virtualCSWSelected.serviceParameters = {};
+              $scope.showExplicitQuery = $scope.virtualCSWSelected.explicitQuery ? true : false;
               angular.forEach(params,
                   function(param) {
                     $scope.virtualCSWSelected.
-                        serviceParameters[param.name] = param.value;
+                        serviceParameters[param.name] = {value: param.value, occur: param.occur};
                   });
               $scope.virtualCSWUpdated = false;
 
@@ -117,6 +120,7 @@
           'id': '',
           'name': 'csw-servicename',
           'description': '',
+          'explicitQuery': '',
           'serviceParameters': {}
         };
         $timeout(function() {
