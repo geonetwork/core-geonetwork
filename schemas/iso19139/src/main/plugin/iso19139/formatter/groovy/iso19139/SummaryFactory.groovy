@@ -117,15 +117,15 @@ class SummaryFactory {
                 def title = isoHandlers.isofunc.clean(linkParts[0]);
                 def desc = isoHandlers.isofunc.clean(linkParts[1]);
                 def href = isoHandlers.isofunc.clean(linkParts[2]);
+                if (title.isEmpty()) {
+                    title = desc;
+                }
+                if (title.isEmpty()) {
+                    title = href;
+                }
 
-                if (href != '' || title != '') {
+                if (href != '') {
                     def protocol = linkParts[3].toLowerCase();
-                    if (title.isEmpty()) {
-                        title = desc;
-                    }
-                    if (title.isEmpty()) {
-                        title = href;
-                    }
                     def linkClass = href.isEmpty() ? 'text-muted' : '';
 
                     def imagesDir = "../../images/formatter/"
