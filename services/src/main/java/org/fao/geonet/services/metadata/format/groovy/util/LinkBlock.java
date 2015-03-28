@@ -42,7 +42,23 @@ public class LinkBlock {
     }
 
     public void put(LinkType type, Link link) {
+        final Collection<Link> links = this.links.get(type);
+        Link other = null;
+        for (Link l : links) {
+            if (l.getHref().equalsIgnoreCase(link.getHref())) {
+                other = l;
+                break;
+            }
+        }
+        if (other != null) {
+            if (other.getText().trim().isEmpty()) {
+                this.links.remove(type, other);
+            } else {
+                return;
+            }
+        }
         this.links.put(type, link);
+
     }
 
     public Collection<LinkBlockEntry> getLinks() {
