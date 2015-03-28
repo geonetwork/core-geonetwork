@@ -150,20 +150,35 @@ public class Handlers {
 
     def onlineResourceEls = { els ->
         def links = []
-
+        def clean = { text ->
+            if (text == null) {
+                return ''
+            }
+            def trimmed = text.trim()
+            if (trimmed  =~ /\W/) {
+                trimmed = '';
+            }
+            return trimmed;
+        }
         els.each {it.'gmd:CI_OnlineResource'.each { link ->
-            links << [
+            def model = [
                     href : isofunc.isoUrlText(link.'gmd:linkage'),
-                    name : isofunc.isoText(link.'gmd:name'),
-                    desc : isofunc.isoText(link.'gmd:description')
+                    name : clean(isofunc.isoText(link.'gmd:name')),
+                    desc : clean(isofunc.isoText(link.'gmd:description'))
             ]
-        }
-        }
+            if (model.href != '' || model.name != '' || model.desc != '') {
+                links << model;
+            }
+        }}
 
-        handlers.fileResult('html/online-resource.html', [
-                label: f.nodeLabel(els[0]),
-                links: links
-        ])
+        if (links.isEmpty()) {
+            return ''
+        } else {
+            handlers.fileResult('html/online-resource.html', [
+                    label: f.nodeLabel(els[0]),
+                    links: links
+            ])
+        }
     }
 
     def coupledResourceEls = { els ->
@@ -198,7 +213,7 @@ public class Handlers {
                     tip : tip,
                     name : scopedName.trim().isEmpty() ? identifier : scopedName,
                     class: cls
-                ]);
+            ]);
         }
 
         def label = f.nodeLabel("srv:SV_CoupledResource", null)
