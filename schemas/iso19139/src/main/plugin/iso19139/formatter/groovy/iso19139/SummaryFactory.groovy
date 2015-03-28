@@ -114,43 +114,46 @@ class SummaryFactory {
 
             links.each { link ->
                 def linkParts = link.split("\\|")
-                def title = linkParts[0];
-                def desc = linkParts[1];
-                def href = linkParts[2];
-                def protocol = linkParts[3].toLowerCase();
-                if (title.trim().isEmpty()) {
-                    title = desc;
-                }
-                if (title.trim().isEmpty()) {
-                    title = href;
-                }
-                def linkClass = href.trim().isEmpty() ? 'text-muted' : '';
+                def title = isoHandlers.isofunc.clean(linkParts[0]);
+                def desc = isoHandlers.isofunc.clean(linkParts[1]);
+                def href = isoHandlers.isofunc.clean(linkParts[2]);
 
-                def imagesDir = "../../images/formatter/"
-                def type;
-                def icon = "";
-                def iconClasses = "";
-                if (protocol.contains("kml")) {
-                    type = "kml";
-                    icon = imagesDir + "kml.png";
-                } else if (protocol.contains("ogc:")) {
-                    type = "ogc";
-                } else if (protocol.contains("wms")) {
-                    type = "wms";
-                    icon = imagesDir + "wms.png";
-                } else if (protocol.contains("download")) {
-                    type = "download";
-                    iconClasses = "fa fa-download"
-                } else if (protocol.contains("wfs")) {
-                    type = "wfs";
-                    icon = imagesDir + "wfs.png";
-                } else {
-                    type = "link";
-                    iconClasses = "fa fa-link"
-                }
+                if (href != '' || title != '') {
+                    def protocol = linkParts[3].toLowerCase();
+                    if (title.isEmpty()) {
+                        title = desc;
+                    }
+                    if (title.isEmpty()) {
+                        title = href;
+                    }
+                    def linkClass = href.isEmpty() ? 'text-muted' : '';
 
-                def linkType = new LinkType(type, icon, iconClasses)
-                linkBlock.put(linkType, new Link(href, title, linkClass))
+                    def imagesDir = "../../images/formatter/"
+                    def type;
+                    def icon = "";
+                    def iconClasses = "";
+                    if (protocol.contains("kml")) {
+                        type = "kml";
+                        icon = imagesDir + "kml.png";
+                    } else if (protocol.contains("ogc:")) {
+                        type = "ogc";
+                    } else if (protocol.contains("wms")) {
+                        type = "wms";
+                        icon = imagesDir + "wms.png";
+                    } else if (protocol.contains("download")) {
+                        type = "download";
+                        iconClasses = "fa fa-download"
+                    } else if (protocol.contains("wfs")) {
+                        type = "wfs";
+                        icon = imagesDir + "wfs.png";
+                    } else {
+                        type = "link";
+                        iconClasses = "fa fa-link"
+                    }
+
+                    def linkType = new LinkType(type, icon, iconClasses)
+                    linkBlock.put(linkType, new Link(href, title, linkClass))
+                }
             }
         }
 

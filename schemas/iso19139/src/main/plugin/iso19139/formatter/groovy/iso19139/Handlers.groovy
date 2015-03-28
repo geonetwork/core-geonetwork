@@ -150,21 +150,11 @@ public class Handlers {
 
     def onlineResourceEls = { els ->
         def links = []
-        def clean = { text ->
-            if (text == null) {
-                return ''
-            }
-            def trimmed = text.trim()
-            if (trimmed  =~ /\W/) {
-                trimmed = '';
-            }
-            return trimmed;
-        }
         els.each {it.'gmd:CI_OnlineResource'.each { link ->
             def model = [
                     href : isofunc.isoUrlText(link.'gmd:linkage'),
-                    name : clean(isofunc.isoText(link.'gmd:name')),
-                    desc : clean(isofunc.isoText(link.'gmd:description'))
+                    name : isofunc.clean(isofunc.isoText(link.'gmd:name')),
+                    desc : isofunc.clean(isofunc.isoText(link.'gmd:description'))
             ]
             if (model.href != '' || model.name != '' || model.desc != '') {
                 links << model;
