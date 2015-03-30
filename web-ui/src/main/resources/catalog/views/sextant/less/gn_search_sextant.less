@@ -5,7 +5,7 @@
 @sxt-orange: #F28033;
 @results-toolbar-height: 2.8em;
 
-@media (min-width: @screen-lg-min) {
+@media (min-width: @screen-md-min) {
   html, body,
   body > div,
   .container-fluid,
@@ -319,6 +319,44 @@
   }
 
 }
+
+@media (min-width: @screen-md-min) {
+  .sxt-col-md-6 {
+    width: 50%;
+    float: left;
+  }
+}
+@media (min-width: @screen-lg-min) {
+  .sxt-col-lg-4 {
+    width: 33.333%;
+    float: left;
+  }
+}
+.sxt-max-md {
+  .list-group-item.sxt-col-lg-4 {
+    width: 50%;
+  }
+  .expander {
+    display: none;
+  }
+}
+.sxt-max-sm {
+  .list-group-item.sxt-col-md-6 {
+    width: 100%;
+  }
+  .maincol.col-md-9,
+  .maincol.col-md-3 {
+    width: 100%;
+    height: auto;
+  }
+  .maincol.col-md-9 {
+    height: ~"calc(100% - 6.5em)";
+  }
+  [gn-map-field], .gn-facet, .expander {
+    display:none;
+  }
+}
+
 ul.gn-resultview {
 
   @thumbnail-width: 170px;
@@ -356,6 +394,12 @@ ul.gn-resultview {
       &:nth-child(3n+1) {
         padding-left: 10px;
       }
+    }
+    .sxt-max-md &:nth-child(3n+1) {
+      padding-left: 0;
+    }
+    .sxt-max-md &:nth-child(2n+1) {
+      padding-left: 10px;
     }
     &:hover {
       background: white;
