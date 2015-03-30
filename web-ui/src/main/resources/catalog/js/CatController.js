@@ -141,7 +141,7 @@
 
             // The md provide the information about
             // if the current user can edit records or not.
-            var editable = md['geonet:info'].edit == 'true';
+            var editable = angular.isDefined(md['geonet:info'].edit) && md['geonet:info'].edit == 'true';
 
 
             // A second filter is for harvested record
