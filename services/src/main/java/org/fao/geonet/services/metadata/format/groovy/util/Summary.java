@@ -73,7 +73,7 @@ public class Summary {
         params.put("addOverviewNavItem", addOverviewNavItem);
         params.put("navBar", navBar);
         params.put("navBarOverflow", navBarOverflow);
-        params.put("showNavOverflow", !navBarOverflow.isEmpty() || addCompleteNavItem);
+        params.put("showNavOverflow", !navBarOverflow.isEmpty());
         params.put("addCompleteNavItem", addCompleteNavItem);
         params.put("content", content);
         params.put("extents", extent != null ? extent : "");
