@@ -180,7 +180,7 @@
 
       this.load = function(url, selector) {
         $http.get(url).then(function(response) {
-          var scope = angular.element($(selector)).scope();
+          var scope = $rootScope.$new();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
