@@ -620,3 +620,19 @@ ul.gn-resultview {
     display:none;
   }
 }
+
+[gn-metadata-display] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  .panel-body {
+    overflow-y: auto;
+    height: calc(~"100% - 55px");
+  }
+  .metadata {
+    height: 100%;
+  }
+}

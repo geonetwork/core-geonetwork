@@ -14,11 +14,12 @@
           <!-- </a> -->
 
           <h4 class="row gn-md-title">
-            <a href="#/metadata/{{md.getUuid()}}"
+            <a href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+            <!--<a href="#/metadata/{{md.getUuid()}}"
               data-ng-click="openRecord($index, md, searchResults.records)"
               title="{{md.title || md.defaultTitle}}">
-              <!-- Icon for types - usually only one -->
-              <!-- TODO : add feature cat -->
+              &lt;!&ndash; Icon for types - usually only one &ndash;&gt;
+              &lt;!&ndash; TODO : add feature cat &ndash;&gt;
               <span data-ng-if="md.type.indexOf('dataset')>=0"
                 class="fa fa-database"
                 title="{{'dataset' | translate}}"></span>
@@ -37,7 +38,7 @@
               <span data-ng-if="md.type.indexOf('service')>=0"
                 class="fa fa-globe"
                 title="{{'service' | translate}}"></span>
-              {{md.title || md.defaultTitle}}</a>
+              {{md.title || md.defaultTitle}}</a>-->
           </h4>
 
 

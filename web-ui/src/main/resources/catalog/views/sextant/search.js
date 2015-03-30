@@ -11,6 +11,7 @@
   goog.require('sxt_directives');
   goog.require('sxt_panier_directive');
   goog.require('sxt_interceptors');
+  goog.require('sxt_mdactionmenu');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -21,7 +22,8 @@
     'gn_thesaurus',
     'sxt_directives',
     'sxt_panier_directive',
-    'sxt_interceptors'
+    'sxt_interceptors',
+    'sxt_mdactionmenu'
   ]);
 
   module.value('sxtGlobals', {});
@@ -63,7 +65,9 @@
       if (!$location.path()) {
         gnSearchLocation.setSearch();
       }
-      gnSearchLocation.initTabRouting($scope.mainTabs);
+
+      gnMdView.initFormatter('body');
+      //gnSearchLocation.initTabRouting($scope.mainTabs);
 
       $scope.gotoPanier = function() {
         $location.path('/panier');
@@ -142,6 +146,7 @@
       };
 
       /** Manage metadata view */
+/*
       $scope.mdView = mdView;
       gnMdView.initMdView();
 
@@ -159,6 +164,7 @@
       $scope.previousRecord = function() {
         $scope.openRecord(mdView.current.index - 1);
       };
+*/
 
       ///////////////////////////////////////////////////////////////////
 
