@@ -100,7 +100,9 @@
           var tab = $location.path().
               match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
 
-          tabs[tab].active = true;
+          if(angular.isDefined(tabs[tab])) {
+            tabs[tab].active = true;
+          }
         };
         updateTabs();
         $rootScope.$on('$locationChangeSuccess', updateTabs);
