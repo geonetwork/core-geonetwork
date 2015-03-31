@@ -1,12 +1,15 @@
 package org.fao.geonet.domain.responses;
 
 import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParam;
 
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This class is a helper class for the service that returns a csw virtual service configuration.
@@ -33,6 +36,7 @@ public class CswVirtualServiceResponse implements Serializable {
     private int id;
     private String name;
     private String description;
+    private String explicitQuery;
 
     public List<ServiceParameter> getParameter() {
         return parameter;
@@ -69,6 +73,14 @@ public class CswVirtualServiceResponse implements Serializable {
         this.description = description;
     }
 
+    public String getExplicitQuery() {
+        return explicitQuery;
+    }
+
+    public void setExplicitQuery(String explicitQuery) {
+        this.explicitQuery = explicitQuery;
+    }
+
     public CswVirtualServiceResponse() {
 
     }
@@ -78,12 +90,13 @@ public class CswVirtualServiceResponse implements Serializable {
         id = service.getId();
         name = service.getName();
         description = service.getDescription();
-        parameter = new ArrayList<ServiceParameter>();
+        this.explicitQuery = service.getExplicitQuery();
+        parameter = new ArrayList<>();
 
-        final Map<String,String> serviceParameters = service.getParameters();
+        final List<ServiceParam> serviceParameters = service.getParameters();
 
-        for (Map.Entry<String, String> serviceParameter : serviceParameters.entrySet()) {
-            parameter.add(new ServiceParameter(serviceParameter.getKey(), serviceParameter.getValue()));
+        for (ServiceParam serviceParameter : serviceParameters) {
+            parameter.add(new ServiceParameter(serviceParameter));
         }
     }
 }

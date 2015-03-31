@@ -71,7 +71,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
             throw new Error(e);
         }
         String[] initSql = {
-                "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(32) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
+                "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(128) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
                 HASH + " VARCHAR(256) NOT NULL, " + RAW_DATA + " CLOB NOT NULL, PRIMARY KEY (" + GROUPNAME + ", " + TYPE + "))"
         };
         String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_DELAY=-1";

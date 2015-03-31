@@ -1,10 +1,12 @@
 package org.fao.geonet.domain.responses;
 
+import org.fao.geonet.domain.ServiceParam;
+
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
-import java.io.Serializable;
 
 /**
  * Class to model CSW Virtual service parameter used for the CSW virtual get service response
@@ -32,18 +34,30 @@ public  class ServiceParameter implements Serializable {
         this.value = value;
     }
 
+    public Character getOccur() {
+        return occur;
+    }
+
+    public void setOccur(Character occur) {
+        this.occur = occur;
+    }
+
     @XmlAttribute
     protected String name;
 
     @XmlValue
     protected String value;
 
+    @XmlValue
+    protected Character occur;
+
     public ServiceParameter() {
 
     }
 
-    public ServiceParameter(String name, String value) {
-        this.name = name;
-        this.value = value;
+    public ServiceParameter(ServiceParam param) {
+        this.name = param.getName();
+        this.value = param.getValue();
+        this.occur = param.getOccur();
     }
 }
