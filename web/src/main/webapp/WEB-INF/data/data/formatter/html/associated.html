@@ -30,7 +30,8 @@
 
                         <div class="target" style="display: none;">
                             <img class="logo" src="{{link.logo}}" fmt-if="link.logo"/>
-                            <p class="text-justify">{{link.abstract}}</p>
+                            <h3 class="text-justify" >{{link.tip | capitalize}}</h3>
+                            <p class="text-justify" fmt-if="link.abstract">{{link.abstract}}</p>
 
 
                             <div id="associated-{{link.metadataId}}">
