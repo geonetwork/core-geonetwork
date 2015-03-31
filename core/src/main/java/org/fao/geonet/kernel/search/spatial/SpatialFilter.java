@@ -29,8 +29,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.vividsolutions.jts.index.SpatialIndex;
-import org.fao.geonet.JeevesJCS;
-import org.fao.geonet.utils.Log;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.lucene.document.Document;
@@ -44,17 +42,17 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.OpenBitSet;
+import org.fao.geonet.JeevesJCS;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Log;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
@@ -73,19 +71,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.SPATIAL_FILTER_JCS;
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter._SPATIAL_INDEX_TYPENAME;
 
 public abstract class SpatialFilter extends Filter
 {
-    private static final SimpleFeatureType FEATURE_TYPE;
-    static {
-        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-        builder.add("the_geom", Geometry.class, DefaultGeographicCRS.WGS84);
-        builder.setDefaultGeometry("the_geom");
-        builder.setName(_SPATIAL_INDEX_TYPENAME);
-        FEATURE_TYPE = builder.buildFeatureType();
-    }
-
 	private static final Geometry WORLD_BOUNDS;
 	private static final int MAX_FIDS_PER_QUERY = 5000;
 	static {
@@ -117,7 +105,7 @@ public abstract class SpatialFilter extends Filter
 
     protected SpatialFilter(Query query, int numHits, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        this(query,numHits,JTS.toGeometry(bounds),sourceAccessor);
+        this(query, numHits, JTS.toGeometry(bounds), sourceAccessor);
     }
 
     public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
@@ -256,8 +244,10 @@ public abstract class SpatialFilter extends Filter
           Geometry geom = (Geometry) jcs.get(id.getID());
             if( geom!=null ){
                 iter.remove();
-                SimpleFeature feature = SimpleFeatureBuilder.build(FEATURE_TYPE, new Object[]{geom}, id.getID());
-                if( evaluateFeature(feature) ){
+                final SimpleFeatureBuilder simpleFeatureBuilder = new SimpleFeatureBuilder(this.sourceAccessor.one().getSchema());
+                simpleFeatureBuilder.set(this.sourceAccessor.one().getSchema().getGeometryDescriptor().getName(), geom);
+                final SimpleFeature simpleFeature = simpleFeatureBuilder.buildFeature(id.getID());
+                if( evaluateFeature(simpleFeature) ){
                   for(int doc:docIndexLookup.get(id)) {
                       bits.set(doc);
                   }
