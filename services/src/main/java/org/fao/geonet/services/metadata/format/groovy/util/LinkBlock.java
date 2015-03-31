@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class LinkBlock {
     public static String CSS_CLASS_PREFIX = "summary-links-";
 
-    public final Multimap<LinkType, Link> links = LinkedHashMultimap.create();
+    public final Multimap<LinkType, Link> linkMap = LinkedHashMultimap.create();
     private String html;
 
     /**
@@ -42,7 +42,7 @@ public class LinkBlock {
     }
 
     public void put(LinkType type, Link link) {
-        final Collection<Link> links = this.links.get(type);
+        final Collection<Link> links = this.linkMap.get(type);
         Link other = null;
         for (Link l : links) {
             if (l.getHref().equalsIgnoreCase(link.getHref())) {
@@ -52,17 +52,16 @@ public class LinkBlock {
         }
         if (other != null) {
             if (other.getText().trim().isEmpty()) {
-                this.links.remove(type, other);
+                this.linkMap.remove(type, other);
             } else {
                 return;
             }
         }
-        this.links.put(type, link);
-
+        this.linkMap.put(type, link);
     }
 
     public Collection<LinkBlockEntry> getLinks() {
-        return Collections2.transform(links.asMap().entrySet(), new Function<Map.Entry<LinkType, Collection<Link>>, LinkBlockEntry>() {
+        return Collections2.transform(linkMap.asMap().entrySet(), new Function<Map.Entry<LinkType, Collection<Link>>, LinkBlockEntry>() {
             @Nullable
             @Override
             public LinkBlockEntry apply(Map.Entry<LinkType, Collection<Link>> input) {

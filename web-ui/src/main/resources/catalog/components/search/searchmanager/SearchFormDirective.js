@@ -96,9 +96,6 @@
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
 
-      //Close metadata views if some are opened
-      $scope.$broadcast('closeMdView');
-
       // Set default pagination if not set
       if ((!keepPagination &&
           !$scope.searchObj.permalink) ||
@@ -184,12 +181,12 @@
         }
       };
 
-      $scope.$on('$locationChangeSuccess', function() {
+      $scope.$on('$locationChangeSuccess', function(e,newUrl,oldUrl) {
         // We are not in a url search so leave
         if (!gnSearchLocation.isSearch()) return;
 
         // We are getting back to the search, no need to reload it
-        if ($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
+        if (newUrl == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
         for (var o in facetsParams) {

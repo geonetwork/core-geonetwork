@@ -14,6 +14,8 @@
       this.METADATA = '/metadata/';
       this.HOME = '/home';
 
+      var state = {};
+
       /** ---- get methods from $location ---- **/
       this.absUrl = function() {
         return $location.absUrl();
@@ -30,8 +32,9 @@
         return $location.path() == this.SEARCH;
       };
 
-      this.isMdView = function() {
-        return $location.path().indexOf(this.METADATA) == 0;
+      this.isMdView = function(path) {
+        var p = path || $location.path();
+        return p.indexOf(this.METADATA) == 0;
       };
 
       this.isMap = function() {
@@ -53,6 +56,7 @@
 
       this.setUuid = function(uuid) {
         $location.path(this.METADATA + uuid);
+        this.removeParams();
       };
 
       this.getUuid = function() {
@@ -86,6 +90,10 @@
         $location.search({});
       };
 
+      this.restoreSearch = function() {
+        this.setSearch(state.lastSearchParams);
+      };
+
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
@@ -97,6 +105,34 @@
         updateTabs();
         $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
+
+      var that = this;
+
+      /**
+       * Keep history and state of routing for to keep the search state.
+       * Actually, if you had run a search, then moved to another location,
+       * when you get back to the search, the params are kept and the search
+       * is not fired again.
+       */
+      var initSearchRouting = function(evt, newUrl, oldUrl) {
+        state.old = state.current || {path: ''};
+        state.current = {
+          params: $location.search(),
+          path: $location.path()
+        };
+        if(that.isMdView(state.old.path) &&
+            state.current.path == that.SEARCH) {
+          $rootScope.$broadcast('closeMdView');
+        }
+        if(state.old.path == that.SEARCH &&
+            state.current.path != that.SEARCH) {
+          state.lastSearchParams = state.old.params;
+          that.lastSearchUrl = oldUrl;
+        }
+      };
+      initSearchRouting();
+      $rootScope.$on('$locationChangeSuccess', initSearchRouting);
+
     }
   ]);
 })();
