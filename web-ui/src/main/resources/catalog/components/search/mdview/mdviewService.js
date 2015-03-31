@@ -25,8 +25,6 @@
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils) {
 
-      var lastSearchParams = {};
-
       // Keep where the metadataview come from to get back on close
       $rootScope.$on('$locationChangeStart', function(o, v) {
         if (!gnSearchLocation.isMdView()) {
@@ -65,11 +63,6 @@
        * @param {string} uuid
        */
       this.setLocationUuid = function(uuid) {
-        if (gnSearchLocation.isSearch()) {
-          lastSearchParams = angular.copy(gnSearchLocation.getParams());
-          gnSearchLocation.saveLastUrl();
-          gnSearchLocation.removeParams();
-        }
         gnSearchLocation.setUuid(uuid);
       };
 
@@ -80,9 +73,6 @@
        */
       this.removeLocationUuid = function() {
         gnSearchLocation.path(gnMdViewObj.from || gnSearchLocation.SEARCH);
-        if (gnSearchLocation.isSearch()) {
-          gnSearchLocation.setSearch(lastSearchParams);
-        }
       };
 
       /**

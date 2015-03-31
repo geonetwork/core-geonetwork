@@ -14,6 +14,8 @@
       this.METADATA = '/metadata/';
       this.HOME = '/home';
 
+      var state = {};
+
       /** ---- get methods from $location ---- **/
       this.absUrl = function() {
         return $location.absUrl();
@@ -53,6 +55,7 @@
 
       this.setUuid = function(uuid) {
         $location.path(this.METADATA + uuid);
+        this.removeParams();
       };
 
       this.getUuid = function() {
@@ -97,6 +100,33 @@
         updateTabs();
         $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
+
+      var that = this;
+
+      /**
+       * Keep history and state of routing for to keep the search state.
+       * Actually, if you had run a search, then moved to another location,
+       * when you get back to the search, the params are kept and the search
+       * is not fired again.
+       */
+      var initSearchRouting = function() {
+        state.old = state.current || {path: ''};
+        state.current = {
+          params: $location.search(),
+          path: $location.path()
+        };
+        if(state.old.path != that.SEARCH &&
+            state.current.path == that.SEARCH && state.lastSearchParams) {
+          $location.search(state.lastSearchParams);
+          that.saveLastUrl();
+        }
+        if(state.old.path == that.SEARCH &&
+            state.current.path != that.SEARCH) {
+          state.lastSearchParams = state.old.params;
+        }
+      };
+      $rootScope.$on('$locationChangeSuccess', initSearchRouting);
+
     }
   ]);
 })();
