@@ -32,8 +32,9 @@
         return $location.path() == this.SEARCH;
       };
 
-      this.isMdView = function() {
-        return $location.path().indexOf(this.METADATA) == 0;
+      this.isMdView = function(path) {
+        var p = path || $location.path();
+        return p.indexOf(this.METADATA) == 0;
       };
 
       this.isMap = function() {
@@ -89,6 +90,10 @@
         $location.search({});
       };
 
+      this.restoreSearch = function() {
+        this.setSearch(state.lastSearchParams);
+      };
+
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
@@ -109,22 +114,23 @@
        * when you get back to the search, the params are kept and the search
        * is not fired again.
        */
-      var initSearchRouting = function() {
+      var initSearchRouting = function(evt, newUrl, oldUrl) {
         state.old = state.current || {path: ''};
         state.current = {
           params: $location.search(),
           path: $location.path()
         };
-        if(state.old.path != that.SEARCH &&
-            state.current.path == that.SEARCH && state.lastSearchParams) {
-          $location.search(state.lastSearchParams);
-          that.saveLastUrl();
+        if(that.isMdView(state.old.path) &&
+            state.current.path == that.SEARCH) {
+          $rootScope.$broadcast('closeMdView');
         }
         if(state.old.path == that.SEARCH &&
             state.current.path != that.SEARCH) {
           state.lastSearchParams = state.old.params;
+          that.lastSearchUrl = oldUrl;
         }
       };
+      initSearchRouting();
       $rootScope.$on('$locationChangeSuccess', initSearchRouting);
 
     }

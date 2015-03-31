@@ -72,7 +72,12 @@
        * at last search.
        */
       this.removeLocationUuid = function() {
-        gnSearchLocation.path(gnMdViewObj.from || gnSearchLocation.SEARCH);
+        if(gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
+          gnSearchLocation.path(gnMdViewObj.from);
+        }
+        else {
+          gnSearchLocation.restoreSearch();
+        }
       };
 
       /**
@@ -128,9 +133,6 @@
           if (uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
-          }
-          else {
-            $rootScope.$broadcast('closeMdView');
           }
         };
         loadFormatter();
