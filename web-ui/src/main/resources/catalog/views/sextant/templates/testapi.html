@@ -26,14 +26,21 @@
 <script src="/geonetwork/static/gn_search_sextant.js"></script>
 
 <script type="text/javascript">
-  var module = angular.module('gn_cat_controller');
 
-  module.config(['gnGlobalSettings',
+  var catModule = angular.module('gn_cat_controller');
+  catModule.config(['gnGlobalSettings',
     function(gnGlobalSettings) {
       gnGlobalSettings.locale = {
         lang: 'en'
       };
       gnGlobalSettings.gnUrl = '/geonetwork/srv/eng/';
     }]);
+
+  var searchModule = angular.module('gn_search');
+  searchModule.config(['gnSearchSettings',
+    function(gnSearchSettings) {
+      gnSearchSettings.formatterTarget = '.gn';
+    }]);
+
 </script>
 </html>

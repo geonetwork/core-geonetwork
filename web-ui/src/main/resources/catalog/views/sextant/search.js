@@ -66,7 +66,7 @@
         gnSearchLocation.setSearch();
       }
 
-      gnMdView.initFormatter('body');
+      gnMdView.initFormatter(gnSearchSettings.formatterTarget || 'body');
       gnSearchLocation.initTabRouting($scope.mainTabs);
 
       $scope.gotoPanier = function() {
