@@ -1,23 +1,67 @@
-<!DOCTYPE html SYSTEM "html">
-<html ng-app="gn_search_sextant" lang="eng" id="ng-app">
+<!DOCTYPE html>
+<html ng-app="gn_search_sextant" xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
 <head>
+  <title>Sextant</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-language" content="en-EN"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Sextant - Ifremer</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <link href="/ifremer/new/css/styles.css" rel="stylesheet"/>
+  <link href="/ifremer/new/css/theme.css" rel="stylesheet"/>
+  <link href="/ifremer/new/css/themesextant.css" rel="stylesheet"/>
 
-  <link rel="icon" type="image/gif" href="/geonetwork/images/logos/favicon.gif">
-  <link rel="shortcut icon" type="image/x-icon" href="/geonetwork/images/logos/favicon.ico">
-  <link href="/geonetwork/static/gn_search_sextant.css" rel="stylesheet" media="screen">
+  <!-- Sextant -->
+  <!--	<link href="/geonetwork/static/gn_search_sextant.css" rel="stylesheet" media="screen">  -->
+  <link href="/geonetwork/static/api.css" rel="stylesheet" media="screen">
   <link href="/geonetwork/static/srv_custom_style.css" rel="stylesheet" media="screen">
-</head>
 
+</head>
 <body data-ng-controller="GnCatController">
-<div data-ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
+<div class="container-fluid">
+  <div id="wrapper" style="min-height: 100%">
+    <header class="navbar navbar-static-top withmargin">
+      <div class="container">
+        <div class="navbar-header">
+          <h1 class="navbar-brand">
+            <a href="index.htm">SEXTANT</a><span class="hidden-xs">Infrastructure de donn&eacute;es g&eacute;ographiques marines et littorales</span>
+          </h1>
+        </div>
+
+        <div class="container right hidden-xs hidden-sm">
+          <a href="" ><img src="/ifremer/new/images/projets/ifremer.png" alt="[]" /></a>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Test API Sextant6 </h1>
+    </div>
+
+    <div class="gn sxt-max-md" data-ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
+
+
+
+  </div> <!-- /wrap -->
+  <!--
+  <footer id="footer" class="container footer">
+    <div class="col-md-9 col-xs-6">
+      <ul>
+        <li style="color:white">
+          <a href="http://sextant.ifremer.fr/">SEXTANT</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3 col-xs-6" style="text-align: right">
+      <ul>
+        <li>
+          <a href="http://www.ifremer.fr/sextant/fr/footernavigation/mentions-legales">LEGAL NOTICE</a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+  -->
+</div>
 </body>
 
 
