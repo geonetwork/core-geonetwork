@@ -1,4 +1,5 @@
 .gn {
+    position: relative;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -8464,7 +8465,7 @@
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: calc(11%);
+  max-height: calc(100% - 89px);
   z-index: 2000;
 }
 .gn .gn-popup .gn-share-grid {
@@ -8580,7 +8581,7 @@
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: calc(11%);
+  max-height: calc(100% - 89px);
   z-index: 2000;
 }
 @media (max-width: 768px) {
@@ -8605,7 +8606,7 @@
 .gn .gn-popup-content {
   overflow: auto;
   max-width: inherit;
-  max-height: calc(-49%);
+  max-height: calc(100% - 149px);
   font-size: 12px;
 }
 @media (max-width: 480px) {
@@ -8727,7 +8728,7 @@
 .gn [gn-main-viewer] .search-container .dropdown-menu,
 .gn .gn-main-viewer .search-container .dropdown-menu {
   width: 100%;
-  top: calc(97%);
+  top: calc(100% - 3px);
   background: rgba(255, 255, 255, 0.9);
   padding: 0 0 1em;
 }
@@ -8810,8 +8811,8 @@
   right: 3em;
   width: 26em;
   min-height: 12.8em;
-  max-height: calc(98%);
-  max-width: calc(96%);
+  max-height: calc(100% - 2em);
+  max-width: calc(100% - 4em);
   overflow-y: auto;
   transition: opacity 0.3s ease;
 }
@@ -9219,7 +9220,7 @@
 .gn .gn-main-viewer .overlay {
   position: absolute;
   bottom: 12px;
-  left: calc(-12px);
+  left: calc(-10px - 2em);
   background: rgba(60, 60, 60, 0.8);
   line-height: 2em;
   padding: 1em;
@@ -9388,7 +9389,7 @@
   min-width: 200px;
   max-width: 1200px;
   min-height: 100px;
-  max-height: calc(11%);
+  max-height: calc(100% - 89px);
   z-index: 2000;
   height: auto;
 }
@@ -10397,7 +10398,7 @@
 .gn [sxt-main-viewer] .panel-ncwms-container {
   position: absolute;
   top: 50%;
-  height: calc(46%);
+  height: calc(50% - 4em);
   left: 15px;
   right: 15px;
 }
@@ -10721,7 +10722,7 @@
     padding: 0 5px;
   }
   .gn [search-results] {
-    height: calc(97.2%);
+    height: calc(100% -  2.8em);
     overflow: auto;
   }
   .gn .gn-searchform {
@@ -10784,7 +10785,7 @@
   position: relative;
 }
 .gn .row.hfull {
-  height: calc(98%);
+  height: calc(100% - 2em);
   margin: 1em 0 0 ;
 }
 .gn .expander {
@@ -10850,7 +10851,7 @@
   line-height: 1.5;
 }
 .gn [data-ng-search-form] [gn-map-field] {
-  width: calc(130%);
+  width: calc(100% + 30px);
   margin-left: -15px;
   margin-top: 25px;
   border-radius: 0;
@@ -11026,7 +11027,7 @@
   height: auto;
 }
 .gn.sxt-max-sm .maincol.col-md-9 {
-  height: calc(93.5%);
+  height: calc(100% - 6.5em);
 }
 .gn.sxt-max-sm [gn-map-field],
 .gn.sxt-max-sm .gn-facet,
@@ -11109,7 +11110,7 @@
 }
 .gn ul.gn-resultview li.list-group-item .md-abstract {
   float: left;
-  width: calc(65%);
+  width: calc(66% - 1em);
 }
 .gn ul.gn-resultview li.list-group-item div.gn-md-links {
   right: auto;
@@ -11291,7 +11292,7 @@
 }
 .gn [sxt-main-viewer] .layers {
   max-height: none;
-  height: calc(96.4%);
+  height: calc(100% - 3.6em);
   border-bottom: 2px dotted rgba(0, 0, 0, 0.2);
 }
 .gn [sxt-main-viewer] .layers.layers-tools-expanded {
@@ -11299,14 +11300,14 @@
   height: 50%;
 }
 .gn [sxt-main-viewer] .sxt-layertree {
-  max-height: calc(96%);
-  height: calc(96%);
+  max-height: calc(100% - 4em);
+  height: calc(100% - 4em);
   overflow-y: auto;
 }
 .gn [sxt-main-viewer] .layers-tools {
   position: absolute;
   bottom: 0px;
-  top: calc(96%);
+  top: calc(100% - 4em);
   overflow: hidden;
   width: 100%;
   height: 4em;
@@ -11316,7 +11317,7 @@
   margin-top: 0;
 }
 .gn [sxt-main-viewer] .layers-tools .panel-carousel-window {
-  height: calc(96.6%);
+  height: calc(100% - 3.4em);
 }
 .gn [sxt-main-viewer] .layers-tools .panel-carousel-container {
   height: 100%;
@@ -11342,3 +11343,20 @@
     display: none;
   }
 }
+
+.gn [gn-metadata-display] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+}
+.gn [gn-metadata-display] .panel-body {
+    overflow-y: auto;
+    height: calc(100% - 55px);
+}
+.gn [gn-metadata-display] .metadata {
+    height: 100%;
+}
+
