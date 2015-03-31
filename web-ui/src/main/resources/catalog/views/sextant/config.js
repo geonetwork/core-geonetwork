@@ -146,10 +146,6 @@
           titleInfo: 0,
           active: false
         },
-        metadata: {
-          title: 'view',
-          active: false
-        },
         map: {
           title: 'Map',
           active: false,

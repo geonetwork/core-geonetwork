@@ -67,7 +67,7 @@
       }
 
       gnMdView.initFormatter('body');
-      //gnSearchLocation.initTabRouting($scope.mainTabs);
+      gnSearchLocation.initTabRouting($scope.mainTabs);
 
       $scope.gotoPanier = function() {
         $location.path('/panier');
