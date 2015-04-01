@@ -132,7 +132,7 @@
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="exclusionMatchesParent">
       <xsl:variable name="parent">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@parent" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@parent" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($parent) > 0">
@@ -143,7 +143,7 @@
     </xsl:variable>
     <xsl:variable name="exclusionMatchesAncestor">
       <xsl:variable name="ancestor">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@ancestor" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@ancestor" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($ancestor) > 0 and count(ancestor::*[contains($ancestor, name())]) != 0">
@@ -154,7 +154,7 @@
     </xsl:variable>
     <xsl:variable name="exclusionMatchesChild">
       <xsl:variable name="child">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@child" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@child" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($child) > 0 and count(*[contains($child, name())]) != 0">
@@ -180,6 +180,15 @@
     <xsl:variable name="isMultilingualElementExpanded"
       select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
 
+    <xsl:if test="name(.) = 'gmd:name' and ../name() = 'gmd:MD_Format'">
+      <xsl:message>
+        --------------------------------------------------------------------------------------------------------------
+        ==============================================================================================================
+        $exclusionMatchesParent : <xsl:value-of select="$exclusionMatchesParent"/>
+        ==============================================================================================================
+        --------------------------------------------------------------------------------------------------------------
+      </xsl:message>
+    </xsl:if>
     <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
