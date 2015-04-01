@@ -180,15 +180,6 @@
     <xsl:variable name="isMultilingualElementExpanded"
       select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
 
-    <xsl:if test="name(.) = 'gmd:name' and ../name() = 'gmd:MD_Format'">
-      <xsl:message>
-        --------------------------------------------------------------------------------------------------------------
-        ==============================================================================================================
-        $exclusionMatchesParent : <xsl:value-of select="$exclusionMatchesParent"/>
-        ==============================================================================================================
-        --------------------------------------------------------------------------------------------------------------
-      </xsl:message>
-    </xsl:if>
     <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
