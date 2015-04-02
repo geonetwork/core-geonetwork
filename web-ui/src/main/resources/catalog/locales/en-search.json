@@ -273,6 +273,8 @@
   "encloses": "Enclosing",
   "within": "Within",
   "transferOwnership": "Transfer Ownership",
+  "selectNewOwner": "Select New Owner",
+  "selectGroup": "Select Group",
   "loadUsersError":"Error loading users",
   "loadUserGroupsError": "Error loading user groups",
   "transferOwnershipError": "Error transferring metadata ownership",
