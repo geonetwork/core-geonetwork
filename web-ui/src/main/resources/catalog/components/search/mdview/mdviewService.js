@@ -175,7 +175,7 @@
         $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
           $rootScope.$broadcast('mdLoadingEnd');
-          var scope = $rootScope.$new();
+          var scope = angular.element($(selector)).scope();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
