@@ -30,6 +30,12 @@
       <i class="fa fa-key"></i>&nbsp;
       <span data-translate="">privileges</span>
     </a></li>
+    <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
+        <a data-ng-href=""
+           data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+      <i class="fa fa-user"></i>&nbsp;
+      <span data-translate="">transferOwnership</span>
+    </a></li>
     <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"

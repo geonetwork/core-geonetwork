@@ -540,6 +540,12 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      isOwned: function() {
+        return this['geonet:info'].owner === 'true';
+      },
+      getOwnerId: function() {
+        return this['geonet:info'].ownerId;
+      },
       publish: function() {
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
             'false' : 'true';

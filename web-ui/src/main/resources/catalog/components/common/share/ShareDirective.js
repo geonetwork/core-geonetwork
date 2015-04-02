@@ -90,7 +90,7 @@
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {
                     msg: $translate('privilegesUpdated'),
-                    timeout: 2,
+                    timeout: 0,
                     type: 'success'});
                 }, function(data) {
                   scope.$emit('PrivilegesUpdated', false);

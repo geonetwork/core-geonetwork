@@ -21,6 +21,12 @@
         <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
         <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
         <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
+        <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
+          <a data-ng-href=""
+             data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+            <i class="fa fa-user"></i>&nbsp;
+            <span data-translate="">transferOwnership</span>
+          </a></li>
       </ul>
     </li>
     <li class="dropdown-submenu">
