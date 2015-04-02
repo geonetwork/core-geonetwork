@@ -272,8 +272,8 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 			throws SQLException 
 	{
 
-	    if (Log.isDebugEnabled(Geonet.LDAP)){
-				Log.debug(Geonet.LDAP, "  - Create user from token " + user.getUsername() + " in local database.");
+	    if (Log.isDebugEnabled(Geonet.OPENAM)){
+				Log.debug(Geonet.OPENAM, "  - Create user from token " + user.getUsername() + " in local database.");
 			}
 	    
 	    SerialFactory serialFactory = applicationContext.getBean(SerialFactory.class);	
@@ -286,7 +286,7 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 		
 		dbms.execute(query, new Integer(id), user.getUsername(), "", user.getSurname(), user.getName(), 
 				user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getZip(), 
-				user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), null);
+				user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), OpenAMConstants.OPENAM_FLAG);
 
 		return id;
 		
