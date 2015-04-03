@@ -397,11 +397,8 @@ ul.gn-resultview {
 .gn-info-list {
   padding: 5px 0px;
   margin: auto -10px;
-  li {
-    width: 33.3%;
+  .gn-item {
     zoom: 1;
-    list-style: none;
-    float: left;
     padding: 10px;
     > div {
       margin: 0px;
@@ -413,7 +410,8 @@ ul.gn-resultview {
       border: 1px solid #ddd;
       border-bottom: 2px solid #337ab7;
       cursor: pointer;
-      > div.gn-md-thumbnail {
+	  overflow:hidden;
+      .gn-md-thumbnail {
         float:left;
         width: 90px;
         height: 90px;
@@ -425,7 +423,7 @@ ul.gn-resultview {
           margin-right: 15px;
         }
       }
-      > div.gn-md-title {
+      .gn-md-title {
         a {
           color: #333333;
           font-size: 120%;

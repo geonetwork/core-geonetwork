@@ -1,36 +1,28 @@
 
-<ul class="row gn-info-list">
-
-	<li
-   	  data-ng-repeat="md in searchResults.records"
+<div class="row gn-info-list">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 gn-item"
+      data-ng-repeat="md in searchResults.records">
+      <div 
       data-ng-click="openRecord($index, md, searchResults.records)"
       data-ng-mouseenter="showMore(true)"
       data-ng-mouseleave="showMore(false)"
       id="gn-info-list{{md.getUuid()}}">
-	  <div>
+      <div>
       <div class="gn-md-thumbnail">
         <img class="gn-img-thumbnail"
              data-ng-src="{{md.getThumbnails().list[0].url}}"
              data-ng-if="md.getThumbnails().list[0].url"/>
       </div>
       <div class="gn-md-title">
-        <a >
-          {{md.title || md.defaultTitle}}
-        </a>
-        <br/>
-		<div class="pull-right">
-		<a data-ng-href="#/search?_cat={{md.type}}"  title="{{md.type | translate}}">
-          <i class="fa gn-icon gn-icon-{{md.type}}"></i>
-        </a>
-        <a data-ng-repeat="cat in ::md.category"
-           data-ng-href="#/search?_cat={{cat}}"  title="{{cat | translate}}">
-          <i class="fa gn-icon gn-icon-{{cat}}"></i>
-        </a>
-		</div>
+        <div class="pull-right">
+          <i class="fa fa-fw gn-icon gn-icon-{{md.type}}"></i>          
+          <i class="fa fa-fw gn-icon gn-icon-{{cat}}" data-ng-repeat="cat in ::md.category"></i>
+        </div> {{md.title || md.defaultTitle | words:8}}
       </div>
-	  </div>
-	  <div class="hidden thumbnail">
+      </div>
+      <div class="hidden">
         {{md.abstract}}
       </div>
-	</li>
-</ul>
+    </div>
+  </div>
+</div>
