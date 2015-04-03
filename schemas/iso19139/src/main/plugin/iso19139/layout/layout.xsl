@@ -178,7 +178,7 @@
     <xsl:variable name="isMultilingualElement"
       select="$metadataIsMultilingual and $excluded = false()"/>
     <xsl:variable name="isMultilingualElementExpanded"
-      select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
+                  select="$isMultilingualElement and count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
 
     <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
