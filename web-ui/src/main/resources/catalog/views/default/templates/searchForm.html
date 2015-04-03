@@ -54,8 +54,11 @@
         <div data-ng-show="searchObj.advancedMode"
              class="gn-search-filter col-lg-12">
 
-
           <div class="row">
+		    <div class="col-md-4">
+				<h3 data-translate="">where</h3>
+				<div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry" gn-map-field-opt="mapfieldOpt" class="search-map"></div>
+            </div>
             <div class="col-md-4">
               <h3 data-translate="">what</h3>
               <div class="form-group">
@@ -95,7 +98,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
               <h3 data-translate="">when</h3>
               <div data-gn-period-chooser="resourcesCreatedTheLast"
                    data-date-from="searchObj.params.creationDateFrom"
@@ -107,9 +110,7 @@
                    data-date-to="searchObj.params.dateTo">
               </div>
             </div>
-            <div class="col-md-5">
-
-            </div>
+            
           </div>
         </div>
       </div>
