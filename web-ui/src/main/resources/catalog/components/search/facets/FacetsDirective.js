@@ -95,7 +95,7 @@
           for (var i = 0; i < groups.length; i++) {
             var o = groups[i];
             if (o.name == f['@name']) {
-              f['@name'] = o.label[lang];
+              f['@label'] = o.label[lang];
             }
             f['name'] = f['@name'];
           }
