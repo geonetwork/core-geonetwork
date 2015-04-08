@@ -105,7 +105,7 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        $q.all(promises).then(function() {
+        $q.all(promises).finally(function() {
           if (bgLayers.length > 0) {
             // make sure we remove any existing bglayer
             if (map.getLayers().getLength() > 0) {
@@ -346,7 +346,9 @@
           map.addLayer(l.ol);
         }, function(layerName) {
           var failedLoadingLayers = map.get('failedLayers') || [];
-          failedLoadingLayers.push(layerName);
+          if(failedLoadingLayers.indexOf(layerName) < 0) {
+            failedLoadingLayers.push(layerName);
+          }
           map.set('failedLayers', failedLoadingLayers);
         });
       };
