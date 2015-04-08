@@ -115,7 +115,7 @@
                   });
                   setTimeout(function() {
                     resetInteraction();
-                  }, 100);
+                  }, 300);
                 }, this);
 
             map.addInteraction(drawInteraction);
