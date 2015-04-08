@@ -11,11 +11,6 @@
     }
     //]]>
   </script>
-  <h1>
-    <img fmt-if="logo" class="logo" src="{{logo | escapeXmlAttrs}}"></img>
-    <i fmt-if="!logo" class="fa fa-arrow-circle-down"></i>
-    <span class="title">{{title | escapeXmlContent}}</span>
-  </h1>
   <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
     <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
     <li fmt-if="associated">
@@ -45,13 +40,15 @@
         <dl class="dl-horizontal">
 
           <dt fmt-translate="">Date(s)</dt>
-          <dd> ...
+          <dd>
+            {{dates}}
           </dd>
 
           <dt fmt-translate="">abstract</dt>
-          <dd>
-            {{abstract}}
+          <dd><p>{{abstract}}</p>
           </dd>
+
+          {{contacts}}
 
           <dt fmt-translate="">keywords</dt>
           <dd>{{keywords}}</dd>
@@ -108,4 +105,5 @@
 
   </div>
   {{content}}
+  {{script}}
 </div>

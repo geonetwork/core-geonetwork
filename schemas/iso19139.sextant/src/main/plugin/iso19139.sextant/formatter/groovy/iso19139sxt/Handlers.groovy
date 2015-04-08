@@ -43,7 +43,44 @@ public class Handlers extends iso19139.Handlers {
     }
 
     def dataQualityInfoElSxt =  { el ->
-        el
+        return handlers.fileResult('html/sxt-statements.html', [
+                statements : el
+        ])
     }
 
+    def datesElSxt =  { els ->
+        def dates = ''
+        els.each { el ->
+            def date = el.'gmd:date'.'gco:Date'.text().isEmpty() ?
+                    el.'gmd:date'.'gco:DateTime'.text() :
+                    el.'gmd:date'.'gco:Date'.text()
+
+            if(date) {
+                def dateType = f.codelistValueLabel(el.'gmd:dateType'.'gmd:CI_DateTypeCode')
+                dates += '<p>' + date + ' - ' + dateType + '</p>'
+            }
+        }
+        return dates
+    }
+
+    def contactsElSxt =  { els ->
+        def contacts = []
+        def orgs = []
+        def idx = 0
+        els.each { el ->
+            def name = el.'gmd:individualName'
+            def org = el.'gmd:organisationName'
+            if(name && contacts.indexOf(name) < 0) {
+                contacts.push(name)
+            }
+            if(org && orgs.indexOf(org) < 0) {
+                orgs.push(org)
+            }
+        }
+        def replacements = [
+                contacts : contacts,
+                orgs : orgs
+        ]
+        return handlers.fileResult("html/sxt-contacts.html", replacements)
+    }
 }
