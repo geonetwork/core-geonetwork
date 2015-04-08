@@ -93,9 +93,8 @@
         <facet name="thesaurus-external.parameter.NVS.P35"
                label="thesaurus-external.parameter.NVS.P35"
                indexKey="thesaurus-external.parameter.NVS.P35"/>
-        <facet name="publishedForGroup" indexKey="_op0" label="publishedForGroup" localized="true"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners" localized="true"/>
-        <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup" localized="true"/>
+        <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     </facets>
 
     <summaryTypes>
@@ -110,11 +109,13 @@
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
-            <item facet="publishedForGroup"/>
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-            <item facet="format" max="15" sortBy="value"/>
+          <item facet="format" max="15" sortBy="value"/>
+          <item facet="publishedForGroup" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
