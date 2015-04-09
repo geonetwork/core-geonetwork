@@ -3,3 +3,13 @@
       class="list-group-item" data-ng-class="{'active': layer.showInfo}">
   </li>
 </ul>
+<ul class="list-group">
+  <li class="list-group-item" data-ng-repeat="l in failedLayers">
+    <span class="pull-right gn-close-btn" ng-click="removeFailed(l)">
+      x
+    </span>
+    <i class="fa fa-warning text-warning"></i>
+    &nbsp;
+    {{l.name}}
+  </li>
+</ul>

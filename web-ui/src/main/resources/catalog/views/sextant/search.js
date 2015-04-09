@@ -204,22 +204,11 @@
               }
             }
           }
-          gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
 
-            if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
-                link.name, link.url)) {
-              return;
-            }
-
-            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                link.name, capObj);
-            layerInfo.group = group;
-            var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
-                layerInfo);
+          gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
+              link.url, link.name).then(function(layer) {
+            layer.set('group', group);
             layer.set('md', md);
-
-          }, function(response) {
-            console.warn('Error loading: ' + link.url);
           });
           $scope.mainTabs.map.titleInfo += 1;
 

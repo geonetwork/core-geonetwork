@@ -141,17 +141,6 @@
             $compile(template)(scope);
           });
 
-          //TODO: remove this is defined in custom controllers
-          scope.addToMap = function(link, md) {
-            gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                function(capObj) {
-                  var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                      link.name, capObj);
-                  scope.$emit('addLayerFromMd', layerInfo);
-                });
-
-          };
-
           scope.zoomToMdExtent = function(md, map) {
             var extent = gnMap.getBboxFromMd(md);
             if (extent) {
