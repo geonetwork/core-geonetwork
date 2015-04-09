@@ -54,14 +54,10 @@
     /**
      * Remove the layer from the queue and add it to errors list.
      * Usually when the getCapabilities failed
-     * @param {string} url
-     * @param {string} name
+     * @param {Object} layer contains
+     *  url - name - msg
      */
-    this.error = function(url, name) {
-      var layer = {
-        url: url,
-        name: name
-      };
+    this.error = function(layer) {
       this.removeFromQueue(layer);
       if(getLayerIndex(errors, layer) < 0) {
         errors.push(layer);

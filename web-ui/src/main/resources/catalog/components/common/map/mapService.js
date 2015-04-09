@@ -364,18 +364,35 @@
             gnWmsQueue.add(url, name);
             gnOwsCapabilities.getWMSCapabilities(url).then(function (capObj) {
               var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
-              var olL;
-              if(createOnly) {
-                olL = $this.createOlWMTSFromCap(map, capL);
-              } else {
-                olL = $this.addWmsToMapFromCap(map, capL);
+              if(!capL) {
+                var o = {
+                  url: url,
+                  name: name,
+                  msg: 'layerNotInCap'
+                };
+                gnWmsQueue.error(o);
+                defer.reject(o);
+              }
+              else {
+                var olL;
+                if(createOnly) {
+                  olL = $this.createOlWMTSFromCap(map, capL);
+                } else {
+                  olL = $this.addWmsToMapFromCap(map, capL);
+                }
+
+                gnWmsQueue.removeFromQueue(url, name);
+                defer.resolve(olL);
               }
 
-              gnWmsQueue.removeFromQueue(url, name);
-              defer.resolve(olL);
             }, function() {
-              gnWmsQueue.error(url, name);
-              defer.reject({url: url, name: name});
+              var o = {
+                url: url,
+                name: name,
+                msg: 'getCapFailure'
+              };
+              gnWmsQueue.error(o);
+              defer.reject(o);
             });
             return defer.promise;
           },
@@ -388,16 +405,31 @@
             gnOwsCapabilities.getWMTSCapabilities(url).then(function (capObj) {
 
               var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
-              var olL = $this.createOlWMTSFromCap(map, capL, capObj);
-
-              if(!createOnly) {
-                map.addLayer(olL);
+              if(!capL) {
+                var o = {
+                  url: url,
+                  name: name,
+                  msg: 'layerNotInCap'
+                };
+                gnWmsQueue.error(o);
+                defer.reject(o);
               }
-              gnWmsQueue.removeFromQueue(url, name);
-              defer.resolve(olL);
+              else {
+                var olL = $this.createOlWMTSFromCap(map, capL, capObj);
+                if(!createOnly) {
+                  map.addLayer(olL);
+                }
+                gnWmsQueue.removeFromQueue(url, name);
+                defer.resolve(olL);
+              }
             }, function() {
-              gnWmsQueue.error(url, name);
-              defer.reject({url: url, name: name});
+              var o = {
+                url: url,
+                name: name,
+                msg: 'getCapFailure'
+              };
+              gnWmsQueue.error(o);
+              defer.reject(o);
             });
             return defer.promise;
           },
