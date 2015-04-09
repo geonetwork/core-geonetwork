@@ -337,27 +337,6 @@ ul.gn-resultview {
   }
 }
 
-[ngeo-map] {
-  height: 86vh;
-  &.gn-search-map {
-    height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    right: 0;
-    bottom: 0;
-    position: fixed !important;
-    z-index: 99;
-    width: 200px !important;
-    heigth: 200px !important;
-    margin: 5px;
-    .btn {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      z-index: 10;
-    }
-  }
-}
 .gn-row-main {}
 
 .gn-row-info {}
@@ -507,4 +486,9 @@ html, body {
     //width: calc(~"33% - 15px");
   }
 }
+
+.search-map [ngeo-map] {
+	height:250px !important;
+}
+
 @import "gn_view.less";
