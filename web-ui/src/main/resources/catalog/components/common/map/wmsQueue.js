@@ -72,6 +72,19 @@
       removeFromArray(errors, layer);
     };
 
+    /**
+     *
+     * @param {string} url
+     * @param {string} name
+     */
+    this.isPending= function(url, name) {
+      var layer = {
+        url: url,
+        name: name
+      };
+      return getLayerIndex(queue, layer) >= 0;
+    };
+
   }]);
 
 })();

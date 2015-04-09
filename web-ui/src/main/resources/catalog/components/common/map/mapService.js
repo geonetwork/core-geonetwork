@@ -597,6 +597,9 @@
            * @param {string} url
            */
           isLayerInMap: function(map, name, url) {
+            if(gnWmsQueue.isPending(url, name)) {
+              return true;
+            }
             for (var i = 0; i < map.getLayers().getLength(); i++) {
               var l = map.getLayers().item(i);
               var source = l.getSource();
