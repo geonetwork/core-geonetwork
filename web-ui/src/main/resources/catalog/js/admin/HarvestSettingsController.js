@@ -41,6 +41,7 @@
         total: 0
       };
       $scope.isLoadingHarvesterHistory = false;
+      $scope.deleting = []; // all harvesters being deleted
 
       var unbindStatusListener = null;
 
@@ -275,6 +276,7 @@
       };
 
       $scope.deleteHarvester = function() {
+        $scope.deleting.push($scope.harvesterSelected['@id']);
         $http.get('admin.harvester.remove?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
@@ -284,6 +286,8 @@
               $scope.$parent.loadHarvesters();
             }).error(function(data) {
               console.log(data);
+            }).then(function(){
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1)
             });
       };
 

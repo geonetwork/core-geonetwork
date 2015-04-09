@@ -81,12 +81,13 @@
 
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
       <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
-      <i data-ng-show="isLoadingOneHarvester" class="fa fa-spinner fa-spin"></i>
+      <i data-ng-show="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1" class="fa fa-spinner fa-spin"></i>
 
 
       <div class="btn-toolbar" data-ng-hide="isLoadingOneHarvester">
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
+                data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
                 data-ng-click="runHarvester(harvesterSelected['@id'])">
 		  <span class="fa fa-play"></span>
           <span data-translate="">runHarvester</span>
@@ -94,18 +95,19 @@
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === false"
                 data-ng-click="stopHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="stopping">
+                data-ng-disabled="stopping || deleting.indexOf(harvesterSelected['@id']) > -1">
 			<span class="fa fa-stop"></span>
             <span data-translate="">stop</span>
             <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
         </button>
         <button type="button" class="btn btn-primary pull-right"
+                data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
                 data-ng-click="saveHarvester('#gn-harvester-edit')">
           <i class="fa fa-save"></i> <span data-translate="">saveHarvester</span></button>
         <button type="button" class="btn btn-warning pull-right"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true"
+                data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                 title="{{'deleteHarvesterRecordsHelp' | translate}}">
 		  <span class="fa fa-trash-o"></span>
           <span data-translate=""
@@ -115,14 +117,14 @@
         <button type="button" class="btn btn-danger pull-right"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="deleteHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true"
+                data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                 title="{{'deleteHarvesterHelp' | translate}}">
 		  <span class="fa fa-trash-o"></span>
           <span data-translate="">deleteHarvester</span>
         </button>
       </div>
     </div>
-    <div class="panel-body" data-ng-hide="isLoadingOneHarvester">
+    <div class="panel-body" data-ng-hide="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
       <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
         <strong data-translate="">harvesterIsRunning</strong>
       </div>
@@ -138,7 +140,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''">
+  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
     <div class="panel-heading">
       <span data-translate="">harvesterHistory</span>
       <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
@@ -230,7 +232,7 @@
   </div>
 
 
-  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''"
+  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1"
        data-ng-search-form=""
        data-ng-show="searchResults.count != 0">
     <div class="panel-heading" data-translate="">harvesterRecords</div>
