@@ -20,7 +20,11 @@ public class AssociatedResource {
     }
 
     public String getInitiativeType() {
-        return initiativeType;
+        if (initiativeType == null) {
+            return "";
+        } else {
+            return initiativeType;
+        }
     }
 
     public AssociatedResource setInitiativeType(String initiativeType) {
@@ -29,7 +33,11 @@ public class AssociatedResource {
     }
 
     public String getAssociationType() {
-        return associationType;
+        if (initiativeType == null) {
+            return "";
+        } else {
+            return associationType;
+        }
     }
 
     public AssociatedResource setAssociationType(String associationType) {

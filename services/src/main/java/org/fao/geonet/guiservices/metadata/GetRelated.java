@@ -349,6 +349,7 @@ public class GetRelated implements Service, RelatedMetadata {
                     if (sibContent != null) {
                         Element sibling = new Element("sibling");
                         sibling.setAttribute("initiative", resource.getInitiativeType());
+                        sibling.setAttribute("association", resource.getAssociationType());
                         response.addContent(sibling.addContent(sibContent));
                     }
                 }
