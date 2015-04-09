@@ -18,8 +18,10 @@
       'gnSearchLocation',
       '$rootScope',
       'gnUrlUtils',
+      '$q',
+      'gnWmsQueue',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
-          gnSearchLocation, $rootScope, gnUrlUtils) {
+          gnSearchLocation, $rootScope, gnUrlUtils, $q, gnWmsQueue) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -339,6 +341,65 @@
 
           addWmtsToMapFromCap: function(map, getCapLayer) {
             map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
+          },
+
+          /**
+           * Here is the method to use when you want to add a wms layer from
+           * a url and a layername. It will call the WMS getCapabilities,
+           * create the ol.Layer with maximum info we got from capabilities,
+           * then add the layer to the map.
+           * Return a promise with ol.Layer as data is succeed, and url/name
+           * if failure.
+           * If createOnly, we don't add the layer to the map
+           *
+           * @param {ol.Map} map
+           * @param {string} url
+           * @param {string} name
+           * @param {boolean} createOnly
+           */
+          addWmsFromScratch: function(map, url, name, createOnly) {
+            var defer = $q.defer();
+            var $this = this;
+
+            gnWmsQueue.add(url, name);
+            gnOwsCapabilities.getWMSCapabilities(url).then(function (capObj) {
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
+              var olL;
+              if(createOnly) {
+                olL = $this.createOlWMTSFromCap(map, capL);
+              } else {
+                olL = $this.addWmsToMapFromCap(map, capL);
+              }
+
+              gnWmsQueue.removeFromQueue(url, name);
+              defer.resolve(olL);
+            }, function() {
+              gnWmsQueue.error(url, name);
+              defer.reject({url: url, name: name});
+            });
+            return defer.promise;
+          },
+
+          addWmtsFromScratch: function(map, url, name, createOnly) {
+            var defer = $q.defer();
+            var $this = this;
+
+            gnWmsQueue.add(url, name);
+            gnOwsCapabilities.getWMTSCapabilities(url).then(function (capObj) {
+
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
+              var olL = $this.createOlWMTSFromCap(map, capL, capObj);
+
+              if(!createOnly) {
+                map.addLayer(olL);
+              }
+              gnWmsQueue.removeFromQueue(url, name);
+              defer.resolve(olL);
+            }, function() {
+              gnWmsQueue.error(url, name);
+              defer.reject({url: url, name: name});
+            });
+            return defer.promise;
           },
 
           /**
