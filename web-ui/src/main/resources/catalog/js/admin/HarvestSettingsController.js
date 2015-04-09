@@ -41,6 +41,7 @@
         total: 0
       };
       $scope.isLoadingHarvesterHistory = false;
+      $scope.deleting = []; // all harvesters being deleted
 
       var unbindStatusListener = null;
 
@@ -212,7 +213,7 @@
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
           .buildResponse($scope.harvesterSelected, $scope);
 
-        $http.post('admin.harvester.' +
+        return $http.post('admin.harvester.' +
             ($scope.harvesterNew ? 'add' : 'update') +
             '?_content_type=json', body, {
               headers: {'Content-type': 'application/xml'}
@@ -275,7 +276,8 @@
       };
 
       $scope.deleteHarvester = function() {
-        $http.get('admin.harvester.remove?_content_type=json&id=' +
+        $scope.deleting.push($scope.harvesterSelected['@id']);
+        return $http.get('admin.harvester.remove?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -284,11 +286,13 @@
               $scope.$parent.loadHarvesters();
             }).error(function(data) {
               console.log(data);
+            }).then(function(){
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1)
             });
       };
 
       $scope.deleteHarvesterRecord = function() {
-        $http.get('admin.harvester.clear?_content_type=json&id=' +
+        return $http.get('admin.harvester.clear?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.harvesterSelected = {};
@@ -300,7 +304,7 @@
             });
       };
       $scope.deleteHarvesterHistory = function() {
-        $http.get('admin.harvester.history.delete?uuid=' +
+        return $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
           .success(function(data) {
               loadHarvesters().then(function() {
@@ -309,7 +313,7 @@
             });
       };
       $scope.runHarvester = function() {
-        $http.get('admin.harvester.run?_content_type=json&id=' +
+        return $http.get('admin.harvester.run?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
               $scope.$parent.loadHarvesters().then(function() {
@@ -322,7 +326,7 @@
         var status = $scope.harvesterSelected.options.status;
         var id = $scope.harvesterSelected['@id'];
         $scope.stopping = true;
-        $http.get('admin.harvester.stop?_content_type=json&id=' +
+        return $http.get('admin.harvester.stop?_content_type=json&id=' +
             id + '&status=' + status)
           .success(function(data) {
               $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);

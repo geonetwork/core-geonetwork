@@ -93,7 +93,7 @@
         <facet name="thesaurus-external.parameter.NVS.P35"
                label="thesaurus-external.parameter.NVS.P35"
                indexKey="thesaurus-external.parameter.NVS.P35"/>
-        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners" localized="true"/>
+        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     </facets>
 

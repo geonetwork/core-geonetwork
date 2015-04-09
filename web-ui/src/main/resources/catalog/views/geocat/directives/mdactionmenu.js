@@ -10,6 +10,7 @@
       return {
         restrict: 'A',
         replace: true,
+        scope: true,
         templateUrl: '../../catalog/views/geocat/directives/' +
             'partials/mdactionmenu.html',
         link: function linkFn(scope, element, attrs) {

@@ -49,8 +49,8 @@
       $scope.report = {};
       $scope.report.suggestedDate = '';
 
-      $scope.report.dateFrom = moment().format('YYYY-MM-DD');
-      $scope.report.dateTo = moment().format('YYYY-MM-DD');
+      $scope.report.dateFrom = new Date(moment().format('YYYY-MM-DD'));
+      $scope.report.dateTo = new Date(moment().format('YYYY-MM-DD'));
 
       /**
        * Creates the records updated report
@@ -98,9 +98,10 @@
               var month = today.format('MM');
               var year = today.format('YYYY');
 
-              $scope.report.dateFrom = year + '-' + month + '-' + '01';
-              $scope.report.dateTo = year + '-' + month + '-' +
-                  today.daysInMonth();
+              $scope.report.dateFrom =
+                  new Date(year + '-' + month + '-' + '01');
+              $scope.report.dateTo = new Date(year + '-' + month + '-' +
+                  today.daysInMonth());
 
             } else if (newValue === 'previousMonth') {
               // Set previous month
@@ -109,15 +110,16 @@
               var month = today.format('MM');
               var year = today.format('YYYY');
 
-              $scope.report.dateFrom = year + '-' + month + '-' + '01';
-              $scope.report.dateTo = year + '-' + month + '-' +
-                  today.daysInMonth();
+              $scope.report.dateFrom =
+                  new Date(year + '-' + month + '-' + '01');
+              $scope.report.dateTo = new Date(year + '-' + month + '-' +
+                  today.daysInMonth());
 
             } else if (newValue == 'currentYear') {
               var year = today.format('YYYY');
 
-              $scope.report.dateFrom = year + '-' + '01' + '-' + '01';
-              $scope.report.dateTo = year + '-' + '12' + '-' + '31';
+              $scope.report.dateFrom = new Date(year + '-' + '01' + '-' + '01');
+              $scope.report.dateTo = new Date(year + '-' + '12' + '-' + '31');
 
             } else if (newValue == 'previousYear') {
               // Set previous year
@@ -125,8 +127,8 @@
 
               var year = today.format('YYYY');
 
-              $scope.report.dateFrom = year + '-' + '01' + '-' + '01';
-              $scope.report.dateTo = year + '-' + '12' + '-' + '31';
+              $scope.report.dateFrom = new Date(year + '-' + '01' + '-' + '01');
+              $scope.report.dateTo = new Date(year + '-' + '12' + '-' + '31');
 
             }
           });

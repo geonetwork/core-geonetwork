@@ -1,16 +1,6 @@
 <nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
-  <div>
-    <ul class="gn-view-menu-button pull-left nav navbar-nav">
-      <!-- An empty drown down updated when form is loaded -->
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-eye"></i>
-          <b class="caret"/>
-        </a>
-      </li>
-    </ul>
-  </div>
+  
 
   <p class="navbar-text gn-tooltip"
     data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
@@ -64,7 +54,7 @@
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
     <button type="button" class="btn btn-default navbar-btn gn-tooltip"
-		    title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
+        title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
@@ -76,7 +66,7 @@
         <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
       </button>
       <button type="button" class="btn btn-primary dropdown-toggle" 
-			data-toggle="dropdown" aria-expanded="false">
+      data-toggle="dropdown" aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -89,6 +79,18 @@
             <input type="checkbox" data-ng-model="gnCurrentEdit.isMinor"/>
             {{'minorEdit' | translate}}
           </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="btn-group">
+      <ul class="gn-view-menu-button nav navbar-nav">
+        <!-- An empty drown down updated when form is loaded -->
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-eye"></i>
+            <b class="caret"/>
+          </a>
         </li>
       </ul>
     </div>

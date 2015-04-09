@@ -229,6 +229,32 @@
             features: select.getFeatures()
           });
 
+          /*
+          function saves the currently drawn geometries as geoJSON
+          inspired by http://openlayers.org/en/v3.4.0/examples/kml.html
+          todo: allow a user to select an export format (kml/gml/json)
+          */
+          scope.save = function($event) {
+            var exportElement = document.getElementById('export-geom');
+            if ('download' in exportElement && !exportElement.href) {
+              var vectorSource = scope.vector.getSource();
+              var features = [];
+              vectorSource.forEachFeature(function(feature) {
+                var clone = feature.clone();
+                clone.setId(feature.getId());
+                //geoJson commonly uses wgs84 (view usually has spherical mercator)
+                clone.getGeometry().transform(
+                    map.getView().getProjection(), 'EPSG:4326');
+                features.push(clone);
+              });
+              var string = new ol.format.GeoJSON().writeFeatures(features);
+              //requires /lib/base64.js
+              var base64 = base64EncArr(strToUTF8Arr(string));
+              exportElement.href =
+                  'data:application/vnd.geo+json;base64,' + base64;
+            }
+          };    
+          
           var deleteF = new ol.interaction.Select();
           deleteF.getFeatures().on('add',
               function(evt) {

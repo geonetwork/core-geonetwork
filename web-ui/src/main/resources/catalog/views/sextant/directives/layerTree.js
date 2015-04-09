@@ -6,7 +6,8 @@
   module.directive('sxtLayertree', [
     'gnLayerFilters',
     '$filter',
-    function (gnLayerFilters, $filter) {
+    'gnWmsQueue',
+    function (gnLayerFilters, $filter, gnWmsQueue) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
@@ -71,9 +72,9 @@
             }
           });
 
+          scope.failedLayers = gnWmsQueue.errors;
           scope.removeFailed = function(layer) {
-            var fl = scope.map.get('failedLayers')
-            fl.splice(fl.indexOf(layer), 1);
+            gnWmsQueue.removeFromError(layer);
           };
         }
       };

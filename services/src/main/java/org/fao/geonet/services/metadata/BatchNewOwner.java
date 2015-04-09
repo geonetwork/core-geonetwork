@@ -24,14 +24,10 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.base.Optional;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -40,13 +36,26 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -55,107 +64,120 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Sets new owner for a set of metadata records.
  */
-public class BatchNewOwner extends NotInReadOnlyModeService {
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
+@ReadWriteController
+@Controller
+public class BatchNewOwner {
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private AccessManager accessManager;
+    @Autowired
+    private ServiceManager serviceManager;
 
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
-        AccessManager accessMan = gc.getBean(AccessManager.class);
+    @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public NewOwnerResult exec(
+            @PathVariable String lang,
+            @RequestParam("userId") String targetUsr,
+            @RequestParam("groupId") String targetGrp,
+            HttpServletRequest request) throws Exception {
+        ServiceContext context = serviceManager.createServiceContext("metadata.batch.newowner", lang, request);
         UserSession session = context.getUserSession();
-
-
-        String targetUsr = Util.getParam(params, Params.USER);
-        String targetGrp = Util.getParam(params, Params.GROUP);
-
-        Set<Integer> metadata = new HashSet<Integer>();
-        Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notOwner = new HashSet<Integer>();
 
         context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(session);
-
-        synchronized (sm.getSelection("metadata")) {
-            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
-                String uuid = (String) iter.next();
-                String id = dm.getMetadataId(uuid);
-
-                context.info("Attempting to set metadata owner on: " + id);
-
-                //--- check existence and access
-                Metadata info = context.getBean(MetadataRepository.class).findOne(id);
-
-                if (info == null) {
-                    notFound.add(Integer.valueOf(id));
-                } else if (!accessMan.isOwner(context, id)) {
-                    notOwner.add(Integer.valueOf(id));
-                } else {
-
-                    //-- Get existing owner and privileges for that owner - note that
-                    //-- owners don't actually have explicit permissions - only their
-                    //-- group does which is why we have an ownerGroup (parameter groupid)
-                    Integer sourceUsr = info.getSourceInfo().getOwner();
-                    Integer sourceGrp = info.getSourceInfo().getGroupOwner();
-                    Vector<OperationAllowedId> sourcePriv =
-                            retrievePrivileges(context, id, "" + sourceUsr, "" + sourceGrp);
-
-                    // -- Set new privileges for new owner from privileges of the old
-                    // -- owner, if none then set defaults
-                    if (sourcePriv.size() == 0) {
-                        dm.copyDefaultPrivForGroup(context, id, targetGrp, false);
-                        context.info("No privileges for user " + sourceUsr + " on metadata " + id + ", so setting default privileges");
-                    } else {
-                        for (OperationAllowedId priv : sourcePriv) {
-                            dm.unsetOperation(context, id,
-                                    "" + sourceGrp,
-                                    "" + priv.getOperationId());
-                            dm.setOperation(context, id, targetGrp,
-                                    "" + priv.getOperationId());
-                        }
-                    }
-                    // -- set the new owner into the metadata record
-                    dm.updateMetadataOwner(Integer.parseInt(id), targetUsr, targetGrp);
-
-                    metadata.add(Integer.valueOf(id));
-                }
-            }
+        Collection<String> selection = new ArrayList<>();
+        synchronized (sm.getSelection(SELECTION_METADATA)) {
+            selection.addAll(sm.getSelection(SELECTION_METADATA));
         }
+
+        Set<Integer> modified = new HashSet<Integer>();
+        NewOwnerResult result = setNewOwner(context, targetUsr, targetGrp, selection, modified);
 
 
         // -- reindex metadata
         context.info("Re-indexing metadata");
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, modified);
         r.process();
 
-        // -- for the moment just return the sizes - we could return the ids
-        // -- at a later stage for some sort of result display
-        return new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element("done").setText(metadata.size() + ""))
-                .addContent(new Element("notOwner").setText(notOwner.size() + ""))
-                .addContent(new Element("notFound").setText(notFound.size() + ""));
+        return result;
+    }
+
+    private NewOwnerResult setNewOwner(ServiceContext context, String targetUsr, String targetGrp,
+                                       Collection<String> selection, Set <Integer> modified) throws Exception {
+
+        Set<Integer> notFound = new HashSet<Integer>();
+        Set<Integer> notOwner = new HashSet<Integer>();
+        for (String uuid : selection) {
+            String id = dataManager.getMetadataId(uuid);
+
+            context.info("Attempting to set metadata owner on: " + id);
+
+            //--- check existence and access
+            Metadata info = null;
+            if (id != null) {
+                info = context.getBean(MetadataRepository.class).findOne(id);
+            }
+            if (info == null) {
+                if (id != null) {
+                    notFound.add(Integer.valueOf(id));
+                } else {
+                    notFound.add(null);
+                }
+            } else if (!accessManager.isOwner(context, id)) {
+                notOwner.add(Integer.valueOf(id));
+            } else {
+
+                //-- Get existing owner and privileges for that owner - note that
+                //-- owners don't actually have explicit permissions - only their
+                //-- group does which is why we have an ownerGroup (parameter groupid)
+                Integer sourceUsr = info.getSourceInfo().getOwner();
+                Integer sourceGrp = info.getSourceInfo().getGroupOwner();
+                Vector<OperationAllowedId> sourcePriv =
+                        retrievePrivileges(context, id, sourceUsr,  sourceGrp);
+
+                // -- Set new privileges for new owner from privileges of the old
+                // -- owner, if none then set defaults
+                if (sourcePriv.size() == 0) {
+                    dataManager.copyDefaultPrivForGroup(context, id, targetGrp, false);
+                    context.info("No privileges for user " + sourceUsr + " on metadata " + id + ", so setting default privileges");
+                } else {
+                    for (OperationAllowedId priv : sourcePriv) {
+                        if (sourceGrp != null) {
+                            dataManager.unsetOperation(context, id,
+                                    "" + sourceGrp,
+                                    "" + priv.getOperationId());
+                        }
+                        dataManager.setOperation(context, id, targetGrp,
+                                "" + priv.getOperationId());
+                    }
+                }
+                // -- set the new owner into the metadata record
+                dataManager.updateMetadataOwner(Integer.parseInt(id), targetUsr, targetGrp);
+
+                modified.add(Integer.valueOf(id));
+            }
+        }
+
+        return new NewOwnerResult(modified.size(), notOwner.size(), notFound.size());
     }
 
     //--------------------------------------------------------------------------
 
-    private Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, String userId, String groupId) throws Exception {
+    private Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) throws Exception {
 
         OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
 
-        Integer iMetadataId = Integer.valueOf(id);
-        Integer iUserId = Integer.valueOf(userId);
-        Integer iGroupId = Integer.valueOf(groupId);
-        Specification<OperationAllowed> spec =
-                where(hasMetadataId(iMetadataId))
-                        .and(hasGroupId(iGroupId));
+        int iMetadataId = Integer.parseInt(id);
+        Specifications<OperationAllowed> spec =
+                where(hasMetadataId(iMetadataId));
+        if (groupId != null) {
+            spec = spec.and(hasGroupId(groupId));
+        }
 
-        List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(iUserId, Optional.of(spec));
+        List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(userId, Optional.of((Specification<OperationAllowed>) spec));
 
         Vector<OperationAllowedId> result = new Vector<OperationAllowedId>();
         for (OperationAllowed operationAllowed : operationsAllowed) {
@@ -164,5 +186,32 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 
         return result;
     }
+
+
+    @XmlRootElement(name = "response")
+    public static class NewOwnerResult {
+        private final int done;
+        private final int notOwner;
+        private final int notFound;
+
+        public NewOwnerResult(int total, int notOwner, int notFound) {
+            this.done = total;
+            this.notOwner = notOwner;
+            this.notFound = notFound;
+        }
+
+        public int getDone() {
+            return done;
+        }
+
+        public int getNotOwner() {
+            return notOwner;
+        }
+
+        public int getNotFound() {
+            return notFound;
+        }
+    }
+
 
 }

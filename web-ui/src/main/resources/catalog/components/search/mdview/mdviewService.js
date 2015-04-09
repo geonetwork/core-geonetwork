@@ -168,16 +168,25 @@
     '$http',
     '$compile',
     '$sce',
-    function($rootScope, $http, $compile, $sce) {
+    'gnAlertService',
+    function($rootScope, $http, $compile, $sce, gnAlertService) {
 
       this.load = function(url, selector) {
+        $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
-          var scope = $rootScope.$new();
+          $rootScope.$broadcast('mdLoadingEnd');
+          var scope = angular.element($(selector)).scope();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
           $(selector).append(el);
           $compile(el)(scope);
+        }, function() {
+          $rootScope.$broadcast('mdLoadingEnd');
+          gnAlertService.addAlert({
+            msg: 'Erreur de chargement de la métadonnée.',
+            type: 'danger'
+          });
         });
       };
     }

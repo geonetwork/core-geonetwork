@@ -50,10 +50,6 @@
             $location.path() == '';
       };
 
-      this.saveLastUrl = function() {
-        this.lastSearchUrl = $location.absUrl();
-      };
-
       this.setUuid = function(uuid) {
         $location.path(this.METADATA + uuid);
         this.removeParams();
@@ -92,6 +88,7 @@
 
       this.restoreSearch = function() {
         this.setSearch(state.lastSearchParams);
+        this.lastSearchUrl = '';
       };
 
       this.initTabRouting = function(tabs) {

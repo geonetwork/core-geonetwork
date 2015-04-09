@@ -8,7 +8,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:param name="url"/>
-
+  <xsl:param name="name"/>
 
   <xsl:template match="/simpledc">
     <xsl:copy>
@@ -19,7 +19,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
       <dct:references>
         <xsl:choose>
           <xsl:when test="not(starts-with($url, 'http'))">
-            upload@<xsl:value-of select="$url"/>
+            upload@<xsl:value-of select="$name"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$url"/>

@@ -36,7 +36,7 @@
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle"
                 data-toggle="dropdown">
-          <i class="fa fa-plus"> </i>
+          <i class="fa fa-plus"> </i>&nbsp;
           <span data-translate="">newHarvester</span>
           <span class="caret"/>
         </button>
@@ -53,7 +53,7 @@
 
       <div class="btn-group" data-ng-show="$parent.harvesters.length > 0">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-		  <span class="fa fa-copy"></span>
+        <span class="fa fa-copy"></span>&nbsp;
           <span data-translate="">cloneHarvester</span>
           <span class="caret"/>
         </button>
@@ -67,7 +67,8 @@
       </div>
       <button type="button" class="btn" data-ng-show="$parent.harvesters.length > 0"
               data-ng-click="$parent.refreshHarvester()" title="{{'refreshHarvester' | translate}}">
-			  <span class="fa fa-refresh"></span></button>
+        <span class="fa fa-refresh"></span>
+      </button>
     </div>
   </div>
 </div>
@@ -81,48 +82,52 @@
 
       <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
       <strong data-ng-hide="harvesterSelected['@id'] != ''">{{'harvester-' + harvesterSelected['@type'] | translate}}</strong>
-      <i data-ng-show="isLoadingOneHarvester" class="fa fa-spinner fa-spin"></i>
+      <i data-ng-show="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1" class="fa fa-spinner fa-spin"></i>
 
 
       <div class="btn-toolbar" data-ng-hide="isLoadingOneHarvester">
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
-                data-ng-click="runHarvester(harvesterSelected['@id'])">
-		  <span class="fa fa-play"></span>
+                data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                data-gn-click-and-spin="runHarvester(harvesterSelected['@id'])">
+          <span class="fa fa-play"></span>&nbsp;
           <span data-translate="">runHarvester</span>
         </button>
         <button type="button" class="btn btn-primary pull-right"
                 data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === false"
-                data-ng-click="stopHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="stopping">
-			<span class="fa fa-stop"></span>
+                data-gn-click-and-spin="stopHarvester(harvesterSelected['@id'])"
+                data-ng-disabled="stopping || deleting.indexOf(harvesterSelected['@id']) > -1">
+            <span class="fa fa-stop"></span>&nbsp;
             <span data-translate="">stop</span>
             <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
         </button>
         <button type="button" class="btn btn-primary pull-right"
-                data-ng-click="saveHarvester('#gn-harvester-edit')">
-          <i class="fa fa-save"></i> <span data-translate="">saveHarvester</span></button>
+                data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                data-gn-click-and-spin="saveHarvester('#gn-harvester-edit')">
+          <i class="fa fa-save"></i>&nbsp;
+          <span data-translate="">saveHarvester</span>
+        </button>
         <button type="button" class="btn btn-warning pull-right"
                 data-ng-hide="harvesterSelected['@id'] == ''"
-                data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true"
+                data-gn-click-and-spin="deleteHarvesterRecord(harvesterSelected['@id'])"
+                data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                 title="{{'deleteHarvesterRecordsHelp' | translate}}">
-		  <span class="fa fa-trash-o"></span>
+          <span class="fa fa-trash-o"></span>&nbsp;
           <span data-translate=""
                   data-translate-values="{records: '{{harvesterSelected.info.result.total}}'}">
             deleteHarvesterRecords</span>
         </button>
         <button type="button" class="btn btn-danger pull-right"
                 data-ng-hide="harvesterSelected['@id'] == ''"
-                data-ng-click="deleteHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true"
+                data-gn-click-and-spin="deleteHarvester(harvesterSelected['@id'])"
+                data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                 title="{{'deleteHarvesterHelp' | translate}}">
-		  <span class="fa fa-trash-o"></span>
+          <span class="fa fa-trash-o"></span>&nbsp;
           <span data-translate="">deleteHarvester</span>
         </button>
       </div>
     </div>
-    <div class="panel-body" data-ng-hide="isLoadingOneHarvester">
+    <div class="panel-body" data-ng-hide="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
       <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
         <strong data-translate="">harvesterIsRunning</strong>
       </div>
@@ -138,7 +143,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''">
+  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
     <div class="panel-heading">
       <span data-translate="">harvesterHistory</span>
       <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
@@ -146,7 +151,7 @@
         <button type="button" class="btn btn-primary pull-right btn-danger"
                 data-ng-hide="harvesterHistory.length === 0"
                 data-ng-click="deleteHarvesterHistory()">
-		  <span class="fa fa-trash-o"></span>
+        <span class="fa fa-trash-o"></span>
           <span data-translate="">deleteHarvesterHistory</span>
         </button>
       </div>
@@ -230,7 +235,7 @@
   </div>
 
 
-  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''"
+  <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1"
        data-ng-search-form=""
        data-ng-show="searchResults.count != 0">
     <div class="panel-heading" data-translate="">harvesterRecords</div>
