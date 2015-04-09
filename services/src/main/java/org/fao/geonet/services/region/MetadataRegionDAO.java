@@ -3,7 +3,6 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Collections;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * A Regions DAO that fetches geometries from a metadata.  The geometry ids are structured as follows:
@@ -68,26 +65,4 @@ public class MetadataRegionDAO extends RegionsDAO {
         return false;
     }
 
-    @Override
-    public boolean canHandleId(ServiceContext context, String id) throws Exception {
-        return id.startsWith(MetadataRegionSearchRequest.PREFIX);
-    }
-
-    @Nullable
-    @Override
-    public Long getLastModified(@Nonnull String id) throws Exception {
-        if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
-            String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
-
-            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
-
-            if (mdId != null) {
-                final ISODate docChangeDate = searchManager.getDocChangeDate(mdId);
-                if (docChangeDate != null) {
-                    return docChangeDate.toDate().getTime();
-                }
-            }
-        }
-        return null;
-    }
 }

@@ -7,8 +7,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public abstract class RegionsDAO {
     private boolean cacheAllRegionsInMemory = true;
@@ -51,7 +49,7 @@ public abstract class RegionsDAO {
      * @param simplified a hint to simplify the geometry if the full geometry is very large.  This will
      * be true when the UI wants to display the geometry.  The region is simplified so the javascript can deal with it better
      * and so it downloads faster.
-     * @param projection the desired projection of the geometry.  The geometry will be reprojected to desired projection
+     * @param projectionCode the desired projection of the geometry.  The geometry will be reprojected to desired projection
      * 
      * @return the geometry containing the CRS
      */
@@ -86,7 +84,7 @@ public abstract class RegionsDAO {
                 CachedRequest request = allRegions.get();
                 if (request == null) {
                     request = new CachedRequest(createSearchRequest(context));
-                    allRegions = new WeakReference<CachedRequest>(request);
+                    allRegions = new WeakReference<>(request);
                 }
                 return request;
             }
@@ -106,16 +104,4 @@ public abstract class RegionsDAO {
     public boolean includeInListing() {
         return true;
     }
-
-    /**
-     * Return true if the id applies to this region.
-     */
-    public abstract boolean canHandleId(ServiceContext context, String id) throws Exception;
-    /**
-     * Get the last modified value or null if it is impossible to calculate.
-     *
-     * @param id id of the region to fetch
-     */
-    @Nullable
-    public abstract Long getLastModified(@Nonnull String id) throws Exception;
 }

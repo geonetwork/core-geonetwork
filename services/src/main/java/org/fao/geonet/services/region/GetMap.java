@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.region;
 
+import com.google.common.base.Optional;
 import com.vividsolutions.jts.awt.ShapeWriter;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -34,6 +35,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -198,15 +200,19 @@ public class GetMap{
         if (id != null) {
             Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
             for (RegionsDAO regionsDAO : daos) {
-                if (regionsDAO.canHandleId(context, id)) {
-                    final Long lastModified = regionsDAO.getLastModified(id);
+                final Request searchRequest = regionsDAO.createSearchRequest(context);
+                searchRequest.id(id);
+                Optional<Long> lastModifiedOption = searchRequest.getLastModified();
+                if (lastModifiedOption.isPresent()) {
+                    final Long lastModified = lastModifiedOption.get();
                     if (lastModified != null && request.checkNotModified(lastModified)) {
                         return null;
                     }
-                    geom = regionsDAO.getGeom(context, id, false, srs);
-                    if (geom != null) {
-                        break;
-                    }
+                }
+
+                geom = regionsDAO.getGeom(context, id, false, srs);
+                if (geom != null) {
+                    break;
                 }
             }
             if (geom == null) {
