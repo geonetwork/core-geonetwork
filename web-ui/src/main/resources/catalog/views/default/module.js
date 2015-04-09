@@ -153,14 +153,20 @@
           titleInfo: '',
           active: false
         }};
-      $scope.addLayerToMap = function(number) {
-        // FIXME $scope.mainTabs.map.titleInfo = '+' + number;
+
+      $scope.resultviewFns = {
+        addMdLayerToMap: function (link, md) {
+
+          if (gnMap.isLayerInMap(viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+          gnMap.addWmsFromScratch(viewerMap,link.url, link.name).
+              then(function(layer) {
+                layer.set('md', md);
+              });
+        }
       };
-
-      $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
-        gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
-      });
-
 
       // Manage route at start and on $location change
       if (!$location.path()) {
