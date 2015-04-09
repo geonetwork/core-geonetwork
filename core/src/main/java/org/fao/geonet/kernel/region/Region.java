@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.region;
 
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -13,7 +13,9 @@ import org.opengis.referencing.operation.TransformException;
 
 import java.util.Collections;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "region")
 public class Region {
     public static final String REGION_EL = "region";
     private static final String ID_ATT = "id";

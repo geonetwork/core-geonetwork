@@ -1,5 +1,6 @@
 package org.fao.geonet.services.region;
 
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
@@ -164,4 +165,8 @@ public class ThesaurusRequest extends Request {
         return this;
     }
 
+    @Override
+    public Optional<Long> getLastModified() {
+        return Optional.of(thesaurus.getLastModifiedTime().toMillis());
+    }
 }

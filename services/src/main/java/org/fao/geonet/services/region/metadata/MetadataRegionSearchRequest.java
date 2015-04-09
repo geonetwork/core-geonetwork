@@ -1,5 +1,6 @@
 package org.fao.geonet.services.region.metadata;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -7,6 +8,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
@@ -192,7 +194,26 @@ public class MetadataRegionSearchRequest extends Request {
         this.id = regionId;
         return this;
     }
-    
+
+    @Override
+    public Optional<Long> getLastModified() throws Exception {
+        if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
+            String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
+
+            SearchManager searchManager = this.context.getBean(SearchManager.class);
+            DataManager dataManager = this.context.getBean(DataManager.class);
+            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
+
+            if (mdId != null) {
+                final ISODate docChangeDate = searchManager.getDocChangeDate(mdId);
+                if (docChangeDate != null) {
+                    return Optional.of(docChangeDate.toDate().getTime());
+                }
+            }
+        }
+        return Optional.absent();
+    }
+
     public static abstract class Id {
 
         protected String id;
@@ -211,7 +232,7 @@ public class MetadataRegionSearchRequest extends Request {
          */
         abstract String getId();
         
-        public static Id create(String id) {
+        static Id create(String id) {
             if(id.toLowerCase().startsWith(MdId.PREFIX)) {
                 return new MdId(id);
             } else if(id.toLowerCase().startsWith(Uuid.PREFIX)) {

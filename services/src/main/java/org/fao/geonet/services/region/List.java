@@ -23,17 +23,14 @@
 
 package org.fao.geonet.services.region;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import org.fao.geonet.Util;
-
-import org.fao.geonet.kernel.region.RegionParams;
+import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -46,6 +43,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import java.nio.file.Path;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 //=============================================================================
 
@@ -53,7 +51,7 @@ import javax.servlet.http.HttpServletRequest;
  * Returns a specific region and coordinates given its id
  */
 @Controller
-public class List implements Service {
+public class List {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -93,7 +91,7 @@ public class List implements Service {
     @RequestMapping(value = "/{lang}/regions.list", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public Element exec(@PathVariable String lang,
+    public ListRegionsResponse exec(@PathVariable String lang,
                         @RequestParam(required = false) String label,
                         @RequestParam(required = false) String categoryId,
                         @RequestParam(defaultValue = "-1") int maxRecords,
@@ -103,40 +101,51 @@ public class List implements Service {
         ServiceContext context = serviceManager.createServiceContext("regions.list", lang, nativeRequest);
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
 
-        Collection<RegionsDAO> applicableDAOs = Lists.newArrayList();
+        long lastModified = -1;
         for (RegionsDAO dao : daos) {
             if (dao.includeInListing()) {
-                dao.
-            }
-        }
+                if (lastModified < Long.MAX_VALUE) {
+                    Request request = createRequest(label, categoryId, maxRecords, context, dao);
 
-        Element regions = null;
-        for (RegionsDAO dao : applicableDAOs) {
-            if (dao.includeInListing()) {
-                Request request = dao.createSearchRequest(context);
-                if (label != null) {
-                    request.label(label);
-                }
-                if (categoryId != null) {
-                    request.categoryId(categoryId);
-                }
-                if (maxRecords > 0) {
-                    request.maxRecords(maxRecords);
-                }
-                Element tmp = request.xmlResult();
-                if (regions != null) {
-                    @SuppressWarnings("unchecked")
-                    java.util.List<Element> children = tmp.getChildren();
-                    for (Element element : children) {
-                        regions.addContent(element);
+                    Optional<Long> currentLastModified = request.getLastModified();
+                    if (currentLastModified.isPresent() && lastModified < currentLastModified.get()) {
+                        lastModified = currentLastModified.get();
                     }
-                } else {
-                    regions = tmp;
                 }
             }
         }
 
-        return regions;
+        if (lastModified < Long.MAX_VALUE && webRequest.checkNotModified(lastModified)) {
+            return null;
+        }
+
+        Collection<Region> regions = Lists.newArrayList();
+        for (RegionsDAO dao : daos) {
+            if (dao.includeInListing()) {
+                Request request = createRequest(label, categoryId, maxRecords, context, dao);
+                regions.addAll(request.execute());
+            }
+        }
+
+        final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
+
+        nativeResponse.setHeader("Cache-Control", "no-cache");
+
+        return new ListRegionsResponse(regions);
+    }
+
+    private Request createRequest(@RequestParam(required = false) String label, @RequestParam(required = false) String categoryId, @RequestParam(defaultValue = "-1") int maxRecords, ServiceContext context, RegionsDAO dao) throws Exception {
+        Request request = dao.createSearchRequest(context);
+        if (label != null) {
+            request.label(label);
+        }
+        if (categoryId != null) {
+            request.categoryId(categoryId);
+        }
+        if (maxRecords > 0) {
+            request.maxRecords(maxRecords);
+        }
+        return request;
     }
 
 }

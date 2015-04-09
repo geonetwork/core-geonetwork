@@ -1,13 +1,17 @@
 package org.fao.geonet.kernel.region;
 
+import com.google.common.base.Optional;
+
 import java.util.Collection;
 
 class CachedRequest extends Request {
 
+    private final Optional<Long> lastModified;
     private Collection<Region> regions;
 
     public CachedRequest(Request createSearchRequest) throws Exception {
-        regions = createSearchRequest.execute();
+        this.regions = createSearchRequest.execute();
+        this.lastModified = createSearchRequest.getLastModified();
     }
 
     @Override
@@ -33,6 +37,11 @@ class CachedRequest extends Request {
     @Override
     public Request id(String regionId) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Optional<Long> getLastModified() {
+        return this.lastModified;
     }
 
 }
