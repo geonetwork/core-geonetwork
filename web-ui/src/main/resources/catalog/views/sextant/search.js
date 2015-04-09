@@ -204,6 +204,14 @@
               }
             }
           }
+
+          gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
+              link.url, link.name).then(function(layer) {
+            layer.set('group', group);
+            layer.set('md', md);
+          });
+
+/*
           gnOwsCapabilities.getWMSCapabilities(link.url).then(function(capObj) {
 
             if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
@@ -221,6 +229,7 @@
           }, function(response) {
             console.warn('Error loading: ' + link.url);
           });
+*/
           $scope.mainTabs.map.titleInfo += 1;
 
         },
