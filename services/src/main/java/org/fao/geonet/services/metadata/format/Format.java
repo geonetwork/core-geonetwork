@@ -429,9 +429,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
     }
 
     @VisibleForTesting
-    Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(Key key,final NativeWebRequest request) throws Exception {
-
-        ServiceContext context = createServiceContext(key.lang, key.formatType, request.getNativeRequest(HttpServletRequest.class));
+    Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key,final NativeWebRequest request) throws Exception {
         final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
         Element metadata = elementMetadataPair.one();
         Metadata metadataInfo = elementMetadataPair.two();
@@ -657,7 +655,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             serviceContext.setAsThreadLocal();
 
             Pair<FormatterImpl, FormatterParams> result =
-                    loadMetadataAndCreateFormatterAndParams(key, request);
+                    loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
             FormatterImpl formatter = result.one();
             FormatterParams fparams = result.two();
             final String formattedMetadata = formatter.format(fparams);
