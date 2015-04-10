@@ -67,19 +67,66 @@ public class List {
 
     /**
      *
-     * Example Response
+     * Example XML Response:
      * <pre><code>
-     * &amp;regions count="1">
-     *   &amp;region id="country.1" hasGeom="true" categoryId="country">
-     *     &amp;label>
-     *       &amp;eng>France</eng>
-     *     &amp;/label>
-     *     &amp;category>
-     *       &amp;fre>Pays</fre>
-     *       &amp;eng>Country</eng>
-     *     &amp;/category>
-     *     &amp;/region>
-     * &amp;/regions>
+     * &lt;response count="3">
+     *    &lt;region hasGeom="false" categoryId="http://geonetwork-opensource.org/regions#country" id="http://geonetwork-opensource.org/regions#19">
+     *       &lt;north>-9.6792&lt;/north>
+     *       &lt;east>-57.52112&lt;/east>
+     *       &lt;south>-22.90111&lt;/south>
+     *       &lt;west>-69.65619&lt;/west>
+     *       &lt;label>
+     *          &lt;entry>
+     *             &lt;key>fre&lt;/key>
+     *             &lt;value>Bolivia&lt;/value>
+     *          &lt;/entry>
+     *       &lt;/label>
+     *       &lt;id>http://geonetwork-opensource.org/regions#19&lt;/id>
+     *    &lt;/region>
+     *    &lt;categories>
+     *       &lt;entry>
+     *          &lt;key>http://geonetwork-opensource.org/regions#country&lt;/key>
+     *          &lt;value>
+     *             &lt;label>
+     *                &lt;entry>
+     *                   &lt;key>cat&lt;/key>
+     *                   &lt;value>Country&lt;/value>
+     *                &lt;/entry>
+     *             &lt;/label>
+     *          &lt;/value>
+     *       &lt;/entry>
+     *    &lt;/categories>
+     * &lt;/response>
+     * </code></pre>
+     *
+     * Example JSON Response:
+     * <pre><code>
+     * {
+     *    "region":[
+     *       {
+     *          "north":-9.6792,
+     *          "east":-57.52112,
+     *          "south":-22.90111,
+     *          "west":-69.65619,
+     *          "label":{
+     *             "fre":"Bolivia",
+     *          },
+     *          "@hasGeom":false,
+     *          "@categoryId":"http://geonetwork-opensource.org/regions#country",
+     *          "@id":"http://geonetwork-opensource.org/regions#19",
+     *          "id":"http://geonetwork-opensource.org/regions#19"
+     *       }
+     *    ],
+     *    "categories":{
+     *       "http://geonetwork-opensource.org/regions#country":{
+     *          "label":{
+     *             "cat":"Country",
+     *             "ger":"Land",
+     *          }
+     *       }
+     *    },
+     *    "@count":3
+     * }
      * </code></pre>
      * @throws Exception
      *

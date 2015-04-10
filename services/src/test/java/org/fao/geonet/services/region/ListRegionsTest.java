@@ -100,7 +100,7 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     }
 
     private void assertRegions(JSONObject json, int expectedRegions, boolean fromXml) throws JSONException {
-        System.out.println(json.toString(2));
+//        System.out.println(json.toString(2));
         assertEquals("" + expectedRegions, json.getString("@count"));
         assertEquals(expectedRegions, json.getJSONArray("region").length());
 

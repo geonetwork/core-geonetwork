@@ -13,9 +13,7 @@ import org.opengis.referencing.operation.TransformException;
 
 import java.util.Collections;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "region")
 public class Region {
     public static final String REGION_EL = "region";
     private static final String ID_ATT = "id";
