@@ -24,6 +24,7 @@ package org.fao.geonet.services.publisher;
 
 import org.fao.geonet.ZipUtil;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -43,7 +44,7 @@ import java.util.LinkedList;
  * @author Éric Lemoine, Camptocamp France SAS
  * @author Francois Prunayre
  */
-public class GeoFile {
+public class GeoFile implements Closeable {
 	private FileSystem zipFile = null;
 	private Path file = null;
 
@@ -219,4 +220,9 @@ public class GeoFile {
 	public static Boolean fileIsRASTER(String fileName) {
 		return fileIsGeotif(fileName) || fileIsECW(fileName);
 	}
+
+    @Override
+    public void close() throws IOException {
+        zipFile.close();
+    }
 };
