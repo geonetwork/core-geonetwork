@@ -1,5 +1,8 @@
 package org.fao.geonet;
 
+import com.google.common.collect.Lists;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 import org.fao.geonet.utils.IO;
 import org.junit.Rule;
 import org.junit.Test;
@@ -8,9 +11,15 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ZipUtilTest {
@@ -32,9 +41,47 @@ public class ZipUtilTest {
     }
 
     @Test
-    public void testOpenZipFs() throws Exception {
+    public void testOpenZipFs1() throws Exception {
         final Path zipfile = folder.getRoot().toPath().resolve("zipfile.zip");
         assertCreateZipFile(zipfile);
+    }
+    @Test
+    public void testOpenZipFsVirtualFS() throws Exception {
+        final Path srcZipFile = Paths.get(ZipUtilTest.class.getResource("example.zip").toURI());
+
+        Configuration[] configs = new Configuration[]{Configuration.osX(), Configuration.unix(), Configuration.windows()};
+        for (Configuration config : configs) {
+            final FileSystem fileSystem = Jimfs.newFileSystem(config);
+            final Path path = fileSystem.getPath("a", "b c", "mu\\d", "hi", "file.zip");
+            Files.createDirectories(path.getParent());
+            Files.copy(srcZipFile, path);
+
+            final FileSystem zipFs = ZipUtil.openZipFs(path);
+            final List<String> allFiles = Lists.newArrayList();
+
+            Files.walkFileTree(zipFs.getPath("/"), new SimpleFileVisitor<Path>(){
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    allFiles.add(dir.toString());
+                    return super.preVisitDirectory(dir, attrs);
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    allFiles.add(file.toString());
+                    return super.visitFile(file, attrs);
+                }
+            });
+
+            assertEquals(7, allFiles.size());
+            assertTrue(allFiles.toString(), allFiles.contains("/"));
+            assertTrue(allFiles.toString(), allFiles.contains("/zipfile/"));
+            assertTrue(allFiles.toString(), allFiles.contains("/zipfile/file1.txt"));
+            assertTrue(allFiles.toString(), allFiles.contains("/zipfile/file2.txt"));
+            assertTrue(allFiles.toString(), allFiles.contains("/zipfile/dir/"));
+            assertTrue(allFiles.toString(), allFiles.contains("/zipfile/dir/file4.txt"));
+            assertTrue(allFiles.toString(), allFiles.contains("/file3.txt"));
+        }
     }
     @Test
     public void testOpenMefFs() throws Exception {
