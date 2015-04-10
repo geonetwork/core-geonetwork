@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 
 public class ListRegionsTest extends AbstractServiceIntegrationTest {
 
-    public static final int expectedRegions = 287;
     @Autowired
     private List service;
 
@@ -29,102 +28,122 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     public void testExecAll() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, null, -1, request);
+        final int expectedRegions = 287;
         HttpMessageConverter<Object> converter = new Jaxb2RootElementHttpMessageConverter();
         MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
         converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
         JSONObject json = new JSONObject(Xml.getJSON(outputMessage.getBodyAsString()));
-        assertRegions(json);
+        assertRegions(json, expectedRegions, true);
 
         converter = new MappingJackson2HttpMessageConverter();
         outputMessage = new MockHttpOutputMessage();
         converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
         json = new JSONObject(outputMessage.getBodyAsString());
-        assertRegions(json);
+        assertRegions(json, expectedRegions, false);
     }
 
     @Test
     public void testExecCategorySearch() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, "http://geonetwork-opensource.org/regions#country", -1, request);
-//        final JSONObject json = new JSONObject(Xml.getJSON(request));
-////        System.out.println(json.toString(2));
-//
-////        assertEquals("287", json.getString("@count"));
-////        assertEquals(287, json.getJSONArray("region").length());
-//
-//
-//        JSONObject region = findRegion(json, "http://geonetwork-opensource.org/regions#107");
-//
-//        assertEquals("http://geonetwork-opensource.org/regions#country", region.get("@categoryId"));
-//        assertEquals("false", region.get("@hasGeom"));
-//        assertEquals("Country", region.getJSONObject("categoryLabel").get("eng"));
-//        assertEquals("Ivory Coast", region.getJSONObject("label").get("eng"));
-//        assertEquals("-2.48778", region.getString("east"));
-//        assertEquals("10.73526", region.getString("north"));
-//        assertEquals("4.34472", region.getString("south"));
-//        assertEquals("-8.60638", region.getString("west"));
+
+        final int expectedRegions = 278;
+        HttpMessageConverter<Object> converter = new Jaxb2RootElementHttpMessageConverter();
+        MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        JSONObject json = new JSONObject(Xml.getJSON(outputMessage.getBodyAsString()));
+        assertRegions(json, expectedRegions, true);
+
+        converter = new MappingJackson2HttpMessageConverter();
+        outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        json = new JSONObject(outputMessage.getBodyAsString());
+        assertRegions(json, expectedRegions, false);
     }
 
     @Test
     public void testExecLabelSearch() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
-        ListRegionsResponse regions = service.exec("eng", "Ivory Co", null, -1, request);
-//        final JSONObject json = new JSONObject(Xml.getJSON(request));
-//        System.out.println(json.toString(2));
-//
-//        assertEquals("1", json.getString("@count"));
-//        assertEquals(1, json.getJSONArray("region").length());
-//
-//
-//        JSONObject region = findRegion(json, "http://geonetwork-opensource.org/regions#107");
-//
-//        assertEquals("http://geonetwork-opensource.org/regions#country", region.get("@categoryId"));
-//        assertEquals("false", region.get("@hasGeom"));
-//        assertEquals("Country", region.getJSONObject("categoryLabel").get("eng"));
-//        assertEquals("Ivory Coast", region.getJSONObject("label").get("eng"));
-//        assertEquals("-2.48778", region.getString("east"));
-//        assertEquals("10.73526", region.getString("north"));
-//        assertEquals("4.34472", region.getString("south"));
-//        assertEquals("-8.60638", region.getString("west"));
+        ListRegionsResponse regions = service.exec("eng", "iv", null, -1, request);
+
+        final int expectedRegions = 3;
+        HttpMessageConverter<Object> converter = new Jaxb2RootElementHttpMessageConverter();
+        MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        JSONObject json = new JSONObject(Xml.getJSON(outputMessage.getBodyAsString()));
+        assertRegions(json, expectedRegions, true);
+
+        converter = new MappingJackson2HttpMessageConverter();
+        outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        json = new JSONObject(outputMessage.getBodyAsString());
+        assertRegions(json, expectedRegions, false);
     }
 
     @Test
     public void testExecMaxResults() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, null, 200, request);
-//        final JSONObject json = new JSONObject(Xml.getJSON(request));
-////        System.out.println(json.toString(2));
-//
-//        assertEquals("200", json.getString("@count"));
-//        assertEquals(200, json.getJSONArray("region").length());
-//
-//
-//        JSONObject region = findRegion(json, "http://geonetwork-opensource.org/regions#107");
-//
-//        assertEquals("http://geonetwork-opensource.org/regions#country", region.get("@categoryId"));
-//        assertEquals("false", region.get("@hasGeom"));
-//        assertEquals("Country", region.getJSONObject("categoryLabel").get("eng"));
-//        assertEquals("Ivory Coast", region.getJSONObject("label").get("eng"));
-//        assertEquals("-2.48778", region.getString("east"));
-//        assertEquals("10.73526", region.getString("north"));
-//        assertEquals("4.34472", region.getString("south"));
-//        assertEquals("-8.60638", region.getString("west"));
+
+        final int expectedRegions = 200;
+        HttpMessageConverter<Object> converter = new Jaxb2RootElementHttpMessageConverter();
+        MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        JSONObject json = new JSONObject(Xml.getJSON(outputMessage.getBodyAsString()));
+        assertRegions(json, expectedRegions, true);
+
+        converter = new MappingJackson2HttpMessageConverter();
+        outputMessage = new MockHttpOutputMessage();
+        converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
+        json = new JSONObject(outputMessage.getBodyAsString());
+        assertRegions(json, expectedRegions, false);
     }
 
-    private void assertRegions(JSONObject json) throws JSONException {
-//        System.out.println(json.toString(2));
+    private void assertRegions(JSONObject json, int expectedRegions, boolean fromXml) throws JSONException {
+        System.out.println(json.toString(2));
         assertEquals("" + expectedRegions, json.getString("@count"));
         assertEquals(expectedRegions, json.getJSONArray("region").length());
 
         JSONObject region = findRegion(json, "http://geonetwork-opensource.org/regions#107");
-        assertEquals(region.toString(2), "http://geonetwork-opensource.org/regions#country", region.get("@categoryId"));
-        assertEquals(region.toString(2), "false", region.get("@hasGeom"));
-        assertEquals(region.toString(2), "Country", region.getJSONObject("categoryLabel").get("eng"));
-        assertEquals(region.toString(2), "Ivory Coast", region.getJSONObject("label").get("eng"));
+        final String categoryId = region.getString("@categoryId");
+        assertEquals(region.toString(2), "http://geonetwork-opensource.org/regions#country", categoryId);
+        assertEquals(region.toString(2), "false", region.get("@hasGeom").toString());
+        if (fromXml) {
+            JSONObject categoryDef = (JSONObject) findInJsonArray(categoryId, json.get("categories"));
+            assertEquals(region.toString(2), "Country", findLabel(categoryDef, "eng"));
+            assertEquals(region.toString(2), "Ivory Coast", findLabel(region, "eng"));
+        } else {
+            final JSONObject categoryDef = json.getJSONObject("categories").getJSONObject(categoryId);
+            assertEquals(region.toString(2), "Country", categoryDef.getJSONObject("label").get("eng"));
+            assertEquals(region.toString(2), "Ivory Coast", region.getJSONObject("label").get("eng"));
+        }
         assertEquals(region.toString(2), "-2.48778", region.getString("east"));
         assertEquals(region.toString(2), "10.73526", region.getString("north"));
         assertEquals(region.toString(2), "4.34472", region.getString("south"));
         assertEquals(region.toString(2), "-8.60638", region.getString("west"));
+    }
+
+    private String findLabel(JSONObject categoryDef, String lang) throws JSONException {
+        JSONArray labels = categoryDef.getJSONArray("label");
+        return (String) findInJsonArray(lang, labels);
+    }
+
+    private Object findInJsonArray(String requiredKey, Object obj) throws JSONException {
+        if (obj instanceof JSONArray) {
+            JSONArray array = (JSONArray) obj;
+            for (int i = 0; i < array.length(); i++) {
+                final JSONObject entry = array.getJSONObject(i);
+                if (requiredKey.equals(entry.getString("key"))) {
+                    return entry.get("value");
+                }
+            }
+        } else if (obj instanceof JSONObject) {
+            JSONObject entry = ((JSONObject) obj).getJSONObject("entry");
+            if (requiredKey.equals(entry.getString("key"))) {
+                return entry.get("value");
+            }
+        }
+        return null;
     }
 
     private JSONObject findRegion(JSONObject json, String regionId) throws JSONException {

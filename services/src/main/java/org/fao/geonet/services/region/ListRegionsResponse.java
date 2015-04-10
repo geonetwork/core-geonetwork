@@ -1,24 +1,19 @@
 package org.fao.geonet.services.region;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.fao.geonet.kernel.region.Region;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * @author Jesse on 4/9/2015.
@@ -27,47 +22,49 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ListRegionsResponse {
     @XmlAttribute
+    @JsonProperty("@count")
     private int count;
 
-    @XmlElement(name = "region")
-    private Collection<RegionResponse> region;
+    @XmlElement
+    @JsonProperty
+    private Collection<RegionResponse> region = Lists.newArrayList();
+
+    @XmlElement
+    @JsonProperty
+    private Map<String, CategoryResponse> categories = Maps.newHashMap();
 
     public ListRegionsResponse() {
-
     }
 
-    public ListRegionsResponse(Collection<Region> region) {
-        this.count = region.size();
-        this.region = Collections2.transform(region, new Function<Region, RegionResponse>() {
-            @Nullable
-            @Override
-            public RegionResponse apply(Region input) {
-                try {
-                    return new RegionResponse(input);
-                } catch (TransformException | FactoryException e) {
-                    throw new RuntimeException(e);
-                }
+    public ListRegionsResponse(Collection<Region> regions) throws TransformException, FactoryException {
+        this.count = regions.size();
+        for (Region region : regions) {
+            this.region.add(new RegionResponse(region));
+            if (!categories.containsKey(region.getCategoryId())) {
+                categories.put(region.getCategoryId(), new CategoryResponse(region));
             }
-        });
+        }
+
     }
 
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class RegionResponse {
         @XmlAttribute
+        @JsonProperty("@hasGeom")
         private boolean hasGeom;
         @XmlAttribute
+        @JsonProperty("@categoryId")
         private String categoryId;
         @XmlAttribute
+        @JsonProperty("@id")
         private String id;
         @XmlElement
+        @JsonProperty
         private double north, east, south, west;
-        @XmlJavaTypeAdapter(MapAdapter.class)
-        @XmlAnyElement
-        private Map<String, String> label = Maps.newHashMap();
         @XmlElement
-        @XmlJavaTypeAdapter(MapAdapter.class)
-        private Map<String, String> categoryLabel = Maps.newHashMap();
+        @JsonProperty
+        private Map<String, String> label = Maps.newHashMap();
 
         public RegionResponse() {
         }
@@ -79,48 +76,28 @@ public class ListRegionsResponse {
             east = input.getLatLongBBox().getMaxX();
             west = input.getLatLongBBox().getMinX();
             label = input.getLabels();
-            categoryLabel = input.getCategoryLabels();
             this.categoryId = input.getCategoryId();
             this.hasGeom = input.hasGeom();
         }
 
         @XmlElement(name = "id")
+        @JsonProperty("id")
         public String getIdElement() {
             return id;
         }
     }
 
-    private static class MapElements {
+    @XmlRootElement
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class CategoryResponse {
         @XmlElement
-        public String key;
-        @XmlElement
-        public String value;
+        @JsonProperty
+        private Map<String, String> label = Maps.newHashMap();
 
-        private MapElements() {
-        } //Required by JAXB
-
-        public MapElements(String key, String value) {
-            this.key = key;
-            this.value = value;
+        public CategoryResponse() {
+        }
+        public CategoryResponse(Region region) {
+            this.label = region.getCategoryLabels();
         }
     }
-
-    private static class MapAdapter extends XmlAdapter<MapElements[], Map<String, String>> {
-        public MapElements[] marshal(Map<String, String> arg0) throws Exception {
-            MapElements[] mapElements = new MapElements[arg0.size()];
-            int i = 0;
-            for (Map.Entry<String, String> entry : arg0.entrySet())
-                mapElements[i++] = new MapElements(entry.getKey(), entry.getValue());
-
-            return mapElements;
-        }
-
-        public Map<String, String> unmarshal(MapElements[] arg0) throws Exception {
-            Map<String, String> r = new HashMap<String, String>();
-            for (MapElements mapelement : arg0)
-                r.put(mapelement.key, mapelement.value);
-            return r;
-        }
-    }
-
 }
