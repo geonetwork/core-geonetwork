@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.region;
 
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
