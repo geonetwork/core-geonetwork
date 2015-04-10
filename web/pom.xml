@@ -97,23 +97,6 @@
           <scope>compile</scope>
       </dependency>
 
- 	<!-- This is to avoid 406 error with spring -->
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-databind</artifactId>
-	   <version>2.1.2</version>
-	</dependency>
- 	<dependency>  
-        <groupId>javax.xml.bind</groupId>  
-        <artifactId>jaxb-api</artifactId>  
-        <version>2.2.11</version>  
-    </dependency> 
-     <dependency>
-		<groupId>com.sun.xml.bind</groupId>
-		<artifactId>jaxb-impl</artifactId>
-		<version>2.2.7</version>
-	</dependency>
- 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
