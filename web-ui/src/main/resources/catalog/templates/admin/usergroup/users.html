@@ -41,7 +41,9 @@
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
-          <span data-ng-show="userSelected.security.authtype"> - {{userSelected.security.authtype}}</span>
+        <span data-ng-show="userSelected.security.authtype.length > 0">
+          - {{userSelected.security.authtype}}
+        </span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
             data-ng-hide="userSelected.security.authtype == 'LDAP'"
