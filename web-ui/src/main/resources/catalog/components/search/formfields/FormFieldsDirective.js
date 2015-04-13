@@ -587,11 +587,21 @@
                 }
                 initialized = true;
               };
+              // List is initialized only on mouseover
+              // To not do it on page load eg. in associated
+              // resource panel
               element.bind('mouseover', function() {
                 if (!initialized) {
                   init();
                 }
               });
+              // ... or you can force init on load
+              // eg. on thesaurus admin
+              if (attrs.initOnLoad) {
+                if (!initialized) {
+                  init();
+                }
+              }
             }
           };
         }]);
