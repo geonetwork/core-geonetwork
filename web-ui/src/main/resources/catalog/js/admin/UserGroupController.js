@@ -399,6 +399,7 @@
 
       $scope.deleteGroupLogo = function() {
         $scope.groupSelected.logo = null;
+        $scope.updatingGroup();
       };
 
       // upload directive options
