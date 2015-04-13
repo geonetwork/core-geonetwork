@@ -45,9 +45,12 @@
               <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small}}" data-ng-if="md.getThumbnails().small"/>
             </div>
 
-            <p class="text-justify md-abstract">
-              {{(md.abstract || md.defaultAbstract) | striptags | characters:275}}
-            </p>
+            <div class="text-justify md-abstract ellipsis">
+              <div>
+                <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
+              </div>
+            </div>
+
             <p data-ng-if="md.getContacts().resource" class="gn-md-source">
               <!--<h5 data-translate="">contacts</h5>-->
               Source: {{::md.getContacts().resource}}

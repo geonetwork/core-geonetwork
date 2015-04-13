@@ -18,7 +18,7 @@
 
             <div class="row hfull">
 
-              <div class="maincol hfull sxt-left-panel" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
+              <div class="maincol hfull sxt-left-panel col-md-4" ng-class="{'sxt-collapsed': !collapsed.search}">
                 <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
                   <span ng-show="collapsed.search">»</span>
                   <span ng-show="!collapsed.search">«</span>
@@ -30,7 +30,7 @@
                 </div>
               </div>
 
-              <div ng-class="{ 'col-md-9': collapsed.search, 'col-md-6': !collapsed.search}" class="maincol hfull sxt-center-panel">
+              <div ng-class="{'sxt-collapsed': !collapsed.search}" class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <div class="btn-toolbar">

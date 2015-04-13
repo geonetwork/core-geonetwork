@@ -2,7 +2,10 @@
 @import "gn_mapviewer_sextant.less";
 @import "../../../style/gn_metadata";
 
+@import "ellipsis.less";
+
 @sxt-orange: #F28033;
+@ellipsis-height: 124px;
 @results-toolbar-height: 2.8em;
 
 @media (min-width: @screen-md-min) {
@@ -12,7 +15,14 @@
   .hfull, .tab-pane
   {
     height: 100%;
-    overflow: hidden;
+  }
+  .sxt-scroll {
+    position: relative;
+    background: white;
+    &,
+    .hfull {
+      height: auto;
+    }
   }
   .tab-content {
     height: 100%;
@@ -35,6 +45,47 @@
     }
   }
   .container .container {
+    width: 100%;
+  }
+  .sxt-left-panel, .sxt-center-panel {
+    float: left;
+  }
+  .sxt-left-panel {
+    width: 33.333%;
+    &.sxt-collapsed {
+      width: 50%;
+    }
+  }
+  .sxt-center-panel {
+    width: 66.666%;
+    &.sxt-collapsed {
+      width: 50%;
+    }
+  }
+}
+@media (min-width: @screen-lg-min) {
+  .sxt-left-panel {
+    width: 25%;
+  }
+  .sxt-center-panel {
+    width: 75%;
+  }
+}
+.sxt-max-md {
+  .sxt-left-panel {
+    width: 33.333%;
+  }
+  .sxt-center-panel {
+    width: 66.666%;
+  }
+}
+.sxt-max-sm {
+  .sxt-left-panel {
+    float: none;
+    width: 100%;
+  }
+  .sxt-center-panel {
+    float: none;
     width: 100%;
   }
 }
@@ -491,12 +542,19 @@ ul.gn-resultview {
     .gn-grid-item {
       position: relative;
       border: 1px solid @list-group-border;
-      height: 18em;
+      height: 18.5em;
       background-color: #EFEFEF;
       margin: 0;
       &:hover {
         background-color: rgba(10, 10, 10, 0.15);
         cursor: default;
+        .ellipsis:after {
+          background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(#dadada), color-stop(50%, #dadada));
+          background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
+          background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
+          background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
+          background: linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
+        }
       }
     }
     h4 {
@@ -587,6 +645,7 @@ ul.gn-resultview {
   right: 0;
   bottom: 0;
   top: 0;
+  overflow: hidden;
   [ngeo-map] {
     height: 100%;
   }
