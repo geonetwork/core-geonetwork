@@ -39,7 +39,11 @@
             'mdpanel.html',
         scope: true,
         link: function(scope, element, attrs, controller) {
+
+          var unRegister;
+
           scope.dismiss = function() {
+            unRegister();
             gnMdView.removeLocationUuid();
             element.remove();
             //TODO: is the scope destroyed ?
@@ -48,7 +52,7 @@
           if (gnSearchSettings.dismissMdView) {
             scope.dismiss = gnSearchSettings.dismissMdView;
           }
-          scope.$on('closeMdView', function() {
+          unRegister = scope.$on('closeMdView', function() {
             scope.dismiss();
           });
         }

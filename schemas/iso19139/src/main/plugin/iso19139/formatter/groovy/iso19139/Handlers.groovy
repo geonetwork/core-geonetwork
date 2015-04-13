@@ -43,6 +43,7 @@ public class Handlers {
         handlers.add select: 'gmd:language', group: false, isoLanguageEl
         handlers.add select: matchers.isCiOnlineResourceParent, group: true, onlineResourceEls
         handlers.add select: 'srv:coupledResource', group: true, coupledResourceEls
+        handlers.add select: 'srv:containsOperations', group: true, containsOperationsEls
         handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, { elems ->
             def listItems = elems.findAll{!it.text().isEmpty()}.collect {f.codelistValueLabel("MD_TopicCategoryCode", it.text())};
             handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
@@ -138,22 +139,36 @@ public class Handlers {
 
         commonHandlers.func.textEl(f.nodeLabel(language), lang);
     }
+    def containsOperationsEls = { els ->
+        StringBuilder builder = new StringBuilder();
+        els.'*'.each{op ->
+            builder.append(handlers.processElements(op));
+        }
+
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(els[0]), childData: builder.toString()])
+    }
+
     def onlineResourceEls = { els ->
         def links = []
-
         els.each {it.'gmd:CI_OnlineResource'.each { link ->
-            links << [
+            def model = [
                     href : isofunc.isoUrlText(link.'gmd:linkage'),
-                    name : isofunc.isoText(link.'gmd:name'),
-                    desc : isofunc.isoText(link.'gmd:description')
+                    name : isofunc.clean(isofunc.isoText(link.'gmd:name')),
+                    desc : isofunc.clean(isofunc.isoText(link.'gmd:description'))
             ]
-        }
-        }
+            if (model.href != '' || model.name != '' || model.desc != '') {
+                links << model;
+            }
+        }}
 
-        handlers.fileResult('html/online-resource.html', [
-                label: f.nodeLabel(els[0]),
-                links: links
-        ])
+        if (links.isEmpty()) {
+            return ''
+        } else {
+            handlers.fileResult('html/online-resource.html', [
+                    label: f.nodeLabel(els[0]),
+                    links: links
+            ])
+        }
     }
 
     def coupledResourceEls = { els ->
@@ -188,7 +203,7 @@ public class Handlers {
                     tip : tip,
                     name : scopedName.trim().isEmpty() ? identifier : scopedName,
                     class: cls
-                ]);
+            ]);
         }
 
         def label = f.nodeLabel("srv:SV_CoupledResource", null)

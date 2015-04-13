@@ -284,13 +284,13 @@
             var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
                 getExtent()) /tileGrid.getTileSize()) /
                 tileGrid.getResolutions()[z];
-            matrixIds[z] = {
-              identifier: tileGrid.getMatrixIds()[z],
-              resolution: tileGrid.getResolutions()[z],
-              tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
-              topLeftCorner: tileGrid.getOrigin(),
-              matrixSize: [mSize, mSize]
-            };
+                matrixIds[z] = {
+                  identifier: tileGrid.getMatrixIds()[z],
+                  resolution: tileGrid.getResolutions()[z],
+                  tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
+                  topLeftCorner: tileGrid.getOrigin(),
+                  matrixSize: [mSize, mSize]
+                };
           }
 
           angular.extend(enc, {
@@ -305,7 +305,7 @@
             matrixIds: matrixIds
           });
 
-    return enc;
+          return enc;
         }
       },
       'legends' : {
@@ -459,7 +459,7 @@
         literal.fontColor = toHexa(fillColor);
         // Fonts managed by print server: COURIER, HELVETICA, TIMES_ROMAN
         literal.fontFamily = fontValues[1].toUpperCase();
-        literal.fontSize = parseInt(fontValues[0].substring(0,2));
+        literal.fontSize = parseInt(fontValues[0].substring(0, 2));
         literal.fontWeight = 'normal'; //fontValues[0];
         literal.label = textStyle.getText();
         literal.labelAlign = textStyle.getTextAlign();

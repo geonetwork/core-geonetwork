@@ -3,10 +3,12 @@ package org.fao.geonet.wro4j;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
-import org.junit.BeforeClass;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.junit.Test;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -36,11 +38,16 @@ public class Wro4jJsCssCompilationTest {
     private static WroModel wro4jModel;
     private static WroManager wro4jManager;
 
-    @BeforeClass
-    public static void createModel() throws IOException {
+    public void createModel() throws IOException {
+        Path webDir = AbstractCoreIntegrationTest.getWebappDir(Wro4jJsCssCompilationTest.class);
+        GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
+        dataDirectory.setSchemaPluginsDir(webDir.resolve("WEB-INF/data/config/schema_plugins"));
+        dataDirectory.setFormatterDir(webDir.resolve("WEB-INF/data/data/formatter"));
+        GenericXmlApplicationContext applicationContext = new GenericXmlApplicationContext();
+        applicationContext.getBeanFactory().registerSingleton("geonetworkDataDirectory", dataDirectory);
+        ApplicationContextHolder.set(applicationContext);
 
         GeonetworkMavenWrojManagerFactory managerFactory = new GeonetworkMavenWrojManagerFactory();
-        Path webDir = AbstractCoreIntegrationTest.getWebappDir(Wro4jJsCssCompilationTest.class);
         final Charset cs = Charset.forName(Constants.ENCODING);
         final List<String> configuration = Files.readAllLines(webDir.resolve("../webResources/WEB-INF/wro.properties"), cs);
 
@@ -70,6 +77,7 @@ public class Wro4jJsCssCompilationTest {
 
     @Test
     public void testCssCompilation() throws Exception {
+        createModel();
 //        testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
 //                Predicates.equalTo("gn_viewer") // currently broken
 //                )));
@@ -77,6 +85,7 @@ public class Wro4jJsCssCompilationTest {
     }
     @Test
     public void testJsCompilation() throws Exception {
+        createModel();
         testResourcesOfType(ResourceType.JS, Predicates.<String>alwaysTrue());
     }
 

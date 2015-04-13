@@ -17,6 +17,10 @@
           label: label || value,
           field: field
         };
+        for(var i=0;i<currentFacets.length;i++) {
+          if(currentFacets[i].field == facet.field &&
+              currentFacets[i].value == facet.value) return;
+        }
         currentFacets.push(facet);
       };
 
@@ -43,11 +47,11 @@
       var getParamsFromFacets = function(facets) {
         var params = {};
         angular.forEach(facets, function(facet) {
-          if (angular.isArray(facets[facet.field])) {
+          if (angular.isArray(params[facet.field])) {
             params[facet.field].push(facet.value);
           }
-          else if (angular.isDefined(facets[facet.field])) {
-            params[facet.field] = [facet.value];
+          else if (angular.isDefined(params[facet.field])) {
+            params[facet.field] = [params[facet.field], facet.value];
           }
           else {
             params[facet.field] = facet.value;
@@ -56,10 +60,29 @@
         return params;
       };
 
+      var removeFacetsFromParams = function(facets, params) {
+        angular.forEach(facets, function(f) {
+          var keep = false;
+          for (p in params) {
+            if (p == f.field) {
+              if(params[p] == f.value ||(angular.isArray(params[p]) &&
+                  params[p].indexOf(f.value) >= 0)) {
+                keep = true;
+              }
+            }
+          }
+          if(!keep) {
+            remove(facets, f);
+          }
+
+        });
+      };
+
       return {
         add: add,
         remove: remove,
-        getParamsFromFacets: getParamsFromFacets
+        getParamsFromFacets: getParamsFromFacets,
+        removeFacetsFromParams: removeFacetsFromParams
       };
     }
   ]);

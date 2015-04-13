@@ -359,36 +359,37 @@ public class Do implements Service {
 					"Could not find dataset file. Invalid zip file parameters: "
 							+ file + ".");
 		}
-
-		// Handle multiple geofile.
-		GeoFile gf = new GeoFile(f);
-
 		Collection<String> rasterLayers, vectorLayers;
 
-		try {
-			vectorLayers = gf.getVectorLayers(true);
-			if (vectorLayers.size() > 0) {
-				if (publishVector(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
-					return report(SUCCESS, VECTOR, getReport());
-				} else {
-					return report(EXCEPTION, VECTOR, getErrorCode());
-				}
-			}
-		} catch (IllegalArgumentException e) {
-			return report(EXCEPTION, VECTOR, e.getMessage());
-		}
+		// Handle multiple geofile.
+		try (GeoFile gf = new GeoFile(f)) {
 
-		try {
-			rasterLayers = gf.getRasterLayers();
-			if (rasterLayers.size() > 0) {
-				if (publishRaster(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
-					return report(SUCCESS, RASTER, getReport());
-				} else {
-					return report(EXCEPTION, RASTER, getErrorCode());
+
+			try {
+				vectorLayers = gf.getVectorLayers(true);
+				if (vectorLayers.size() > 0) {
+					if (publishVector(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
+						return report(SUCCESS, VECTOR, getReport());
+					} else {
+						return report(EXCEPTION, VECTOR, getErrorCode());
+					}
 				}
+			} catch (IllegalArgumentException e) {
+				return report(EXCEPTION, VECTOR, e.getMessage());
 			}
-		} catch (IllegalArgumentException e) {
-			return report(EXCEPTION, RASTER, e.getMessage());
+
+			try {
+				rasterLayers = gf.getRasterLayers();
+				if (rasterLayers.size() > 0) {
+					if (publishRaster(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
+						return report(SUCCESS, RASTER, getReport());
+					} else {
+						return report(EXCEPTION, RASTER, getErrorCode());
+					}
+				}
+			} catch (IllegalArgumentException e) {
+				return report(EXCEPTION, RASTER, e.getMessage());
+			}
 		}
 
 		if (vectorLayers.size() == 0 && rasterLayers.size() == 0) {

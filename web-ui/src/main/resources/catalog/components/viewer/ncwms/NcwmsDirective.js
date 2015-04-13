@@ -115,7 +115,7 @@
                   });
                   setTimeout(function() {
                     resetInteraction();
-                  }, 100);
+                  }, 300);
                 }, this);
 
             map.addInteraction(drawInteraction);
@@ -154,6 +154,8 @@
               min: ncInfo.scaleRange[0],
               max: ncInfo.scaleRange[1]
             };
+            scope.colorscalerange = [scope.colorRange.min,
+              scope.colorRange.max];
             scope.timeSeries = {};
             scope.elevations = ncInfo.zaxis.values;
             scope.styles = gnNcWms.parseStyles(ncInfo);
@@ -171,7 +173,8 @@
           scope.setAutoColorranges = function(evt) {
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
-                ol.proj.transform(map.getView().calculateExtent(map.getSize()),
+                ol.proj.transformExtent(
+                    map.getView().calculateExtent(map.getSize()),
                     map.getView().getProjection(), 'EPSG:4326').join(',')).
                 success(function(data) {
                   scope.colorscalerange = [data.min, data.max];

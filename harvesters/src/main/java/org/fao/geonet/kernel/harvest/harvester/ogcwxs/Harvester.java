@@ -35,6 +35,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -232,11 +233,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
 
-			// Remove thumbnails
-			unsetThumbnail (id);
-			
-			// Remove metadata
-			dataMan.deleteMetadata (context, id);
+            //--- remove the metadata directory including the public and private directories.
+            IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+
+            // Remove metadata
+            dataMan.deleteMetadata(context, id);
 			
 			result.locallyRemoved ++;
 		}
@@ -775,26 +776,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		}
 		
 	}
-	
-	/** 
-     * Remove thumbnails directory for all metadata
-     * FIXME : Do this only for existing one !
-     *  
-     * @param id   layer for which the thumbnail needs to be generated
-     *                   
-     */
-	private void unsetThumbnail (String id){
-        if(log.isDebugEnabled()) log.debug("  - Removing thumbnail for layer metadata: " + id);
-
-		try {
-			Path file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-            IO.deleteFileOrDirectory(file);
-		} catch (Exception e) {
-			log.warning("  - Failed to remove thumbnail for metadata: " + id + ", error: " + e.getMessage());
-		}
-	}
-
-	
 	
 	/** 
      * Load thumbnails making a GetMap operation.

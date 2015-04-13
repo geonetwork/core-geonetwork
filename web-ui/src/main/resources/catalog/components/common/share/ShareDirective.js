@@ -90,7 +90,7 @@
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {
                     msg: $translate('privilegesUpdated'),
-                    timeout: 2,
+                    timeout: 0,
                     type: 'success'});
                 }, function(data) {
                   scope.$emit('PrivilegesUpdated', false);
@@ -101,6 +101,30 @@
                     type: 'danger'});
                 });
           };
+
+          scope.sorter = {
+            predicate: 'g',
+            reverse: false
+          };
+
+          scope.setSorter = function(pred) {
+            if(pred == scope.sorter.predicate) {
+              scope.sorter.reverse = !scope.sorter.reverse;
+            } else {
+              scope.sorter.reverse = false;
+              scope.sorter.predicate = pred;
+            }
+          };
+
+          scope.sortGroups = function(g) {
+            if(scope.sorter.predicate == 'g') {
+              return g.label[scope.lang];
+            }
+            else {
+              return g.privileges[scope.sorter.predicate].value;
+            }
+          }
+
         }
       };
     }]);

@@ -232,5 +232,22 @@
             return 'DEFAULT';
           };
         }
-          ]);
+      ]);
+
+  /**
+   * AngularJS Filter. Filters an array of relations by the given tpye.
+   * Uses : relations | relationsfilter:'children children'
+   */
+  module.filter('gnRelationsFilter', function() {
+    return function (relations, types) {
+      var result = [];
+      var types = types.split(' ');
+      angular.forEach(relations, function (rel) {
+        if (types.indexOf(rel['@type']) >= 0) {
+          result.push(rel);
+        }
+      });
+      return result;
+    }
+  });
 })();

@@ -121,28 +121,42 @@ public class FormatterCache {
     @Nullable
     public byte[] get(Key key, Validator validator, Callable<StoreInfoAndDataLoadResult> loader,
                       boolean writeToStoreInCurrentThread) throws Exception {
-        if (!cacheConfig.allowCaching(key)) {
-            return loader.call().data;
-        }
+        final Lock readLock = lock.readLock();
+        StoreInfoAndData cached;
+        try {
+            readLock.lock();
+            if (!cacheConfig.allowCaching(key)) {
+                return loader.call().data;
+            }
 
-        StoreInfoAndData cached = memoryCache.getIfPresent(key);
-        boolean invalid = false;
-        if (cached != null && !validator.isCacheVersionValid(cached)) {
-            cached = null;
-            invalid = true;
-        }
+            cached = memoryCache.getIfPresent(key);
+            boolean invalid = false;
+            if (cached != null && !validator.isCacheVersionValid(cached)) {
+                cached = null;
+                invalid = true;
+            }
 
-        if (!invalid && cached == null) {
-            cached = loadFromPersistentCache(key, validator);
-        }
+            if (!invalid && cached == null) {
+                cached = loadFromPersistentCache(key, validator);
+            }
 
+        } finally {
+            readLock.unlock();
+        }
+        final Lock writeLock = lock.writeLock();
         if (cached == null) {
-            StoreInfoAndDataLoadResult loaded = loader.call();
-            cached = loaded;
-            push(key, loaded, writeToStoreInCurrentThread);
+            try {
+                writeLock.lock();
+                StoreInfoAndDataLoadResult loaded = loader.call();
+                cached = loaded;
+                push(key, loaded, writeToStoreInCurrentThread);
+            } finally {
+                writeLock.unlock();
+            }
         }
 
         return cached.data;
+
     }
 
     private void push(Key key, StoreInfoAndDataLoadResult cached,
@@ -208,19 +222,31 @@ public class FormatterCache {
      * @param metadataId the id of the metadata whose published state may have changed
      * @param published  mark all cached values for this metadata
      */
-    synchronized void setPublished(int metadataId, boolean published) throws IOException {
-        this.persistentStore.setPublished(metadataId, published);
+    void setPublished(int metadataId, boolean published) throws IOException {
+        final Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            this.persistentStore.setPublished(metadataId, published);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     /**
      * Remove all cached values related to the metadataId.
      */
     public synchronized void removeAll(int metadataId) throws IOException, SQLException {
-        Collection<Pair<Key, StoreInfoAndData>> storeInfoAndDatas = this.mdIdIndex.removeAll(metadataId);
-        for (Pair<Key, StoreInfoAndData> storeInfoAndData : storeInfoAndDatas) {
-            final Key key = storeInfoAndData.one();
-            this.memoryCache.invalidate(key);
-            this.persistentStore.remove(key);
+        final Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            Collection<Pair<Key, StoreInfoAndData>> storeInfoAndDatas = this.mdIdIndex.removeAll(metadataId);
+            for (Pair<Key, StoreInfoAndData> storeInfoAndData : storeInfoAndDatas) {
+                final Key key = storeInfoAndData.one();
+                this.memoryCache.invalidate(key);
+                this.persistentStore.remove(key);
+            }
+        } finally {
+            writeLock.unlock();
         }
     }
 
@@ -228,8 +254,14 @@ public class FormatterCache {
      * Clear all records from the cache and backing persistent cache.
      */
     public void clear() throws IOException, SQLException {
-        this.memoryCache.invalidateAll();
-        this.persistentStore.clear();
+        final Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            this.memoryCache.invalidateAll();
+            this.persistentStore.clear();
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     private class RemoveFromIndexListener implements RemovalListener<Key, StoreInfoAndData> {

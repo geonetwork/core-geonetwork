@@ -29,7 +29,8 @@
    */
   module.directive('gnLayermanager', [
     'gnLayerFilters',
-    function(gnLayerFilters) {
+    'gnWmsQueue',
+    function(gnLayerFilters, gnWmsQueue) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/layermanager/' +
@@ -73,6 +74,12 @@
 
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.selected;
+
+          scope.failedLayers = gnWmsQueue.errors;
+          scope.removeFailed = function(layer) {
+            gnWmsQueue.removeFromError(layer);
+          };
+
         }
       };
     }]);

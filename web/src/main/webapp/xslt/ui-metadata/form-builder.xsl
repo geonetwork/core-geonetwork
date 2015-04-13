@@ -135,6 +135,9 @@
 
             <xsl:choose>
               <xsl:when test="$isMultilingual">
+
+                <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"></xsl:variable>
+
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
                   
@@ -143,7 +146,7 @@
                     <xsl:with-param name="lang" select="@lang"/>
                     <xsl:with-param name="value" select="."/>
                     <xsl:with-param name="type" select="$type"/>
-                    <xsl:with-param name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
+                    <xsl:with-param name="tooltip" select="$tooltip"/>
                     <xsl:with-param name="isRequired" select="$isRequired"/>
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>

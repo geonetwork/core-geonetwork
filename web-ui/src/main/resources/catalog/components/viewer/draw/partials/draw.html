@@ -20,9 +20,12 @@
       <i class="fa fa-eraser"></i>&nbsp;
       <span data-translate="">Remove</span>
     </button>
+    <a class="btn btn-default" data-ng-click="save()" id="export-geom" download="export.json"
+            data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}">
+            <i class="fa fa-fw fa-save"></i> {{"save"|translate}}</a>
   </div>
   <div class="alert alert-warning" role="alert">
     <span class="fa fa-info-circle"></span>
-	{{'drawInstruction'|translate}}</span>
+    {{'drawInstruction'|translate}}</span>
   </div>
 </div>

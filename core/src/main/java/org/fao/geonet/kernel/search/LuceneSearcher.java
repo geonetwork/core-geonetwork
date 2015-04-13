@@ -271,8 +271,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 		// build response
 		Element response =  new Element("response");
-		response.setAttribute("from",  getFrom()+"");
-		response.setAttribute("to",    getTo()+"");
+		response.setAttribute("from", getFrom() + "");
+		response.setAttribute("to", getTo() + "");
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, Xml.getString(response));
 
@@ -363,6 +363,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         HashSet<ReservedOperation> operations;
         if (isOwner) {
             operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
+            if (owner != null) {
+                addElement(infoEl, "ownerId", owner.toString());
+            }
         } else {
             final Collection<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
             operations = Sets.newHashSet();

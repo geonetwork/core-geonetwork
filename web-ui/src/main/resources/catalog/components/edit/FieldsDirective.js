@@ -113,8 +113,7 @@
                          element.outerWidth()) * .95;
 
                      var closeBtn = '<button onclick="$(this).' +
-                     'closest(\'div.popover\').prev().' +
-                     'popover(\'hide\');" type="button" ' +
+                     'closest(\'div.popover\').remove();" type="button" ' +
                      'class="fa fa-times btn btn-link pull-right"></button>';
 
                      element.popover({

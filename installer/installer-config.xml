@@ -8,10 +8,10 @@
 		<appname>geonetwork</appname>
 		<appversion>@version@ @subVersion@</appversion>
 		<authors>
-			<author name="OSGeo"               email="geonetwork@osgeo.org"/>					
+			<author name="OSGeo"               email="geonetwork@osgeo.org"/>
 			<author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
 			<author name="VAM WFP"             email="vamsie@wfp.org"/>
-			<author name="UNEP.net"            email="info@unep.net"/>			 
+			<author name="UNEP.net"            email="info@unep.net"/>
 			<author name="OCHA"                email="ochageodata@un.org"/>				 
 		</authors>
 		<url>http://geonetwork-opensource.org/</url>
@@ -96,9 +96,7 @@
 			
             <fileset dir="../web-client/target/classes/apps" targetdir="$INSTALL_PATH/web/geonetwork/apps" />
 			
-			<!-- Update the config-gui.xml to reflect the selected GUI -->
-			<parsable targetfile="$INSTALL_PATH/web/geonetwork/WEB-INF/config-gui.xml" />
-				
+
 			<executable targetfile="$INSTALL_PATH/bin/startup.sh" />
 			<executable targetfile="$INSTALL_PATH/bin/shutdown.sh" />
 		</pack>

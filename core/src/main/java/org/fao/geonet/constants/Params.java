@@ -137,6 +137,7 @@ public final class Params {
     
 	public static final String SERVICENAME     = "servicename";
 	public static final String SERVICEDESCRIPTION     = "servicedescription";
+	public static final String SERVICED_EXPLICIT_QUERY     = "serviceExplicitQuery";
 	public static final String CLASSNAME     = "classname";
 	public static final String FILTER_ANY     = "any";	
 	public static final String FILTER_TITLE     = "title";

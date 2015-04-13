@@ -7,6 +7,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 exclude-result-prefixes="#all">
 
@@ -27,10 +28,21 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="thesaurusTitle"
-      select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
-
-
+    <xsl:variable name="thesaurusTitleEl" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
+    <xsl:variable name="thesaurusTitle">
+      <xsl:choose>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">$thesaurusTitleEl/gco:CharacterString</xsl:when>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]) != ''">
+          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]"/>
+        </xsl:when>
+        <xsl:when test="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]">
+          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="attributes">
       <xsl:if test="$isEditing">
         <!-- Create form for all existing attribute (not in gn namespace)
@@ -71,40 +83,35 @@
 
 
 
-
   <xsl:template mode="mode-iso19139" match="gmd:MD_Keywords" priority="2000">
 
 
+    <xsl:variable name="thesaurusIdentifier"
+                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+
     <xsl:variable name="thesaurusTitle"
-      select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+        select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
 
 
-    <xsl:variable name="isTheaurusAvailable"
-      select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
+    <xsl:variable name="thesaurusConfig"
+                  as="element()?"
+                  select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]|
+                  $listOfThesaurus/thesaurus[key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]"></xsl:variable>
 
     <xsl:choose>
-      <xsl:when test="$isTheaurusAvailable">
+      <xsl:when test="$thesaurusConfig">
 
         <!-- The thesaurus key may be contained in the MD_Identifier field or 
           get it from the list of thesaurus based on its title.
           -->
         <xsl:variable name="thesaurusInternalKey"
-          select="if (gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code) 
-          then gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code 
-          else $listOfThesaurus/thesaurus[title=$thesaurusTitle]/key"/>
+          select="if ($thesaurusIdentifier)
+          then $thesaurusIdentifier
+          else thesaurusConfig/key"/>
         <xsl:variable name="thesaurusKey"
                       select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
-
-        <xsl:variable name="thesaurusConfig"
-                      as="element()?"
-                      select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
-        <!-- Single quote are escaped inside keyword. 
-          TODO: support multilingual editing of keywords
-          -->
-        <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], ',')"/>
-
 
         <!-- if gui lang eng > #EN -->
         <xsl:variable name="guiLangId"

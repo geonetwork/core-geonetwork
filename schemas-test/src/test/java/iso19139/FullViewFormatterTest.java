@@ -18,6 +18,18 @@ public class FullViewFormatterTest extends AbstractFullViewFormatterTest {
 
     protected List<String> excludes() {
         return Lists.newArrayList(
+               "> gmd:MD_Metadata > gmd:contentInfo > gmd:MD_CoverageDescription > gmd:dimension > gmd:MD_Band > gmd:sequenceIdentifier > gco:MemberName > gco:attributeType > gco:TypeName > gco:aName > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:contentInfo > gmd:MD_CoverageDescription > gmd:dimension > gmd:MD_Band > gmd:descriptor > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:dataQualityInfo > gmd:DQ_DataQuality > gmd:report > gmd:DQ_TemporalValidity > gmd:evaluationMethodDescription > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:dataQualityInfo > gmd:DQ_DataQuality > gmd:report > gmd:DQ_TemporalValidity > gmd:evaluationProcedure > gmd:CI_Citation > gmd:title > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:dataQualityInfo > gmd:DQ_DataQuality > gmd:lineage > gmd:LI_Lineage > gmd:processStep > gmd:LI_ProcessStep > gmd:processor > gmd:CI_ResponsibleParty > gmd:organisationName > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:dataQualityInfo > gmd:DQ_DataQuality > gmd:report > gmd:DQ_NonQuantitativeAttributeAccuracy > gmd:nameOfMeasure > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:metadataConstraints > gmd:MD_LegalConstraints > gmd:otherConstraints > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:applicationSchemaInfo > gmd:MD_ApplicationSchemaInformation > gmd:name > gmd:CI_Citation > gmd:title > gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text",
+                "> gmd:MD_Metadata > gmd:applicationSchemaInfo > gmd:MD_ApplicationSchemaInformation > gmd:constraintLanguage > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:applicationSchemaInfo > gmd:MD_ApplicationSchemaInformation > gmd:schemaAscii > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:applicationSchemaInfo > gmd:MD_ApplicationSchemaInformation > gmd:softwareDevelopmentFileFormat > gco:CharacterString > Text",
+                "> gmd:MD_Metadata > gmd:metadataMaintenance > gmd:MD_MaintenanceInformation > gmd:maintenanceNote > gco:CharacterString > Text",
                 "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text",
                 "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:date > gmd:CI_Date > gmd:date > gco:DateTime > Text",
                 "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:identifier > gmd:RS_Identifier > gmd:authority > gmd:CI_Citation > gmd:title > gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text",

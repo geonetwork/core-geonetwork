@@ -145,7 +145,8 @@
 
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
-          title: 'privileges',
+          title: $translate('privileges') + ' - ' +
+              (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope, 'PrivilegesUpdated');
       };
@@ -192,6 +193,14 @@
         }, scope, 'CategoriesUpdated');
       };
 
+      this.openTransferOwnership = function(md, scope) {
+        var uuid = md ? md.getUuid() : '';
+        var ownerId = md ? md.getOwnerId() : '';
+        openModal({
+          title: 'transferOwnership',
+          content: '<div gn-transfer-ownership="'+uuid +'" gn-transfer-md-owner="'+ownerId+'"></div>'
+        }, scope, 'TransferOwnership');
+      };
       /**
        * Duplicate the given metadata. Open the editor in new page.
        * @param {string} md

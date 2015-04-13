@@ -35,6 +35,7 @@
     <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
     <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
     <bean id="TranslatorCache" class="org.fao.geonet.kernel.search.TranslatorCache" lazy-init="false" scope="singleton"/>
+    <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false" scope="singleton"/>
 
 
     <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>

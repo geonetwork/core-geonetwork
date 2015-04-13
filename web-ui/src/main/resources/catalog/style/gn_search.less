@@ -478,3 +478,30 @@ button.active [role=tooltip] {
     color: grey;
   }
 }
+
+div[gn-transfer-ownership] .panel-body {
+  max-height: 45em;
+  overflow-y: auto;
+}
+
+[gn-share] {
+
+  @media (min-width: @screen-md) {
+    min-width: 800px;
+  }
+  .gn-searchgroup-input {
+    padding-left: 0;
+  }
+  .gn-share-grid {
+    th, td {
+      text-align: center;
+    }
+    th:first-child, td:first-child  {
+      text-align: left;
+    }
+    td {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+  }
+}

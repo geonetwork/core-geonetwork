@@ -18,8 +18,10 @@
       'gnSearchLocation',
       '$rootScope',
       'gnUrlUtils',
+      '$q',
+      'gnWmsQueue',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
-          gnSearchLocation, $rootScope, gnUrlUtils) {
+          gnSearchLocation, $rootScope, gnUrlUtils, $q, gnWmsQueue) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -342,6 +344,97 @@
           },
 
           /**
+           * Here is the method to use when you want to add a wms layer from
+           * a url and a layername. It will call the WMS getCapabilities,
+           * create the ol.Layer with maximum info we got from capabilities,
+           * then add the layer to the map.
+           * Return a promise with ol.Layer as data is succeed, and url/name
+           * if failure.
+           * If createOnly, we don't add the layer to the map
+           *
+           * @param {ol.Map} map
+           * @param {string} url
+           * @param {string} name
+           * @param {boolean} createOnly
+           */
+          addWmsFromScratch: function(map, url, name, createOnly) {
+            var defer = $q.defer();
+            var $this = this;
+
+            gnWmsQueue.add(url, name);
+            gnOwsCapabilities.getWMSCapabilities(url).then(function (capObj) {
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
+              if(!capL) {
+                var o = {
+                  url: url,
+                  name: name,
+                  msg: 'layerNotInCap'
+                };
+                gnWmsQueue.error(o);
+                defer.reject(o);
+              }
+              else {
+                var olL;
+                if(createOnly) {
+                  olL = $this.createOlWMTSFromCap(map, capL);
+                } else {
+                  olL = $this.addWmsToMapFromCap(map, capL);
+                }
+
+                gnWmsQueue.removeFromQueue(url, name);
+                defer.resolve(olL);
+              }
+
+            }, function() {
+              var o = {
+                url: url,
+                name: name,
+                msg: 'getCapFailure'
+              };
+              gnWmsQueue.error(o);
+              defer.reject(o);
+            });
+            return defer.promise;
+          },
+
+          addWmtsFromScratch: function(map, url, name, createOnly) {
+            var defer = $q.defer();
+            var $this = this;
+
+            gnWmsQueue.add(url, name);
+            gnOwsCapabilities.getWMTSCapabilities(url).then(function (capObj) {
+
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
+              if(!capL) {
+                var o = {
+                  url: url,
+                  name: name,
+                  msg: 'layerNotInCap'
+                };
+                gnWmsQueue.error(o);
+                defer.reject(o);
+              }
+              else {
+                var olL = $this.createOlWMTSFromCap(map, capL, capObj);
+                if(!createOnly) {
+                  map.addLayer(olL);
+                }
+                gnWmsQueue.removeFromQueue(url, name);
+                defer.resolve(olL);
+              }
+            }, function() {
+              var o = {
+                url: url,
+                name: name,
+                msg: 'getCapFailure'
+              };
+              gnWmsQueue.error(o);
+              defer.reject(o);
+            });
+            return defer.promise;
+          },
+
+          /**
            * Parse an object describing a layer from
            * a getCapabilities document parsing. Create a ol.Layer WMS
            * from this object and add it to the map with all known
@@ -536,17 +629,20 @@
            * @param {string} url
            */
           isLayerInMap: function(map, name, url) {
-            for(var i=0;i<map.getLayers().getLength();i++) {
+            if(gnWmsQueue.isPending(url, name)) {
+              return true;
+            }
+            for (var i = 0; i < map.getLayers().getLength(); i++) {
               var l = map.getLayers().item(i);
               var source = l.getSource();
-              if(source instanceof ol.source.WMTS &&
+              if (source instanceof ol.source.WMTS &&
                   l.get('url') == url) {
-                if(l.get('name') == name) {
+                if (l.get('name') == name) {
                   return true;
                 }
               }
-              else if(source instanceof ol.source.TileWMS) {
-                if(source.getParams().LAYERS == name &&
+              else if (source instanceof ol.source.TileWMS) {
+                if (source.getParams().LAYERS == name &&
                     l.get('url').split('?')[0] == url.split('?')[0]) {
                   return true;
                 }

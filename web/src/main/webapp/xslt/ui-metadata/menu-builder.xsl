@@ -29,7 +29,7 @@
           <i class="fa fa-eye"></i>
           <b class="caret"/>
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-right">
           <!-- links -->
           <xsl:choose>
             <xsl:when test="$isTemplate = 's'">

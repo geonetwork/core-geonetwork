@@ -29,8 +29,6 @@
       <i class="fa fa-angle-right"></i>
     </button>
 
-    <div class="gn-md-actions-btn pull-right"
-         data-gn-md-actions-menu="mdView.current.record"/>
 
     <div class="btn-group pull-right">
       <button type="button" class="btn btn-link dropdown-toggle"
@@ -51,6 +49,8 @@
       </ul>
     </div>
 
+    <div class="gn-md-actions-btn pull-right"
+         data-gn-md-actions-menu="mdView.current.record"/>
 
     <a class="btn btn-danger gn-md-delete-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
@@ -393,10 +393,13 @@
             <span data-translate="">shareOn</span>
           </h4>
           <a data-ng-href="https://plus.google.com/share?url={{mdView.current.record.encodedUrl}}"
+             target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
           <a data-ng-href="https://twitter.com/share?url={{mdView.current.record.encodedUrl}}"
+             target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-twitter"></i></a>
           <a data-ng-href="https://www.facebook.com/sharer.php?u={{mdView.current.record.encodedUrl}}"
+             target="_blank"
              class="btn btn-lg btn-default"><i class="fa fa-fw fa-facebook"></i></a>
         </section></br>
 

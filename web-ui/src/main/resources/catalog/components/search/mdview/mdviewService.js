@@ -25,8 +25,6 @@
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils) {
 
-      var lastSearchParams = {};
-
       // Keep where the metadataview come from to get back on close
       $rootScope.$on('$locationChangeStart', function(o, v) {
         if (!gnSearchLocation.isMdView()) {
@@ -65,11 +63,6 @@
        * @param {string} uuid
        */
       this.setLocationUuid = function(uuid) {
-        if (gnSearchLocation.isSearch()) {
-          lastSearchParams = angular.copy(gnSearchLocation.getParams());
-          gnSearchLocation.saveLastUrl();
-          gnSearchLocation.removeParams();
-        }
         gnSearchLocation.setUuid(uuid);
       };
 
@@ -79,7 +72,12 @@
        * at last search.
        */
       this.removeLocationUuid = function() {
-        gnSearchLocation.path(gnMdViewObj.from || gnSearchLocation.SEARCH);
+        if(gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
+          gnSearchLocation.path(gnMdViewObj.from);
+        }
+        else {
+          gnSearchLocation.restoreSearch();
+        }
       };
 
       /**
@@ -136,9 +134,6 @@
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
           }
-          else {
-            $rootScope.$broadcast('closeMdView');
-          }
         };
         loadFormatter();
         $rootScope.$on('$locationChangeSuccess', loadFormatter);
@@ -173,16 +168,25 @@
     '$http',
     '$compile',
     '$sce',
-    function($rootScope, $http, $compile, $sce) {
+    'gnAlertService',
+    function($rootScope, $http, $compile, $sce, gnAlertService) {
 
       this.load = function(url, selector) {
+        $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
+          $rootScope.$broadcast('mdLoadingEnd');
           var scope = angular.element($(selector)).scope();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
           $(selector).append(el);
           $compile(el)(scope);
+        }, function() {
+          $rootScope.$broadcast('mdLoadingEnd');
+          gnAlertService.addAlert({
+            msg: 'Erreur de chargement de la métadonnée.',
+            type: 'danger'
+          });
         });
       };
     }

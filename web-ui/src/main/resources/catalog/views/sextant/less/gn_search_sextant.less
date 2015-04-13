@@ -3,6 +3,7 @@
 @import "../../../style/gn_metadata";
 
 @sxt-orange: #F28033;
+@results-toolbar-height: 2.8em;
 
 @media (min-width: @screen-lg-min) {
   html, body,
@@ -22,7 +23,7 @@
   }
   [search-results]
   {
-    height: 100%;
+    height: calc(~"100% - "@results-toolbar-height);
     overflow: auto;
   }
   .gn-searchform
@@ -32,6 +33,9 @@
     .close {
       font-size: 20px;
     }
+  }
+  .container .container {
+    width: 100%;
   }
 }
 
@@ -239,8 +243,8 @@
     }
   }
   .panel-heading {
-    height: 2.8em;
-    line-height: 2.8em;
+    height: @results-toolbar-height;
+    line-height: @results-toolbar-height;
     [data-gn-pagination] > li > a {
       background-color: transparent;
       border: none;
@@ -279,15 +283,38 @@
   }
 }
 
+.sxt-md-container {
+  background: url(http://sextant.ifremer.fr/record/images/bg_page.gif) top left repeat;
+}
+
 .gn-md-view {
   padding: 25px;
-  
+  background: white;
+  h2 {
+    font-size: 24px;
+    font-weight: normal;
+  }
+  .gn-md-side {
+    h4 {
+      font-size: 14px;
+    }
+    .well {
+      padding: 0 1em;
+    }
+  }
+  .dl-horizontal {
+    clear: right;
+    margin-top: 2em;
+    font-size: 13px;
+    dt {
+      text-align: left;
+    }
+    dt, dd {
+      margin-bottom: 1em;
+    }
+  }
   .gn-metadata-display {
     .nav li {
-      display:none;
-      &:nth-child(2), &:first-child {
-        display: block;
-      }
     }
   }
 
@@ -376,6 +403,19 @@ ul.gn-resultview {
       position: static;
       float: right;
       margin: 7px 4px 0 0;
+      .btn-group, button {
+        width: 46px;
+        margin: 0 3px 0 0;
+      }
+    }
+    .gn-md-relations {
+      float: left;
+      margin: 7px 0 0 4px;
+      .dropdown-menu {
+        max-width: 100%;
+      }
+    }
+    .gn-md-relations, .gn-md-links {
       .dropdown-menu {
         max-width: 300px;
         font-size: 12px;
@@ -385,10 +425,6 @@ ul.gn-resultview {
           line-height: normal;
           .text-overflow();
         }
-      }
-      .btn-group, button {
-        width: 46px;
-        margin: 0 3px 0 0;
       }
     }
     .md-actions {
@@ -582,5 +618,11 @@ ul.gn-resultview {
   }
   .expander {
     display:none;
+  }
+}
+
+[gn-share] {
+  .gn-share-help {
+    display: none;
   }
 }

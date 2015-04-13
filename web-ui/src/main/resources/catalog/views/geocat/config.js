@@ -112,9 +112,6 @@
       searchSettings.resultTemplate = '../../catalog/components/search/' +
           'resultsview/partials/viewtemplates/geocat.html';
 
-      searchSettings.dismissMdView = function() {
-        window.history.back();
-      };
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id='
       };

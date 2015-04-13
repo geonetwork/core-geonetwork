@@ -13,7 +13,7 @@
           'http://www.opengis.net/ows': 'ows'
         }
       }
-      );
+  );
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
@@ -24,8 +24,10 @@
     'gnViewerSettings',
     '$translate',
     '$q',
+    '$filter',
+    'gnWmsQueue',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q) {
+             $translate, $q, $filter) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -74,7 +76,7 @@
               if (type != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type);
                 if (olLayer) {
-                  bgLayers.push(olLayer);
+                  bgLayers.push({layer:olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
                   olLayer.set('group', 'Background layers');
@@ -82,21 +84,17 @@
                 }
               }
               else {
-                promises.push(this.createLayer(layer, map).then(
-                    function(o) {
-                      var olLayer = o.ol;
-                      var ctxLayer = o.ctx;
-                      bgLayers.push(olLayer);
+                promises.push(this.createLayer(layer, map, i).then(
+                    function(olLayer) {
+                      bgLayers.push({layer:olLayer, idx: olLayer.get('bgIdx')});
                       olLayer.displayInLayerManager = false;
                       olLayer.background = true;
-                      olLayer.set('group', 'Background layers');
-                      olLayer.setVisible(!ctxLayer.hidden);
                     }));
               }
             } else {
               var server = layer.server[0];
               if (server.service == 'urn:ogc:serviceType:WMS') {
-                self.addLayer(layer, map);
+                self.createLayer(layer, map);
               }
             }
           }
@@ -104,7 +102,7 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        $q.all(promises).then(function() {
+        $q.all(promises).finally(function() {
           if (bgLayers.length > 0) {
             // make sure we remove any existing bglayer
             if (map.getLayers().getLength() > 0) {
@@ -119,11 +117,13 @@
             gnViewerSettings.bgLayers.length = 0;
 
             var firstVisibleBgLayer = true;
+            bgLayers = $filter('orderBy')(bgLayers, 'idx');
+
             $.each(bgLayers, function(index, item) {
-              gnViewerSettings.bgLayers.push(item);
+              gnViewerSettings.bgLayers.push(item.layer);
               // the first visible bg layer wins and get displayed in the map
-              if (item.getVisible() && firstVisibleBgLayer) {
-                map.getLayers().insertAt(0, item);
+              if (item.layer.getVisible() && firstVisibleBgLayer) {
+                map.getLayers().insertAt(0, item.layer);
                 firstVisibleBgLayer = false;
               }
             });
@@ -277,73 +277,53 @@
        * Create a WMS ol.Layer from context object
        * @param {Object} layer layer
        * @param {ol.map} map map
+       * @param {numeric} bgIdx if it is a background layer, index in the
+       * dropdown
        */
-      this.createLayer = function(layer, map) {
-
-        var defer = $q.defer();
+      this.createLayer = function(layer, map, bgIdx) {
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
         var reT = /type\s*=\s*([^,|^}|^\s]*)/;
         var reL = /name\s*=\s*([^,|^}|^\s]*)/;
 
+        var createOnly = angular.isDefined(bgIdx);
+
         if (layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
           var name = reL.exec(layer.name)[1];
 
           if (type == 'wmts') {
-            gnOwsCapabilities.getWMTSCapabilities(res.href).
-                then(function(capObj) {
-                  var info = gnOwsCapabilities.getLayerInfoFromCap(
-                      name, capObj);
-                  info.group = layer.group;
-                  var l = gnMap.createOlWMTSFromCap(map, info, capObj);
-                  l.setOpacity(layer.opacity);
-                  l.setVisible(!layer.hidden);
-                  if(layer.title) {
-                    l.set('title', layer.title);
-                    l.set('label', layer.title);
+            return gnMap.addWmtsFromScratch(map, res.href, name, createOnly).
+                then(function(olL) {
+                  olL.set('group', layer.group);
+                  olL.setOpacity(layer.opacity);
+                  olL.setVisible(!layer.hidden);
+                  if (layer.title) {
+                    olL.set('title', layer.title);
+                    olL.set('label', layer.title);
                   }
-                  defer.resolve({ol: l, ctx: layer});
+                  if(bgIdx) {
+                    olL.set('bgIdx', bgIdx);
+                  }
+                  return olL;
                 });
           }
         }
         else { // we suppose it's WMS
-          gnOwsCapabilities.getWMSCapabilities(res.href).then(function(capObj) {
-            var info = gnOwsCapabilities.getLayerInfoFromCap(
-                layer.name, capObj);
-            info.group = layer.group;
-            var l = gnMap.createOlWMSFromCap(map, info);
-            l.setOpacity(layer.opacity);
-            l.setVisible(!layer.hidden);
-            if(layer.title) {
-              l.set('title', layer.title);
-              l.set('label', layer.title);
-            }
 
-            defer.resolve({ol: l, ctx: layer});
-          }, function() {
-            console.warn('Failed to load layer from : ' + res.href +
-                'during capabilities reading.');
-            defer.reject(layer.name);
-          });
+          return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
+              then(function(olL) {
+                olL.set('group', layer.group);
+                olL.setOpacity(layer.opacity);
+                olL.setVisible(!layer.hidden);
+                if (layer.title) {
+                  olL.set('title', layer.title);
+                  olL.set('label', layer.title);
+                }
+                return olL;
+              });
         }
-        return defer.promise;
-      };
-
-      /**
-       * Adds a WMS layer to map
-       * @param {Object} layer layer
-       * @param {ol.map} map map
-       */
-      this.addLayer = function(layer, map) {
-        this.createLayer(layer, map).then(function(l) {
-          map.addLayer(l.ol);
-        }, function(layerName) {
-          var failedLoadingLayers = map.get('failedLayers') || [];
-          failedLoadingLayers.push(layerName);
-          map.set('failedLayers', failedLoadingLayers);
-        });
       };
     }
   ]);

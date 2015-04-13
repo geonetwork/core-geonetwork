@@ -130,7 +130,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             });
             dataManager.indexMetadata(Lists.newArrayList("" + this.id));
 
-            final String formatterName = configureGroovyTestFormatter();
+            final String formatterName = "full_view";
 
             MockHttpServletRequest request = new MockHttpServletRequest();
             request.addParameter("h2IdentInfo", "true");

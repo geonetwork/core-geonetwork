@@ -62,7 +62,7 @@
       </tab>
       <tab heading="{{mainTabs.metadata.title}}"
            active="mainTabs.metadata.active">
-        <div class="container-fluid">
+        <div class="container-fluid sxt-md-container">
           <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
         </div>
       </tab>
@@ -80,7 +80,7 @@
           <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
         </tab-heading>
 
-        <div sxt-panier="searchObj.panier"></div>
+        <div sxt-panier="searchObj.panier" sxt-panier-user="user"></div>
       </tab>
     </tabset>
   </div>

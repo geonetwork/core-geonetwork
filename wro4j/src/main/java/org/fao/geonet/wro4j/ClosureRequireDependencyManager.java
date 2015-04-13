@@ -141,8 +141,8 @@ public class ClosureRequireDependencyManager {
      * A node in the Dependency Graph.
      */
     static class Node {
-        static final String PROVIDES_PATTERN_STRING = "goog\\s*\\.\\s*provide\\s*\\(\\s*(.+?)\\s*\\)";
-        static final String REQUIRE_PATTERN_STRING = "goog\\s*\\.\\s*require\\s*\\(\\s*(.+?)\\s*\\)";
+        static final String PROVIDES_PATTERN_STRING = "goog\\s*\\.\\s*provide\\s*\\(\\s*(.*?)\\s*\\)";
+        static final String REQUIRE_PATTERN_STRING = "goog\\s*\\.\\s*require\\s*\\(\\s*(.*?)\\s*\\)";
 
         private static final Pattern SCAN_PATTERN = Pattern.compile("(" + PROVIDES_PATTERN_STRING + ")|(" + REQUIRE_PATTERN_STRING + ")");
         final String id;
@@ -181,9 +181,9 @@ public class ClosureRequireDependencyManager {
                 final int index1 = path.lastIndexOf('/');
                 final int index2 = path.lastIndexOf('\\');
                 if (Math.max(index1, index2) < 0) {
-                    return path;
+                    return Files.getNameWithoutExtension(path);
                 } else {
-                    return path.substring(Math.max(index1, index2) + 1);
+                    return Files.getNameWithoutExtension(path.substring(Math.max(index1, index2) + 1));
                 }
             }
             return id;

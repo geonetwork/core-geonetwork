@@ -242,7 +242,7 @@
 
  
   <div data-ng-repeat="report in reports track by $index">
-	  <div class="panel panel-default" data-ng-class="report.exceptions ||
+	  <div class="panel panel-default" data-ng-class="report.exceptions || report.exception ||
 	       (!report.success && report.message) ?
 	                        'panel-danger' : 'panel-success'">
 	    <div class="panel-heading" data-translate="">importReport</div>
@@ -271,7 +271,11 @@
 	            <td>{{e['#text']}}</td>
 	          </tr>
 	        </table>
-	      </p>
+
+          <!--Only one exception from single import-->
+          <span ng-show="report.exception">{{report.exception}}</span>
+
+        </p>
 	    </div>
 	  </div>
   </div>

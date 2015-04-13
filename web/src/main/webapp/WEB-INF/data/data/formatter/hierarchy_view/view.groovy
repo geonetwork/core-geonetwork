@@ -1,3 +1,3 @@
 handlers.add select: ~/.*/, {els ->
-    handlers.fileResult("html/links.html", ["links" : new common.Handlers(handlers, f, env).loadHierarchyLinkBlocks()])
+    handlers.fileResult("html/associated.html", ["associated" : new common.Handlers(handlers, f, env).loadHierarchyLinkBlocks()])
 }
