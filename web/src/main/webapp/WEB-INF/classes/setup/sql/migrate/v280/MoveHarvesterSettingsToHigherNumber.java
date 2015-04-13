@@ -2,7 +2,10 @@ package v280;
 
 import org.fao.geonet.DatabaseMigrationTask;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,18 +47,12 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
             }
         }
 
-        public void write(Connection connection) throws SQLException {
-            final String sql = format("INSERT INTO %s (id, parentId, name, value) VALUES (?, ?, " +
-                                      "?, ?)", getHarvesterSettingsName());
-            try(PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, id);
-                statement.setInt(2, parentId);
-                statement.setString(3, name);
-                statement.setString(4, value);
-                statement.execute();
-            }
+        public void write(Statement statement) throws SQLException {
+            final String sql = format("INSERT INTO " + getHarvesterSettingsName() + " (id, parentId, name, value) VALUES (%s, %s, " +
+                                      "'%s', '%s')", id, parentId, name, value);
+            statement.execute(sql);
             for (HarvesterSetting child : children) {
-                child.write(connection);
+                child.write(statement);
             }
         }
 
@@ -98,7 +95,7 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
                 setting.delete(statement);
             }
             for (HarvesterSetting setting : settings) {
-                setting.write(connection);
+                setting.write(statement);
             }
         }
     }

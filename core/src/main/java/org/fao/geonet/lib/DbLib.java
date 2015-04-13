@@ -81,21 +81,12 @@ public class DbLib {
 		List<String> data = loadSqlDataFile(servletContext, statement, appPath, filePath, filePrefix);
 		runSQL(statement, data, true);
 	}
-    @Deprecated
+
 	private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;
-        for (String row1 : data) {
-            String row;
-            //Check for zero space non brea
-            if (row1.length()>1&&(int)row1.charAt(0) == 65279) {
-                row = row1.substring(1);
-            }
-            else
-            {
-                row = row1;
-            }
+        for (String row : data) {
             if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
                 && !row.trim().equals("")) {
                 sb.append(" ");
@@ -142,17 +133,7 @@ public class DbLib {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;
-        for (String row1 : data) {
-            String row;
-            if(row1.trim().equals("")) continue;
-            if ((int)row1.charAt(0) == 65279) {
-                row = row1.substring(1);
-            }
-            else
-            {
-                row = row1;
-            }
-
+        for (String row : data) {
             if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
                 && !row.trim().equals("")) {
                 sb.append(" ");
@@ -173,9 +154,9 @@ public class DbLib {
 
                     try {
                         if (sql.trim().startsWith("SELECT")) {
-                            statement.executeQuery(sql.trim()).close();
+                            statement.executeQuery(sql).close();
                         } else {
-                            statement.execute(sql.trim());
+                            statement.execute(sql);
                         }
                     } catch (SQLException e) {
                         Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
