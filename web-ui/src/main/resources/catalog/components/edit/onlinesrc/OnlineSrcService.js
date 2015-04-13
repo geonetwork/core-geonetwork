@@ -321,7 +321,7 @@
           else {
             params[mode + 'Uuid'] = md.getUuid();
           }
-          runProcess(this, params).then(function() {
+          return runProcess(this, params).then(function() {
             closePopup(popupid);
           });
         },
