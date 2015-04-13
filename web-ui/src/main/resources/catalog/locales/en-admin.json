@@ -213,6 +213,7 @@
     "chooseAFile": "Choose a file",
     "chooseAServiceType": "Choose a service type",
     "chooseFormatter": "Choose a formatter package to upload",
+    "formatterUploadError": "Error occurred while loading formatter",
     "chooseLogos": "Choose or drop images here",
     "chooseProcess": "Choose",
     "chooseRecordsToUpdate": "Select records to process",
