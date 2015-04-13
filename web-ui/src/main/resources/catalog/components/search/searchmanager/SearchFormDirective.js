@@ -264,12 +264,14 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function(htmlQuery) {
-            scope.controller.resetSearch();
+          scope.resetSearch = function(htmlElementOrDefaultSearch) {
             //TODO: remove geocat ref
             $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
-            if (htmlQuery) {
-              $(htmlQuery).focus();
+            if (angular.isObject(htmlElementOrDefaultSearch)) {
+              scope.controller.resetSearch(htmlElementOrDefaultSearch);
+            } else {
+              scope.controller.resetSearch();
+              $(htmlElementOrDefaultSearch).focus();
             }
           };
 
