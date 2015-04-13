@@ -14,10 +14,30 @@
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/layertree.html',
         controller: [ '$scope', function($scope) {
+          var $this = this;
+
           this.setNCWMS = function(layer) {
             $scope.active.layersTools = false;
             $scope.active.NCWMS = layer;
           };
+
+          this.comboGroups = {};
+          this.switchGroupCombo = function(groupcombo) {
+            var activeLayer = this.comboGroups[groupcombo];
+            var fLayers = $filter('filter')($scope.layers,
+                $scope.layerFilterFn);
+            for (var i = 0; i < fLayers.length; i++) {
+              var l = fLayers[i];
+              if(l.get('groupcombo') == groupcombo) {
+                l.visible = false;
+              }
+            }
+            activeLayer.visible = true;
+          }
+
+          $scope.setActiveComboGroup = function(l) {
+            $this.comboGroups[l.get('groupcombo')] = l;
+          }
         }],
         link: function(scope, element, attrs) {
 
@@ -80,6 +100,9 @@
                   var g = groups.split(sep);
                   createNode(l, scope.layerTree, g, 1);
                 }
+                if(l.visible && l.get('groupcombo')) {
+                  scope.setActiveComboGroup(l);
+                }
               }
               debounce--;
             }, 100);
@@ -141,6 +164,12 @@
           scope.mapService = gnMap;
 
           scope.setNCWMS = controller.setNCWMS;
+
+          if(!scope.isParentNode()) {
+            scope.groupCombo = scope.member.get('groupcombo');
+            scope.comboGroups = controller.comboGroups;
+            scope.switchGroupCombo = controller.switchGroupCombo;
+          }
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);

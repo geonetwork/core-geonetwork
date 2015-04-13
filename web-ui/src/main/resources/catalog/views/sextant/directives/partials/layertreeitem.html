@@ -39,7 +39,9 @@
 
     <!-- Visibility check box & Layer title-->
     <label>
-      <input type="checkbox" ng-model="member.visible" title="{{'layerVisible'|translate}}" />
+      <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" title="{{'layerVisible'|translate}}" />
+      <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}"
+             type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}" data-ng-change="switchGroupCombo(groupCombo)"/>
       {{member.get('label')}}
     </label>
 
