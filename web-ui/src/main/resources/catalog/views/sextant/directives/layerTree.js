@@ -79,7 +79,7 @@
           var debounce = 0;
 
           // Build the layer manager tree depending on layer groups
-          scope.map.getLayers().on('change:length', function(e) {
+          var buildTree = function() {
             if(debounce > 0) {
               return;
             }
@@ -89,7 +89,13 @@
                 nodes: []
               };
               var sep = '/';
-              var fLayers = $filter('filter')(scope.layers, scope.layerFilterFn);
+              var fLayers = $filter('filter')(scope.layers,
+                  scope.layerFilterFn);
+
+              if(scope.layerFilter.length > 2) {
+                fLayers = $filter('filter')(fLayers, filterFn);
+              }
+
               for (var i = 0; i < fLayers.length; i++) {
                 var l = fLayers[i];
                 var groups = l.get('group');
@@ -106,12 +112,35 @@
               }
               debounce--;
             }, 100);
-          });
+          };
+
+          scope.map.getLayers().on('change:length', buildTree);
 
           scope.failedLayers = gnWmsQueue.errors;
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
           };
+
+          scope.layerFilter = '';
+          var filterFn = function(layer) {
+            var labelLc = layer.get('label').toLowerCase();
+            var groupLc = layer.get('group').toLowerCase();
+            var filterLc = scope.layerFilter.toLowerCase();
+            return labelLc.indexOf(filterLc) >= 0 ||
+                groupLc.indexOf(filterLc) >= 0;
+          };
+
+          scope.filterLayers = function() {
+            if(scope.layerFilter == '' || scope.layerFilter.length > 2) {
+              buildTree();
+            }
+          };
+
+          scope.filterClear = function() {
+            scope.layerFilter = '';
+            scope.filterLayers();
+          };
+
         }
       };
     }]);
