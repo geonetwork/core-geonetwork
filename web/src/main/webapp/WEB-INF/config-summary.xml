@@ -99,6 +99,7 @@
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         </summaryType>
         <summaryType name="manager">
+          <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="category" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
           <item facet="status" max="10" sortBy="value"
