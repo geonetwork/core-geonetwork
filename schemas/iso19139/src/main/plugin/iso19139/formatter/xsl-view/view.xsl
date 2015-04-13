@@ -285,12 +285,12 @@
       <dd>
 
         <xsl:if test="*/gmd:codeSpace">
-        <xsl:apply-templates mode="render-value"
-                             select="*/gmd:codeSpace"/>
-        /
+          <xsl:apply-templates mode="render-value"
+                               select="*/gmd:codeSpace"/>
+          /
         </xsl:if>
         <xsl:apply-templates mode="render-value"
-                               select="*/gmd:code"/>
+                             select="*/gmd:code"/>
         <xsl:if test="*/gmd:version">
           / <xsl:apply-templates mode="render-value"
                                  select="*/gmd:version"/>
@@ -366,17 +366,17 @@
       </dt>
       <dd>
         <ul>
-        <xsl:for-each select="parent::node()/gmd:graphicOverview">
-          <xsl:variable name="label">
-            <xsl:apply-templates mode="localised"
-                               select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
-          </xsl:variable>
-          <li>
-            <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
-                 alt="{$label}"
-                 class="img-thumbnail"/>
-          </li>
-        </xsl:for-each>
+          <xsl:for-each select="parent::node()/gmd:graphicOverview">
+            <xsl:variable name="label">
+              <xsl:apply-templates mode="localised"
+                                   select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
+            </xsl:variable>
+            <li>
+              <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
+                   alt="{$label}"
+                   class="img-thumbnail"/>
+            </li>
+          </xsl:for-each>
         </ul>
       </dd>
     </dl>
@@ -402,8 +402,8 @@
               (<xsl:apply-templates mode="render-value"
                                     select="*/gmd:version"/>)
               <p>
-              <xsl:apply-templates mode="render-field"
-                      select="*/(gmd:amendmentNumber|gmd:specification|
+                <xsl:apply-templates mode="render-field"
+                                     select="*/(gmd:amendmentNumber|gmd:specification|
                               gmd:fileDecompressionTechnique|gmd:formatDistributor)"/>
               </p>
             </li>
@@ -431,8 +431,8 @@
         </xsl:if>
       </dt>
       <dd>
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:date/*"/>
+        <xsl:apply-templates mode="render-value"
+                             select="*/gmd:date/*"/>
       </dd>
     </dl>
   </xsl:template>
@@ -450,8 +450,8 @@
         <ul>
           <xsl:for-each select="parent::node()/(gmd:topicCategory|gmd:obligation|gmd:pointInPixel)">
             <li>
-            <xsl:apply-templates mode="render-value"
-                                 select="*"/>
+              <xsl:apply-templates mode="render-value"
+                                   select="*"/>
             </li>
           </xsl:for-each>
         </ul>
@@ -513,7 +513,25 @@
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gml:beginPosition|gml:endPosition">
-    <xsl:value-of select="normalize-space(.)"/>
+
+    <xsl:choose>
+      <xsl:when test="contains(., 'http')">
+        <!-- Replace hyperlink in text by an hyperlink -->
+        <xsl:variable name="textWithLinks"
+                      select="replace(., '([a-z][\w-]+:/{1,3}[^\s()&gt;&lt;]+[^\s`!()\[\]{};:'&apos;&quot;.,&gt;&lt;?«»“”‘’])',
+                                    '&lt;a href=''$1''&gt;$1&lt;/a&gt;')"/>
+
+        <xsl:if test="$textWithLinks != ''">
+          <xsl:copy-of select="saxon:parse(
+                          concat('&lt;p&gt;',
+                          replace($textWithLinks, '&amp;', '&amp;amp;'),
+                          '&lt;/p&gt;'))"/>
+        </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="normalize-space(.)"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template mode="render-value"
@@ -556,7 +574,7 @@
   </xsl:template>
 
   <xsl:template mode="render-value"
-          match="gmd:language/gco:CharacterString">
+                match="gmd:language/gco:CharacterString">
     <span data-translate=""><xsl:value-of select="."/></span>
   </xsl:template>
 
