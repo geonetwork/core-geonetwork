@@ -85,7 +85,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private final List<String> summaryHarvesterSettings =
             Arrays.asList("harvesting", "node", "site", "name", "uuid",
                     "url", "capabUrl", "baseUrl", "host", "useAccount",
-                    "ogctype", "options", "status", "info", "lastRun");
+                    "ogctype", "options", "status", "info", "lastRun",
+                    "ownerGroup");
     
 
 	//---------------------------------------------------------------------------
