@@ -11312,6 +11312,15 @@
 .gn .gn-pager .btn-group li.dropdown-header {
   display: block;
 }
+.gn .gn-facet {
+  background: purple;
+}
+.gn .gn-facet input[type=checkbox] {
+  position: static;
+}
+.gn .gn-facet label {
+  padding-left: 0;
+}
 .gn [sxt-main-viewer] {
   position: absolute;
   left: 0;
