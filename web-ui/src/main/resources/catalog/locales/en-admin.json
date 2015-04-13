@@ -926,6 +926,8 @@
     "updateUser": "Update user ",
     "updateVirtualCSW": "Update ",
     "uploadThesaurus": "Upload",
+    "useCtrlClickToUnselect": "Use CTRL + click to unselect a group",
+    "aReviewerInAGroupIsAlsoAnEditor": "A reviewer in a group will also be set editor of this group",
     "url-host-relocator": "URL replacer",
     "urlPrefix": "URL prefix to search",
     "urlUpdater": "Update URLs in metadata records",
