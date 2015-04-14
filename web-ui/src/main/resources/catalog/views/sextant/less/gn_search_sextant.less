@@ -302,7 +302,7 @@
       padding: 0 5px;
     }
     .pull-right {
-      margin-top: .3em;
+      margin-top: 0.15em;
     }
   }
 
@@ -324,6 +324,17 @@
     background: rgba(255,255,255,.7);
     border-radius: 1em;
     padding: .2em;
+  }
+
+  .sxt-adminbtn {
+    float: none;
+    position: absolute;
+    left: 50%;
+    top: 3px;
+    margin-left: -5em;
+    .caret {
+      color: @sxt-orange;
+    }
   }
 }
 
@@ -758,5 +769,11 @@ ul.gn-resultview {
     top: auto;
     bottom: .3em;
     right: .3em;
+  }
+}
+
+[gn-share] {
+  .gn-share-help {
+    display: none;
   }
 }

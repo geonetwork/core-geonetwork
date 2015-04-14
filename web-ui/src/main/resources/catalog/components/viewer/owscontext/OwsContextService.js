@@ -232,6 +232,7 @@
             name: name,
             title: layer.get('title'),
             group: layer.get('group'),
+            groupcombo: layer.get('groupcombo'),
             server: [{
               onlineResource: [{
                 href: url
@@ -297,6 +298,7 @@
             return gnMap.addWmtsFromScratch(map, res.href, name, createOnly).
                 then(function(olL) {
                   olL.set('group', layer.group);
+                  olL.set('groupcombo', layer.groupcombo);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);
                   if (layer.title) {
@@ -315,6 +317,7 @@
           return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
               then(function(olL) {
                 olL.set('group', layer.group);
+                olL.set('groupcombo', layer.groupcombo);
                 olL.setOpacity(layer.opacity);
                 olL.setVisible(!layer.hidden);
                 if (layer.title) {

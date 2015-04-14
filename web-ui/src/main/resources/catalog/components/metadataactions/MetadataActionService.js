@@ -145,7 +145,8 @@
 
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
-          title: 'privileges',
+          title: $translate('privileges') + ' - ' +
+              (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope, 'PrivilegesUpdated');
       };

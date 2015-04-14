@@ -21,8 +21,11 @@
               data-cache="groups"/>
         </div>
 
-        <button type="button" class="btn btn-primary btn-block" data-ng-click="addGroup()"
-          id="gn-btn-group-add">
+        <button type="button"
+                class="btn btn-primary btn-block"
+                data-ng-click="addGroup()"
+                data-ng-show="user.isAdministratorOrMore()"
+                id="gn-btn-group-add">
           <i class="fa fa-plus"/>
           <span data-translate="">newGroup</span>
         </button>
@@ -39,7 +42,8 @@
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <strong>{{groupSelected.name}}</strong>
-        <div class="btn-toolbar">
+        <div class="btn-toolbar"
+                data-ng-show="user.isAdministratorOrMore()">
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')" id="gn-btn-group-save">
@@ -97,7 +101,11 @@
                               <div class="col-md-4">
                                   <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
                                        style="max-width:128px; max-height:128px"></img>
-                                  <i data-ng-show="groupSelected.logo" class="fa fa-times delete" data-ng-click="deleteGroupLogo()"></i>
+                                <a href="" data-ng-click="deleteGroupLogo()"
+                                   class="text-danger">
+                                  <i data-ng-show="groupSelected.logo"
+                                     class="fa fa-times delete"></i>
+                                </a>
                               </div>
                               <div class="col-md-8">
                                   <span class="btn btn-success btn-block fileinput-button">

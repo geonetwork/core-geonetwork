@@ -818,7 +818,7 @@
                       associationType: scope.associationType,
                       uuids: uuids.join(',')
                     };
-                    gnOnlinesrc.linkToSibling(params, scope.popupid);
+                    return gnOnlinesrc.linkToSibling(params, scope.popupid);
                   };
                 }
               };

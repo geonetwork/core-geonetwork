@@ -20,6 +20,18 @@
       cursor: wait;
     }
   }
+
+  .clear {
+    position: absolute;
+    top: .75em;
+    right: .75em;
+    color: #666;
+    &:hover {
+      cursor: pointer;
+      color: #222;
+    }
+  }
+
   .search-container {
     position: absolute;
     top: @viewport-padding;
@@ -50,16 +62,6 @@
           font-size: 90%;
           color: grey;
         }
-      }
-    }
-    .clear {
-      position: absolute;
-      top: .75em;
-      right: .75em;
-      color: #666;
-      &:hover {
-        cursor: pointer;
-        color: #222;
       }
     }
   }

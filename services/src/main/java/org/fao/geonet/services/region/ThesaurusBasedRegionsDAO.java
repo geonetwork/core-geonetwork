@@ -4,8 +4,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
@@ -17,13 +15,14 @@ import org.fao.geonet.kernel.region.Request;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     
@@ -36,9 +35,6 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         }
     };
     private static final String CATEGORY_ID_CACHE_KEY = "CATEGORY_ID_CACHE_KEY";
-
-    @Autowired
-    private ThesaurusManager thesaurusManager;
 
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
@@ -61,8 +57,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     }
 
     private synchronized Thesaurus getThesaurus(ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager th = gc.getBean(ThesaurusManager.class);
+        ThesaurusManager th = context.getBean(ThesaurusManager.class);
         Thesaurus regions = th.getThesaurusByName(thesaurusName);
         if(regions != null) {
             return regions;
@@ -88,23 +83,6 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         geometry.setUserData(region.getBBox().getCoordinateReferenceSystem());
         
         return geometry;
-    }
-
-    @Override
-    public boolean canHandleId(ServiceContext context, String id) throws Exception {
-        return createSearchRequest(context).id(id).get() != null;
-    }
-
-    @Nullable
-    @Override
-    public synchronized Long getLastModified(@Nonnull String id) {
-        final Thesaurus thesaurus = thesaurusManager.getThesaurusByName(this.thesaurusName);
-
-        if (thesaurus != null) {
-            return thesaurus.getLastModifiedTime().toMillis();
-        } else {
-            return null;
-        }
     }
 
     @Override

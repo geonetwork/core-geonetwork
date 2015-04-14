@@ -7,16 +7,37 @@
     'gnLayerFilters',
     '$filter',
     'gnWmsQueue',
-    function (gnLayerFilters, $filter, gnWmsQueue) {
+    '$timeout',
+    function (gnLayerFilters, $filter, gnWmsQueue, $timeout) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/layertree.html',
         controller: [ '$scope', function($scope) {
+          var $this = this;
+
           this.setNCWMS = function(layer) {
             $scope.active.layersTools = false;
             $scope.active.NCWMS = layer;
           };
+
+          this.comboGroups = {};
+          this.switchGroupCombo = function(groupcombo) {
+            var activeLayer = this.comboGroups[groupcombo];
+            var fLayers = $filter('filter')($scope.layers,
+                $scope.layerFilterFn);
+            for (var i = 0; i < fLayers.length; i++) {
+              var l = fLayers[i];
+              if(l.get('groupcombo') == groupcombo) {
+                l.visible = false;
+              }
+            }
+            activeLayer.visible = true;
+          }
+
+          $scope.setActiveComboGroup = function(l) {
+            $this.comboGroups[l.get('groupcombo')] = l;
+          }
         }],
         link: function(scope, element, attrs) {
 
@@ -52,30 +73,74 @@
             }
           };
 
+          // on OWS Context loading, we don't want to build the tree on each
+          // layer remove or add. The delay also helps to get layer properties
+          // (i.e 'group') that are set after layer is added to map.
+          var debounce = 0;
+
           // Build the layer manager tree depending on layer groups
-          scope.map.getLayers().on('change:length', function(e) {
-            scope.layerTree = {
-              nodes: []
-            };
-            var sep = '/';
-            var fLayers = $filter('filter')(scope.layers, scope.layerFilterFn);
-            for (var i = 0; i < fLayers.length; i++) {
-              var l = fLayers[i];
-              var groups = l.get('group');
-              if (!groups) {
-                scope.layerTree.nodes.push(l);
-              }
-              else {
-                var g = groups.split(sep);
-                createNode(l, scope.layerTree, g, 1);
-              }
+          var buildTree = function() {
+            if(debounce > 0) {
+              return;
             }
-          });
+            debounce++;
+            $timeout(function() {
+              scope.layerTree = {
+                nodes: []
+              };
+              var sep = '/';
+              var fLayers = $filter('filter')(scope.layers,
+                  scope.layerFilterFn);
+
+              if(scope.layerFilter.length > 2) {
+                fLayers = $filter('filter')(fLayers, filterFn);
+              }
+
+              for (var i = 0; i < fLayers.length; i++) {
+                var l = fLayers[i];
+                var groups = l.get('group');
+                if (!groups) {
+                  scope.layerTree.nodes.push(l);
+                }
+                else {
+                  var g = groups.split(sep);
+                  createNode(l, scope.layerTree, g, 1);
+                }
+                if(l.visible && l.get('groupcombo')) {
+                  scope.setActiveComboGroup(l);
+                }
+              }
+              debounce--;
+            }, 100);
+          };
+
+          scope.map.getLayers().on('change:length', buildTree);
 
           scope.failedLayers = gnWmsQueue.errors;
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
           };
+
+          scope.layerFilter = '';
+          var filterFn = function(layer) {
+            var labelLc = layer.get('label').toLowerCase();
+            var groupLc = layer.get('group').toLowerCase();
+            var filterLc = scope.layerFilter.toLowerCase();
+            return labelLc.indexOf(filterLc) >= 0 ||
+                groupLc.indexOf(filterLc) >= 0;
+          };
+
+          scope.filterLayers = function() {
+            if(scope.layerFilter == '' || scope.layerFilter.length > 2) {
+              buildTree();
+            }
+          };
+
+          scope.filterClear = function() {
+            scope.layerFilter = '';
+            scope.filterLayers();
+          };
+
         }
       };
     }]);
@@ -128,6 +193,12 @@
           scope.mapService = gnMap;
 
           scope.setNCWMS = controller.setNCWMS;
+
+          if(!scope.isParentNode()) {
+            scope.groupCombo = scope.member.get('groupcombo');
+            scope.comboGroups = controller.comboGroups;
+            scope.switchGroupCombo = controller.switchGroupCombo;
+          }
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);
