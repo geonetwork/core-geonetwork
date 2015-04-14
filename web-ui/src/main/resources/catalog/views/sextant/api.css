@@ -8344,7 +8344,7 @@
 .gn .ng-cloak {
   display: none !important;
 }
-.gn [gn-img-modal],
+.gn-img-modal],
 .gn [data-gn-img-modal] {
   cursor: pointer;
 }
@@ -10066,6 +10066,10 @@
 .gn .gn-close-btn:hover {
   color: grey;
 }
+.gn div[gn-transfer-ownership] .panel-body {
+  max-height: 45em;
+  overflow-y: auto;
+}
 .gn [sxt-main-viewer] .sxt-search-btn {
   left: 0;
 }
@@ -11312,9 +11316,6 @@
 .gn .gn-pager .btn-group li.dropdown-header {
   display: block;
 }
-.gn .gn-facet {
-  background: purple;
-}
 .gn .gn-facet input[type=checkbox] {
   position: static;
 }
@@ -11411,4 +11412,14 @@
 }
 .gn [gn-metadata-display] .metadata {
   height: 100%;
+}
+.gn-img-modal .modal-dialog {
+  background: white;
+  padding-bottom: 3em;
+  text-align: center;
+}
+.gn-img-modal .modal-dialog .gn-btn-modal-img {
+  top: auto;
+  bottom: .3em;
+  right: .3em;
 }

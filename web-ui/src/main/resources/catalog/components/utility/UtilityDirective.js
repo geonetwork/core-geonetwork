@@ -821,6 +821,7 @@
       }
     };
   });
+
   module.directive('gnImgModal', function() {
     return {
       restrict: 'A',
@@ -832,17 +833,33 @@
           var img = imgs.big || imgs.small;
 
           if (img) {
-            var modalElt = angular.element('' +
-                '<div class="modal fade in">' +
-                '<div class="modal-dialog in">' +
-                '  <button type=button class="btn btn-default ' +
-                'gn-btn-modal-img">&times</button>' +
-                '    <img src="' + img + '">' +
-                '</div>' +
+            var modalElt = angular.element(
+                '<div class="modal fade in gn-img-modal">' +
+                '  <div class="modal-dialog in">' +
+                '    <img src="' + img + '"/>' +
+                '    <button type=button class="btn btn-default ' +
+                '    gn-btn-modal-img">&times</button>' +
+                '  </div>' +
                 '</div>');
+            var dial = modalElt.find('.modal-dialog');
+            var imgEl = modalElt.find('img');
+            dial.css('overflow', 'hidden');
+            dial.css('height', '6em');
+            imgEl.css('opacity', 0);
+            if (modalElt.find('img')[0].naturalWidth == 0) {
+              dial.css('width', '3em');
+              dial.prepend($('<i class="fa fa-spinner fa-spin fa-3x"></i>'));
+            } else {
+              dial.css('width', modalElt.find('img')[0].naturalWidth + 'px');
+              dial.css('height', 'auto');
+              imgEl.css('opacity', 0);
+            }
             modalElt.find('img').on('load', function() {
-              var w = this.clientWidth;
-              modalElt.find('.modal-dialog').css('width', w + 'px');
+              dial.find('i').remove();
+              dial.css('width', this.naturalWidth + 'px');
+              dial.css('height', 'auto');
+              dial.css('overflow', 'visible');
+              imgEl.css('opacity', 1);
             });
 
             $(document.body).append(modalElt);
@@ -858,4 +875,5 @@
       }
     };
   });
+
 })();

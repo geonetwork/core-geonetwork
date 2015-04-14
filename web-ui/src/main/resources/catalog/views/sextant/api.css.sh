@@ -1,5 +1,6 @@
-./node_modules/.bin/lessc less/gn_search_sextant.less api.css
+lessc less/gn_search_sextant.less api.css
 sed 's/calc(\(.*\))/~"calc(\1)"/' api.css > less/tmp.css
-./node_modules/.bin/lessc less/sxt-api.less tmp.css
+lessc less/sxt-api.less tmp.css
 sed 's/.gn .sxt-max-md/.gn.sxt-max-md/' tmp.css > api.css
+sed -i .bak 's/.gn .gn-img-modal/.gn-img-modal/' api.css
 rm tmp.css less/tmp.css
