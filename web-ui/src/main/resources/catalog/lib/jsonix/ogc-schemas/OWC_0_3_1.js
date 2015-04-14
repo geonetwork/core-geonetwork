@@ -336,6 +336,9 @@ var OWC_0_3_1_Module_Factory = function () {
             n: 'group',
             t: 'a'
           }, {
+            n: 'groupcombo',
+            t: 'a'
+          }, {
             n: 'hidden',
             ti: 'Boolean',
             t: 'a'

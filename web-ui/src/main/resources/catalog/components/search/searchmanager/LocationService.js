@@ -6,8 +6,9 @@
   module.service('gnSearchLocation', [
     '$location',
     '$rootScope',
+    '$timeout',
     'gnGlobalSettings',
-    function($location, $rootScope, gnGlobalSettings) {
+    function($location, $rootScope, $timeout, gnGlobalSettings) {
 
       this.SEARCH = '/search';
       this.MAP = '/map';
@@ -15,6 +16,7 @@
       this.HOME = '/home';
 
       var state = {};
+      var that = this;
 
       /** ---- get methods from $location ---- **/
       this.absUrl = function() {
@@ -88,7 +90,11 @@
 
       this.restoreSearch = function() {
         this.setSearch(state.lastSearchParams);
-        this.lastSearchUrl = '';
+
+        //Wait all location search are triggered
+        $timeout(function () {
+          that.lastSearchUrl = '';
+        }, 100);
       };
 
       this.initTabRouting = function(tabs) {
@@ -103,7 +109,6 @@
         $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
 
-      var that = this;
 
       /**
        * Keep history and state of routing for to keep the search state.
