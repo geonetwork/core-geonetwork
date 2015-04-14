@@ -1,11 +1,11 @@
 <ul class="list-group gn-resultview gn-resultview-sumup">
-  <li class="list-group-item gn-grid col-md-6 col-lg-4"
+  <li class="list-group-item gn-grid sxt-col-md-6 sxt-col-lg-4"
       data-ng-repeat="md in searchResults.records"
       data-sxt-fix-mdlinks=""
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
 
-      <div class="gn-grid-item" title="{{md.abstract || md.defaultAbstract}}">
+      <div class="gn-grid-item" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
 
 
           <!--Edit button-->
@@ -14,11 +14,8 @@
           <!-- </a> -->
 
           <h4 class="row gn-md-title">
-            <a href=""
-              data-ng-click="openRecord($index, md, searchResults.records)"
-              title="{{md.title || md.defaultTitle}}">
-              <!-- Icon for types - usually only one -->
-              <!-- TODO : add feature cat -->
+            <a  href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md" title="{{md.title || md.defaultTitle}}">
+              <!--Icon for types - usually only one-->
               <span data-ng-if="md.type.indexOf('dataset')>=0"
                 class="fa fa-database"
                 title="{{'dataset' | translate}}"></span>
@@ -44,19 +41,19 @@
           <div class="gn-md-details">
 
             <!-- Thumbnail -->
-            <div class="gn-md-thumbnail">
-              <img class="gn-img-thumbnail"
-              data-ng-src="{{md.getThumbnails().small}}"
-              data-ng-if="md.getThumbnails().small"/>
+            <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small }">
+              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{md.getThumbnails().small}}" data-ng-if="md.getThumbnails().small"/>
             </div>
 
-            <p ng-if="md.credit" class="text-justify gn-md-credit">Sources:  {{md.credit}}</p>
-            <p class="text-justify">
-              {{(md.abstract || md.defaultAbstract) | striptags | characters:330}}
-            </p>
-            <p data-ng-if="md.getContacts().resource">
+            <div class="text-justify md-abstract ellipsis">
+              <div>
+                <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
+              </div>
+            </div>
+
+            <p data-ng-if="md.getContacts().resource" class="gn-md-source">
               <!--<h5 data-translate="">contacts</h5>-->
-              {{::md.getContacts().resource}}
+              Source: {{::md.getContacts().resource}}
             </p>
 
           </div>
@@ -64,10 +61,15 @@
 
       <div class="sx-md-footer">
 
+        <div class="gn-md-relations">
+          <div gn-related="{{md.getUuid()}}" types="parent|children"
+               template="../../catalog/views/sextant/templates/related.html"></div>
+         </div>
+
         <div class="gn-md-links">
 
           <div class="btn-group pull-right" ng-if="links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Liens">
               <span class="fa fa-link"></span>
               <span class="caret"></span>
             </button>
@@ -78,7 +80,7 @@
           </div>
 
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Télécharger">
               <span class="fa fa-download"></span>
               <span class="caret"></span>
             </button>
@@ -90,14 +92,14 @@
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
+                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="Télécharger">
             <span class="fa fa-download"></span>
           </button>
 
 
           <!--Layers to map button-->
           <div class="btn-group pull-right" ng-if="layers.length > 1 ">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Visualiser">
               <span class="fa fa-globe"></span>
               <span class="caret"></span>
             </button>
@@ -111,13 +113,13 @@
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)">
+                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="Visualiser">
             <span class="fa fa-globe"></span>
           </button>
 
           <!--admin button-->
           <div class="btn-group pull-right md-actions" ng-if="user.canEditRecord(md)">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Administrer">
               <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>

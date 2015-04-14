@@ -1,0 +1,109 @@
+<div class="container gn-metadata-view">
+  <script type="application/javascript" fmt-if="isHTML">
+    //<![CDATA[
+    document.title="{{pageTitle}}";
+    var headEl = $("head");
+    var iconLink = headEl.children("link[rel='shortcut icon']");
+    if (iconLink.length > 0) {
+      iconLink.attr("href", "{{logo}}");
+    } else {
+      headEl.append("<link rel='shortcut icon' type='image/x-icon' href='{{logo}}'></link>");
+    }
+    //]]>
+  </script>
+  <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
+    <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
+    <li fmt-if="associated">
+      <a href="" rel=".container > .associated"><span fmt-translate="">associated-link</span>&amp;nbsp; <i class="fa fa-circle-o-notch fa-spin associated-spinner"></i></a>
+    </li>
+    <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
+    <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">
+      <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
+      <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName | escapeXmlContent}}</a>
+    </li>
+    <li fmt-if="showNavOverflow" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        <li fmt-repeat="item in navBarOverflow">
+          <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
+          <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName | escapeXmlContent}}</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <div class="entry overview">
+
+    <div class="gn-metadata-display">
+
+      <div class="col-md-9 gn-record">
+
+        <dl class="dl-horizontal">
+
+          <dt fmt-translate="">Date(s)</dt>
+          <dd>
+            {{dates}}
+          </dd>
+
+          <dt fmt-translate="">abstract</dt>
+          <dd><p>{{abstract}}</p>
+          </dd>
+
+          {{contacts}}
+
+          <dt fmt-translate="">keywords</dt>
+          <dd>{{keywords}}</dd>
+
+          <dt fmt-translate="">statements</dt>
+          <dd>{{formats}}</dd>
+
+        </dl>
+      </div>
+
+      <div class="col-md-3 gn-md-side">
+
+        <section>
+          <p>
+            <img fmt-if="thumbnail" class="gn-img-thumbnail img-thumbnail graphic-overview" src="{{thumbnail | escapeXmlAttrs}}"></img>
+          </p>
+        </section>
+
+        <section >
+          <!-- TODO: use map config -->
+          <p>
+            {{extents}}
+          </p>
+        </section>
+
+        <section>
+          <div class="well">
+            <h4>
+              <i class="fa fa-fw"></i>
+              <span fmt-translate="">sourceCatalog</span>
+            </h4>
+            <img class="gn-source-logo"/>
+          </div>
+        </section>
+
+        <section>
+          <div class="well">
+            <h4>
+              <i class="fa fa-share-square"></i>
+              <span fmt-translate="">shareOn</span>
+            </h4>
+            <a data-ng-href="https://plus.google.com/share?url="
+               class="btn btn-link"><i class="fa fa-google-plus"></i></a>
+            <a data-ng-href="https://twitter.com/share?url="
+               class="btn btn-link"><i class="fa fa-twitter"></i></a>
+            <a data-ng-href="https://www.facebook.com/sharer.php?u="
+               class="btn btn-link"><i class="fa fa-facebook"></i></a>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+  {{content}}
+  {{script}}
+</div>

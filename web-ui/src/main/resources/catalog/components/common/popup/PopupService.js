@@ -92,12 +92,14 @@
             '</div>' +
             '</div>');
 
-        element = $compile(element)($rootScope.$new());
+        var newScope = scope || $rootScope.$new();
+        element = $compile(element)(newScope);
 
         $(document.body).append(element);
         element.modal();
         element.on('hidden.bs.modal', function() {
           element.remove();
+          newScope.$destroy();
         });
       };
       return {

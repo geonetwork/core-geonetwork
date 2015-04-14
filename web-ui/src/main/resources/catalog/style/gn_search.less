@@ -27,7 +27,10 @@
     color: #428bca;
   }
   h4 {
-    padding-left: .8em;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 2px black solid;
   }
 }
 .gn-facet-breadcrumb {
@@ -35,6 +38,28 @@
   li > a:hover {
     color: darkred;
     text-decoration: line-through;
+  }
+}
+
+
+.gn-icon-bg {
+  height: 130px;
+
+  text-align: center;
+  .gn-icon-label {
+    font-size: 70%;
+  }
+  .badge {
+    background-color: #428BCA;
+  }
+  :hover {
+    color: #fff;
+    background-color: #428BCA;
+    text-decoration:none;
+    .badge {
+      background-color: #ffffff;
+      color: #428BCA;
+    }
   }
 }
 
@@ -101,10 +126,6 @@
   padding: 3px 10px;
 }
 
-.tt-suggestion.tt-is-under-cursor {
-  color: #fff;
-  background-color: #0097cf;
-}
 
 .tt-suggestion p {
   margin: 0;
@@ -116,11 +137,6 @@
   color: #999;
   width: 100% !important;
   border: none !important;
-}
-.tt-suggestion.tt-cursor {
-  color: #fff;
-  background-color: #0097cf;
-  cursor: pointer;
 }
 .bootstrap-tagsinput .tt-input {
   width: 100% !important;
@@ -162,6 +178,9 @@
   font-size: 90%;
   label {
     font-weight: normal;
+  }
+  [gn-collapse] {
+    cursor: pointer;
   }
   input[type='text'], select {
     .input-sm;
@@ -246,7 +265,7 @@
     line-height: 3em;
     font-size: 90%;
     margin: 0;
-    margin-left: 6em;
+    //margin-left: 6em;
     .dropdown-menu {
       max-width: 500px;
       li a {
@@ -276,11 +295,29 @@
     background-color:  #428bca;
   }
   .gn-md-edit-btn {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    margin: 2px;
-    z-index: 10;
+    //position: absolute;
+    //bottom: 0px;
+    //right: 0px;
+    //margin: 2px;
+    //z-index: 10;
+    float: right;
+  }
+  .invisible {
+    display: none;
+  }
+  .gn-md-thumbnail {
+    float:left;
+    width: 140px;
+    height: 140px;
+    margin-right: 15px;
+    background-image: url(../catalog/views/default/images/no-thumbnail.png);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    .gn-img-thumbnail {
+      margin: 0;
+      min-height: 100%;
+    }
   }
 }
 
@@ -333,19 +370,25 @@
     border-radius: 3px;
     position: relative;
     [gn-draw-bbox-btn],
-    .btn-group-vertical {
+    .btn-group-vertical,
+    .dropdown{
       position: absolute;
       top: 4px;
       z-index: 10;
-    }
-    .btn-group-vertical {
       right: 4px;
     }
     [gn-draw-bbox-btn] {
       left: 4px;
     }
+    .dropdown {
+      left: 4px;
+      top: initial;
+      bottom: 4px;
+      .dropdown-menu {
+        font-size: 90%;
+      }
+    }
   }
-
 }
 
 .dropdown-submenu {
@@ -405,5 +448,60 @@
     font-weight: bolder;
     font-color: #428bca;
     cursor: pointer;
+  }
+}
+
+[role=tooltip] {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  right: 0;
+}
+button:focus [role=tooltip],
+button:hover [role=tooltip] {
+  clip: auto;
+  right: 2.8em;
+  background: rgba(0, 0, 0, .6);
+  color: #fff;
+  padding: .2em .5em;
+  margin-top: -.2em;
+  border-radius: .2em 0 0 .2em;
+  text-shadow: 0 0 1px #000;
+  z-index: 9000;
+}
+button.active [role=tooltip] {
+  display: none;
+}
+
+.gn-close-btn {
+  cursor: pointer;
+  &:hover {
+    color: grey;
+  }
+}
+
+div[gn-transfer-ownership] .panel-body {
+  max-height: 45em;
+  overflow-y: auto;
+}
+
+[gn-share] {
+
+  @media (min-width: @screen-md) {
+    min-width: 800px;
+  }
+  .gn-searchgroup-input {
+    padding-left: 0;
+  }
+  .gn-share-grid {
+    th, td {
+      text-align: center;
+    }
+    th:first-child, td:first-child  {
+      text-align: left;
+    }
+    td {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
   }
 }

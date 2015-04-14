@@ -108,13 +108,13 @@
       <ul class="list-group">
         <li class="list-group-item" href=""
           data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
-          <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
-          <a href="" data-ng-click="onlinesrcService.openLink(resource.url)">
+          <i class="fa fa-fw" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
+          <a data-ng-href="{{resource.url}}" target="_blank">
             {{resource.title}}
          </a> 
          <span class="onlinesrc-remove"
             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-            data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
+            data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
         </li>
       </ul>
 

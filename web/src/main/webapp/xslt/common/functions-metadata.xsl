@@ -345,6 +345,15 @@
     <xsl:value-of select="gn-fn-metadata:getXPath($node, false())"/>
   </xsl:function>
 
+  <xsl:function name="gn-fn-metadata:positionOfType" as="xs:string">
+    <xsl:param name="node" as="node()"/>
+    <xsl:variable name="nodePosition" select="$node/position()" />
+    <xsl:variable name="allPrecedingSiblings" select="$node/preceding-sibling::*[name() = name($node)]" />
+    <xsl:message select="concat('-------------##$$%% ', $node/name(), ' -- ', count($node/preceding-sibling::*), ' -----------------------------------')" />
+    <!--<xsl:value-of select="count($node/../*[name = name($node) and position() &lt; $nodePosition]) + 1"/>-->
+    <xsl:value-of select="count($allPrecedingSiblings) + 1"/>
+  </xsl:function>
+
   <!-- 
     Return the xpath of a node.
   -->
@@ -362,7 +371,7 @@
     <xsl:variable name="xpath">
       <xsl:for-each select="$ancestors[position() != $untilIndex]">
         <xsl:value-of select="if ($withPosition) 
-          then concat($xpathSeparator, name(.), '[', position(), ']')
+          then concat($xpathSeparator, name(.), '[', gn-fn-metadata:positionOfType(.), ']')
           else concat($xpathSeparator, name(.))"/>
       </xsl:for-each>
     </xsl:variable>
@@ -371,7 +380,7 @@
       select="if ($isAttribute) 
       then concat($xpath, $xpathSeparator, '@', $elementName) 
       else if ($withPosition) 
-        then concat($xpath, $xpathSeparator, $elementName, '[', $node/position(), ']')
+        then concat($xpath, $xpathSeparator, $elementName, '[', gn-fn-metadata:positionOfType($node), ']')
         else concat($xpath, $xpathSeparator, $elementName)
       "
     />

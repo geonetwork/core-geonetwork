@@ -29,7 +29,13 @@
     </licenses>
 
     <dependencies>
-        <dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+      </dependency>
+
+      <dependency>
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
@@ -74,7 +80,15 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
 
     <profiles>

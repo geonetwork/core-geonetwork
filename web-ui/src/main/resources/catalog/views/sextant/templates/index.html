@@ -1,7 +1,3 @@
-<div class="navbar navbar-default gn-top-bar" role="navigation"
-     data-ng-include="'../../catalog/templates/top-toolbar.html'">
-</div>
-
 <div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsSextant">
 
@@ -10,11 +6,19 @@
 
         <div class="hfull" data-ng-controller="gnsSextantSearch">
 
+          <button class="btn btn-default sxt-side-btn sxt-map-btn" data-ng-click="locService.setMap()" >
+            <span class="side-label">
+              <span translate>Carte</span>
+              <i class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</i>
+            </span>
+            <i class="fa fa-play fa-flip-horizontal"></i>
+          </button>
+
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
             <div class="row hfull">
 
-              <div class="maincol hfull sxt-left-panel" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
+              <div class="maincol hfull sxt-left-panel col-md-4" ng-class="{'sxt-collapsed': !collapsed.search}">
                 <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
                   <span ng-show="collapsed.search">»</span>
                   <span ng-show="!collapsed.search">«</span>
@@ -23,28 +27,44 @@
                   <div class="panel-body gn-searchform">
                     <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
                   </div>
-                  <div class="panel-footer">
-                    <div class="submit">
-                      <button type="button" data-ng-click="resetSearch()" class="btn btn-link" data-translate>Reset</button>
-                      <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
-                        <i class="fa fa-search"></i> <span data-translate>Search</span></button>
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              <div ng-class="{ 'col-md-9': collapsed.search, 'col-md-6': !collapsed.search}" class="maincol hfull sxt-center-panel">
+              <div ng-class="{'sxt-collapsed': !collapsed.search}" class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <div class="btn-toolbar">
+
+                      <!-- To Basket button-->
+                      <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
+                        <span class="fa fa-shopping-cart"></span>
+                        <span class="badge" ng-if="searchObj.panier.length">{{searchObj.panier.length}}</span>
+                        <span role="tooltip" data-translate="">Basket</span>
+                      </button>
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
                            gn-sortby-values="searchObj.sortbyValues"
                            class="pull-right"></div>
 
-                      <div data-gn-pagination="paginationInfo"
+                      <div class="pull-left" data-gn-pagination="paginationInfo"
                            data-hits-values="searchObj.hitsperpageValues"></div>
+
+                      <div class="btn-group sxt-adminbtn clearfix" data-ng-if="authenticated">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                          <span translate>adminConsole</span>&nbsp;
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="{{pages.admin}}">
+                            <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
+                          <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
+                            <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+                          <li><a href="catalog.edit#/import" target="_blank">
+                            <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+                        </ul>
+                      </div>
+
                     </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
@@ -56,12 +76,14 @@
           </form>
         </div>
       </tab>
-      <tab heading="{{mainTabs.view.title}}"
-           active="mainTabs.view.active">
-        <div class="container-fluid">
+<!--
+      <tab heading="{{mainTabs.metadata.title}}"
+           active="mainTabs.metadata.active">
+        <div class="container-fluid sxt-md-container">
           <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
         </div>
       </tab>
+-->
       <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
         <tab-heading>
           {{mainTabs.map.title}}
@@ -76,8 +98,9 @@
           <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
         </tab-heading>
 
-        <div sxt-panier="searchObj.panier"></div>
+        <div sxt-panier="searchObj.panier" sxt-panier-user="user"></div>
       </tab>
+
     </tabset>
   </div>
 </div>

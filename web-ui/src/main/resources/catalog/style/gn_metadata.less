@@ -4,6 +4,13 @@
   width: 100%;
 }
 
+/* Angular view */
+.gn-md-view {
+  table tr th {
+    width: 25%;
+  }
+}
+
 .gn-metadata-view {
 
   .nav li:hover {
@@ -85,9 +92,11 @@
       width: 14px;
       transition: transform .4s;
       transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
     }
     .closed i {
       transform: rotate(90deg);
+      -ms-transform: rotate(270deg);
     }
   }
 
@@ -216,6 +225,13 @@ img.graphic-overview.large.dropdown-menu {
 
 .container img.logo {
   max-width: 128px;
+  float:left;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+.container img.small-logo {
+  max-width: 64px;
 }
 
 .overview img:not(.graphic-overview):not(.icon) {

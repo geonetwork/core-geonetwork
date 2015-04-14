@@ -27,15 +27,15 @@
 
 package org.fao.geonet.util;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
+import javax.annotation.PreDestroy;
 
 public class ThreadPool {
     public static final String SEQUENTIAL_EXECUTION = "geonetwork.sequential.execution";
@@ -48,7 +48,6 @@ public class ThreadPool {
 
 	ThreadPoolExecutor threadPool = null;
 	ScheduledExecutorService timer =  Executors.newScheduledThreadPool(1);
-	Runnable task;
 
 	final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(20);
 
@@ -69,7 +68,6 @@ public class ThreadPool {
         if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "false"))) {
             task.run();
         } else {
-            this.task = task;
             if(delayBeforeStart < 1) {
                 if (Log.isDebugEnabled(Geonet.THREADPOOL)) {
                     Log.debug(Geonet.THREADPOOL, "Adding task to threadpool:"+toString());
@@ -86,14 +84,13 @@ public class ThreadPool {
         }
     }
 
-
+    @PreDestroy
 	public void shutDown() {
 		threadPool.shutdown();
 	}
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("ThreadPool tasks | ");
-		sb.append(task.getClass().getName());
 		sb.append(" \t| total: ").append(threadPool.getTaskCount());
 		sb.append(" \t| completed: ")
 				.append(threadPool.getCompletedTaskCount());

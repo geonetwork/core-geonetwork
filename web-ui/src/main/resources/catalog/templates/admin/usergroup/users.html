@@ -36,12 +36,14 @@
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
     <div class="panel panel-default" >
       <div class="panel-heading"
-        title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
+        title="{{searchResults.count > 0 ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
-          <span data-ng-show="userSelected.security.authtype"> - {{userSelected.security.authtype}}</span>
+        <span data-ng-show="userSelected.security.authtype.length > 0">
+          - {{userSelected.security.authtype}}
+        </span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
             data-ng-hide="userSelected.security.authtype == 'LDAP'"
@@ -72,8 +74,11 @@
             <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''" class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
-                <input type="text" id="username"  name="username" class="form-control"
-                  data-ng-model="userSelected.username" data-ng-required="true"/>
+                <input type="text" id="username" name="username"
+                       class="form-control"
+                       data-ng-model="userSelected.username"
+                       data-ng-required="true"
+                       autocomplete="off"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
               </div>
             </div>
@@ -83,9 +88,12 @@
                 data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ? 'has-error' : ''" class="form-group">
                 <label class="control-label col-sm-3" data-translate="">password</label>
                 <div class="col-sm-9">
-                  <input type="password" id="gn-user-password" name="password" class="form-control"
-                    data-ng-minlength="6" data-ng-required="true"
-                    data-ng-model="userSelected.password"/>
+                  <input type="password" id="gn-user-password" name="password"
+                         class="form-control"
+                         data-ng-minlength="6"
+                         data-ng-required="true"
+                         data-ng-model="userSelected.password"
+                         autocomplete="off"/>
                   <p class="help-block">
                     <span class="error" data-ng-show="gnUserEdit.password.$error.minlength"
                       data-translate="">passwordMinlength</span>
@@ -200,6 +208,7 @@
               </label>
 
               <div data-ng-hide="userSelected.profile == 'Administrator'">
+
                 <h3 data-translate="">RegisteredUser</h3>
                 <select multiple="multiple" id="groups_RegisteredUser" name="groups_RegisteredUser"
                   class="form-control" data-ng-click="setUserProfile()">
@@ -222,6 +231,11 @@
                           value="{{g.id}}"
                     data-ng-selected="isUserGroup(g.id, 'Reviewer')">{{g.label[lang]}}</option>
                 </select>
+
+                <p class="help-block"
+                   data-translate="">aReviewerInAGroupIsAlsoAnEditor</p>
+
+
                 <h3 data-translate="">UserAdmin</h3>
                 <select multiple="multiple" id="groups_UserAdmin" name="groups_UserAdmin"
                   class="form-control" data-ng-click="setUserProfile()">
@@ -229,6 +243,10 @@
                           value="{{g.id}}"
                     data-ng-selected="isUserGroup(g.id, 'UserAdmin')">{{g.label[lang]}}</option>
                 </select>
+
+                <p class="help-block"
+                     data-translate="">useCtrlClickToUnselect</p>
+
               </div>
             </fieldset>
           </fieldset>
@@ -305,7 +323,7 @@
           <button type="button" class="btn btn-primary"
             data-ng-disabled="!gnPasswordReset.password.$valid || resetPassword2 !== resetPassword1"
             data-ng-click="saveNewPassword()">
-            <i class=" fa fa-lock"></i>&nbsp;
+            <i class="fa fa-lock"></i>&nbsp;
             <span data-translate="">resetPassword</span>
           </button>
         </div>

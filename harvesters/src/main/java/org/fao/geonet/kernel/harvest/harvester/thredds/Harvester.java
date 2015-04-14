@@ -233,11 +233,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         this.log = log;
 
         Element xml = null;
-        log.info("Retrieving remote metadata information for : " + params.name);
+        log.info("Retrieving remote metadata information for : " + params.getName());
 
         //--- Get uuid's and change dates of metadata records previously
         //--- harvested by this harvester grouping by harvest uri
-        localUris = new UriMapper(context, params.uuid);
+        localUris = new UriMapper(context, params.getUuid());
 
         //--- Try to load thredds catalog document
         String url = params.url;
@@ -375,7 +375,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("lang",			params.lang);
 			param.put("topic",		params.topic);
-			param.put("uuid",			params.uuid);
+			param.put("uuid", params.getUuid());
 			param.put("url",			params.url);
 			param.put("name",			catalog.getName());
 			param.put("type",			"Thredds Data Service Catalog "+catalog.getVersion());
@@ -469,11 +469,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 setRoot(md.getQualifiedName()).
                 setType(MetadataType.METADATA);
         metadata.getSourceInfo().
-                setSourceId(params.uuid).
-                setOwner(Integer.parseInt(params.ownerId));
+                setSourceId(params.getUuid()).
+                setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
                 setHarvested(true).
-                setUuid(params.uuid).
+                setUuid(params.getUuid()).
                 setUri(uri);
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
@@ -1321,7 +1321,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		collectionParams.isoCategory = params.datasetCategory;
 		collectionParams.privileges = params.getPrivileges();
 		collectionParams.templateId = params.collectionMetadataTemplate;
-		collectionParams.uuid = params.uuid;
+		collectionParams.uuid = params.getUuid();
 		collectionParams.outputSchema = params.outputSchemaOnCollectionsFragments;
 		return collectionParams;
 	}
@@ -1341,9 +1341,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		atomicParams.isoCategory = params.datasetCategory;
 		atomicParams.privileges = params.getPrivileges();
 		atomicParams.templateId = params.atomicMetadataTemplate;
-		atomicParams.uuid = params.uuid;
+		atomicParams.uuid = params.getUuid();
 		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
-		atomicParams.owner = params.ownerId;
+		atomicParams.owner = params.getOwnerId();
 		return atomicParams;
 	}
 

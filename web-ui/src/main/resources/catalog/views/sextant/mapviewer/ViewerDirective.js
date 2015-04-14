@@ -37,7 +37,8 @@
                 gnMap.zoom(map, delta);
               };
               scope.zoomToMaxExtent = function(map) {
-                map.getView().setResolution(gnMapConfig.maxResolution);
+                map.getView().fitExtent(map.getView().
+                    getProjection().getExtent(), map.getSize());
               };
 
               var div = document.createElement('div');
@@ -48,7 +49,11 @@
               });
               scope.map.addOverlay(overlay);
 
-              scope.active = { tool: false };
+              scope.active = {
+                tool: false,
+                layersTools: false,
+                NCWMS: null
+              };
               scope.locService = gnSearchLocation;
 
             },
@@ -118,5 +123,57 @@
       }
     }
   }]);
+
+  module.directive('sxtFullScreen', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        var map = scope.$eval(attrs['sxtFullScreen']);
+        // FIXME: which element to maximize??
+        var elem = $('[sxt-main-viewer]')[0];
+        element.on('click', function() {
+          if (!document.fullscreenElement && !document.mozFullScreenElement &&
+            !document.webkitFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+          } else {
+            if (document.cancelFullScreen) {
+              document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+              document.webkitCancelFullScreen();
+            }
+          }
+        });
+      }
+    }
+  }]);
+
+  module.directive('sxtLayersTools', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        element.find('.flux button').on('click', function(e) {
+          var active = $(this).hasClass('active');
+          var elem = $(this);
+          scope.$apply(function(){
+            scope.active.NCWMS = null;
+            scope.active.layersTools = !active;
+          });
+          if (active) {
+            elem.removeClass('active');
+            e.stopImmediatePropagation();
+          }
+        });
+      }
+    }
+  }]);
+
 
 })();

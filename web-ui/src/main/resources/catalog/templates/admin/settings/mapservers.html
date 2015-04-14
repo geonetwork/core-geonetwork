@@ -15,13 +15,12 @@
 
         <button type="button" class="btn btn-primary btn-block"
                 data-ng-click="addMapServer()">
-          <i class=" fa fa-plus"/>
+          <i class="fa fa-plus"/>
           <span data-translate="">newMapServer</span>
         </button>
       </div>
     </div>
   </div>
-
 
   <div class="col-lg-8" data-ng-hide="mapserverSelected == null">
     <div class="panel panel-default">
@@ -102,7 +101,7 @@
                 <label class="control-label col-sm-3" data-translate="">username</label>
 
                 <div class="col-sm-9">
-                  <input type="text" name="username" class="form-control"
+                  <input type="text" class="form-control"
                          required=""
                          data-ng-model="mapserverSelected.username"/>
                 </div>
@@ -113,7 +112,7 @@
                 <label class="control-label col-sm-3" data-translate="">password</label>
 
                 <div class="col-sm-9">
-                  <input type="password" name="password" class="form-control"
+                  <input type="password" class="form-control"
                          required=""
                          data-ng-model="mapserverSelected.password"/>
                 </div>
@@ -230,7 +229,7 @@
                 >cancel</span></button>
           <button type="button" class="btn btn-primary"
                   data-ng-click="saveNewPassword()">
-            <i class=" fa fa-lock"></i>&nbsp;
+            <i class="fa fa-lock"></i>&nbsp;
             <span data-translate="">resetPassword</span>
           </button>
         </div>

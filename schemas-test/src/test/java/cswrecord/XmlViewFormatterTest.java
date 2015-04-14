@@ -2,6 +2,7 @@ package cswrecord;
 
 import com.google.common.collect.Lists;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -9,9 +10,12 @@ import org.jdom.Text;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
 import java.util.List;
+
+import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -29,7 +33,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
 //        measureFormatterPerformance(request, formatterId);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+        formatService.exec("eng", "html", "" + id, formatterId, "true", false, _100, new ServletWebRequest(request, response));
         String view = response.getContentAsString();
 //        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
         view = view.replaceAll("\\s+", " ");

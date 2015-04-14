@@ -1,0 +1,28 @@
+<div class="btn-group md-actions gn-md-actions-btn pull-right">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-expanded="false">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a data-ng-href="" data-ng-click="mdService.getPermalink(md)">
+        <i class="fa fa-link"/>&nbsp;
+        <span data-translate="">permalink</span>
+      </a>
+    </li>
+    <li>
+      <a data-ng-href="xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">
+        <i class="fa fa-file-code-o"></i>&nbsp;
+        <span data-translate="">exportXML</span>
+      </a>
+    </li>
+    <li>
+      <a data-ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid())">
+        <i class="fa fa-file-pdf-o"></i>&nbsp;
+        <span data-translate="">exportPDF</span>
+      </a>
+    </li>
+  </ul>
+</div>

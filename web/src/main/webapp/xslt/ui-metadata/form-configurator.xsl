@@ -19,10 +19,10 @@
 
     <xsl:choose>
       <xsl:when test="$sectionName">
-        <fieldset>
+        <fieldset data-gn-field-highlight="">
           <!-- Get translation for labels.
           If labels contains ':', search into labels.xml. -->
-          <legend>
+          <legend data-gn-slide-toggle="">
             <xsl:value-of
               select="if (contains($sectionName, ':')) 
                 then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label 

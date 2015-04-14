@@ -53,9 +53,10 @@
         },
         link: function(scope) {
           scope.facetConfig = [];
-          gnFacetConfigService.loadConfig(scope.summaryType).then(function(data) {
-            scope.facetConfig = data;
-          });
+          gnFacetConfigService.loadConfig(scope.summaryType).
+              then(function(data) {
+                scope.facetConfig = data;
+              });
         }
       };
     }]);
@@ -82,10 +83,24 @@
     }]);
 
   module.directive('gnFacetMultiselect', [
+    '$q',
+    '$filter',
     'gnFacetService',
     'gnFacetConfigService',
-    function(gnFacetService, gnFacetConfigService) {
+    'gnHttp',
+    function($q, $filter, gnFacetService, gnFacetConfigService, gnHttp) {
 
+      var updateLabelFromInfo = function(facets, groups, lang) {
+        angular.forEach(facets, function(f) {
+          for (var i = 0; i < groups.length; i++) {
+            var o = groups[i];
+            if (o.name == f['@name']) {
+              f['@label'] = o.label[lang];
+            }
+            f['name'] = f['@label'];
+          }
+        });
+      };
 
       return {
         restrict: 'A',
@@ -93,73 +108,103 @@
         templateUrl: '../../catalog/components/search/facets/' +
             'partials/facet-multiselect.html',
         scope: true,
-        link: function(scope, element, attrs) {
+        compile: function compile(tElement, tAttrs, transclude) {
+          return {
+            pre: function preLink(scope, element, attrs, controller) {
 
-          var delimiter = ' or ';
-          var oldParams;
+              var delimiter = ' or ';
+              var oldParams;
+              var groups;
 
-          scope.name = attrs.gnFacetMultiselect;
+              scope.name = attrs.gnFacetMultiselect;
+              scope.contentCollapsed =
+                  attrs.gnFacetMultiselectCollapsed == 'true';
 
-          gnFacetConfigService.loadConfig('hits').then(function(data) {
-            if(angular.isArray(data)) {
-              for(var i = 0;i<data.length;i++) {
-                if (data[i].name == scope.name) {
-                  scope.facetConfig = data[i];
-                  break;
-                }
-              }
-            }
-          }).then(function() {
-            scope.$watch('searchResults.facet', function(v) {
-              if (oldParams &&
-                  oldParams != scope.searchObj.params[scope.facetConfig.key]) {
-              }
-              else if (v) {
-                oldParams = scope.searchObj.params[scope.facetConfig.key];
-                scope.facetObj = v[scope.facetConfig.label];
-              }
-            });
-          });
+              gnFacetConfigService.loadConfig('hits').
 
+                  // Load facets global config from cache
+                  then(function(data) {
+                    if (angular.isArray(data)) {
+                      for (var i = 0; i < data.length; i++) {
+                        if (data[i].name == scope.name) {
+                          scope.facetConfig = data[i];
+                          break;
+                        }
+                      }
+                    }
+                  }).then(function() {
+                    var promises = [];
 
-          /**
-           * Check if the facet item is checked or not, depending if the
-           * value is in the search params.
-           * @param {string} value
-           * @return {*|boolean}
-           */
-          scope.isInSearch = function(value) {
-            return scope.searchObj.params[scope.facetConfig.key] &&
-                scope.searchObj.params[scope.facetConfig.key].split(delimiter).
-                    indexOf(value) >= 0;
-          };
+                    // Load groups label for 'publishedForGroup'
+                    if (scope.facetConfig.label == 'publishedForGroup') {
+                      promises.push(gnHttp.callService('info', {
+                        type: 'groups'}).
+                          success(function(data) {
+                            groups = data.group;
+                          }));
+                    }
 
-          //TODO improve performance here, maybe to complex $watchers
-          // add subdirective to watch a boolean and make only one
-          // watcher on searchObj.params
-          scope.updateSearch = function(value, e) {
-            var search = scope.searchObj.params[scope.facetConfig.key];
-            if (angular.isUndefined(search)) {
-              scope.searchObj.params[scope.facetConfig.key] = value;
-            }
-            else {
-              if (search == '') {
-                scope.searchObj.params[scope.facetConfig.key] = value;
-              }
-              else {
-                var s = search.split(delimiter);
-                var idx = s.indexOf(value);
-                if (idx < 0) {
-                  scope.searchObj.params[scope.facetConfig.key] += delimiter + value;
+                    // When everything is loaded, watch the summary response
+                    // to update the multi facet list
+                    $q.all(promises).then(function() {
+                      scope.$watch('searchResults.facet', function(v) {
+                        if (v && scope.facetConfig && scope.facetConfig.label) {
+                          var facets = v[scope.facetConfig.label];
+
+                          if (scope.facetConfig.label == 'publishedForGroup') {
+                            updateLabelFromInfo(facets, groups, scope.lang);
+                            facets = $filter('orderBy')(facets, 'name');
+
+                          }
+                          scope.facetObj = facets;
+                        }
+                      });
+                    });
+                  });
+
+              /**
+               * Check if the facet item is checked or not, depending if the
+               * value is in the search params.
+               * @param {string} value
+               * @return {*|boolean}
+               */
+              scope.isInSearch = function(value) {
+                return scope.searchObj.params[scope.facetConfig.key] &&
+                    scope.searchObj.params[scope.facetConfig.key]
+                      .split(delimiter)
+                      .indexOf(value) >= 0;
+              };
+
+              //TODO improve performance here, maybe to complex $watchers
+              // add subdirective to watch a boolean and make only one
+              // watcher on searchObj.params
+              scope.updateSearch = function(value, e) {
+                var search = scope.searchObj.params[scope.facetConfig.key];
+                if (angular.isUndefined(search)) {
+                  scope.searchObj.params[scope.facetConfig.key] = value;
                 }
                 else {
-                  s.splice(idx, 1);
-                  scope.searchObj.params[scope.facetConfig.key] = s.join(delimiter);
+                  if (search == '') {
+                    scope.searchObj.params[scope.facetConfig.key] = value;
+                  }
+                  else {
+                    var s = search.split(delimiter);
+                    var idx = s.indexOf(value);
+                    if (idx < 0) {
+                      scope.searchObj.params[scope.facetConfig.key] +=
+                          delimiter + value;
+                    }
+                    else {
+                      s.splice(idx, 1);
+                      scope.searchObj.params[scope.facetConfig.key] =
+                          s.join(delimiter);
+                    }
+                  }
                 }
-              }
+                scope.$emit('resetSearch', scope.searchObj.params);
+                e.preventDefault();
+              };
             }
-            scope.$emit('resetSearch', scope.searchObj.params);
-            e.preventDefault();
           };
         }
       };

@@ -23,10 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Localized;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
@@ -42,6 +44,7 @@ import org.quartz.Trigger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.quartz.JobBuilder.newJob;
@@ -51,6 +54,40 @@ import static org.quartz.JobBuilder.newJob;
  * url, username, password,...
  */
 public abstract class AbstractParams {
+    private static final long MAX_EVERY = Integer.MAX_VALUE;
+    public static final String TRANSLATIONS = "translations";
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    private String name;
+    private Map<String, String> translations = Maps.newHashMap();
+    private String uuid;
+
+    private boolean useAccount;
+    private String username;
+    private String password;
+
+    private String every;
+    private boolean oneRunOnly;
+
+    private HarvestValidationEnum validate;
+    private String importXslt;
+
+    private Element node;
+
+    private String ownerId;
+
+    private String ownerIdGroup;
+
+    protected DataManager dm;
+
+    private List<Privileges> alPrivileges = new ArrayList<>();
+    private List<String> alCategories = new ArrayList<>();
+
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -84,6 +121,10 @@ public abstract class AbstractParams {
         Element account = site.getChild("account");
 
         name = Util.getParam(site, "name", "");
+        if (site.getChild(TRANSLATIONS) != null) {
+            translations = Localized.translationXmlToLangMap(site.getChild(TRANSLATIONS).getChildren());
+        }
+
         uuid = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 
         Element ownerIdE = node.getChild("owner");
@@ -91,17 +132,17 @@ public abstract class AbstractParams {
             ownerIdE = node.getChild("ownerId");
         }
         if (ownerIdE != null) {
-            ownerId = ownerIdE.getChildText("id");
-            if (ownerId == null || ownerId.trim().isEmpty()) {
-                ownerId = ownerIdE.getText();
-                if (ownerId == null || ownerId.trim().isEmpty()) {
-                    ownerId = null;
+            setOwnerId(ownerIdE.getChildText("id"));
+            if (getOwnerId() == null || getOwnerId().trim().isEmpty()) {
+                setOwnerId(ownerIdE.getText());
+                if (getOwnerId() == null || getOwnerId().trim().isEmpty()) {
+                    setOwnerId(null);
                 }
             }
         }
 
-        if (StringUtils.isEmpty(ownerId)) {
-            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+        if (StringUtils.isEmpty(getOwnerId())) {
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
         Element ownerIdGroupE = site.getChild("ownerGroup");
@@ -111,30 +152,30 @@ public abstract class AbstractParams {
         if (ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if (idE != null) {
-                ownerIdGroup = idE.getText();
+                setOwnerIdGroup(idE.getText());
             } else if (!ownerIdGroupE.getTextTrim().isEmpty()) {
-                ownerIdGroup = ownerIdGroupE.getTextTrim();
+                setOwnerIdGroup(ownerIdGroupE.getTextTrim());
             }
         }
 
-        useAccount = Util.getParam(account, "use", false);
-        username = Util.getParam(account, "username", "");
-        password = Util.getParam(account, "password", "");
+        setUseAccount(Util.getParam(account, "use", false));
+        setUsername(Util.getParam(account, "username", ""));
+        setPassword(Util.getParam(account, "password", ""));
 
-        every = Util.getParam(opt, "every", "0 0 0 * * ?");
+        setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
-        oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
+        setOneRunOnly(Util.getParam(opt, "oneRunOnly", false));
 
         getTrigger();
 
-        importXslt = Util.getParam(content, "importxslt", "none");
+        setImportXslt(Util.getParam(content, "importxslt", "none"));
 
-        this.validate = readValidateFromParams(content);
+        this.setValidate(readValidateFromParams(content));
 
         addPrivileges(node.getChild("privileges"));
         addCategories(node.getChild("categories"));
 
-        this.node = node;
+        this.setNodeElement(node);
     }
 
     private static HarvestValidationEnum readValidateFromParams(Element content) {
@@ -159,42 +200,45 @@ public abstract class AbstractParams {
         Element privil = node.getChild("privileges");
         Element categ = node.getChild("categories");
 
-        name = Util.getParam(site, "name", name);
+        setName(Util.getParam(site, "name", getName()));
+        if (site != null && site.getChild(TRANSLATIONS) != null) {
+            setTranslations(Localized.translationXmlToLangMap(site.getChild(TRANSLATIONS).getChildren()));
+        }
 
         Element ownerIdE = node.getChild("owner");
         if (ownerIdE == null) {
             ownerIdE = node.getChild("ownerId");
         }
         if (ownerIdE != null) {
-            ownerId = ownerIdE.getChildText("id");
-            if (ownerId == null || ownerId.isEmpty()) {
-                ownerId = ownerIdE.getTextNormalize();
+            setOwnerId(ownerIdE.getChildText("id"));
+            if (getOwnerId() == null || getOwnerId().isEmpty()) {
+                setOwnerId(ownerIdE.getTextNormalize());
             }
         } else {
-            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
         Element ownerIdGroupE = node.getChild("ownerGroup");
         if (ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if (idE != null) {
-                ownerIdGroup = idE.getText();
+                setOwnerIdGroup(idE.getText());
             } else {
-                ownerIdGroup = ownerIdGroupE.getText();
+                setOwnerIdGroup(ownerIdGroupE.getText());
             }
         }
 
-        useAccount = Util.getParam(account, "use", useAccount);
-        username = Util.getParam(account, "username", username);
-        password = Util.getParam(account, "password", password);
+        setUseAccount(Util.getParam(account, "use", isUseAccount()));
+        setUsername(Util.getParam(account, "username", getUsername()));
+        setPassword(Util.getParam(account, "password", getPassword()));
 
-        every = Util.getParam(opt, "every", every);
-        oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
+        setEvery(Util.getParam(opt, "every", getEvery()));
+        setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
 
         getTrigger();
 
-        importXslt = Util.getParam(content, "importxslt", importXslt);
-        this.validate = readValidateFromParams(content);
+        setImportXslt(Util.getParam(content, "importxslt", getImportXslt()));
+        this.setValidate(readValidateFromParams(content));
 
         if (privil != null) {
             addPrivileges(privil);
@@ -204,7 +248,7 @@ public abstract class AbstractParams {
             addCategories(categ);
         }
 
-        this.node = node;
+        this.setNodeElement(node);
     }
 
     /**
@@ -231,21 +275,21 @@ public abstract class AbstractParams {
      * @param copy
      */
     protected void copyTo(AbstractParams copy) {
-        copy.name = name;
-        copy.uuid = uuid;
+        copy.setName(getName());
+        copy.setUuid(getUuid());
+        copy.setTranslations(getTranslations());
+        copy.setOwnerId(getOwnerId());
+        copy.setOwnerIdGroup(getOwnerIdGroup());
 
-        copy.ownerId = ownerId;
-        copy.ownerIdGroup = ownerIdGroup;
+        copy.setUseAccount(isUseAccount());
+        copy.setUsername(getUsername());
+        copy.setPassword(getPassword());
 
-        copy.useAccount = useAccount;
-        copy.username = username;
-        copy.password = password;
+        copy.setEvery(getEvery());
+        copy.setOneRunOnly(isOneRunOnly());
 
-        copy.every = every;
-        copy.oneRunOnly = oneRunOnly;
-
-        copy.importXslt = importXslt;
-        copy.validate = validate;
+        copy.setImportXslt(getImportXslt());
+        copy.setValidate(getValidate());
 
         for (Privileges p : alPrivileges) {
             copy.addPrivilege(p.copy());
@@ -255,22 +299,22 @@ public abstract class AbstractParams {
             copy.addCategory(s);
         }
 
-        copy.node = node;
+        copy.setNodeElement(getNodeElement());
     }
 
     /**
      * @return
      */
     public JobDetail getJob() {
-        return newJob(HarvesterJob.class).withIdentity(uuid, AbstractHarvester.HARVESTER_GROUP_NAME).usingJobData(HarvesterJob
-                .ID_FIELD, uuid).build();
+        return newJob(HarvesterJob.class).withIdentity(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME).usingJobData(HarvesterJob
+                .ID_FIELD, getUuid()).build();
     }
 
     /**
      * @return
      */
     public Trigger getTrigger() {
-        return QuartzSchedulerUtils.getTrigger(uuid, AbstractHarvester.HARVESTER_GROUP_NAME, every, MAX_EVERY);
+        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY);
     }
 
     /**
@@ -403,41 +447,113 @@ public abstract class AbstractParams {
         alCategories.add(categId);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
+    public String getName() {
+        return name;
+    }
 
-    public String name;
-    public String uuid;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public boolean useAccount;
-    public String username;
-    public String password;
+    public Map<String, String> getTranslations() {
+        return translations;
+    }
 
-    String every;
-    public boolean oneRunOnly;
+    public void setTranslations(Map<String, String> translations) {
+        this.translations = translations;
+    }
 
-    public HarvestValidationEnum validate;
-    public String importXslt;
+    public String getUuid() {
+        return uuid;
+    }
 
-    public Element node;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public boolean isUseAccount() {
+        return useAccount;
+    }
+
+    public void setUseAccount(boolean useAccount) {
+        this.useAccount = useAccount;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEvery() {
+        return every;
+    }
+
+    public void setEvery(String every) {
+        this.every = every;
+    }
+
+    public boolean isOneRunOnly() {
+        return oneRunOnly;
+    }
+
+    public void setOneRunOnly(boolean oneRunOnly) {
+        this.oneRunOnly = oneRunOnly;
+    }
+
+    public HarvestValidationEnum getValidate() {
+        return validate;
+    }
+
+    public void setValidate(HarvestValidationEnum validate) {
+        this.validate = validate;
+    }
+
+    public String getImportXslt() {
+        return importXslt;
+    }
+
+    public void setImportXslt(String importXslt) {
+        this.importXslt = importXslt;
+    }
+
+    public Element getNodeElement() {
+        return node;
+    }
+
+    public void setNodeElement(Element node) {
+        this.node = node;
+    }
 
     /**
      * id of the user who created or updated this harvester node.
      */
-    public String ownerId;
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 
     /**
      * id of the group selected by the user who created or updated this harvester node.
      */
-    public String ownerIdGroup;
+    public String getOwnerIdGroup() {
+        return ownerIdGroup;
+    }
 
-    protected DataManager dm;
-
-    private List<Privileges> alPrivileges = new ArrayList<Privileges>();
-    private List<String> alCategories = new ArrayList<String>();
-
-    private static final long MAX_EVERY = Integer.MAX_VALUE;
+    public void setOwnerIdGroup(String ownerIdGroup) {
+        this.ownerIdGroup = ownerIdGroup;
+    }
 }

@@ -3,12 +3,14 @@
 
   goog.require('gn_search_manager');
 
-  var module = angular.module('gn_cat_controller', ['gn_search_manager']);
+  var module = angular.module('gn_cat_controller',
+      ['gn_search_manager']);
 
 
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
-    locale: {}
+    locale: {},
+    isMapViewerEnabled: false
   });
 
   /**
@@ -23,24 +25,30 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
+    'gnGlobalSettings', '$location',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnConfig) {
+            gnSearchManagerService, gnConfigService, gnConfig,
+            gnGlobalSettings, $location) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
-      $scope.langs = {'fre': 'fr', 'eng': 'en', 'spa': 'sp'};
+      $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
+        'ger': 'ge', 'kor': 'ko', 'spa': 'es'};
       $scope.url = '';
       $scope.base = '../../catalog/';
-      $scope.proxyUrl = '../../proxy?url=';
+      $scope.proxyUrl = gnGlobalSettings.proxyUrl;
       $scope.logoPath = '../../images/harvesting/';
+      $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
+      $scope.isDebug = window.location.search.indexOf('debug') !== -1;
+
       $scope.pages = {
         home: 'home',
-        admin: 'admin.console',
         signin: 'catalog.signin'
       };
+
       $scope.layout = {
         hideTopToolBar: false
       };
@@ -127,13 +135,13 @@
             return !this.isAnonymous();
           },
           canEditRecord: function(md) {
-            if (md === null) {
+            if (!md) {
               return false;
             }
 
             // The md provide the information about
             // if the current user can edit records or not.
-            var editable = md['geonet:info'].edit == 'true';
+            var editable = angular.isDefined(md['geonet:info'].edit) && md['geonet:info'].edit == 'true';
 
 
             // A second filter is for harvested record

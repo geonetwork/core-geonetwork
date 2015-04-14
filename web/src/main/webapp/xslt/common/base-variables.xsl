@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- Global XSL variables about the catalog and user session -->
   
   
@@ -28,8 +30,9 @@
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
-  <xsl:variable name="withD3" select="$service = 'admin.console' or $service = 'catalog.search'"/>
-  <xsl:variable name="searchView" select="if (/root/request/view) then /root/request/view else 'default'"></xsl:variable>
+  <xsl:variable name="withD3" select="$service = 'admin.console'"/>
+
+  <xsl:variable name="searchView" select="if (/root/request/view) then /root/request/view else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
   <xsl:variable name="owsContext" select="/root/request/owscontext" />
   <xsl:variable name="wmsUrl" select="/root/request/wmsurl" />
   <xsl:variable name="layerName" select="/root/request/layername" />
@@ -48,6 +51,7 @@
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search') then 'gn_search'
+    else if ($service = 'md.viewer') then 'gn_formatter_viewer'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>
@@ -72,7 +76,8 @@
     $env/system/server/port)"/>
   <!-- Full URL for services -->
   <xsl:variable name="fullURLForService" select="concat($fullURL, /root/gui/locService)"/>
-  
+  <xsl:variable name="fullURLForWebapp" select="concat($fullURL, /root/gui/url)"/>
+
   <xsl:variable name="isMailEnabled" select="$env/feedback/emailServer/host != ''"/>
 
   <xsl:variable name="serviceInfo" select="/root/gui"/>

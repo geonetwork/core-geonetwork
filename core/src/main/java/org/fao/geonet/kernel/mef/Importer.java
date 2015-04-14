@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -75,6 +76,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+
+import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
 public class Importer {
 	public static List<String> doImport(final Element params, final ServiceContext context,
@@ -234,6 +237,8 @@ public class Importer {
                 String changeDate = null;
                 String source;
                 String sourceName = null;
+                Map<String, String> sourceTranslations = Maps.newHashMap();
+
                 // Schema in info.xml is not used here anymore.
                 // It is used in handleMetadataFiles as the first option to pick a
                 // metadata file from those in a metadata dir in a MEF2
@@ -316,14 +321,15 @@ public class Importer {
                     boolean assign = Util.getParam(params, "assign", "off")
                             .equals("on");
                     if (assign) {
-                        if (Log.isDebugEnabled(Geonet.MEF))
+                        if (Log.isDebugEnabled(Geonet.MEF)) {
                             Log.debug(Geonet.MEF, "Assign to local catalog");
+                        }
                         source = context.getBean(SettingManager.class).getSiteId();
                     } else {
                         // --- If siteId is not set, set to current node
                         source = Util.getParam(general, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
                         sourceName = general.getChildText("siteName");
-
+                        sourceTranslations = translationXmlToLangMap(general.getChildren("siteTranslations"));
                         if (Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to catalog: " + source);
                     }
@@ -341,7 +347,7 @@ public class Importer {
                         Params.NOTHING);
 
                 importRecord(uuid, uuidAction, md, schema, index,
-                        source, sourceName, context, metadataIdMap, createDate,
+                        source, sourceName, sourceTranslations, context, metadataIdMap, createDate,
                         changeDate, groupId, isTemplate);
 
                 if (fc.size() != 0 && fc.get(index) != null) {
@@ -474,23 +480,20 @@ public class Importer {
 
     public static void importRecord(String uuid,
                                     String uuidAction, List<Element> md, String schema, int index,
-                                    String source, String sourceName, ServiceContext context,
+                                    String source, String sourceName, Map<String, String> sourceTranslations, ServiceContext context,
                                     List<String> id, String createDate, String changeDate,
                                     String groupId, MetadataType isTemplate) throws Exception {
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getBean(DataManager.class);
 		
 
 		if (uuid == null || uuid.equals("")
 				|| uuidAction.equals(Params.GENERATE_UUID)) {
 			String newuuid = UUID.randomUUID().toString();
-			source = null;
+            source = null;
 
-			Log
-					.debug(Geonet.MEF, "Replacing UUID " + uuid + " with "
-							+ newuuid);
+            Log.debug(Geonet.MEF, "Replacing UUID " + uuid + " with " + newuuid);
 			uuid = newuuid;
 
 			// --- set uuid inside metadata
@@ -505,7 +508,7 @@ public class Importer {
 
 			// --- only update sources table if source is not current site 
             if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
-                Source source1 = new Source(source, sourceName, true);
+                Source source1 = new Source(source, sourceName, sourceTranslations, true);
                 context.getBean(SourceRepository.class).save(source1);
             }
 		}

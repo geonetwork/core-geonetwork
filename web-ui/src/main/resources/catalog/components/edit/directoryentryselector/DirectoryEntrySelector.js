@@ -97,19 +97,19 @@
 
 
                   scope.add = function() {
-                    gnEditor.add(gnCurrentEdit.id,
+                    return gnEditor.add(gnCurrentEdit.id,
                         scope.elementRef, scope.elementName,
                         scope.domId, 'before').then(function() {
                      if (scope.templateAddAction) {
                        gnEditor.save(gnCurrentEdit.id, true);
                      }
                    });
-                    return false;
                   };
 
                   // <request><codelist schema="iso19139"
                   // name="gmd:CI_RoleCode" /></request>
                   scope.addEntry = function(entry, role, usingXlink) {
+                    gnCurrentEdit.working = true;
                     if (!(entry instanceof Array)) {
                       entry = [entry];
                     }

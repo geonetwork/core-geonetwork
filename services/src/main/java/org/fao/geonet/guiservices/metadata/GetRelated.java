@@ -70,6 +70,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
@@ -221,15 +222,21 @@ public class GetRelated implements Service, RelatedMetadata {
         id = md.getId();
         uuid = md.getUuid();
 
-        Element raw = new Element("root").addContent(getRelated(context, id, uuid, type, from, to, fast));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
+        Element raw = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                    new Element("language").setText(lang),
+                    new Element("url").setText(context.getBaseUrl())
+                )),
+                getRelated(context, id, uuid, type, from, to, fast)
+        ));
+        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
         final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
 
         byte[] response;
         String contentType;
-        if (acceptContentType == null ||
+        if (acceptContentType.isEmpty() ||
             acceptsType(acceptContentType, "xml") ||
             acceptContentType.contains("*/*")||
             acceptContentType.contains("text/plain")) {
@@ -310,7 +317,7 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         String schemaIdentifier = dm.getMetadataSchema(id);
-        SchemaPlugin instance = SchemaManager.getSchemaPlugin(context, schemaIdentifier);
+        SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
         AssociatedResourcesSchemaPlugin schemaPlugin = null;
         if (instance instanceof AssociatedResourcesSchemaPlugin) {
             schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
@@ -342,6 +349,7 @@ public class GetRelated implements Service, RelatedMetadata {
                     if (sibContent != null) {
                         Element sibling = new Element("sibling");
                         sibling.setAttribute("initiative", resource.getInitiativeType());
+                        sibling.setAttribute("association", resource.getAssociationType());
                         response.addContent(sibling.addContent(sibContent));
                     }
                 }
@@ -420,9 +428,8 @@ public class GetRelated implements Service, RelatedMetadata {
         // perform the search
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
-        MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-        try {
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             // Creating parameters for search, fast only to retrieve uuid
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             if ("children".equals(type))
@@ -452,8 +459,6 @@ public class GetRelated implements Service, RelatedMetadata {
             Element relatedElement = searcher.present(context, parameters, _config);
             response.addContent(relatedElement);
             return response;
-        } finally {
-            searcher.close();
         }
     }
 

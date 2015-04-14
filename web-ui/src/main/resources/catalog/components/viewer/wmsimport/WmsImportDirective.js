@@ -16,8 +16,12 @@
     'gnOwsCapabilities',
     'gnMap',
     '$translate',
+    '$timeout',
+    'gnSearchManagerService',
+    'Metadata',
     'gnViewerSettings',
-    function(gnOwsCapabilities, gnMap, $translate, gnViewerSettings) {
+    function(gnOwsCapabilities, gnMap, $translate, $timeout,
+             gnSearchManagerService, Metadata, gnViewerSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -46,32 +50,77 @@
           };
         }],
         link: function(scope, element, attrs) {
-
-
-          scope.format = attrs['gnWmsImport'];
-          scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
-
           scope.loading = false;
+          scope.format = attrs['gnWmsImport'];
+          scope.serviceDesc = null;
+          scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
+          scope.catServicesList = [];
+
+          // Get the list of services registered in the catalog
+          if (attrs.servicesListFromCatalog) {
+            // FIXME: Only load the first 100 services
+            gnSearchManagerService.gnSearch({
+              fast: 'index',
+              _content_type: 'json',
+              from: 1,
+              to: 100,
+              serviceType: 'OGC:WMS'
+            }).then(function(data) {
+              angular.forEach(data.metadata, function(record) {
+                var md = new Metadata(record);
+                angular.forEach(md.getLinksByType('wms'), function(link) {
+                  if (link.url) {
+                    scope.catServicesList.push({
+                      title: md.title || md.defaultTitle,
+                      uuid: md.getUuid(),
+                      name: link.name,
+                      desc: link.desc,
+                      url: link.url
+                    });
+                  }
+                });
+              });
+            });
+          }
 
           // This event focus on map, display the WMSImport and request
           // a getCapabilities
           //TODO : to be improved
-          var event = 'requestCapLoad' + scope.format.toUpperCase();
+          var type = scope.format.toUpperCase();
+          var event = 'requestCapLoad' + type;
           scope.$on(event, function(e, url) {
-            $('#layers').removeClass('force-hide');
-            $('[gn-wms-import]').removeClass('collapsed');
+            var button = $('[data-gn-import-button=' + type + ']');
+            if (button) {
+              var panel = button.parents('.panel-tools'),
+                  toolId = panel && panel.attr('id');
+              if (toolId) {
+                $timeout(function() {
+                  var menu = $('*[rel=#' + toolId + ']');
+                  if (!menu.hasClass('active')) {
+                    menu.click();
+                  }
+                });
+              }
+            }
             scope.url = url;
-            scope.load(url);
           });
 
-          scope.load = function(url) {
-            scope.loading = true;
-            gnOwsCapabilities['get' + scope.format.toUpperCase() +
-                'Capabilities'](url).then(function(capability) {
-              scope.loading = false;
-              scope.capability = capability;
-            });
+          scope.setUrl = function(srv) {
+            scope.url = angular.isObject(srv) ? srv.url : srv;
+            scope.serviceDesc = angular.isObject(srv) ? srv : null;
           };
+          function load() {
+            if (scope.url) {
+              scope.loading = true;
+              gnOwsCapabilities['get' + scope.format.toUpperCase() +
+                  'Capabilities'](scope.url).then(function(capability) {
+                scope.loading = false;
+                scope.capability = capability;
+              });
+            }
+          };
+
+          scope.$watch('url', load);
         }
       };
     }]);
@@ -105,6 +154,7 @@
               return;
             }
 
+            //FIXME use global constant defined in gnGlobalSettings
             var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
             var kmlSource = new ol.source.KML({
               projection: 'EPSG:3857',

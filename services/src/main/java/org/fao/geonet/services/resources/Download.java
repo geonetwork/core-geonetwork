@@ -23,11 +23,9 @@
 
 package org.fao.geonet.services.resources;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
@@ -40,43 +38,53 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.util.MailSender;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 //=============================================================================
 
-/** Sends the resource to the client
-  */
+/**
+ * Sends the resource to the client
+ */
+@Controller
+public class Download {
 
-public class Download implements Service
-{
-	//-----------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//-----------------------------------------------------------------------------
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private ServiceManager serviceManager;
+    @RequestMapping(value="/{lang}/resources.get")
+	public HttpEntity<byte[]> exec(@PathVariable String lang,
+                                   @RequestParam(value = Params.ID, required = false) String idParam,
+                                   @RequestParam(value = Params.UUID, required = false) String uuidParam,
+                                   @RequestParam(Params.FNAME) String fname,
+                                   @RequestParam(value = Params.ACCESS, defaultValue = Params.Access.PUBLIC) String access,
+                                   NativeWebRequest request) throws Exception {
+		String id = null;
+        if (idParam != null) {
+            id = idParam;
+        } else if (uuidParam != null) {
+            id = dataManager.getMetadataId(uuidParam);
+        } else {
+            throw new Exception("Request must contain a UUID ("
+                                + Params.UUID + ") or an ID (" + Params.ID + ")");
+        }
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
-
-	//-----------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//-----------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = Utils.getIdentifierFromParameters(params, context);
-		String fname  = Util.getParam(params, Params.FNAME);
-		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
-
-		boolean doNotify = false;
+        final HttpServletRequest httpServletRequest = request.getNativeRequest(HttpServletRequest.class);
+        final ServiceContext context = serviceManager.createServiceContext("resources.get", lang, httpServletRequest);
+        boolean doNotify = false;
 
 		if (fname.contains("..")) {
 			throw new BadParameterEx("Invalid character found in resource name.", fname);
@@ -164,7 +172,7 @@ public class Download implements Service
 		}
 
         IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
-        return downloadHook.onDownload(context, params, Integer.parseInt(id), fname, file).getElement();
+        return downloadHook.onDownload(context, request, Integer.parseInt(id), fname, file);
 	}
 }
 

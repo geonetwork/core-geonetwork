@@ -4,6 +4,24 @@
   var module = angular.module('gn_utility_directive', [
   ]);
 
+  module.directive('gnConfirmClick', [
+    function() {
+      return {
+        priority: -1,
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.bind('click', function(e) {
+            var message = attrs.gnConfirmClick;
+            if (message && !confirm(message)) {
+              e.stopImmediatePropagation();
+              e.preventDefault();
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker
@@ -357,6 +375,44 @@
   });
 
 
+  /**
+   * Make an element able to collapse/expand
+   * the next element. An icon is added before
+   * the element to indicate the status
+   * collapsed or expanded.
+   */
+  module.directive('gnSlideToggle', [
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+
+          element.on('click', function(e) {
+            /**
+             * Toggle collapse-expand fieldsets
+             * TODO: This is in conflict with click
+             * event added by field tooltip
+             */
+            var legend = $(this);
+            //getting the next element
+            var content = legend.nextAll();
+            //open up the content needed - toggle the slide-
+            //if visible, slide up, if not slidedown.
+            content.slideToggle(attrs.duration || 250, function() {
+              //execute this after slideToggle is done
+              //change the icon of the legend based on
+              // visibility of content div
+              if (content.is(':visible')) {
+                legend.removeClass('collapsed');
+              } else {
+                legend.addClass('collapsed');
+              }
+            });
+          });
+        }
+      };
+    }]);
+
   module.directive('gnClickAndSpin', ['$parse',
     function($parse) {
       return {
@@ -661,20 +717,145 @@
       scope: true,
       link: function(scope, element, attrs) {
         scope.collapsed = attrs['gnCollapse'] == 'true';
+        var next = element.next();
         element.on('click', function(e) {
-          var next = element.next();
+          scope.$apply(function() {
+            scope.collapsed = !scope.collapsed;
+          });
           next.collapse('toggle');
-/*
-          if(scope.collapsed) {
-            next.show();
-          }
-          else {
-            next.hide();
-          }
-*/
         });
       }
     };
   }]);
 
+
+  /**
+   * Directive which create the href attribute
+   * for an element preserving the debug mode
+   * if activated and adding an active class
+   * to the parent element (required to highlight
+   * element in navbar)
+   */
+  module.directive('gnActiveTbItem', ['$location', function($location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var link = attrs.gnActiveTbItem, href,
+            isCurrentService = false;
+
+        // Insert debug mode between service and route
+        if (link.indexOf('#') !== -1) {
+          var tokens = link.split('#');
+          isCurrentService = window.location.pathname.
+              match('.*' + tokens[0] + '$') !== null;
+          href =
+              (isCurrentService ? '' :
+              tokens[0] + (scope.isDebug ? '?debug' : '')
+              ) + '#' +
+              tokens[1];
+        } else {
+          isCurrentService = window.location.pathname.
+              match('.*' + link + '$') !== null;
+          href =
+              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
+
+        }
+
+        // Set the href attribute for the element
+        // with the link containing the debug mode
+        // or not
+        element.attr('href', href);
+
+        function checkActive() {
+          // Ignore the service parameters and
+          // check url contains path
+          var isActive = $location.absUrl().replace(/\?.*#/, '#').
+              match('.*' + link + '.*') !== null;
+
+          if (isActive) {
+            element.parent().addClass('active');
+          } else {
+            element.parent().removeClass('active');
+          }
+        }
+
+        scope.$on('$locationChangeSuccess', checkActive);
+
+        checkActive();
+      }
+    };
+  }]);
+  module.filter('newlines', function() {
+    return function(text) {
+      if (text) {
+        return text.replace(/(\r)?\n/g, '<br/>');
+      } else {
+        return text;
+      }
+    }
+  });
+  module.directive('gnJsonText', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attr, ngModel) {
+        function into(input) {
+          return ioFn(input, 'parse');
+        }
+        function out(input) {
+          return ioFn(input, 'stringify');
+        }
+        function ioFn(input, method) {
+          var json;
+          try {
+            json = JSON[method](input);
+            ngModel.$setValidity('json', true);
+          } catch (e) {
+            ngModel.$setValidity('json', false);
+          }
+          return json;
+        }
+        ngModel.$parsers.push(into);
+        ngModel.$formatters.push(out);
+
+      }
+    };
+  });
+  module.directive('gnImgModal', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attr, ngModel) {
+
+        element.bind('click', function() {
+          var md = scope.$eval(attr['gnImgModal']);
+          var imgs = md.getThumbnails();
+          var img = imgs.big || imgs.small;
+
+          if (img) {
+            var modalElt = angular.element('' +
+                '<div class="modal fade in">' +
+                '<div class="modal-dialog in">' +
+                '  <button type=button class="btn btn-default ' +
+                'gn-btn-modal-img">&times</button>' +
+                '    <img src="' + img + '">' +
+                '</div>' +
+                '</div>');
+            modalElt.find('img').on('load', function() {
+              var w = this.clientWidth;
+              modalElt.find('.modal-dialog').css('width', w + 'px');
+            });
+
+            $(document.body).append(modalElt);
+            modalElt.modal();
+            modalElt.on('hidden.bs.modal', function() {
+              modalElt.remove();
+            });
+            modalElt.find('.gn-btn-modal-img').on('click', function() {
+              modalElt.modal('hide');
+            });
+          }
+        });
+      }
+    };
+  });
 })();

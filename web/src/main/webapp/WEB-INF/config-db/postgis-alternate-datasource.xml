@@ -8,6 +8,22 @@
 	">
     <context:property-placeholder location="WEB-INF/config-db/jdbc.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="1"/>
 
+    <import resource="defaultJdbcDataSource.xml" />
+
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+        <constructor-arg value="POSTGRESQL"/>
+    </bean>
+
+    <bean id="jdbcDriverClassName" class="java.lang.String">
+        <constructor-arg value="org.postgresql.Driver"/>
+    </bean>
+
+    <bean id="jdbcURL" class="java.lang.String">
+        <constructor-arg value="jdbc:postgresql://${jdbc.host}:5432/${jdbc.database}"/>
+    </bean>
+
+
+
     <bean id="datastoreFactory" class="org.geotools.data.postgis.PostgisNGDataStoreFactory"/>
     <bean id="datastore"
           factory-bean="datastoreFactory"

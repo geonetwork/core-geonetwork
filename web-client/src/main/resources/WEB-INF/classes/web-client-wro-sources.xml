@@ -1,0 +1,384 @@
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd">
+    <!-- geonetwork.css -->
+    <declarative name="geonetwork-client_css" pathOnDisk="${project.basedir}/src/main/resources">
+        <cssSource webappPath="/apps/css/gndefault.css"/>
+        <cssSource webappPath="/apps/css/gnmapdefault.css"/>
+        <cssSource webappPath="/apps/css/gnmetadatadefault.css"/>
+        <cssSource webappPath="/apps/css/metadata-view.css"/>
+    </declarative>
+    <!-- ext-ux.css -->
+    <declarative name="geonetwork-client-ext-ux_css" pathOnDisk="${project.basedir}/src/main/resources">
+        <cssSource webappPath="/apps/js/ext-ux/Rating/rating.css"/>
+        <cssSource webappPath="/apps/js/ext-ux/SuperBoxSelect/superboxselect.css"/>
+        <cssSource webappPath="/apps/js/ext-ux/LightBox/lightbox.css"/>
+        <cssSource webappPath="/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+        <cssSource webappPath="/apps/js/ext-ux/FileUploadField/file-upload.css"/>
+    </declarative>
+    <!-- GeoNetwork-mini-nomap.js -->
+    <declarative name="geonetwork-client-mini-nomap" pathOnDisk="${project.basedir}/src/main/resources">
+            <jsSource webappPath="/apps/js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/Rating/RatingItem.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/FileUploadField/FileUploadField.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/DateTime/DateTime.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/RowExpander/RowExpander.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/MultiselectItemSelector-3.0/DDView.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/LightBox/lightbox.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
+            <jsSource webappPath="/apps/js/ext-ux/CheckColumn.js"/>
+
+            <jsSource webappPath="/apps/js/proj4js-compressed.js" minimize="false"/>
+
+
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/SingleFile.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Class.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Bounds.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Console.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Util.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/Rico/Corner.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Events.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Events/buttonclick.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Icon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Animation.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Marker.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Popup.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Popup/Anchored.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Popup/AnchoredBubble.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Feature.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Feature/Vector.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/XML.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/XML/VersionedOGC.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/JSON.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GeoJSON.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/Context.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OWSContext.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMC.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WKT.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/OGCExceptionReport.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/Zoom.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoom.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoomBar.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Tween.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Map.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Projection.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Tile.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Tile/Image.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/Image.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/Collection.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/Point.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/MultiPoint.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/Curve.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/LineString.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/LinearRing.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Point.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Path.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/Polygon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Polygon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/XML.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/MultiLineString.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Geometry/MultiPolygon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GeoJSON.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GML.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GML/Base.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GML/v3.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Element.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/MouseWheel.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/ZoomToMaxExtent.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Style.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Filter.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Filter/Function.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Filter/FeatureId.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Filter/Logical.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Filter/Comparison.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/Filter.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Protocol.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Protocol/HTTP.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Renderer.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Renderer/Elements.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Feature.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/StyleMap.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/Vector.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/Markers.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/Vector/RootContainer.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/SelectFeature.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/NavigationHistory.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/Attribution.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/WMSGetFeatureInfo.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Request.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Request/XMLHttpRequest.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/LonLat.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Size.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Pixel.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/ca.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/de.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/en.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/es.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/nl.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Lang/pl.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Drag.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Box.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/ZoomBox.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/DragPan.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Click.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/Navigation.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/HTTPRequest.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/Grid.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/WMS.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/WMTS.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/XYZ.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/OSM.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Renderer/SVG.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Layer/TileCache.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/Button.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/ScaleLine.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/GML/v2.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/JSON.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/Filter/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/Filter/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/Filter/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMTSCapabilities.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_3.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_3_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WMTSCapabilities/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_0_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_1_0.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/Scale.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/DrawFeature.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Rule.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/Hover.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/MousePosition.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Handler/RegularPolygon.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Renderer/VML.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/lib/OpenLayers/Control/ArgParser.js"/>
+
+            <jsSource webappPath="/apps/js/OpenLayers/addins/LoadingPanel.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/addins/ScaleBar.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/addins/Format/CSWGetRecords/v2_0_2_GeoNetwork.js"/>
+            <jsSource webappPath="/apps/js/OpenLayers/addins/Format/GeoNetworkRecords.js"/>
+
+
+            <jsSource webappPath="/apps/js/GeoExt/lib/overrides/override-ext-ajax.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/SingleFile.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/AttributeReader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/AttributeStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/FeatureReader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/FeatureStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/LayerRecord.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/LayerReader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/LayerStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/ScaleStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/PrintProvider.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/PrintPage.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/WMSCapabilitiesReader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/WMSCapabilitiesStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/WMSDescribeLayerReader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/data/WMSDescribeLayerStore.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/state/PermalinkProvider.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/Action.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/MapPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/LegendImage.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/LegendPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/LayerLegend.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/WMSLegend.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/LayerContainer.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/BaseLayerContainer.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/LayerLoader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/LayerNode.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/LayerParamLoader.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/LayerParamNode.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/OverlayLayerContainer.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tree/TreeNodeUIEventMixin.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/plugins/TreeNodeRadioButton.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/plugins/PrintProviderField.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/plugins/PrintPageField.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tips/SliderTip.js"/>
+            <jsSource webappPath="/apps/js/GeoExt/lib/GeoExt/widgets/tips/LayerOpacitySliderTip.js"/>
+
+            <jsSource webappPath="/apps/js/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/SingleFile.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/ca.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/de.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/en.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/es.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/lang/pl.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/Util.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/Message.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/Catalogue.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/HelpTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/SearchTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/Old.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/INSPIRESearchFormTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/SearchFormTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/util/CSWSearchTools.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/CatalogueSourceStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/CategoryStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/CodeListStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/GroupStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/HarvesterStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/LanguageStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataCSWResultsStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataRelationStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataResultsStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataResultsFastStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataSummaryStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/MetadataThumbnailStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionReader.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/OpenSearchSuggestionStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/RegionStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/StatusStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/SubTemplateTypeStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/SuggestionStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/UserStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/ValidationRuleStore.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/data/Z3950RepositoryStore.js"/>
+
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/form/GeometryMapField.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/form/OpenSearchSuggestionTextField.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/form/SearchField.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/LoginForm.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/MetadataMenu.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/MetadataResultsView.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/MetadataResultsToolbar.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/TagCloudView.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/Templates.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FeedbackForm.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewPanel.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/CRSSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/EditorPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/EditorToolbar.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/EditorTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/HelpPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/KeywordSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ConceptSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkResourcesWindow.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LogoSelectionPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/NewMetadataPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/InsertMetadataPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/GeoPublisherPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/SuggestionsPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ThumbnailPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ValidationPanel.js"/>
+
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/AdminTools.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/HarvesterPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js"/>
+
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/ExtentMap.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/Control/ZoomWheel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/Control/ExtentBox.js"/>
+        </declarative>
+    <!-- GeoNetwork-mini.js + geonetwork-client-mini-nomap_js-->
+    <declarative name="geonetwork-client-mini" pathOnDisk="${project.basedir}/src/main/resources">
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/core/OGCUtil.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/core/CatalogueInterface.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/core/WMCManager.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/tree/WMSListGenerator.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/tree/WMSTreeGenerator.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/wms/BrowserPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/wms/LayerInfoPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/wms/LayerStylesPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/wms/PreviewPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/wms/WMSLayerInfo.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/FeatureInfoPanel.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/LegendPanel.js"/>
+            <!--<jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/OpacitySlider.js" />-->
+            <!--//"GeoNetwork/map/widgets/PrintAction.js" />-->
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/ProjectionSelector.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/TimeSelector.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/WxSExtractor.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/BaseWindow.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/SingletonWindowManager.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMS.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMTS.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/FeatureInfo.js"/>
+            <!--<jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/Opacity.js" />-->
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/LoadWmc.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/Disclaimer.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/LayerStyles.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/WmsLayerMetadata.js"/>
+            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/WMSTime.js"/>
+        </declarative>
+    <!-- search/js/App-mini.js + geonetwork-client-mini-nomap_js + geonetwork-client-mini_js -->
+    <declarative name="geonetwork-client-search-app" pathOnDisk="${project.basedir}/src/main/resources">
+            <jsSource webappPath="/apps/search/js/Settings.js"/>
+            <jsSource webappPath="/apps/search/js/map/Settings.js"/>
+            <jsSource webappPath="/apps/search/js/map/MapApp.js"/>
+            <jsSource webappPath="/apps/search/js/Shortcuts.js"/>
+            <jsSource webappPath="/apps/search/js/App.js"/>
+    </declarative>
+    <!-- tabsearch/js/App-mini.js + geonetwork-client-mini-nomap_js + geonetwork-client-mini_js -->
+    <declarative name="geonetwork-client-tabsearch-app" pathOnDisk="${project.basedir}/src/main/resources">
+            <jsSource webappPath="/apps/tabsearch/js/Settings.js"/>
+            <jsSource webappPath="/apps/tabsearch/js/map/Settings.js"/>
+            <jsSource webappPath="/apps/tabsearch/js/map/MapApp.js"/>
+            <jsSource webappPath="/apps/tabsearch/js/Shortcuts.js"/>
+            <jsSource webappPath="/apps/tabsearch/js/App.js"/>
+    </declarative>
+
+    <!-- search/css/style.css
+    <declarative name="geonetwork-client-style_css" pathOnDisk="${project.basedir}/src/main/resources">
+         <cssSource webappPath="/apps/js/OpenLayers/theme/dark/style.css" />
+         <cssSource webappPath="/apps/js/ext/resources/css/ext-all.css" />
+         <cssSource webappPath="/apps/js/ext/resources/css/xtheme-gray.css" />
+         <cssSource webappPath="/apps/js/ext-ux/FileUploadField/file-upload.css" />
+         <cssSource webappPath="/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css" />
+         <cssSource webappPath="/apps/css/gndefault.css" />
+         <cssSource webappPath="/apps/css/gnmapdefault.css" />
+         <cssSource webappPath="/apps/css/gnmetadatadefault.css" />
+         <cssSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/resources/css/metadata-view.css" />
+     </declarative>-->
+</sources>

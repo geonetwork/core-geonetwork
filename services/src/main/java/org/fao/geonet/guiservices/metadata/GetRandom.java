@@ -97,9 +97,9 @@ public class GetRandom implements Service
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager searchMan = gc.getBean(SearchManager.class);
-			MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-			try {
+
+			try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 				// FIXME: featured should be at metadata level, not at group level
 				Element searchRequest = new Element("request");
 				searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
@@ -138,9 +138,6 @@ public class GetRandom implements Service
 					_response.addContent(md);
 				}
 				_lastUpdateTime = System.currentTimeMillis();
-			}
-            finally {
-				searcher.close();
 			}
 		}
 		return (Element)_response.clone();

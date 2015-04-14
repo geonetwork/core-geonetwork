@@ -13,10 +13,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
@@ -109,7 +106,7 @@ public class GeonetHttpRequestFactory {
         request.setQuery(url.getQuery());
         request.setFragment(url.getRef());
         request.setUserInfo(url.getUserInfo());
-
+        request.setCookieStore(new BasicCookieStore());
         return request;
     }
 
@@ -156,7 +153,7 @@ public class GeonetHttpRequestFactory {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         configurator.apply(clientBuilder);
         CloseableHttpClient httpClient = clientBuilder.build();
-        if (r.isPreemptiveBasicAuth()) {
+        if (r.isPreemptiveBasicAuth() || r.getHttpClientContext() != null) {
             return new AdaptingResponse(httpClient, httpClient.execute(request, r.getHttpClientContext()));
         } else {
             return new AdaptingResponse(httpClient, httpClient.execute(request));

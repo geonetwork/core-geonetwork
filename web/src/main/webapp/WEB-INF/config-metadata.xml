@@ -141,26 +141,6 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.newowner">
-            <class name=".services.metadata.BatchNewOwner" />
-
-            <output sheet="metadata-batch-results.xsl">
-                <xml name="info" file="xml/metadata-batchNewOwner.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batch.newowner.form">
-            <class name=".services.metadata.PrepareBatchNewOwner" />
-
-            <output sheet="metadata-batchownership.xsl">
-                <xml name="info" file="xml/metadata-batchNewOwner.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.batch.status.form">
             <class name=".services.metadata.PrepareBatchUpdateStatus" />
 

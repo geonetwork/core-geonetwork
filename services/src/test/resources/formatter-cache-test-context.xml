@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <bean id="fsStore" class="org.fao.geonet.services.metadata.format.cache.FilesystemStore" lazy-init="true">
+    <property name="maxSizeGb" value="500" />
+    <property name="testing" value="true" />
+  </bean>
+
+  <bean id="formatterCache" class="org.fao.geonet.services.metadata.format.cache.FormatterCache"  lazy-init="true">
+    <constructor-arg index="0" ref="fsStore"/>
+    <constructor-arg index="1" value="500000" />
+    <constructor-arg index="2" value="5000" />
+  </bean>
+
+</beans>

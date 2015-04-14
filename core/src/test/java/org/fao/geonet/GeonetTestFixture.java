@@ -143,6 +143,9 @@ public class GeonetTestFixture {
 
         ServiceContext serviceContext = test.createServiceContext();
 
+        ApplicationContextHolder.set(_applicationContext);
+        serviceContext.setAsThreadLocal();
+
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(serviceContext, false);
@@ -155,6 +158,7 @@ public class GeonetTestFixture {
         try (Connection conn = dataSource.getConnection()) {
             ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
         }
+
     }
 
 
@@ -194,7 +198,6 @@ public class GeonetTestFixture {
 
     private void assertRequiredSchemas(SchemaManager schemaManager) {
         assertTrue(schemaManager.existsSchema("iso19139"));
-        assertTrue(schemaManager.existsSchema("iso19115"));
         assertTrue(schemaManager.existsSchema("dublin-core"));
     }
 

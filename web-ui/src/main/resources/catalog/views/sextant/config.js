@@ -6,10 +6,18 @@
 
   module.constant('gnPanierSettings', {});
 
-  module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnMap',
+  var gfiTemplateURL = '../../catalog/views/sextant/templates/gfi.html';
 
-    function(searchSettings, viewerSettings, gnPanierSettings, gnMap) {
+  module.value('gfiTemplateURL', gfiTemplateURL);
+
+  module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
+    'gnGlobalSettings', 'gnMap',
+
+    function(searchSettings, viewerSettings, gnPanierSettings,
+             gnGlobalSettings, gnMap) {
+
+      gnGlobalSettings.isMapViewerEnabled =
+          gnGlobalSettings.isMapViewerEnabled || true;
 
       /** *************************************
        * Define mapviewer background layers
@@ -82,9 +90,8 @@
        * Define maps
        */
       var mapsConfig = {
-        center: [280274.03240585705, 6053178.654789996],
         zoom: 2,
-        maxResolution: '9783.93962050256'
+        maxResolution: '39135.75848201024'
       };
 
       var viewerMap = new ol.Map({
@@ -127,7 +134,7 @@
         ],
         controls: [],
         view: new ol.View({
-          center: mapsConfig.center,
+          center: [280274.03240585705, 6053178.654789996],
           zoom: 0
         })
       });
@@ -137,10 +144,6 @@
         search: {
           title: 'Search',
           titleInfo: 0,
-          active: false
-        },
-        view: {
-          title: 'view',
           active: false
         },
         map: {
@@ -165,10 +168,7 @@
       searchSettings.formatter = {
         defaultUrl: 'md.format.xml?xsl=full_view&id=',
         list: [
-          {label: 'inspire', url: 'md.format.xml?xsl=xsl-view' +
-                '&view=inspire&id='},
-          {label: 'full', url: 'md.format.xml?xsl=xsl-view&view=advanced&id='},
-          {label: 'groovy', url: 'md.format.xml?xsl=full_view&id='}
+          {label: 'fullView', url: 'md.format.xml?xsl=full_view&id='}
         ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
@@ -184,25 +184,19 @@
         field: 'sextantTheme',
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
-      },{
-        id: 'external.theme.inspire-theme',
-        field: 'inspireTheme_en',
-        tree: false,
-        label: {eng: 'INSPIRE', fre: 'INSPIRE'}
       }];
 
       /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [10, 20, 50, 100];
+      searchSettings.hitsperpageValues = [20, 50, 100];
 
       searchSettings.paginationInfo = {
-        hitsPerPage: searchSettings.hitsperpageValues[1]
+        hitsPerPage: searchSettings.hitsperpageValues[0]
       };
       /* Sort by combo values configuration */
       searchSettings.sortbyValues = [
         {sortBy: 'popularity', sortOrder: ''},
-        {sortBy: 'changeDate', sortOrder: ''},
         {sortBy: 'title', sortOrder: 'reverse'},
-        {sortBy: 'relevance', sortOrder: ''}];
+        {sortBy: 'changeDate', sortOrder: ''}];
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       // Set custom config in gnSearchSettings

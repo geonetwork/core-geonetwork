@@ -130,7 +130,7 @@
 
         <filter-name>WebResourceOptimizer</filter-name>
         <filter-class>
-            ro.isdc.wro.http.WroFilter
+            org.fao.geonet.wro4j.GeonetWro4jFilter
         </filter-class>
     </filter>
     <filter-mapping>
@@ -403,7 +403,6 @@
     </welcome-file-list>
 
     <session-config>
-        <!-- 3 hours -->
-        <session-timeout>180</session-timeout>
+        <session-timeout>${sessionTimeout}</session-timeout>
     </session-config>
 </web-app>

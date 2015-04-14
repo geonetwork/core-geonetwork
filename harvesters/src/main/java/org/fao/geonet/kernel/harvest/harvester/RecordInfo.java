@@ -96,6 +96,10 @@ public class RecordInfo
 
 		ISODate remoteDate = new ISODate(changeDate);
 		ISODate localDate  = new ISODate(localChangeDate);
+        
+        if(remoteDate.timeDifferenceInSeconds(localDate) == 0) {
+            return false;
+        }
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences

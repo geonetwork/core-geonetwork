@@ -37,7 +37,7 @@ CREATE TABLE MetadataNotifications_Tmp
     notifierId         int            not null,
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
-    action             char(1)        not null,
+    action             int            not null,
     errormsg           text
   );
 

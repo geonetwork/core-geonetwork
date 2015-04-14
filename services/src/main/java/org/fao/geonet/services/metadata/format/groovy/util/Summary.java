@@ -13,7 +13,6 @@ import org.fao.geonet.services.metadata.format.groovy.template.FileResult;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -35,21 +34,21 @@ public class Summary {
     protected final Environment env;
     protected final Functions functions;
 
-    private List<MenuAction> actions = Lists.newArrayList();
-    private String logo;
-    private List<String> thumbnails = Lists.newArrayList();
-    private String title = "";
-    private String abstr = "";
-    private List<NavBarItem> navBar = Lists.newArrayList();
-    private List<NavBarItem> navBarOverflow = Lists.newArrayList();
-    private String content = "";
-    private boolean addCompleteNavItem = true;
-    private boolean addOverviewNavItem = true;
-    private String keywords = "";
-    private String extent = "";
-    private String formats = "";
+    protected String logo;
+    protected List<String> thumbnails = Lists.newArrayList();
+    protected String title = "";
+    protected String abstr = "";
+    protected List<NavBarItem> navBar = Lists.newArrayList();
+    protected List<NavBarItem> navBarOverflow = Lists.newArrayList();
+    protected String content = "";
+    protected boolean addCompleteNavItem = true;
+    protected boolean addOverviewNavItem = true;
+    protected String keywords = "";
+    protected String extent = "";
+    protected String formats = "";
 
     public List<LinkBlock> links = Lists.newArrayList();
+    public List<LinkBlock> associated = Lists.newArrayList();
 
     public Summary(Handlers handlers, Environment env, Functions functions) throws Exception {
         this.handlers = handlers;
@@ -70,16 +69,16 @@ public class Summary {
         params.put("abstract", abstr);
         params.put("thumbnail", thumbnailUrl());
         params.put("links", links);
+        params.put("associated", associated);
         params.put("addOverviewNavItem", addOverviewNavItem);
         params.put("navBar", navBar);
         params.put("navBarOverflow", navBarOverflow);
-        params.put("showNavOverflow", !navBarOverflow.isEmpty() || addCompleteNavItem);
+        params.put("showNavOverflow", !navBarOverflow.isEmpty());
         params.put("addCompleteNavItem", addCompleteNavItem);
         params.put("content", content);
         params.put("extents", extent != null ? extent : "");
         params.put("formats", formats != null ? formats : "");
         params.put("keywords", keywords != null ? keywords : "");
-        params.put("actions", this.actions);
         params.put("isHTML", env.getFormatType() == FormatType.html);
         params.put("isPDF", env.getFormatType() == FormatType.pdf);
 
@@ -197,33 +196,5 @@ public class Summary {
 
     public void setFormats(String formats) {
         this.formats = formats;
-    }
-
-    public List<MenuAction> getActions() {
-        return this.actions;
-    }
-
-    /**
-     * look up the the action using the menu names as keys for lookup.
-     *
-     * @param path the path to the action
-     */
-    public MenuAction findAction(String... path) {
-        List<MenuAction> current = this.actions;
-        for (int i = 0; i < path.length; i++) {
-            String segment = path[i];
-            for (MenuAction menuAction : current) {
-                if (segment.equals(menuAction.getLabel())) {
-                    if (i == path.length - 1) {
-                        return menuAction;
-                    } else {
-                        current = menuAction.getSubmenu();
-                        break;
-                    }
-                }
-            }
-
-        }
-        throw new IllegalArgumentException("No menu action found given the path: " + Arrays.toString(path));
     }
 }

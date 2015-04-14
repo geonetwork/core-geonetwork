@@ -9,7 +9,7 @@ public class Handlers {
     protected org.fao.geonet.services.metadata.format.groovy.Functions f
     protected Environment env
     Matchers matchers
-    Functions isofunc
+    iso19139.Functions isofunc
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
@@ -19,7 +19,7 @@ public class Handlers {
         this.f = f
         this.env = env
         commonHandlers = new common.Handlers(handlers, f, env)
-        isofunc = new Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
+        isofunc = new iso19139.Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
         matchers =  new Matchers(handlers: handlers, f:f, env:env)
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
@@ -39,9 +39,15 @@ public class Handlers {
         handlers.add name: 'Keyword Elements', select: 'gmd:descriptiveKeywords', group:true, keywordsEl
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         handlers.add name: 'Graphic Overview', select: 'gmd:graphicOverview', group: true, graphicOverviewEl
+        handlers.add name: 'Dataset URI', select: 'gmd:dataSetURI', isoDatasetUriEl
         handlers.add select: 'gmd:language', group: false, isoLanguageEl
-        handlers.add select: 'gmd:onLine', group: true, onlineResourceEls
-        handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, isoSimpleTextElGrouped
+        handlers.add select: matchers.isCiOnlineResourceParent, group: true, onlineResourceEls
+        handlers.add select: 'srv:coupledResource', group: true, coupledResourceEls
+        handlers.add select: 'srv:containsOperations', group: true, containsOperationsEls
+        handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, { elems ->
+            def listItems = elems.findAll{!it.text().isEmpty()}.collect {f.codelistValueLabel("MD_TopicCategoryCode", it.text())};
+            handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
+        }
 
         handlers.skip name: "skip date parent element", select: matchers.hasDateChild, {it.children()}
         handlers.skip name: "skip codelist parent element", select: matchers.hasCodeListChild, {it.children()}
@@ -77,7 +83,8 @@ public class Handlers {
     }
 
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
-    def isoUrlEl = { isofunc.isoTextEl(it, isofunc.isoUrlText(it))}
+    def isoUrlEl = { isofunc.isoUrlEl(it, isofunc.isoUrlText(it), isofunc.isoUrlText(it))}
+    def isoDatasetUriEl = { isofunc.isoUrlEl(it, isofunc.isoText(it), isofunc.isoText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
     def isoBasicType = {isofunc.isoTextEl(it, it.'*'.text())}
     def isoSimpleTextEl = { isofunc.isoTextEl(it, it.text()) }
@@ -132,24 +139,81 @@ public class Handlers {
 
         commonHandlers.func.textEl(f.nodeLabel(language), lang);
     }
-    def onlineResourceEls = { els ->
-        def links = []
-
-        els.each {it.'gmd:CI_OnlineResource'.each { link ->
-                links << [
-                        href : isofunc.isoUrlText(link.'gmd:linkage'),
-                        name : isofunc.isoText(link.'gmd:name'),
-                        desc : isofunc.isoText(link.'gmd:description')
-                ]
-            }
+    def containsOperationsEls = { els ->
+        StringBuilder builder = new StringBuilder();
+        els.'*'.each{op ->
+            builder.append(handlers.processElements(op));
         }
 
-        handlers.fileResult('html/online-resource.html', [
-                label: f.nodeLabel(els[0]),
-                links: links
-        ])
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(els[0]), childData: builder.toString()])
     }
 
+    def onlineResourceEls = { els ->
+        def links = []
+        els.each {it.'gmd:CI_OnlineResource'.each { link ->
+            def model = [
+                    href : isofunc.isoUrlText(link.'gmd:linkage'),
+                    name : isofunc.clean(isofunc.isoText(link.'gmd:name')),
+                    desc : isofunc.clean(isofunc.isoText(link.'gmd:description'))
+            ]
+            if (model.href != '' || model.name != '' || model.desc != '') {
+                links << model;
+            }
+        }}
+
+        if (links.isEmpty()) {
+            return ''
+        } else {
+            handlers.fileResult('html/online-resource.html', [
+                    label: f.nodeLabel(els[0]),
+                    links: links
+            ])
+        }
+    }
+
+    def coupledResourceEls = { els ->
+        def resources = com.google.common.collect.ArrayListMultimap.create()
+
+        def resolveResource = { el ->
+            def resource = el.'srv:SV_CoupledResource'
+            if (resource.isEmpty()) {
+                resource = el
+            }
+            resource
+        }
+
+        els.each {el ->
+            def resource = resolveResource(el)
+            def opName = resource.'srv:operationName'.text()
+            def identifier = resource.'srv:identifier'.text()
+            def scopedName = resource.'gco:ScopedName'.text()
+
+            def tip, href, cls;
+            if (identifier.trim().isEmpty()) {
+                href = "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
+                tip = this.f.translate("noUuidInLink")
+                cls = 'text-muted'
+            } else {
+                href = env.localizedUrl + 'md.viewer#/full_view/' + identifier
+                tip = href
+            }
+            def category = opName.trim().isEmpty() ? 'uncategorized' : opName
+            resources.put(category, [
+                    href : href,
+                    tip : tip,
+                    name : scopedName.trim().isEmpty() ? identifier : scopedName,
+                    class: cls
+            ]);
+        }
+
+        def label = f.nodeLabel("srv:SV_CoupledResource", null)
+        if (!els.isEmpty()) {
+            label = f.nodeLabel(els[0])
+        }
+
+        def model = [label: label, resources: resources.asMap()]
+        handlers.fileResult("html/coupled-resources.html", model)
+    }
     def formatEls = { els ->
         def formats = [] as Set
 
@@ -196,13 +260,13 @@ public class Handlers {
     }
     def keywordsEl = {keywords ->
         def keywordProps = com.google.common.collect.ArrayListMultimap.create()
-        keywords.collectNested {it.'gmd:MD_Keywords'.'gmd:keyword'.list()}.flatten().each { k ->
+        keywords.collectNested {it.'**'.findAll{it.name() == 'gmd:keyword'}}.flatten().each { k ->
             def thesaurusName = isofunc.isoText(k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:title')
 
             if (thesaurusName.isEmpty()) {
                 def keywordTypeCode = k.parent().'gmd:type'.'gmd:MD_KeywordTypeCode'
                 if (!keywordTypeCode.isEmpty()) {
-                    thesaurusName = f.codelistValueLabel(keywordTypeCode)
+                    thesaurusName = f.translate("uncategorizedKeywords")
                 }
             }
 
@@ -311,7 +375,7 @@ public class Handlers {
 
             if (xpath != null) {
                 def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
-                        "         style=\"width:${width/4}; min-height:${width/4};\" />"
+                        "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
         }
@@ -337,13 +401,13 @@ public class Handlers {
         }
 
         return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
-          e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
-          s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-          n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-          geomproj: "EPSG:4326",
-          minwidth: mapConfig.getWidth() / 4,
-          minheight: mapConfig.getWidth() / 4,
-          mapconfig: mapConfig
+                 e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+                 s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+                 n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
+                 geomproj: "EPSG:4326",
+                 minwidth: mapConfig.getWidth() / 4,
+                 minheight: mapConfig.getWidth() / 4,
+                 mapconfig: mapConfig
         ]
     }
     def rootPackageEl = {

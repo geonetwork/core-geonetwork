@@ -84,6 +84,7 @@
                  scope.$parent.thesaurusKey = scope.thesaurusKey =
                          thesaurusIdentifier;
                } else {
+                 gnCurrentEdit.working = true;
                  gnThesaurusService
                          .getXML(thesaurusIdentifier,  null,
                                  attrs.transformation).then(
@@ -142,6 +143,9 @@
              keywords: '@',
              transformations: '@',
              currentTransformation: '@',
+             lang: '@',
+             textgroupOnly: '@',
+
              // Max number of tags allowed. Use 1 to restrict to only
              // on keyword.
              maxTags: '@'
@@ -164,6 +168,13 @@
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
+
+             //Get langs of metadata
+             var langs = [];
+             for (var p in JSON.parse(scope.lang)) {
+               langs.push(p);
+             }
+             scope.langs = langs.join(',');
 
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
@@ -365,7 +376,8 @@
              var getSnippet = function() {
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
-               getKeywordIds(), scope.currentTransformation).then(
+               getKeywordIds(), scope.currentTransformation, scope.langs,
+                   scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;
                });

@@ -528,6 +528,7 @@
 
 <xsl:template name="process-pattern">
 	<xsl:param name="name"/>
+	<xsl:param name="titles"/>
 	<xsl:param name="id"/>
 	<xsl:param name="is-a"/>
 	
@@ -546,6 +547,13 @@
 				<xsl:value-of select=" $id " />
 			</axsl:attribute>
 		</xsl:if>
+    <xsl:for-each select="$titles">
+      <xsl:if test="@xml:lang">
+        <axsl:attribute name="name_{@xml:lang}">
+          <xsl:value-of select="."/>
+        </axsl:attribute>
+      </xsl:if>
+    </xsl:for-each>
 	  <xsl:if test=" string( $name )">
   	  <axsl:attribute name="name">
   	    <xsl:choose>

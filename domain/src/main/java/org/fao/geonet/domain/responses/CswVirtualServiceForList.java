@@ -1,12 +1,16 @@
 package org.fao.geonet.domain.responses;
 
 import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParam;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * Wrapper for CSW virtual services (@see org.fao.geonet.domain.Service) used for the CSW virtual list service response.
@@ -23,7 +27,8 @@ public class CswVirtualServiceForList implements Serializable {
     @XmlElement(name="classname")
     private String className;
     private String description;
-    private String parameters;
+    @XmlElementWrapper(name = "parameter")
+    private List<ServiceParameter> parameters = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -37,7 +42,7 @@ public class CswVirtualServiceForList implements Serializable {
         return description;
     }
 
-    public String getParameters() {
+    public List<ServiceParameter> getParameters() {
         return parameters;
     }
 
@@ -54,7 +59,10 @@ public class CswVirtualServiceForList implements Serializable {
         name = service.getName();
         className = service.getClassName();
         description = service.getDescription();
-        parameters = service.getParameters().toString();
+        for (ServiceParam serviceParam : service.getParameters()) {
+            this.parameters.add(new ServiceParameter(serviceParam));
+        }
     }
+
 }
 

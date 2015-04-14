@@ -224,16 +224,6 @@
 		</service>
 
 
-		<service name="resources.get">
-			<class name=".services.resources.Download" />
-
-			<error id="file-not-found" sheet="error-embedded.xsl">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output file="true" />
-		</service>
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- XML services -->
 

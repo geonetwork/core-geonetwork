@@ -20,10 +20,17 @@
     'gnMdViewObj',
     'gnSearchManagerService',
     'gnSearchSettings',
+    'gnUrlUtils',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
-             gnMdViewObj, gnSearchManagerService, gnSearchSettings) {
+             gnMdViewObj, gnSearchManagerService, gnSearchSettings,
+             gnUrlUtils) {
 
-      var lastSearchParams = {};
+      // Keep where the metadataview come from to get back on close
+      $rootScope.$on('$locationChangeStart', function(o, v) {
+        if (!gnSearchLocation.isMdView()) {
+          gnMdViewObj.from = gnSearchLocation.path();
+        }
+      });
 
       this.feedMd = function(index, md, records) {
         gnMdViewObj.records = records || gnMdViewObj.records;
@@ -56,11 +63,6 @@
        * @param {string} uuid
        */
       this.setLocationUuid = function(uuid) {
-        if (gnSearchLocation.isSearch()) {
-          lastSearchParams = angular.copy(gnSearchLocation.getParams());
-          gnSearchLocation.saveLastUrl();
-          gnSearchLocation.removeParams();
-        }
         gnSearchLocation.setUuid(uuid);
       };
 
@@ -70,8 +72,11 @@
        * at last search.
        */
       this.removeLocationUuid = function() {
-        if (!gnSearchLocation.isSearch()) {
-          gnSearchLocation.setSearch(lastSearchParams);
+        if(gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
+          gnSearchLocation.path(gnMdViewObj.from);
+        }
+        else {
+          gnSearchLocation.restoreSearch();
         }
       };
 
@@ -129,12 +134,31 @@
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
                 selector);
           }
-          else {
-            $rootScope.$broadcast('closeMdView');
-          }
         };
         loadFormatter();
         $rootScope.$on('$locationChangeSuccess', loadFormatter);
+      };
+
+      /**
+       * Open a metadata just from info in the layer. If the metadata comes
+       * from the catalog, then the layer 'md' property contains the gn md
+       * object. If not, we search the md in the catalog to open it.
+       * @param {ol.layer} layer
+       */
+      this.openMdFromLayer = function(layer) {
+        var md = layer.get('md');
+        if (!md && layer.get('metadataUrl')) {
+
+          var mdUrl = gnUrlUtils.urlResolve(layer.get('metadataUrl'));
+          if (mdUrl.host == gnSearchLocation.host()) {
+            gnSearchLocation.setUuid(layer.get('metadataUuid'));
+          } else {
+            window.open(layer.get('metadataUrl'), '_blank');
+          }
+        }
+        else {
+          this.feedMd(0, md, [md]);
+        }
       };
     }
   ]);
@@ -144,16 +168,25 @@
     '$http',
     '$compile',
     '$sce',
-    function($rootScope, $http, $compile, $sce) {
+    'gnAlertService',
+    function($rootScope, $http, $compile, $sce, gnAlertService) {
 
       this.load = function(url, selector) {
+        $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
+          $rootScope.$broadcast('mdLoadingEnd');
           var scope = angular.element($(selector)).scope();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
           $(selector).append(el);
           $compile(el)(scope);
+        }, function() {
+          $rootScope.$broadcast('mdLoadingEnd');
+          gnAlertService.addAlert({
+            msg: 'Erreur de chargement de la métadonnée.',
+            type: 'danger'
+          });
         });
       };
     }

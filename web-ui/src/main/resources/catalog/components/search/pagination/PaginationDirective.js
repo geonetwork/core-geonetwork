@@ -33,8 +33,9 @@
            * SearchFormController, then add from and to  params
            * to the search.
            */
-          var getPaginationParams = function() {
+          var getPaginationParams = function(customPageOptions) {
             var pageOptions = scope.config;
+            angular.extend(pageOptions, customPageOptions);
             return {
               from: (pageOptions.currentPage - 1) * pageOptions.hitsPerPage + 1,
               to: pageOptions.currentPage * pageOptions.hitsPerPage

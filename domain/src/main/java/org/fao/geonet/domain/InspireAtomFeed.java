@@ -39,7 +39,10 @@ import java.util.List;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name = "InspireAtomFeed")
+@SequenceGenerator(name=InspireAtomFeed.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class InspireAtomFeed extends GeonetEntity implements Serializable {
+    static final String ID_SEQ_NAME = "inspire_atom_feed_id_seq";
     private int _id;
     private int _metadataId;
     private String _title;
@@ -70,7 +73,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
      * @return the id of the metadata
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;

@@ -9,15 +9,16 @@ var gnHarvestergeonetwork20 = {
             "ownerGroup": [""],
             "site":   {
               "name": "",
+              "translations": {},
               "uuid": "",
               "account":     {
-                "use": "false",
+                "use": false,
                 "username": "",
                 "password": ""
               },
               "host": [],
-              "createRemoteCategory": "false",
-              "mefFormatFull": "false",
+              "createRemoteCategory": false,
+              "mefFormatFull": false,
               "xslfilter": []
             },
             "content":   {
@@ -26,7 +27,7 @@ var gnHarvestergeonetwork20 = {
             },
             "options":   {
               "every": "0 0 0 ? * *",
-              "oneRunOnly": "false",
+              "oneRunOnly": false,
               "status": ""
             },
             "searches": [{
@@ -48,7 +49,7 @@ var gnHarvestergeonetwork20 = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
-              "running": "false"
+              "running": false
             }
           };
     },
@@ -57,7 +58,8 @@ var gnHarvestergeonetwork20 = {
                 + '    type="' + h['@type'] + '">' 
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
+                + '    <name>' + h.site.name + '</name>'
+                + $scope.buildTranslations(h)
                 + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
@@ -79,7 +81,8 @@ var gnHarvestergeonetwork20 = {
                 + '  </searches>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <every>' + h.options.every + '</every>'
+                + '    <status>' + h.options.status + '</status>'
                 + '  </options>' 
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'

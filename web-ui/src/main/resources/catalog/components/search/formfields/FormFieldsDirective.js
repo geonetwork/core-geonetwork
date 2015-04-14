@@ -163,7 +163,7 @@
                 for (i = 0; i < added.length; i++) {
                   $(element).tagsinput('add', {
                     id: added[i],
-                    name: findLabel(data, added[i])
+                    name: data ? findLabel(data, added[i]) : added[i]
                   });
                 }
               }, true);
@@ -208,23 +208,41 @@
           scope: {
             ownerGroup: '=',
             lang: '=',
-            groups: '='
+            groups: '=',
+            excludeSpecialGroups: '='
           },
 
           link: function(scope, element, attrs) {
-            var url = 'info@json?type=groupsIncludingSystemGroups';
+            var url = 'info?_content_type=json' +
+                '&type=groupsIncludingSystemGroups';
             if (attrs.profile) {
-              url = 'info@json?type=groups&profile=' + attrs.profile;
+              url = 'info?_content_type=json' +
+                  '&type=groups&profile=' + attrs.profile;
             }
             $http.get(url, {cache: true}).
                 success(function(data) {
-                  scope.groups = data !== 'null' ? data.group : null;
+
+                  //data-ng-if is not correctly updating groups.
+                  //So we do the filter here
+                  if (scope.excludeSpecialGroups) {
+                    scope.groups = [];
+                    angular.forEach(data.group, function(g) {
+                      if (g['@id'] > 1) {
+                        scope.groups.push(g);
+                      }
+                    });
+                  } else {
+                    scope.groups = data !== 'null' ? data.group : null;
+                  }
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
                       scope.ownerGroup === '') && data.group) {
                     scope.ownerGroup = data.group[0]['@id'];
                   }
+
+
+
                 });
           }
 

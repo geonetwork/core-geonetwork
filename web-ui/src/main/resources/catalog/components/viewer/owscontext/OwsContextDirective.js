@@ -32,7 +32,9 @@
   module.directive('gnOwsContext', [
     'gnViewerSettings',
     'gnOwsContextService',
-    function(gnViewerSettings, gnOwsContextService) {
+    '$translate',
+    '$rootScope',
+    function(gnViewerSettings, gnOwsContextService, $translate, $rootScope) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
@@ -41,16 +43,20 @@
           map: '='
         },
         link: function(scope, element, attrs) {
-
+          scope.mapFileName = $translate('mapFileName');
           scope.save = function($event) {
-            var xml = gnOwsContextService.writeContext(scope.map);
+            scope.mapFileName = $translate('mapFileName') +
+                '-z' + scope.map.getView().getZoom() +
+                '-c' + scope.map.getView().getCenter().join('-');
 
+            var xml = gnOwsContextService.writeContext(scope.map);
             var str = new XMLSerializer().serializeToString(xml);
             var base64 = base64EncArr(strToUTF8Arr(str));
             $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
 
           scope.reset = function() {
+            $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
                 scope.map);

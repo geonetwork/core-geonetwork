@@ -1,9 +1,11 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
@@ -78,6 +80,11 @@ public class EnvironmentProxy implements Environment {
     }
 
     @Override
+    public FormatterWidth getEmbeddingWidth() {
+        return get().getEmbeddingWidth();
+    }
+
+    @Override
     public Multimap<String, ParamValue> params() {
         return get().params();
     }
@@ -90,6 +97,16 @@ public class EnvironmentProxy implements Environment {
     @Override
     public Collection<ParamValue> paramValues(String paramName) {
         return get().paramValues(paramName);
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return get().getHeaders(name);
+    }
+
+    @Override
+    public Optional<String> getHeader(String name) {
+        return get().getHeader(name);
     }
 
     @Override

@@ -3,13 +3,16 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.region.metadata.MetadataRegionSearchRequest;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +32,13 @@ public class MetadataRegionDAO extends RegionsDAO {
     public static final String CATEGORY_NAME = "metadata";
     private final Parser parser = new Parser(new GMLConfiguration());
     private final GeometryFactory factory = new GeometryFactory();
-    
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private SearchManager searchManager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+
     @Override
     public Collection<String> getRegionCategoryIds(ServiceContext context) throws Exception {
         return Collections.singleton(CATEGORY_NAME);
@@ -55,4 +64,5 @@ public class MetadataRegionDAO extends RegionsDAO {
     public boolean includeInListing() {
         return false;
     }
+
 }

@@ -11,17 +11,21 @@
   ]);
 
   module.controller('GnMdViewController', [
-    '$scope', '$http', '$compile', 'gnSearchSettings',
+    '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate',
-    function($scope, $http, $compile, gnSearchSettings,
-             gnMetadataActions, gnAlertService, $translate) {
+    'gnMdView', 'gnMdViewObj',
+    function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
+             gnMetadataActions, gnAlertService, $translate, gnMdView,
+             gnMdViewObj) {
+
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.usingFormatter = false;
       $scope.compileScope = $scope.$new();
+      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
 
       $scope.deleteRecord = function(md) {
-        gnMetadataActions.deleteMd(md).then(function(data) {
+        return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate('metadataRemoved',
                 {title: md.title || md.defaultTitle}),
@@ -65,6 +69,14 @@
         $scope.usingFormatter = false;
         $scope.currentFormatter = null;
       });
+
+      // Know from what path we come from
+      $scope.gnMdViewObj = gnMdViewObj;
+      $scope.$watch('gnMdViewObj.from', function(v) {
+        $scope.fromView = v ? v.substring(1) : v;
+      });
+
+
     }]);
 
 })();

@@ -5,10 +5,9 @@
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core" 
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-  xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
@@ -24,15 +23,15 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-    
-    
+
+
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
     <xsl:variable name="flatModeException" select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
     <!-- TODO: this should be common to all schemas -->
-	<xsl:if test="$isEditing and
+    <xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
-      
+
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
       <xsl:call-template name="render-element-to-add">
@@ -91,13 +90,13 @@
         <xsl:with-param name="insertRef" select="gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-    
+
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors"/>
       </xsl:if>
     </xsl:variable>
-    
+
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
@@ -119,8 +118,8 @@
 
   </xsl:template>
 
-  
-  
+
+
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:CharacterString|gco:Integer|gco:Decimal|
@@ -131,23 +130,67 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
-    
-    <xsl:variable name="hasPTFreeText" select="count(gmd:PT_FreeText) > 0"/>
-    <xsl:variable name="isMultilingualElement" 
-      select="$metadataIsMultilingual and 
-              count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
-    <xsl:variable name="isMultilingualElementExpanded" 
-      select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
-    
-    <!-- For some fields, always display attributes. 
+    <xsl:variable name="exclusionMatchesParent">
+      <xsl:variable name="parent">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@parent" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($parent) > 0">
+          <xsl:value-of select="contains($parent, ../name())" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="exclusionMatchesAncestor">
+      <xsl:variable name="ancestor">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@ancestor" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($ancestor) > 0 and count(ancestor::*[contains($ancestor, name())]) != 0">
+          <xsl:value-of select="true()" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="exclusionMatchesChild">
+      <xsl:variable name="child">
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@child" />
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="string-length($child) > 0 and count(*[contains($child, name())]) != 0">
+          <xsl:value-of select="true()" />
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="excluded"
+      select="(
+                    count($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]) > 0 and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@ancestor) and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@child) and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@parent)) or
+                      $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
+
+    <xsl:variable name="hasPTFreeText"
+      select="count(gmd:PT_FreeText) > 0"/>
+    <xsl:variable name="hasOnlyPTFreeText"
+      select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
+    <xsl:variable name="isMultilingualElement"
+      select="$metadataIsMultilingual and $excluded = false()"/>
+    <xsl:variable name="isMultilingualElementExpanded"
+                  select="$isMultilingualElement and count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
+
+    <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
-    <xsl:variable name="theElement" select="gco:CharacterString|gco:Integer|gco:Decimal|
+    <xsl:variable name="monoLingualValue" select="gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
-    
+      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName" />
+    <xsl:variable name="theElement" select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
+      then gmd:PT_FreeText
+      else $monoLingualValue"/>
     <!--
       This may not work if node context is lost eg. when an element is rendered
       after a selection with copy-of.
@@ -157,9 +200,9 @@
     <xsl:variable name="labelConfig"
       select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
-    
+
     <xsl:variable name="attributes">
-        
+
       <!-- Create form for all existing attribute (not in gn namespace)
       and all non existing attributes not already present for the
       current element and its children (eg. @uom in gco:Distance).
@@ -179,7 +222,7 @@
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-    
+
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors">
@@ -187,10 +230,10 @@
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
-    
+
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
-        
+
         <values>
           <!-- Or the PT_FreeText element matching the main language -->
           <value ref="{$theElement/gn:element/@ref}" lang="{$metadataLanguage}"><xsl:value-of select="gco:CharacterString"/></value>
@@ -199,7 +242,7 @@
           <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
             <value ref="{gn:element/@ref}" lang="{substring-after(@locale, '#')}"><xsl:value-of select="."/></value>
           </xsl:for-each>
-          
+
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
             <xsl:variable name="currentLanguageId" select="@id"/>
@@ -212,7 +255,7 @@
         </values>
       </xsl:if>
     </xsl:variable>
-        
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="if ($overrideLabel != '') then $overrideLabel else $labelConfig/label"/>
       <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
@@ -225,7 +268,7 @@
       <xsl:with-param name="type"
         select="gn-fn-metadata:getFieldType($editorConfig, name(), 
         name($theElement))"/>
-      <xsl:with-param name="name" select="if ($isEditing) then $theElement/gn:element/@ref else ''"/>
+      <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <!-- TODO: Handle conditional helper -->
@@ -240,17 +283,33 @@
 
 
   <xsl:template mode="mode-iso19139" priority="200"
-                match="*[gco:Date|gco:DateTime]">
+    match="*[gco:Date|gco:DateTime]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="editInfo" required="no"/>
+    <xsl:param name="parentEditInfo" required="no"/>
+
+    <xsl:variable name="isRequired" as="xs:boolean">
+      <xsl:choose>
+        <xsl:when
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
     <xsl:variable name="labelConfig"
-                  select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
+      select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
 
     <div data-gn-date-picker="{gco:Date|gco:DateTime}"
-         data-label="{$labelConfig/label}"
-         data-element-name="{name(gco:Date|gco:DateTime)}"
-         data-element-ref="{concat('_X', gn:element/@ref)}">
+      data-label="{$labelConfig/label}"
+      data-element-name="{name(gco:Date|gco:DateTime)}"
+      data-element-ref="{concat('_X', gn:element/@ref)}"
+      data-required="{$isRequired}">
     </div>
   </xsl:template>
 
@@ -277,7 +336,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+        select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
@@ -292,8 +351,8 @@
     </xsl:call-template>
 
   </xsl:template>
-  
-  
+
+
   <!-- 
     Take care of enumerations.
     
@@ -341,7 +400,7 @@
       <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo"
-                      select="gn:element"/>
+        select="gn:element"/>
       <xsl:with-param name="listOfValues" select="$helper"/>
     </xsl:call-template>
   </xsl:template>

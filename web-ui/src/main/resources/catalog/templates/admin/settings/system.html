@@ -5,18 +5,24 @@
     <span data-translate="">settings</span>
     <div class="btn-toolbar">
         <form class="form-inline pull-right">
-            <select ng-change="updateProfile()" class="form-control" data-ng-model="systemInfo.stagingProfile">
+            <select ng-change="updateProfile()" class="form-control"
+                    data-ng-model="systemInfo.stagingProfile">
                 <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
                         ng-selected="p === systemInfo.stagingProfile">{{p | translate}}</option>
             </select>
             &nbsp;
-            <button type="submit" class="btn btn-primary fa fa-save" id="gn-btn-settings-save"
-              data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+            <button type="submit" class="btn btn-primary"
+                    id="gn-btn-settings-save"
+                    data-ng-disabled="!gnSettings.$valid"
+                    data-ng-click="saveSettings('#gn-settings')">
+              <span class="fa fa-save"></span>
+              {{"saveSettings"|translate}}
+            </button>
         </form>
     </div>
   </div>
   <div class="panel-body">
-    <form id="gn-settings" class="form-horizontal">
+    <form id="gn-settings" name="gnSettings" class="form-horizontal">
       <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'@position'"
         id="gn-settings-spy-target">
         <h1>{{section1.name | translate}}</h1>
@@ -24,7 +30,7 @@
           id="{{section2.name.replace('/', '-')}}">
           <legend>{{section2.name | translate}}</legend>
           <!-- According to data type -->
-          <div data-ng-repeat="s in section2.children | orderObjectBy:'@position'"
+          <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'@position'"
             data-ng-switch="s['@datatype']">
             <div data-ng-switch-when="BOOLEAN">
               <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
@@ -32,16 +38,21 @@
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
                   data-ng-model="s['#text']"/>
 
-                <p class="help-block ">{{s['@name'] + '-help' | translate}}</p>
-
+                <p class="help-block">
+                  <span data-ng-show="(s['@name'] + '-help' | translate) !== (s['@name'] + '-help')">
+                    {{s['@name'] + '-help' | translate}}
+                  </span>
+                </p>
               </div>
             </div>
-            <div data-ng-switch-default="" class="form-group">
+            <div data-ng-switch-default=""
+                 data-ng-class="gnSettings[s.formName].$error.required ||
+                                gnSettings[s.formName].$error.json ? 'has-error' : ''"
+                 class="form-group">
               <label class="col-sm-4 control-label" for="{{s['@name']}}">{{s['@name'] |
                 translate}}</label>
               <!-- According to entry -->
               <div class="col-sm-8" data-ng-switch="s['@name']">
-
                 <!-- List of user to be used as CSW contact -->
                 <select data-ng-switch-when="system/csw/contactId" class="form-control"
                   name="{{s.formName}}">
@@ -67,21 +78,44 @@
                 <!-- JSON configuration for map and editor -->
                 <textarea 
                   data-gn-autogrow=""
+                  data-gn-json-text=""
+                  data-ng-model="s['#text']"
                   data-ng-switch-when="map/config" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                  >{{s['#text']}}</textarea>
+                  ></textarea>
                 <textarea 
                   data-gn-autogrow=""
+                  data-gn-json-text=""
+                  data-ng-model="s['#text']"
                   data-ng-switch-when="metadata/editor/schemaConfig" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
-                  >{{s['#text']}}</textarea>
-                
-                <select data-ng-switch-when="system/server/protocol" class="form-control"
+                  ></textarea>
+                <textarea
+                   data-gn-autogrow=""
+                   data-gn-json-text=""
+                   data-ng-model="s['#text']"
+                   data-ng-switch-when="map/proj4js" type="text"
+                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                   ></textarea>
+
+
+
+                <select data-ng-switch-when="system/server/protocol"
+                        class="form-control"
                       name="{{s.formName}}">
                   <option value="http"
                           ng-selected="'http' == s['#text']">http</option>
                   <option value="https"
                           ng-selected="'https' == s['#text']">https</option>
+                </select>
+                <select data-ng-switch-when="system/server/log" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="log4j"
+                          ng-selected="'log4j' == s['#text']">PROD</option>
+                  <option value="log4j-jeeves"
+                          ng-selected="'log4j-jeeves' == s['#text']">TEST</option>
+                  <option value="log4j-dev"
+                          ng-selected="'log4j-dev' == s['#text']">DEV</option>
                 </select>
                 <select data-ng-switch-when="system/oai/mdmode" class="form-control"
                       name="{{s.formName}}">
@@ -122,9 +156,10 @@
                           ng-selected="'remote' == s['#text']">{{'system/inspire/atomRemote' | translate}}</option>
                 </select>
 
-                <button class="btn btn-primary pull-right fa fa-refresh ng-scope"
+                <button class="btn btn-primary pull-right ng-scope"
                         data-ng-switch-when="system/inspire/atom"
                         data-ng-click="executeAtomHarvester()">
+						<span class="fa fa-refresh"></span>
                   {{'system/inspire/atomExecute' | translate}}
                 </button>
 
@@ -215,9 +250,13 @@
           </div>
 
         </fieldset>
-
-        <button type="submit" class="btn btn-primary pull-right fa fa-save"
-          data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+        <button type="submit"
+                class="btn btn-primary pull-right"
+                data-ng-disabled="!gnSettings.$valid"
+                data-ng-click="saveSettings('#gn-settings')">
+          <span class="fa fa-save"></span>&nbsp;
+          {{"saveSettings"|translate}}
+        </button>
       </fieldset>
     </form>
 

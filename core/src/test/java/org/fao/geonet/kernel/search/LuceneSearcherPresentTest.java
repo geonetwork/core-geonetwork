@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
@@ -47,11 +48,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
 
             assertEqualsText("true", info, "edit");
             assertEqualsText("true", info, "owner");
-            try {
-                assertEqualsText("true", info, "isPublishedToAll");
-            } catch (Exception e) {
-                throw new AssertionError("Expected isPublishToAll to be true :" + doc);
-            }
+            assertNotNull("Expected ownerId to be one of the elements in : " + Xml.getString(info), info.getChild("ownerId"));
             assertEqualsText("true", info, "view");
             assertEqualsText("true", info, "notify");
             assertEqualsText("true", info, "download");

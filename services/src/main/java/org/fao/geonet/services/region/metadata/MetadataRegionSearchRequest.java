@@ -1,5 +1,6 @@
 package org.fao.geonet.services.region.metadata;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -7,10 +8,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -29,6 +32,7 @@ import java.util.List;
 
 public class MetadataRegionSearchRequest extends Request {
 
+    public static final String PREFIX = "metadata:";
     private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
             new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
     private String id;
@@ -61,7 +65,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     @Override
     public Collection<Region> execute() throws Exception {
-        if(label==null && id==null || (id!=null && !id.startsWith("metadata:")) ) {
+        if(label==null && id==null || (id!=null && !id.startsWith(PREFIX)) ) {
             return Collections.emptySet();
         }
         List<Region> regions = new ArrayList<Region>();
@@ -92,9 +96,12 @@ public class MetadataRegionSearchRequest extends Request {
                 break;
             }
         }
-        Element metadata = findMetadata(mdId, regionFinder.needsEditData());
-        if (metadata != null) {
-            regionFinder.findRegion(this, regions, mdId, id, metadata);
+
+        if (regionFinder != null) {
+            Element metadata = findMetadata(mdId, regionFinder.needsEditData());
+            if (metadata != null) {
+                regionFinder.findRegion(this, regions, mdId, id, metadata);
+            }
         }
     }
 
@@ -166,12 +173,13 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
-        String mdId = id.getMdId(context);
+        final DataManager dataManager = context.getBean(DataManager.class);
+        String mdId = id.getMdId(context.getBean(SearchManager.class), dataManager);
         try {
             if (context.getBean(MetadataRepository.class).exists(Integer.parseInt(mdId))) {
                 Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
-                return context.getBean(DataManager.class).getMetadata(context, mdId, includeEditData, false, true);
+                return dataManager.getMetadata(context, mdId, includeEditData, false, true);
             } else {
                 return null;
             }
@@ -186,7 +194,26 @@ public class MetadataRegionSearchRequest extends Request {
         this.id = regionId;
         return this;
     }
-    
+
+    @Override
+    public Optional<Long> getLastModified() throws Exception {
+        if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
+            String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
+
+            SearchManager searchManager = this.context.getBean(SearchManager.class);
+            DataManager dataManager = this.context.getBean(DataManager.class);
+            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
+
+            if (mdId != null) {
+                final ISODate docChangeDate = searchManager.getDocChangeDate(mdId);
+                if (docChangeDate != null) {
+                    return Optional.of(docChangeDate.toDate().getTime());
+                }
+            }
+        }
+        return Optional.absent();
+    }
+
     public static abstract class Id {
 
         protected String id;
@@ -199,7 +226,7 @@ public class MetadataRegionSearchRequest extends Request {
         /**
          * Convert ID to the id for looking up the metadata in the database
          */
-        abstract String getMdId(ServiceContext context) throws Exception;
+        public abstract String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception;
         /**
          * Strip the identifier from the id and return the id
          */
@@ -228,12 +255,11 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) throws Exception {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            String mdId = Utils.lookupMetadataIdFromFileId(gc, id);
+        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
+            String mdId = Utils.lookupMetadataIdFromFileId(id, searchManager);
             
             if (mdId == null) {
-                mdId = gc.getBean(DataManager.class).getMetadataId(id);
+                mdId = dataManager.getMetadataId(id);
             }
             return mdId;
         }
@@ -251,7 +277,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) {
+        public String getMdId(SearchManager searchManager, DataManager dataManager) {
             return id;
         }
 
@@ -269,9 +295,8 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(ServiceContext context) throws Exception {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            return gc.getBean(DataManager.class).getMetadataId(id);
+        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
+            return dataManager.getMetadataId(id);
         }
 
         @Override

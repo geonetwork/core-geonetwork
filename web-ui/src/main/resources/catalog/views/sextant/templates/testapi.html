@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
+<head>
+  <title>Sextant</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-language" content="en-EN"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link href="/ifremer/new/css/styles.css" rel="stylesheet"/>
+  <link href="/ifremer/new/css/theme.css" rel="stylesheet"/>
+  <link href="/ifremer/new/css/themesextant.css" rel="stylesheet"/>
+
+  <!-- Sextant -->
+  <link href="/geonetwork/static/api.css" rel="stylesheet" media="screen">
+
+  <style>
+    body > .container-fluid, #wrapper {
+      height: 100%;
+    }
+    .gn {
+      height: calc(100% - 77px - 38px);
+      border-top: 1px solid #dddddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div id="wrapper" style="min-height: 100%">
+      <header class="navbar navbar-static-top withmargin">
+        <div class="container">
+          <div class="navbar-header">
+            <h1 class="navbar-brand">
+              <a href="index.htm">SEXTANT</a><span class="hidden-xs">Infrastructure de donn&eacute;es g&eacute;ographiques marines et littorales</span>
+            </h1>
+          </div>
+
+          <div class="container right hidden-xs hidden-sm">
+            <a href="" ><img src="/ifremer/new/images/projets/ifremer.png" alt="[]" /></a>
+          </div>
+        </div>
+      </header>
+
+      <div class="container">
+        <h1>Test API Sextant6 </h1>
+      </div>
+
+      <div ng-app="gn_search_sextant"
+           ng-controller="GnCatController"
+           class="gn sxt-max-md"
+           ng-include="'../../catalog/views/sextant/templates/index.html'">
+       </div>
+
+    </div>
+  </div>
+</body>
+
+
+<script>var geonet={provide:function(s){},require:function(s){}}</script>
+<script src="/geonetwork/static/lib.js"></script>
+<script src="/geonetwork/static/gn_search_sextant.js"></script>
+
+<script type="text/javascript">
+
+  var catModule = angular.module('gn_cat_controller');
+  catModule.config(['gnGlobalSettings',
+    function(gnGlobalSettings) {
+      gnGlobalSettings.locale = {
+        lang: 'en'
+      };
+      gnGlobalSettings.gnUrl = '/geonetwork/srv/eng/';
+    }]);
+
+  var searchModule = angular.module('gn_search');
+  searchModule.config(['gnSearchSettings',
+    function(gnSearchSettings) {
+      gnSearchSettings.formatterTarget = '.gn';
+    }]);
+
+</script>
+</html>

@@ -65,11 +65,10 @@ public class ArcSDEParams extends AbstractParams {
 		Element site = node.getChild("site");
 		server = Util.getParam(site, "server", "");
 		port = Util.getParam(site, "port", 0);
-		username = Util.getParam(site, "username", "");
-		password = Util.getParam(site, "password", "");
+		setUsername(Util.getParam(site, "username", ""));
+		setPassword(Util.getParam(site, "password", ""));
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams create: " + server + ":" + port + " " + username + " " + password + " " + database);
 	}
 
 	//---------------------------------------------------------------------------
@@ -83,11 +82,10 @@ public class ArcSDEParams extends AbstractParams {
 		Element site = node.getChild("site");
 		server = Util.getParam(site, "server", "");
 		port = Util.getParam(site, "port", 5151);
-		username = Util.getParam(site, "username", "");
-		password = Util.getParam(site, "password", "");
+		setUsername(Util.getParam(site, "username", ""));
+		setPassword(Util.getParam(site, "password", ""));
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams update: " + server + ":" + port + " " + username + " " + password + " " + database);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -102,8 +100,8 @@ public class ArcSDEParams extends AbstractParams {
 		copy.icon = icon;
 		copy.server = server;
 		copy.port = port;
-		copy.username = username;
-		copy.password = password;
+		copy.setUsername(getUsername());
+		copy.setPassword(getPassword());
 		copy.database = database;
 		return copy;		
 	}

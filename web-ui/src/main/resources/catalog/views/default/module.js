@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
   goog.require('cookie_warning');
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
@@ -123,7 +116,9 @@
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
       gnMdView.initMdView();
-
+      $scope.goToSearch = function (any) {
+        $location.path('/search').search({'any': any});
+      };
       $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
         if (record && record['geonet:info'] &&
@@ -158,14 +153,20 @@
           titleInfo: '',
           active: false
         }};
-      $scope.addLayerToMap = function(number) {
-        // FIXME $scope.mainTabs.map.titleInfo = '+' + number;
+
+      $scope.resultviewFns = {
+        addMdLayerToMap: function (link, md) {
+
+          if (gnMap.isLayerInMap(viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+          gnMap.addWmsFromScratch(viewerMap,link.url, link.name).
+              then(function(layer) {
+                layer.set('md', md);
+              });
+        }
       };
-
-      $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
-        gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
-      });
-
 
       // Manage route at start and on $location change
       if (!$location.path()) {

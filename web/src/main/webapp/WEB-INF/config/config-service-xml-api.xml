@@ -141,7 +141,7 @@
       <class name=".services.status.Get" />
     </service>
 
-    <service name="xml.metadata.rate" xmlapi="true">
+    <service name="xml.metadata.rate" xmlapi="true" deprecated="true">
       <class name=".services.metadata.Rate" />
     </service>
 

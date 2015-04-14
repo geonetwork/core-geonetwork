@@ -3,12 +3,6 @@
  */
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.naming.Context;
-import javax.naming.directory.Attributes;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fao.geonet.domain.Group;
@@ -23,6 +17,11 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.ldap.LdapUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Map;
+import javax.naming.Context;
+import javax.naming.directory.Attributes;
 
 /**
  * When a group is created on the database, create it on the LDAP
@@ -175,12 +174,11 @@ public class AutoCreateGroups implements ApplicationListener<GroupCreated> {
         this.profileMapping = profileMapping;
     }
 
-    private class GidAttributesMapper implements AttributesMapper {
+    private static class GidAttributesMapper implements AttributesMapper {
 
         public Integer mapFromAttributes(Attributes attributes)
                 throws javax.naming.NamingException {
-            return Integer
-                    .valueOf(attributes.get("gidNumber").get().toString());
+            return Integer.valueOf(attributes.get("gidNumber").get().toString());
         }
     }
 }

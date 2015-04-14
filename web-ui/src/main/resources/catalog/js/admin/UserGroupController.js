@@ -77,29 +77,31 @@
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
-        $http.get('admin.group.list@json').success(function(data) {
-          $scope.groups = data !== 'null' ? data : null;
-          $scope.isLoadingGroups = false;
-        }).error(function(data) {
-          // TODO
-          $scope.isLoadingGroups = false;
-        }).then(function() {
-          // Search if requested group in location is
-          // in the list and trigger selection.
-          // TODO: change route path when selected (issue - controller is
-          // reloaded)
-          if ($routeParams.userOrGroup) {
-            angular.forEach($scope.groups, function(u) {
-              if (u.name === $routeParams.userOrGroup) {
-                $scope.selectGroup(u);
+        $http.get('admin.group.list?_content_type=json').
+            success(function(data) {
+              $scope.groups = data !== 'null' ? data : null;
+              $scope.isLoadingGroups = false;
+            }).error(function(data) {
+              // TODO
+              $scope.isLoadingGroups = false;
+            }).then(function() {
+              // Search if requested group in location is
+              // in the list and trigger selection.
+              // TODO: change route path when selected (issue - controller is
+              // reloaded)
+              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+                angular.forEach($scope.groups, function(u) {
+                  if (u.name === $routeParams.userOrGroup ||
+                      $routeParams.userOrGroupId === u.id.toString()) {
+                    $scope.selectGroup(u);
+                  }
+                });
               }
             });
-          }
-        });
       }
       function loadUsers() {
         $scope.isLoadingUsers = true;
-        $http.get('admin.user.list@json').success(function(data) {
+        $http.get('admin.user.list?_content_type=json').success(function(data) {
           $scope.users = data.users;
           $scope.isLoadingUsers = false;
         }).error(function(data) {
@@ -108,9 +110,11 @@
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
-          if ($routeParams.userOrGroup) {
+          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
             angular.forEach($scope.users, function(u) {
-              if (u.username === $routeParams.userOrGroup) {
+
+              if (u.value.username === $routeParams.userOrGroup ||
+                  $routeParams.userOrGroupId === u.value.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -173,14 +177,15 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
 
-        $http.get('admin.user@json?id=' + u.value.id)
+        $http.get('admin.user?_content_type=json&id=' + u.value.id)
           .success(function(data) {
               $scope.userSelected = data;
               $scope.userIsAdmin =
                   (data.profile === 'Administrator');
 
               // Load user group and then select user
-              $http.get('admin.usergroups.list@json?id=' + u.value.id)
+              $http.get('admin.usergroups.list?_content_type=json&id=' +
+                  u.value.id)
               .success(function(groups) {
                     $scope.userGroups = groups;
                   }).error(function(data) {
@@ -222,13 +227,14 @@
           password2: $scope.resetPassword2
         };
 
-        $http.post('admin.user.update@json', null, {params: params})
+        $http.post('admin.user.resetpassword', null, {params: params})
               .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
-              // TODO
+              alert('Error occurred while resetting password: ' +
+                  data.error.message);
             });
 
       };
@@ -391,6 +397,11 @@
           type: 'danger'});
       };
 
+      $scope.deleteGroupLogo = function() {
+        $scope.groupSelected.logo = null;
+        $scope.updatingGroup();
+      };
+
       // upload directive options
       $scope.mdImportUploadOptions = {
         autoUpload: false,
@@ -403,8 +414,10 @@
         if (uploadScope.queue.length > 0) {
           uploadScope.submit();
         } else {
-          $http.get('admin.group.update?' + $(formId).serialize())
-          .success(uploadImportMdDone())
+          var deleteLogo = $scope.groupSelected.logo === null ?
+              '&deleteLogo=true' : '';
+          $http.get('admin.group.update?' + $(formId).serialize() + deleteLogo)
+          .success(uploadImportMdDone)
           .error(uploadImportMdError);
         }
       };

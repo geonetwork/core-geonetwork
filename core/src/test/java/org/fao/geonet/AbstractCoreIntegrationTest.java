@@ -1,30 +1,11 @@
 package org.fao.geonet;
 
-import static java.lang.Math.round;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jeeves.constants.ConfigFile;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -38,7 +19,6 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -53,7 +33,26 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static java.lang.Math.round;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -78,12 +77,12 @@ import com.google.common.collect.Lists;
     protected UserRepository _userRepo;
 
     @Before
-    public void setup() throws Exception {
+    public final void setup() throws Exception {
         testFixture.setup(this);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public final void tearDown() throws Exception {
         testFixture.tearDown();
     }
 
@@ -135,13 +134,7 @@ import com.google.common.collect.Lists;
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, new ThreadPool(){
-            @Override
-            public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
-                task.run();
-            }
-        });
-
+        GeonetContext gc = new GeonetContext(_applicationContext, false, null);
 
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
@@ -207,7 +200,11 @@ import com.google.common.collect.Lists;
 
     public static File getClassFile(Class<?> cl) {
         final String testClassName = cl.getSimpleName();
-        return new File(cl.getResource(testClassName + ".class").getFile());
+        try {
+            return new File(URLDecoder.decode(cl.getResource(testClassName + ".class").getFile(), Constants.ENCODING));
+        } catch (UnsupportedEncodingException e) {
+            throw new Error(e);
+        }
     }
 
     public User loginAsAdmin(ServiceContext context) {
@@ -270,7 +267,7 @@ import com.google.common.collect.Lists;
         String createDate = new ISODate().getDateAndTime();
         Importer.importRecord(uuid,
                 uuidAction, Lists.newArrayList(metadata), schema, 0,
-                source.getUuid(), source.getName(), context,
+                source.getUuid(), source.getName(), Maps.<String, String>newHashMap(), context,
                 id, createDate, createDate,
                 "" + groupId, metadataType);
 

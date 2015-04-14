@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading" data-translate="">selectNewOwner</div>
+            <div class="panel-body">
+                <input class="form-control" data-ng-model="userSearch.$" autofocus=""
+                       placeholder="{{'filter' | translate}}"/>
+                <div class="list-group">
+                    <a class="list-group-item" data-ng-show="userLoading">
+                        <i class="fa fa-spinner fa-spin fa-2x"></i>
+                    </a>
+                    <a class="list-group-item"
+                       data-ng-repeat="user in users | filter:userSearch"
+                       data-ng-click="selectUser(user)"
+                       data-ng-class="user === selectedUser ? 'active' : ''">{{user.name}} ({{user.username}})</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading" data-translate="">selectGroup</div>
+            <div class="panel-body">
+                <input class="form-control" data-ng-model="groupSearch.$" autofocus=""
+                       placeholder="{{'filter' | translate}}"/>
+                <div class="list-group">
+                    <a class="list-group-item" data-ng-show="groupLoading">
+                        <i class="fa fa-spinner fa-spin fa-2x"></i>
+                    </a>
+                    <a class="list-group-item"
+                       data-ng-repeat="g in groups | filter:groupSearch | orderBy:name"
+                       data-ng-click="selectGroup(g)"
+                       data-ng-class="g === selectedGroup ? 'active' : ''"
+                       title="{{g.desc}}">{{g.name}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-toolbar col-md-12">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                data-ng-class="selectedUser && selectedGroup ? '' : 'disabled'"
+                data-gn-click-and-spin="save()"><i class="fa fa-save"></i>&nbsp; <span
+                data-translate="" class="ng-scope">Save</span></button>
+    </div>
+</div>

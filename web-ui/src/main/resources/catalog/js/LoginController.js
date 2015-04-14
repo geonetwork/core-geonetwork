@@ -21,6 +21,8 @@
        function($scope, $http, $rootScope, $translate, 
            $location, $window, $timeout,
                gnUtilityService, gnConfig) {
+          $scope.formAction = '../../j_spring_security_check#' +
+         $location.path();
           $scope.registrationStatus = null;
           $scope.passwordReminderStatus = null;
           $scope.sendPassword = false;
@@ -31,6 +33,7 @@
           $scope.passwordUpdated = false;
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
 
           function initForm() {

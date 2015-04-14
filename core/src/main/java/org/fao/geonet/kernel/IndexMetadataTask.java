@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 final class IndexMetadataTask implements Runnable {
 
     private final ServiceContext _context;
-    private final List<String> _metadataIds;
+    private final List<?> _metadataIds;
     private final TransactionStatus _transactionStatus;
     private final Set<IndexMetadataTask> _batchIndex;
     private final SearchManager searchManager;
@@ -32,11 +32,11 @@ final class IndexMetadataTask implements Runnable {
      * Constructor.
      *
      * @param context           context object
-     * @param metadataIds       the metadata ids to index
+     * @param metadataIds       the metadata ids to index (either integers or strings)
      * @param batchIndex
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
      */
-    IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<String> metadataIds, Set<IndexMetadataTask> batchIndex,
+    IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
                       @Nullable TransactionStatus transactionStatus, @Nonnull AtomicInteger indexed) {
         this.indexed = indexed;
         this._transactionStatus = transactionStatus;
@@ -76,7 +76,7 @@ final class IndexMetadataTask implements Runnable {
 
             DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
-            for (String metadataId : _metadataIds) {
+            for (Object metadataId : _metadataIds) {
                 this.indexed.incrementAndGet();
                 if (this.indexed.compareAndSet(500, 0)) {
                     try {
@@ -87,7 +87,7 @@ final class IndexMetadataTask implements Runnable {
                 }
 
                 try {
-                    dataManager.indexMetadata(metadataId, false);
+                    dataManager.indexMetadata(metadataId.toString(), false);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
                                                    + "\n" + Util.getStackTrace(e));

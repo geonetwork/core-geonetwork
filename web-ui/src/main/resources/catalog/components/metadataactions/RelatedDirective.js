@@ -36,25 +36,21 @@
               scope.updateRelations = function() {
                 scope.relations = [];
                 if (scope.uuid) {
-                  if (!scope.list) {
-                    $http.get(
-                       'md.relations?_content_type=json&uuid=' +
-                       scope.uuid + (scope.types ? '&type=' +
-                       scope.types : ''), {cache: true})
-                              .success(function(data, status, headers, config) {
-                         if (data && data != 'null' && data.relation) {
-                           if (!angular.isArray(data.relation))
-                             scope.relation = [
-                               data.relation
-                             ];
-                           for (var i = 0; i < data.relation.length; i++) {
-                             scope.relations.push(data.relation[i]);
-                           }
+                  $http.get(
+                     'md.relations?_content_type=json&uuid=' +
+                     scope.uuid + (scope.types ? '&type=' +
+                     scope.types : ''), {cache: true})
+                            .success(function(data, status, headers, config) {
+                       if (data && data != 'null' && data.relation) {
+                         if (!angular.isArray(data.relation))
+                           scope.relations = [
+                             data.relation
+                           ];
+                         for (var i = 0; i < data.relation.length; i++) {
+                           scope.relations.push(data.relation[i]);
                          }
-                       });
-                  } else {
-                    scope.relations = scope.list;
-                  }
+                       }
+                     });
                 }
               };
 
@@ -67,6 +63,21 @@
               scope.$watch('uuid', function() {
                 scope.updateRelations();
               });
+
+              /**
+               * Return an array of all relations of the given types
+               * @returns {Array}
+               */
+              scope.getByTypes = function() {
+                var res = [];
+                var types = Array.prototype.splice.call(arguments, 0);
+                angular.forEach(scope.relations, function(rel) {
+                  if(types.indexOf(rel['@type']) >= 0 ){
+                    res.push(rel);
+                  }
+                });
+                return res;
+              };
             }
           };
         }]);

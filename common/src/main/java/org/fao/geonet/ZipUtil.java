@@ -5,11 +5,9 @@ import org.fao.geonet.utils.IO;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.file.*;
 import java.util.Collections;
 
 /**
@@ -35,7 +33,10 @@ public class ZipUtil {
         for (Path root : zipFile.getRootDirectories()) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
                 for (Path path : paths) {
-                    IO.copyDirectoryOrFile(path, toDir.resolve(path.getFileName().toString()), false);
+                    final Path fileName = path.getFileName();
+                    if (fileName != null) {
+                        IO.copyDirectoryOrFile(path, toDir.resolve(fileName.toString()), false);
+                    }
                 }
             }
         }
@@ -45,8 +46,26 @@ public class ZipUtil {
      * FileSystem must be closed when done.  This method should always be called in a try (resource) {} block
      */
     public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
-        URI uri = new URI("jar:" + path.toUri());
-        return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
+        try {
+            URI uri = new URI("jar:" + path.toUri().toString());
+            return getOrCreateZipFs(uri);
+        } catch (Throwable e) {
+            try {
+                URI uri = new URI("jar:" + URLDecoder.decode(path.toUri().toString(), Constants.ENCODING));
+                return getOrCreateZipFs(uri);
+            } catch (Throwable e2) {
+                URI uri = new URI("jar:" + URLEncoder.encode(path.toUri().toString(), Constants.ENCODING));
+                return getOrCreateZipFs(uri);
+            }
+        }
+    }
+
+    private static FileSystem getOrCreateZipFs(URI uri) throws IOException {
+        try {
+            return FileSystems.getFileSystem(uri);
+        } catch (FileSystemNotFoundException e) {
+            return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(false)));
+        }
     }
 
     /**

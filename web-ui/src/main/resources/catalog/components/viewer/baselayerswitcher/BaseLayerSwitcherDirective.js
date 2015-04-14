@@ -24,6 +24,7 @@
         },
         link: function(scope, element, attrs) {
           scope.layers = gnViewerSettings.bgLayers;
+          scope.dropup = angular.isDefined(attrs.dropup);
           scope.map.getLayers().insertAt(0, scope.layers[0]);
           scope.setBgLayer = function(layer) {
             layer.setVisible(true);

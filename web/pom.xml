@@ -39,11 +39,6 @@
           <version>3.2.0</version>
       </dependency>
 
-      <dependency>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr-runtime</artifactId>
-          <version>3.5.2</version>
-      </dependency>
     <dependency>
           <groupId>org.antlr</groupId>
           <artifactId>antlr-runtime</artifactId>
@@ -95,24 +90,13 @@
          <artifactId>spring-web</artifactId>
          <version>${spring.version}</version>
       </dependency>
- 
- 	<!-- This is to avoid 406 error with spring -->
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-databind</artifactId>
-	   <version>2.1.2</version>
-	</dependency>
- 	<dependency>  
-        <groupId>javax.xml.bind</groupId>  
-        <artifactId>jaxb-api</artifactId>  
-        <version>2.2.11</version>  
-    </dependency> 
-     <dependency>
-		<groupId>com.sun.xml.bind</groupId>
-		<artifactId>jaxb-impl</artifactId>
-		<version>2.2.7</version>
-	</dependency>
- 
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-test</artifactId>
+         <version>${spring.version}</version>
+          <scope>compile</scope>
+      </dependency>
+
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -162,6 +146,10 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.jdbc</groupId>
+      <artifactId>gt-jdbc-postgis</artifactId>
     </dependency>
 
     <dependency>
@@ -478,10 +466,6 @@
 	</dependency>
 
       <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-test</artifactId>
-      </dependency>
-      <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>domain</artifactId>
           <version>${project.version}</version>
@@ -520,6 +504,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19110</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -634,14 +623,6 @@
                 </resource>
                 <resource>
                   <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/fgdc-std/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
               </resources>

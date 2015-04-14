@@ -3,6 +3,7 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -20,7 +21,10 @@ import java.util.Set;
  */
 public class ISO19139SchemaPlugin
         extends org.fao.geonet.kernel.schema.SchemaPlugin
-        implements AssociatedResourcesSchemaPlugin, MultilingualSchemaPlugin {
+        implements
+                AssociatedResourcesSchemaPlugin,
+                MultilingualSchemaPlugin,
+                ISOPlugin {
     public static final String IDENTIFIER = "iso19139";
 
     private static ImmutableSet<Namespace> allNamespaces;
@@ -68,8 +72,13 @@ public class ISO19139SchemaPlugin
                         final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
                         String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
                                 .getAttributeValue("codeListValue");
-
-                        AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
+                        final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139Namespaces.GMD);
+                        String initiativeType = "";
+                        if (initiativeTypeEl != null) {
+                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139Namespaces.GMD)
+                                    .getAttributeValue("codeListValue");
+                        }
+                        AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
                         listOfResources.add(resource);
                     }
                 } catch (Exception e) {
@@ -178,4 +187,13 @@ public class ISO19139SchemaPlugin
         freeTextElement.addContent(textGroupElement);
     }
 
+    @Override
+    public String getBasicTypeCharacterStringName() {
+        return "gco:CharacterString";
+    }
+
+    @Override
+    public Element createBasicTypeCharacterString() {
+        return new Element("CharacterString", ISO19139Namespaces.GCO);
+    }
 }

@@ -35,6 +35,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -190,13 +191,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         
         this.log = log;
 
-        log.info("Retrieving remote metadata information for : " + params.name);
+        log.info("Retrieving remote metadata information for : " + params.getName());
         
 		// Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ? 
-        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
 
         // Try to load capabilities document
@@ -215,8 +216,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
 
-        if (params.useAccount) {
-            req.setCredentials(params.username, params.password);
+        if (params.isUseAccount()) {
+            req.setCredentials(params.getUsername(), params.getPassword());
         }
 
         xml = req.execute();
@@ -232,11 +233,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             if(log.isDebugEnabled()) log.debug ("  - Removing old metadata before update with id: " + id);
 
-			// Remove thumbnails
-			unsetThumbnail (id);
-			
-			// Remove metadata
-			dataMan.deleteMetadata (context, id);
+            //--- remove the metadata directory including the public and private directories.
+            IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+
+            // Remove metadata
+            dataMan.deleteMetadata(context, id);
 			
 			result.locallyRemoved ++;
 		}
@@ -351,11 +352,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                  setRoot(md.getQualifiedName()).
                  setType(MetadataType.METADATA);
          metadata.getSourceInfo().
-                 setSourceId(params.uuid).
-                 setOwner(Integer.parseInt(params.ownerId));
+                 setSourceId(params.getUuid()).
+                 setOwner(Integer.parseInt(params.getOwnerId()));
          metadata.getHarvestInfo().
                  setHarvested(true).
-                 setUuid(params.uuid).
+                 setUuid(params.getUuid()).
                  setUri(params.url);
 
          addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
@@ -368,9 +369,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          dataMan.flush();
 
-         //dataMan.indexMetadata(dbms, id); setTemplate update the index
-		
-		result.addedMetadata++;
+         dataMan.indexMetadata(id, true);
+         result.addedMetadata++;
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
@@ -661,14 +661,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                     setRoot(xml.getQualifiedName()).
                     setType(MetadataType.METADATA);
             metadata.getSourceInfo().
-                    setSourceId(params.uuid).
-                    setOwner(Integer.parseInt(params.ownerId));
+                    setSourceId(params.getUuid()).
+                    setOwner(Integer.parseInt(params.getOwnerId()));
             metadata.getHarvestInfo().
                     setHarvested(true).
-                    setUuid(params.uuid).
+                    setUuid(params.getUuid()).
                     setUri(params.url);
             if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
-                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOneByName(params.datasetCategory);
+                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOne(Integer.parseInt(params.datasetCategory));
 
                 if (metadataCategory == null) {
                     throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);
@@ -776,26 +776,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		}
 		
 	}
-	
-	/** 
-     * Remove thumbnails directory for all metadata
-     * FIXME : Do this only for existing one !
-     *  
-     * @param id   layer for which the thumbnail needs to be generated
-     *                   
-     */
-	private void unsetThumbnail (String id){
-        if(log.isDebugEnabled()) log.debug("  - Removing thumbnail for layer metadata: " + id);
-
-		try {
-			Path file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-            IO.deleteFileOrDirectory(file);
-		} catch (Exception e) {
-			log.warning("  - Failed to remove thumbnail for metadata: " + id + ", error: " + e.getMessage());
-		}
-	}
-
-	
 	
 	/** 
      * Load thumbnails making a GetMap operation.

@@ -38,7 +38,7 @@
             <ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="md in searchResults.records"><a
                 href="" data-ng-click="addToSelection(md, associationType, initiativeType)"
-                > {{md.title}} </a></li>
+                > {{md.title || md.defaultTitle}} </a></li>
             </ul>
           </div>
         </div>
@@ -52,14 +52,14 @@
                 <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
               </i></span>
               <a data-ng-click="removeFromSelection(obj)" href="">
-                <i class="btn fa fa-times text-danger"></i>
+                <i class="btn fa fa-times text-danger pull-right"></i>
               </a>
           </li>
         </ul>
       </div>
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"
-          data-ng-click="linkToResource()"
+          data-gn-click-and-spin="linkToResource()"
           data-ng-class="{'disabled': (selection.length < 1)}">
           <i class="fa fa-sign-out" />&nbsp;
           <span data-translate="">linkToSibling</span>

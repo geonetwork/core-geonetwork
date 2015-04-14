@@ -123,34 +123,6 @@
       <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
     </service>
 
-    <service name="regions.list">
-      <documentation>
-        <![CDATA[
-        
-        Parameters:
-        * category - only return labels contained in the given category - optional
-        * label - searches the labels for regions that contain the text in this parameters - optional
-        * maxRecords - limit the number of results returned - optional
-        
-        Example Response
-        ```
-        <regions count="1">
-          <region id="country.1" hasGeom="true" categoryId="country">
-            <label>
-              <eng>France</eng>
-            </label>
-            <category>
-                 <fre>Pays</fre>
-                 <eng>Country</eng>
-            </category>
-          </region>
-        </regions>
-        ```
-]]>
-      </documentation>
-      <class name=".services.region.List"/>
-    </service>
-
     <service name="regions.category.list">
       <documentation>
         <![CDATA[
@@ -170,58 +142,6 @@
       </documentation>
       <class name=".services.region.ListCategories"/>
     </service>
-
-    <service name="region.getmap.png">
-      <documentation>
-        <![CDATA[
-        
-        return a rendering of the geometry as a png. If no background is specified the image will be a transparent png
-         * id - required
-         * mapsrs - (optional) default is EPSG:4326 otherwise it is the project to use when rendering the image
-         * width - (optional) width of the image that is created. Only one of width and height are permitted
-         * height - (optional) height of the image that is created. Only one of width and height are permitted
-         * background - (optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config.xml). A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters:
-         * minx
-         * maxx
-         * miny
-         * maxy
-         * width
-         * height
-         * srs (optional)
-         * geom - (optional) a wkt or gml encoded geometry.
-         * geomtype - (optional) defines if geom is wkt or gml. allowed values are wkt and gml. if not specified the it is assumed the geometry is wkt
-         * geomsrs - (optional) the srs of the geometry passed in via the geom parameter
-        
-        In getMap the envelope of the geometry is calculated then
-        it is expanded by a factor.  That factor is the size of the map.  This allows the 
-        map to be slightly bigger than the geometry allowing some context to be shown.
-        This parameter allows different factors to be chosen per scale level 
-         
-        Proportion is the proportion of the world that the geometry
-        covers (bounds of WGS84)/(bounds of geometry in WGS84)
-
-        Named backgrounds allow the background parameter to be a simple key 
-        and the complete URL will be looked up from this list of named backgrounds 
-        The name of the child elements is the key and the text is the url
-        ]]>
-      </documentation>
-      <class name=".services.region.GetMap">
-        <param name="expandFactors">
-          <factor proportion=".0005" value="2"/>
-          <factor proportion=".01" value=".5"/>
-          <factor proportion=".015" value=".2"/>
-        </param>
-        <param name="format" value="png"/>
-        <!--  -->
-        <param name="namedBackgrounds">
-           <osm>http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</osm>
-          <!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
-        </param>
-      </class>
-      <output file="true" contentType="image/png"/>
-      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
-    </service>
-
 
     <service name="region.geom.wkt">
       <documentation><![CDATA[

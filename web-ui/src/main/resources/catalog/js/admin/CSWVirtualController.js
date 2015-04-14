@@ -25,6 +25,16 @@
       $scope.groupsFilter = {};
       $scope.sourcesFilter = {};
       $scope.categoriesFilter = {};
+      $scope.newFilter = {
+        name: null,
+        value: null,
+        occur: '+'
+      };
+      $scope.occurs = ['+',' ','-'];
+      $scope.showExplicitQuery = false;
+      $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
+        'denominator', '_source', '_cat', '_groupPublished'];
+
       var operation = '';
 
       /**
@@ -59,23 +69,23 @@
               // TODO
             });
       }
-      $scope.updatingVirtualCSW = function() {
-        $scope.virtualCSWUpdated = true;
-      };
 
       $scope.selectVirtualCSW = function(v) {
         operation = 'updateservice';
         $http.get('admin.config.virtualcsw.get?' +
             '_content_type=json&id=' + v.id)
           .success(function(data) {
-              var params = [];
+              var params = [], formParams = ['abstract', 'title',
+                '_source', '_cat', 'any', '_groupPublished', 'keyword',
+                'denominator', 'type'];
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
               $scope.virtualCSWSelected.serviceParameters = {};
+              $scope.showExplicitQuery = $scope.virtualCSWSelected.explicitQuery ? true : false;
               angular.forEach(params,
                   function(param) {
                     $scope.virtualCSWSelected.
-                        serviceParameters[param.name] = param.value;
+                        serviceParameters[param.name] = {value: param.value, occur: param.occur};
                   });
               $scope.virtualCSWUpdated = false;
 
@@ -87,25 +97,37 @@
             });
       };
 
+      $scope.addFilter = function() {
+        $scope.virtualCSWSelected.serviceParameters[$scope.newFilter.name] = angular.copy($scope.newFilter);
+        $scope.newFilter.value = $scope.newFilter.name = null;
+        $scope.newFilter.occur = '+';
+      };
+      $scope.removeFilter = function(f) {
+        delete $scope.virtualCSWSelected.serviceParameters[f];
+      };
+      $scope.setFilter = function(f) {
+        $scope.newFilter.name = f;
+      };
+      $scope.setFilterValue = function(field, value) {
+        $scope.virtualCSWSelected.serviceParameters[field] = {
+            value: value,
+            occur: '='
+        }
+      };
+
+      $scope.$watchCollection('virtualCSWSelected', function() {
+        $scope.virtualCSWUpdated = true;
+      });
+
       $scope.addVirtualCSW = function() {
         operation = 'newservice';
         $scope.virtualCSWSelected = {
           'id': '',
           'name': 'csw-servicename',
           'description': '',
-          'serviceParameters': {
-            'any': '',
-            'abstract': '',
-            'title': '',
-            '_source': '',
-            '_groupPublished': '',
-            'keyword': '',
-            '_cat': '',
-            'denominator': '',
-            'type': ''
-          }
+          'explicitQuery': '',
+          'serviceParameters': {}
         };
-
         $timeout(function() {
           $('#servicename').focus();
         }, 100);

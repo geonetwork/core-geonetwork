@@ -83,80 +83,93 @@ public class DbLib {
 	}
 
 	private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
-		StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-		for (String row : data) {
-			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
-					&& !row.trim().equals("")) {
-				sb.append(" ");
-				sb.append(row);
+        boolean inBlock = false;
+        for (String row : data) {
+            if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
+                && !row.trim().equals("")) {
+                sb.append(" ");
+                sb.append(row);
 
-				if (row.endsWith(";")) {
-					String sql = sb.toString();
+                if (!inBlock && row.contains("BEGIN")) {
+                    inBlock = true;
+                } else if (inBlock && row.contains("END")) {
+                    inBlock = false;
+                }
 
-					sql = sql.substring(0, sql.length() - 1);
+                if (!inBlock && row.endsWith(";")) {
+                    String sql = sb.toString();
 
-                    if(Log.isDebugEnabled(Geonet.DB))
+                    sql = sql.substring(0, sql.length() - 1);
+
+                    if (Log.isDebugEnabled(Geonet.DB))
                         Log.debug(Geonet.DB, "Executing " + sql);
-					
-					try {
+
+                    try {
                         final String trimmedSQL = sql.trim();
                         final Query query = entityManager.createNativeQuery(trimmedSQL);
                         if (trimmedSQL.startsWith("SELECT")) {
-							query.setMaxResults(1);
+                            query.setMaxResults(1);
                             query.getSingleResult();
-						} else {
-							query.executeUpdate();
-						}
-					} catch (Throwable e) {
-						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage(), e);
+                        } else {
+                            query.executeUpdate();
+                        }
+                    } catch (Throwable e) {
+                        Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage(), e);
 
-						if (failOnError)
-							throw new RuntimeException(e);
-					}
-					sb = new StringBuffer();
-				}
-			}
-		}
+                        if (failOnError)
+                            throw new RuntimeException(e);
+                    }
+                    sb = new StringBuffer();
+                }
+            }
+        }
         entityManager.flush();
         entityManager.clear();
 
 	}
 	private void runSQL(Statement statement, List<String> data, boolean failOnError) throws Exception {
-		StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-		for (String row : data) {
-			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
-					&& !row.trim().equals("")) {
-				sb.append(" ");
-				sb.append(row);
+        boolean inBlock = false;
+        for (String row : data) {
+            if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
+                && !row.trim().equals("")) {
+                sb.append(" ");
+                sb.append(row);
 
-				if (row.endsWith(";")) {
-					String sql = sb.toString();
+                if (!inBlock && row.contains("BEGIN")) {
+                    inBlock = true;
+                } else if (inBlock && row.contains("END")) {
+                    inBlock = false;
+                }
+                if (!inBlock && row.endsWith(";")) {
+                    String sql = sb.toString();
 
-					sql = sql.substring(0, sql.length() - 1);
+                    sql = sql.substring(0, sql.length() - 1);
 
-                    if(Log.isDebugEnabled(Geonet.DB))
+                    if (Log.isDebugEnabled(Geonet.DB))
                         Log.debug(Geonet.DB, "Executing " + sql);
 
-					try {
-						if (sql.trim().startsWith("SELECT")) {
-							statement.executeQuery(sql).close();
-						} else {
-							statement.execute(sql);
-						}
-					} catch (SQLException e) {
-						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
+                    try {
+                        if (sql.trim().startsWith("SELECT")) {
+                            statement.executeQuery(sql).close();
+                        } else {
+                            statement.execute(sql);
+                        }
+                    } catch (SQLException e) {
+                        Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
 
-						if (failOnError)
-							throw e;
-					}
-					sb = new StringBuffer();
-				}
-			}
-		}
+                        if (failOnError)
+                            throw e;
+                    }
+                    sb = new StringBuffer();
+                }
+            }
+        }
         statement.getConnection().commit();
-	}
+    }
 
 	/**
 	 * Check if db specific SQL script exist, if not return default SQL script path.

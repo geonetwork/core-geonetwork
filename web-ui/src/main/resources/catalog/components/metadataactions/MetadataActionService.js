@@ -1,10 +1,12 @@
 (function() {
   goog.provide('gn_mdactions_service');
+
+  goog.require('gn_category');
   goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share'
+    'gn_share', 'gn_category'
   ]);
 
   module.service('gnMetadataActions', [
@@ -126,24 +128,25 @@
         window.open(gnHttp.getService('csv'), windowName, windowOption);
       };
 
-      this.deleteMd = function(md) {
+      this.deleteMd = function(md, searchParams) {
         if (md) {
           return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch');
+            $rootScope.$broadcast('resetSearch', searchParams);
           });
         }
         else {
           return callBatch('mdDeleteBatch').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('resetSearch');
+            $rootScope.$broadcast('resetSearch', searchParams);
           });
         }
       };
 
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
-          title: 'privileges',
+          title: $translate('privileges') + ' - ' +
+              (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope, 'PrivilegesUpdated');
       };
@@ -156,13 +159,48 @@
         }, scope, 'metadataStatusUpdated');
       };
 
+      this.startWorkflow = function(md, scope) {
+        return $http.get('md.status.update?' +
+            '_content_type=json&id=' + md.getId() +
+            '&changeMessage=Enable workflow' +
+            '&status=1').then(
+            function(data) {
+              scope.$emit('metadataStatusUpdated', true);
+              scope.$emit('StatusUpdated', {
+                msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                timeout: 2,
+                type: 'success'});
+            }, function(data) {
+              scope.$emit('metadataStatusUpdated', false);
+              scope.$emit('StatusUpdated', {
+                title: $translate('metadataStatusUpdatedErrors'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
       this.openPrivilegesBatchPanel = function(scope) {
         openModal({
           title: 'privileges',
           content: '<div gn-share="" gn-share-batch="true"></div>'
         }, scope, 'PrivilegesUpdated');
       };
+      this.openCategoriesBatchPanel = function(scope) {
+        openModal({
+          title: 'categories',
+          content: '<div gn-batch-categories=""></div>'
+        }, scope, 'CategoriesUpdated');
+      };
 
+      this.openTransferOwnership = function(md, scope) {
+        var uuid = md ? md.getUuid() : '';
+        var ownerId = md ? md.getOwnerId() : '';
+        openModal({
+          title: 'transferOwnership',
+          content: '<div gn-transfer-ownership="'+uuid +'" gn-transfer-md-owner="'+ownerId+'"></div>'
+        }, scope, 'TransferOwnership');
+      };
       /**
        * Duplicate the given metadata. Open the editor in new page.
        * @param {string} md

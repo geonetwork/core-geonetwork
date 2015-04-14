@@ -79,7 +79,7 @@ class Harvester implements IHarvester<HarvestResult>
 	public HarvestResult harvest(Logger log) throws Exception
 	{	    
 	    this.log = log;
-		log.info("Retrieving capabilities file for : "+ params.name);
+		log.info("Retrieving capabilities file for : "+ params.getName());
 
 		CswServer server = retrieveCapabilities(log);
         if (cancelMonitor.get()) {
@@ -151,8 +151,8 @@ class Harvester implements IHarvester<HarvestResult>
 
 		Lib.net.setupProxy(context, req);
 
-		if (params.useAccount)
-			req.setCredentials(params.username, params.password);
+		if (params.isUseAccount())
+			req.setCredentials(params.getUsername(), params.getPassword());
 		CswServer server = null;
 		try{
     		Element capabil = req.execute();
@@ -224,9 +224,9 @@ class Harvester implements IHarvester<HarvestResult>
 
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
 
-        if (params.useAccount) {
-            log.debug("Logging into server (" + params.username + ")");
-            request.setCredentials(params.username, params.password);
+        if (params.isUseAccount()) {
+            log.debug("Logging into server (" + params.getUsername() + ")");
+            request.setCredentials(params.getUsername(), params.getPassword());
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
@@ -281,7 +281,7 @@ class Harvester implements IHarvester<HarvestResult>
 
                 } catch (Exception ex) {
                     errors.add(new HarvestError(ex, log));
-                    log.error("Unable to process record from csw (" + this.params.name + ")");
+                    log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + counter); 
                     log.debug("   Record: " +  ((Element)record).getName()); 
                 }
@@ -537,7 +537,7 @@ class Harvester implements IHarvester<HarvestResult>
 	{
 		try
 		{
-			log.info("Searching on : "+ params.name +" ("+ start +".."+ (start + max) +")");
+			log.info("Searching on : "+ params.getName() +" ("+ start +".."+ (start + max) +")");
 			Element response = request.execute();
             if(log.isDebugEnabled()) {
                 log.debug("Sent request "+request.getSentData());

@@ -1,9 +1,9 @@
 <span data-ng-search-form="">
   <div class="input-group">
     <div class="input-group-btn"
-         data-ng-show="templateAddAction">
+         data-ng-show="templateAddAction == 'true'">
       <button class="btn btn-default" type="button" title="{{'add' | translate}}"
-        data-ng-click="add();">
+        data-gn-click-and-spin="add();">
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
@@ -17,7 +17,7 @@
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
-        data-ng-show="searchResults.records">
+        data-ng-show="searchResults.records.length > 0">
       <span class="tt-suggestions">
         <div class="tt-suggestion"
             data-ng-repeat="r in searchResults.records"> {{r.title}}

@@ -64,7 +64,9 @@
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
               angular.forEach(data[0], function(k) {
-                listOfKeywords.push(new Keyword(k));
+                if (k.value['#text']) {
+                  listOfKeywords.push(new Keyword(k));
+                }
               });
 
               if (dataToExclude && dataToExclude.length > 0) {
@@ -115,19 +117,26 @@
                * eg. to-iso19139-keyword for default form.
                */
               getXML: function(thesaurus, 
-                  keywordUris, transformation) {
+                  keywordUris, transformation, lang, textgroupOnly) {
                 // http://localhost:8080/geonetwork/srv/eng/
                 // xml.keyword.get?thesaurus=external.place.regions&id=&
                 // multiple=false&transformation=to-iso19139-keyword&
                 var defer = $q.defer();
+                var params = {
+                  thesaurus: thesaurus,
+                  id: keywordUris instanceof Array ?
+                      keywordUris.join(',') : keywordUris || '',
+                  multiple: keywordUris instanceof Array ? 'true' : 'false',
+                  transformation: transformation || 'to-iso19139-keyword'
+                };
+                if (lang) {
+                  params.lang = lang;
+                }
+                if (textgroupOnly) {
+                  params.textgroupOnly = textgroupOnly;
+                }
                 var url = gnUrlUtils.append('thesaurus.keyword',
-                    gnUrlUtils.toKeyValue({
-                      thesaurus: thesaurus,
-                      id: keywordUris instanceof Array ?
-                          keywordUris.join(',') : keywordUris || '',
-                      multiple: keywordUris instanceof Array ? 'true' : 'false',
-                      transformation: transformation || 'to-iso19139-keyword'
-                    })
+                    gnUrlUtils.toKeyValue(params)
                     );
                 $http.get(url, { cache: true }).
                     success(function(data, status) {

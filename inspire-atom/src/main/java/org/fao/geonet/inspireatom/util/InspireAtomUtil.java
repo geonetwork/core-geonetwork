@@ -288,9 +288,8 @@ public class InspireAtomUtil {
         request.addContent(new Element("fast").setText("true"));
 
         // perform the search and return the results read from the index
-        MetaSearcher searcher = null;
-        try {
-            searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+        try ( MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             searcher.search(context, request, new ServiceConfig());
 
             List<String> uuids = ((LuceneSearcher)searcher).getAllUuids(1, context);
@@ -299,8 +298,6 @@ public class InspireAtomUtil {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
-            if (searcher != null) searcher.close();
         }
 
         return uuid;

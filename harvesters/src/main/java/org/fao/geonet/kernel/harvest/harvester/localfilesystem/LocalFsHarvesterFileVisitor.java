@@ -45,17 +45,16 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private Path thisXslt;
     private final CategoryMapper localCateg;
     private final GroupMapper localGroups;
-    private final List<String> idsForHarvestingResult = Lists.newArrayList();
+    private final List<Integer> idsForHarvestingResult = Lists.newArrayList();
 
-    public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log,
-                                       LocalFilesystemHarvester harvester) throws Exception {
+    public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log, LocalFilesystemHarvester harvester) throws Exception {
         this.aligner = new BaseAligner(cancelMonitor) {};
 
         this.cancelMonitor = cancelMonitor;
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-        if (!params.importXslt.equals("none")) {
-            thisXslt = thisXslt.resolve(params.importXslt);
+        if (!params.getImportXslt().equals("none")) {
+            thisXslt = thisXslt.resolve(params.getImportXslt());
             transformIt = true;
         }
         localCateg = new CategoryMapper(context);
@@ -94,13 +93,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     return FileVisitResult.CONTINUE; // skip this one
                 }
 
-                try {
-                    params.validate.validate(dataMan, context, xml);
-                } catch (Exception e) {
-                    log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
-                    result.doesNotValidate++;
-                    return FileVisitResult.CONTINUE; // skip this one
-                }
+
 
                 // transform using importxslt if not none
                 if (transformIt) {
@@ -113,10 +106,23 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     }
                 }
 
-                String schema = dataMan.autodetectSchema(xml, null);
-                if (schema == null) {
+
+                String schema = null;
+                try {
+                    schema = dataMan.autodetectSchema(xml, null);
+                } catch (Exception e) {
                     result.unknownSchema++;
-                } else {
+                }
+
+                if (schema != null) {
+                    try {
+                        params.getValidate().validate(dataMan, context, xml);
+                    } catch (Exception e) {
+                        log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
+                        result.doesNotValidate++;
+                        return FileVisitResult.CONTINUE; // skip this one
+                    }
+
                     String uuid = dataMan.extractUUID(schema, xml);
                     if (uuid == null || uuid.equals("")) {
                         result.badFormat++;
@@ -141,7 +147,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             }
 
                             log.debug("adding new metadata");
-                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner);
+                            id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, false);
                             result.addedMetadata++;
                         } else {
                             // Check last modified date of the file with the record change date
@@ -188,12 +194,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 result.updatedMetadata++;
                             }
                         }
-                        idsForHarvestingResult.add(id);
+                        idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
             }
         } catch (Throwable e) {
-            log.error("An error occurred while harvesting a local file:" + file);
+            log.error("An error occurred while harvesting a local file:" + file + ". Error is: " + e.getMessage());
         }
         return FileVisitResult.CONTINUE;
     }
@@ -202,7 +208,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         return result;
     }
 
-    public List<String> getIdsForHarvestingResult() {
+    public List<Integer> getIdsForHarvestingResult() {
         return idsForHarvestingResult;
     }
 }

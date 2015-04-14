@@ -80,11 +80,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  </documentation>
  <class name=".services.metadata.XslProcessingReportGet"/>
  <error sheet="../xslt/error/error-json.xsl"/>
- </service> -->
-
- <!-- <service name="resource-onlinesrc-upload">
- <documentation>Upload online resource</documentation>
- <class name=".services.resources.UploadAndProcess"/>
+ </service>
 
  FIXME : this is a default success response XSL
  * @author delawen

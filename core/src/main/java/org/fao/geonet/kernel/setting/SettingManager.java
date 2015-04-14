@@ -22,10 +22,9 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.setting;
-import org.fao.geonet.NodeInfo;
-import jeeves.server.sources.http.ServletPathFinder;
-
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
@@ -49,6 +48,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this
  * class at the moment is to maintain backwards compatibility so not all code and xsl files
@@ -58,6 +59,7 @@ public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
+    public static final String SYSTEM_SITE_LABEL_PREFIX = "system/site/labels/";
     public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
 
     public static final String SYSTEM_PROXY_USE = "system/proxy/use";
@@ -71,11 +73,13 @@ public class SettingManager {
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
     public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
+	public static final String SYSTEM_SERVER_LOG = "system/server/log";
 
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
-    public static final java.lang.String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
 
     @Autowired
     private SettingRepository _repo;
@@ -118,6 +122,7 @@ public class SettingManager {
                 settingEl.setAttribute("name", setting.getName());
                 settingEl.setAttribute("position", String.valueOf(setting.getPosition()));
                 settingEl.setAttribute("datatype", String.valueOf(setting.getDataType()));
+                settingEl.setAttribute("internal", String.valueOf(setting.isInternal()));
                 settingEl.setText(setting.getValue());
                 env.addContent(settingEl);
             }
@@ -134,23 +139,30 @@ public class SettingManager {
             path.append("/").append(segment);
             Element currentElement = pathElements.get(path.toString());
             if (currentElement == null) {
-                currentElement = new Element(segment);
-                currentElement.setAttribute("name", path.substring(1));
-                currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
-                if (i == segments.length - 1) {
-                    final SettingDataType dataType;
-                    if (setting.getDataType() != null) {
-                        dataType = setting.getDataType();
-                    } else {
-                        dataType = SettingDataType.STRING;
-                    }
-                    currentElement.setAttribute("datatype", String.valueOf(dataType.ordinal()));
-                    currentElement.setAttribute("datatypeName", dataType.name());
+                try {
+                    currentElement = new Element(segment);
+                    currentElement.setAttribute("name", path.substring(1));
+                    currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
+                    if (i == segments.length - 1) {
+                        final SettingDataType dataType;
+                        if (setting.getDataType() != null) {
+                            dataType = setting.getDataType();
+                        } else {
+                            dataType = SettingDataType.STRING;
+                        }
+                        currentElement.setAttribute("datatype", String.valueOf(dataType.ordinal()));
+                        currentElement.setAttribute("datatypeName", dataType.name());
 
-                    currentElement.setText(setting.getValue());
+                        if (setting.getValue() != null)
+                            currentElement.setText(xmlContentEscaper().escape(setting.getValue()));
+                    } else {
+                        currentElement.setText("");
+                    }
+                    parent.addContent(currentElement);
+                    pathElements.put(path.toString(), currentElement);
+                } catch (Exception e) {
+                    Log.error("Settings table has an illegal setting: " + path, e);
                 }
-                parent.addContent(currentElement);
-                pathElements.put(path.toString(), currentElement);
             }
 
             parent = currentElement;

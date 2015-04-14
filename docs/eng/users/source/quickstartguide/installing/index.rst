@@ -23,7 +23,7 @@ Some general system requirements for the software to run without problems are li
 
 **Disk Space** : Minimum of 512MB of free disk space. Additional space is required depending on the amount of spatial data that you expect to upload.
 
-**Other Software requirements** : A Java Runtime Environment (JRE 1.6.0). For server installations, Apache Tomcat and a dedicated JDBC compliant DBMS (MySQL, Postgresql, Oracle) can be used instead of Jetty and H2.
+**Other Software requirements** : A Java Runtime Environment (JRE 1.7.0). For server installations, Apache Tomcat and a dedicated JDBC compliant DBMS (MySQL, Postgresql, Oracle) can be used instead of Jetty and H2.
 
 Additional Software
 ```````````````````
@@ -39,9 +39,9 @@ Supported browsers
 
 GeoNetwork should work normally with the following browsers:
 
-#. Firefox v1.5+ (All) [#all_os]_
-#. Internet Explorer v8+ (Windows)
-#. Safari v3+ (Mac OS X Leopard)
+#. Firefox, Chrome, Safari
+#. Internet Explorer 8+
+
 
 How do I install GeoNetwork opensource?
 ---------------------------------------
@@ -126,69 +126,6 @@ You can also run the installation with lots of debug output. To do so run the in
 .. [#all_os] All = Windows, Linux and Mac OS X
 
 
-User interface configuration
-----------------------------
-
-As mentioned above, GeoNetwork now provides two user interfaces: 
-
-- **Default** user interface is the old user interface from 2.6.x and earlier
-- **Javascript Widgets** user interface is the new user interface for searching, editing and viewing metadata records in 2.8.x
-
-The catalog administrator can configure which interface to use in `WEB-INF/config-gui.xml` as follows. 
-
-
-Configuring the Default user interface
-``````````````````````````````````````
-
-`WEB-INF/config-gui.xml` is used to define which home page to use. To configure the Default user interface use::
-
-    <client type="redirect" 
-      widget="false" 
-      url="main.home"
-      parameters=""
-      stateId=""
-      createParameter=""/>
-  
-
-Configuring the Javascript Widgets user interface
-`````````````````````````````````````````````````
-
-Widgets can be used to build custom interfaces. GeoNetwork provides a Javascript Widgets interface for searching, viewing and editing metadata records.
-
-
-This interface can be configured using the following attributes:
-
- - **parameter** is used to define custom application properties like default map extent for example or change the default language to be loaded
-
- - **createParameter** is appended to URL when the application is called from the administration > New metadata menu (usually "#create").
-
- - **stateId** is the identifier of the search form (usually "s") in the application. It is used to build quick links section in the administration and permalinks.
-
-
-Sample configuration::
-
-  <!-- Widget client application with a tab based layout -->
-  <client type="redirect" 
-    widget="true" 
-    url="../../apps/tabsearch/" 
-    createParameter="#create" 
-    stateId="s"/>
-    
-
-
-Configuring the user interface with configuration overrides
-```````````````````````````````````````````````````````````
-
-Instead of changing config-gui.xml file, the catalog administrator could use the configuration overrides mechanism to create a custom configuration (See :ref:`adv_configuration_overriddes`). By default, no overrides are set and the Default user interface is loaded. 
-
-To configure which user interface to load, add the following line in WEB-INF/config-overrides.xml in order to load
-the Widgets based user interface::
- 
- 
-    <override>/WEB-INF/config-overrides-widgettab.xml</override>
-
-
-
 XSLT processor configuration
 ----------------------------
 
@@ -208,7 +145,6 @@ Geonetwork uses the `H2 database engine <http://www.h2database.com/>`_ as defaul
 
 * DB2
 * H2
-* Mckoi
 * MS SqlServer 2008
 * MySQL
 * Oracle
@@ -236,37 +172,9 @@ For the Apache DBCP pool, JDBC database driver jar files should be in **INSTALL_
 Specify configuration in GeoNetwork
 ```````````````````````````````````
 
-You can manually configure the database by editing **INSTALL_DIR/WEB-INF/config.xml**. In the resources element of this file, you will find a resource element for each database that GeoNetwork supports. Only one of these resource elements can be enabled. The following is an example for the default H2 database used by GeoNetwork:: 
+You can manually configure the database by editing **INSTALL_DIR/WEB-INF/config-node/*.xml** and **INSTALL_DIR/WEB-INF/config-db/*.xml**.
 
-            <resource enabled="true">
-              <name>main-db</name>
-              <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-              <config>
-                <user>admin</user>
-                <password>gnos</password>
-                <driver>org.h2.Driver</driver>
-                <url>jdbc:h2:geonetwork;MVCC=TRUE</url>
-                <poolSize>33</poolSize>
-                <validationQuery>SELECT 1</validationQuery>
-              </config>
-            </resource>
 
-If you want to use a different database, then you need to set the enabled attribute on your choice to "true" and set the enabled attribute on the H2 database to "false". **NOTE:** If two resources are enabled, GeoNetwork will **not** start. 
-
-As a minimum, the **<user>** , **<password>** and **<url>** for your database need to be changed. Here is an example for the DB2 database::
-
-            <resource enabled="true">
-              <name>main-db</name>
-              <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-              <config>
-                <user>db2inst1</user>
-                <password>mypassword</password>
-                <driver>com.ibm.db2.jcc.DB2Driver</driver>
-                <url>jdbc:db2:geonet</url>
-                <poolSize>10</poolSize>
-                <validationQuery>SELECT 1 FROM SYSIBM.SYSDUMMY1</validationQuery>
-              </config>
-            </resource>
 
 Starting up GeoNetwork with a new database
 ------------------------------------------
@@ -285,6 +193,30 @@ Issues or exceptions with databases
 -----------------------------------
 
 If you run into problems when you start GeoNetwork with a particular database, you may find a solution in the :ref:`database_specific_issues` section of this manual.
+
+
+
+Install standards
+-----------------
+
+By default, the catalogue provides the following standards:
+
+* ISO19139
+* ISO19110
+* Dublin core
+
+Additional standards are available in the `schema plugin repository <https://github.com/geonetwork/schema-plugins/>`_.
+
+For using the following standard, version 2.10.x or ealier must be used:
+* ISO19115-FDIS
+* FGDC
+
+
+
+
+
+
+
 
 Upgrading to a new Version
 ==========================

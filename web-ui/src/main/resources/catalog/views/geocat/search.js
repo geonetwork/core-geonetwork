@@ -5,11 +5,13 @@
   goog.require('gn_search');
   goog.require('gn_search_geocat_config');
   goog.require('gn_selection_directive');
+  goog.require('gn_search_geocat_mdactionmenu');
 
   var module = angular.module('gn_search_geocat', [
     'gn_search',
     'gn_search_geocat_config',
-    'gn_selection_directive'
+    'gn_selection_directive',
+    'gn_search_geocat_mdactionmenu'
   ]);
 
   /**
@@ -480,8 +482,18 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
+          var links = scope.md.getLinksByType('LINK');
+          scope.links = [];
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
+
+          angular.forEach(links, function(l) {
+            if(l.url && l.url != '' && l.url != '-') {
+              if(l.desc == '' || l.desc == '-') {
+                l.desc = l.url;
+              }
+              scope.links.push(l);
+            }
+          });
 
           if (scope.md.type.indexOf('service') >= 0) {
             scope.layers = [];

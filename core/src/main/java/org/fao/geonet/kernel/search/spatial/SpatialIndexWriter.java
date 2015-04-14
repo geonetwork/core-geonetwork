@@ -505,6 +505,10 @@ public class SpatialIndexWriter implements FeatureListener
                 return descriptor.getName();
             }
         }
+
+        if (featureSource.getSchema().getDescriptor("fid") != null) {
+            return featureSource.getSchema().getDescriptor("fid").getName();
+        }
         return null;
     }
 

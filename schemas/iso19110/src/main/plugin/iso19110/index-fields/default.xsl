@@ -73,6 +73,30 @@
 				<xsl:with-param name="name" select="'fileId'"/>
 			</xsl:apply-templates>
 
+      <!-- Index attribute table as JSON object -->
+      <xsl:variable name="attributes"
+                    select=".//gfc:carrierOfCharacteristics"/>
+      <xsl:if test="count($attributes) > 0">
+        <xsl:variable name="jsonAttributeTable">
+          [<xsl:for-each select="$attributes">
+          {"name": "<xsl:value-of select="*/gfc:memberName/*/text()"/>",
+            "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>",
+            "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
+            <xsl:if test="*/gfc:listedValue">
+              ,"values": [<xsl:for-each select="*/gfc:listedValue">{
+                "label": "<xsl:value-of select="*/gfc:label/*/text()"/>",
+                "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
+                "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>"}
+              <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:for-each>]
+            </xsl:if>}
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
+        </xsl:variable>
+        <Field name="attributeTable" index="true" store="true"
+               string="{$jsonAttributeTable}"/>
+      </xsl:if>
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Responsible organization === -->
 			<xsl:for-each

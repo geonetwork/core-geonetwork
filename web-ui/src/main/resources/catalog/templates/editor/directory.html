@@ -60,18 +60,22 @@
                 data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
                 <a href="" data-ng-click="selectEntry(e)">{{e.title}}</a>
                 <div class="pull-right">
-                  <a href="" data-ng-click="copyEntry(e)">
+                  <a href=""
+                     data-ng-click="copyEntry(e)"
+                     title="{{'duplicate' | translate}}">
                     <i class="fa fa-copy"/>
                   </a>
                   <a href=""
                      data-ng-class="e['geonet:info'].edit !== 'true' ? 'invisible' : ''"
-                     data-ng-click="delEntry(e)">
+                     data-ng-click="delEntry(e)"
+                     title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger"/>
                   </a>
                 </div>
               </li>
             </div>
-            <div data-gn-pagination="paginationInfo"/>
+            <div data-gn-pagination="paginationInfo"
+                 data-hits-values="[20, 50, 100]"/>
           </form>
         </div>
       </div>
@@ -99,11 +103,11 @@
             </div>
             <div class="form-group" data-ng-show="groups && groups.length > 1">
               <label class="control-label" data-translate="">inGroup</label>
-              <div data-groups-combo="" data-owner-group="importData.group" lang="lang" data-groups="groups"/>
+              <div data-groups-combo="" data-owner-group="importData.group" lang="lang" data-groups="groups" data-exclude-special-groups="false"/>
             </div>
             
             <div class="btn-toolbar">
-              <button type="button" class="btn btn-primary pull-right" 
+              <button type="button" class="btn btn-primary pull-right"
                 data-ng-click="importEntry()" 
                 title="{{'importEntry' | translate}}">
                 <i class="fa fa-plus"/>&nbsp;
@@ -120,10 +124,10 @@
           <div class="pull-right">
             <div data-gn-metadata-group-updater="activeEntry.groupOwner"/>
 
-            <button type="button" class="btn btn-primary"
+            <button type="button" class="btn btn-default"
                     data-ng-click="startSharing()"
                     data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-              <i class="fa fa-link"></i>&nbsp;<span data-translate="">share</span>
+              <i class="fa fa-key"></i>&nbsp;<span data-translate="">share</span>
             </button>
 
             <button type="button" class="btn btn-primary"
@@ -132,7 +136,7 @@
               <i class="fa fa-save"></i>&nbsp;<span data-translate="">save</span>
             </button>
 
-            <button type="button" class="btn btn-danger"
+            <button type="button" class="btn btn-default"
                     data-ng-click="close()"
                     data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
               title="{{'closeEditor' | translate}}">

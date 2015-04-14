@@ -64,7 +64,7 @@
               <div class="panel-body">
 
                 <span class="btn btn-success btn-block fileinput-button">
-                  <i class="fa fa-plus fa fa-white"/>
+                  <i class="fa fa-plus fa-white"/>
                   <span data-translate="">chooseOnlinesrc</span>
                   <input type="file" id="md-import-file" name="mefFile" multiple="false"
                          />
@@ -205,7 +205,7 @@
             <div data-groups-combo=""
                  data-owner-group="ownerGroup"
                  lang="lang"
-                 data-groups="groups"/>
+                 data-groups="groups" data-exclude-special-groups="true"/>
             <input type="text" data-ng-model="ownerGroup"
                    name="group" id="md-import-group"
                    class="form-control hidden"/>
@@ -240,37 +240,44 @@
     <div class="progress-bar" style="width: 100%"/>
   </div>
 
-  <div class="panel panel-default" data-ng-show="report"
-       data-ng-class="report.exceptions || report.message ?
-                        'panel-danger' : 'panel-success'">
-    <div class="panel-heading" data-translate="">importReport</div>
-    <div class="panel-body">
+ 
+  <div data-ng-repeat="report in reports track by $index">
+	  <div class="panel panel-default" data-ng-class="report.exceptions || report.exception ||
+	       (!report.success && report.message) ?
+	                        'panel-danger' : 'panel-success'">
+	    <div class="panel-heading" data-translate="">importReport</div>
+	    <div class="panel-body">
+	
+	      <p data-ng-show="report.message" translate="">
+	        {{report.message}}
+	      </p>
+	      <p>
+	        <!--id and uuid from single import-->
+	        <span ng-show="report.id" translate
+	              translate-values="{id: '{{report.id}}', uuid: '{{report.uuid}}'}">importCPResult</span>
+	
+	        <!--Error message-->
+	        <span ng-show="!report.message && report.records" translate
+	              translate-values="{records: '{{report.records}}', success: '{{report.success}}', time: '{{report.time}}'}">importFromDirReport</span>
+	
+	        <!--Exception report-->
+	        <table class="table table-striped" data-ng-show="report.exceptions">
+	          <tr>
+	            <th data-translate="">file</th>
+	            <th data-translate="">error</th>
+	          </tr>
+	          <tr data-ng-repeat="e in report.exceptions.exception">
+	            <td>{{e['@file']}}</td>
+	            <td>{{e['#text']}}</td>
+	          </tr>
+	        </table>
 
-      <p data-ng-show="report.message" translate="">
-        {{report.message}}
-      </p>
-      <p>
-        <!--id and uuid from single import-->
-        <span ng-show="report.id" translate
-              translate-values="{id: '{{report.id}}', uuid: '{{report.uuid}}'}">importCPResult</span>
+          <!--Only one exception from single import-->
+          <span ng-show="report.exception">{{report.exception}}</span>
 
-        <!--Error message-->
-        <span ng-show="!report.message && report.records" translate
-              translate-values="{records: '{{report.records}}', success: '{{report.success}}', time: '{{report.time}}'}">importFromDirReport</span>
-
-        <!--Exception report-->
-        <table class="table table-striped" data-ng-show="report.exceptions">
-          <tr>
-            <th data-translate="">file</th>
-            <th data-translate="">error</th>
-          </tr>
-          <tr data-ng-repeat="e in report.exceptions.exception">
-            <td>{{e['@file']}}</td>
-            <td>{{e['#text']}}</td>
-          </tr>
-        </table>
-      </p>
-    </div>
+        </p>
+	    </div>
+	  </div>
   </div>
 </div>
 </div>

@@ -3,7 +3,6 @@
 @viewport-padding: 1em;
 @transition-params: .3s ease;
 
-@gn-popup-max-height: 1000px;
 @gn-popup-max-width: 1200px;
 
 [gn-main-viewer],
@@ -21,6 +20,18 @@
       cursor: wait;
     }
   }
+
+  .clear {
+    position: absolute;
+    top: .75em;
+    right: .75em;
+    color: #666;
+    &:hover {
+      cursor: pointer;
+      color: #222;
+    }
+  }
+
   .search-container {
     position: absolute;
     top: @viewport-padding;
@@ -29,7 +40,7 @@
     .dropdown-menu {
       width: 100%;
       top: ~"calc(100% - 3px)";
-      background: rgba(255,255,255,.8);
+      background: rgba(255,255,255,.9);
       padding: 0 0 1em;
       h5 {
         padding: 0 1em;
@@ -51,16 +62,6 @@
           font-size: 90%;
           color: grey;
         }
-      }
-    }
-    .clear {
-      position: absolute;
-      top: .75em;
-      right: .75em;
-      color: #666;
-      &:hover {
-        cursor: pointer;
-        color: #222;
       }
     }
   }
@@ -87,26 +88,6 @@
         color: #FFF;
       }
     }
-    [role=tooltip] {
-      position: absolute;
-      clip: rect(1px, 1px, 1px, 1px);
-      right: 0;
-    }
-    button:focus [role=tooltip],
-    button:hover [role=tooltip] {
-      clip: auto;
-      right: 2.8em;
-      background: rgba(0, 0, 0, .6);
-      color: #fff;
-      padding: .2em .5em;
-      margin-top: -.2em;
-      border-radius: .2em 0 0 .2em;
-      text-shadow: 0 0 1px #000;
-      z-index: 9000;
-    }
-    button.active [role=tooltip] {
-      display: none;
-    }
   }
   .control-tools {
     top: auto;
@@ -125,19 +106,31 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
+    div[gn-layermanager-item] {
+      .fa-arrows-alt,.gn-layer-ordering {
+        opacity: 0;
+        transition: opacity @transition-params;
+      }
+    }
+    .gn-searchlayer {
+      label {
+        font-size: 90%;
+        max-width: 68%;
+      }
+    }
     .list-group-item {
       background: inherit;
       transition: max-height @transition-params;
       .btn-cog {
-        float: right;
-        margin-right: -.6em;
-        margin-top: -.5em;
-        background: inherit;
-        padding: 6px 8px;
-      }
-      .fa-arrows-alt, .gn-layer-ordering {
-        opacity: 0;
-        transition: opacity @transition-params;
+         float: right;
+         margin-right: -.6em;
+         margin-top: -.5em;
+         background: inherit;
+         padding: 6px 8px;
+       }
+      .btn-cog-left {
+        float: left;
+        padding: 6px 14px;
       }
       &:hover {
         .fa-arrows-alt, .gn-layer-ordering {
@@ -149,7 +142,7 @@
       }
       & > label {
         font-size: 90%;
-        max-width: 82%;
+        max-width: 72%;
       }
       &.active {
         background: rgba(255,255,255,.6);
@@ -174,7 +167,7 @@
       }
     }
     .flux, .context {
-      margin: 2em 0 1em;
+      margin: .2em;
     }
     .baselayer {
       margin: 0 15px;
@@ -263,7 +256,7 @@
     overflow-x: hidden;
   }
   .panel-carousel-container {
-    width: 300%;
+    width: 400%;
     position: relative;
     left: 0;
     transition: left @transition-params;
@@ -455,9 +448,12 @@
         }
       }
     }
-
   }
-
+  [gn-localisation-input] {
+    .dropdown-menu {
+      padding-bottom: 0;
+    }
+  }
 }
 
 [gn-popup] {
@@ -465,8 +461,9 @@
   min-width: 200px;
   max-width: @gn-popup-max-width;
   min-height: 100px;
-  max-height: @gn-popup-max-height;
+  max-height: ~"calc(100% - 89px)";
   z-index: 2000;
+  height: auto;
 
   @media (max-width: @screen-tablet) {
     z-index: 1500;
@@ -493,7 +490,7 @@
 .gn-popup-content {
   overflow: auto;
   max-width: inherit;
-  max-height: (@gn-popup-max-height - 60);
+  max-height: 600px;
   font-size: 12px;
   @media (max-width: @screen-phone) {
     width: 100%;

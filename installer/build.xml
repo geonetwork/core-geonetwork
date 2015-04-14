@@ -10,221 +10,202 @@
 
 <project name="geonetwork" default="installer" basedir=".">
 
-	<!-- =================================================================================== -->
+  <condition property="osys" value="macosx">
+    <os family="mac"/>
+  </condition>
+  <condition property="osys" value="win">
+    <os family="windows"/>
+  </condition>
+  <condition property="osys" value="unix">
+    <os family="unix"/>
+  </condition>
 
-	<condition property="osys" value="macosx">
-		<os family="mac"/>
-	</condition>
-	<condition property="osys" value="win">
-			<os family="windows"/>
-	</condition>
-	<condition property="osys" value="unix">
-			<os family="unix"/>
-	</condition>
+  <property name="appName" value="geonetwork"/>
+  <property name="version" value="3.0.0"/>
+  <property name="subVersion" value="RC0"/>
+  <property name="javaVersion" value="1.7.0"/>
+  <!-- Minimum version required -->
+  <property name="jre_url" value="http://openjdk.java.net/"/>
+  <property name="OS" value="Compiled on ${os.name} (${osys})"/>
+  <property name="propsdir" value="../.props"/>
+  <property name="ant.build.javac.target" value="1.7"/>
+  <property name="debugOn" value="on"/>
+  <!-- on off true false yes no -->
+  <property name="thesaurusUrl"
+            value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
 
-	<!-- =================================================================================== -->
-	
-	<property name="appName" value="geonetwork" />
-	<property name="version" value="3.0.0" />
-    <property name="subVersion" value="SNAPSHOT" />
-	<property name="javaVersion" value="1.6.0" /> <!-- Minimum version required -->
-	<property name="jre_url" value="http://java.sun.com/javase/downloads" />
-	<property name="OS" value="Compiled on ${os.name} (${osys})" />
-	<property name="propsdir" value="../.props" />
-	<property name="ant.build.javac.target" value="1.5"/>
-	<property name="debugOn" value="on"/> <!-- on off true false yes no -->
-    <property name="thesaurusUrl" value="https://raw.github.com/geonetwork/util-gemet/master/thesauri" />
+  <!-- =================================================================================== -->
 
-	<!-- =================================================================================== -->
-	
-	<taskdef name="izpack" 
-				classpath="lib/standalone-compiler.jar" 
-				classname="com.izforge.izpack.ant.IzPackTask"/>
-	
-	<taskdef name="launch4j"
-	        classname="net.sf.launch4j.ant.Launch4jTask"
-	        classpath="launch4j/${osys}/launch4j.jar:launch4j/${osys}/lib/xstream.jar"/>
+  <taskdef name="izpack"
+           classpath="lib/standalone-compiler.jar"
+           classname="com.izforge.izpack.ant.IzPackTask"/>
 
-	<!-- =================================================================================== -->
+  <taskdef name="launch4j"
+           classname="net.sf.launch4j.ant.Launch4jTask"
+           classpath="launch4j/${osys}/launch4j.jar:launch4j/${osys}/lib/xstream.jar"/>
 
-    <target name="thesaurusDownload">
-        <mkdir	dir ="../web/target/thesauri" />
+  <!-- =================================================================================== -->
 
-        <get src="${thesaurusUrl}/gemet.rdf"
-        	dest="../web/target/thesauri/gemet.rdf" usetimestamp="true" />
+  <target name="thesaurusDownload">
+    <mkdir dir="../web/target/thesauri"/>
 
-        <get src="${thesaurusUrl}/inspire-service-taxonomy.rdf"
-             dest="../web/target/thesauri/inspire-service-taxonomy.rdf" usetimestamp="true" />
+    <get src="${thesaurusUrl}/gemet.rdf"
+         dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>
 
-         <get src="${thesaurusUrl}/inspire-theme.rdf"
-             dest="../web/target/thesauri/inspire-theme.rdf" usetimestamp="true" />
-    </target>
+    <get src="${thesaurusUrl}/inspire-service-taxonomy.rdf"
+         dest="../web/target/thesauri/inspire-service-taxonomy.rdf"
+         usetimestamp="true"/>
 
-    <target name="inspireDbSettings">
-        <mkdir	dir ="../web/target/inspire" />
+    <get src="${thesaurusUrl}/inspire-theme.rdf"
+         dest="../web/target/thesauri/inspire-theme.rdf" usetimestamp="true"/>
+  </target>
 
-        <copy file="../web/target/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql" tofile="../web/target/inspire/data-db-default.sql" overwrite="true"/>
-        <replace file="../web/target/inspire/data-db-default.sql">
-            <replacefilter>
-                <replacetoken><![CDATA[INSERT INTO Settings VALUES (721,720,'enable','false');]]></replacetoken>
-                <replacevalue><![CDATA[INSERT INTO Settings VALUES (721,720,'enable','true');]]></replacevalue>
-            </replacefilter>
+  <target name="inspireDbSettings">
+    <mkdir dir="../web/target/inspire"/>
 
-            <replacefilter>
-                <replacetoken><![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');]]></replacetoken>
-                <replacevalue><![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','true');]]></replacevalue>
-            </replacefilter>
+    <copy file="../web/target/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
+          tofile="../web/target/inspire/data-db-default.sql" overwrite="true"/>
+    <replace file="../web/target/inspire/data-db-default.sql">
+      <replacefilter>
+        <replacetoken>
+          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','false');]]></replacetoken>
+        <replacevalue>
+          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','true');]]></replacevalue>
+      </replacefilter>
 
-            <replacefilter>
-                <replacetoken><![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','false');]]></replacetoken>
-                <replacevalue><![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','true');]]></replacevalue>
-            </replacefilter>
-        </replace>
-    </target>
+      <replacefilter>
+        <replacetoken>
+          <![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');]]></replacetoken>
+        <replacevalue>
+          <![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','true');]]></replacevalue>
+      </replacefilter>
 
-    <target name="inspireTarget" depends="thesaurusDownload,inspireDbSettings" />
+      <replacefilter>
+        <replacetoken>
+          <![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','false');]]></replacetoken>
+        <replacevalue>
+          <![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','true');]]></replacevalue>
+      </replacefilter>
+    </replace>
+  </target>
 
-    <target name="setProperties">
-	
-		<delete	dir ="${propsdir}" />
-		<mkdir	dir ="${propsdir}" />
+  <target name="inspireTarget" depends="thesaurusDownload,inspireDbSettings"/>
 
-		<exec executable="git" dir=".." output="git.properties">
-		    <arg value="remote" />
-		    <arg value="-v" />
-		</exec>
-		<property prefix="git" file="git.properties"/>
-		
-		<exec executable="git" dir=".." output="git2.properties">
-		    <arg value="log" />
-		    <arg value="--max-count=1" />
-		</exec>
-		<property prefix="git2" file="git2.properties"/>
-	
-		<!-- Update the properties file -->
-		<propertyfile
-		    file="../web/src/main/webapp/WEB-INF/server.prop"
-		    comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
-			<!-- These are used by geonetwork at runtime -->
-			<!-- Do not remove !! -->
-			<entry  key="version" value="${version}"/>
-			<entry  key="subVersion" value="${subVersion}"/>
-			<entry  key="release" value="${version}"/>
-			
-			<entry  key="javaVersion" value="${javaVersion}"/>
-			<entry	key="jre_url" value="${jre_url}"/>
-			<entry	key="ant.build.javac.target" value="1.5"/>
-			<entry	key="buildDate" type="date" value="now" pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
+  <target name="setProperties">
 
-			<entry  key="date" type="date" value="now" pattern="yymmddHHmm"/>
-			<entry  key="day" type="date" value="now" pattern="dd-M-yyyy"/>
-			<entry  key="OS" value="${OS}"/>
-			<entry	key="debugOn" value="${debugOn}"/>
+    <delete dir="${propsdir}"/>
+    <mkdir dir="${propsdir}"/>
 
-			<entry key="git_revision" value="${git2.commit}"/>
-			<entry key="git_url" value="${git.origin}"/>
-					  
-		</propertyfile>
-		
-		<!-- make sure all files that need have version numbers etc updated -->
+    <exec executable="git" dir=".." output="git.properties">
+      <arg value="remote"/>
+      <arg value="-v"/>
+    </exec>
+    <property prefix="git" file="git.properties"/>
 
-		<!-- Windows installer build -->
-		<copy 	file="../installer/installer-config.xml"
-				tofile="${propsdir}/installer-config.xml"
-				filtering="on" overwrite="yes"/>
+    <exec executable="git" dir=".." output="git2.properties">
+      <arg value="log"/>
+      <arg value="--max-count=1"/>
+    </exec>
+    <property prefix="git2" file="git2.properties"/>
 
-		<replace 	file="${propsdir}/installer-config.xml"
-					propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-			<replacefilter token="@version@" property="version"/>
-			<replacefilter token="@subVersion@" property="subVersion"/>
-			<replacefilter token="@javaVersion@" property="javaVersion"/>
-		</replace>
+    <!-- Update the properties file -->
+    <propertyfile
+            file="../web/src/main/webapp/WEB-INF/server.prop"
+            comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
+      <!-- These are used by geonetwork at runtime -->
+      <!-- Do not remove !! -->
+      <entry key="version" value="${version}"/>
+      <entry key="subVersion" value="${subVersion}"/>
+      <entry key="release" value="${version}"/>
 
-		<!-- help file -->
-		<copy 	file="../docs/readme.html"
-				tofile="${propsdir}/readme.html"
-				filtering="on" overwrite="yes"/>
-		<copy 	file="../docs/readme_fra.html"
-				tofile="${propsdir}/readme_fra.html"
-				filtering="on" overwrite="yes"/>
-		<copy 	file="../docs/readme_spa.html"
-						tofile="${propsdir}/readme_spa.html"
-						filtering="on" overwrite="yes"/>
-        
-		<replace 	file="${propsdir}/readme.html"
-			propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-			<replacefilter token="@version@" property="version"/>
-			<replacefilter token="@subVersion@" property="subVersion"/>
-			<replacefilter token="@day@" property="day"/>
-			<replacefilter token="@javaVersion@" property="javaVersion"/>
-			<replacefilter token="@jre_url@" property="jre_url"/>
-		</replace>
-		<replace 	file="${propsdir}/readme_fra.html"
-			propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-			<replacefilter token="@version@" property="version"/>
-			<replacefilter token="@subVersion@" property="subVersion"/>
-			<replacefilter token="@day@" property="day"/>
-			<replacefilter token="@javaVersion@" property="javaVersion"/>
-			<replacefilter token="@jre_url@" property="jre_url"/>
-		</replace>
-        <replace 	file="${propsdir}/readme_spa.html"
-        	propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-                <replacefilter token="@version@" property="version"/>
-                <replacefilter token="@subVersion@" property="subVersion"/>
-                <replacefilter token="@day@" property="day"/>
-                <replacefilter token="@javaVersion@" property="javaVersion"/>
-                <replacefilter token="@jre_url@" property="jre_url"/>
-        </replace>
-	</target>
+      <entry key="javaVersion" value="${javaVersion}"/>
+      <entry key="jre_url" value="${jre_url}"/>
+      <entry key="ant.build.javac.target" value="1.5"/>
+      <entry key="buildDate" type="date" value="now"
+             pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
 
-	<!-- =================================================================================== -->
+      <entry key="date" type="date" value="now" pattern="yymmddHHmm"/>
+      <entry key="day" type="date" value="now" pattern="dd-M-yyyy"/>
+      <entry key="OS" value="${OS}"/>
+      <entry key="debugOn" value="${debugOn}"/>
 
-	<target name="installer" depends="setProperties,inspireTarget">
+      <entry key="git_revision" value="${git2.commit}"/>
+      <entry key="git_url" value="${git.origin}"/>
 
-        <ant dir="." target="jarinstall"  />
-		<ant dir="." target="wininstall"  />	
+    </propertyfile>
 
-	</target>
+    <!-- make sure all files that need have version numbers etc updated -->
 
-    <!-- =================================================================================== -->
+    <!-- Windows installer build -->
+    <copy file="../installer/installer-config.xml"
+          tofile="${propsdir}/installer-config.xml"
+          filtering="on" overwrite="yes"/>
 
-    <target name="jarinstall" depends="setProperties,inspireTarget">
+    <replace file="${propsdir}/installer-config.xml"
+             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+      <replacefilter token="@version@" property="version"/>
+      <replacefilter token="@subVersion@" property="subVersion"/>
+      <replacefilter token="@javaVersion@" property="javaVersion"/>
+    </replace>
 
-        <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
+    <!-- help file -->
+    <copy file="../docs/readme.html"
+          tofile="${propsdir}/readme.html"
+          filtering="on" overwrite="yes"/>
+    <copy file="../docs/readme_fra.html"
+          tofile="${propsdir}/readme_fra.html"
+          filtering="on" overwrite="yes"/>
+    <copy file="../docs/readme_spa.html"
+          tofile="${propsdir}/readme_spa.html"
+          filtering="on" overwrite="yes"/>
 
-    	<delete dir="../${appName}-${release}"/>
-    	<mkdir  dir="../${appName}-${release}"/>
+    <replace file="${propsdir}/readme.html"
+             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+      <replacefilter token="@version@" property="version"/>
+      <replacefilter token="@subVersion@" property="subVersion"/>
+      <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@javaVersion@" property="javaVersion"/>
+      <replacefilter token="@jre_url@" property="jre_url"/>
+    </replace>
+    <replace file="${propsdir}/readme_fra.html"
+             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+      <replacefilter token="@version@" property="version"/>
+      <replacefilter token="@subVersion@" property="subVersion"/>
+      <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@javaVersion@" property="javaVersion"/>
+      <replacefilter token="@jre_url@" property="jre_url"/>
+    </replace>
+    <replace file="${propsdir}/readme_spa.html"
+             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+      <replacefilter token="@version@" property="version"/>
+      <replacefilter token="@subVersion@" property="subVersion"/>
+      <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@javaVersion@" property="javaVersion"/>
+      <replacefilter token="@jre_url@" property="jre_url"/>
+    </replace>
+  </target>
 
-        <echo message="Building platform independent installer on ${osys} using IzPack"/>
 
-        <izpack	input="${propsdir}/installer-config.xml"
-        	output="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
-                    installerType="standard"
-                    basedir="${basedir}"/>
+  <target name="installer" depends="setProperties,inspireTarget">
+    <ant dir="." target="jarinstall"/>
+  </target>
 
-    	<checksum file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar" forceOverwrite="yes"/>
 
-    </target>
+  <target name="jarinstall" depends="setProperties,inspireTarget">
+    <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
 
-	<!-- =================================================================================== -->
+    <delete dir="../${appName}-${release}"/>
+    <mkdir dir="../${appName}-${release}"/>
 
-	<target name="wininstall">
-		<!-- create a Windows installer using launch4j -->
+    <echo message="Building platform independent installer on ${osys} using IzPack"/>
 
-		<property file="../web/src/main/webapp/WEB-INF/server.prop"/>
+    <izpack input="${propsdir}/installer-config.xml"
+            output="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+            installerType="standard"
+            basedir="${basedir}"/>
 
-		<echo message="Building Windows installer on ${osys} using launch4j"/>
-
-		<launch4j configFile="${basedir}/launch4j/launch4jConfig.xml"
-			jar="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
-			outfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.exe"
-			txtFileVersion="${version}-${subVersion}-${date}" 
-			txtProductVersion="${version}-${subVersion}" 
-			fileVersion="${version}.0" 
-			productVersion="${version}.0"/>
-
-		<checksum file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.exe" forceOverwrite="yes"/>
-		
-	</target>
-
+    <checksum
+            file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+            forceOverwrite="yes"/>
+  </target>
 </project>

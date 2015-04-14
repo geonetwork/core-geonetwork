@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.HarvesterSetting;
 
 import javax.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -59,4 +60,11 @@ public interface HarvesterSettingRepositoryCustom {
      * @return the first setting with the given path.
      */
     HarvesterSetting findOneByPath(String pathToSetting);
+
+    /**
+     * Get all settings on given names of settings with one request
+     * @param names
+     * @return
+     */
+	List<HarvesterSetting> findAllByNames(List<String> names);
 }

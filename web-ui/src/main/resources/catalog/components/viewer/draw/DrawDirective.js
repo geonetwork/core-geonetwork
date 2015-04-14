@@ -70,7 +70,7 @@
               color: 'rgba(255, 255, 255, 0.6)'
             },
             stroke: {
-              color: 'red',
+              color: '#ff0000',
               width: 1
             },
             image: {
@@ -93,8 +93,15 @@
           };
 
 
-          var textFeatStyleFn = function(resolution) {
-            var text = this.get('name');
+          var textFeatStyleFn = function(feature) {
+            var f;
+            if (feature instanceof ol.Feature) {
+              f = feature;
+            }
+            else {
+              f = this;
+            }
+            var text = f.get('name');
             if (!txtStyleCache[text]) {
               txtStyleCache[text] = [new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -222,6 +229,32 @@
             features: select.getFeatures()
           });
 
+          /*
+          function saves the currently drawn geometries as geoJSON
+          inspired by http://openlayers.org/en/v3.4.0/examples/kml.html
+          todo: allow a user to select an export format (kml/gml/json)
+          */
+          scope.save = function($event) {
+            var exportElement = document.getElementById('export-geom');
+            if ('download' in exportElement && !exportElement.href) {
+              var vectorSource = scope.vector.getSource();
+              var features = [];
+              vectorSource.forEachFeature(function(feature) {
+                var clone = feature.clone();
+                clone.setId(feature.getId());
+                //geoJson commonly uses wgs84 (view usually has spherical mercator)
+                clone.getGeometry().transform(
+                    map.getView().getProjection(), 'EPSG:4326');
+                features.push(clone);
+              });
+              var string = new ol.format.GeoJSON().writeFeatures(features);
+              //requires /lib/base64.js
+              var base64 = base64EncArr(strToUTF8Arr(string));
+              exportElement.href =
+                  'data:application/vnd.geo+json;base64,' + base64;
+            }
+          };    
+          
           var deleteF = new ol.interaction.Select();
           deleteF.getFeatures().on('add',
               function(evt) {
@@ -275,6 +308,10 @@
             else if (scope.drawPolygon.active) return 'polygon';
             else if (scope.drawText.active) return 'text';
           };
+
+          scope.$on('owsContextReseted', function() {
+            source.clear();
+          });
         }
       };
     }]);
@@ -292,8 +329,19 @@
           getType: '&gnStyleType'
         },
         link: function(scope, element, attrs) {
-          scope.colors = ['red', 'orange', 'blue', 'white', 'black', 'gray',
-            'yellow', 'green', 'pink', 'purple', 'brown'];
+          scope.colors = {
+            red: '#FF0000',
+            orange: '#FFA500',
+            blue: '#0000FF',
+            white: '#FFFFFF',
+            black: '#000000',
+            gray: '#BEBEBE',
+            yellow: '#FFFF00',
+            green: '#008000',
+            pink: '#FFC0CB',
+            purple: '#800080',
+            brown: '#A52A2A'
+          };
         }
       };
     }]);

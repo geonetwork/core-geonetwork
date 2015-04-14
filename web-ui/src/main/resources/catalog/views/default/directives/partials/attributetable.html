@@ -1,0 +1,32 @@
+<table class="table table-striped">
+  <tr>
+    <th data-translate="">attributeName</th>
+    <th data-translate="">attributeDefinition</th>
+  </tr>
+  <tr data-ng-repeat="attribute in attributeTable track by $index">
+    <td>
+      <strong>{{attribute.name}}</strong>
+      <span data-ng-show="attribute.type">&nbsp;({{attribute.type}})</span>
+    </td>
+    <td>
+      {{attribute.definition}}
+
+      <div data-ng-show="attribute.values.length > 0">
+        <h5 data-translate="">attributeValues</h5>
+
+        <table class="table">
+          <tr>
+            <th data-translate="">valueName</th>
+            <th data-translate="">valueCode</th>
+            <th data-translate="">valueDefinition</th>
+          </tr>
+          <tr data-ng-repeat="v in attribute.values track by $index">
+            <td>{{v.label}}</td>
+            <td>{{v.code}}</td>
+            <td>{{v.definition}}</td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>

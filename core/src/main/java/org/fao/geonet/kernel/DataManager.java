@@ -87,6 +87,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -136,6 +137,8 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -180,7 +183,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  */
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
-public class DataManager {
+public class DataManager implements ApplicationEventPublisherAware {
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
@@ -215,6 +218,7 @@ public class DataManager {
 
 
     private String baseURL;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     //--------------------------------------------------------------------------
     //---
@@ -411,7 +415,7 @@ public class DataManager {
      * @param context context object
      * @param metadataIds the metadata ids to index
      */
-    public void batchIndexInThreadPool(ServiceContext context, List<String> metadataIds) {
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
 
         TransactionStatus transactionStatus = null;
         try {
@@ -441,7 +445,7 @@ public class DataManager {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
             }
 
-            List<String> subList = metadataIds.subList(start, nbRecords);
+            List subList = metadataIds.subList(start, nbRecords);
 
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, subList.toString());
@@ -505,9 +509,11 @@ public class DataManager {
         } finally {
             indexLock.unlock();
         }
+        Metadata fullMd;
+
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.valueOf(metadataId);
+            int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
@@ -528,7 +534,7 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            final Metadata fullMd = _metadataRepository.findOne(id$);
+            fullMd = _metadataRepository.findOne(id$);
 
             final String  schema     = fullMd.getDataInfo().getSchemaId();
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
@@ -552,8 +558,8 @@ public class DataManager {
 
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CREATE_DATE,  createDate,  true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CHANGE_DATE,  changeDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE,  createDate,  true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE,  changeDate,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE,      source,      true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE,  metadataType.codeString,  true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID,        uuid,        true, true));
@@ -618,7 +624,7 @@ public class DataManager {
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".gif", true, false));
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
                 }
             }
 
@@ -679,6 +685,7 @@ public class DataManager {
             searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            fullMd = null;
         } finally {
             indexLock.lock();
             try {
@@ -686,6 +693,9 @@ public class DataManager {
             } finally {
                 indexLock.unlock();
             }
+        }
+        if (fullMd != null) {
+            applicationEventPublisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
     }
 
@@ -1446,15 +1456,10 @@ public class DataManager {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
-            Integer iId = Integer.valueOf(id);
-            _metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata entity) {
-                    final MetadataDataInfo dataInfo = entity.getDataInfo();
-                    int popularity = dataInfo.getPopularity();
-                    dataInfo.setPopularity(popularity + 1);
-                }
-            });
+            int iId = Integer.parseInt(id);
+            _metadataRepository.incrementPopularity(iId);
+            _entityManager.flush();
+            _entityManager.clear();
 
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);
@@ -2119,147 +2124,12 @@ public class DataManager {
      * metadata
      *
      * Returns null if no error on validation.
-     *
-     *
-     * @param schema
-     * @param metadataId
-     * @param md
-     * @param lang
-     * @param validations
-     *
-     * @return errors
      */
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
                                               String lang, List<MetadataValidation> validations) {
-        MetadataSchema metadataSchema = getSchema(schema);
-        final Path schemaDir = this.schemaMan.getSchemaDir(schema);
-
-        Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
-        try {
-            final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
-            final SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
-
-            final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
-
-            //Loop through all xsl files
-            for (Schematron schematron : schematronList) {
-
-                int id = schematron.getId();
-                //it contains absolute path to the xsl file
-                String rule = schematron.getRuleName();
-                String dbident = ""+id;
-
-                List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
-
-                //Loop through all criteria to see if apply schematron
-                //if any criteria does not apply, do not apply at all (AND)
-                SchematronRequirement requirement = SchematronRequirement.DISABLED;
-                for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
-                    List<SchematronCriteria> criterias = criteriaGroup.getCriteria();
-                    boolean apply = false;
-                    for(SchematronCriteria criteria : criterias) {
-                        boolean tmpApply = criteria.accepts(_applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                        if(!tmpApply) {
-                            apply = false;
-                            break;
-                        } else {
-                            apply = true;
+        final SchematronValidator schematronValidator = this._applicationContext.getBean(SchematronValidator.class);
+        return schematronValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
                         }
-
-                    }
-
-                    if (apply) {
-                        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() + " for schematron: "+schematron.getRuleName());
-                        }
-                        requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-                    } else {
-                        requirement = SchematronRequirement.DISABLED;
-                    }
-                }
-
-                if(requirement != SchematronRequirement.DISABLED) {
-                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
-                    }
-
-                    String ruleId = schematron.getRuleName();
-
-                    Element report = new Element("report", Edit.NAMESPACE);
-                    report.setAttribute("rule", ruleId,
-                            Edit.NAMESPACE);
-                    report.setAttribute("displayPriority", ""+schematron.getDisplayPriority(),
-                            Edit.NAMESPACE);
-                    report.setAttribute("dbident", dbident,
-                            Edit.NAMESPACE);
-                    report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
-
-                    try {
-                        Map<String,Object> params = new HashMap<String,Object>();
-                        params.put("lang", lang);
-                        params.put("rule", ruleId);
-                        params.put("thesaurusDir", this.thesaurusDir);
-
-                        Path file = schemaDir.resolve(SCHEMATRON_DIR).resolve(schematron.getFile());
-                        Element xmlReport = Xml.transform(md, file, params);
-                        if (xmlReport != null) {
-                            report.addContent(xmlReport);
-                            // add results to persistent validation information
-                            int firedRules = 0;
-                            @SuppressWarnings("unchecked")
-                            Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespaces.SVRL));
-                            while (i.hasNext()) {
-                                i.next();
-                                firedRules ++;
-                            }
-                            int invalidRules = 0;
-                            i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespaces.SVRL));
-                            while (i.hasNext()) {
-                                i.next();
-                                invalidRules ++;
-                            }
-
-                            if (validations != null) {
-                                validations.add(new MetadataValidation().
-                                        setId(new MetadataValidationId(metadataId, ruleId)).
-                                        setStatus(invalidRules!=0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID).
-                                        setRequired(requirement == SchematronRequirement.REQUIRED).
-                                        setNumTests(firedRules).
-                                        setNumFailures(invalidRules));
-
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
-
-                        // If an error occurs that prevents to verify schematron rules, add to show in report
-                        Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-                        errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-                        report.addContent(errorReport);
-
-                        e.printStackTrace();
-                    }
-
-                    // -- append report to main XML report.
-                    schemaTronXmlOut.addContent(report);
-
-
-                }
-
-            }
-        } catch (Throwable e) {
-            Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-            schemaTronXmlOut.addContent(errorReport);
-        }
-
-        if(schemaTronXmlOut.getChildren().isEmpty()) {
-            schemaTronXmlOut = null;
-        }
-
-        return schemaTronXmlOut;
-    }
 
     /**
      * Saves validation status information into the database for the current record.
@@ -2291,7 +2161,7 @@ public class DataManager {
         //--- remove operations
         deleteMetadataOper(context, id, false);
 
-        int intId = Integer.valueOf(id);
+        int intId = Integer.parseInt(id);
         _applicationContext.getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataStatusRepository.class).deleteAllById_MetadataId(intId);
@@ -2358,9 +2228,9 @@ public class DataManager {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         
         if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(metadataId), ReservedGroup.intranet.getId());
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
         } else {
-            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.valueOf(metadataId));
+            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
     }
 
@@ -2591,7 +2461,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, ReservedOperation op) throws Exception {
-        setOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId), op.getId());
+        setOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId), op.getId());
     }
 
     /**
@@ -2604,7 +2474,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        setOperation(context, Integer.valueOf(mdId), Integer.valueOf(grpId), Integer.valueOf(opId));
+        setOperation(context, Integer.parseInt(mdId), Integer.parseInt(grpId), Integer.valueOf(opId));
     }
 
     /**
@@ -2717,7 +2587,7 @@ public class DataManager {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, ReservedOperation opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),opId.getId());
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),opId.getId());
     }
 
     /**
@@ -2729,7 +2599,7 @@ public class DataManager {
      * @throws Exception
      */
     public void unsetOperation(ServiceContext context, String mdId, String grpId, String opId) throws Exception {
-        unsetOperation(context,Integer.valueOf(mdId),Integer.valueOf(grpId),Integer.valueOf(opId));
+        unsetOperation(context,Integer.parseInt(mdId),Integer.parseInt(grpId),Integer.valueOf(opId));
     }
 
     /**
@@ -3032,6 +2902,10 @@ public class DataManager {
             Element env = new Element("env");
             env.addContent(new Element("id").setText(id));
             env.addContent(new Element("uuid").setText(uuid));
+
+            final ThesaurusManager thesaurusManager = this._applicationContext.getBean(ThesaurusManager.class);
+            env.addContent(thesaurusManager.buildResultfromThTable(context));
+
             Element schemaLoc = new Element("schemaLocation");
             schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
             env.addContent(schemaLoc);
@@ -3057,9 +2931,10 @@ public class DataManager {
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
             List config = settingMan.getAllAsXML(true).cloneContent();
-            Element settings = (Element) config.get(0);
-            settings.setName("config");
-            env.addContent(settings);
+            for (Object c : config) {
+                Element settings = (Element) c;
+                env.addContent(settings);
+            }
 
             result.addContent(env);
             // apply update-fixed-info.xsl
@@ -3246,7 +3121,7 @@ public class DataManager {
 
 
         // Add validity information
-        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.valueOf(id));
+        List<MetadataValidation> validationInfo = _metadataValidationRepository.findAllById_MetadataId(Integer.parseInt(id));
         if (validationInfo == null || validationInfo.size() == 0) {
             addElement(info, Edit.Info.Elem.VALID, "-1");
         } else {
@@ -3512,5 +3387,10 @@ public class DataManager {
         _metadataRepository.deleteAll(specification);
 
         return idsOfMetadataToDelete.size();
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

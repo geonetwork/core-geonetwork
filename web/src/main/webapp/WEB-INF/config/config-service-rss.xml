@@ -30,5 +30,23 @@
       </output>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
+
+
+    <service name="portal.opensearch">
+      <documentation>
+        <![CDATA[
+        Return the opensearch description for the catalogue
+        providing information to get the:
+        * search page
+        * suggestion service
+        * rss search
+        * home page
+        * icon
+        ]]>
+      </documentation>
+      <class name=".services.config.Get"/>
+      <output sheet="../xslt/services/rss/opensearch.xsl"
+              contentType="text/xml; charset=UTF-8"/>
+    </service>
   </services>
 </geonet>

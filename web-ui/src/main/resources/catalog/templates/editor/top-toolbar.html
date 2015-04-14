@@ -1,16 +1,6 @@
 <nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
-  <div>
-    <ul class="gn-view-menu-button pull-left nav navbar-nav">
-      <!-- An empty drown down updated when form is loaded -->
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-eye"></i>
-          <b class="caret"/>
-        </a>
-      </li>
-    </ul>
-  </div>
+  
 
   <p class="navbar-text gn-tooltip"
     data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
@@ -24,18 +14,31 @@
       <span data-translate="">share</span>
     </button>-->
 
-    <button type="button" class="btn btn-default navbar-btn"
-            data-gn-click-and-spin="startVersioning()"
-            title="{{'startVersioning-help' | translate}}">
-      <i class="fa fa-history"/>&nbsp;
-      <span class="visible-lg" data-translate="">startVersioning</span>
-    </button>
 
     <div data-gn-metadata-category-updater="mdCategories"
          data-metadata-id="gnCurrentEdit.id" title="{{'categories'|translate}}"/>
 
     <div data-gn-metadata-group-updater="groupOwner"
          data-metadata-id="gnCurrentEdit.id" title="{{'group'|translate}}"/>
+
+    <div class="btn-group">
+      <button class="btn btn-default dropdown-toggle"
+              type="button"
+              data-toggle="dropdown" aria-expanded="true">
+        <i class="fa fa-cog"/>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1"
+             data-gn-click-and-spin="startVersioning()"
+             title="{{'startVersioning-help' | translate}}">
+            <i class="fa fa-history"/>&nbsp;
+            <span class="visible-lg" data-translate="">startVersioning</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <button type="button" class="btn btn-default navbar-btn"
             title="{{'validate'|translate}}" gn-click-and-spin="validate()">
@@ -51,7 +54,7 @@
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
     <button type="button" class="btn btn-default navbar-btn gn-tooltip"
-		    title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
+        title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
@@ -63,7 +66,7 @@
         <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
       </button>
       <button type="button" class="btn btn-primary dropdown-toggle" 
-			data-toggle="dropdown" aria-expanded="false">
+      data-toggle="dropdown" aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -71,8 +74,25 @@
                data-gn-click-and-spin="switchTypeAndSave(true)">
           {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
         </a></li>
+        <li class="dropdown-header">
+          <label title="{{'minorEditHelp' | translate}}">
+            <input type="checkbox" data-ng-model="gnCurrentEdit.isMinor"/>
+            {{'minorEdit' | translate}}
+          </label>
+        </li>
       </ul>
     </div>
 
+    <div class="btn-group">
+      <ul class="gn-view-menu-button nav navbar-nav">
+        <!-- An empty drown down updated when form is loaded -->
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-eye"></i>
+            <b class="caret"/>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>

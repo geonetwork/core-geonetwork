@@ -188,7 +188,7 @@ class Harvester implements IHarvester<HarvestResult>
 
     private Element doSearch(XmlRequest request) throws OperationAbortedEx {
         try {
-            log.info("Searching on : " + params.name);
+            log.info("Searching on : " + params.getName());
             Element response = request.execute();
             if (log.isDebugEnabled()) {
                 log.debug("Sent request " + request.getSentData());

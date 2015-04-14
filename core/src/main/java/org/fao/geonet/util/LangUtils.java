@@ -2,12 +2,15 @@ package org.fao.geonet.util;
 
 import com.google.common.collect.Maps;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -63,28 +66,39 @@ public class LangUtils {
 
         if (translations == null || context.getBean(SystemInfo.class).isDevMode()) {
             Path webappDir = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
-            XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
             Path loc = webappDir.resolve("loc");
-            String typeWithExtension = "xml/" + type + ".xml";
-            translations = new HashMap<>();
+            XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
+
+            String xmlTypeWithExtension = "xml/" + type + ".xml";
+            String jsonTypeWithExtension = "json/" + type + ".json";
+
+            Map<String, String> translations1 = new HashMap<>();
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc, IO.DIRECTORIES_FILTER)) {
                 for (Path path : paths) {
-                    if (Files.exists(path.resolve(typeWithExtension))) {
-                        final String filename = path.getFileName().toString();
-                        Element xml = cacheManager.get(context, true, loc, typeWithExtension, filename, filename, false);
-                        String translation;
+                    final String lang = path.getFileName().toString();
+                    String translation = null;
+                    if (Files.exists(path.resolve(jsonTypeWithExtension))) {
+                        Path jsonFile = path.resolve(jsonTypeWithExtension);
+                        try {
+                            JSONObject json = new JSONObject(new String(Files.readAllBytes(jsonFile), Constants.CHARSET));
+                            translation = json.optString(key);
+                        } catch (JSONException e) {
+                            throw new RuntimeException("Failed to parse the following file as a json file: " + jsonFile, e);
+                        }
+                    } else if (Files.exists(path.resolve(xmlTypeWithExtension))) {
+                        Element xml = cacheManager.get(context, true, loc, xmlTypeWithExtension, lang, lang, false);
                         if (key.contains("/") || key.contains("[") || key.contains(":")) {
                             translation = Xml.selectString(xml, key);
                         } else {
                             translation = xml.getChildText(key);
                         }
-                        if (translation != null && !translation.trim().isEmpty()) {
-                            translations.put(filename, translation);
-                        }
+                    }
+                    if (translation != null && !translation.trim().isEmpty()) {
+                        translations1.put(lang, translation);
                     }
                 }
             }
-
+            translations = translations1;
             translationsCache.put(translationKey, translations);
         }
         

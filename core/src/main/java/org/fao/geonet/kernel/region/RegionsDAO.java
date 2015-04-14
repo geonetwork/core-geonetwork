@@ -49,7 +49,7 @@ public abstract class RegionsDAO {
      * @param simplified a hint to simplify the geometry if the full geometry is very large.  This will
      * be true when the UI wants to display the geometry.  The region is simplified so the javascript can deal with it better
      * and so it downloads faster.
-     * @param projection the desired projection of the geometry.  The geometry will be reprojected to desired projection
+     * @param projectionCode the desired projection of the geometry.  The geometry will be reprojected to desired projection
      * 
      * @return the geometry containing the CRS
      */
@@ -84,7 +84,7 @@ public abstract class RegionsDAO {
                 CachedRequest request = allRegions.get();
                 if (request == null) {
                     request = new CachedRequest(createSearchRequest(context));
-                    allRegions = new WeakReference<CachedRequest>(request);
+                    allRegions = new WeakReference<>(request);
                 }
                 return request;
             }
@@ -104,5 +104,4 @@ public abstract class RegionsDAO {
     public boolean includeInListing() {
         return true;
     }
-
 }

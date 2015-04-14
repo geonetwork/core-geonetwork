@@ -111,7 +111,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             conn = dataSource.getConnection();
             statement = conn.createStatement();
             this.foundErrors = doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
-
+            conn.commit();
         } finally {
             try {
                 if (statement != null) {

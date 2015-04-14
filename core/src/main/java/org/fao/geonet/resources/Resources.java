@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -432,7 +433,7 @@ public class Resources {
 	 * @param icon
 	 *            a relative path from images directory (
 	 *            {@linkplain #locateResourcesDir(ServiceContext)}) for example
-	 *            harvesting/defaultHarvester.gif
+	 *            harvesting/defaultHarvester.png
 	 * @param destName
 	 *            the name of the final image (in logos directory) so just the
 	 *            name.
@@ -474,7 +475,7 @@ public class Resources {
 	 *            the filename prefix to copy the unknown logo to.
 	 */
 	public static void copyUnknownLogo(ServiceContext context, String destName) {
-		copyLogo(context, "unknown-logo.gif", destName);
+		copyLogo(context, "unknown-logo.png", destName);
 	}
 
 	/**
@@ -520,5 +521,12 @@ public class Resources {
             throw new RuntimeException(e);
         }
 	}
-
+    @Nullable
+    public static FileTime getLastModified(Path resourcesDir, ServletContext context, Path appPath, String filename) throws IOException {
+        Path file = locateResource(resourcesDir, context, appPath, filename);
+        if (file != null && java.nio.file.Files.exists(file)) {
+            return java.nio.file.Files.getLastModifiedTime(file);
+        }
+        return null;
+    }
 }

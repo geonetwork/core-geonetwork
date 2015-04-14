@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.main;
 
+import com.google.common.collect.Maps;
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -52,6 +53,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -61,6 +63,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
@@ -72,9 +75,14 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
 
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
@@ -89,6 +97,7 @@ public class Info implements Service {
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
     public static final String ISOLANGUAGES = "isolanguages";
+    public static final String LANGUAGES = "languages";
     public static final String REGIONS = "regions";
     public static final String OPERATIONS = "operations";
     public static final String GROUPS_INCLUDING_SYSTEM_GROUPS = "groupsIncludingSystemGroups";
@@ -213,6 +222,9 @@ public class Info implements Service {
 				result.addContent(regions);
 			} else if (type.equals(ISOLANGUAGES)) {
                 result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
+
+			} else if (type.equals(LANGUAGES)) {
+                result.addContent(context.getBean(LanguageRepository.class).findAllAsXml());
 
             } else if (type.equals(SOURCES)) {
 				result.addContent(getSources(context, sm));
@@ -383,7 +395,11 @@ public class Info implements Service {
         // you're Administrator
         if (Profile.Administrator == session.getProfile()) {
             // return all groups
-            result = groupRepository.findAllAsXml(null, sort);
+            if (includingSystemGroups) {
+                result = groupRepository.findAllAsXml(null, sort);
+            } else {
+                return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+            }
         } else {
             Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're not Administrator
@@ -410,30 +426,33 @@ public class Info implements Service {
         return result;
 	}
 
-    /**
-     *
-     *
-     * @param context
-     * @param sm
-     * @return
-     * @throws java.sql.SQLException
-     */
-	private Element getSources(ServiceContext context, SettingManager sm) throws SQLException
-	{
+    private Element getSources(ServiceContext context, SettingManager sm) throws SQLException {
         Element element = new Element("results");
         final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
-		String siteId   = sm.getSiteId();
-        String siteName = sm.getSiteName();
+        Set<String> sourceIds = new HashSet<>();
+        for (Source o : sourceList) {
+            if (!sourceIds.contains(o.getUuid())) {
+                element.addContent(buildRecord(o.getUuid(), o.getName(), o.getLabelTranslations(), null, null));
+                sourceIds.add(o.getUuid());
+            }
+        }
 
-		for (Source o : sourceList) {
-            element.addContent(buildRecord(o.getUuid(), o.getName(), null, null));
-		}
+        String siteId = sm.getSiteId();
+        if (!sourceIds.contains(siteId)) {
+            String siteName = sm.getSiteName();
 
-        element.addContent(buildRecord(siteId, siteName, null, null));
+            final SettingRepository settingRepository = context.getBean(SettingRepository.class);
+            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+            Map<String, String> labels = Maps.newHashMap();
+            for (Setting setting : labelSettings) {
+                labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+            }
+            element.addContent(buildRecord(siteId, siteName, labels, null, null));
+        }
 
-		return element;
-	}
+        return element;
+    }
 
 	//--------------------------------------------------------------------------
 	//--- ZRepositories
@@ -451,7 +470,8 @@ public class Info implements Service {
 			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
 				continue; // skip Local GeoNetwork Z server if not enabled
 			} else {
-				response.addContent(buildRecord(repo.getDn(),repo.getName(),repo.getCode(),repo.getServerCode()));
+				response.addContent(buildRecord(repo.getDn(),repo.getName(), Collections.<String, String>emptyMap(),
+                        repo.getCode(), repo.getServerCode()));
 			}
 		}
 
@@ -504,18 +524,16 @@ public class Info implements Service {
 		ServiceConfig config = new ServiceConfig();
 
 		SearchManager searchMan = gc.getBean(SearchManager.class);
-		MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
-		searcher.search(context, params, config);
+            searcher.search(context, params, config);
 
-		params.addContent(new Element("from").setText("1"));
-		params.addContent(new Element("to").setText(searcher.getSize() +""));
+            params.addContent(new Element("from").setText("1"));
+            params.addContent(new Element("to").setText(searcher.getSize() + ""));
 
-		Element result = searcher.present(context, params, config);
+            return searcher.present(context, params, config);
+        }
 
-		searcher.close();
-
-		return result;
 	}
 
 	//--------------------------------------------------------------------------
@@ -541,13 +559,13 @@ public class Info implements Service {
 
 	private Element buildTemplateRecord(String id, String title, String schema)
 	{
-		return buildRecord(id, title, schema, null);
+		return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
 	}
 
 
 	//--------------------------------------------------------------------------
 
-	private Element buildRecord(String id, String name, String code, String serverCode)
+	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
 	{
 		Element el = new Element("record");
 
@@ -556,8 +574,12 @@ public class Info implements Service {
 		if (serverCode != null) idE.setAttribute("serverCode", serverCode);
 		el.addContent(idE);
 		el.addContent(new Element("name").setText(name));
-
-		return el;
+        Element translations = new Element("label");
+        el.addContent(translations);
+        for (Map.Entry<String, String> entry : labelTranslations.entrySet()) {
+            translations.addContent(new Element(entry.getKey()).setText(xmlContentEscaper().escape(entry.getValue())));
+        }
+        return el;
 	}
 
 	//--------------------------------------------------------------------------

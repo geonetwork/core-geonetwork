@@ -26,8 +26,11 @@
     'gnEditor',
     'gnCurrentEdit',
     '$q',
+    '$rootScope',
+    '$translate',
     'Metadata',
-    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q, Metadata) {
+    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
+             $q, $rootScope, $translate, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -77,8 +80,8 @@
               descs = [];
 
           angular.forEach(params.layers, function(layer) {
-            names.push(layer.name);
-            descs.push(layer.title);
+            names.push(layer.Name || layer.name);
+            descs.push(layer.Title || layer.title);
           });
 
           angular.extend(params, {
@@ -140,6 +143,12 @@
       var runProcess = function(scope, params) {
         return gnBatchProcessing.runProcessMd(params).then(function(data) {
           refreshForm(scope, $(data.data));
+        }, function(error) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('runProcessError'),
+            error: error,
+            timeout: 0,
+            type: 'danger'});
         });
       };
 
@@ -152,10 +161,16 @@
        * onlinesrc list on save and on batch success.
        */
       var runService = function(service, params, scope) {
-        gnEditor.save(false, true)
+        return gnEditor.save(false, true)
         .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);
+              }).error(function(error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('runServiceError'),
+                  error: error,
+                  timeout: 0,
+                  type: 'danger'});
               });
             });
       };
@@ -254,7 +269,7 @@
          * @param {string} popupid id of the popup to close after process.
          */
         addOnlinesrc: function(params, popupid) {
-          runProcess(this,
+          return runProcess(this,
               setParams('onlinesrc-add', params)).then(function() {
             closePopup(popupid);
           });
@@ -274,7 +289,7 @@
          * @param {string} popupid id of the popup to close after process.
          */
         addThumbnailByURL: function(params, popupid) {
-          runProcess(this,
+          return runProcess(this,
               setParams('thumbnail-add', params)).then(function() {
             closePopup(popupid);
           });
@@ -306,7 +321,7 @@
           else {
             params[mode + 'Uuid'] = md.getUuid();
           }
-          runProcess(this, params).then(function() {
+          return runProcess(this, params).then(function() {
             closePopup(popupid);
           });
         },
@@ -330,14 +345,6 @@
               return protocolIcons[i][1];
             }
           }
-        },
-
-        /**
-         * Open onlinesrc url into a new window
-         * On onlinesrc list click.
-         */
-        openLink: function(url) {
-          window.open(url, '_blank');
         },
 
         /**
@@ -370,6 +377,12 @@
             }).then(function() {
               closePopup(popupid);
             });
+          }, function(error) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate('linkToServiceError'),
+              msg: error.statusText,
+              timeout: 0,
+              type: 'danger'});
           });
         },
 
@@ -475,13 +488,13 @@
           var scope = this;
 
           if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
-            runService('removeOnlinesrc', {
+            return runService('removeOnlinesrc', {
               id: gnCurrentEdit.id,
               url: onlinesrc.url,
               name: onlinesrc.name
             }, this);
           } else {
-            runProcess(this,
+            return runProcess(this,
                 setParams('onlinesrc-remove', {
                   id: gnCurrentEdit.id,
                   url: onlinesrc.url,
@@ -504,9 +517,23 @@
           var params = {
             uuid: onlinesrc['geonet:info'].uuid,
             uuidref: gnCurrentEdit.uuid
-          };
-          runProcess(this,
-              setParams('services-remove', params));
+          }, service = this;
+
+          gnBatchProcessing.runProcessMdXml(
+              setParams('services-remove', params)).
+              then(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('serviceDetachedToCurrentRecord'),
+                  timeout: 3
+                });
+                service.reload = true;
+              }, function(error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('removeServiceError'),
+                  error: error,
+                  timeout: 0,
+                  type: 'danger'});
+              });
         },
 
         /**

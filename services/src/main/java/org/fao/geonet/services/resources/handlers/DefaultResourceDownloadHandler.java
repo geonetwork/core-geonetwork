@@ -10,24 +10,32 @@ import org.fao.geonet.domain.MetadataFileDownload;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.context.request.NativeWebRequest;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 public class DefaultResourceDownloadHandler implements IResourceDownloadHandler {
 
-    public BinaryFile onDownload(ServiceContext context, Element params, int metadataId,
+    @Autowired
+    private ThreadPool threadPool;
+    public HttpEntity<byte[]> onDownload(ServiceContext context, NativeWebRequest request, int metadataId,
                               String fileName, Path file) throws ResourceHandlerException {
 
 
         try {
-            String requesterName =  Util.getParam(params, "name", "");
-            String requesterMail =  Util.getParam(params, "email",  "");
-            String requesterOrg =  Util.getParam(params, "org",  "");
-            String requesterComments =  Util.getParam(params, "comments",  "");
+            String requesterName =  getParam(request, "name", "");
+            String requesterMail =  getParam(request, "email",  "");
+            String requesterOrg =  getParam(request, "org",  "");
+            String requesterComments =  getParam(request, "comments",  "");
 
 
             // Store download request for statistics
@@ -35,13 +43,51 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             storeFileDownloadRequest(context, metadataId, fileName, requesterName, requesterMail, requesterOrg,
                     requesterComments, downloadDate);
 
-            return BinaryFile.encode(200, file.toAbsolutePath());
+            if (Files.exists(file) && request.checkNotModified(Files.getLastModifiedTime(file).toMillis())) {
+                return null;
+            }
+
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename=\"" + fileName + "\"");
+            headers.add("Cache-Control", "no-cache");
+            String contentType = Files.probeContentType(file);
+            if (contentType == null) {
+                String ext = com.google.common.io.Files.getFileExtension(file.getFileName().toString()).toLowerCase();
+                switch (ext) {
+                    case "png":
+                    case "gif":
+                    case "bmp":
+                    case "tif":
+                    case "tiff":
+                    case "jpg":
+                    case "jpeg":
+                        contentType = "image/" + ext;
+                        break;
+                    case "txt":
+                    case "html":
+                        contentType = "text/" + ext;
+                        break;
+                    default:
+                        contentType = "application/" + ext;
+                }
+            }
+
+            headers.add("Content-Type", contentType);
+
+            return new HttpEntity<>(Files.readAllBytes(file), headers);
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownload): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownload): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
+    }
+
+    private String getParam(NativeWebRequest request, String paramName, String defaultVal) {
+        String val = request.getParameter(paramName);
+        if (val == null) {
+            return defaultVal;
+        }
+        return val;
     }
 
     @Override
@@ -103,41 +149,46 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
      * @param requesterComments
      * @param downloadDate
      */
-    private void storeFileDownloadRequest(ServiceContext context, int metadataId, String fname,
-                                          String requesterName, String requesterMail,
-                                          String requesterOrg, String requesterComments,
-                                          String downloadDate) {
-        MetadataFileUpload metadataFileUpload;
+    private void storeFileDownloadRequest(final ServiceContext context, final int metadataId, final String fname,
+                                          final String requesterName, final String requesterMail,
+                                          final String requesterOrg, final String requesterComments,
+                                          final String downloadDate) {
+        final MetadataFileUploadRepository uploadRepository = context.getBean(MetadataFileUploadRepository.class);
+        final MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
 
-        // Each download is related to a file upload record
-        try {
-            metadataFileUpload = context.getBean(MetadataFileUploadRepository.class).
-                    findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
+        threadPool.runTask(new Runnable() {
+            @Override
+            public void run() {
+                MetadataFileUpload metadataFileUpload;
 
-        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-            Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
+                // Each download is related to a file upload record
+                try {
+                    metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
 
-            // No related upload is found
-            metadataFileUpload = null;
-        }
+                } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+                    Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
 
-        if (metadataFileUpload != null) {
-            MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
+                    // No related upload is found
+                    metadataFileUpload = null;
+                }
 
+                if (metadataFileUpload != null) {
             MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
 
-            metadataFileDownload.setMetadataId(metadataId);
-            metadataFileDownload.setFileName(fname);
-            metadataFileDownload.setRequesterName(requesterName);
-            metadataFileDownload.setRequesterMail(requesterMail);
+                    metadataFileDownload.setMetadataId(metadataId);
+                    metadataFileDownload.setFileName(fname);
+                    metadataFileDownload.setRequesterName(requesterName);
+                    metadataFileDownload.setRequesterMail(requesterMail);
 
-            metadataFileDownload.setRequesterOrg(requesterOrg);
-            metadataFileDownload.setRequesterComments(requesterComments);
-            metadataFileDownload.setDownloadDate(downloadDate);
-            metadataFileDownload.setUserName(context.getUserSession().getUsername());
-            metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
+                    metadataFileDownload.setRequesterOrg(requesterOrg);
+                    metadataFileDownload.setRequesterComments(requesterComments);
+                    metadataFileDownload.setDownloadDate(downloadDate);
+                    metadataFileDownload.setUserName(context.getUserSession().getUsername());
+                    metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
 
-            repo.save(metadataFileDownload);
-        }
+                    repo.save(metadataFileDownload);
+                }
+            }
+        });
     }
 }

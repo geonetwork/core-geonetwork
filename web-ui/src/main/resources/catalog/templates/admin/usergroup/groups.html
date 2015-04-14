@@ -21,8 +21,11 @@
               data-cache="groups"/>
         </div>
 
-        <button type="button" class="btn btn-primary btn-block" data-ng-click="addGroup()"
-          id="gn-btn-group-add">
+        <button type="button"
+                class="btn btn-primary btn-block"
+                data-ng-click="addGroup()"
+                data-ng-show="user.isAdministratorOrMore()"
+                id="gn-btn-group-add">
           <i class="fa fa-plus"/>
           <span data-translate="">newGroup</span>
         </button>
@@ -35,18 +38,20 @@
   <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
     <div class="panel panel-default" data-ng-search-form="">
       <div class="panel-heading"
-        title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
+        title="{{searchResults.count > 0 ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <strong>{{groupSelected.name}}</strong>
-        <div class="btn-toolbar">
+        <div class="btn-toolbar"
+                data-ng-show="user.isAdministratorOrMore()">
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')" id="gn-btn-group-save">
             <i class="fa fa-save"></i> <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
-            data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0"
+            data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
             <i class="fa fa-trash-o"></i> <span data-translate="">deleteGroup</span>
           </button>
@@ -96,10 +101,15 @@
                               <div class="col-md-4">
                                   <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
                                        style="max-width:128px; max-height:128px"></img>
+                                <a href="" data-ng-click="deleteGroupLogo()"
+                                   class="text-danger">
+                                  <i data-ng-show="groupSelected.logo"
+                                     class="fa fa-times delete"></i>
+                                </a>
                               </div>
                               <div class="col-md-8">
                                   <span class="btn btn-success btn-block fileinput-button">
-                                      <i class="fa fa-plus fa fa-white"></i>
+                                      <i class="fa fa-plus fa-white"></i>
                                       <span data-translate="">chooseOrDropResource</span>
                                       <input type="file" id="group-logo" name="logofile" multiple="false"></input>
                                   </span>

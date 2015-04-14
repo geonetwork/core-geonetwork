@@ -60,11 +60,13 @@
         <facet name="p02" indexKey="thesaurus-parameter.seadatanet-ocean-discovery-parameter" label="p02"/>
         <facet name="p35" indexKey="thesaurus-parameter.seadatanet-ocean-chemistry-variable" label="p35"/>
         <facet name="sextantTheme" indexKey="sextantTheme" label="sextantThemes"/>
+        <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
+        <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="inspireTheme_en" indexKey="inspireTheme_en" label="inspireThemes_en"/>
         <facet name="inspireTheme_fr" indexKey="inspireTheme_fr" label="inspireThemes_fr"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
-        <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
+        <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
@@ -73,9 +75,12 @@
         <facet name="createDateYear" indexKey="createDateYear" label="createDateYears"/>
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
+        <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
+        <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
+        <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
+        <facet name="status" indexKey="_status" label="status"/>
+        <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
-        <facet name="_groupPublished" indexKey="_groupPublished" label="_groupPublished"/>
         <facet name="thesaurus-external.parameter.NVS.P01"
                label="thesaurus-external.parameter.NVS.P01"
                indexKey="thesaurus-external.parameter.NVS.P01"/>
@@ -88,6 +93,8 @@
         <facet name="thesaurus-external.parameter.NVS.P35"
                label="thesaurus-external.parameter.NVS.P35"
                indexKey="thesaurus-external.parameter.NVS.P35"/>
+        <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
+        <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     </facets>
 
     <summaryTypes>
@@ -99,17 +106,35 @@
             <item facet="sextantTheme" max="300"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-            <item facet="format" max="15" sortBy="value"/>
+          <item facet="format" max="15" sortBy="value"/>
+          <item facet="publishedForGroup" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        </summaryType>
+        <summaryType name="manager">
+          <item facet="category" max="99" sortBy="value"
+                translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+          <item facet="status" max="10" sortBy="value"
+                translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
+          <item facet="isValid" max="3" sortBy="value"/>
+          <item facet="groupOwner" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+          <item facet="publishedForGroup" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+          <item facet="standard" max="15" sortBy="value"/>
+          <item facet="isHarvested" max="2" sortBy="value"/>
+          <item facet="metadataType" max="3" sortBy="value"/>
         </summaryType>
         <summaryType name="titles">
             <item facet="title" sortOrder="desc" max="100"/>
@@ -145,7 +170,7 @@
             <item facet="inspireTheme_fr" max="35"/>
             <item facet="inspireTheme_en" max="35"/>
             <item facet="sextantTheme" max="300"/>
-            <item facet="_groupPublished" max="300"/>
+            <item facet="publishedForGroup" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P01" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>

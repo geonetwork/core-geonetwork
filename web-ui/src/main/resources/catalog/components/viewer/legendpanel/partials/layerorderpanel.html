@@ -1,0 +1,14 @@
+  <ul class="list-group">
+    <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
+        class="list-group-item" >
+
+      <span class="">
+       <a href="" class="fa fa-arrow-up" ng-class="{ 'disabled' : $first}" ng-click="moveLayer(layer, 1)" title="{{'layerMoveUp'|translate}}"></a>
+       <a href="" class="fa fa-arrow-down" ng-class="{ 'disabled' : $last}" ng-click="moveLayer(layer, -1)"  title="{{'layerMoveDown'|translate}}"></a>
+      </span>
+      <label>
+        {{layer.get('label')}}
+      </label>
+
+    </li>
+  </ul>

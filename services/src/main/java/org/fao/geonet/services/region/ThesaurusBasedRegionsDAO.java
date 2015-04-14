@@ -4,8 +4,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
@@ -18,8 +16,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
@@ -55,8 +57,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     }
 
     private synchronized Thesaurus getThesaurus(ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager th = gc.getBean(ThesaurusManager.class);
+        ThesaurusManager th = context.getBean(ThesaurusManager.class);
         Thesaurus regions = th.getThesaurusByName(thesaurusName);
         if(regions != null) {
             return regions;
@@ -84,7 +85,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         return geometry;
     }
 
-	@Override
+    @Override
 	public Collection<String> getRegionCategoryIds(final ServiceContext context) throws Exception{
 	    return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY, new Callable<Collection<String>>(){
 

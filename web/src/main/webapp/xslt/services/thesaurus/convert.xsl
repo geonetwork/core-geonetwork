@@ -23,7 +23,7 @@
 		<xsl:choose>
 			<xsl:when test="$keywords">
 				<xsl:for-each-group select="$keywords"
-					group-by="thesaurus">
+					group-by="thesaurus/key">
 					<saxon:call-template name="{$tpl}"/>
 				</xsl:for-each-group>
 			</xsl:when>

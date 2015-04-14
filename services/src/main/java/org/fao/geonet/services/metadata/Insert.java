@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Maps;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -46,6 +47,7 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 
@@ -109,7 +111,7 @@ public class Insert extends NotInReadOnlyModeService {
         //--- if the uuid does not exist and is not a template we generate it
 
         String uuid;
-        if (metadataType == MetadataType.TEMPLATE) {
+        if (metadataType == MetadataType.METADATA) {
             uuid = dataMan.extractUUID(schema, xml);
             if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
         } else uuid = UUID.randomUUID().toString();
@@ -127,9 +129,10 @@ public class Insert extends NotInReadOnlyModeService {
         DataManager dm = gc.getBean(DataManager.class);
 
         // Import record
+        Map<String, String> sourceTranslations = Maps.newHashMap();
         Importer.importRecord(uuid, uuidAction, md, schema, 0,
-                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
-                date, group, metadataType);
+                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(),
+                sourceTranslations, context, id, date, date, group, metadataType);
 
         int iId = Integer.parseInt(id.get(0));
 

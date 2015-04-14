@@ -116,7 +116,15 @@
         importFromDir: function(data) {
           return $http({
             url: 'md.import@json?' + data,
-            method: 'GET'
+            method: 'GET',
+            transformResponse: function (defaults) {
+              try {
+                return JSON.parse(defaults);
+              }
+              catch(e) {
+                return defaults;
+              }
+            }
           });
         },
 
@@ -134,7 +142,16 @@
         importFromXml: function(data) {
           return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
-                  'application/x-www-form-urlencoded'}
+                  'application/x-www-form-urlencoded'},
+            transformResponse: function (defaults) {
+              try {
+                return JSON.parse(defaults);
+              }
+              catch(e) {
+                return defaults;
+              }
+            }
+
           });
         },
 
@@ -263,9 +280,9 @@
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
 
-    info: 'info@json',
+    info: 'info?_content_type=json',
 
-    country: 'regions.list@json?categoryId=' +
+    country: 'regions.list?_content_type=json&categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
@@ -279,7 +296,7 @@
     lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
+    geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
     facetConfig: 'search/facet/config'
   });
@@ -493,10 +510,19 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      if (angular.isDefined(this.category) &&
-          !angular.isArray(this.category)) {
-        this.category = [this.category];
-      }
+      var listOfArrayFields = ['topicCat', 'category',
+        'securityConstraints', 'resourceConstraints', 'legalConstraints',
+        'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'mdLanguage', 'datasetLang', 'type'];
+      var record = this;
+      this.linksCache = [];
+      $.each(listOfArrayFields, function(idx) {
+        var field = listOfArrayFields[idx];
+        if (angular.isDefined(record[field]) &&
+            !angular.isArray(record[field])) {
+          record[field] = [record[field]];
+        }
+      });
     };
 
     function formatLink(sLink) {
@@ -523,6 +549,12 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      isOwned: function() {
+        return this['geonet:info'].owner === 'true';
+      },
+      getOwnerId: function() {
+        return this['geonet:info'].ownerId;
+      },
       publish: function() {
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
             'false' : 'true';
@@ -533,6 +565,10 @@
       getLinksByType: function() {
         var ret = [];
         var types = Array.prototype.splice.call(arguments, 0);
+        var key = types.join('|');
+        if (this.linksCache[key]) {
+          return this.linksCache[key];
+        }
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           types.forEach(function(type) {
@@ -548,6 +584,7 @@
             }
           });
         });
+        this.linksCache[key] = ret;
         return ret;
       },
       getThumbnails: function() {
@@ -555,12 +592,14 @@
           var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
+            var insertFn = 'push';
             if (s[0] === 'thumbnail') {
               images.small = s[1];
+              var insertFn = 'unshift';
             } else if (s[0] === 'overview') {
               images.big = s[1];
             }
-            images.list.push({url: s[1], label: s[2]});
+            images.list[insertFn]({url: s[1], label: s[2]});
           }
         }
         return images;
@@ -579,10 +618,11 @@
         }
         return ret;
       },
-      getBoxAsPolygon: function() {
+      getBoxAsPolygon: function(i) {
         // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
-        if (this.geoBox) {
-          var coords = this.geoBox.split('|');
+        var bboxes = [];
+        if (this.geoBox[i]) {
+          var coords = this.geoBox[i].split('|');
           return 'Polygon((' +
               coords[0] + ' ' +
               coords[1] + ',' +

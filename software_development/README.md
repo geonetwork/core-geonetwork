@@ -4,23 +4,22 @@
 ## System Requirements
 
 GeoNetwork is a Java application that runs as a servlet so the Java Runtime
-Environment (JRE) must be installed in order to run it. You can get the JRE from http://www.oracle.com/technetwork/java/javase/downloads and you have to download the Java 6 Standard Edition (SE). GeoNetwork won’t run with Java 1.4. It will run with:
+Environment (JRE) must be installed in order to run it.
+You can get the JRE from http://www.oracle.com/technetwork/java/javase/downloads and
+you have to download the Java 7 Standard Edition (SE).
+GeoNetwork won’t run with Java 1.4, 1.5, 1.6.
 
-* Java 5 - but few people should be using that now as it is unsupported.
-* Java 6 - most testing has taken place under Java 6, so we recommend Java 6.
-* OpenJDK 7 - note: problems have been reported with OpenJDK 6.
 
 Being written in Java, GeoNetwork can run on any
-platform that supports Java, so it can run on Windows, Linux and Mac OSX. For
-MacOSX, make sure you use version 10.4 (Tiger) or newer. Version 10.3 (Panther)
-has only Java 1.4 so it cannot run GeoNetwork.
+platform that supports Java, so it can run on Windows, Linux and Mac OSX.
+
 
 Next, you need a servlet container. GeoNetwork comes with an embedded container (Jetty)
 which is fast and well suited for most applications. If you need a stronger one, you
 can install Tomcat from the Apache Software Foundation (http://tomcat.apache.org).
 It provides load balancing, fault tolerance and other production features. If you
 work for an organisation, it is probable that you already use Tomcat.
-The tested version is 6.0.x but GeoNetwork should work with all other versions (>= 5.5).
+The tested version is 7.x or 8.x.
 
 Regarding storage, you need a Database Management System (DBMS) like Oracle,
 MySQL, Postgresql etc. GeoNetwork comes with an embedded DBMS (H2) which is
@@ -40,7 +39,7 @@ The software is run in different ways depending on the servlet container you are
 using:
 
 * *Tomcat* - GeoNetwork is available as a WAR file which you can put into the Tomcat webapps directory. Tomcat will deploy the WAR file when it is started. You can then use the Tomcat manager web application to stop/start GeoNetwork. You can also use the startup.* and shutdown.* scripts located in the Tomcat bin directory (.* means .sh or .bat depending on your OS) but if you have other web applications in the tomcat container, then they will also be affected.
-* *Jetty* - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are start-geonetwork.* and stop-geonetwork.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
+* *Jetty* - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are startup.* and shutdown.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
 
 ## Tools
 
@@ -213,22 +212,6 @@ default.
 
 Make sure you update version number and other relevant properties in the
 ``installer/build.xml`` file
-
-You can also create an installer that includes a Java Runtime Environment
-(JRE) for Windows. This will allow GeoNetwork to run on a compatible, embedded
-JRE and thus avoid error messages caused by JRE incompatibilities on the PC.
-
-Creating an installer with an embedded JRE requires you to first download and
-unzip the JRE in a folder jre1.5.0_12 at the project root
-level. Refer to the installer-config-win-jre.xml file for
-exact configuration.
-
-
-## Running tests
-
-Build the application and run the integration tests in ``web-itests``
-
-  $ mvn clean install -Pitests
 
 
 ### Packaging GeoNetwork using Maven
