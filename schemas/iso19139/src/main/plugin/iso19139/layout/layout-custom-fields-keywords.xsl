@@ -31,15 +31,23 @@
     <xsl:variable name="thesaurusTitleEl" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
-        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">$thesaurusTitleEl/gco:CharacterString</xsl:when>
-        <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]) != ''">
+        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
+          <xsl:value-of select="normalize-space($thesaurusTitleEl/gco:CharacterString)"/>
+        </xsl:when>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/
+                          gmd:textGroup/gmd:LocalisedCharacterString[
+                            @locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]) != ''">
           <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]"/>
         </xsl:when>
-        <xsl:when test="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]">
-          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]"/>
+        <xsl:when test="$thesaurusTitleEl/gmd:PT_FreeText/
+                          gmd:textGroup/gmd:LocalisedCharacterString[
+                            normalize-space(text()) != ''][1]">
+          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/
+                                  gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code" />
+          <xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName/
+                                  gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

@@ -549,8 +549,8 @@
 					</xsl:choose>
 				</xsl:if>
 			</xsl:for-each>
-			
-			
+
+
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -562,66 +562,65 @@
 			</xsl:for-each>
 
 			<!-- index online protocol -->
-			
-			<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
-				<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
-				<xsl:variable name="linkage" select="gmd:linkage/gmd:URL" /> 
-				<xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
-				<xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
-				<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
-				<xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
-				
-                <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
-                <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
-				<!-- ignore empty downloads -->
-				<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
-					<Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
-				</xsl:if>  
+      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+        <xsl:variable name="tPosition" select="position()"></xsl:variable>
+        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
+          <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+          <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+          <xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
+          <xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
+          <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+          <xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
 
-        <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
-          <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
-        </xsl:if>
+          <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
+          <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
-                <xsl:if test="normalize-space($mimetype)!=''">
-					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
-				</xsl:if>
-			  
-				<xsl:if test="contains($protocol, 'WWW:DOWNLOAD') or contains($protocol, 'DB') 
-				 or contains($protocol, 'FILE')  or contains($protocol, 'WFS')  or contains($protocol, 'WCS')  or contains($protocol, 'COPYFILE')">
-			    	<Field name="download" string="true" store="false" index="true"/>
-			  	</xsl:if>
-			  
-                <xsl:if test="contains($protocol, 'OGC:WMS') or contains($protocol, 'OGC:WMC') or contains($protocol, 'OGC:OWS')
-                	or contains($protocol, 'OGC:OWS-C') or $wmsLinkNoProtocol">
-			   	 	<Field name="dynamic" string="true" store="false" index="true"/>
-			  	</xsl:if>
+          <!-- ignore empty downloads -->
+          <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
+            <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
+          </xsl:if>
 
-                <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
-                <xsl:if test="not($wmsLinkNoProtocol)">
-				<Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
-                </xsl:if>
-				
-				<!-- Add KML link if WMS -->
-				<xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
-					<!-- FIXME : relative path -->
-					<Field name="link" string="{concat($title, '|', $desc, '|', 
-						'../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title, 
-						'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>					
-				</xsl:if>					
-				
-				<!-- Try to detect Web Map Context by checking protocol or file extension -->
-				<xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
-					<Field name="link" string="{concat($title, '|', $desc, '|', 
-						$linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc')}" store="true" index="false"/>
-				</xsl:if>
+          <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
+            <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
+          </xsl:if>
 
-                <xsl:if test="$wmsLinkNoProtocol">
-                    <Field name="link" string="{concat($title, '|', $desc, '|',
-						$linkage, '|OGC:WMS|application/vnd.ogc.wms_xml')}" store="true" index="false"/>
-                </xsl:if>
-			</xsl:for-each>  
-		</xsl:for-each>
+          <xsl:if test="normalize-space($mimetype)!=''">
+            <Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="contains($protocol, 'WWW:DOWNLOAD') or contains($protocol, 'DB')
+           or contains($protocol, 'FILE')  or contains($protocol, 'WFS')  or contains($protocol, 'WCS')  or contains($protocol, 'COPYFILE')">
+            <Field name="download" string="true" store="false" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="contains($protocol, 'OGC:WMS') or contains($protocol, 'OGC:WMC') or contains($protocol, 'OGC:OWS')
+                    or contains($protocol, 'OGC:OWS-C') or $wmsLinkNoProtocol">
+            <Field name="dynamic" string="true" store="false" index="true"/>
+          </xsl:if>
+
+          <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
+          <xsl:if test="not($wmsLinkNoProtocol)">
+            <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition)}" store="true" index="false"/>
+          </xsl:if>
+
+          <!-- Add KML link if WMS -->
+          <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
+            <!-- FIXME : relative path -->
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+              '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
+              '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition)}" store="true" index="false"/>
+          </xsl:if>
+
+          <!-- Try to detect Web Map Context by checking protocol or file extension -->
+          <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+              $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition)}" store="true" index="false"/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:for-each>
+
+    </xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- === Content info === -->

@@ -13,6 +13,10 @@
 
       <i class="fa text-muted"
          data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
+      <br/>
+      <span title="{{'metadataAuthor' | translate}}">
+        {{md.getOwnername()}}
+      </span>
     </td>
     <td>
       <!-- TODO: subtemplate link for editing is different -->

@@ -168,21 +168,6 @@
 
       ///////////////////////////////////////////////////////////////////
 
-      angular.extend($scope.searchObj, {
-        advancedMode: false,
-        viewerMap: viewerMap,
-        searchMap: searchMap,
-        panier: []
-      });
-    }]);
-
-  module.controller('gnsSextantSearch', [
-    '$scope',
-    'gnOwsCapabilities',
-    'gnMap',
-    'sxtGlobals',
-    function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
-
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
@@ -204,9 +189,14 @@
 
           gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name).then(function(layer) {
-            layer.set('group', group);
-            layer.set('md', md);
-          });
+                layer.set('group', group);
+                layer.set('md', md);
+                var downloads = md.getLinksByType(link.group,
+                    'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+                    'WFS', 'WCS', 'COPYFILE');
+
+                layer.set('downloads', downloads);
+              });
           $scope.mainTabs.map.titleInfo += 1;
 
         },
@@ -218,6 +208,22 @@
           $scope.mainTabs.panier.titleInfo += 1;
         }
       };
+
+      angular.extend($scope.searchObj, {
+        advancedMode: false,
+        viewerMap: viewerMap,
+        searchMap: searchMap,
+        panier: []
+      });
+    }]);
+
+  module.controller('gnsSextantSearch', [
+    '$scope',
+    'gnOwsCapabilities',
+    'gnMap',
+    'sxtGlobals',
+    function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
+
     }]);
 
   module.controller('gnsSextantSearchForm', [

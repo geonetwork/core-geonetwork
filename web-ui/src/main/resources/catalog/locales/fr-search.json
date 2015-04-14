@@ -271,5 +271,12 @@
     "intersectWith": "Intersects with",
     "fullyOutsideOf": "Fully outside of",
     "encloses": "Enclosing",
-    "within": "Within"
+    "within": "Within",
+    "transferOwnership": "Changer l'auteur",
+    "selectNewOwner": "Choisir un auteur",
+    "selectGroup": "Choisir un groupe",
+    "loadUsersError": "Erreur lors du chargement des utilisateurs",
+    "loadUserGroupsError": "Erreur lors du chargement des groupes",
+    "transferOwnershipError": "Erreur lors du changement d'auteur",
+    "transferOwnershipSuccessMsg": "<h4>Changement d'auteur effectué.</h4><dl class=\"dl-horizontal\"><dt>Transférés :</dt><dd>{{done}}</dd><dt>Fiches avec auteur différent :</dt><dd>{{notOwner}}</dd><dt>Fiches non trouvées :</dt><dd>{{notFound}}</dd></dl>"
 }
