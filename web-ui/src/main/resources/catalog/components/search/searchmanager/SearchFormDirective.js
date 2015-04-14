@@ -34,6 +34,8 @@
     };
     var self = this;
 
+    var hiddenParams = $scope.searchObj.hiddenParams;
+
     /** State of the facets of the current search */
     $scope.currentFacets = [];
 
@@ -118,7 +120,8 @@
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
-      gnSearchManagerService.gnSearch(params).then(
+      var finalParams = angular.extend(params, hiddenParams);
+      gnSearchManagerService.gnSearch(finalParams).then(
           function(data) {
             $scope.searching--;
             $scope.searchResults.records = [];
