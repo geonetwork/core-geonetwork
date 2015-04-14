@@ -5,12 +5,17 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputLayerSpec {
-	
+	@JacksonXmlProperty(isAttribute = true)
 	private String format;
+	@JacksonXmlProperty(isAttribute = true)
 	private String epsg;
+	@JacksonXmlProperty(isAttribute = true)
 	private String protocol;
+	@JacksonXmlProperty(isAttribute = true)
 	private String linkage;
 
 	public InputLayerSpec() {};

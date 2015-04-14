@@ -5,13 +5,20 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OutputLayerSpec {
 
+	@JacksonXmlProperty(isAttribute = true)
 	private String format;
+	@JacksonXmlProperty(isAttribute = true)
 	private String name;
+	@JacksonXmlProperty(isAttribute = true)
 	private String epsg;
+	@JacksonXmlProperty(isAttribute = true)
 	private String xmin, ymin, xmax, ymax;
+	@JacksonXmlProperty(isAttribute = true)
 	private String mercator_lat;
 
 	public OutputLayerSpec() {}

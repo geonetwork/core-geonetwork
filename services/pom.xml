@@ -89,7 +89,12 @@
           <groupId>com.sun.xml.bind</groupId>
           <artifactId>jaxb-impl</artifactId>
       </dependency>
-	</dependencies>
+        <dependency>
+          <groupId>com.fasterxml</groupId>
+          <artifactId>jackson-xml-databind</artifactId>
+          <version>0.6.2</version>
+        </dependency>
+      </dependencies>
     <build>
         <plugins>
             <plugin>
