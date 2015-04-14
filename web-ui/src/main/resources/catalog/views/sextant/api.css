@@ -8674,6 +8674,18 @@
 .gn .gn-main-viewer [ngeo-map].gn-gfi-loading:hover {
   cursor: wait;
 }
+.gn [gn-main-viewer] .clear,
+.gn .gn-main-viewer .clear {
+  position: absolute;
+  top: .75em;
+  right: .75em;
+  color: #666;
+}
+.gn [gn-main-viewer] .clear:hover,
+.gn .gn-main-viewer .clear:hover {
+  cursor: pointer;
+  color: #222;
+}
 .gn [gn-main-viewer] .search-container,
 .gn .gn-main-viewer .search-container {
   position: absolute;
@@ -8711,18 +8723,6 @@
 .gn .gn-main-viewer .search-container .dropdown-menu a em {
   font-size: 90%;
   color: grey;
-}
-.gn [gn-main-viewer] .search-container .clear,
-.gn .gn-main-viewer .search-container .clear {
-  position: absolute;
-  top: .75em;
-  right: .75em;
-  color: #666;
-}
-.gn [gn-main-viewer] .search-container .clear:hover,
-.gn .gn-main-viewer .search-container .clear:hover {
-  cursor: pointer;
-  color: #222;
 }
 .gn [gn-main-viewer] .tools,
 .gn .gn-main-viewer .tools {
@@ -10070,6 +10070,49 @@
   max-height: 45em;
   overflow-y: auto;
 }
+@media (min-width: 992px) {
+  .gn [gn-share] {
+    min-width: 600px;
+  }
+}
+.gn [gn-share] .gn-searchgroup-input {
+  padding-left: 0;
+  max-width: 400px;
+}
+.gn [gn-share] .gn-share-grid table {
+  width: auto;
+}
+.gn [gn-share] .gn-share-grid thead,
+.gn [gn-share] .gn-share-grid tbody {
+  display: block;
+}
+.gn [gn-share] .gn-share-grid tbody {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.gn [gn-share] .gn-share-grid td,
+.gn [gn-share] .gn-share-grid th {
+  text-align: center;
+  width: 7em;
+}
+.gn [gn-share] .gn-share-grid td:first-child,
+.gn [gn-share] .gn-share-grid th:first-child {
+  width: 15em;
+  text-align: left;
+}
+.gn [gn-share] .gn-share-grid td td,
+.gn [gn-share] .gn-share-grid th td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.gn .gn-popup-title span {
+  display: inline-block;
+  max-width: 660px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .gn [sxt-main-viewer] .sxt-search-btn {
   left: 0;
 }
@@ -10354,6 +10397,11 @@
 .gn [sxt-main-viewer] [sxt-layertree] li,
 .gn [sxt-main-viewer] .sxtb-speciestree li {
   display: block;
+}
+.gn [sxt-main-viewer] [sxt-layertree] .sxt-layertree-filter,
+.gn [sxt-main-viewer] .sxtb-speciestree .sxt-layertree-filter {
+  margin: 0 0 15px 15px;
+  position: relative;
 }
 .gn [sxt-main-viewer] .panel-ncwms-container {
   position: absolute;
@@ -10975,7 +11023,7 @@
   padding: 0 5px;
 }
 .gn [data-ng-search-form] .panel-heading .pull-right {
-  margin-top: .3em;
+  margin-top: 0.15em;
 }
 .gn [data-ng-search-form] .sxt-right-panel .panel-body {
   font-size: .9em;
@@ -10992,6 +11040,16 @@
   background: rgba(255, 255, 255, 0.7);
   border-radius: 1em;
   padding: .2em;
+}
+.gn [data-ng-search-form] .sxt-adminbtn {
+  float: none;
+  position: absolute;
+  left: 50%;
+  top: 3px;
+  margin-left: -5em;
+}
+.gn [data-ng-search-form] .sxt-adminbtn .caret {
+  color: #f28033;
 }
 .gn .tab-pane .container-fluid {
   overflow-y: auto;
@@ -11419,7 +11477,11 @@
   text-align: center;
 }
 .gn-img-modal .modal-dialog .gn-btn-modal-img {
+  position: absolute;
   top: auto;
   bottom: .3em;
   right: .3em;
+}
+.gn [gn-share] .gn-share-help {
+  display: none;
 }
