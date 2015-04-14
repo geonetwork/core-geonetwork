@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
-								xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-								xmlns:gmx="http://www.isotc211.org/2005/gmx"
-								xmlns:gco="http://www.isotc211.org/2005/gco"
-								xmlns:gmd="http://www.isotc211.org/2005/gmd"
-								xmlns:srv="http://www.isotc211.org/2005/srv"
-								xmlns:geonet="http://www.fao.org/geonetwork"
-								xmlns:xlink="http://www.w3.org/1999/xlink"
-								xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-								exclude-result-prefixes="#all">
-	
-	
-	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
-	
-	
-	
-	<xsl:include href="../process/process-utility.xsl"/>
-	
-	
-	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
+                exclude-result-prefixes="#all">
+
+
+  <!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
+
+
+
+  <xsl:include href="../process/process-utility.xsl"/>
+
+
+  <!-- Convert a concept to an ISO19139 fragment with an Anchor
         for each keywords pointing to the concept URI-->
-	<xsl:template name="to-iso19139-keyword-with-anchor">
-		<xsl:call-template name="to-iso19139-keyword">
-			<xsl:with-param name="withAnchor" select="true()"/>
-		</xsl:call-template>
-	</xsl:template>
-	
-	
-	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
+  <xsl:template name="to-iso19139-keyword-with-anchor">
+    <xsl:call-template name="to-iso19139-keyword">
+      <xsl:with-param name="withAnchor" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
+  <!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
     will be resolved by XLink resolver. -->
-	<xsl:template name="to-iso19139-keyword-as-xlink">
-		<xsl:call-template name="to-iso19139-keyword">
-			<xsl:with-param name="withXlink" select="true()"/>
-		</xsl:call-template>
-	</xsl:template>
-	
-	
-	<!-- Convert a concept to an ISO19139 keywords.
+  <xsl:template name="to-iso19139-keyword-as-xlink">
+    <xsl:call-template name="to-iso19139-keyword">
+      <xsl:with-param name="withXlink" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
+  <!-- Convert a concept to an ISO19139 keywords.
     If no keyword is provided, only thesaurus section is adaded.
     -->
-	<xsl:template name="to-iso19139-keyword">
-		<xsl:param name="withAnchor" select="false()"/>
-		<xsl:param name="withXlink" select="false()"/>
-		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
+  <xsl:template name="to-iso19139-keyword">
+    <xsl:param name="withAnchor" select="false()"/>
+    <xsl:param name="withXlink" select="false()"/>
+    <!-- Add thesaurus identifier using an Anchor which points to the download link.
         It's recommended to use it in order to have the thesaurus widget inline editor
         which use the thesaurus identifier for initialization. -->
-		<xsl:param name="withThesaurusAnchor" select="true()"/>
+    <xsl:param name="withThesaurusAnchor" select="true()"/>
 
+
+    <!-- The lang parameter contains a list of languages
+    with the main one as the first element. If only one element
+    is provided, then CharacterString or Anchor are created.
+    If more than one language is provided, then PT_FreeText
+    with or without CharacterString can be created. -->
     <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
-    <xsl:variable name="textgroupOnly" select="/root/request/textgroupOnly"/>
+    <xsl:variable name="textgroupOnly"
+                  as="xs:boolean"
+                  select="if (/root/request/textgroupOnly)
+                          then /root/request/textgroupOnly
+                          else false()"/>
 
 
     <xsl:apply-templates mode="to-iso19139-keyword" select="." >
@@ -59,7 +69,7 @@
       <xsl:with-param name="listOfLanguage" select="$listOfLanguage"/>
       <xsl:with-param name="textgroupOnly" select="$textgroupOnly"/>
     </xsl:apply-templates>
-	</xsl:template>
+  </xsl:template>
 
   <xsl:template mode="to-iso19139-keyword" match="*[not(/root/request/skipdescriptivekeywords)]">
     <xsl:param name="textgroupOnly"/>
@@ -72,16 +82,16 @@
       <xsl:choose>
         <xsl:when test="$withXlink">
           <xsl:variable name="multiple"
-            select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
+                        select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
           <xsl:variable name="isLocalXlink"
-            select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
+                        select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
-            select="if ($isLocalXlink = 'true')
+                        select="if ($isLocalXlink = 'true')
 																then  concat('local://', /root/gui/language)
 																else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
-            select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
+                         select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
 							                '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
 							                '&amp;amp;multiple=', $multiple,
 							                if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
@@ -105,12 +115,13 @@
     <xsl:param name="listOfLanguage"/>
     <xsl:param name="withAnchor"/>
     <xsl:param name="withThesaurusAnchor"/>
-          <xsl:call-template name="to-md-keywords">
-            <xsl:with-param name="withAnchor" select="$withAnchor"/>
-            <xsl:with-param name="withThesaurusAnchor" select="$withThesaurusAnchor"/>
-            <xsl:with-param name="listOfLanguage" select="$listOfLanguage"/>
-            <xsl:with-param name="textgroupOnly" select="$textgroupOnly"/>
-          </xsl:call-template>
+
+    <xsl:call-template name="to-md-keywords">
+      <xsl:with-param name="withAnchor" select="$withAnchor"/>
+      <xsl:with-param name="withThesaurusAnchor" select="$withThesaurusAnchor"/>
+      <xsl:with-param name="listOfLanguage" select="$listOfLanguage"/>
+      <xsl:with-param name="textgroupOnly" select="$textgroupOnly"/>
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="to-md-keywords">
@@ -133,8 +144,10 @@
             <xsl:variable name="keywordThesaurus" select="replace(./uri, 'http://org.fao.geonet.thesaurus.all/([^@]+)@@@.+', '$1')" />
             <xsl:attribute name="gco:nilReason" select="concat('thesaurus::', $keywordThesaurus)" />
           </xsl:if>
+
+          <!-- Multilingual output if more than one requested language -->
           <xsl:choose>
-            <xsl:when test="/root/request/lang">
+            <xsl:when test="count($listOfLanguage) > 1">
 
               <xsl:variable name="keyword" select="." />
 
@@ -158,6 +171,7 @@
               </gmd:PT_FreeText>
             </xsl:when>
             <xsl:otherwise>
+              <!-- ... default mode -->
               <xsl:choose>
                 <xsl:when test="$withAnchor">
                   <!-- TODO multilingual Anchor ? -->
@@ -173,10 +187,10 @@
               </xsl:choose>
             </xsl:otherwise>
           </xsl:choose>
-
-
         </gmd:keyword>
       </xsl:for-each>
+
+
       <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
     </gmd:MD_Keywords>
   </xsl:template>
@@ -190,7 +204,7 @@
     <!-- Add thesaurus theme -->
     <gmd:type>
       <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-        codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
+                              codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
     </gmd:type>
     <xsl:if test="$thesaurusInfo">
       <gmd:thesaurusName>
@@ -202,7 +216,7 @@
           </gmd:title>
 
           <xsl:variable name="thesaurusDate"
-            select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)" />
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)" />
 
           <xsl:if test="$thesaurusDate != ''">
             <gmd:date>
@@ -223,8 +237,8 @@
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                    codeListValue="publication" />
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                          codeListValue="publication" />
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>
@@ -235,7 +249,7 @@
               <gmd:MD_Identifier>
                 <gmd:code>
                   <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/url}">geonetwork.thesaurus.<xsl:value-of
-                    select="$currentThesaurus" />
+                          select="$currentThesaurus" />
                   </gmx:Anchor>
                 </gmd:code>
               </gmd:MD_Identifier>
@@ -247,24 +261,24 @@
   </xsl:function>
 
   <!-- Convert a concept to an ISO19139 extent -->
-	<xsl:template name="to-iso19139-extent">
-		<xsl:param name="isService" select="false()"/>
-		
-		<xsl:variable name="currentThesaurus" select="thesaurus/key"/>
-		<!-- Loop on all keyword from the same thesaurus -->
-		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
-			<xsl:choose>
-				<xsl:when test="$isService">
-					<srv:extent>
-						<xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
-					</srv:extent>
-				</xsl:when>
-				<xsl:otherwise>
-					<gmd:extent>
-						<xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
-					</gmd:extent>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:for-each>
-	</xsl:template>
+  <xsl:template name="to-iso19139-extent">
+    <xsl:param name="isService" select="false()"/>
+
+    <xsl:variable name="currentThesaurus" select="thesaurus/key"/>
+    <!-- Loop on all keyword from the same thesaurus -->
+    <xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+      <xsl:choose>
+        <xsl:when test="$isService">
+          <srv:extent>
+            <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
+          </srv:extent>
+        </xsl:when>
+        <xsl:otherwise>
+          <gmd:extent>
+            <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
+          </gmd:extent>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
+  </xsl:template>
 </xsl:stylesheet>

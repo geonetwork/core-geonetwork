@@ -188,7 +188,7 @@
           data-current-transformation="{$transformation}"
           data-max-tags="{$maxTags}"
           data-lang="{$metadataOtherLanguagesAsJson}"
-          data-textgroup-only="true">
+          data-textgroup-only="false">
         </div>
 
         <xsl:variable name="isTypePlace" select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
