@@ -224,7 +224,7 @@
 
     </element>
     <element name="gmd:DQ_DomainConsistency" id="113.0">
-        <label>Cohérence du domaine de valeur</label>
+        <label>Cohérence du domaine de valeurs</label>
         <description>Classe pour l'adhésion des valeurs aux domaines de valeurs</description>
         <help>Classe permettant la description du respect des valeurs des domaines de valeurs.
             Exemple : Un attribut a une valeur non renseignée dans la nomenclature, La charte graphique n’est pas respectée.</help>
@@ -795,7 +795,7 @@ responsable du service.</li>
         <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Cet élément de métadonnées fournit un lien vers la ressource décrite elle-même, et/ou vers des informations complémentaires la concernant.
     <ul>
-    <li>Le domaine de valeur de cet élément est une chaîne de caractères couramment exprimée sous forme d’un localisateur uniforme de la ressource (URL).</li>
+    <li>Le domaine de valeurs de cet élément est une chaîne de caractères couramment exprimée sous forme d’un localisateur uniforme de la ressource (URL).</li>
     <li>Cet élément répétable est obligatoire s’il existe une URL permettant d’obtenir davantage d’informations sur la ressource et/ou un accès à des services connexes.</li>
     </ul>
     ]]></help>
@@ -1101,13 +1101,13 @@ de métadonnées de données « BD Carthage métropole »
     </p>
     ]]></help>
         <help for="france"><![CDATA[<b>Recommandations :</b>
-    Même si le jeu de caractère de la donnée est UTF-8, le préciser. 
+    Même si le jeu de caractères de la donnée est UTF-8, le préciser.
     Cette information, purement technique, est disponible auprès de votre administrateur de données.
     ]]></help>
         <condition>Par défaut UTF-8</condition>
     </element>
     <element name="gmd:characterSet" id="4.0">
-        <label>Jeu de caractère</label>
+        <label>Jeu de caractères</label>
         <description>Nom complet du standard de code de caractères utilisé pour le jeu de métadonnées</description>
         <help>Nom complet du code de caractères normalisé utilisé pour le fichier de métadonnées. Le paramètre par défaut est "utf8". Les fichiers de texte contiennent normalement des valeurs d'octets représentant un sous-ensemble de valeurs de caractères via un codage (8859_1, ISO Latin-1), un format de transfert (Unicode-Transfer-Format UTF8) ou tout autre moyen.</help>
         <condition>Par défaut UTF-8</condition>
@@ -1255,7 +1255,7 @@ de métadonnées de données « BD Carthage métropole »
     <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
         <label>Point de contact des métadonnées</label>
         <description>Organisme responsable pour les informations que contiennent les métadonnées.</description>
-        <help>Rôle (propriétaire, prestataire, gestionnaire, etc.) de la personne ou du service compétent pouvant être sélectionné dans la liste présentée ici. Cet attribut renvoie à la classe CI_ResponsibleParty dans laquelle les informations relatives au service ou à la personne concernée sont gérées. Cet attribut est du type CI_ResponsibleParty et est géré dans la classe du même nom.</help>
+        <help>Fonction (propriétaire, prestataire, gestionnaire, etc.) de la personne ou du service compétent pouvant être sélectionné dans la liste présentée ici. Cet attribut renvoie à la classe CI_ResponsibleParty dans laquelle les informations relatives au service ou à la personne concernée sont gérées. Cet attribut est du type CI_ResponsibleParty et est géré dans la classe du même nom.</help>
 
         <help><![CDATA[<b>Point de contact des métadonnées</b>]]></help>
 
@@ -1280,7 +1280,7 @@ de métadonnées de données « BD Carthage métropole »
     <ul>
     <li>Ministère de l’Ecologie, du Développement et de lAménagement Durable, des Transports et du Logement  - Cartorisque - DPPR –SDPRM</li>
     <li>Email : editeur@prim.net</li>
-    <li>Rôle : point de contact</li>
+    <li>Fonction : point de contact</li>
     </ul>
     ]]></help>
 
@@ -2708,12 +2708,12 @@ période de temps couverte par le service.
             <option value="Number of invalid overlaps of surfaces" title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well." id="ISO19138:2006:measure:11">Nombre de chevauchements invalides de surface</option>
             <option value="Non-compliance rate with respect to the rules of the conceptual schema" title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset" id="ISO19138:2006:measure:12">Taux de non-conformité au regard des règles du schéma conceptuel</option>
             <option value=" Compliance rate with the rules of the conceptual schema" title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items" id="ISO19138:2006:measure:13">Pourcentage de conformité avec les règles du schéma conceptuel</option>
-            <option value="">-- Cohérence logique / de domaine de valeur --</option>
-            <option value="Value domain non-conformance" title="Indication of if an item is not in conformance with its value domain" id="ISO19138:2006:measure:14">Non conformité au domaine de valeur</option>
-            <option value="Value domain conformance" title="Indication of if an item is conforming to its value domain" id="ISO19138:2006:measure:15">Conformité au domaine de valeur</option>
+            <option value="">-- Cohérence logique / de domaine de valeurs --</option>
+            <option value="Value domain non-conformance" title="Indication of if an item is not in conformance with its value domain" id="ISO19138:2006:measure:14">Non conformité au domaine de valeurs</option>
+            <option value="Value domain conformance" title="Indication of if an item is conforming to its value domain" id="ISO19138:2006:measure:15">Conformité au domaine de valeurs</option>
             <option value="Number of items not in conformance with their value domain" title="Count of all items in the dataset that are not in conformance with their value domain." id="ISO19138:2006:measure:16">Nombre d'éléments non conformes avec leur domaine de valeurs</option>
-            <option value="Value domain conformance rate" title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset" id="ISO19138:2006:measure:17">Taux de conformité au domaine de valeur</option>
-            <option value="Value domain non-conformance rate" title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items" id="ISO19138:2006:measure:18">Taux de non-conformité au domaine de valeur</option>
+            <option value="Value domain conformance rate" title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset" id="ISO19138:2006:measure:17">Taux de conformité au domaine de valeurs</option>
+            <option value="Value domain non-conformance rate" title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items" id="ISO19138:2006:measure:18">Taux de non-conformité au domaine de valeurs</option>
             <option value="Physical structure conflicts" title="Count of all items in the dataset that are stored in conflict with the physical structure of the dataset" id="ISO19138:2006:measure:19">Conflits de structure physique</option>
             <option value="Physical structure conflict rate" title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items" id="ISO19138:2006:measure:20">Taux de conflit de structure physique</option>
             <option value="">-- Cohérence logique / topologique --</option>
@@ -3041,8 +3041,8 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
 
     </element>
     <element name="gmd:positionName" id="377.0">
-        <label>Position</label>
-        <description>Rôle ou position de la personne responsable</description>
+        <label>Fonction</label>
+        <description>Rôle ou fonction de la personne responsable</description>
         <help>Fonction ou position de la personne responsable.</help>
         <condition>Condition</condition>
     </element>
@@ -3981,7 +3981,7 @@ l’IGN (WPS)
     </element>
     <element name="gmd:valueType" id="134.0">
         <label>Type de valeur</label>
-        <description>Valeur quantitative, ou domaine de valeur, pour l'appréciation de qualité</description>
+        <description>Valeur quantitative, ou domaine de valeurs, pour l'appréciation de qualité</description>
         <help>Valeur (ou domaine de valeurs) quantitative pour l'appréciation de la qualité.</help>
         <helper>
             <option value="Booléen">Booléen</option>
@@ -4913,13 +4913,13 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
         <label>Jeu de caractère </label>
     </element>
     <element name="gmd:MD_ProgressCode">
-        <label>Progrès</label>
+        <label>État d'avancement</label>
     </element>
     <element name="gmd:MD_SpatialRepresentationTypeCode">
         <label>Type de représentation spatiale</label>
     </element>
     <element name="gmd:MD_MaintenanceFrequencyCode">
-        <label>Maintenance Fréquence</label>
+        <label>Fréquence de mise à jour</label>
     </element>
     <element name="gmd:MD_TopologyLevelCode">
         <label>Topologie de Niveau</label>
