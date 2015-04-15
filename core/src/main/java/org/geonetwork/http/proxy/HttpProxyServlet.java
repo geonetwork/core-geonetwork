@@ -354,8 +354,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                     // Sets response contentType
                     response.setContentType(getResponseContentType(contentTypesReturned));
-
-                    String responseBody = IOUtils.toString(httpPost.getEntity().getContent());
+                    String responseBody = IOUtils.toString(httpResponse.getEntity().getContent());
 
                     out.print(responseBody);
                     out.flush();
