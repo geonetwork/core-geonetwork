@@ -218,27 +218,29 @@
 		</service>
 		
 		
-        <!-- HTML5UI -->
-        <service name="search">
-            <class name=".services.main.Home" />
-            <output sheet="search.xsl">
-                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-                <call name="isoLang" class=".guiservices.isolanguages.Get" />
-            </output>
-        </service>
-		
+    <!-- HTML5UI
+    Enable to use ExtJS UI
+    <service name="search">
+        <class name=".services.main.Home" />
+        <output sheet="search.xsl">
+            <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+            <call name="isoLang" class=".guiservices.isolanguages.Get" />
+        </output>
+    </service>
+
 		<service name="find">
 			<output sheet="search-cat.xsl"/>
 		</service>
+    -->
 
 
 
-<!--
-    tabsearch is turned off by default (no maintainer).
-		<service name="tabsearch">
-			<output sheet="search-tab.xsl"/>
-		</service>
--->
+    <!--
+        tabsearch is turned off by default (no maintainer).
+        <service name="tabsearch">
+          <output sheet="search-tab.xsl"/>
+        </service>
+    -->
 
 	</services>
 
