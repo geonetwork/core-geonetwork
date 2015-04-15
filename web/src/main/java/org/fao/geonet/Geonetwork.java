@@ -585,7 +585,8 @@ public class Geonetwork implements ApplicationHandler {
             Path logo =logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
                 final ServletContext servletContext = context.getServlet().getServletContext();
-                byte[] logoData = Resources.loadImage(servletContext, appPath, "images/logos/GN3.png", new byte[0]).one();
+                byte[] logoData = Resources.loadImage(servletContext, appPath,
+                                        "images/harvesting/GN3.png", new byte[0]).one();
                 Files.write(logo, logoData);
             }
         } catch (Throwable e) {

@@ -664,9 +664,11 @@
               </includes>
               <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
             </resource>
+            <!--
+            Enable to use ExtJS UI
             <resource>
               <directory>${project.basedir}/../web-client/src/main/resources</directory>
-            </resource>
+            </resource>-->
             <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
@@ -749,11 +751,17 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+           <!--
+              Enable to use ExtJS UI
+              Add
+              ${rootProjectDir}/web-client/src/main/resources/
+              to resourcesAsCSV
+            -->
             <resourcesAsCSV>
               ${project.basedir}/src/main/webapp,
               ${rootProjectDir}/web-ui/src/main/resources/,
-              ${build.webapp.resources},
-              ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
+              ${build.webapp.resources}
+              </resourcesAsCSV>
             </baseResource>
           </webApp>
           <systemProperties>
@@ -1132,25 +1140,6 @@
       </properties>
     </profile>
     <!-- Sextant configuration porfile / end -->
-    
-    <profile>
-      <id>widgets</id>
-      <properties>
-        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
-      </properties>
-    </profile>
-    <profile>
-      <id>widgets-tab</id>
-      <properties>
-          <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
-      </properties>
-    </profile>
-    <profile>
-		<id>html5ui</id>
-		<properties>
-			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-		</properties>
-    </profile>
     
   </profiles>
 
