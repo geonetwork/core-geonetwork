@@ -1,0 +1,27 @@
+<!-- Not intended as a standalone overrides.  
+Normally this needs to be added to config-overrides-dev.xml or one of the other profiles.
+If you build with -Pwidget this is added to the web.xml list of configuration overrides
+
+To better understand build with:
+
+mvn process-resources -Penv-dev,widgetstab
+
+then look at the resuling web.xml in target/webapp/WEB-INF/web.xml
+
+you will see the init param jeeves.configuration.overrides.file
+
+with the value:
+/WEB-INF/config-overrides-dev.xml,/WEB-INF/config-overrides-widgettab.xml
+
+but just 
+/WEB-INF/config-overrides-dev.xml
+
+if the widgets profile is not active
+-->
+<overrides>
+	<file name=".*/WEB-INF/config-gui.xml">
+		<replaceAtt xpath="client" attName="widget" value="true"/>
+		<replaceAtt xpath="client" attName="url" value="tabsearch"/>
+		<replaceAtt xpath="client" attName="createParameter" value="#create"/>
+	</file>
+</overrides>
