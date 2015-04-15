@@ -114,9 +114,6 @@ cat.app = function() {
     
     function createLoginForm() {
 
-      if(!Ext.get('login-form')){
-        return;
-      }
         // Refresh login form if needed
         var user = cookie.get('user');
         if (user) {
@@ -464,7 +461,7 @@ cat.app = function() {
         var services = catalogue.services;
         cat.what.createCmp(catalogue);
         
-        searchModes = GeoNetwork.Settings.bootsrap.configtypesearch.split(',');
+        searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split(',');
         activeSearchMode = searchModes.indexOf('simple') >= 0 ? 'simple' : searchModes[0];
         
         var whereForm = cat.where.createCmp();
@@ -1141,9 +1138,7 @@ cat.app = function() {
 }
 
 Ext.onReady(function() {
-
-    GeoNetwork.Bootstrap.run();
-
+    
     var urlParameters = GeoNetwork.Util.getParameters(location.href);
     cat.language = cat.language || urlParameters.hl || GeoNetwork.Util.defaultLocale;
     

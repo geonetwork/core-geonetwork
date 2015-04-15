@@ -36,8 +36,8 @@ cat.what = function() {
 			
 			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
 			var mode = 'remote',
-        configwhatInput = GeoNetwork.Settings.bootsrap.configwhat,
-        configlistThesaurus = GeoNetwork.Settings.bootsrap.configListThesaurus;
+        configwhatInput = Ext.query('input[id*=configwhat]'),
+        configlistThesaurus = Ext.query('input[id=configlistThesaurus]');
 
 			groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
 					url : services.opensearchSuggest,
@@ -210,10 +210,7 @@ cat.what = function() {
         if (thesaurus.labelFromThesaurus) {
           // Retrieve label from thesaurus
           labelStore = new Ext.data.Store({
-            proxy : new Ext.data.HttpProxy({
-              method: 'GET',
-              url: services.searchKeyword
-            }),
+            url: services.searchKeyword,
             baseParams: {
                 pNewSearch: true,
                 pTypeSearch: 1,
