@@ -40,12 +40,12 @@
               //},{
               type: 'formatter',
               label: 'metadataFormatter',
-              icon: 'fa-print',
+              icon: 'fa-eye',
               href: '#/metadata/formatter'
             },{
               type: 'schematron',
               label: 'schematron',
-              icon: 'fa-eye',
+              icon: 'fa-check',
               href: '#/metadata/schematron'
             }]
       };
