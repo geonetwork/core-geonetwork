@@ -18,6 +18,9 @@
     <xsl:copy-of select="document('../../iso19139/layout/config-editor.xml')"/>
   </xsl:template>
 
+  <xsl:template name="get-iso19139.myocean.short-is-service">
+    <xsl:call-template name="get-iso19139-is-service"/>
+  </xsl:template>
 
   <xsl:template name="dispatch-iso19139.myocean.short">
     <xsl:param name="base" as="node()"/>
