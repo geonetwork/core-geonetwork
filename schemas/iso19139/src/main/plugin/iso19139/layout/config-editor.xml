@@ -214,6 +214,7 @@
       <name>gmd:checkPointDescription</name>
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
+      <name>gmd:distance</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
@@ -505,7 +506,6 @@
               <snippet>
                 <gmd:extent>
                   <gmd:EX_Extent>
-                    <gn:copy select="gmd:description"/>
                     <gmd:geographicElement>
                       <gmd:EX_GeographicBoundingBox>
                         <gmd:westBoundLongitude>
@@ -522,8 +522,6 @@
                         </gmd:northBoundLatitude>
                       </gmd:EX_GeographicBoundingBox>
                     </gmd:geographicElement>
-                    <gn:copy select="gmd:temporalElement"/>
-                    <gn:copy select="gmd:verticalElement"/>
                   </gmd:EX_Extent>
                 </gmd:extent>
               </snippet>
