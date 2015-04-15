@@ -12,9 +12,9 @@
     <dcterms:modified>2014-08-11</dcterms:modified>
   </skos:ConceptScheme>
   <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/data-delivery#order-form">
-    <skos:prefLabel xml:lang="en">Order form/envoice</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Order form/invoice</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Order form/envoice</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Order form/invoice</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
 

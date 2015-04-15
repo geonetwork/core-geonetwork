@@ -143,6 +143,7 @@
       <class name=".services.region.ListCategories"/>
     </service>
 
+
     <service name="region.geom.wkt">
       <documentation><![CDATA[
         

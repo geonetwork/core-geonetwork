@@ -16,6 +16,9 @@
                 exclude-result-prefixes="#all">
 
 
+  <xsl:output name="default" indent="yes"
+              omit-xml-declaration="yes" />
+
   <!-- Load labels. -->
   <xsl:variable name="schema"
                 select="'iso19139'"/>
@@ -156,8 +159,8 @@
               href="{root/url}/apps/sextant/css/schema/medsea.css"/>
         <div class="tpl-emodnet">
           <div class="ui-layout-content mdshow-tabpanel">
-            <a id="md-print-btn" class="file-pdf" title="Export PDF" href="pdf?uuid={$identifier}"></a>
-            <a id="md-xml-btn" class="file-xml" title="Export XML" href="xml.metadata.get?uuid={$identifier}"></a>
+            <a class="file-link" title="Export HTML" href="{/root/url}/srv/eng/metadata.formatter.html?uuid={$identifier}&amp;xsl=medsea"></a>
+            <a class="file-xml" title="Export XML" href="{/root/url}/srv/eng/xml.metadata.get?uuid={$identifier}"></a>
 
              <xsl:for-each
                     select="$iso19139-configuration//view[@name = 'medsea']/tab">
@@ -223,14 +226,39 @@
                         </tr>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:message>No match for field: <xsl:copy-of select="$fieldConfig"/></xsl:message>
+                        <!--<xsl:message>No match for field: <xsl:copy-of select="$fieldConfig"/></xsl:message>-->
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:for-each>
                 </tbody>
               </table>
-
              </xsl:for-each>
+
+
+            <xsl:if test="count($metadata/gmd:distributionInfo//
+                                              gmd:onLine/*[gmd:linkage/gmd:URL != '']) > 0">
+              <table class="print_table" border="0" cellpadding="0"
+                     cellspacing="0">
+                <tbody>
+                  <tr valign="top">
+                    <td class="print_ttl">
+                      <xsl:value-of select="$schemaStrings/associatedResources"/>
+                    </td>
+                    <td class="print_data">
+                      <ul>
+                        <xsl:for-each select="$metadata/gmd:distributionInfo//
+                                                gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+                          <li>
+                            <a href="{gmd:linkage/gmd:URL}"><xsl:value-of select="gmd:name/*"/></a>
+                          </li>
+                        </xsl:for-each>
+                      </ul>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </xsl:if>
           </div>
         </div>
       </body>
@@ -266,7 +294,7 @@
         <td><xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $numberFormat)"/></td>
         <td>
           <img class="gn-img-extent"
-                 src="region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
+                 src="{root/url}/geonetwork/srv/fre/region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
         </td>
         <td><xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $numberFormat)"/></td>
       </tr>
@@ -311,12 +339,34 @@
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:Date|gco:DateTime|
        gco:LocalName|gmd:PT_FreeText|gml:beginPosition|gml:endPosition|gco:Date|gco:DateTime|
         gml:beginPosition|gml:endPosition">
-    <p><xsl:value-of select="."/>
-    <xsl:if test="@uom">
-      <xsl:text> </xsl:text><xsl:value-of select="@uom"/>
-    </xsl:if>
+    <p>
+      <xsl:choose>
+        <xsl:when test="contains(., 'http')">
+          <!-- Replace hyperlink in text by an hyperlink -->
+          <xsl:variable name="textWithLinks"
+                        select="replace(., '([a-z][\w-]+:/{1,3}[^\s()&gt;&lt;]+[^\s`!()\[\]{};:'&apos;&quot;.,&gt;&lt;?«»“”‘’])',
+                                    '&lt;a href=''$1''&gt;$1&lt;/a&gt;')"/>
+
+          <xsl:if test="$textWithLinks != ''">
+            <!-- Create a parent <p/> element
+            and replace &amp; when URL contains parameters -->
+            <xsl:copy-of select="saxon:parse(
+                                  concat('&lt;p&gt;',
+                                    replace($textWithLinks, '&amp;', '&amp;amp;'),
+                                  '&lt;/p&gt;')
+                                  )"/>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="@uom">
+        <xsl:text> </xsl:text><xsl:value-of select="@uom"/>
+      </xsl:if>
     </p>
   </xsl:template>
+
 
 
   <xsl:template mode="render-value" match="gmd:dateStamp/*">
@@ -389,7 +439,7 @@
           <xsl:value-of select="$title"/>
         </td>
         <td class="print_data">
-          <xsl:value-of select="gmd:URL"/>
+          <a href="{gmd:URL}"><xsl:value-of select="gmd:URL"/></a>
         </td>
       </tr>
     </xsl:if>

@@ -1781,6 +1781,10 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
+    <helper relAtt="uom">
+      <option value="1" title="Arc seconds (North)">Arc seconds (North)</option>
+      <option value="1" title="meter">meters</option>
+    </helper>
     <!--<helper relAtt="uom">
       <option value="0.10" title="m">10 cm</option>
       <option value="0.25" title="m">25 cm</option>
@@ -2906,7 +2910,7 @@ période de temps couverte par le service.
       <option value="Restricted">Restricted</option>
       <option value="Accessible under moratorium">Accessible under moratorium</option>
       <option value="Unrestricted">Unrestricted</option>
-      <option value="Unknown">Unknown</option>
+      <option value="Not documented">Not documented</option>
     </helper>
     <!--
       Only relevant for France
@@ -3968,8 +3972,8 @@ l’IGN (WPS)
       <option value="Distribution cost charge">Distribution cost charge</option>
       <option value="Collection cost charge">Collection cost charge</option>
       <option value="Commercial cost charge">Commercial cost charge</option>
-      <option value="Cost charge depends on intented use and category of users">Cost charge depends on intented use and category of users</option>
-      <option value="Unknown">Unknown</option>
+      <option value="Cost charge depends on intended use and category of users">Cost charge depends on intended use and category of users</option>
+      <option value="Not documented">Not documented</option>
     </helper>
     <helper>
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
@@ -4030,6 +4034,7 @@ l’IGN (WPS)
       <option value="Less than 24 hours">Less than 24 hours</option>
       <option value="Less than 1 week">Less than 1 week</option>
       <option value="More than 1 week">More than 1 week</option>
+      <option value="Not documented">Not documented</option>
     </helper>
   </element>
   <element name="gmd:value">

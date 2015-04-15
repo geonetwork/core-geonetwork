@@ -36,6 +36,31 @@ WHERE data like '%local.parameter.seadatanet-ocean-chemistry-variable%';
 
 
 UPDATE metadata SET data = replace(data,
+'>parameter.seadatanet-ocean-discovery-parameter.rdf<',
+'>external.parameter.NVS.P02<')
+WHERE data like '%>parameter.seadatanet-ocean-discovery-parameter.rdf<%';
+
+
+UPDATE metadata SET data = replace(data,
+'>parameter.seadatanet-ocean-chemistry-variable.rdf<',
+'>external.parameter.NVS.P35<')
+WHERE data like '%>parameter.seadatanet-ocean-chemistry-variable.rdf<%';
+
+
+UPDATE metadata SET data = replace(data,
+'>reference-geographical-area.seadatanet.reference-geographical-area.rdf<',
+'>external.reference-geographical-area.NVS.C19<')
+WHERE data like '%>reference-geographical-area.seadatanet.reference-geographical-area.rdf<%';
+
+
+UPDATE metadata SET data = replace(data,
+'>parameter.myocean.ocean-variables.rdf<',
+'>external.parameter.myocean.ocean-variables<')
+WHERE data like '%>parameter.myocean.ocean-variables.rdf<%';
+
+
+
+UPDATE metadata SET data = replace(data,
 'local.parameter.seadatanet-ocean-discovery-parameter',
 'external.parameter.NVS.P02')
 WHERE data like '%local.parameter.seadatanet-ocean-discovery-parameter%';

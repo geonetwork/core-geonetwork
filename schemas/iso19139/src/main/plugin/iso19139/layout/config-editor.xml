@@ -1468,9 +1468,12 @@
 
       <thesaurusList>
         <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.visibility" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.policy.visibility" maxtags="1"/>
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
         <thesaurus key="local.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="local.theme.medsea.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.medsea.readyness" maxtags="1"/>
         <thesaurus key="local.theme.medsea.data.delivery.mechanism" maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P03" maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P01" maxtags="1"/>
@@ -1484,15 +1487,15 @@
                   in keyword selector.
                   -->
           <field
-              name="environmental-matrix"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                  name="environmental-matrix"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Environmental matrix')]"/>
 
           <field
-              name="p03"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                  name="p03"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
                 'NVS.P03')]"/>
@@ -1518,16 +1521,16 @@
                 'Parameter Usage Vocabulary (other)')]/gmd:keyword"/>
 
           <field
-              name="inspireTheme"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                  name="inspireTheme"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'INSPIRE themes')]"/>
 
 
           <field
-              name="level-of-characteristics"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                  name="level-of-characteristics"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Processing level of characteristics')]"/>
@@ -1538,9 +1541,6 @@
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Production mode')]"/>
-
-          <field name="medseaHierarchyLevel"
-                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
         </section>
       </tab>
       <tab id="datasources">
@@ -1567,15 +1567,15 @@
                 gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
 -->
 
-         <!--
+          <!--
 
-         Do not store EDMERP in keyword anymore. Use a contact with a specific role.
-         <field
-                  name="edmerpName"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'SDN EDMERP Identifier')]"/>-->
+          Do not store EDMERP in keyword anymore. Use a contact with a specific role.
+          <field
+                   name="edmerpName"
+                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                 gmd:descriptiveKeywords
+                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                 'SDN EDMERP Identifier')]"/>-->
 
 
 
@@ -1590,7 +1590,7 @@
                 <key label="acronym"
                      xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
                 <key label="edmerpId"
-                      xpath="gmd:CI_ResponsibleParty/@id"/>
+                     xpath="gmd:CI_ResponsibleParty/@id"/>
               </values>
               <snippet>
                 <gmd:pointOfContact>
@@ -1640,7 +1640,7 @@
           <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']"
                  del="."
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']) != 0">
             <template>
               <values readonlyIf="true()">
                 <key label="organisationName"
@@ -1721,29 +1721,115 @@
           </field>
           <text ref="dataProvider-help"/>
 
+          <!-- edmoProducerName -->
+          <field name="edmoProducerName" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']) != 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gn:copy select="gmd:electronicMailAddress"/>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+          <action type="add"
+                  name="edmoProducerNameSearch"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
+          </action>
+          <action type="add" name="producerName"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName gco:nilReason="missing">
+                      <gco:CharacterString/>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                                       codeListValue="originator"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+
+          <field name="medseaHierarchyLevel"
+                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
 
           <text ref="dataCollection-help"/>
 
           <field
-              name="medseaTitle"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle"/>
+                  name="datasourceAcronym"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:otherCitationDetails"/>
+
           <field
-              name="medseaDataSourceCatalogueName"
-              xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                  name="medseaTitle"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle"/>
+          <field
+                  name="medseaDataSourceCatalogueName"
+                  xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                       gmd:transferOptions/gmd:MD_DigitalTransferOptions/
                         gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name"/>
           <field
-              name="medseaDataSourceCatalogueURL"
-              xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                  name="medseaDataSourceCatalogueURL"
+                  xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                   gmd:transferOptions/gmd:MD_DigitalTransferOptions/
                     gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
-
-          <field
-                  name="serviceExtent"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
-                'theme.medsea.service.extent')]"/>
 
           <field
                   name="medseaDataSourceIdentifier"
@@ -1764,32 +1850,32 @@
       <tab id="overview">
         <section>
           <field
-              name="providerSpecification"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="providerSpecification"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:purpose"/>
 
 
           <field
-              name="processStepReference"
-              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                  name="processStepReference"
+                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                 gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
           <field
-              name="useOfTheCharacteristics"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="useOfTheCharacteristics"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/
                 gmd:authority//gmd:CI_Citation/gmd:title"/>
 
 
           <field name="useByChallenges"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Used by challenges')]"/>
 
           <field
-              name="intendedUse"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="intendedUse"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                   gmd:environmentDescription"/>
 
         </section>
@@ -1801,7 +1887,7 @@
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
               gmd:extent/gmd:EX_Extent/gmd:description"/>-->
           <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
               gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
 
 
@@ -1809,25 +1895,25 @@
         <section name="horizontalAndVerticalInfo">
 
           <field
-              name="horResolution"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="horResolution"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:spatialResolution/gmd:MD_Resolution/gmd:distance"/>
 
           <field
-              name="minDepth"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="minDepth"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:extent/gmd:EX_Extent/
                 gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
 
           <field
-              name="maxDepth"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="maxDepth"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:extent/gmd:EX_Extent/
                 gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
 
           <field
-              name="verticalResolution"
-              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                  name="verticalResolution"
+                  xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
                 gmd:MD_Georectified/gmd:numberOfDimensions"/>
 
 
@@ -1857,10 +1943,10 @@
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                      use="gn-date-picker"
                      tooltip="gmd:extent|gmd:EX_TemporalExtent"
-                    >
+                        >
                   <directiveAttributes
-                      data-tag-name="gml:endPosition"
-                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                          data-tag-name="gml:endPosition"
+                          data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
                 </key>
               </values>
               <snippet>
@@ -1880,34 +1966,51 @@
 
 
           <field
-              name="timeResolution"
-              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
+                  name="timeResolution"
+                  xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
                 gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
           <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"/>
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"/>
 
         </section>
       </tab>
       <tab id="accessibility">
         <section>
 
+          <field name="visibility"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.visibility')]"/>
+
+          <field
+                  name="serviceExtent"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'theme.medsea.service.extent')]"/>
 
           <field name="dataDelivery"
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Data delivery mechanism')]"/>
 
+          <field name="policyVisibility"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.policy.visibility')]"/>
 
           <field
-              name="dataPolicy"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="dataPolicy"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
 
 
           <field
-              name="costBasis"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  name="costBasis"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
 
 
@@ -1961,12 +2064,19 @@
             </template>
           </action>
 
+
+          <field name="readyness"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:descriptiveKeywords
+                          [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                          'medsea.readyness')]"/>
+
           <field name="responsiveness"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
-          <field name="reliability"
+          <field name="losi"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Reliability']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>

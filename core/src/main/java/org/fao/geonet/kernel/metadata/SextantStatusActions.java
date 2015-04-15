@@ -63,7 +63,8 @@ public class SextantStatusActions extends DefaultStatusActions {
 //					new ISODate().toString(),
 //					"Set metadata with status UNKNOWN to status DRAFT");
 //		}
-		super.onEdit(id, minorEdit);
+//      https://forge.ifremer.fr/mantis/view.php?id=24431
+//		super.onEdit(id, minorEdit);
 	}
 	
 	/** 

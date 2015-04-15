@@ -213,14 +213,14 @@
 									</td>
 									<td class="print_data"/>
 								</tr>
-
+<!--
 								<xsl:if test="/root//gmd:MD_ScopeDescription/gmd:attributes">
 									<xsl:call-template name="writeAttribute">
 										<xsl:with-param name="element" select="/root//gmd:MD_ScopeDescription" />
 										<xsl:with-param name="attr" select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope[gmd:level/gmd:MD_ScopeCode/@codeListValue='propertyType']/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:attributes/@uuidref" />
 									</xsl:call-template>
 								</xsl:if>
-
+-->
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo[position()>1]/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
 

@@ -170,12 +170,12 @@
             <item facet="inspireTheme_fr" max="35"/>
             <item facet="inspireTheme_en" max="35"/>
             <item facet="sextantTheme" max="300"/>
-            <item facet="publishedForGroup" max="300"/>
+            <item facet="publishedForGroup" max="199" sortBy="value"
+                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
             <item facet="thesaurus-external.parameter.NVS.P01" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P35" max="300"/>
         </summaryType>
     </summaryTypes>
-
 </bean:beans>
