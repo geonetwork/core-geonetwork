@@ -273,6 +273,11 @@
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
+            olLayer.getSource().on('tileloaderror', function (tileEvent, target) {
+              console.warn('Something went wrong when loading the tile ' +
+                tileEvent.tile.getKey() + ' in layer ' +
+                tileEvent.currentTarget.getParams().LAYERS);
+            });
             return olLayer;
           },
 
@@ -291,6 +296,27 @@
             var legend, attribution, metadata;
             if (getCapLayer) {
               var layer = getCapLayer;
+
+              var isLayerAvailableInMapProjection = false;
+              // OL3 only parse CRS from WMS 1.3 (and not SRS in WMS 1.1.x)
+              // so a WMS 1.1.x will always failed on this
+              // https://github.com/openlayers/ol3/blob/master/src/
+              // ol/format/wmscapabilitiesformat.js
+              if (layer.CRS) {
+                for (var i = 0; i < layer.CRS.length; i ++) {
+                  if (layer.CRS[i] === map.getView().getProjection()) {
+                    isLayerAvailableInMapProjection = true;
+                    break;
+                  }
+                }
+              } else {
+                console.log('The WMS layer does not provide coordinate ' +
+                'reference system information.');
+              }
+              if (!isLayerAvailableInMapProjection) {
+                console.log('The WMS service does not provide the layer ' +
+                'in the map projection.');
+              }
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
@@ -372,8 +398,7 @@
                 };
                 gnWmsQueue.error(o);
                 defer.reject(o);
-              }
-              else {
+              } else {
                 var olL;
                 if(createOnly) {
                   olL = $this.createOlWMTSFromCap(map, capL);
