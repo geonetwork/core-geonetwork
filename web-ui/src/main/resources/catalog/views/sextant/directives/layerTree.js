@@ -33,10 +33,13 @@
               }
             }
             activeLayer.visible = true;
-          }
+          };
 
           $scope.setActiveComboGroup = function(l) {
             $this.comboGroups[l.get('groupcombo')] = l;
+          };
+          this.addToPanier = function(md, link) {
+            $scope.resultviewFns.addMdLayerToPanier(link, md);
           }
         }],
         link: function(scope, element, attrs) {
@@ -198,7 +201,17 @@
             scope.groupCombo = scope.member.get('groupcombo');
             scope.comboGroups = controller.comboGroups;
             scope.switchGroupCombo = controller.switchGroupCombo;
+
+            var d =  scope.member.get('downloads');
+            if(angular.isArray(d)) {
+              scope.download = d[0];
+
+            }
           }
+
+          scope.addToPanier = function(download) {
+            controller.addToPanier(scope.member.get('md'), download);
+          };
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);

@@ -32,7 +32,6 @@
       </error>
     </service>
 
-
     <service name="xml.regions.category.list" deprecated="true" xmlapi="true">
       <class name=".services.region.ListCategories" />
     </service>

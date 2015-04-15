@@ -874,9 +874,8 @@
     "thesaurusTitle": "Title",
     "thesaurusUploadHelp": "Thesaurus in <a href=\"http://www.w3.org/2004/02/skos/\">SKOS format</a> are supported. File could have xml or rdf extensions.",
     "thesaurusUrl": "URL",
-
     "recordsRemoved": "record(s) removed",
-
+    "recordsHarvestedIn": "record(s) harvested in ",
     "thredds-DIF": "Extract DIF metadata elements and create ISO metadata",
     "thredds-UNIDATA": "Extract Unidata dataset discovery metadata using fragments",
     "thredds-createAtomicDatasetMd": "Create metadata for Atomic Datasets",

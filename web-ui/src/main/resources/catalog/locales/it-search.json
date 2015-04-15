@@ -271,5 +271,12 @@
     "intersectWith": "Intersects with",
     "fullyOutsideOf": "Fully outside of",
     "encloses": "Enclosing",
-    "within": "Within"
+    "within": "Within",
+    "transferOwnership": "Transfer Ownership",
+    "selectNewOwner": "Select New Owner",
+    "selectGroup": "Select Group",
+    "loadUsersError": "Error loading users",
+    "loadUserGroupsError": "Error loading user groups",
+    "transferOwnershipError": "Error transferring metadata ownership",
+    "transferOwnershipSuccessMsg": "<h4>Successfully transferred metadata to a new Owner.</h4><dl class=\"dl-horizontal\"><dt>Transferred:</dt><dd>{{done}}</dd><dt>Not Owned:</dt><dd>{{notOwner}}</dd><dt>Not found:</dt><dd>{{notFound}}</dd></dl>"
 }

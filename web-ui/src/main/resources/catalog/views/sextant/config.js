@@ -166,7 +166,7 @@
           'templates/mdview/grid.html';
 
       searchSettings.formatter = {
-        defaultUrl: 'md.format.xml?xsl=full_view&id=',
+        defaultUrl: 'md.format.xml?xsl=sxt_view&id=',
         list: [
           {label: 'fullView', url: 'md.format.xml?xsl=full_view&id='}
         ]
@@ -265,5 +265,19 @@
         proj: '4326'
       };
 
+      // Sextant API params
+      var sxtSettings = {
+        configWhat: '',
+        //configWhat: 'AMBIO,CARIBSAT,INTERNET',
+        gnUrl: 'http://localhost:8080/geonetwork/srv/eng',
+        maxExtent: [-2499215.9244278017, 4985853.6451996025,
+          829769.5314481944, 7243497.712630568],
+        configWho: ''
+      };
+
+      var configWhat = sxtSettings.configWhat.replace(/,/, ' or ');
+      searchSettings.hiddenParams = {
+        _groupPublished: configWhat
+      };
     }]);
 })();
