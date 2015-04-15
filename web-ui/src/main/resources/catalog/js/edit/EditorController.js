@@ -98,14 +98,16 @@
           when('/import', {
             templateUrl: tplFolder + 'import.html',
             controller: 'GnImportController'}).
-          otherwise({
+          when('/board', {
             templateUrl: tplFolder + 'editorboard.html',
-            controller: 'GnEditorBoardController'
+            controller: 'GnEditorBoardController'}).
+          otherwise({
+            redirectTo: '/board'
           });
     }]);
 
   /**
-   * Metadata editor controller - draft
+   * Metadata editor controller
    */
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
