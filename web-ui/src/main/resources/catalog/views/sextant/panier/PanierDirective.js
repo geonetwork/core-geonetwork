@@ -10,8 +10,8 @@
    *
    * @description
    */
-  module.directive('sxtPanier', [
-    function() {
+  module.directive('sxtPanier', [ 'sxtPanierService',
+    function(sxtPanierService) {
       return {
         restrict: 'A',
         replace: true,
@@ -30,7 +30,8 @@
 
           scope.formObj = [];
           scope.extract = function() {
-            scope.panier = [];
+            sxtPanierService.extract(scope.formObj);
+            //scope.panier = [];
           };
 
           scope.downloadDisabled = true;
@@ -41,6 +42,7 @@
             });
             scope.downloadDisabled = !enable;
           }
+
         }
       };
     }]);
@@ -56,7 +58,8 @@
         replace: true,
         scope: {
           formObj: '=sxtPanierElt',
-          md: '=sxtPanierEltMd'
+          md: '=sxtPanierEltMd',
+          link: '=sxtPanierEltLink'
         },
         templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panierelement.html',
@@ -72,9 +75,18 @@
 
               /** object that contains the form values */
               scope.form = {
-                uuid: scope.md.getUuid(),
-                format: gnPanierSettings.defaults.format,
-                projection: gnPanierSettings.defaults.proj
+                id: scope.md.getUuid(),
+                input: {
+                  format: gnPanierSettings.defaults.format,
+                  epsg: gnPanierSettings.defaults.proj,
+                  protocol: scope.link.protocol,
+                  linkage: scope.link.url
+                },
+                output: {
+                  format: gnPanierSettings.defaults.format,
+                  epsg: gnPanierSettings.defaults.proj,
+                  name: scope.link.name
+                }
               };
 
               /** Map useed to draw the bbox */
@@ -132,6 +144,23 @@
                 controller.del(md);
                 scope.formObj.splice(scope.formObj.indexOf(form), 1);
               };
+
+              var format = new ol.format.WKT();
+              scope.$watch('extent', function(n) {
+                if(n) {
+                  try {
+                    var g = format.readGeometry(n);
+                    var e = g.getExtent();
+                    angular.extend(scope.form.output, {
+                      xmin: e[0],
+                      ymin: e[1],
+                      xmax: e[2],
+                      ymax: e[3]
+                    })
+                  }
+                  catch(e) {}
+                }
+              });
             }
           };
         }
