@@ -2,13 +2,17 @@ package org.fao.geonet.spring.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.classifier.Split;
 import org.fao.geonet.kernel.search.classifier.Value;
 import org.fao.geonet.kernel.search.facet.Dimension;
 import org.fao.geonet.kernel.search.facet.Facets;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -18,8 +22,17 @@ public class FacetsConfigurationTest {
 
     @Autowired
     private Facets facets;
+    @Autowired
+    private ConfigurableApplicationContext applicationContext;
 
-    @Test 
+
+    @Before
+    public void setUp() throws Exception {
+        ApplicationContextHolder.set(applicationContext);
+
+    }
+
+    @Test
     public void testMandatoryParametersSet() {
         Dimension keyword = facets.getDimensions().get(0);
         assertEquals("keyword", keyword.getName());

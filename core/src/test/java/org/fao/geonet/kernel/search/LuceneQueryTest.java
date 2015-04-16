@@ -1,12 +1,13 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.search.Query;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.facet.Dimension;
@@ -19,7 +20,8 @@ import org.jdom.Element;
 import org.jdom.JDOMFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.nio.file.Path;
@@ -61,10 +63,13 @@ public class LuceneQueryTest {
         Facets facets = new Facets(new ArrayList<Dimension>());
         SummaryTypes summaryTypes = new SummaryTypes(new ArrayList<SummaryType>());
         LuceneConfig lc = new LuceneConfig(facets, summaryTypes);
-        lc.geonetworkDataDirectory = dataDirectory;
-        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
-        lc._appContext = context;
-        context.refresh();
+
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(GeonetworkDataDirectory.class)).thenReturn(dataDirectory);
+        Mockito.when(applicationContext.getBean(LuceneConfig.class)).thenReturn(lc);
+        Mockito.when(applicationContext.getBean(NodeInfo.class)).thenReturn(new NodeInfo());
+
         lc.configure(configFile);
 
         _tokenizedFieldSet = lc.getTokenizedField();

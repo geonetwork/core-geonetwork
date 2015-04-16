@@ -7,13 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
 
 /**
  * Created by Jesse on 2/17/14.
@@ -29,7 +30,7 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-        final ConfigurableApplicationContext applicationContext = getApplicationContextFromServletContext(context);
+        final ConfigurableApplicationContext applicationContext = getApplicationContextFromServletContext(getServletContext(context));
 
         NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
 
@@ -37,4 +38,5 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
 
         return urlPattern.replace("@@nodeId@@", nodeInfo.getId());
     }
+
 }

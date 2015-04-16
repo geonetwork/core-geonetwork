@@ -2,6 +2,7 @@ package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataValidation;
@@ -18,8 +19,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -35,22 +35,13 @@ import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
  * @author Jesse on 4/1/2015.
  */
 public class SchematronValidator {
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private SchematronRepository schematronRepository;
-    @Autowired
-    private SchematronCriteriaGroupRepository criteriaGroupRepository;
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private ThesaurusManager thesaurusManager;
-
 
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
                                               String lang, List<MetadataValidation> validations) {
-        MetadataSchema metadataSchema = this.schemaManager.getSchema(schema);
-        final Path schemaDir = this.schemaManager.getSchemaDir(schema);
+        SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+
+        MetadataSchema metadataSchema = schemaManager.getSchema(schema);
+        final Path schemaDir = schemaManager.getSchemaDir(schema);
 
         Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
         try {
@@ -77,6 +68,8 @@ public class SchematronValidator {
                                                            final Element md,
                                                            final MetadataSchema metadataSchema) {
         List<ApplicableSchematron> applicableSchematron = Lists.newArrayList();
+        SchematronRepository schematronRepository = ApplicationContextHolder.get().getBean(SchematronRepository.class);
+        SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
 
         final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
 
@@ -102,6 +95,8 @@ public class SchematronValidator {
                                                  final MetadataSchema metadataSchema,
                                                  final Schematron schematron) {
         //it contains absolute path to the xsl file
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        SchematronCriteriaGroupRepository criteriaGroupRepository = applicationContext.getBean(SchematronCriteriaGroupRepository.class);
 
         List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
 
@@ -137,6 +132,9 @@ public class SchematronValidator {
 
     private void runSchematron(String lang, Path schemaDir, List<MetadataValidation> validations, Element schemaTronXmlOut,
                                int metadataId, Element md, SchematronValidator.ApplicableSchematron applicable) {
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
         final Schematron schematron = applicable.schematron;
         final SchematronRequirement requirement = applicable.requirement;
         final String ruleId = schematron.getRuleName();

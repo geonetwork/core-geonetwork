@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.setting;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
@@ -81,15 +82,8 @@ public class SettingManager {
     public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
     public static final String ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
 
-    @Autowired
-    private SettingRepository _repo;
-
     @PersistenceContext
     private EntityManager _entityManager;
-    @Autowired
-    private LanguageRepository languageRepository;
-    @Autowired
-    private NodeInfo nodeInfo;
     @Autowired
     private ServletContext servletContext;
 
@@ -109,8 +103,10 @@ public class SettingManager {
      * @return all settings as xml.
      */
     public Element getAllAsXML(boolean asTree) {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+
         Element env = new Element("settings");
-        List<Setting> settings = _repo.findAll(SortUtils.createSort(Setting_.name));
+        List<Setting> settings = repo.findAll(SortUtils.createSort(Setting_.name));
 
         Map<String, Element> pathElements = new HashMap<String, Element>();
 
@@ -178,7 +174,9 @@ public class SettingManager {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
-        Setting se = _repo.findOne(path);
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+
+        Setting se = repo.findOne(path);
         if (se == null) {
             // TODO : When a settings is not available in the settings table
             // we end here. It could be relevant to add a list of default
@@ -200,10 +198,12 @@ public class SettingManager {
      * @param keys A list of setting's key to retrieve
      */
     public Element getValues(String[] keys) {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            Setting se = _repo.findOne(key);
+            Setting se = repo.findOne(key);
             if (se == null) {
                 Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
@@ -273,7 +273,8 @@ public class SettingManager {
             Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
         }
 
-        Setting setting = _repo.findOne(key);
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+        Setting setting = repo.findOne(key);
 
         if (setting == null) {
             throw new NoSuchElementException("There is no existing setting element with the key: " + key);
@@ -283,7 +284,7 @@ public class SettingManager {
 
         setting.setValue(value);
 
-        _repo.save(setting);
+        repo.save(setting);
         return true;
     }
 
@@ -353,6 +354,9 @@ public class SettingManager {
      * @return
      */
     public @Nonnull String getSiteURL(String language) {
+        LanguageRepository languageRepository = ApplicationContextHolder.get().getBean(LanguageRepository.class);
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+
         if(language == null) {
             language = languageRepository.findOneByDefaultLanguage().getId();
         }
@@ -361,7 +365,7 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language + "/";
+        String locServ = baseURL +"/"+ nodeInfo.getId() +"/" + language + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

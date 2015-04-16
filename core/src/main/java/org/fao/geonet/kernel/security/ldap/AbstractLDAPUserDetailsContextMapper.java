@@ -22,21 +22,13 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -46,6 +38,13 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.InetOrgPerson;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -75,9 +74,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
 	private String ldapBaseDn;
 
-	@Autowired
-	private LDAPUtils ldapUtils;
-	
+
 	public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
 		ctx.setAttributeValues("objectclass", new String[] { "top", "person",
 				"organizationalPerson", "inetOrgPerson" });
@@ -104,6 +101,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 			defaultProfile = Profile.RegisteredUser;
 		}
 		String defaultGroup = mapping.get("privilege")[1];
+		LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
 
 		Map<String, ArrayList<String>> userInfo = ldapUtils
 				.convertAttributes(userCtx.getAttributes().getAll());
@@ -170,6 +168,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 	@Override
 	public synchronized void saveUser(LDAPUser userDetails) {
 		try {
+			LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
 
 			if (createNonExistingLdapUser
 					&& !ldapManager.userExists(userDetails.getUsername())) {

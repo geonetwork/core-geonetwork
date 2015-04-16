@@ -1,9 +1,9 @@
 package org.fao.geonet.kernel.security.listener;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -29,14 +29,12 @@ import org.springframework.security.web.authentication.switchuser.Authentication
 public class UpdateTimestampListener implements
 		ApplicationListener<AbstractAuthenticationEvent> {
 
-	@Autowired
-	private UserRepository _userRepository;
-
 	@Override
 	/**
 	 * Depending on which type of app event we will log one or other thing.
 	 */
 	public void onApplicationEvent(AbstractAuthenticationEvent e) {
+		UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
 		if (e instanceof InteractiveAuthenticationSuccessEvent
 				|| e instanceof AuthenticationSuccessEvent
@@ -46,10 +44,9 @@ public class UpdateTimestampListener implements
 				UserDetails userDetails = (UserDetails) e.getAuthentication()
 						.getPrincipal();
 
-				User user = _userRepository.findOneByUsername(userDetails
-						.getUsername());
+				User user = userRepo.findOneByUsername(userDetails.getUsername());
 				user.setLastLoginDate(new ISODate().toString());
-				_userRepository.save(user);
+				userRepo.save(user);
 
 			} catch (Exception ex) {
 				// TODO: Log exception

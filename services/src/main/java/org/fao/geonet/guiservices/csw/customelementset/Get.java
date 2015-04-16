@@ -22,11 +22,11 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.customelementset;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.responses.CustomElementSetsListResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CustomElementSetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -42,12 +42,6 @@ import java.util.List;
  */
 @Controller("admin.config.csw.customelementset")
 public class Get {
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
-    @Autowired
-    private CustomElementSetRepository customElementSetRepository;
-
     /**
      * Retrieves custom elementsets.
      *
@@ -58,7 +52,9 @@ public class Get {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
     CustomElementSetsListResponse exec() throws Exception {
-        SettingManager sm = jeevesApplicationContext.getBean(SettingManager.class);
+        ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        CustomElementSetRepository customElementSetRepository = context.getBean(CustomElementSetRepository.class);
+        SettingManager sm = context.getBean(SettingManager.class);
 
         boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
 

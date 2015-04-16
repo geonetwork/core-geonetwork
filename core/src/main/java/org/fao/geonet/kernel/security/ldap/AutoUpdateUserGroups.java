@@ -6,7 +6,6 @@ package org.fao.geonet.kernel.security.ldap;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.events.user.GroupJoined;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -25,9 +24,6 @@ import javax.naming.Context;
  * 
  */
 public class AutoUpdateUserGroups implements ApplicationListener<GroupJoined> {
-
-    @Autowired
-    private AbstractLDAPUserDetailsContextMapper ldapMapper;
 
     private LdapTemplate template;
     private String baseDn = "ou=groups";
@@ -104,10 +100,6 @@ public class AutoUpdateUserGroups implements ApplicationListener<GroupJoined> {
         } catch (org.springframework.ldap.NameNotFoundException e) {
             return null;
         }
-    }
-
-    public void setLdapMapper(AbstractLDAPUserDetailsContextMapper ldapMapper) {
-        this.ldapMapper = ldapMapper;
     }
 
     public void setTemplate(LdapTemplate template) {

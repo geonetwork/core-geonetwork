@@ -23,15 +23,15 @@
 
 package jeeves.server.dispatchers;
 
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
@@ -51,8 +51,6 @@ public class ServiceInfo {
     private Vector<Service> vServices = new Vector<Service>();
     private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
     private Vector<ErrorPage> vErrors = new Vector<ErrorPage>();
-    @Autowired
-    private GeonetworkDataDirectory geonetworkDataDirectory;
 
     //--------------------------------------------------------------------------
     //---
@@ -197,7 +195,8 @@ public class ServiceInfo {
         if (sheet == null)
             return request;
 
-        Path styleSheet = this.geonetworkDataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(sheet);
+        GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        Path styleSheet = geonetworkDataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(sheet);
 
         ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
 

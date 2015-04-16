@@ -4,12 +4,12 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NRTCachingDirectory;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,15 +41,15 @@ public class FSDirectoryFactory implements DirectoryFactory {
     public static final String NON_SPATIAL_DIR = "index";
     public static final String TAXONOMY_DIR = "taxonomy";
     private static final String DELETE_DIR_FLAG_FILE = "This_directory_could_not_be_deleted_during_reindex";
-    @Autowired
-    private GeonetworkDataDirectory _dataDir;
 
     protected volatile Path taxonomyFile;
     protected volatile Path indexFile;
 
     public synchronized void init() throws IOException {
+
+        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         if (taxonomyFile == null) {
-            final Path luceneDir = _dataDir.getLuceneDir();
+            final Path luceneDir = dataDir.getLuceneDir();
             if (luceneDir == null) {
                 throw new IllegalStateException("This object cannot be constructed until GeonetworkDataDirectory has been initialized");
             }
@@ -60,9 +60,10 @@ public class FSDirectoryFactory implements DirectoryFactory {
     }
 
     private Path findLatestIndexDir(String baseName) throws IOException {
+        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
 
         Path indexDir = null;
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(this._dataDir.getLuceneDir()) ){
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dataDir.getLuceneDir()) ){
             Iterator<Path> pathIter = paths.iterator();
             while (pathIter.hasNext()) {
                 Path file =  pathIter.next();
@@ -75,7 +76,7 @@ public class FSDirectoryFactory implements DirectoryFactory {
         }
 
         if (indexDir == null) {
-            return this._dataDir.getLuceneDir().resolve(baseName);
+            return dataDir.getLuceneDir().resolve(baseName);
         }
         return indexDir;
     }
@@ -114,7 +115,9 @@ public class FSDirectoryFactory implements DirectoryFactory {
     }
 
     private void cleanOldDirectoriesIfPossible() throws IOException {
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(this._dataDir.getLuceneDir())) {
+        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+
+        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dataDir.getLuceneDir())) {
             for (Path path : directoryStream) {
                 Path deleteFlagFile = path.resolve(DELETE_DIR_FLAG_FILE);
                 if (Files.exists(deleteFlagFile)) {
@@ -132,11 +135,13 @@ public class FSDirectoryFactory implements DirectoryFactory {
     @Nonnull
     @VisibleForTesting
     protected Path createNewIndexDirectory(String baseName) throws IOException {
-        Path newFile = _dataDir.getLuceneDir().resolve(baseName);
+        GeonetworkDataDirectory dataDir = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+
+        Path newFile = dataDir.getLuceneDir().resolve(baseName);
         int i = 0;
         while (Files.exists(newFile) || Files.exists(newFile.resolve(DELETE_DIR_FLAG_FILE))) {
             i++;
-            newFile = _dataDir.getLuceneDir().resolve(baseName + "_"+i);
+            newFile = dataDir.getLuceneDir().resolve(baseName + "_"+i);
         }
         return newFile;
     }
@@ -207,10 +212,6 @@ public class FSDirectoryFactory implements DirectoryFactory {
         double maxMergeSizeMD = luceneConfig.getMergeFactor();
         double maxCachedMB = luceneConfig.getRAMBufferSize();
         return new NRTCachingDirectory(fsDir, maxMergeSizeMD,maxCachedMB);
-    }
-
-    public void setDataDir(GeonetworkDataDirectory dataDir) {
-        this._dataDir = dataDir;
     }
 
     public Path getIndexDir() {

@@ -27,9 +27,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.TermQuery;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
@@ -38,9 +37,6 @@ import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
 
 //=============================================================================
 public class SettingInfo {
-    @Autowired
-    private SettingManager _settingManager;
-
 
 	//---------------------------------------------------------------------------
 	//---
@@ -50,20 +46,26 @@ public class SettingInfo {
 
 	public String getSiteName()
 	{
-		return _settingManager.getSiteName();
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+        return settingManager.getSiteName();
 	}
 
 	//---------------------------------------------------------------------------
 	/** Return a string like 'http://HOST[:PORT]' */
 	public String getSiteUrl() {
-        String protocol = _settingManager.getValue(Geonet.Settings.SERVER_PROTOCOL);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+        String protocol = settingManager.getValue(Geonet.Settings.SERVER_PROTOCOL);
         return getSiteUrl(protocol.equalsIgnoreCase("https"));
 	}
 	/** Return a string like 'http://HOST[:PORT]' */
 	public String getSiteUrl(boolean secureUrl) {
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
 		String protocol;
 		Integer port;
-        String host = _settingManager.getValue(Geonet.Settings.SERVER_HOST);
+        String host = settingManager.getValue(Geonet.Settings.SERVER_HOST);
 		Integer secureport = toIntOrNull(Geonet.Settings.SERVER_SECURE_PORT);
 		Integer insecureport = toIntOrNull(Geonet.Settings.SERVER_PORT);
 		if (secureUrl) {
@@ -104,7 +106,8 @@ public class SettingInfo {
 
 	private Integer toIntOrNull(String key) {
         try {
-             return Integer.parseInt(_settingManager.getValue(key));
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+            return Integer.parseInt(settingManager.getValue(key));
         } catch (NumberFormatException e) {
             return null;
         }
@@ -112,7 +115,8 @@ public class SettingInfo {
 
     public String getSelectionMaxRecords()
 	{
-		String value = _settingManager.getValue("system/selectionmanager/maxrecords");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/selectionmanager/maxrecords");
 		if (value == null) value = "10000";
 		return value;
 	}
@@ -122,7 +126,8 @@ public class SettingInfo {
      * @return
      */
     public boolean getAutoDetect() {
-        String value = _settingManager.getValue("system/autodetect/enable");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/autodetect/enable");
         if(value == null) {
             return false;
         }
@@ -174,7 +179,8 @@ public class SettingInfo {
      * @return
      */
     public SearchRequestLanguage getRequestedLanguageOnly() {
-        String value = _settingManager.getValue(SettingManager.SYSTEM_REQUESTED_LANGUAGE_ONLY);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue(SettingManager.SYSTEM_REQUESTED_LANGUAGE_ONLY);
         return SearchRequestLanguage.find(value);
     }
 
@@ -183,7 +189,8 @@ public class SettingInfo {
      * @return
      */
     public boolean getRequestedLanguageOnTop() {
-        String value = _settingManager.getValue("system/requestedLanguage/sorted");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/requestedLanguage/sorted");
         if(value == null) {
             return false;
         }
@@ -194,7 +201,8 @@ public class SettingInfo {
 
     public boolean getLuceneIndexOptimizerSchedulerEnabled()
 	{
-		String value = _settingManager.getValue("system/indexoptimizer/enable");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/indexoptimizer/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -203,7 +211,8 @@ public class SettingInfo {
 
 	public boolean isXLinkResolverEnabled()
 	{
-		String value = _settingManager.getValue("system/xlinkResolver/enable");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/xlinkResolver/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -212,7 +221,8 @@ public class SettingInfo {
 
 	public boolean isSearchStatsEnabled()
 	{
-		String value = _settingManager.getValue("system/searchStats/enable");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String value = settingManager.getValue("system/searchStats/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -222,10 +232,12 @@ public class SettingInfo {
 	public Calendar getLuceneIndexOptimizerSchedulerAt() throws IllegalArgumentException {
 		Calendar calendar = Calendar.getInstance();
 		try {
-			calendar.set(0,0,0,
-					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/hour")),
-					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/min")) ,
-					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/sec")));
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+            calendar.set(0,0,0,
+					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/hour")),
+					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/min")) ,
+					Integer.parseInt(settingManager.getValue("system/indexoptimizer/at/sec")));
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed parsing schedule at info from settings: "+e.getMessage());
 		}
@@ -237,9 +249,11 @@ public class SettingInfo {
 	public int getLuceneIndexOptimizerSchedulerInterval() throws IllegalArgumentException {
 		int result = -1;
 		try {
-			int day  = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/day"));
-			int hour = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/hour"));
-			int min  = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/min"));
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+            
+            int day  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/day"));
+			int hour = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/hour"));
+			int min  = Integer.parseInt(settingManager.getValue("system/indexoptimizer/interval/min"));
 			result = (day * 24 * 60) + (hour * 60) + min;
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed parsing scheduler interval from settings: "+e.getMessage());
@@ -251,18 +265,21 @@ public class SettingInfo {
 
 	public String getFeedbackEmail()
 	{
-		return _settingManager.getValue("system/feedback/email");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return settingManager.getValue("system/feedback/email");
 	}
 
     //---------------------------------------------------------------------------
 
     public boolean getInspireEnabled() {
-        return _settingManager.getValueAsBool("system/inspire/enable");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return settingManager.getValueAsBool("system/inspire/enable");
     }
 
 
     public char[] getAnalyzerIgnoreChars() {
-        String ignoreChars = _settingManager.getValue(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String ignoreChars = settingManager.getValue(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
         if(ignoreChars == null || ignoreChars.length() == 0) {
             return null;
         }

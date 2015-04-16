@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import org.fao.geonet.events.md.MetadataRemove;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 
@@ -17,8 +16,6 @@ import java.sql.SQLException;
 public class FormatterCacheDeletionListener implements ApplicationListener<MetadataRemove> {
     @Autowired
     private FormatterCache formatterCache;
-    @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
 
     @Override
     public synchronized void onApplicationEvent(MetadataRemove event) {

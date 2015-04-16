@@ -21,41 +21,28 @@
 package org.fao.geonet.kernel.security.shibboleth;
 
 import jeeves.component.ProfileManager;
-
 import org.apache.batik.util.resources.ResourceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
-import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import javax.servlet.ServletRequest;
 import org.springframework.security.provisioning.UserDetailsManager;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author ETj (etj at geo-solutions.it)
  */
 public class ShibbolethUserUtils {
-
-	@Autowired
-	private UserRepository _userRepository;
-
-
-	@Autowired
-	private GroupRepository _groupRepository;
-
-	@Autowired
-	private GeonetworkAuthenticationProvider authProvider;
-
 	private UserDetailsManager userDetailsManager;
 	private WritableUserDetailsContextMapper udetailsmapper;
 
@@ -138,6 +125,8 @@ public class ShibbolethUserUtils {
 	@Transactional
 	protected UserDetails setupUser(ServletRequest request,
 			ShibbolethUserConfiguration config) throws Exception {
+		UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+		GeonetworkAuthenticationProvider authProvider = ApplicationContextHolder.get().getBean(GeonetworkAuthenticationProvider.class);
 
 		// Read in the data from the headers
 		HttpServletRequest req = (HttpServletRequest) request;
@@ -221,7 +210,7 @@ public class ShibbolethUserUtils {
 
 				user = ldapUserDetails.getUser();
 			} else {
-				_userRepository.saveAndFlush(user);
+				userRepository.saveAndFlush(user);
 			}
 
 			return user;
@@ -242,49 +231,6 @@ public class ShibbolethUserUtils {
 			return defValue;
 
 		return value;
-	}
-
-	public UserRepository get_userRepository() {
-		return _userRepository;
-	}
-
-	public void set_userRepository(UserRepository _userRepository) {
-		this._userRepository = _userRepository;
-	}
-
-	public GroupRepository get_groupRepository() {
-		return _groupRepository;
-	}
-
-	public void set_groupRepository(GroupRepository _groupRepository) {
-		this._groupRepository = _groupRepository;
-	}
-
-	public GeonetworkAuthenticationProvider getAuthProvider() {
-		return authProvider;
-	}
-
-	public void setAuthProvider(GeonetworkAuthenticationProvider authProvider) {
-		this.authProvider = authProvider;
-	}
-
-
-	public WritableUserDetailsContextMapper getUdetailsmapper() {
-		return udetailsmapper;
-	}
-
-	public void setUdetailsmapper(
-			WritableUserDetailsContextMapper udetailsmapper) {
-		this.udetailsmapper = udetailsmapper;
-	}
-
-	public UserDetailsManager getUserDetailsManager() {
-		return userDetailsManager;
-	}
-
-	public void setUserDetailsManager(
-			UserDetailsManager ldapUserDetailsManager) {
-		this.userDetailsManager = ldapUserDetailsManager;
 	}
 
 }

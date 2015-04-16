@@ -1,8 +1,8 @@
 package org.fao.geonet.web;
 
-import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
@@ -30,6 +30,8 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is needed.  For example
  * index.html redirects to /srv/eng/home but that redirect should depend on the language of the users browser.
@@ -54,9 +56,6 @@ public class LocaleRedirects {
         headers.add(REFERER_PARAMETER);
         SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
     }
-
-    @Autowired
-    private ApplicationContext _appContext;
 
     private String _homeRedirectUrl;
 
@@ -105,7 +104,8 @@ public class LocaleRedirects {
     }
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
-        ConfigurableApplicationContext context = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(_appContext.getBean(ServletContext.class));
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        ConfigurableApplicationContext context = getApplicationContextFromServletContext(appContext.getBean(ServletContext.class));
         String currentNode = context.getBean(NodeInfo.class).getId();
 
         node = node == null ? currentNode : node;
@@ -189,6 +189,10 @@ public class LocaleRedirects {
 
         return userLang;
     }
+
+
+    @Autowired
+    private ApplicationContext _appContext;
 
     @PostConstruct
     public void init() throws BeansException {

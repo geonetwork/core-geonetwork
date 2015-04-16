@@ -25,12 +25,12 @@ package org.fao.geonet.guiservices.csw.virtual;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.server.JeevesEngine;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Service;
 import org.fao.geonet.domain.ServiceParam;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.Map;
 
 
 /**
@@ -49,11 +49,6 @@ import java.util.*;
 public class Update {
 
     public static final String OCCUR_PREFIX = "occur__";
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
-    @Autowired
-    private ServiceRepository serviceRepository;
 
     private static String[] noneFilterParameters = {
             Params.ID,
@@ -77,6 +72,9 @@ public class Update {
                  @RequestParam Map<String, String> filters
                  )
             throws Exception {
+
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceRepository serviceRepository = applicationContext.getBean(ServiceRepository.class);
 
         for (String p : noneFilterParameters) {
             filters.remove(p);
@@ -134,7 +132,7 @@ public class Update {
         }
 
         // launching the service on the fly
-        jeevesApplicationContext.getBean(JeevesEngine.class).loadConfigDB(jeevesApplicationContext, Integer.valueOf(serviceId));
+        applicationContext.getBean(JeevesEngine.class).loadConfigDB(applicationContext, Integer.valueOf(serviceId));
 
         return new OkResponse();
     }

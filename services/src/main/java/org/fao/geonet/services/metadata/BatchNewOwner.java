@@ -28,6 +28,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -36,7 +37,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
@@ -68,13 +69,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Controller
 public class BatchNewOwner {
 
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    private AccessManager accessManager;
-    @Autowired
-    private ServiceManager serviceManager;
-
     @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
@@ -83,6 +77,11 @@ public class BatchNewOwner {
             @RequestParam("userId") String targetUsr,
             @RequestParam("groupId") String targetGrp,
             HttpServletRequest request) throws Exception {
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
+
         ServiceContext context = serviceManager.createServiceContext("metadata.batch.newowner", lang, request);
         UserSession session = context.getUserSession();
 
@@ -107,6 +106,9 @@ public class BatchNewOwner {
 
     private NewOwnerResult setNewOwner(ServiceContext context, String targetUsr, String targetGrp,
                                        Collection<String> selection, Set <Integer> modified) throws Exception {
+
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        DataManager dataManager = context.getBean(DataManager.class);
 
         Set<Integer> notFound = new HashSet<Integer>();
         Set<Integer> notOwner = new HashSet<Integer>();

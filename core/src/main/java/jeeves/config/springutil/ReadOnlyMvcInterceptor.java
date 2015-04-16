@@ -9,6 +9,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
+
 /**
  * This class intercepts MVC requests and verifies that:
  * <ol>
@@ -21,13 +23,13 @@ public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
     public static final String SERVLET_CONTEXT_ATTR_KEY = "readOnlyMode";
 
     @Autowired
-    ServletContext servletContext;
+    ServletContext context;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
-            Boolean isReadOnly = (Boolean) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_KEY);
+            Boolean isReadOnly = (Boolean) getServletContext(context).getAttribute(SERVLET_CONTEXT_ATTR_KEY);
             if (isReadOnly == null) {
                 isReadOnly = false;
             }
