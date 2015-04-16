@@ -12,6 +12,7 @@ import com.fasterxml.jackson.xml.annotate.JacksonXmlRootElement;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "layer")
 public class LayerSpec {
+
 	@JacksonXmlProperty(isAttribute = true)
 	private String id;
 	private InputLayerSpec input;
@@ -21,8 +22,8 @@ public class LayerSpec {
 	
 	@JsonCreator
 	public LayerSpec(Map<String,Object> props) {
-		id = (String) props.get("id");
-		input = (InputLayerSpec) props.get("input");
+		id     = (String) props.get("id");
+		input  = (InputLayerSpec)  props.get("input");
 		output = (OutputLayerSpec) props.get("output");
 	}
 	

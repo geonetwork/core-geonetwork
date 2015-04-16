@@ -119,7 +119,14 @@
     <entry key="osm" value="http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png"/>
   </util:map>
 
-  <bean id="extractorPath" class="java.lang.String">
-    <constructor-arg type="java.lang.String" value="/tmp"/>
+  <bean id="panierXmlPathLogged" class="java.io.File">
+    <constructor-arg index="0" type="java.lang.String" value="/tmp/sextant-extractor/logged"/>
   </bean>
+
+  <bean id="panierXmlPathAnonymous" class="java.io.File">
+    <constructor-arg index="0" type="java.lang.String" value="/tmp/sextant-extractor/anonymous"/>
+  </bean>
+
+
+
 </beans>
