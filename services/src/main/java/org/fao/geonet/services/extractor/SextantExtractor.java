@@ -21,7 +21,9 @@ import jeeves.server.dispatchers.ServiceManager;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.extractor.mapping.ExtractRequestSpec;
 import org.fao.geonet.services.extractor.mapping.LayerSpec;
+import org.fao.geonet.services.extractor.mapping.UserSpec;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -51,24 +53,20 @@ public class SextantExtractor {
 	@Autowired
 	private ServiceManager serviceManager;
 	@Autowired
-	private String extractorPath;
-
-	private File intranetPath, extranetPath, anonymousPath;
+	private File panierXmlPathLogged;
+	@Autowired
+	private File panierXmlPathAnonymous;
 
 	@PostConstruct
 	public void init() throws Exception {
 		// ensures directories are created
-		File exPathF  = new File(extractorPath + File.separator + "folders" + File.separator + "aTraiter");
-		intranetPath  = new File(exPathF, "intranet");
-		extranetPath  = new File(exPathF, "extranet");
-		anonymousPath = new File(exPathF, "anonymous");
-		FileUtils.forceMkdir(intranetPath);
-		FileUtils.forceMkdir(extranetPath);
-		FileUtils.forceMkdir(anonymousPath);
+		FileUtils.forceMkdir(panierXmlPathLogged);
+		FileUtils.forceMkdir(panierXmlPathAnonymous);
+
 	}
 
 	@RequestMapping(value = "/{lang}/extractor.doExtract", method = RequestMethod.POST)
-	public HttpEntity<byte[]> exec(@RequestBody LayerSpec[] jsonLayers, HttpServletRequest request) throws Exception {
+	public HttpEntity<byte[]> exec(@RequestBody ExtractRequestSpec jsonExtractionSpec, HttpServletRequest request) throws Exception {
 		JSONObject status = new JSONObject();
 		try {
 			XmlMapper xmlMapper = new XmlMapper();
@@ -87,9 +85,19 @@ public class SextantExtractor {
 								+ " uidNumber=\"%s\" login=\"%s\" />", us.getName(), us.getSurname(),
 						us.getEmailAddr(), us.getPrincipal().getOrganisation().equals("ifremer"), us.getUserId(),
 						us.getUsername()).getBytes());
+			} else {
+				// using data provided by the user
+				UserSpec usr = jsonExtractionSpec.getUser();
+				if (usr == null) {
+					throw new RuntimeException("User not logged in, and no information provided");
+				}
+				out.write(String.format(
+						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
+								+ " uidNumber=\"%s\" login=\"%s\" />", usr.getLastname(), usr.getFirstname(),
+						usr.getMail(), "false", "", "").getBytes());
 			}
 			out.write("<layers>".getBytes());
-			for (LayerSpec l : jsonLayers) {
+			for (LayerSpec l : jsonExtractionSpec.getLayers()) {
 				xmlMapper.writeValue(out, l);
 			}
 			out.write("</layers>".getBytes());
@@ -104,11 +112,10 @@ public class SextantExtractor {
 			String xmlString = result.getWriter().toString();
 
 			if (isAuthenticated) {
-				// TODO: intranet vs extranet ?
-				FileUtils.writeStringToFile(new File(anonymousPath, us.getEmailAddr() + "_" + UUID.randomUUID()
+				FileUtils.writeStringToFile(new File(panierXmlPathLogged, us.getEmailAddr() + "_" + UUID.randomUUID()
 						+ ".xml"), xmlString);
 			} else {
-				FileUtils.writeStringToFile(new File(anonymousPath, "anonymous_" + UUID.randomUUID() + ".xml"),
+				FileUtils.writeStringToFile(new File(panierXmlPathAnonymous, "anonymous_" + UUID.randomUUID() + ".xml"),
 						xmlString);
 			}
 			status.put("success", true);
