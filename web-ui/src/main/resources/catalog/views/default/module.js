@@ -166,10 +166,15 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap,link.url, link.name).
-              then(function(layer) {
-                layer.set('md', md);
-              });
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name).
+            then(function (layer) {
+              layer.set('md', md);
+            });
+      },
+        addAllMdLayersToMap: function (layers, md) {
+          angular.forEach(layers, function (layer) {
+            $scope.resultviewFns.addMdLayerToMap(layer, md);
+          });
         }
       };
 
