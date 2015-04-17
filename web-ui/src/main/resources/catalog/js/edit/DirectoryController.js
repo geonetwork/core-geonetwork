@@ -18,13 +18,15 @@
     'gnEditor',
     'gnCurrentEdit',
     'gnMetadataManager',
+    'gnGlobalSettings',
     function($scope, $routeParams, $http, 
         $rootScope, $translate, $compile,
             gnSearchManagerService, 
             gnUtilityService,
             gnEditor,
             gnCurrentEdit,
-            gnMetadataManager) {
+            gnMetadataManager,
+            gnGlobalSettings) {
 
       $scope.isTemplate = 's';
       $scope.hasEntries = false;
@@ -40,12 +42,13 @@
         sortOrder: 'reverse',
         resultType: 'subtemplates'
       }};
-
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,
         hitsPerPage: 10
       };
+
+      $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       var dataTypesToExclude = [];
 

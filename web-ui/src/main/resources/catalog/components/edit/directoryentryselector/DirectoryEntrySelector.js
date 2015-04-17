@@ -20,10 +20,12 @@
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
         'gnCurrentEdit', 'gnConfigService', 'gnElementsMap',
+        'gnGlobalSettings',
         function($rootScope, $timeout, $q, $http,
                  gnEditor, gnSchemaManagerService,
                  gnEditorXMLService, gnHttp, gnConfig,
-                 gnCurrentEdit, gnConfigService, gnElementsMap) {
+                 gnCurrentEdit, gnConfigService, gnElementsMap,
+                 gnGlobalSettings) {
 
           return {
             restrict: 'A',
@@ -65,6 +67,9 @@
                       resultType: 'subtemplates'
                     }
                   };
+
+                  scope.modelOptions = angular.copy(
+                 gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   // Separator between each contact XML

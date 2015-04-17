@@ -10,7 +10,14 @@
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
     locale: {},
-    isMapViewerEnabled: false
+    isMapViewerEnabled: false,
+    modelOptions: {
+      updateOn: 'default blur',
+      debounce: {
+        default: 300,
+        blur: 0
+      }
+    }
   });
 
   /**
@@ -46,6 +53,7 @@
       $scope.logoPath = '../../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
+
 
       $scope.pages = {
         home: 'home',
