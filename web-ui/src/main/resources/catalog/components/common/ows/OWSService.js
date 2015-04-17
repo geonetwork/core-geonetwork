@@ -158,8 +158,8 @@
                 // or the first one.
                 if (bbox.crs === srsCode || layer.BoundingBox.length === 1) {
                   extent = ol.proj.transformExtent(bbox.extent,
-                    bbox.crs || 'EPSG:4326',
-                    srsCode);
+                      bbox.crs || 'EPSG:4326',
+                      srsCode);
                   break;
                 }
               }

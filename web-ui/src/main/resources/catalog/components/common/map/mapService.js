@@ -19,9 +19,11 @@
       '$rootScope',
       'gnUrlUtils',
       '$q',
+      '$translate',
       'gnWmsQueue',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
-          gnSearchLocation, $rootScope, gnUrlUtils, $q, gnWmsQueue) {
+          gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
+          gnWmsQueue) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -273,11 +275,20 @@
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
-            olLayer.getSource().on('tileloaderror', function (tileEvent, target) {
-              console.warn('Something went wrong when loading the tile ' +
-                tileEvent.tile.getKey() + ' in layer ' +
-                tileEvent.currentTarget.getParams().LAYERS);
-            });
+            var unregisterEventKey = olLayer.getSource().on('tileloaderror',
+                function(tileEvent, target) {
+                  var msg = $translate('layerTileLoadError', {
+                    url: tileEvent.tile.getKey(),
+                    layer: tileEvent.currentTarget.getParams().LAYERS
+                  });
+                  console.warn(msg);
+                  $rootScope.$broadcast('StatusUpdated', {
+                    msg: msg,
+                    timeout: 0,
+                    type: 'danger'});
+                  olLayer.get('errors').push(msg);
+                  olLayer.getSource().unByKey(unregisterEventKey);
+                });
             return olLayer;
           },
 
@@ -293,7 +304,7 @@
            */
           createOlWMSFromCap: function(map, getCapLayer) {
 
-            var legend, attribution, metadata;
+            var legend, attribution, metadata, errors = [];
             if (getCapLayer) {
               var layer = getCapLayer;
 
@@ -303,19 +314,19 @@
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
               if (layer.CRS) {
-                for (var i = 0; i < layer.CRS.length; i ++) {
+                for (var i = 0; i < layer.CRS.length; i++) {
                   if (layer.CRS[i] === map.getView().getProjection()) {
                     isLayerAvailableInMapProjection = true;
                     break;
                   }
                 }
               } else {
-                console.log('The WMS layer does not provide coordinate ' +
-                'reference system information.');
+                errors.push($translate('layerCRSNotFound'));
+                console.warn($translate('layerCRSNotFound'));
               }
               if (!isLayerAvailableInMapProjection) {
-                console.log('The WMS service does not provide the layer ' +
-                'in the map projection.');
+                errors.push($translate('layerNotAvailableInMapProj'));
+                console.warn($translate('layerNotAvailableInMapProj'));
               }
 
               // TODO: parse better legend & attribution
@@ -343,7 +354,7 @@
                 }
               }
 
-              return this.createOlWMS(map, {
+              var layer = this.createOlWMS(map, {
                 LAYERS: layer.Name
               }, {
                 url: layer.url,
@@ -356,6 +367,9 @@
                 extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
               }
               );
+              layer.set('errors', errors);
+
+              return layer;
             }
           },
 
