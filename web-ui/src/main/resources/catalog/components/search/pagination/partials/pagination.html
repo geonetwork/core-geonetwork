@@ -14,8 +14,14 @@
   </ul>
   <!-- A dropdown button to select the number of page
   and indicating the current page info -->
+  <span data-ng-hide="values && values.length > 1">
+    {{config.from}} - {{config.to}}
+    <em data-translate="">on</em>
+    {{config.resultsCount}}
+  </span>
   <div class="btn-group"
-          title="{{'chooseRecordsPerPage' | translate}}">
+       data-ng-show="values && values.length > 1"
+       title="{{'chooseRecordsPerPage' | translate}}">
     <button type="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
