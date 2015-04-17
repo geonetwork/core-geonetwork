@@ -302,7 +302,7 @@
            * @param {Object} getCapLayer
            * @return {*}
            */
-          createOlWMSFromCap: function(map, getCapLayer) {
+          createOlWMSFromCap: function(map, getCapLayer, layerCoreInfo) {
 
             var legend, attribution, metadata, errors = [];
             if (getCapLayer) {
@@ -314,8 +314,9 @@
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
               if (layer.CRS) {
+                var mapProjection = map.getView().getProjection().getCode();
                 for (var i = 0; i < layer.CRS.length; i++) {
-                  if (layer.CRS[i] === map.getView().getProjection()) {
+                  if (layer.CRS[i] === mapProjection) {
                     isLayerAvailableInMapProjection = true;
                     break;
                   }
@@ -368,17 +369,28 @@
               }
               );
               layer.set('errors', errors);
-
               return layer;
             }
-          },
 
+          },
           addWmsToMapFromCap: function(map, getCapLayer) {
             var layer = this.createOlWMSFromCap(map, getCapLayer);
             map.addLayer(layer);
             return layer;
           },
-
+          addWmsToMap: function(map, layerInfo) {
+            if (layerInfo) {
+              var layer = this.createOlWMS(map, {
+                LAYERS: layerInfo.name
+              }, {
+                url: layerInfo.url,
+                label: layerInfo.name
+              }
+              );
+              map.addLayer(layer);
+              return layer;
+            }
+          },
           addWmtsToMapFromCap: function(map, getCapLayer) {
             map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
           },
@@ -388,6 +400,10 @@
            * a url and a layername. It will call the WMS getCapabilities,
            * create the ol.Layer with maximum info we got from capabilities,
            * then add the layer to the map.
+           *
+           * If the layer is not found in the capability, a simple WMS layer
+           * based on the name only will be created.
+           *
            * Return a promise with ol.Layer as data is succeed, and url/name
            * if failure.
            * If createOnly, we don't add the layer to the map
@@ -403,17 +419,36 @@
 
             gnWmsQueue.add(url, name);
             gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj),
+                  olL;
               if (!capL) {
+                // If layer not found in the GetCapabilities
+                // Try to add the layer from the metadata
+                // information only. A tile error loading
+                // may be reported after the layer is added
+                // to the map and will give more details.
                 var o = {
                   url: url,
                   name: name,
                   msg: 'layerNotInCap'
-                };
+                }, errors = [];
+                olL = $this.addWmsToMap(map, o);
+
+                if (!angular.isArray(olL.get('errors'))) {
+                  olL.set('errors', []);
+                }
+                var errormsg = $translate('layerNotfoundInCapability', {
+                  layer: name,
+                  url: url
+                });
+                errors.push(errormsg);
+                console.warn(errormsg);
+
+                olL.get('errors').push(errors);
+
                 gnWmsQueue.error(o);
                 defer.reject(o);
               } else {
-                var olL;
                 if (createOnly) {
                   olL = $this.createOlWMTSFromCap(map, capL);
                 } else {
