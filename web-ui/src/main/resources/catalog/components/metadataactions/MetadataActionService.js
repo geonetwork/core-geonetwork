@@ -198,7 +198,8 @@
         var ownerId = md ? md.getOwnerId() : '';
         openModal({
           title: 'transferOwnership',
-          content: '<div gn-transfer-ownership="'+uuid +'" gn-transfer-md-owner="'+ownerId+'"></div>'
+          content: '<div gn-transfer-ownership="' + uuid +
+              '" gn-transfer-md-owner="' + ownerId + '"></div>'
         }, scope, 'TransferOwnership');
       };
       /**

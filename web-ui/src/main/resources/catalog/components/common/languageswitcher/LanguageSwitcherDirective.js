@@ -42,8 +42,8 @@
             }
           });
 
-          scope.isHidden = function () {
-            return Object.keys(scope.langs).length > 1
+          scope.isHidden = function() {
+            return Object.keys(scope.langs).length > 1;
           };
         }
       };

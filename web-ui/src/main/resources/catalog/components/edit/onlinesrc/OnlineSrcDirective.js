@@ -612,10 +612,11 @@
                    */
                   scope.linkTo = function() {
                     if (scope.mode == 'service') {
-                      gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
-                    }
-                    else {
-                      gnOnlinesrc.linkToDataset(scope.srcParams, scope.popupid);
+                      return gnOnlinesrc.
+                          linkToService(scope.srcParams, scope.popupid);
+                    } else {
+                      return gnOnlinesrc.
+                          linkToDataset(scope.srcParams, scope.popupid);
                     }
                   };
                 }

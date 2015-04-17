@@ -104,21 +104,22 @@
           data.relation = [data.relation];
         }
         angular.forEach(data.relation, function(rel) {
+          if (angular.isDefined(rel)) {
+            var type = rel['@type'];
+            if (!relations[type]) {
+              relations[type] = [];
+            }
+            rel.type = type;
+            delete rel['@type'];
 
-          var type = rel['@type'];
-          if (!relations[type]) {
-            relations[type] = [];
-          }
-          rel.type = type;
-          delete rel['@type'];
-
-          if (rel['@subType']) {
-            rel.subType = rel['@subType'];
-            delete rel['@subType'];
-          }
-          if (angular.isString(rel.title) ||
-              type == 'thumbnail') {
-            relations[type].push(rel);
+            if (rel['@subType']) {
+              rel.subType = rel['@subType'];
+              delete rel['@subType'];
+            }
+            if (angular.isString(rel.title) ||
+                type == 'thumbnail') {
+              relations[type].push(rel);
+            }
           }
         });
         return relations;
@@ -362,7 +363,7 @@
           var qParams = setParams('dataset-add', params);
           var scope = this;
 
-          gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMdXml({
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
@@ -402,7 +403,7 @@
           var qParams = setParams('onlinesrc-add', params);
           var scope = this;
 
-          gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMdXml({
             scopedName: qParams.name,
             uuidref: qParams.uuidSrv,
             uuid: qParams.uuidDS,
@@ -433,7 +434,7 @@
          * @param {string} popupid id of the popup to close after process.
          */
         linkToSibling: function(params, popupid) {
-          runProcess(this,
+          return runProcess(this,
               setParams('sibling-add', params)).then(function() {
             closePopup(popupid);
           });
