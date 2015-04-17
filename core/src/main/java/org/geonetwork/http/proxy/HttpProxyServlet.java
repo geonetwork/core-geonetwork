@@ -335,7 +335,15 @@ public class HttpProxyServlet extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 String body = RequestUtil.inputStreamAsString(request);
 
-                final ContentType contentType1 = ContentType.create(request.getContentType(),
+                String ct = request.getContentType();
+                if (ct != null) {
+                    String[] cts = ct.split(";");
+                    ct = cts[0].trim();
+                } else {
+                    ct = "text/plain";
+                }
+
+                final ContentType contentType1 = ContentType.create(ct,
                         request.getCharacterEncoding());
                 StringEntity entity = new StringEntity(body, contentType1);
                 httpPost.setEntity(entity);
