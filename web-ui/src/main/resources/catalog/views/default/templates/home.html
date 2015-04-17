@@ -18,6 +18,7 @@
                class="form-control input-lg"
                autofocus=""
                data-ng-model="homeAnyField"
+               data-ng-model-options="modelOptions"
                placeholder="{{'anyPlaceHolder' | translate}}"
                data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
                data-typeahead="address for address in getAnySuggestions($viewValue)"

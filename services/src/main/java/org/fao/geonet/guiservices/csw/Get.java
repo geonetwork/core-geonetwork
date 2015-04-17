@@ -22,11 +22,11 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.responses.CswConfigurationResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -35,17 +35,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("admin.config.csw")
 public class Get {
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
-    @Autowired
-    private CswCapabilitiesInfoFieldRepository infoFieldRepository;
 
     @RequestMapping(value = "/{lang}/admin.config.csw", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
     CswConfigurationResponse exec() throws Exception {
-        SettingManager sm = jeevesApplicationContext.getBean(SettingManager.class);
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         CswConfigurationResponse response = new CswConfigurationResponse();
 
@@ -54,6 +50,7 @@ public class Get {
             cswContactIdValue = "-1";
         }
 
+        final CswCapabilitiesInfoFieldRepository infoFieldRepository = applicationContext.getBean(CswCapabilitiesInfoFieldRepository.class);
         java.util.List<CswCapabilitiesInfoField> capabilitiesInfoFields = infoFieldRepository.findAll(); //AsXml();
 
         response.setCswEnabled(sm.getValueAsBool("system/csw/enable"));

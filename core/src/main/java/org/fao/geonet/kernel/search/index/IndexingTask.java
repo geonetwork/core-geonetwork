@@ -31,7 +31,6 @@ import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -53,7 +52,6 @@ public class IndexingTask extends QuartzJobBean {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
-    @Qualifier("DataManager")
     @Autowired
     private DataManager _dataManager;
 

@@ -184,7 +184,7 @@
         }
       };
 
-      $scope.$on('$locationChangeSuccess', function(e,newUrl,oldUrl) {
+      $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
         // We are not in a url search so leave
         if (!gnSearchLocation.isSearch()) return;
 

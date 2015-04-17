@@ -24,17 +24,16 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Sets;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +44,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -70,12 +68,6 @@ import javax.servlet.http.HttpSession;
 @Controller("md.processing.batch")
 @ReadWriteController
 public class BatchXslProcessing { // extends NotInReadOnlyModeService {
-	@Autowired
-	private DataManager dataMan;
-    @Autowired
-    private XslProcessing xslProcessing;
-    @Autowired
-    private ServiceManager serviceManager;
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -95,6 +87,12 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
                                             @PathVariable String lang,
                                             HttpSession session,
                                             HttpServletRequest request) throws Exception {
+
+
+		ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+		DataManager dataMan = appContext.getBean(DataManager.class);
+		XslProcessing xslProcessing = appContext.getBean(XslProcessing.class);
+		ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
 		XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
 

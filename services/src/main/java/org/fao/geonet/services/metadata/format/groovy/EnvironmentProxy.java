@@ -21,8 +21,8 @@ import java.util.Map;
 public class EnvironmentProxy implements Environment {
     private static ThreadLocal<Environment> currentEnvironment = new InheritableThreadLocal<Environment>();
 
-    public static void setCurrentEnvironment(FormatterParams fparams, IsoLanguagesMapper mapper) {
-        currentEnvironment.set(new EnvironmentImpl(fparams, mapper));
+    public static void setCurrentEnvironment(FormatterParams fparams) {
+        currentEnvironment.set(new EnvironmentImpl(fparams, fparams.context.getBean(IsoLanguagesMapper.class)));
     }
     public static void clearContext() {
         currentEnvironment.set(null);

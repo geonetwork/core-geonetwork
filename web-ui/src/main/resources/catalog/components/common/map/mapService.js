@@ -388,9 +388,9 @@
             var $this = this;
 
             gnWmsQueue.add(url, name);
-            gnOwsCapabilities.getWMSCapabilities(url).then(function (capObj) {
+            gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
               var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
-              if(!capL) {
+              if (!capL) {
                 var o = {
                   url: url,
                   name: name,
@@ -400,7 +400,7 @@
                 defer.reject(o);
               } else {
                 var olL;
-                if(createOnly) {
+                if (createOnly) {
                   olL = $this.createOlWMTSFromCap(map, capL);
                 } else {
                   olL = $this.addWmsToMapFromCap(map, capL);
@@ -427,10 +427,10 @@
             var $this = this;
 
             gnWmsQueue.add(url, name);
-            gnOwsCapabilities.getWMTSCapabilities(url).then(function (capObj) {
+            gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
               var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
-              if(!capL) {
+              if (!capL) {
                 var o = {
                   url: url,
                   name: name,
@@ -441,7 +441,7 @@
               }
               else {
                 var olL = $this.createOlWMTSFromCap(map, capL, capObj);
-                if(!createOnly) {
+                if (!createOnly) {
                   map.addLayer(olL);
                 }
                 gnWmsQueue.removeFromQueue(url, name);
@@ -654,7 +654,7 @@
            * @param {string} url
            */
           isLayerInMap: function(map, name, url) {
-            if(gnWmsQueue.isPending(url, name)) {
+            if (gnWmsQueue.isPending(url, name)) {
               return true;
             }
             for (var i = 0; i < map.getLayers().getLength(); i++) {

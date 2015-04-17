@@ -22,9 +22,9 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,16 +36,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller("admin.config.virtualcsw.remove")
 public class Delete {
-    @Autowired
-    private ServiceRepository serviceRepository;
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.remove", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
     OkResponse exec(@RequestParam String id)
             throws Exception {
+        ServiceRepository serviceRepository = ApplicationContextHolder.get().getBean(ServiceRepository.class);
         int iId = Integer.parseInt(id);
-
         serviceRepository.delete(iId);
 
         return new OkResponse();

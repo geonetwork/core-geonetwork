@@ -31,6 +31,7 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
@@ -76,6 +77,7 @@ public class JeevesServlet extends HttpServlet
             if (!node.trim().isEmpty()) {
                 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
                         User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                ApplicationContextHolder.set(jeevesAppContext);
                 jeevesAppContext.setServletConfig(getServletConfig());
                 jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
                         pathFinder.getBaseUrl(), this);

@@ -4,9 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
@@ -25,6 +28,10 @@ public class TNodeIfTest extends AbstractTemplateParserTest {
 
     @Test
     public void testParseIfDirective() throws Exception {
+        ConfigurableApplicationContext context = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(context);
+        Mockito.when(context.getBean(SystemInfo.class)).thenReturn(info);
+
         final TemplateParser parser = createTestParser(SystemInfo.STAGE_PRODUCTION);
         final URL url = AbstractTemplateParserTest.class.getResource("non-empty-template.html");
         final TNode parseTree = parser.parse(IO.toPath(url.toURI()));

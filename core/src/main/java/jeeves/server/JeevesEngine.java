@@ -34,12 +34,12 @@ import jeeves.interfaces.ApplicationHandler;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
@@ -52,7 +52,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -93,21 +92,11 @@ public class JeevesEngine {
 	/* true if the 'general' part has been loaded */
 	private boolean _generalLoaded;
 
-    @Autowired
-	private ServiceManager _serviceMan;
-    @Autowired
-    private XmlCacheManager _xmlCacheManager;
-    @Autowired
-    private MonitorManager _monitorManager;
-    @Autowired
-	private ConfigurableApplicationContext _applicationContext;
 
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
     private List<Element> _dbServices = new ArrayList<Element>();
-    @Autowired
-    private GeonetworkDataDirectory dataDirectory;
     private Path _appPath;
     private int _maxUploadSize;
 
@@ -122,6 +111,10 @@ public class JeevesEngine {
 	  */
     public void init(final Path appPath, final Path configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceManager _serviceMan = appContext.getBean(ServiceManager.class);
+        MonitorManager _monitorManager = appContext.getBean(MonitorManager.class);
+
         ServletContext servletContext = null;
         if (servlet != null) {
             servletContext = servlet.getServletContext();
@@ -171,7 +164,7 @@ public class JeevesEngine {
 
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
-            loadConfigDB(_applicationContext, -1);
+            loadConfigDB(appContext, -1);
 
             //--- handlers must be started here because they may need the context
             //--- with the ProfileManager already loaded
@@ -325,8 +318,9 @@ public class JeevesEngine {
 
         List<Element> monitorList = configRoot.getChildren(ConfigFile.Child.MONITORS);
 
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         for (Element aMonitorList : monitorList) {
-            _monitorManager.initMonitors(aMonitorList);
+            context.getBean(MonitorManager.class).initMonitors(aMonitorList);
         }
 
 		//--- recurse on includes
@@ -436,13 +430,17 @@ public class JeevesEngine {
                                                    + "' element");
             }
 
+            ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+            ServiceManager serviceMan = appContext.getBean(ServiceManager.class);
+            MonitorManager monitorManager = appContext.getBean(MonitorManager.class);
+
 			info("Found handler : " +className);
 
 			Class<?> c = Class.forName(className);
 
 			ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-			ServiceContext srvContext = _serviceMan.createServiceContext("AppHandler", _applicationContext);
+			ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", appContext);
 			srvContext.setLanguage(_defaultLang);
 			srvContext.setLogger(_appHandLogger);
 			srvContext.setServlet(servlet);
@@ -454,8 +452,8 @@ public class JeevesEngine {
 				Object context = h.start(handler, srvContext);
 
 				_appHandlers.add(h);
-				_serviceMan.registerContext(h.getContextName(), context);
-                _monitorManager.initMonitorsForApp(srvContext);
+				serviceMan.registerContext(h.getContextName(), context);
+                monitorManager.initMonitorsForApp(srvContext);
 
 				info("--- Handler started ---------------------------------------");
 			} catch (Exception e) {
@@ -475,8 +473,8 @@ public class JeevesEngine {
                 errors.put("Stack", stackTrace);
                 error(errors.toString());
                 // only set the error if we don't already have one
-                if (!_serviceMan.isStartupError()) {
-                    _serviceMan.setStartupErrors(errors);
+                if (!serviceMan.isStartupError()) {
+                    serviceMan.setStartupErrors(errors);
                 }
             }
 		}
@@ -499,7 +497,9 @@ public class JeevesEngine {
 		//--- get services root package
 		String pack = services.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
 
-		// --- scan services elements
+        ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
+
+        // --- scan services elements
 		for (Element service : (List<Element>) services
 				.getChildren(ConfigFile.Services.Child.SERVICE)) {
 			String name = service
@@ -508,7 +508,7 @@ public class JeevesEngine {
 			info("   Adding service : " + name);
 			
 			try {
-				_serviceMan.addService(pack, service, this._appPath);
+				serviceManager.addService(pack, service, this._appPath);
 			} catch (Exception e) {
 				warning("Raised exception while registering service. Skipped.");
 				warning("   Service   : " + name);
@@ -533,7 +533,7 @@ public class JeevesEngine {
 			info("=== Stopping system ========================================");
 
 			info("Shutting down monitor manager...");
-			_monitorManager.shutdown();
+			ApplicationContextHolder.get().getBean(MonitorManager.class).shutdown();
 
 			info("Stopping handlers...");
 			stopHandlers();
@@ -568,7 +568,8 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	public Path getUploadDir() { return this.dataDirectory.getUploadDir(); }
+	public Path getUploadDir() {
+        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class).getUploadDir(); }
 
 	//---------------------------------------------------------------------------
 
@@ -578,7 +579,9 @@ public class JeevesEngine {
 
 	public void dispatch(ServiceRequest srvReq, UserSession session)
 	{
-		if (srvReq.getService() == null || srvReq.getService().length() == 0)
+        ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
+
+        if (srvReq.getService() == null || srvReq.getService().length() == 0)
 			srvReq.setService(_defaultSrv);
 
 		if (srvReq.getLanguage() == null || srvReq.getLanguage().length() == 0)
@@ -588,13 +591,13 @@ public class JeevesEngine {
 
 		//--- if we have a startup error (ie. exception during startup) then
 		//--- override with the startupErrorSrv service (if defined)
-		if (_serviceMan.isStartupError() && !_startupErrorSrv.equals("")
+		if (serviceManager.isStartupError() && !_startupErrorSrv.equals("")
 				&& !srvReq.getService().contains(_startupErrorSrv))
 			srvReq.setService(_startupErrorSrv);
 
 		//--- normal dispatch pipeline
 
-		_serviceMan.dispatch(srvReq, session);
+		serviceManager.dispatch(srvReq, session);
 	}
 
 	//---------------------------------------------------------------------------
@@ -609,10 +612,10 @@ public class JeevesEngine {
 	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
 
 	public ServiceManager getServiceManager() {
-		return _serviceMan;
+		return ApplicationContextHolder.get().getBean(ServiceManager.class);
 	}
 
-	public ProfileManager getProfileManager() { return _serviceMan.getProfileManager(); }
+	public ProfileManager getProfileManager() { return getServiceManager().getProfileManager(); }
 	
     /**
      * Create or reload Jeeves services from a configuration stored in the Services table

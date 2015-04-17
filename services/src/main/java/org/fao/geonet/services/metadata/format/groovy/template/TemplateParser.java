@@ -39,10 +39,6 @@ public class TemplateParser {
     @Autowired
     TextContentParser textContentParser;
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private SystemInfo info;
-
     public TNode parse(Path path) {
         try {
             final TNode root = parse(Files.readAllBytes(path), TemplateType.fromPath(path));
@@ -79,11 +75,15 @@ public class TemplateParser {
             default:
                 try {
                     final String unparsedText = new String(in, Constants.ENCODING);
-                    return new TNodeTextContent(info, textContentParser, textContentParser.parse(unparsedText));
+                    return new TNodeTextContent(getSystemInfo(), textContentParser, textContentParser.parse(unparsedText));
                 } catch (IOException e) {
                     throw new TemplateException(e);
                 }
         }
+    }
+
+    protected SystemInfo getSystemInfo() {
+        return SystemInfo.getInfo();
     }
 
     private class Handler extends DefaultHandler {
@@ -107,7 +107,7 @@ public class TemplateParser {
                     }
                 }
                 if (found == null) {
-                    setCurrentNode(new SimpleTNode(info, textContentParser, qName, attributes));
+                    setCurrentNode(new SimpleTNode(getSystemInfo(), textContentParser, qName, attributes));
                 }
             } catch (IOException e) {
                 throw new TemplateException(e);

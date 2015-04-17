@@ -1,13 +1,13 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.MetadataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -24,10 +24,6 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XS
  * @author jeichar
  */
 abstract class AbstractFormatService {
-    @Autowired
-    protected DataManager dataManager;
-    @Autowired
-    protected MetadataRepository metadataRepository;
 
     protected static final DirectoryStream.Filter<Path> FORMATTER_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -124,7 +120,7 @@ abstract class AbstractFormatService {
                 resolvedId = id;
             } catch (NumberFormatException e) {
                 try {
-                    resolvedId = dataManager.getMetadataId(id);
+                    resolvedId = ApplicationContextHolder.get().getBean(DataManager.class).getMetadataId(id);
                 } catch (Exception e2) {
                     throw new ResourceNotFoundEx("Metadata with id: id");
                 }

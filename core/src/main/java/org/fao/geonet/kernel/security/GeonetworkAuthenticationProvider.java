@@ -23,11 +23,12 @@
 package org.fao.geonet.kernel.security;
 
 import jeeves.config.springutil.JeevesAuthenticationDetails;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,16 +52,13 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 
     private boolean checkUserNameOrEmail = false;
 
-    @Autowired
-    private PasswordEncoder encoder;
-
-	@Autowired
-	private UserRepository _userRepository;
-
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
+		PasswordEncoder encoder = ApplicationContextHolder.get().getBean(PasswordEncoder.class);
+
+
 		User gnDetails = (User) userDetails;
 				
 		if (authentication.getCredentials() == null) {
@@ -80,17 +78,21 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 	    try {
+			final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+			PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
+			UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+
 			// Only check user with local db user (ie. authtype is '')
-	        User user = _userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
+	        User user = userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
             if (user == null && checkUserNameOrEmail) {
-                user = _userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
+                user = userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
             }
 			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
 					if(PasswordUtil.hasOldHash(user)) {
 						String oldPassword = user.getPassword();
 						String newPassword = authentication.getCredentials().toString();
-                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, _userRepository);
+                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, userRepository);
 					}
 				}
 

@@ -59,13 +59,18 @@
     'gnSearchLocation',
     'gnOwsContextService',
     'hotkeys',
+    'gnGlobalSettings',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnSearchLocation, gnOwsContextService,
-             hotkeys) {
+             hotkeys, gnGlobalSettings) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
+
+      $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+      $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
+
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;

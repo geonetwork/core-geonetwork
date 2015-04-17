@@ -72,7 +72,7 @@
        * at last search.
        */
       this.removeLocationUuid = function() {
-        if(gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
+        if (gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
           gnSearchLocation.path(gnMdViewObj.from);
         }
         else {

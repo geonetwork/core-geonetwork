@@ -12,14 +12,14 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,13 +46,6 @@ public class LuceneIndexLanguageTracker {
 	private final Map<String, Directory> dirs = new HashMap<String, Directory>();
 	private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
 	private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
-    @Autowired
-	private LuceneConfig luceneConfig;
-    @Autowired
-    private DirectoryFactory _directoryFactory;
-    @Qualifier("timerThreadPool")
-    @Autowired
-    private ScheduledThreadPoolExecutor timer;
 
 	private TaxonomyIndexTracker taxonomyIndexTracker;
 	private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
@@ -63,16 +56,17 @@ public class LuceneIndexLanguageTracker {
     public LuceneIndexLanguageTracker() {
         // used by spring
     }
-    public LuceneIndexLanguageTracker(FSDirectoryFactory directoryFactory, LuceneConfig luceneConfig) {
-        this._directoryFactory = directoryFactory;
-        this.luceneConfig = luceneConfig;
-    }
 
     private void lazyInit() {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        LuceneConfig luceneConfig = context.getBean(LuceneConfig.class);
+        DirectoryFactory directoryFactory = context.getBean(DirectoryFactory.class);
+        ScheduledThreadPoolExecutor timer = context.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
+
         if (!initialized.get()) {
             lock.lock();
             try {
-                this.taxonomyIndexTracker = new TaxonomyIndexTracker(_directoryFactory, luceneConfig);
+                this.taxonomyIndexTracker = new TaxonomyIndexTracker(directoryFactory, luceneConfig);
                 init();
 
                 if (timer != null) {
@@ -89,8 +83,11 @@ public class LuceneIndexLanguageTracker {
     }
 
     private void init() throws Exception {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        DirectoryFactory directoryFactory = context.getBean(DirectoryFactory.class);
+
         try {
-            Set<String> indices = _directoryFactory.listIndices();
+            Set<String> indices = directoryFactory.listIndices();
             for (String indexDir : indices) {
                 openIndex(indexDir);
             }
@@ -102,13 +99,16 @@ public class LuceneIndexLanguageTracker {
     }
 
     private void openIndex(String indexId) throws IOException {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        LuceneConfig luceneConfig = context.getBean(LuceneConfig.class);
+        DirectoryFactory directoryFactory = context.getBean(DirectoryFactory.class);
 
         Directory cachedFSDir = null;
         IndexWriter writer = null;
         GeonetworkNRTManager nrtManager = null;
         TrackingIndexWriter trackingIndexWriter;
         try {
-            cachedFSDir = _directoryFactory.createIndexDirectory(indexId, luceneConfig);
+            cachedFSDir = directoryFactory.createIndexDirectory(indexId, luceneConfig);
             IndexWriterConfig conf = new IndexWriterConfig(Geonet.LUCENE_VERSION, SearchManager.getAnalyzer(indexId, false));
             ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
             conf.setMergeScheduler(mergeScheduler);
@@ -166,6 +166,8 @@ public class LuceneIndexLanguageTracker {
         try {
             lazyInit();
 
+            final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+            LuceneConfig luceneConfig = context.getBean(LuceneConfig.class);
 
             if (!luceneConfig.useNRTManagerReopenThread()
                 || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
@@ -300,12 +302,14 @@ public class LuceneIndexLanguageTracker {
         lock.lock();
         try{
             lazyInit();
+            final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+            DirectoryFactory directoryFactory = context.getBean(DirectoryFactory.class);
 
             waitForReadersToClose(timeoutInMillis);
             // reset taxonomy first
             taxonomyIndexTracker.reset();
             close(0, false);
-            _directoryFactory.resetIndex();
+            directoryFactory.resetIndex();
             init();
         } finally {
             lock.unlock();

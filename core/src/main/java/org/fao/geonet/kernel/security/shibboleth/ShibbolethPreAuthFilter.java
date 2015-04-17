@@ -20,18 +20,9 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils.MinimalUser;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +30,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.web.filter.GenericFilterBean;
+
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Preauthentication Filter for Shibboleth.
@@ -49,12 +48,6 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author ETj (etj at geo-solutions.it)
  */
 public class ShibbolethPreAuthFilter extends GenericFilterBean {
-
-	@Autowired
-	private ShibbolethUserConfiguration configuration;
-
-	@Autowired
-	private ShibbolethUserUtils utils;
 
 	private RequestCache requestCache;
 
@@ -92,6 +85,10 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean {
 			} catch (Throwable t) {
 			}
 		}
+
+		ShibbolethUserConfiguration configuration = ApplicationContextHolder.get().getBean(ShibbolethUserConfiguration.class);
+		ShibbolethUserUtils utils = ApplicationContextHolder.get().getBean(ShibbolethUserUtils.class);
+
 
 		HttpServletRequest hreq = (HttpServletRequest) request;
 
@@ -201,24 +198,8 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean {
 		chain.doFilter(request, response);
 	}
 
-	public void setConfiguration(ShibbolethUserConfiguration configuration) {
-		this.configuration = configuration;
-	}
-
 	public void setRequestCache(RequestCache requestCache) {
 		this.requestCache = requestCache;
-	}
-
-	public ShibbolethUserUtils getUtils() {
-		return utils;
-	}
-
-	public void setUtils(ShibbolethUserUtils utils) {
-		this.utils = utils;
-	}
-
-	public ShibbolethUserConfiguration getConfiguration() {
-		return configuration;
 	}
 
 	public RequestCache getRequestCache() {

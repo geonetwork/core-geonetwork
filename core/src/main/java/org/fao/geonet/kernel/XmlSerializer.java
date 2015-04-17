@@ -23,10 +23,9 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.apache.log4j.Priority;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -41,13 +40,9 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -65,15 +60,6 @@ public abstract class XmlSerializer {
             this.forceFilterEditOperation = forceFilterEditOperation;
         }
 	}
-
-    @Autowired
-    protected SettingManager _settingManager;
-    @Autowired
-    protected AccessManager accessManager;
-    @Autowired
-    protected DataManager _dataManager;
-    @Autowired
-    private MetadataRepository _metadataRepository;
 
 	private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
 	public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
@@ -94,7 +80,9 @@ public abstract class XmlSerializer {
      * @return
      */
 	public boolean resolveXLinks() {
-		if (_settingManager == null) { // no initialization, no XLinks
+        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+        if (_settingManager == null) { // no initialization, no XLinks
 			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
 			return false; 
 		}
@@ -112,6 +100,8 @@ public abstract class XmlSerializer {
 	}
 
     public boolean isLoggingEmptyWithHeld() {
+        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
         if (_settingManager == null) {
             return false;
         }
@@ -133,6 +123,8 @@ public abstract class XmlSerializer {
      * @throws Exception
      */
 	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
+        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+
         Metadata metadata = _metadataRepository.findOne(id);
 
 		if (metadata == null)
@@ -142,6 +134,9 @@ public abstract class XmlSerializer {
 	}
 
     public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+        AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
+        DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
+
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
 
@@ -242,8 +237,7 @@ public abstract class XmlSerializer {
 		if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
-        Metadata savedMetadata = _metadataRepository.save(newMetadata);
-		return savedMetadata;
+        return context.getBean(MetadataRepository.class).save(newMetadata);
 	}
 
     /**
@@ -260,6 +254,8 @@ public abstract class XmlSerializer {
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
+
+        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
 
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
@@ -289,6 +285,8 @@ public abstract class XmlSerializer {
      * @throws SQLException
      */
 	protected void deleteDb(String id) throws Exception {
+        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly

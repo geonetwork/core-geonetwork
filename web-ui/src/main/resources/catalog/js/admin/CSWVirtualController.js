@@ -30,7 +30,7 @@
         value: null,
         occur: '+'
       };
-      $scope.occurs = ['+',' ','-'];
+      $scope.occurs = ['+', ' ', '-'];
       $scope.showExplicitQuery = false;
       $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
         'denominator', '_source', '_cat', '_groupPublished'];
@@ -81,11 +81,14 @@
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
               $scope.virtualCSWSelected.serviceParameters = {};
-              $scope.showExplicitQuery = $scope.virtualCSWSelected.explicitQuery ? true : false;
+              $scope.showExplicitQuery =
+                  $scope.virtualCSWSelected.explicitQuery ? true : false;
               angular.forEach(params,
                   function(param) {
                     $scope.virtualCSWSelected.
-                        serviceParameters[param.name] = {value: param.value, occur: param.occur};
+                        serviceParameters[param.name] = {
+                          value: param.value,
+                          occur: param.occur};
                   });
               $scope.virtualCSWUpdated = false;
 
@@ -98,7 +101,8 @@
       };
 
       $scope.addFilter = function() {
-        $scope.virtualCSWSelected.serviceParameters[$scope.newFilter.name] = angular.copy($scope.newFilter);
+        $scope.virtualCSWSelected.serviceParameters[$scope.newFilter.name] =
+            angular.copy($scope.newFilter);
         $scope.newFilter.value = $scope.newFilter.name = null;
         $scope.newFilter.occur = '+';
       };
@@ -110,9 +114,9 @@
       };
       $scope.setFilterValue = function(field, value) {
         $scope.virtualCSWSelected.serviceParameters[field] = {
-            value: value,
-            occur: '='
-        }
+          value: value,
+          occur: '='
+        };
       };
 
       $scope.$watchCollection('virtualCSWSelected', function() {

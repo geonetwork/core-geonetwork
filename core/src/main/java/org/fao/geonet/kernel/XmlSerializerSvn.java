@@ -23,17 +23,15 @@
 
 package org.fao.geonet.kernel;
 
-import java.sql.SQLException;
-
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+
+import java.sql.SQLException;
 
 /**
  * This class is responsible for reading and writing metadata extras from the 
@@ -41,9 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  */
 public class XmlSerializerSvn extends XmlSerializer {
-
-    @Autowired
-	private SvnManager svnMan;
 
     /**
      * Retrieves the xml element whose id matches the given one. The element is read from the database as subversion may be busy with commit changes.
@@ -121,7 +116,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws SQLException, SVNException
      */
 	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
-
+		SvnManager svnMan = context.getBean(SvnManager.class);
 		// old XML comes from the database
 		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 
@@ -146,14 +141,14 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws SQLException, SVNException
      */
 	public void delete(String id, ServiceContext context) throws Exception {
-
 		deleteDb(id);
-		if (svnMan == null) { // do nothing
-			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
-		} else {
+		try {
+			SvnManager svnMan = context.getBean(SvnManager.class);
 			svnMan.deleteDir(id, context);
-		}
+			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
+		} catch (NoSuchBeanDefinitionException e) {
 
+		}
 	}
 
 }

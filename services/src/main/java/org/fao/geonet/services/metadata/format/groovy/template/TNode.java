@@ -81,7 +81,7 @@ public abstract class TNode {
     }
 
     public void addCannontRenderComment(TRenderContext context, Optional<String> reasonToNotRender) throws IOException {
-        if (this.info.isDevMode()) {
+        if (SystemInfo.getInfo(this.info).isDevMode()) {
             context.append("<!-- ").append(reasonToNotRender.get()).append(" -->");
         }
     }

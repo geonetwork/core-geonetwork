@@ -60,6 +60,11 @@ public class FunctionsTest {
         Mockito.when(appContext.getBean(GeonetworkDataDirectory.class)).thenReturn(dataDir);
         Mockito.when(appContext.getBean(XmlCacheManager.class)).thenReturn(new XmlCacheManager());
 
+        final IsoLanguagesMapper languagesMapper = Mockito.mock(IsoLanguagesMapper.class);
+        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en")).thenReturn("eng");
+        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en", "en")).thenReturn("eng");
+        Mockito.when(appContext.getBean(IsoLanguagesMapper.class)).thenReturn(languagesMapper);
+
         fparams = new FormatterParams() {
             @Override
             public boolean isDevMode() {
@@ -82,11 +87,6 @@ public class FunctionsTest {
                 return false;
             }
         };
-
-        final IsoLanguagesMapper languagesMapper = Mockito.mock(IsoLanguagesMapper.class);
-        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en")).thenReturn("eng");
-        Mockito.when(languagesMapper.iso639_1_to_iso639_2("en", "en")).thenReturn("eng");
-        fparams.format.setIsoLanguagesMapper(languagesMapper);
 
         Environment env = Mockito.mock(Environment.class);
         Mockito.when(env.getLang3()).thenReturn("eng");

@@ -228,9 +228,10 @@
    * must be provided.
    *
    * The metadata id should be the value of the gn-transfer-ownership attribute
-   * and the metadata owner id should be the value of the gn-transfer-md-owner attribute
+   * and the metadata owner id should be the value of the
+   * gn-transfer-md-owner attribute
    */
-  module.directive('gnTransferOwnership',  [
+  module.directive('gnTransferOwnership', [
     '$translate', '$http', 'gnHttp', '$rootScope',
     function($translate, $http, gnHttp, $rootScope) {
       return {
@@ -251,7 +252,8 @@
           scope.selectUser = function(user) {
             scope.selectedUser = user;
             scope.groupLoading = true;
-            $http.get("admin.usergroups.list?_content_type=json&id="+user.id).success(function(groups){
+            $http.get('admin.usergroups.list?_content_type=json&id=' +
+                user.id).success(function(groups) {
               scope.groups = [];
               var added = {};
               angular.forEach(groups, function(g) {
@@ -263,13 +265,13 @@
                     desc: g.description
                   });
                 }
-              })
-            }).error(function(error){
+              });
+            }).error(function(error) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('loadUserGroupsError'),
                 timeout: 0,
                 type: 'danger'});
-            }).then(function(){
+            }).then(function() {
               scope.groupLoading = false;
             });
           };
@@ -277,60 +279,62 @@
           scope.selectGroup = function(group) {
             scope.selectedGroup = group;
           };
-          $http.get("admin.user.list?_content_type=json").success(function(data) {
-            var isEditor = function(user) {
-              var hasEditorAuth = false;
-              var auths = user.authorities;
-              if (!angular.isArray(auths)) {
-                auths = [auths];
-              }
-              angular.forEach(auths, function(auth) {
-                if (!hasEditorAuth && auth.authority === 'Editor') {
-                  hasEditorAuth = true;
-                }
-              });
+          $http.get('admin.user.list?_content_type=json').
+              success(function(data) {
+                var isEditor = function(user) {
+                  var hasEditorAuth = false;
+                  var auths = user.authorities;
+                  if (!angular.isArray(auths)) {
+                    auths = [auths];
+                  }
+                  angular.forEach(auths, function(auth) {
+                    if (!hasEditorAuth && auth.authority === 'Editor') {
+                      hasEditorAuth = true;
+                    }
+                  });
 
-              return hasEditorAuth;
-            };
-            angular.forEach(data.users, function(user) {
-              user = user.value;
-              if (isEditor(user)) {
-                var userObj = {
-                  name: user.name + " " + user.surname,
-                  username: user.username,
-                  id: user.id
+                  return hasEditorAuth;
                 };
-                scope.users.push(userObj);
+                angular.forEach(data.users, function(user) {
+                  user = user.value;
+                  if (isEditor(user)) {
+                    var userObj = {
+                      name: user.name + ' ' + user.surname,
+                      username: user.username,
+                      id: user.id
+                    };
+                    scope.users.push(userObj);
 
-                if (user.id === ownerId) {
-                  scope.selectUser(userObj);
-                }
-              }
-            });
-          }).error(function(error){
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('loadUsersError'),
-              timeout: 0,
-              type: 'danger'});
-          }).then(function(){
-            scope.userLoading = false;
-          });
+                    if (user.id === ownerId) {
+                      scope.selectUser(userObj);
+                    }
+                  }
+                });
+              }).error(function(error) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: $translate('loadUsersError'),
+                  timeout: 0,
+                  type: 'danger'});
+              }).then(function() {
+                scope.userLoading = false;
+              });
 
           var updateSelection = function() {
             return $http({
               method: 'GET',
-              url: "metadata.batch.newowner?userId="+scope.selectedUser.id+"&groupId="+scope.selectedGroup.id,
+              url: 'metadata.batch.newowner?userId=' + scope.selectedUser.id +
+                  '&groupId=' + scope.selectedGroup.id,
               headers: {
                 'Content-Type': 'application/json'
               }
-            }).success(function(result){
+            }).success(function(result) {
               scope.$emit('TransferOwnership', true);
               var msg = $translate('transferOwnershipSuccessMsg', result);
               $rootScope.$broadcast('StatusUpdated', {
                 msg: msg,
                 timeout: 2,
-                type: 'success'})
-            }).error(function(){
+                type: 'success'});
+            }).error(function() {
               scope.$emit('TransferOwnership', false);
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('transferOwnershipError'),
@@ -338,13 +342,13 @@
                 type: 'danger'});
             });
           };
-          scope.save = function () {
+          scope.save = function() {
             if (scope.selectedUser && scope.selectedGroup) {
               if (angular.isDefined(mdUuid)) {
                 return gnHttp.callService('mdSelect', {
                   selected: 'add',
                   id: mdUuid
-                }).success(function () {
+                }).success(function() {
                   updateSelection();
                 });
               } else {

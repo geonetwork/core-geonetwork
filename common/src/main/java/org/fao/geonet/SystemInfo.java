@@ -103,4 +103,17 @@ public class SystemInfo {
                 new Element("buildDate").setText(this.buildDate)
         ));
     }
+
+    public static SystemInfo getInfo() {
+        return getInfo(null);
+    }
+    public static SystemInfo getInfo(SystemInfo defaultInfo) {
+        SystemInfo actualInfo = defaultInfo;
+        if (actualInfo == null && ApplicationContextHolder.get() != null) {
+            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+        }
+
+
+        return actualInfo;
+    }
 }
