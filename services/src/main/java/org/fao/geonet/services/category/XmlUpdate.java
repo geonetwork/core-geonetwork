@@ -24,6 +24,7 @@
 package org.fao.geonet.services.category;
 
 import jeeves.services.ReadWriteController;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.util.Xml;
@@ -31,7 +32,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,13 +48,13 @@ import javax.xml.bind.annotation.XmlValue;
 @ReadWriteController
 public class XmlUpdate{
 
-    @Autowired
-    private MetadataCategoryRepository categoryRepository;
-
     @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public OkResponse serviceSpecificExec(@RequestBody String request) throws Exception {
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataCategoryRepository categoryRepository = appContext.getBean(MetadataCategoryRepository.class);
 
         Element requestXml = Xml.loadString(request, false);
         for (Object r : requestXml.getChildren("category")) {

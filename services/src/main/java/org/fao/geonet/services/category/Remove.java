@@ -26,12 +26,13 @@ package org.fao.geonet.services.category;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import jeeves.services.ReadWriteController;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +46,9 @@ import java.util.List;
  */
 @Controller("admin.category.remove")
 @ReadWriteController
-public class Remove  {
-
-    @Autowired
-    private MetadataCategoryRepository categoryRepository;
-    @Autowired
-    private MetadataRepository metadataRepository;
-    @Autowired
-    private DataManager dataManager;
-
-
+public class Remove {
     @RequestMapping(value = "/{lang}/admin.category.remove", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CategoryUpdateResponse exec(
             @RequestParam Integer id
@@ -65,16 +57,22 @@ public class Remove  {
             throw new IllegalArgumentException("parameter id is required");
         }
 
-        final MetadataCategory category = this.categoryRepository.findOne(id);
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataCategoryRepository categoryRepository = appContext.getBean(MetadataCategoryRepository.class);
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        DataManager dataManager = appContext.getBean(DataManager.class);
+
+        final MetadataCategory category = categoryRepository.findOne(id);
         final List<Integer> affectedMd = metadataRepository.findAllIdsBy(MetadataSpecs.hasCategory(category));
 
         categoryRepository.deleteCategoryAndMetadataReferences(id);
-		//--- reindex affected metadata
+        //--- reindex affected metadata
 
         dataManager.indexMetadata(Lists.transform(affectedMd, Functions.toStringFunction()));
 
         CategoryUpdateResponse response = new CategoryUpdateResponse();
         response.addOperation(CategoryUpdateResponse.Operation.removed);
         return response;
-	}
+    }
 }

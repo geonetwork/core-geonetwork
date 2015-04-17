@@ -26,24 +26,21 @@ package org.fao.geonet.services.logo;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 
@@ -54,22 +51,14 @@ import javax.imageio.ImageIO;
  * 
  */
 public class Set implements Service {
-    private volatile Path harvestingLogoDirectory;
-    private volatile Path nodeLogoDirectory = null;
-
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    public Element exec(Element params, ServiceContext context)
-            throws Exception {
-        synchronized (this) {
-            if(harvestingLogoDirectory == null) {
-                harvestingLogoDirectory = Resources.locateHarvesterLogosDir(context);
-            }
-            if(nodeLogoDirectory == null) {
-                nodeLogoDirectory = Resources.locateLogosDir(context);
-            }
-        }
+    public Element exec(Element params, ServiceContext context) throws Exception {
+
+        Path harvestingLogoDirectory = Resources.locateHarvesterLogosDir(context);
+        Path nodeLogoDirectory = Resources.locateLogosDir(context);
+
         String file = Util.getParam(params, Params.FNAME);
         String asFavicon = Util.getParam(params, Params.FAVICON, "0");
 
@@ -82,32 +71,37 @@ public class Set implements Service {
             throw new Exception("Logo name is not defined.");
         }
 
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager settingMan = gc.getBean(SettingManager.class);
+        SettingManager settingMan = context.getBean(SettingManager.class);
         String nodeUuid = settingMan.getSiteId();
 
         try {
-        	String logoFilePath = harvestingLogoDirectory + File.separator + file;
-        	File logoFile = new File(logoFilePath);
-        	if (!logoFile.exists()) {
-        		logoFilePath = context.getAppPath() + "images" + File.separator + "harvesting" + File.separator + file;
-        		logoFile = new File(logoFilePath);
+        	Path logoFilePath = harvestingLogoDirectory.resolve(file);
+        	if (!Files.exists(logoFilePath)) {
+        		logoFilePath = context.getAppPath().resolve("images/harvesting/" + file);
         	}
-            BufferedImage source = ImageIO.read(logoFile);
+            try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
+                BufferedImage source = ImageIO.read(inputStream);
 
-            if ("1".equals(asFavicon)) {
-                createFavicon(source, nodeLogoDirectory + File.separator + "favicon.png");
-            } else {
-                String logo = nodeLogoDirectory + File.separator + nodeUuid + ".png";
-                String defaultLogo = nodeLogoDirectory + File.separator + "logo.png";
-    
-                if (!file.endsWith(".png")) {
-                    ImageIO.write(source, "png", new File(logo));
-                    ImageIO.write(source, "png", new File(defaultLogo));
+                if ("1".equals(asFavicon)) {
+                    createFavicon(source, nodeLogoDirectory.resolve("favicon.png"));
                 } else {
-                    copyLogo(logoFilePath, logo);
-                    copyLogo(logoFilePath, defaultLogo);
+                    Path logo = nodeLogoDirectory.resolve(nodeUuid + ".png");
+                    Path defaultLogo = nodeLogoDirectory.resolve("logo.png");
+
+                    if (!file.endsWith(".png")) {
+                        try (
+                                OutputStream logoOut = Files.newOutputStream(logo);
+                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
+                        ) {
+                            ImageIO.write(source, "png", logoOut);
+                            ImageIO.write(source, "png", defLogoOut);
+                        }
+                    } else {
+                        Files.deleteIfExists(logo);
+                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
+                        Files.deleteIfExists(defaultLogo);
+                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -120,20 +114,7 @@ public class Set implements Service {
         return response;
     }
 
-    private void copyLogo(String file, String logo) throws IOException {
-        FileInputStream is = null;
-        FileOutputStream os = null;
-        try {
-            is = new FileInputStream(file);
-            os = new FileOutputStream(logo);
-            BinaryFile.copy(is, os);
-        } finally {
-            IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(os);
-        }
-    }
-
-    private void createFavicon(Image img, String outFile) throws IOException {
+    private void createFavicon(Image img, Path outFile) throws IOException {
         int width = 32;
         int height = 32;
         String type = "png";
@@ -148,6 +129,8 @@ public class Set implements Service {
         g.drawImage(thumb, 0, 0, null);
         g.dispose();
 
-        ImageIO.write(bimg, type, new File(outFile));
+        try (OutputStream out = Files.newOutputStream(outFile)) {
+            ImageIO.write(bimg, type, out);
+        }
     }
 }

@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
 
 /**
  * Created by Jesse on 2/17/14.
  */
 public class JeevesNodeAwareLoginUrlEntryPoint extends LoginUrlAuthenticationEntryPoint {
     @Autowired
-    ServletContext context;
+    private ServletContext context;
 
     public JeevesNodeAwareLoginUrlEntryPoint(String loginFormUrl) {
         super(loginFormUrl);
@@ -25,6 +26,7 @@ public class JeevesNodeAwareLoginUrlEntryPoint extends LoginUrlAuthenticationEnt
 
     @Override
     protected String buildRedirectUrlToLoginPage(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
+        final ServletContext context = getServletContext(this.context);
         final ConfigurableApplicationContext applicationContext = getApplicationContextFromServletContext(context);
 
         NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);

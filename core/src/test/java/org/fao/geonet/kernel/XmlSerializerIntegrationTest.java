@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel;
 
+import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -15,6 +16,7 @@ import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.InputStream;
@@ -27,7 +29,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -178,23 +179,32 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     private ServiceContext configureXmlSerializerAndServiceContext(boolean canEdit,
                                                                    boolean canDownload,
                                                                    boolean canDynamic) throws Exception {//boolean isAdmin, String userId) {
-        ServiceContext context = mock(ServiceContext.class);
-        doCallRealMethod().when(context).setAsThreadLocal();
-
         AccessManager accessManager = mock(AccessManager.class);
+        if (applicationContext.getBean(AccessManager.class).getClass().getSimpleName().contains("Mockito")) {
+            accessManager = applicationContext.getBean(AccessManager.class);
+        }
+
         when(accessManager.canEdit(any(ServiceContext.class), anyString()))
                 .thenReturn(canEdit);
         when(accessManager.canDownload(any(ServiceContext.class), anyString()))
                 .thenReturn(canDownload);
         when(accessManager.canDynamic(any(ServiceContext.class), anyString()))
                 .thenReturn(canDynamic);
+
         GeonetContext gc = mock(GeonetContext.class);
         when(gc.getBean(AccessManager.class)).thenReturn(accessManager);
-        when(context.getHandlerContext(Geonet.CONTEXT_NAME)).thenReturn(gc);
-
+        final HashMap<String, Object> contexts = Maps.newHashMap();
+        contexts.put(Geonet.CONTEXT_NAME, gc);
+        ServiceContext context = new ServiceContext("test", applicationContext, contexts, null);
         context.setAsThreadLocal();
 
-        _xmlSerializer.accessManager = accessManager;
+        final String beanName = "AccessManager";
+        if (!applicationContext.getBean(AccessManager.class).getClass().getSimpleName().contains("Mockito")) {
+            final DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
+            beanFactory.removeBeanDefinition(beanName);
+            beanFactory.registerSingleton(beanName, accessManager);
+        }
+
         return context;
     }
 

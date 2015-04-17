@@ -23,21 +23,20 @@
 
 package org.fao.geonet.kernel.setting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Allows hierarchical management of harvester settings. The harvester settings API has been designed with the following goals:
@@ -63,11 +62,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class HarvesterSettingsManager {
 
-    @Autowired
-    private HarvesterSettingRepository _settingsRepo;
-    @Autowired
-    private SettingManager _settingManager;
-
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -85,11 +79,12 @@ public class HarvesterSettingsManager {
      * Get settings and with only names.
      * 
      * @param names path to the setting that is root of the subtree
-     * @param level depth of tree to create
      * @return
      */
     public Element getList(List<String> names) {
-        List<HarvesterSetting> s = _settingsRepo.findAllByNames(names);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        List<HarvesterSetting> s = settingsRepo.findAllByNames(names);
         
         Element el = null;
         if (s != null) {
@@ -130,7 +125,9 @@ public class HarvesterSettingsManager {
      * @return
      */
     public Element get(String path, int level) {
-        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        HarvesterSetting s = settingsRepo.findOneByPath(path);
 
         return (s == null) ? null : build(s, level);
     }
@@ -138,7 +135,8 @@ public class HarvesterSettingsManager {
     // ---------------------------------------------------------------------------
 
     public String getValue(String path) {
-        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+        HarvesterSetting s = settingsRepo.findOneByPath(path);
 
         return (s == null) ? null : s.getValue();
     }
@@ -155,15 +153,17 @@ public class HarvesterSettingsManager {
      * @return
      */
     public boolean setName(String path, String name) {
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
         if (path == null)
             throw new IllegalArgumentException("Path cannot be null");
 
-        HarvesterSetting updatedSetting = _settingsRepo.findOneByPath(path);
+        HarvesterSetting updatedSetting = settingsRepo.findOneByPath(path);
         if (updatedSetting == null) {
             return false;
         } else {
             updatedSetting.setName(name);
-            _settingsRepo.save(updatedSetting);
+            settingsRepo.save(updatedSetting);
 
             return true;
         }
@@ -194,6 +194,8 @@ public class HarvesterSettingsManager {
      * @return
      */
     public boolean setValues(Map<String, Object> values) {
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
         boolean success = true;
 
         List<HarvesterSetting> toSave = new ArrayList<HarvesterSetting>(values.size());
@@ -201,7 +203,7 @@ public class HarvesterSettingsManager {
             String path = entry.getKey();
             String value = makeString(entry.getValue());
 
-            HarvesterSetting s = _settingsRepo.findOneByPath(path);
+            HarvesterSetting s = settingsRepo.findOneByPath(path);
 
             if (s == null) {
                 success = false;
@@ -215,7 +217,7 @@ public class HarvesterSettingsManager {
             }
         }
 
-        _settingsRepo.save(toSave);
+        settingsRepo.save(toSave);
 
         return success;
     }
@@ -238,14 +240,15 @@ public class HarvesterSettingsManager {
         // --- first, we look into the tasks list because the 'id' could have been
         // --- added just now
 
-        HarvesterSetting parent = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+        HarvesterSetting parent = settingsRepo.findOneByPath(path);
 
         if (parent == null)
             return null;
 
         HarvesterSetting child = new HarvesterSetting().setParent(parent).setName(sName).setValue(sValue);
 
-        _settingsRepo.save(child);
+        settingsRepo.save(child);
         return Integer.toString(child.getId());
     }
 
@@ -258,11 +261,13 @@ public class HarvesterSettingsManager {
      * @return
      */
     public boolean remove(String path) {
-        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        HarvesterSetting s = settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
 
-        _settingsRepo.delete(s);
+        settingsRepo.delete(s);
         return true;
     }
 
@@ -275,12 +280,14 @@ public class HarvesterSettingsManager {
      * @return
      */
     public boolean removeChildren(String path) {
-        HarvesterSetting parent = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        HarvesterSetting parent = settingsRepo.findOneByPath(path);
 
         if (parent == null)
             return false;
 
-        List<HarvesterSetting> children = _settingsRepo.findAllChildren(parent.getId());
+        List<HarvesterSetting> children = settingsRepo.findAllChildren(parent.getId());
         for (HarvesterSetting child : children) {
             remove(child);
         }
@@ -294,7 +301,9 @@ public class HarvesterSettingsManager {
 
 
     public boolean getValueAsBool(String path, boolean defValue) {
-        HarvesterSetting setting = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        HarvesterSetting setting = settingsRepo.findOneByPath(path);
         if (setting == null) {
             return defValue;
         }
@@ -304,7 +313,9 @@ public class HarvesterSettingsManager {
     // ---------------------------------------------------------------------------
 
     public boolean getValueAsBool(String path) {
-        HarvesterSetting value = _settingsRepo.findOneByPath(path);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        HarvesterSetting value = settingsRepo.findOneByPath(path);
 
         if (value == null)
             return false;
@@ -312,8 +323,14 @@ public class HarvesterSettingsManager {
         return value.getValueAsBool();
     }
 
-    public String getSiteId()   { return _settingManager.getSiteId(); }
-    public String getSiteName() { return _settingManager.getSiteName();   }
+    public String getSiteId()   {
+        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return _settingManager.getSiteId();
+    }
+    public String getSiteName() {
+        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return _settingManager.getSiteName();
+    }
     
     // ---------------------------------------------------------------------------
     // ---
@@ -371,6 +388,8 @@ public class HarvesterSettingsManager {
      * @return
      */
     private Element build(HarvesterSetting s, int level) {
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
         Element el = new Element(s.getName());
         el.setAttribute("id", Integer.toString(s.getId()));
 
@@ -385,7 +404,7 @@ public class HarvesterSettingsManager {
             Element children = new Element("children");
             
             // get children in base
-        	List<HarvesterSetting> childrenHarvestSettings = _settingsRepo.findAllChildren(s.getId());
+        	List<HarvesterSetting> childrenHarvestSettings = settingsRepo.findAllChildren(s.getId());
         	// add children recursively
             for (HarvesterSetting child : childrenHarvestSettings) {
 //                fromList.remove(child);
@@ -402,7 +421,9 @@ public class HarvesterSettingsManager {
     // ---------------------------------------------------------------------------
 
     private void remove(HarvesterSetting s) {
-        _settingsRepo.delete(s);
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        settingsRepo.delete(s);
     }
 
     public void refresh() {

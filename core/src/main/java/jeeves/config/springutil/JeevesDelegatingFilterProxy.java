@@ -141,6 +141,14 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
         return filter;
     }
 
+    public static ServletContext getServletContext(ServletContext fallback) {
+        if (ApplicationContextHolder.get() != null) {
+            return ApplicationContextHolder.get().getBean(ServletContext.class);
+        } else {
+            return fallback;
+        }
+    }
+
     public static ConfigurableApplicationContext getApplicationContextFromServletContext(ServletContext servletContext) {
         final Object applicationContext = servletContext.getAttribute(applicationContextAttributeKey.get());
         return (ConfigurableApplicationContext) applicationContext;

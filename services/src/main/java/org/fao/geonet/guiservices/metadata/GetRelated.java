@@ -31,6 +31,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -59,8 +60,8 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
@@ -177,14 +178,6 @@ public class GetRelated implements Service, RelatedMetadata {
     private ServiceConfig _config = new ServiceConfig();
     private static int maxRecords = 1000;
     private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-    @Autowired
-    private ServiceManager serviceManager;
-    @Autowired
-    private GeonetworkDataDirectory dataDirectory;
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    MetadataRepository metadataRepository;
 
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
@@ -202,6 +195,10 @@ public class GetRelated implements Service, RelatedMetadata {
         if (to < 0) {
             to = maxRecords;
         }
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
+        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
         final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
 

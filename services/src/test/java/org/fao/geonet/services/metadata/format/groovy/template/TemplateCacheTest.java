@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
@@ -7,6 +8,7 @@ import org.fao.geonet.services.metadata.format.FormatIntegrationTest;
 import org.fao.geonet.utils.IO;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,8 +22,11 @@ public class TemplateCacheTest {
 
     @Test
     public void testCreateFileResult() throws Exception {
+        ConfigurableApplicationContext context = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(context);
+        Mockito.when(context.getBean(SystemInfo.class)).thenReturn(SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION));
+
         final TemplateCache templateCache = new TemplateCache();
-        templateCache.systemInfo = SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION);
         templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
         final Path functionFile = IO.toPath(FormatIntegrationTest.class.getResource("functions.xsl").toURI());
         final FileResult fileResult = templateCache.createFileResult(functionFile.getParent(), functionFile.getParent(),
@@ -41,13 +46,17 @@ public class TemplateCacheTest {
         final Path file3 = IO.toPath(FormatIntegrationTest.class.getResource("template-cache-test/file3.txt").toURI());
 
         for (String profile : stagingProfiles) {
-            final TemplateCache templateCache = new TemplateCache();
-            templateCache.systemInfo = SystemInfo.createForTesting(profile);
-            templateCache.schemaManager = Mockito.mock(SchemaManager.class);
-            templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParent().getParent());
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParent().getParent());
+            SchemaManager schemaManager = Mockito.mock(SchemaManager.class);
+            Mockito.when(schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParent().getParent());
+            Mockito.when(schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParent().getParent());
 
+            ConfigurableApplicationContext context = Mockito.mock(ConfigurableApplicationContext.class);
+            ApplicationContextHolder.set(context);
+            Mockito.when(context.getBean(SystemInfo.class)).thenReturn(SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION));
+            Mockito.when(context.getBean(SchemaManager.class)).thenReturn(schemaManager);
+
+            final TemplateCache templateCache = new TemplateCache();
+            templateCache.xmlTemplateParser = AbstractTemplateParserTest.createTestParser(SystemInfo.STAGE_TESTING);
             final Path schemaAndRootDir = file0.getParent().getParent();
 
             final Map<String, Object> emptyMap = Collections.emptyMap();

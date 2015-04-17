@@ -22,10 +22,10 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Service;
 import org.fao.geonet.domain.responses.CswVirtualServiceResponse;
 import org.fao.geonet.repository.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,15 +39,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("admin.config.virtualcsw.get")
 public class Get {
 
-    @Autowired
-    private ServiceRepository serviceRepository;
-
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.get", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
-    CswVirtualServiceResponse exec(@RequestParam String id)
-            throws Exception {
+    CswVirtualServiceResponse exec(@RequestParam String id)throws Exception {
 
+        ServiceRepository serviceRepository = ApplicationContextHolder.get().getBean(ServiceRepository.class);
         final Service service = serviceRepository.findOne(Integer.valueOf(id));
 
         CswVirtualServiceResponse response = new CswVirtualServiceResponse(service);

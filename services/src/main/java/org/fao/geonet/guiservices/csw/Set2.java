@@ -23,12 +23,13 @@
 package org.fao.geonet.guiservices.csw;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -47,12 +48,6 @@ import java.util.List;
 @Controller("admin.config.csw.save")
 public class Set2 {
 
-    @Autowired
-    private LanguageRepository languageRepository;
-
-    @Autowired
-    private CswCapabilitiesInfoFieldRepository cswCapabilitiesInfoFieldRepository;
-
     @RequestMapping(value = "/{lang}/admin.config.csw.save", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
@@ -64,7 +59,9 @@ public class Set2 {
     }
 
     private void saveCswCapabilitiesInfo(MultiValueMap parameters) throws Exception {
-
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
+        CswCapabilitiesInfoFieldRepository cswCapabilitiesInfoFieldRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
         final List<Language> langs = languageRepository.findAll();
 
         for (Language lang : langs) {

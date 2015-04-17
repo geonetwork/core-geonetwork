@@ -24,13 +24,14 @@
 package org.fao.geonet.services.category;
 
 import jeeves.services.ReadWriteController;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,11 +47,6 @@ import javax.annotation.Nonnull;
 @ReadWriteController
 public class Update {
 
-    @Autowired
-    private MetadataCategoryRepository categoryRepository;
-    @Autowired
-    private LanguageRepository langRepository;
-
     @RequestMapping(value = "/{lang}/admin.category.update", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
@@ -61,6 +57,10 @@ public class Update {
         if (name == null) {
             throw new MissingParameterEx("name");
         }
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        MetadataCategoryRepository categoryRepository = appContext.getBean(MetadataCategoryRepository.class);
+        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
 
         CategoryUpdateResponse response = new CategoryUpdateResponse();
 

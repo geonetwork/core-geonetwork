@@ -1,7 +1,7 @@
 package jeeves.config.springutil;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -14,10 +14,9 @@ import javax.servlet.http.HttpServletRequest;
  * Time: 8:12 AM
  */
 public class JeevesAuthenticationDetailSource extends WebAuthenticationDetailsSource {
-    @Autowired
-    private NodeInfo _nodeInfo;
     @Override
     public WebAuthenticationDetails buildDetails(HttpServletRequest context) {
-        return new JeevesAuthenticationDetails(context, _nodeInfo);
+        final NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        return new JeevesAuthenticationDetails(context, nodeInfo);
     }
 }

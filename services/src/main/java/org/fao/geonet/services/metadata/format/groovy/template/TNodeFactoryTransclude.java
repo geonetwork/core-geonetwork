@@ -6,7 +6,6 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -26,17 +25,12 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
     private static final String EXTRA_MODEL = TRANSCLUDE + "-extra-model";
     private static final String REPLACE = TRANSCLUDE + "-replace";
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private SystemInfo info;
-
     protected TNodeFactoryTransclude() {
-        super(TRANSCLUDE);
+        super(TRANSCLUDE, null);
     }
 
     public TNodeFactoryTransclude(SystemInfo info, TextContentParser contentParser) {
-        super(TRANSCLUDE);
-        this.info = info;
+        super(TRANSCLUDE, info);
         super.textContentParser = contentParser;
     }
 
@@ -61,7 +55,7 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
 
         boolean replace = getBooleanAttribute(attributes, REPLACE, false);
 
-        return new TNodeTransclude(info, textContentParser, qName, filteredAtts, templatePath, replace, model, extraModel);
+        return new TNodeTransclude(SystemInfo.getInfo(this.testingInfo), textContentParser, qName, filteredAtts, templatePath, replace, model, extraModel);
     }
 
     private static class TNodeTransclude extends TNode {

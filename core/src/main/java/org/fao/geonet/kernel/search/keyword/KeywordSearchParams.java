@@ -49,7 +49,7 @@ public class KeywordSearchParams {
         Thesaurus thesaurus = finder.getThesaurusByName(thesaurusName);
         Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
         if (thesaurus == null) {
-            throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be excuted: '"+query+"'" );
+            throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be executed: '"+query+"'" );
         }
         for (KeywordBean keywordBean : query.execute(thesaurus)) {
             if (maxResults > -1 && results.size() >= maxResults) {

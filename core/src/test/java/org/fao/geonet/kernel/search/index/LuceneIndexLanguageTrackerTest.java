@@ -6,6 +6,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -13,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.Closeable;
 import java.io.File;
@@ -40,15 +42,22 @@ public class LuceneIndexLanguageTrackerTest {
     public TemporaryFolder folder = new TemporaryFolder();
     @Test
     public void testResetWaitsForAllReadersToClose() throws Exception {
-        GeonetworkDataDirectory datadir = Mockito.mock(GeonetworkDataDirectory.class);
-        Mockito.when(datadir.getLuceneDir()).thenReturn(folder.getRoot().toPath());
         FSDirectoryFactory directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
         LuceneConfig luceneConfig = Mockito.mock(LuceneConfig.class);
         Mockito.when(luceneConfig.commitInterval()).thenReturn(1L);
         Mockito.when(luceneConfig.useNRTManagerReopenThread()).thenReturn(false);
         Mockito.when(luceneConfig.getTaxonomyConfiguration()).thenReturn(new FacetsConfig());
-        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker(directoryFactory, luceneConfig);
+
+        GeonetworkDataDirectory datadir = Mockito.mock(GeonetworkDataDirectory.class);
+        Mockito.when(datadir.getLuceneDir()).thenReturn(folder.getRoot().toPath());
+
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(GeonetworkDataDirectory.class)).thenReturn(datadir);
+        Mockito.when(applicationContext.getBean(DirectoryFactory.class)).thenReturn(directoryFactory);
+        Mockito.when(applicationContext.getBean(LuceneConfig.class)).thenReturn(luceneConfig);
+
+        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker();
 
         final IndexAndTaxonomy acquire = addDocumentAndAssertCorrectlyAdded(tracker);
 
@@ -97,14 +106,20 @@ public class LuceneIndexLanguageTrackerTest {
     public void testResetThrowsExceptionWhenReadersAreNotClosed() throws Exception {
         GeonetworkDataDirectory datadir = Mockito.mock(GeonetworkDataDirectory.class);
         Mockito.when(datadir.getLuceneDir()).thenReturn(folder.getRoot().toPath());
+
         FSDirectoryFactory directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
         LuceneConfig luceneConfig = Mockito.mock(LuceneConfig.class);
         Mockito.when(luceneConfig.commitInterval()).thenReturn(1L);
         Mockito.when(luceneConfig.useNRTManagerReopenThread()).thenReturn(false);
         Mockito.when(luceneConfig.getTaxonomyConfiguration()).thenReturn(new FacetsConfig());
 
-        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker(directoryFactory, luceneConfig);
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(GeonetworkDataDirectory.class)).thenReturn(datadir);
+        Mockito.when(applicationContext.getBean(DirectoryFactory.class)).thenReturn(directoryFactory);
+        Mockito.when(applicationContext.getBean(LuceneConfig.class)).thenReturn(luceneConfig);
+
+        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker();
 
         addDocumentAndAssertCorrectlyAdded(tracker);
 
@@ -119,11 +134,14 @@ public class LuceneIndexLanguageTrackerTest {
         final File root = folder.getRoot();
         Mockito.when(datadir.getLuceneDir()).thenReturn(root.toPath());
         FSDirectoryFactory directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
         LuceneConfig luceneConfig = Mockito.mock(LuceneConfig.class);
         Mockito.when(luceneConfig.commitInterval()).thenReturn(1L);
         Mockito.when(luceneConfig.useNRTManagerReopenThread()).thenReturn(false);
         Mockito.when(luceneConfig.getTaxonomyConfiguration()).thenReturn(new FacetsConfig());
+
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(GeonetworkDataDirectory.class)).thenReturn(datadir);
 
         createAndLockFilesAndResetTracker(directoryFactory, luceneConfig, true);
 
@@ -131,14 +149,11 @@ public class LuceneIndexLanguageTrackerTest {
         assertEquals(FSDirectoryFactory.TAXONOMY_DIR + "_" + 1, directoryFactory.getTaxonomyDir().getFileName().toString());
 
         directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
         createAndLockFilesAndResetTracker(directoryFactory, luceneConfig, false);
 
         // Test that creating new searcher finds new index
         directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
-
-        final LuceneIndexLanguageTracker tracker2 = new LuceneIndexLanguageTracker(directoryFactory, luceneConfig);
+        final LuceneIndexLanguageTracker tracker2 = new LuceneIndexLanguageTracker();
 
         final IndexAndTaxonomy acquire3 = tracker2.acquire(LANG, -1);
         assertEquals(1, acquire3.indexReader.numDocs());
@@ -150,7 +165,6 @@ public class LuceneIndexLanguageTrackerTest {
         tracker2.close(1000, true);
 
         directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
         directoryFactory.init();
 
         assertEquals(FSDirectoryFactory.NON_SPATIAL_DIR, directoryFactory.getIndexDir().getFileName().toString());
@@ -158,7 +172,10 @@ public class LuceneIndexLanguageTrackerTest {
     }
 
     private void createAndLockFilesAndResetTracker(FSDirectoryFactory directoryFactory, LuceneConfig luceneConfig, boolean addDoc) throws Exception {
-        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker(directoryFactory, luceneConfig);
+        Mockito.when(ApplicationContextHolder.get().getBean(DirectoryFactory.class)).thenReturn(directoryFactory);
+        Mockito.when(ApplicationContextHolder.get().getBean(LuceneConfig.class)).thenReturn(luceneConfig);
+
+        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker();
 
         if (addDoc) {
             addDocumentAndAssertCorrectlyAdded(tracker).indexReader.releaseToNRTManager();
@@ -226,14 +243,21 @@ public class LuceneIndexLanguageTrackerTest {
     public void testCantOpenNewReaderDuringReset() throws Exception {
         GeonetworkDataDirectory datadir = Mockito.mock(GeonetworkDataDirectory.class);
         Mockito.when(datadir.getLuceneDir()).thenReturn(folder.getRoot().toPath());
+
         FSDirectoryFactory directoryFactory = new FSDirectoryFactory();
-        directoryFactory.setDataDir(datadir);
+
         LuceneConfig luceneConfig = Mockito.mock(LuceneConfig.class);
         Mockito.when(luceneConfig.commitInterval()).thenReturn(1L);
         Mockito.when(luceneConfig.useNRTManagerReopenThread()).thenReturn(false);
         Mockito.when(luceneConfig.getTaxonomyConfiguration()).thenReturn(new FacetsConfig());
 
-        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker(directoryFactory, luceneConfig);
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(GeonetworkDataDirectory.class)).thenReturn(datadir);
+        Mockito.when(applicationContext.getBean(DirectoryFactory.class)).thenReturn(directoryFactory);
+        Mockito.when(applicationContext.getBean(LuceneConfig.class)).thenReturn(luceneConfig);
+
+        final LuceneIndexLanguageTracker tracker = new LuceneIndexLanguageTracker();
 
         final IndexAndTaxonomy acquire = addDocumentAndAssertCorrectlyAdded(tracker);
 
