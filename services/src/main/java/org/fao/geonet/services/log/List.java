@@ -67,7 +67,7 @@ public class List {
 					String key = matcher.group(2);
 					
 					if (StringUtils.isEmpty(key))
-						key = "default";
+						key = "prod";
 					logFileList.add(new LogFileResponse(key.toUpperCase(), fileName));
 				}
 			}			
