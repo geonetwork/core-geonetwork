@@ -98,12 +98,12 @@ public class DoActions implements Service
 		try {
 			// Set Level log
 			String log4jProp = settingMan.getValue(SettingManager.SYSTEM_SERVER_LOG);
-			URL url = DoActions.class.getResource("/"+log4jProp + ".xml");
+			URL url = DoActions.class.getResource("/"+log4jProp);
 			if (url != null) {
 				DOMConfigurator.configure(url);
 				
 			} else {
-				throw new OperationAbortedEx("Parameters saved but cannot set level log: file \""+log4jProp+".xml\" doesn't exist.");
+				throw new OperationAbortedEx("Parameters saved but cannot set level log: file \""+log4jProp+"\" doesn't exist.");
 			}
 			
 		} catch (Exception e) {

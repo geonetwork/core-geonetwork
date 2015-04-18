@@ -3,10 +3,6 @@ package org.fao.geonet.monitor.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
@@ -17,15 +13,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+/**
+ * get last lines of log
+ * @author bmaire
+ *
+ */
 
 @Controller("/log")
 public class LogConfig {
 	private FileAppender fileAppender = null;
 	
 	private final String fileAppenderName = "fileAppender";
-	private final int maxLines = 100;
-		
+	private final int maxLines = 200;
+	
 	@RequestMapping(value = "/{lang}/log/activity", produces = {
             MediaType.TEXT_PLAIN_VALUE})
 	@ResponseBody
