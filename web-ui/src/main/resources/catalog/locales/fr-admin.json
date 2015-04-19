@@ -1023,5 +1023,6 @@
     "region/getmap/summaryWidth": "Summary width",
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
-    "metadata/editor/schemaConfig": "Configuration par standard"
+    "metadata/editor/schemaConfig": "Configuration par standard",
+    "logActivity" : "Activité"
 }
