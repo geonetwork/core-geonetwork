@@ -306,6 +306,7 @@
     "emailToSearch": "Email à rechercher",
     "emptyCatalogShouldBeFilled": "Le catalogue est vide, vous devriez probablement importer des nouvelles fiches ou moissonner un catalogue distant. Vous pouvez également insérer <a href='#/metadata/metadata-and-template/load-templates/all'>les modèles</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>les exemples</a> ou <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>les deux</a>.",
     "enable": "Activer",
+    "exportMEF": "Export (ZIP)",
     "facetIndicatorHelp": "Les statistiques sur les fiches reposent sur la configuration des facettes et peuvent ne représenter qu'un sous-ensemble du catalogue.",
     "fees": "Fees",
     "filesystem-checkFileLastModifiedForUpdate": "Mettre à jour les fiches dans le catalogue uniquement si la date du fichier a été modifiée",

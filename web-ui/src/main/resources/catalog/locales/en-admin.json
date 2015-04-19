@@ -307,6 +307,7 @@
     "emailToSearch": "Email to search",
     "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>.",
     "enable": "Enable",
+    "exportMEF": "Export (ZIP)",
     "facetIndicatorHelp": "Statistics by records are defined based on facets configuration and may represent only the most frequent values.",
     "fees": "Fees",
     "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",

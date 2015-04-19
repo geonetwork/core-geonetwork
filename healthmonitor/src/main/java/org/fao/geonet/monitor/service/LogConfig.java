@@ -1,8 +1,16 @@
 package org.fao.geonet.monitor.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.Calendar;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
@@ -26,18 +34,66 @@ public class LogConfig {
 	private final String fileAppenderName = "fileAppender";
 	private final int maxLines = 200;
 	
+	//--------------------------------------------------------------------------
+	// ---
+	// --- Init
+	// ---
+	// --------------------------------------------------------------------------
+	@PostConstruct
+	public void init() throws Exception {
+		fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
+		
+		if (fileAppender == null) {
+			fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
+		}	
+
+	}
+	
+	@RequestMapping(value = "/{lang}/log/file", produces = {
+            MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@ResponseBody
+	public void getLog(HttpServletResponse response) throws IOException {
+		if (fileAppender != null) {
+			File file = new File(fileAppender.getFile());
+			
+			// create ZIP FILE
+			
+			String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
+		
+			// set headers for the response
+			response.setContentType("application/zip");
+			response.setContentLength((int) file.length());
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"","export-log-" + fname + ".zip");
+			response.setHeader(headerKey, headerValue);
+		    
+			int read = 0;
+		    byte[] bytes = new byte[1024];
+		    ZipOutputStream zos = null;
+	    	ZipEntry ze;
+		    InputStream in = null;
+		    try {
+		    	zos = new ZipOutputStream(response.getOutputStream());
+				ze = new ZipEntry(file.getName());
+				zos.putNextEntry(ze);
+				in=new FileInputStream(file);
+		        while ((read = in.read(bytes)) != -1) {
+		            zos.write(bytes, 0, read);
+		        }
+		    } finally {
+		        in.close();
+		        zos.flush();
+		        zos.close(); 
+		    }
+		}
+	}
+	
 	@RequestMapping(value = "/{lang}/log/activity", produces = {
             MediaType.TEXT_PLAIN_VALUE})
 	@ResponseBody
 	public String activity() {
 		String lastActivity = null;
-		if (fileAppender == null) {
-			fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
-		}
-		if (fileAppender == null) {
-			fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
-		}	
-
+		
 	    if (fileAppender != null) {
 	    	lastActivity = readLastLines(new File(fileAppender.getFile()));
 	    }		
