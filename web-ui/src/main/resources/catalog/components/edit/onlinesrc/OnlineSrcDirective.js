@@ -528,7 +528,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
@@ -650,7 +650,7 @@
    * then the form and online resource list are refreshed.
    */
   .directive('gnLinkToMetadata', [
-      'gnOnlinesrc', '$translate', 'gnGlobalSettings',
+        'gnOnlinesrc', '$translate', 'gnGlobalSettings',
         function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
@@ -664,7 +664,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkToMetadata'];
@@ -745,7 +745,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.popupid = iAttrs['gnLinkToSibling'];

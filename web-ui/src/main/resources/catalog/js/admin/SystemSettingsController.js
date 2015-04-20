@@ -199,10 +199,10 @@
       $scope.processRecommendedForId = function(processName) {
         $scope.resourceIdProcessName = processName;
         $scope.processResourceTitle =
-          $translate('processRecommendedOnHostChange-help', {
-            old: buildUrl($scope.initalSettings),
-            by: buildUrl($scope.settings)
-          });
+            $translate('processRecommendedOnHostChange-help', {
+              old: buildUrl($scope.initalSettings),
+              by: buildUrl($scope.settings)
+            });
       };
 
       var buildUrl = function(settings) {
@@ -243,8 +243,8 @@
           $('#atomHarvesterModal').modal();
         });
       };
-      
-      
+
+
 
       /**
          * Scroll to an element.

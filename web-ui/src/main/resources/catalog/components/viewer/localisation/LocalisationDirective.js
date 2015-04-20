@@ -28,7 +28,7 @@
           function($scope, $http, gnGetCoordinate) {
 
             $scope.modelOptions =
-              angular.copy(gnGlobalSettings.modelOptions);
+                angular.copy(gnGlobalSettings.modelOptions);
 
             var zoomTo = function(extent, map) {
               map.getView().fitExtent(extent, map.getSize());

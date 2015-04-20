@@ -50,7 +50,7 @@
             gnSearchManagerService, 
             gnUtilityService, gnSearchSettings, gnGlobalSettings) {
       $scope.modelOptions =
-        angular.copy(gnGlobalSettings.modelOptions);
+          angular.copy(gnGlobalSettings.modelOptions);
 
       $scope.pageMenu = {
         folder: 'tools/',
