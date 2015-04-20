@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
@@ -32,6 +33,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -65,6 +67,7 @@ import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
@@ -109,6 +112,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -145,6 +149,10 @@ public class Geonetwork implements ApplicationHandler {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
+        
+        // refresh log from db
+        LogUtils logUtils = new LogUtils(context);
+        logUtils.refreshLogConfiguration();
         logger = context.getLogger();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
