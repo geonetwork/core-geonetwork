@@ -448,11 +448,9 @@
               //if (forceAsyncEvents[eventName] && $rootScope.$$phase) {
               //  scope.$evalAsync(callback);
               //} else {
-              if(angular.isFunction(callback)) {
-                callback().then(function() {
-                  done();
-                });
-              }
+              callback().then(function() {
+                done();
+              });
               //if (angular.isFunction(callback.then)) {
               //  callback().then(function() {
               //    done();
