@@ -151,7 +151,7 @@ public class Geonetwork implements ApplicationHandler {
         ApplicationContextHolder.set(this._applicationContext);
         
         // refresh log from db
-        LogUtils logUtils = new LogUtils(context);
+        LogUtils logUtils = new LogUtils(this._applicationContext);
         logUtils.refreshLogConfiguration();
         logger = context.getLogger();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
