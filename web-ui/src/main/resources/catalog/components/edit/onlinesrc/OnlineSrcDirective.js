@@ -365,6 +365,23 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
 
+                if(!scope.mdLangs && gnCurrentEdit.mdOtherLanguages) {
+                  scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                  scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+                  scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                  for(var p in scope.mdLangs) {
+                    var v = scope.mdLangs[p];
+                    if(v.indexOf('#') == 0) {
+                      var l = v.substr(1);
+                      if(!l) {
+                        l = scope.mdLang;
+                      }
+                      scope.mdLangs[p] = l;
+                    }
+                  }
+                };
+
                 $(scope.popupid).modal('show');
 
               });
@@ -383,9 +400,9 @@
 
               var resetForm = function() {
                 if (scope.params) {
-                  scope.params.desc = '';
+                  scope.params.desc = scope.mdLangs ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = '';
+                  scope.params.name = scope.mdLangs ? {} : '';
                   scope.params.protocol = '';
                 }
                 scope.clear(scope.queue);
@@ -425,6 +442,20 @@
                 if (scope.mode == 'upload') {
                   return scope.submit();
                 } else {
+                  if(angular.isObject(scope.params.name)) {
+                    var name = [];
+                    for(var p in scope.params.name) {
+                      name.push(p + '#' + scope.params.name[p])
+                    }
+                    scope.params.name = name.join('|');
+                  }
+                  if(angular.isObject(scope.params.desc)) {
+                    var desc = [];
+                    for(var p in scope.params.desc) {
+                      desc.push(p + '#' + scope.params.desc[p])
+                    }
+                    scope.params.desc = desc.join('|');
+                  }
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {
                         resetForm();
