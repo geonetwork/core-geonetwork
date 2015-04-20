@@ -2,7 +2,7 @@
    <button class="btn btn-cog btn-cog-left"
            ng-click="map.removeLayer(layer)"
            title="{{'layerDelete'|translate}}">
-     <span class="fa fa-trash-o"></span>
+     <span class="fa fa-times"></span>
    </button>
    <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'layerInfo'|translate}}">
      <span class="fa fa-cog"></span>
@@ -14,9 +14,16 @@
      <a href="" class="fa fa-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)" title="{{'layerMoveUp'|translate}}"></a>
      <a href="" class="fa fa-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"  title="{{'layerMoveDown'|translate}}"></a>
    </span>
-   <label>
+   <label data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
      <input type="checkbox" ng-model="layer.visible" title="{{'layerVisible'|translate}}" />
      {{layer.get('label')}}
+
+     <button class="btn btn-link"
+             data-ng-show="layer.get('errors').length > 0"
+             data-ng-click="layer.showErrors = !layer.showErrors"
+             title="{{'layerErrors'|translate}}">
+       <span class="fa fa-warning text-danger"></span>
+     </button>
    </label>
    <div class="details">
      <button class="metadata" ng-if="layer.get('metadataUrl')" data-ng-click="showMetadata(layer.get('metadataUrl'), layer.get('label'))" title="{{'layerMetadata'|translate}}">
@@ -31,5 +38,13 @@
      <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
      <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
      <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
+   </div>
+   <div data-ng-show="layer.showErrors"
+        class="alert alert-warning alert-dismissible"
+        role="alert">
+     <ul>
+       <li data-ng-repeat="e in layer.get('errors')"
+           data-ng-bind-html="e"></li>
+     </ul>
    </div>
 </div>

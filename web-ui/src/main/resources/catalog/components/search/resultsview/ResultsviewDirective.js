@@ -174,7 +174,7 @@
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
-
+          scope.maps = scope.md.getLinksByType('ows');
         }
       };
     }]);
