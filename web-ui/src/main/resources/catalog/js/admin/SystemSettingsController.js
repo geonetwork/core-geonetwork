@@ -94,50 +94,48 @@
             });
         // load log files
         $http.get('admin.logfile.list?_content_type=json')
-    	  .success(function(data) {
-    		  $scope.logfiles = data.logFile;
+          .success(function(data) {
+              $scope.logfiles = data.logFile;
             });
-//        .then(function() {
-	        $http.get('admin.config.list?asTree=false&_content_type=json')
-	          .success(function(data) {
-	
-	              var sectionsLevel1 = [];
-	              var sectionsLevel2 = [];
-	              gnUtilityService.parseBoolean(data);
-	              $scope.settings = data;
-	              angular.copy(data, $scope.initalSettings);
-	
-	
-	              for (var i = 0; i < $scope.settings.length; i++) {
-	                var tokens = $scope.settings[i]['@name'].split('/');
-	                $scope.settings[i].formName =
-	                    $scope.settings[i]['@name'].replace(/\//g, '.');
-	                // Extract level 1 and 2 sections
-	                if (tokens) {
-	                  var level1name = tokens[0];
-	                  if (sectionsLevel1.indexOf(level1name) === -1) {
-	                    sectionsLevel1.push(level1name);
-	                    $scope.sectionsLevel1[level1name] = {
-	                      'name': level1name,
-	                      '@position': $scope.settings[i]['@position'],
-	                      children: []
-	                    };
-	                  }
-	                  var level2name = level1name + '/' + tokens[1];
-	                  if (sectionsLevel2.indexOf(level2name) === -1) {
-	                    sectionsLevel2.push(level2name);
-	                    $scope.sectionsLevel1[level1name].children.push({
-	                      'name': level2name,
-	                      '@position': $scope.settings[i]['@position'],
-	                      'children': filterBySection($scope.settings, level2name)
-	                    });
-	                  }
-	                }
-	              }
-	            }).error(function(data) {
-	              // TODO
-	            });
-//        	});
+        $http.get('admin.config.list?asTree=false&_content_type=json')
+          .success(function(data) {
+
+              var sectionsLevel1 = [];
+              var sectionsLevel2 = [];
+              gnUtilityService.parseBoolean(data);
+              $scope.settings = data;
+              angular.copy(data, $scope.initalSettings);
+
+
+              for (var i = 0; i < $scope.settings.length; i++) {
+                var tokens = $scope.settings[i]['@name'].split('/');
+                $scope.settings[i].formName =
+                    $scope.settings[i]['@name'].replace(/\//g, '.');
+                // Extract level 1 and 2 sections
+                if (tokens) {
+                  var level1name = tokens[0];
+                  if (sectionsLevel1.indexOf(level1name) === -1) {
+                    sectionsLevel1.push(level1name);
+                    $scope.sectionsLevel1[level1name] = {
+                      'name': level1name,
+                      '@position': $scope.settings[i]['@position'],
+                      children: []
+                    };
+                  }
+                  var level2name = level1name + '/' + tokens[1];
+                  if (sectionsLevel2.indexOf(level2name) === -1) {
+                    sectionsLevel2.push(level2name);
+                    $scope.sectionsLevel1[level1name].children.push({
+                      'name': level2name,
+                      '@position': $scope.settings[i]['@position'],
+                      'children': filterBySection($scope.settings, level2name)
+                    });
+                  }
+                }
+              }
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadUsers() {
