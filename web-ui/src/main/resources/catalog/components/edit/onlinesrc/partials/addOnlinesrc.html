@@ -85,11 +85,16 @@
         <label for="onlinesrcName"
                class="col-sm-2 control-label"
                data-translate="">onlineResourceName</label>
-        <div class="col-sm-10">
+        <div class="col-sm-10" data-ng-if="!mdLangs">
           <input ng-model="params.name" name="name" class="" type="text"
-            id="onlinesrcName" placeholder="Name">
+                 id="onlinesrcName" placeholder="Name">
+        </div>
+        <div class="col-sm-10" data-ng-if="mdLangs" gn-multilingual-field="{{mdOtherLanguages}}"
+             data-main-language="{{mdLang}}" expanded="false">
+          <input data-ng-repeat="(key, val) in mdLangs" class="form-control input-sm" lang="{{val}}" data-ng-model="params.name[val]" >
         </div>
       </div>
+
 
       <!-- Refresh Grid Button -->
       <button type="button" class="btn navbar-btn btn-warning"
@@ -109,10 +114,16 @@
       <div class="form-group" data-ng-hide="schema === 'dublin-core'">
         <label for="onlinesrcDescr" class="col-sm-2 control-label"
                 data-translate="">Description</label>
-        <div class="col-sm-10">
+        <div class="col-sm-10" data-ng-if="!mdLangs">
           <textarea rows="3" data-ng-model="params.desc"
-            class="form-control input-sm" id="onlinesrcDescr"
-            placeholder="Description" name="description" />
+                    class="form-control input-sm" id="onlinesrcDescr"
+                    placeholder="Description" name="description" />
+        </div>
+        <div class="col-sm-10" data-ng-if="mdLangs" gn-multilingual-field="{{mdOtherLanguages}}"
+             data-main-language="{{mdLang}}" expanded="false">
+          <textarea data-ng-repeat="(key, val) in mdLangs" rows="3" lang="{{val}}" data-ng-model="params.desc[val]"
+                    class="form-control input-sm" id="onlinesrcDescr"
+                    placeholder="Description" name="description" />
         </div>
       </div>
 
