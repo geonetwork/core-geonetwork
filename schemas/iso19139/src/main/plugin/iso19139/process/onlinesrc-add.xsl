@@ -123,6 +123,8 @@ attached it to the metadata for data.
                     <!-- ... the name is simply added in the newly
                     created online element. -->
 
+                    <xsl:variable name="separator" select="'\|'"/>
+
                     <gmd:onLine>
                       <xsl:if test="$uuidref">
                         <xsl:attribute name="uuidref" select="$uuidref"/>
@@ -144,20 +146,49 @@ attached it to the metadata for data.
 
                         <xsl:if test="$name != ''">
                           <gmd:name>
-                            <gco:CharacterString>
-                              <xsl:value-of select="$name"/>
-                            </gco:CharacterString>
+                            <xsl:choose>
+                              <xsl:when test="contains($name, '|')">
+                                <gmd:PT_FreeText>
+                                  <xsl:for-each select="tokenize($name, $separator)">
+                                    <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                                    <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+                                    <gmd:textGroup>
+                                      <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                                    </gmd:textGroup>
+                                  </xsl:for-each>
+                                </gmd:PT_FreeText>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="$name"/>
+                                </gco:CharacterString>
+                              </xsl:otherwise>
+                            </xsl:choose>
                           </gmd:name>
                         </xsl:if>
 
                         <xsl:if test="$desc != ''">
                           <gmd:description>
-                            <gco:CharacterString>
-                              <xsl:value-of select="$desc"/>
-                            </gco:CharacterString>
+                            <xsl:choose>
+                              <xsl:when test="contains($desc, '|')">
+                                <gmd:PT_FreeText>
+                                  <xsl:for-each select="tokenize($desc, $separator)">
+                                    <xsl:variable name="descLang" select="substring-before(., '#')"></xsl:variable>
+                                    <xsl:variable name="descValue" select="substring-after(., '#')"></xsl:variable>
+                                    <gmd:textGroup>
+                                      <gmd:LocalisedCharacterString locale="{concat('#', $descLang)}"><xsl:value-of select="$descValue" /></gmd:LocalisedCharacterString>
+                                    </gmd:textGroup>
+                                  </xsl:for-each>
+                                </gmd:PT_FreeText>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="$desc"/>
+                                </gco:CharacterString>
+                              </xsl:otherwise>
+                            </xsl:choose>
                           </gmd:description>
                         </xsl:if>
-
                         <!-- TODO may be relevant to add the function -->
                       </gmd:CI_OnlineResource>
                     </gmd:onLine>
