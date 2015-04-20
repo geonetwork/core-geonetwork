@@ -513,8 +513,9 @@
         'gnCurrentEdit',
         '$rootScope',
         '$translate',
+        'gnGlobalSettings',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-                 gnCurrentEdit, $rootScope, $translate) {
+                 gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -526,6 +527,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                    angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
@@ -646,8 +649,9 @@
    * On submit, the metadata is saved, the thumbnail is added,
    * then the form and online resource list are refreshed.
    */
-  .directive('gnLinkToMetadata', ['gnOnlinesrc', '$translate',
-        function(gnOnlinesrc, $translate) {
+  .directive('gnLinkToMetadata', [
+      'gnOnlinesrc', '$translate', 'gnGlobalSettings',
+        function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -659,6 +663,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                    angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkToMetadata'];
@@ -725,8 +731,8 @@
    * On submit, the metadata is saved, the resource is associated, then the form
    * and online resource list are refreshed.
    */
-  .directive('gnLinkToSibling', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+  .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
+        function(gnOnlinesrc, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -738,6 +744,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                    angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.popupid = iAttrs['gnLinkToSibling'];

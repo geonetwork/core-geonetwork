@@ -12,8 +12,8 @@
    * Panel to load WMS capabilities service and pick layers.
    * The server list is given in global properties.
    */
-  module.directive('gnLocalisationInput', ['$timeout',
-    function($timeout) {
+  module.directive('gnLocalisationInput', ['$timeout', 'gnGlobalSettings',
+    function($timeout, gnGlobalSettings) {
       return {
         restrict: 'A',
         require: 'gnLocalisationInput',
@@ -26,6 +26,9 @@
         controllerAs: 'locCtrl',
         controller: ['$scope', '$http', 'gnGetCoordinate',
           function($scope, $http, gnGetCoordinate) {
+
+            $scope.modelOptions =
+              angular.copy(gnGlobalSettings.modelOptions);
 
             var zoomTo = function(extent, map) {
               map.getView().fitExtent(extent, map.getSize());
