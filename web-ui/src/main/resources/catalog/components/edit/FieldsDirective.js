@@ -242,12 +242,12 @@
             // on touchscreen delete action will not be visible
 
             element.addClass('field-bg');
-            element.find('i.btn.fa-times.text-danger')
+            element.find('a').has('.fa-times.text-danger')
               .css('visibility', 'visible');
           });
           element.on('mouseout', function() {
             element.removeClass('field-bg');
-            element.find('i.btn.fa-times.text-danger')
+            element.find('a').has('.fa-times.text-danger')
               .css('visibility', 'hidden');
           });
         }
