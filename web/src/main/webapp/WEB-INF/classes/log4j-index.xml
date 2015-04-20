@@ -27,83 +27,83 @@
 
     <!-- Geonetwork module (and submodule) logging -->
     <logger name="geonetwork" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="geonetwork.search" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.editor" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.schemamanager" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.thesaurus-man" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.accessmanager" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.thesaurus" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.editorexpandelement" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.editorfillelement" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.LanguageDetector" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
-    <logger name="geonetwork.index" additivity="false">
+    <logger name="geonetwork.index" additivity="true">
         <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.csw" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.csw.search" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.harvester" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="geonetwork.lucene" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.ldap" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.lucene.tracking" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.mef" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.z3950server" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.z3950" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.sru" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.sru.search" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.GeoServerPublisher" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.GeoServerRest" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="geonetwork.data.directory" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
@@ -113,19 +113,19 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="jeeves.dbms" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.dbms.resourcetracking" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.monitor" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.engine" additivity="false">
         <level value="DEBUG" />
     </logger>
     <logger name="jeeves.dbmspool" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.resources" additivity="false">
         <level value="DEBUG" />
@@ -134,26 +134,26 @@
         <level value="DEBUG" />
     </logger>
     <logger name="jeeves.transformerFactory" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.xmlresolver" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
 
 
 
     <!--  Spring logging configuration -->
     <logger name="org.springframework" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.springframework.beans" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.springframework.security" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="org.springframework.security.ldap" additivity="false">
         <level value="WARN" />
@@ -183,17 +183,17 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.SQL" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.type" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.tool.hbm2ddl" additivity="false">
-        <level value="DEBUG"/>
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>

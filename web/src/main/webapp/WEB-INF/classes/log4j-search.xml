@@ -6,7 +6,7 @@
 
     <!-- Appender Configurations -->
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="INFO" />
+        <param name="Threshold" value="ALL" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
@@ -31,8 +31,8 @@
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="geonetwork.search" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.search" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.editor" additivity="false">
         <level value="WARN" />
@@ -55,31 +55,31 @@
     <logger name="geonetwork.editorfillelement" additivity="false">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.LanguageDetector" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.LanguageDetector" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.index" additivity="false">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.csw" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.csw" additivity="true">
+        <level value="DEBUG" />
     </logger>
-    <logger name="geonetwork.csw.search" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.csw.search" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.harvester" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <logger name="geonetwork.lucene" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.lucene" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.ldap" additivity="false">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.lucene.tracking" additivity="false">
-        <level value="WARN" />
+    <logger name="geonetwork.lucene.tracking" additivity="true">
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.mef" additivity="false">
         <level value="WARN" />
@@ -113,31 +113,31 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="jeeves.dbms" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.dbms.resourcetracking" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.monitor" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.engine" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.dbmspool" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.resources" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.xlinkprocessor" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.transformerFactory" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
     <logger name="jeeves.xmlresolver" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
 
 

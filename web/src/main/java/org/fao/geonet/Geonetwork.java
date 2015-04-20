@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
@@ -32,6 +33,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -40,6 +42,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
@@ -65,6 +68,7 @@ import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
@@ -109,6 +113,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -145,7 +150,18 @@ public class Geonetwork implements ApplicationHandler {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
+
         logger = context.getLogger();
+        // If an error occur during logger configuration
+        // Continue starting the application with
+        // a logger initialized with the default log4j.xml.
+        try {
+            LogUtils.refreshLogConfiguration();
+        } catch (OperationAbortedEx e) {
+            logger.error("Error while setting log configuration. " +
+                         "Check the setting in the database for logger configuration file.");
+            logger.error(e.getMessage());
+        }
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));

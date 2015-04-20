@@ -110,12 +110,8 @@
                 </select>
                 <select data-ng-switch-when="system/server/log" class="form-control"
                       name="{{s.formName}}">
-                  <option value="log4j"
-                          ng-selected="'log4j' == s['#text']">PROD</option>
-                  <option value="log4j-jeeves"
-                          ng-selected="'log4j-jeeves' == s['#text']">TEST</option>
-                  <option value="log4j-dev"
-                          ng-selected="'log4j-dev' == s['#text']">DEV</option>
+                  <option data-ng-repeat="log in logfiles" value="{{log.file}}"
+                        ng-selected="log.file === s['#text']">{{log.name}}</option>
                 </select>
                 <select data-ng-switch-when="system/oai/mdmode" class="form-control"
                       name="{{s.formName}}">

@@ -92,6 +92,11 @@
           .success(function(data) {
               $scope.systemInfo = data.systemInfo;
             });
+        // load log files
+        $http.get('admin.logfile.list?_content_type=json')
+          .success(function(data) {
+              $scope.logfiles = data.logFile;
+            });
         $http.get('admin.config.list?asTree=false&_content_type=json')
           .success(function(data) {
 
@@ -229,6 +234,8 @@
           $('#atomHarvesterModal').modal();
         });
       };
+      
+      
 
       /**
          * Scroll to an element.
