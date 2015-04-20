@@ -42,6 +42,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
@@ -149,11 +150,18 @@ public class Geonetwork implements ApplicationHandler {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
-        
-        // refresh log from db
-        LogUtils logUtils = new LogUtils(context);
-        logUtils.refreshLogConfiguration();
+
         logger = context.getLogger();
+        // If an error occur during logger configuration
+        // Continue starting the application with
+        // a logger initialized with the default log4j.xml.
+        try {
+            LogUtils.refreshLogConfiguration();
+        } catch (OperationAbortedEx e) {
+            logger.error("Error while setting log configuration. " +
+                         "Check the setting in the database for logger configuration file.");
+            logger.error(e.getMessage());
+        }
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));

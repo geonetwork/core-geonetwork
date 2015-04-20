@@ -92,8 +92,7 @@ public class DoActions implements Service
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
         }
         
-        LogUtils logUtils = new LogUtils(context);
-        logUtils.refreshLogConfiguration();
+        LogUtils.refreshLogConfiguration();
 
         try {
             // Load proxy information into Jeeves

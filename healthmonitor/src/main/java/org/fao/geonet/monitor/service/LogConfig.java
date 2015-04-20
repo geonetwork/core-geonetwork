@@ -32,7 +32,7 @@ public class LogConfig {
     private FileAppender fileAppender = null;
     
     private final String fileAppenderName = "fileAppender";
-    private final int maxLines = 200;
+    private final int maxLines = 2000;
     
     //--------------------------------------------------------------------------
     // ---
