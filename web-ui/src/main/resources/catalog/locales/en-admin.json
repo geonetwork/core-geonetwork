@@ -545,6 +545,8 @@
     "prefix": "Prefix",
     "processError": "Processing error.",
     "processFinished": "Processing done.",
+    "processRecommendedOnPrefixChange": "Update metadata records",
+    "processRecommendedOnPrefixChange-help": "After changing the resource identifier prefix, it's recommended to update all resources identifiers.",
     "processRecommendedOnHostChange": "Update metadata records",
     "processRecommendedOnHostChange-help": "After changing the catalog host name, it's recommended to update all links which may be defined in the catalog records (eg. thumbnails, uploaded documents, XLinks). Click here to replace {{old}} by {{by}}",
     "processReport-done": "Number of records proccessed",
