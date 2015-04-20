@@ -18,6 +18,7 @@
     // wms for which getCapabilities failed
     var errors = [];
 
+    this.queue = queue;
     this.errors = errors;
 
     var getLayerIndex = function(a, layer) {

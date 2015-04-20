@@ -155,6 +155,18 @@
         }
       };
     }]);
+
+  module.directive('gnvLayerIndicator', ['gnWmsQueue',
+    function(gnWmsQueue) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/viewer/' +
+            'partials/layerindicator.html',
+        link: function(scope, element, attrs) {
+          scope.layerQueue = gnWmsQueue;
+        }
+      };
+    }]);
   module.directive('gnvLayermanagerBtn', ['$timeout',
     function($timeout) {
       return {

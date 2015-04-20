@@ -56,13 +56,15 @@
     'gnMap',
     'gnMdView',
     'gnMdViewObj',
+    'gnWmsQueue',
     'gnSearchLocation',
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, gnMdView, mdView, gnSearchLocation, gnOwsContextService,
+             gnMap, gnMdView, mdView, gnWmsQueue,
+             gnSearchLocation, gnOwsContextService,
              hotkeys, gnGlobalSettings) {
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -70,7 +72,7 @@
 
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
-
+      $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
@@ -175,6 +177,9 @@
           angular.forEach(layers, function (layer) {
             $scope.resultviewFns.addMdLayerToMap(layer, md);
           });
+        },
+        loadMap: function (map, md) {
+          gnOwsContextService.loadContextFromUrl(map.url, viewerMap);
         }
       };
 
