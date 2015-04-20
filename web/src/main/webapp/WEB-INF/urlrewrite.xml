@@ -181,7 +181,7 @@
         Redirects to hash with metadata
         Example URL: http://localhost:8080/geonetwork?uuid=da165110-88fd-11da-a88f-000d939bc5d8
       </note>
-      <from>^/(.*)/catalog.search\?uuid=(.*)$</from>
+      <from>^/(.*)/catalog.search\?.*uuid=(.*)</from>
       <to type="permanent-redirect">%{context-path}/#/metadata/$2</to>
     </rule>
     <rule>
@@ -192,7 +192,7 @@
         http://localhost:8080/geonetwork/?node={{nodeid}}&amp;uuid=ca5e22d6-5bd3-4b6a-bcfb-11462f76cd10
       </note>
       <from>^/([a-zA-Z0-9_\-]+)/metadata/(.*)$</from>
-      <to type="permanent-redirect">%{context-path}/?uuid=$2&amp;node=$1</to>
+      <to type="permanent-redirect">%{context-path}/?node=$1&amp;uuid=$2</to>
     </rule>
 
     <rule>
