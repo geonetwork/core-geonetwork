@@ -1,4 +1,4 @@
-package iso19139sxt
+package iso19139
 
 import com.google.common.collect.Maps
 import org.fao.geonet.services.metadata.format.FormatType
@@ -46,7 +46,7 @@ class SxtSummary extends Summary {
         params.put("dates", dates);
         params.put("contacts", contacts);
 
-        return handlers.fileResult("html/view-header.html", params);
+        return handlers.fileResult("html/sxt-view-header.html", params);
     }
 }
 

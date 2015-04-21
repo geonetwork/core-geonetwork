@@ -1,4 +1,4 @@
-package iso19139sxt
+package iso19139
 
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
@@ -9,7 +9,7 @@ import org.fao.geonet.services.metadata.format.groovy.util.*
  *
  * @author Fgravin on 28/03/2015.
  */
-class SummaryFactory {
+class SxtSummaryFactory {
     def isoHandlers;
     org.fao.geonet.services.metadata.format.groovy.Handlers handlers
     org.fao.geonet.services.metadata.format.groovy.Functions f
@@ -23,7 +23,7 @@ class SummaryFactory {
      */
     Closure<Summary> summaryCustomizer = null
 
-    SummaryFactory(isoHandlers, summaryCustomizer) {
+    SxtSummaryFactory(isoHandlers, summaryCustomizer) {
         this.isoHandlers = isoHandlers
         this.handlers = isoHandlers.handlers;
         this.f = isoHandlers.f;
@@ -31,12 +31,12 @@ class SummaryFactory {
         this.navBarItems = []
         this.summaryCustomizer = summaryCustomizer;
     }
-    SummaryFactory(isoHandlers) {
+    SxtSummaryFactory(isoHandlers) {
         this(isoHandlers, null)
     }
 
     static void summaryHandler(select, isoHandler) {
-        def factory = new SummaryFactory(isoHandler)
+        def factory = new SxtSummaryFactory(isoHandler)
         factory.handlers.add name: "Summary Handler", select: select, {factory.create(it).getResult()}
     }
 
@@ -55,7 +55,7 @@ class SummaryFactory {
         configureDates(metadata, summary)
         configureContacts(metadata, summary)
 
-        createCollapsablePanel()
+        //createCollapsablePanel()
 
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
@@ -125,6 +125,7 @@ class SummaryFactory {
 
     def createCollapsablePanel() {
 
+/*
         def js = this.handlers.fileResult("js/utils.js", null)
         def htmlOrXmlEnd = {
             def required = """
@@ -137,6 +138,7 @@ class SummaryFactory {
             """
         }
         handlers.end htmlOrXmlEnd
+*/
     }
 
     private static void configureThumbnails(metadata, header) {
