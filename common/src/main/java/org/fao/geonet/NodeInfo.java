@@ -10,9 +10,9 @@ import java.io.Serializable;
  * Time: 2:35 PM
  */
 public class NodeInfo implements Serializable {
-    private String id;
-    private boolean defaultNode;
-    private boolean readOnly;
+    private String id = "srv";
+    private boolean defaultNode = true;
+    private boolean readOnly = false;
 
     public String getId() {
         return id;

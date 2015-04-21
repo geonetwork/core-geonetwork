@@ -17,8 +17,8 @@
           label: label || value,
           field: field
         };
-        for(var i=0;i<currentFacets.length;i++) {
-          if(currentFacets[i].field == facet.field &&
+        for (var i = 0; i < currentFacets.length; i++) {
+          if (currentFacets[i].field == facet.field &&
               currentFacets[i].value == facet.value) return;
         }
         currentFacets.push(facet);
@@ -65,13 +65,13 @@
           var keep = false;
           for (p in params) {
             if (p == f.field) {
-              if(params[p] == f.value ||(angular.isArray(params[p]) &&
+              if (params[p] == f.value || (angular.isArray(params[p]) &&
                   params[p].indexOf(f.value) >= 0)) {
                 keep = true;
               }
             }
           }
-          if(!keep) {
+          if (!keep) {
             remove(facets, f);
           }
 

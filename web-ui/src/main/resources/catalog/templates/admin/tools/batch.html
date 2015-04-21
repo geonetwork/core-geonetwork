@@ -35,6 +35,7 @@
                        class="form-control input-lg"
                        id="gn-any-field"
                        data-ng-model="searchObj.params.any"
+                       data-ng-model-options="modelOptions"
                        placeholder="{{'anyPlaceHolder' | translate}}"
                        data-typeahead="address for address in getAnySuggestions($viewValue)"
                        data-typeahead-loading="anyLoading" class="form-control"
@@ -150,6 +151,7 @@
                   data-ng-model="data.selectedProcess"
                   data-ng-options="p.key | translate for p in batchProcesses">
           </select>
+
           <!-- ng-options set only a index for the select value, 
           bound the process name in a hidden field -->
           <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
@@ -167,7 +169,8 @@
                     <textarea data-ng-switch-when="textarea" class="form-control"
                       id="batch_param_{{p.name}}" name="{{p.name}}">{{p.value}}</textarea>
                     <input data-ng-switch-default="" id="batch_param_{{p.name}}" name="{{p.name}}"
-                      type="{{p.type || 'text'}}" class="form-control" placeholder="{{p.value}}"/>
+                      type="{{p.type || 'text'}}" class="form-control"
+                      placeholder="{{p.value}}"/>
 
                     <p class="help-block"
                       data-ng-show="((p.name + '-help') | translate) != (p.name + '-help')"

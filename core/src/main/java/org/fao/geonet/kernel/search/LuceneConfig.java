@@ -28,6 +28,7 @@ import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.facet.Dimension;
@@ -39,7 +40,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.io.FileNotFoundException;
@@ -65,11 +65,6 @@ public class LuceneConfig {
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
-
-    @Autowired
-    GeonetworkDataDirectory geonetworkDataDirectory;
-    @Autowired
-    ApplicationContext _appContext;
 
 	private Path configurationFile;
 
@@ -189,7 +184,10 @@ public class LuceneConfig {
      * @param luceneConfigXmlFile
      */
 	public void configure(String luceneConfigXmlFile) {
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+		ApplicationContext _appContext = ApplicationContextHolder.get();
+		GeonetworkDataDirectory geonetworkDataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
+
+		if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.configurationFile = geonetworkDataDirectory.resolveWebResource(luceneConfigXmlFile);
         ServletContext servletContext;
@@ -203,6 +201,8 @@ public class LuceneConfig {
     }
 
 	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
+		ApplicationContext _appContext = ApplicationContextHolder.get();
+		GeonetworkDataDirectory geonetworkDataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
 		try (InputStream in = IO.newInputStream(this.configurationFile)) {
 			luceneConfig = Xml.loadStream(in);
 			if (servletContext != null) {
@@ -485,6 +485,9 @@ public class LuceneConfig {
 	private void loadClassParameters(int type, String field, String clazz, List<?> children) {
 		if (children == null)
 			return; // No params
+
+		ApplicationContext _appContext = ApplicationContextHolder.get();
+		GeonetworkDataDirectory geonetworkDataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
 
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading class " + clazz + " ...");

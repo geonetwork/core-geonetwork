@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                exclude-result-prefixes="#all">
 
   <xsl:template mode="relation" match="metadata[simpledc]" priority="99">
     <xsl:for-each select="*/descendant::*[name(.) = 'dct:references'][starts-with(., 'http') or contains(. , 'resources.get') or contains(., 'file.disclaimer')]">

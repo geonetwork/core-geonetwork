@@ -110,12 +110,8 @@
                 </select>
                 <select data-ng-switch-when="system/server/log" class="form-control"
                       name="{{s.formName}}">
-                  <option value="log4j"
-                          ng-selected="'log4j' == s['#text']">PROD</option>
-                  <option value="log4j-jeeves"
-                          ng-selected="'log4j-jeeves' == s['#text']">TEST</option>
-                  <option value="log4j-dev"
-                          ng-selected="'log4j-dev' == s['#text']">DEV</option>
+                  <option data-ng-repeat="log in logfiles" value="{{log.file}}"
+                        ng-selected="log.file === s['#text']">{{log.name}}</option>
                 </select>
                 <select data-ng-switch-when="system/oai/mdmode" class="form-control"
                       name="{{s.formName}}">
@@ -159,7 +155,7 @@
                 <button class="btn btn-primary pull-right ng-scope"
                         data-ng-switch-when="system/inspire/atom"
                         data-ng-click="executeAtomHarvester()">
-						<span class="fa fa-refresh"></span>
+                  <span class="fa fa-refresh"></span>&nbsp;
                   {{'system/inspire/atomExecute' | translate}}
                 </button>
 
@@ -199,8 +195,8 @@
                       <div class="modal-footer">
                         <button type="button" class="btn" data-dismiss="modal">
                           <i class="fa fa-ban-circle"></i>&nbsp;
-            <span data-translate=""
-              >close</span></button>
+                          <span data-translate="">close</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -216,7 +212,7 @@
                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
 
                 <div data-ng-switch-when="system/server/host">
-                  <div class="input-group">
+                  <div data-ng-class="processName !== null ? 'input-group' : ''">
                     <input type="text" class="form-control"
                       id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
                       data-ng-model="s['#text']"
@@ -224,13 +220,29 @@
                     <span class="input-group-btn" data-ng-show="processName !== null">
                         <button type="submit" class="btn btn-warning"
                           title="{{processTitle}}" 
-                          data-ng-click="saveAndProcessSettings('#gn-settings')">
+                          data-ng-click="saveAndProcessSettings('#gn-settings', 'url-host-relocator')">
                           <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
                           >processRecommendedOnHostChange</span></button>
                       </span>
                   </div>
                 </div>
-                
+
+                <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
+                  <div data-ng-class="resourceIdProcessName !== null ? 'input-group' : ''">
+                    <input type="text" class="form-control"
+                           id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                           data-ng-model="s['#text']"
+                           data-ng-change="processRecommendedForId('resourceIdentifierChange', s['@name'])"/>
+                    <span class="input-group-btn" data-ng-show="resourceIdProcessName !== null">
+                        <button type="submit" class="btn btn-warning"
+                                title="{{processTitle}}"
+                                data-ng-click="saveAndProcessSettings('#gn-settings', 'add-resource-id')">
+                          <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
+                                >processRecommendedOnPrefixChange</span></button>
+                      </span>
+                  </div>
+                </div>
+
                 <div data-ng-switch-when="system/server/port">
                   <input type="text" class="form-control"
                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"

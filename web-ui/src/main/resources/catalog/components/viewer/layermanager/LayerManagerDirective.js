@@ -79,7 +79,6 @@
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
           };
-
         }
       };
     }]);

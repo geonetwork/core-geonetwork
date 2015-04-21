@@ -8,6 +8,7 @@ import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -16,7 +17,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
@@ -50,12 +51,6 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 @Controller("md.publish")
 public class Publish {
 
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
-    @Autowired
-    private ServiceManager serviceManager;
     @VisibleForTesting
     boolean testing = false;
 
@@ -68,6 +63,8 @@ public class Publish {
             HttpServletRequest request,
             @RequestParam(value = "ids", required = false) String commaSeparatedIds,
             @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
         return exec(commaSeparatedIds, true, skipIntranet, serviceContext);
@@ -82,6 +79,8 @@ public class Publish {
             HttpServletRequest request,
             @RequestParam(value = "ids", required = false) String commaSeparatedIds,
             @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
         return exec(commaSeparatedIds, false, skipIntranet, serviceContext);
@@ -96,9 +95,13 @@ public class Publish {
      */
     private PublishReport exec(String commaSeparatedIds, boolean publish, boolean skipIntranet, ServiceContext serviceContext) throws
             Exception {
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+        DataManager dataManager = appContext.getBean(DataManager.class);
+        OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
+
         final PublishReport report = new PublishReport();
 
-        Iterator<String> iter = getIds(serviceContext.getUserSession(), commaSeparatedIds);
+        Iterator<String> iter = getIds(appContext, serviceContext.getUserSession(), commaSeparatedIds);
 
         final ArrayList<Integer> groupIds = Lists.newArrayList(ReservedGroup.all.getId());
         if (!skipIntranet) {
@@ -136,7 +139,9 @@ public class Publish {
         return report;
     }
 
-    private Iterator<String> getIds(UserSession userSession, final String commaSeparatedIds) {
+    private Iterator<String> getIds(ConfigurableApplicationContext appContext, UserSession userSession, final String commaSeparatedIds) {
+        final DataManager dataManager = appContext.getBean(DataManager.class);
+
         if (commaSeparatedIds == null) {
             if (userSession != null) {
                 SelectionManager sm = SelectionManager.getManager(userSession);
@@ -180,6 +185,8 @@ public class Publish {
     private void doUnpublish(ServiceContext serviceContext, PublishReport report, ArrayList<Integer> groupIds, Set<Integer> toIndex,
                              Collection<Integer> operationIds, int mdId, Specifications<OperationAllowed> allOpsSpec,
                              List<OperationAllowed> operationAllowed) throws Exception {
+
+        OperationAllowedRepository operationAllowedRepository = serviceContext.getBean(OperationAllowedRepository.class);
         final long count = operationAllowedRepository.count(allOpsSpec);
         if (count == 0) {
             report.incUnmodified();
@@ -199,6 +206,7 @@ public class Publish {
     private void doPublish(ServiceContext serviceContext, PublishReport report, ArrayList<Integer> groupIds, Set<Integer> toIndex,
                            Collection<Integer> operationIds, int mdId, Specifications<OperationAllowed> allOpsSpec,
                            List<OperationAllowed> operationAllowed) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = serviceContext.getBean(OperationAllowedRepository.class);
         long count = operationAllowedRepository.count(Specifications.where(hasMetadataId(mdId)).and
                 (OperationAllowedSpecs.isPublic(ReservedOperation.view)));
         if (count == 1) {
@@ -218,6 +226,8 @@ public class Publish {
 
     private boolean updateOps(ServiceContext serviceContext, boolean publish, ArrayList<Integer> groupIds, Collection<Integer>
             operationIds, int metadataId) throws Exception {
+        final DataManager dataManager = serviceContext.getBean(DataManager.class);
+
         for (Integer groupId : groupIds) {
             for (Integer operationId : operationIds) {
                 try {

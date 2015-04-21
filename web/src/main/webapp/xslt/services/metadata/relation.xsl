@@ -6,18 +6,22 @@
       + super-brief representation.
 -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:util="java:org.fao.geonet.util.XslUtil"
   xmlns:exslt="http://exslt.org/common"
-  exclude-result-prefixes="geonet exslt">
+  exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
   <xsl:include href="../../common/profiles-loader-relations.xsl"/>
 
   <xsl:template match="/">
     <relations>
+      <!-- This is a hack to preserve the JSON output to be an array
+      like it use to be. -->
+      <xsl:namespace name="geonet" select="'http://www.fao.org/geonetwork'"/>
       <xsl:apply-templates mode="relation" select="/root/relations/*"/>
     </relations>
   </xsl:template>
@@ -64,7 +68,7 @@
 					<xsl:value-of select="$subType"/>		
 				</xsl:attribute>
 			</xsl:if>
-      <xsl:copy-of select="$metadata"/>
+      <xsl:copy-of select="$metadata" copy-namespaces="no"/>
     </relation>
   </xsl:template>
   

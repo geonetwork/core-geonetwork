@@ -18,8 +18,9 @@
     'Metadata',
     'gnRelatedResources',
     'gnSearchSettings',
+    'gnGlobalSettings',
     function(gnOwsCapabilities, gnMap, $translate, Metadata,
-             gnRelatedResources, gnSearchSettings) {
+             gnRelatedResources, gnSearchSettings, gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -28,23 +29,25 @@
         scope: {
           map: '=gnSearchLayerForMap'
         },
-        controller: ['$scope', function($scope) {
-          $scope.searchObj = {
-            permalink: false,
-            hitsperpageValues: gnSearchSettings.hitsperpageValues,
-            sortbyValues: gnSearchSettings.sortbyValues,
-            params: {
-              protocol: 'OGC:WMS*',
-              from: 1,
-              to: 9
-            }
-          };
+        controller: ['$scope',
+          function($scope) {
+            $scope.searchObj = {
+              permalink: false,
+              hitsperpageValues: gnSearchSettings.hitsperpageValues,
+              sortbyValues: gnSearchSettings.sortbyValues,
+              params: {
+                protocol: 'OGC:WMS*',
+                from: 1,
+                to: 9
+              }
+            };
+            $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
-          $scope.paginationInfo = {
-            hitsPerPage: gnSearchSettings.hitsperpageValues[0]
-          };
+            $scope.paginationInfo = {
+              hitsPerPage: gnSearchSettings.hitsperpageValues[0]
+            };
 
-        }],
+          }],
         link: function(scope, element, attrs) {
           scope.filterTopic = function(topic) {
             delete scope.searchObj.params.topicCat;

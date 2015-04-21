@@ -23,6 +23,7 @@
                      class="form-control"
                      id="gn-any-field"
                      data-ng-model="searchObj.params.any"
+                     data-ng-model-options="modelOptions"
                      placeholder="{{'anyPlaceHolder' | translate}}"
                      data-typeahead="address for address in getAnySuggestions($viewValue)"
                      data-typeahead-loading="anyLoading" class="form-control"
@@ -104,7 +105,7 @@
         <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
       </a>
       <a href="#/directory" class="btn btn-default btn-lg btn-block"
-        ng-if="user.isReviewerOrMore()">
+        ng-if="user.isEditorOrMore()">
         <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
       </a>
 

@@ -5,11 +5,11 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +23,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class GenericController {
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
 
     @RequestMapping(value = "/{lang}/{service}")
     @ResponseBody
@@ -74,6 +71,7 @@ public class GenericController {
 
         ServiceRequest srvReq = null;
 
+        ApplicationContext jeevesApplicationContext = ApplicationContextHolder.get();
         JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
         try {
             final Path uploadDir = jeeves.getUploadDir();

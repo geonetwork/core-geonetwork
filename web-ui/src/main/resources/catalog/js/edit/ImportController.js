@@ -78,16 +78,16 @@
         } else {
           $scope.reports.push(response.data);
         }
-        if(response.data.records) {
+        if (response.data.records) {
           $scope.reports.push({success: parseInt(response.data.records) -
-              parseInt((response.data.exceptions &&
-                  response.data.exceptions['@count']) || 0)});
+                parseInt((response.data.exceptions &&
+                response.data.exceptions['@count']) || 0)});
         }
       };
       var onErrorFn = function(error) {
         $scope.importing = false;
         $scope.reports = [{
-            exception: error.data
+          exception: error.data
         }];
       };
 

@@ -108,7 +108,7 @@
           };
 
           scope.setSorter = function(pred) {
-            if(pred == scope.sorter.predicate) {
+            if (pred == scope.sorter.predicate) {
               scope.sorter.reverse = !scope.sorter.reverse;
             } else {
               scope.sorter.reverse = false;
@@ -117,13 +117,13 @@
           };
 
           scope.sortGroups = function(g) {
-            if(scope.sorter.predicate == 'g') {
+            if (scope.sorter.predicate == 'g') {
               return g.label[scope.lang];
             }
             else {
               return g.privileges[scope.sorter.predicate].value;
             }
-          }
+          };
 
         }
       };

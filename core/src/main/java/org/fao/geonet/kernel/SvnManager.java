@@ -28,7 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.AfterCommitTransactionListener;
 import jeeves.transaction.BeforeRollbackTransactionListener;
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.lang.annotation.Before;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -53,7 +53,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
@@ -86,18 +86,6 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
-
-    @Autowired
-    OperationAllowedRepository _operationAllowedRepository;
-    @Autowired
-    GroupRepository _groupRepository;
-    @Autowired
-    OperationRepository _operationRepository;
-    @Autowired
-    private SettingManager _settingManager;
-    @Autowired
-    private DataSource _dataSource;
-
     // configure via setter in Geonetwork app
     private ServiceContext context;
     // configure in init method
@@ -124,6 +112,10 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
      * of the repository in repoUrl. Adds the commit/abort listeners to the DbmsPool resource provider.
      */
     public void init() throws Exception {
+
+        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
+
         this._enabled = true;
         String uuid = _settingManager.getValue("system/site/svnUuid");
 
@@ -744,17 +736,23 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
      * @throws Exception if something goes wrong
      */
     private void commitMetadataPrivileges(ISVNEditor editor, String id) throws Exception {
+
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        OperationAllowedRepository operationAllowedRepository = applicationContext.getBean(OperationAllowedRepository.class);
+        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
+        OperationRepository operationRepository = applicationContext.getBean(OperationRepository.class);
+
         Sort sort = SortUtils.createSort(OperationAllowed_.id, OperationAllowedId_.operationId);
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
-        List<OperationAllowed> opsAllowed = _operationAllowedRepository.findAll(hasMetadataId, sort);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(hasMetadataId, sort);
         Element privs = new Element("response");
         for (OperationAllowed operationAllowed : opsAllowed) {
             Element record = new Element("record");
             final OperationAllowedId operationAllowedId = operationAllowed.getId();
             record.addContent(new Element("group_id").setText(Integer.toString(operationAllowedId.getGroupId())));
-            final Group group = _groupRepository.findOne(operationAllowedId.getGroupId());
+            final Group group = groupRepository.findOne(operationAllowedId.getGroupId());
             record.addContent(new Element("group_name").setText(group.getName()));
-            final Operation operation = _operationRepository.findOne(operationAllowedId.getOperationId());
+            final Operation operation = operationRepository.findOne(operationAllowedId.getOperationId());
             record.addContent(new Element("operation_id").setText(Integer.toString(operationAllowedId.getOperationId())));
             record.addContent(new Element("operation_name").setText(operation.getName()));
             privs.addContent(record);

@@ -117,7 +117,7 @@
   "chooseAservice": "Choose a service",
   "chooseAserviceHelp": "All services registered in the catalogue are presented here.",
   "orTypeAServiceUrl": "Or type a service URL",
-  "addAllLayersToMap": "Map all layers",
+  "addAllLayersToMap": "Add all {{number}} layers to the map",
   "downloadsAndResources": "Download and links",
   "sourceCatalog": "Provided by",
   "tempExtent": "Temporal extent",

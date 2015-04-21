@@ -16,22 +16,23 @@
   </xsl:template>
 
   <xsl:template name="get-iso19139-extents-as-json">[
-    <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-      <xsl:variable name="format" select="'#0.0000'"></xsl:variable>
-
-      <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
+    <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox[
+            number(gmd:westBoundLongitude/gco:Decimal)
             and number(gmd:southBoundLatitude/gco:Decimal)
             and number(gmd:eastBoundLongitude/gco:Decimal)
             and number(gmd:northBoundLatitude/gco:Decimal)
-            ">
+            and normalize-space(gmd:westBoundLongitude/gco:Decimal) != ''
+            and normalize-space(gmd:southBoundLatitude/gco:Decimal) != ''
+            and normalize-space(gmd:eastBoundLongitude/gco:Decimal) != ''
+            and normalize-space(gmd:northBoundLatitude/gco:Decimal) != '']">
+      <xsl:variable name="format" select="'#0.0000'"></xsl:variable>
+
         [
           <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $format)"/>,
           <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, $format)"/>,
           <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $format)"/>,
           <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, $format)"/>
-        ]
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:if>
+        ]<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
     ]
   </xsl:template>

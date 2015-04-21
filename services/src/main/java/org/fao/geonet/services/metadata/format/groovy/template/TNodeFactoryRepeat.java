@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import org.fao.geonet.SystemInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -22,17 +21,12 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
     public static final String REPEAT = "repeat";
     public static final String ONLY_CHILDREN = REPEAT + "-only-children";
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private SystemInfo info;
-
     protected TNodeFactoryRepeat() {
-        super(REPEAT);
+        super(REPEAT, null);
     }
 
     public TNodeFactoryRepeat(SystemInfo info, TextContentParser contentParser) {
-        super(REPEAT);
-        this.info = info;
+        super(REPEAT, info);
         this.textContentParser = contentParser;
     }
 
@@ -50,6 +44,7 @@ public class TNodeFactoryRepeat extends TNodeFactoryByAttName {
 
         Matcher mapMatcher = MAP_PATTERN.matcher(contextName);
 
+        SystemInfo info = SystemInfo.getInfo(this.testingInfo);
         if (mapMatcher.matches()) {
             return new TNodeRepeatMap(info, textContentParser, onlyChildren, qName, attributesFiltered, key, mapMatcher.group(1), mapMatcher.group(2));
         } else {

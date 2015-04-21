@@ -137,7 +137,13 @@ GeoNetwork.Control.ExtentBox = OpenLayers.Class(OpenLayers.Control, {
         this.events.triggerEvent("finishBox", null);
     },
     updateFieldsWKT: function(wkt) {
-        this.updateFields(OpenLayers.Geometry.fromWKT(wkt).getBounds());
+      // Reproject WGS extent to map projection
+      // Before adding to the map
+      var geom = OpenLayers.Geometry.fromWKT(wkt);
+      var mapProj = this.map.getProjectionObject();
+      var wgs84 = new OpenLayers.Projection("WGS84");
+      geom = geom.transform(wgs84, mapProj)
+      this.updateFields(geom.getBounds());
     },
     updateFields: function(bounds) {
         var polFeature = new OpenLayers.Feature.Vector(

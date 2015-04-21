@@ -605,7 +605,8 @@
           </xsl:if>
 
           <!-- Add KML link if WMS -->
-          <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
+          <xsl:if test="starts-with($protocol,'OGC:WMS') and
+                        string($linkage)!='' and string($title)!=''">
             <!-- FIXME : relative path -->
             <Field name="link" string="{concat($title, '|', $desc, '|',
               '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
@@ -616,6 +617,16 @@
           <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
               $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition)}" store="true" index="false"/>
+          </xsl:if>
+          <!-- Try to detect OWS Context by checking protocol or file extension -->
+          <xsl:if test="starts-with($protocol,'OGC:OWS-C') or contains($linkage,'.ows')">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+						$linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition)}" store="true" index="false"/>
+          </xsl:if>
+
+          <xsl:if test="$wmsLinkNoProtocol">
+            <Field name="link" string="{concat($title, '|', $desc, '|',
+						$linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition)}" store="true" index="false"/>
           </xsl:if>
         </xsl:for-each>
       </xsl:for-each>

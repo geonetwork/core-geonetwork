@@ -255,11 +255,12 @@
           <h3>
             <ng-pluralize count="searchResults.count"
                           when="{'0': ('noRecordFound' | translate),
-                    'one': '1' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
-                    'other': '{}' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}"
+                    'one': '1 ' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
+                    'other': '{} ' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}"
                 > </ng-pluralize>
           </h3>
-          <div data-gn-search-form-results=""
+          <div data-ng-show="searchResults.records.length > 0"
+               data-gn-search-form-results=""
                data-gn-search-form-results-mode="title"
                data-search-results="searchResults"
                data-pagination-info="paginationInfo">

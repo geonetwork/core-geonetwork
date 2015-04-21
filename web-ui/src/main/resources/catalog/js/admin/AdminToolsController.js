@@ -44,12 +44,13 @@
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout', '$routeParams', '$location',
     'gnSearchManagerService',
-    'gnUtilityService', 'gnSearchSettings',
-    function($scope, $http, $rootScope, $translate, $compile, 
+    'gnUtilityService', 'gnSearchSettings', 'gnGlobalSettings',
+    function($scope, $http, $rootScope, $translate, $compile,
         $q, $timeout, $routeParams, $location,
             gnSearchManagerService, 
-            gnUtilityService, gnSearchSettings) {
-
+            gnUtilityService, gnSearchSettings, gnGlobalSettings) {
+      $scope.modelOptions =
+          angular.copy(gnGlobalSettings.modelOptions);
 
       $scope.pageMenu = {
         folder: 'tools/',
@@ -382,7 +383,7 @@
                     param.value = urlParam;
                   }
                 });
-                $scope.selectedProcess = p;
+                $scope.data.selectedProcess = p;
               }
             });
           }

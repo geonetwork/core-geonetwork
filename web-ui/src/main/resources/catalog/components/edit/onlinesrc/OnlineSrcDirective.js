@@ -365,6 +365,23 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
 
+                if(!scope.mdLangs && gnCurrentEdit.mdOtherLanguages) {
+                  scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                  scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+                  scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                  for(var p in scope.mdLangs) {
+                    var v = scope.mdLangs[p];
+                    if(v.indexOf('#') == 0) {
+                      var l = v.substr(1);
+                      if(!l) {
+                        l = scope.mdLang;
+                      }
+                      scope.mdLangs[p] = l;
+                    }
+                  }
+                };
+
                 $(scope.popupid).modal('show');
 
               });
@@ -383,9 +400,9 @@
 
               var resetForm = function() {
                 if (scope.params) {
-                  scope.params.desc = '';
+                  scope.params.desc = scope.mdLangs ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = '';
+                  scope.params.name = scope.mdLangs ? {} : '';
                   scope.params.protocol = '';
                 }
                 scope.clear(scope.queue);
@@ -425,6 +442,20 @@
                 if (scope.mode == 'upload') {
                   return scope.submit();
                 } else {
+                  if(angular.isObject(scope.params.name)) {
+                    var name = [];
+                    for(var p in scope.params.name) {
+                      name.push(p + '#' + scope.params.name[p])
+                    }
+                    scope.params.name = name.join('|');
+                  }
+                  if(angular.isObject(scope.params.desc)) {
+                    var desc = [];
+                    for(var p in scope.params.desc) {
+                      desc.push(p + '#' + scope.params.desc[p])
+                    }
+                    scope.params.desc = desc.join('|');
+                  }
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {
                         resetForm();
@@ -513,8 +544,9 @@
         'gnCurrentEdit',
         '$rootScope',
         '$translate',
+        'gnGlobalSettings',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-                 gnCurrentEdit, $rootScope, $translate) {
+                 gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -526,6 +558,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
@@ -612,10 +646,11 @@
                    */
                   scope.linkTo = function() {
                     if (scope.mode == 'service') {
-                      gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
-                    }
-                    else {
-                      gnOnlinesrc.linkToDataset(scope.srcParams, scope.popupid);
+                      return gnOnlinesrc.
+                          linkToService(scope.srcParams, scope.popupid);
+                    } else {
+                      return gnOnlinesrc.
+                          linkToDataset(scope.srcParams, scope.popupid);
                     }
                   };
                 }
@@ -645,8 +680,9 @@
    * On submit, the metadata is saved, the thumbnail is added,
    * then the form and online resource list are refreshed.
    */
-  .directive('gnLinkToMetadata', ['gnOnlinesrc', '$translate',
-        function(gnOnlinesrc, $translate) {
+  .directive('gnLinkToMetadata', [
+        'gnOnlinesrc', '$translate', 'gnGlobalSettings',
+        function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -658,6 +694,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkToMetadata'];
@@ -724,8 +762,8 @@
    * On submit, the metadata is saved, the resource is associated, then the form
    * and online resource list are refreshed.
    */
-  .directive('gnLinkToSibling', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+  .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
+        function(gnOnlinesrc, gnGlobalSettings) {
           return {
             restrict: 'A',
             scope: {},
@@ -737,6 +775,8 @@
                   scope.searchObj = {
                     params: {}
                   };
+                  scope.modelOptions =
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.popupid = iAttrs['gnLinkToSibling'];

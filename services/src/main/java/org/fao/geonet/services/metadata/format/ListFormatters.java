@@ -24,11 +24,12 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Lists;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.IO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,13 +57,6 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  */
 @Controller("md.formatter.list")
 public class ListFormatters extends AbstractFormatService {
-
-    @Autowired
-    private MetadataRepository repository;
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private GeonetworkDataDirectory dataDirectory;
 
     private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter,
                                boolean publishedOnly)
@@ -167,9 +161,10 @@ public class ListFormatters extends AbstractFormatService {
             @RequestParam(defaultValue = "false") boolean pluginOnly,
             @RequestParam(defaultValue = "true") boolean publishedOnly
     ) throws Exception {
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         if (id != null || uuid != null) {
             try {
-                loadMetadata(this.repository, Integer.parseInt(resolveId(id)));
+                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id)));
             } catch (Throwable e) {
                 // its ok.  just can't use metadata
             }
@@ -182,14 +177,14 @@ public class ListFormatters extends AbstractFormatService {
 
         FormatterDataResponse response = new FormatterDataResponse();
         if (!pluginOnly) {
-            Path userXslDir = this.dataDirectory.getFormatterDir();
+            Path userXslDir = applicationContext.getBean(GeonetworkDataDirectory.class).getFormatterDir();
             addFormatters(schema, response, userXslDir, userXslDir, false, publishedOnly);
         }
 
-        final Set<String> schemas = this.schemaManager.getSchemas();
+        final Set<String> schemas = applicationContext.getBean(SchemaManager.class).getSchemas();
         for (String schemaName : schemas) {
             if (schema.equals("all") || schema.equals(schemaName)) {
-                final Path schemaDir = this.schemaManager.getSchemaDir(schemaName);
+                final Path schemaDir = applicationContext.getBean(SchemaManager.class).getSchemaDir(schemaName);
                 final Path formatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
                 addFormatters(schemaName, response, formatterDir, formatterDir, true, publishedOnly);
             }

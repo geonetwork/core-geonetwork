@@ -40,12 +40,12 @@
               //},{
               type: 'formatter',
               label: 'metadataFormatter',
-              icon: 'fa-print',
+              icon: 'fa-eye',
               href: '#/metadata/formatter'
             },{
               type: 'schematron',
               label: 'schematron',
-              icon: 'fa-eye',
+              icon: 'fa-check',
               href: '#/metadata/schematron'
             }]
       };
@@ -58,15 +58,16 @@
       $scope.sampleLoadRunning = false;
 
       function loadSchemas() {
-        $http.get('admin.schema.list?_content_type=json').success(function(data) {
-          for (var i = 0; i < data.length; i++) {
-            $scope.schemas.push(data[i]['#text'].trim());
-          }
-          $scope.schemas.sort();
+        $http.get('admin.schema.list?_content_type=json').
+            success(function(data) {
+              for (var i = 0; i < data.length; i++) {
+                $scope.schemas.push(data[i]['#text'].trim());
+              }
+              $scope.schemas.sort();
 
-          // Trigger load action according to route params
-          launchActions();
-        });
+              // Trigger load action according to route params
+              launchActions();
+            });
       }
 
       function launchActions() {
@@ -145,8 +146,9 @@
 
       $scope.loadSamples = function() {
         $scope.sampleLoadRunning = true;
-        $http.get('admin.load.samples?_content_type=json&file_type=mef&uuidAction=overwrite' +
-                '&schema=' +
+        $http.get('admin.load.samples?_content_type=json&' +
+                  'file_type=mef&uuidAction=overwrite' +
+                  '&schema=' +
             $scope.selectedSchemas.join(',')
         ).success(function(data) {
           $scope.loadReport = data;

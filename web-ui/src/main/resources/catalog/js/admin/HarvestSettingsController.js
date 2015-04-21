@@ -286,8 +286,8 @@
               $scope.$parent.loadHarvesters();
             }).error(function(data) {
               console.log(data);
-            }).then(function(){
-              $scope.deleting.splice($scope.deleting.indexOf(3), 1)
+            }).then(function() {
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1);
             });
       };
 

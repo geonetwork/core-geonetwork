@@ -92,6 +92,11 @@
           .success(function(data) {
               $scope.systemInfo = data.systemInfo;
             });
+        // load log files
+        $http.get('admin.logfile.list?_content_type=json')
+          .success(function(data) {
+              $scope.logfiles = data.logFile;
+            });
         $http.get('admin.config.list?asTree=false&_content_type=json')
           .success(function(data) {
 
@@ -190,6 +195,15 @@
               by: buildUrl($scope.settings)
             });
       };
+      $scope.resourceIdProcessName = null;
+      $scope.processRecommendedForId = function(processName) {
+        $scope.resourceIdProcessName = processName;
+        $scope.processResourceTitle =
+            $translate('processRecommendedOnHostChange-help', {
+              old: buildUrl($scope.initalSettings),
+              by: buildUrl($scope.settings)
+            });
+      };
 
       var buildUrl = function(settings) {
         var port = filterBySection(settings, 'system/server/port')[0]['#text'];
@@ -204,10 +218,10 @@
        *
        * TODO: set the process to use and select all
        */
-      $scope.saveAndProcessSettings = function(formId) {
+      $scope.saveAndProcessSettings = function(formId, process) {
         $scope.saveSettings(formId);
 
-        $location.path('/tools/batch/select/all/process/url-host-relocator')
+        $location.path('/tools/batch/select/all/process/' + process)
           .search(
             'urlPrefix=' + buildUrl($scope.initalSettings) +
             '&newUrlPrefix=' + buildUrl($scope.settings));
@@ -229,6 +243,8 @@
           $('#atomHarvesterModal').modal();
         });
       };
+
+
 
       /**
          * Scroll to an element.

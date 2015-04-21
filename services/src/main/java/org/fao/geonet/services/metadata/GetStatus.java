@@ -122,7 +122,7 @@ public class GetStatus implements Service
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(Integer.valueOf(id));
 
-		Element cRevs = am.getContentReviewers(ids);
+		Element cRevs = am.getContentReviewers(context, ids);
 		cRevs.setName("contentReviewers");
 
 		//-----------------------------------------------------------------------

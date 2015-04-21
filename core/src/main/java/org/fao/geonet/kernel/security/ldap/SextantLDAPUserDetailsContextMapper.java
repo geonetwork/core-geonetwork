@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.LDAPUser;
@@ -73,7 +74,9 @@ public class SextantLDAPUserDetailsContextMapper extends
 		}
 		String defaultGroup = mapping.get("privilege")[1];
 
-		Map<String, ArrayList<String>> userInfo = ldapUtils
+        LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
+
+        Map<String, ArrayList<String>> userInfo = ldapUtils
 				.convertAttributes(userCtx.getAttributes().getAll());
 
 		LDAPUser userDetails = new LDAPUser(username);

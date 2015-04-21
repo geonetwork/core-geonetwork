@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -20,18 +19,13 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
     private static final String INCLUDE = "include";
     private static final String REPLACE = "include-replace";
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private SystemInfo info;
-
 
     protected TNodeFactoryInclude() {
-        super(INCLUDE);
+        super(INCLUDE, null);
     }
 
     public TNodeFactoryInclude(SystemInfo info, TextContentParser contentParser) {
-        super(INCLUDE);
-        this.info = info;
+        super(INCLUDE, info);
         super.textContentParser = contentParser;
     }
 
@@ -41,7 +35,7 @@ public class TNodeFactoryInclude extends TNodeFactoryByAttName {
         String templatePath = getValue(attributes, INCLUDE);
 
         boolean replace = getBooleanAttribute(attributes, REPLACE, false);
-        return new TNodeInclude(info, textContentParser, qName, filteredAtts, templatePath, replace);
+        return new TNodeInclude(SystemInfo.getInfo(this.testingInfo), textContentParser, qName, filteredAtts, templatePath, replace);
     }
 
     private class TNodeInclude extends TNode {

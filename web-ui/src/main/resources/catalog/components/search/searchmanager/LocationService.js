@@ -92,7 +92,7 @@
         this.setSearch(state.lastSearchParams);
 
         //Wait all location search are triggered
-        $timeout(function () {
+        $timeout(function() {
           that.lastSearchUrl = '';
         }, 100);
       };
@@ -124,11 +124,11 @@
           params: $location.search(),
           path: $location.path()
         };
-        if(that.isMdView(state.old.path) &&
+        if (that.isMdView(state.old.path) &&
             state.current.path == that.SEARCH) {
           $rootScope.$broadcast('closeMdView');
         }
-        if(state.old.path == that.SEARCH &&
+        if (state.old.path == that.SEARCH &&
             state.current.path != that.SEARCH) {
           state.lastSearchParams = state.old.params;
           that.lastSearchUrl = oldUrl;

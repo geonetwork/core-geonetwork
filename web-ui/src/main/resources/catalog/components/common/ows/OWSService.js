@@ -115,7 +115,8 @@
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities'
+                REQUEST: 'GetCapabilities',
+                service: 'WMTS'
               });
 
               if (gnUrlUtils.isValid(url)) {
@@ -146,11 +147,23 @@
             //var olExtent = [ext[1],ext[0],ext[3],ext[2]];
             // TODO fix using layer.BoundingBox[0].extent
             // when sextant fix his capabilities
-            if (angular.isArray(layer.BoundingBox)) {
-              extent = ol.proj.transformExtent(layer.EX_GeographicBoundingBox,
-                  //layer.BoundingBox[0].crs,
+            if (angular.isArray(layer.EX_GeographicBoundingBox)) {
+              extent = ol.proj.transformExtent(
+                  layer.EX_GeographicBoundingBox,
                   'EPSG:4326',
                   srsCode);
+            } else if (angular.isArray(layer.BoundingBox)) {
+              for (var i = 0; i < layer.BoundingBox.length; i++) {
+                var bbox = layer.BoundingBox[i];
+                // Use the bbox with the code matching the map projection
+                // or the first one.
+                if (bbox.crs === srsCode || layer.BoundingBox.length === 1) {
+                  extent = ol.proj.transformExtent(bbox.extent,
+                      bbox.crs || 'EPSG:4326',
+                      srsCode);
+                  break;
+                }
+              }
             }
             return extent;
           },

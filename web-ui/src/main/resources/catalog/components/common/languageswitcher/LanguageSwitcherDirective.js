@@ -12,15 +12,17 @@
         replace: false,
         transclude: true,
         scope: {
-          langs: '=langs',
+          langs: '=',
+          langLabels: '=',
           lang: '=gnLanguageSwitcher'
         },
         template:
-            '<select class="form-control" ng-model="lang" ' +
-            'ng-options="key as (key | translate) for (key, value) in ' +
-            'langs">' +
-                '</select>',
-        link: function(scope, element, attrs) {
+            '<select class="form-control" ' +
+            ' data-ng-show="isHidden()" ' +
+            ' data-ng-model="lang" ' +
+            ' data-ng-options="key as langLabels[key] ' +
+            ' for (key, value) in langs"/>',
+        link: function(scope) {
           scope.$watch('lang', function(value) {
             var url = location.href.split('/');
             if (value !== url[5]) {
@@ -39,6 +41,10 @@
               }
             }
           });
+
+          scope.isHidden = function() {
+            return Object.keys(scope.langs).length > 1;
+          };
         }
       };
     }]);

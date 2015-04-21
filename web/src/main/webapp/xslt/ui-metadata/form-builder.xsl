@@ -298,11 +298,12 @@
   <xsl:template name="render-boxed-element-control">
     <xsl:param name="editInfo"/>
 
-    <i class="btn fa fa-times text-danger pull-right"
-      data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
-      data-gn-field-highlight-remove="{$editInfo/@ref}"
-      title="{{{{'deleteFieldSet' | translate}}}}"/>
-
+    <a class="btn pull-right"
+       data-gn-click-and-spin="remove({$editInfo/@ref}, {$editInfo/@parent})"
+       data-gn-field-highlight-remove="{$editInfo/@ref}"
+       title="{{{{'deleteFieldSet' | translate}}}}">
+      <i class="fa fa-times text-danger"/>
+    </a>
   </xsl:template>
   
   
@@ -615,11 +616,13 @@
             <xsl:when test="count($childEditInfo/gn:choose) = 1">
                   <xsl:for-each select="$childEditInfo/gn:choose">
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-                    
-                    <i type="button" class="btn btn-default fa fa-plus gn-add" 
-                    title="{$label/description}"
-                    data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
-                    </i>
+
+                    <a class="btn btn-default"
+                       data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
+                      <i type="button" class="fa fa-plus gn-add"
+                      title="{$label/description}">
+                      </i>
+                    </a>
                   </xsl:for-each>
             </xsl:when>
             <!-- 
@@ -636,7 +639,7 @@
                     
                     <li title="{$label/description}">
                       <a
-                        data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
+                        data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
                         <xsl:value-of select="$label/label"/>
                       </a>
                     </li>
@@ -664,9 +667,10 @@
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
-                  <i class="btn btn-default fa fa-plus gn-add"
-                    data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
-                  />
+                  <a class="btn btn-default"
+                     data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                    <i class="fa fa-plus gn-add"/>
+                  </a>
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:otherwise>
@@ -959,11 +963,13 @@
       
       <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then 
         $parentEditInfo else $editInfo"/>
-      
-      <i class="btn fa fa-times text-danger gn-control pull-right"
-        data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
-        data-gn-field-highlight-remove="{$editInfo/@ref}"
-        data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
+
+      <a class="btn pull-right"
+         data-gn-click-and-spin="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
+         data-gn-field-highlight-remove="{$editInfo/@ref}"
+         data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}">
+        <i class="fa fa-times text-danger gn-control"/>
+      </a>
     </xsl:if>
   </xsl:template>
 
@@ -977,8 +983,10 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <i class="btn btn-default fa fa-plus gn-add"
-        data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
+      <a class="btn btn-default"
+         data-gn-click-and-spin="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})">
+        <i class="fa fa-plus gn-add"/>
+      </a>
     </xsl:if>
   </xsl:template>
 
@@ -1061,7 +1069,10 @@
         </xsl:choose>
       </div>
       <div class="col-sm-1">
-          <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}"/>
+        <a class="btn pull-right"
+           data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}">
+          <i class="fa fa-times text-danger"/>
+        </a>
       </div>
     </div>
   </xsl:template>
@@ -1096,7 +1107,7 @@
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
     <button type="button" class="btn btn-link btn-xs"
-      data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
+      data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
       title="{$attributeLabel/description}">
       <i class="fa fa-plus"/>
       <xsl:value-of select="$attributeLabel/label"/>

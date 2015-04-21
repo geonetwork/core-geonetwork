@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -40,7 +41,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,19 +97,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ReadWriteController
 public class XslProcessing {
 
-    @Autowired
-    private DataManager dataMan;
-    @Autowired
-    private SchemaManager schemaMan;
-    @Autowired
-    private AccessManager accessMan;
-    @Autowired
-    private SettingManager settingsMan;
-    @Autowired
-    private MetadataRepository metadataRepository;
-    @Autowired
-    private ServiceManager serviceManager;
-
     @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
@@ -119,6 +107,13 @@ public class XslProcessing {
                                   @RequestParam(defaultValue = "") String uuid,
                                   HttpServletRequest request)
             throws Exception {
+
+        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
+
+        DataManager dataMan = appContext.getBean(DataManager.class);
+        SettingManager settingsMan = appContext.getBean(SettingManager.class);
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
+
         ServiceContext context = serviceManager.createServiceContext("md.processing", lang, request);
         XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
 
@@ -165,6 +160,11 @@ public class XslProcessing {
                            XslProcessingReport report,
                            String siteUrl,
                            Map<String, String[]> params) throws Exception {
+        SchemaManager schemaMan = context.getBean(SchemaManager.class);
+        AccessManager accessMan = context.getBean(AccessManager.class);
+        DataManager dataMan = context.getBean(DataManager.class);
+        SettingManager settingsMan = context.getBean(SettingManager.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         report.incrementProcessedRecords();
         

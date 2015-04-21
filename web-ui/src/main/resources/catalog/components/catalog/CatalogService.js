@@ -117,11 +117,11 @@
           return $http({
             url: 'md.import@json?' + data,
             method: 'GET',
-            transformResponse: function (defaults) {
+            transformResponse: function(defaults) {
               try {
                 return JSON.parse(defaults);
               }
-              catch(e) {
+              catch (e) {
                 return defaults;
               }
             }
@@ -143,11 +143,11 @@
           return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
                   'application/x-www-form-urlencoded'},
-            transformResponse: function (defaults) {
+            transformResponse: function(defaults) {
               try {
                 return JSON.parse(defaults);
               }
-              catch(e) {
+              catch (e) {
                 return defaults;
               }
             }
@@ -570,9 +570,9 @@
         var groupId;
 
         var key = types.join('|');
-        if(angular.isNumber(types[0])) {
+        if (angular.isNumber(types[0])) {
           groupId = types[0];
-          types.splice(0,1);
+          types.splice(0, 1);
         }
         if (this.linksCache[key]) {
           return this.linksCache[key];

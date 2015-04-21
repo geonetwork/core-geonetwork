@@ -44,6 +44,7 @@ import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.eclipse.jetty.io.EofException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
@@ -59,7 +60,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.ByteArrayOutputStream;
@@ -92,13 +92,10 @@ public class ServiceManager {
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String, String> startupErrors;
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
+
+
     @PersistenceContext
     private EntityManager entityManager;
-    @Autowired
-    private GeonetworkDataDirectory dataDir;
-
 
     //---------------------------------------------------------------------------
     //---
@@ -169,7 +166,7 @@ public class ServiceManager {
         String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
         String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
 
-        ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
+        ServiceInfo si = ApplicationContextHolder.get().getBean(ServiceInfo.class);
         si.setMatch(match);
         si.setSheet(sheet);
         si.setCache(cache);
@@ -275,11 +272,12 @@ public class ServiceManager {
     //---------------------------------------------------------------------------
 
     private GuiService getGuiService(String pack, Element elem) throws Exception {
+        final GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         if (ConfigFile.Output.Child.XML.equals(elem.getName()))
             return new XmlFile(elem, defaultLang, defaultLocal);
 
         if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
-            return new Call(elem, pack, dataDir.getWebappDir());
+            return new Call(elem, pack, dataDirectory.getWebappDir());
 
         throw new IllegalArgumentException("Unknown GUI element : " + Xml.getString(elem));
     }
@@ -353,8 +351,7 @@ public class ServiceManager {
     }
 
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
-        ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
-                entityManager);
+        ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage(lang);
@@ -382,7 +379,7 @@ public class ServiceManager {
     }
 
     public void dispatch(ServiceRequest req, UserSession session) {
-        ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext,
+        ServiceContext context = new ServiceContext(req.getService(), ApplicationContextHolder.get(),
                 htContexts, entityManager);
         dispatch(req, session, context);
     }
@@ -504,7 +501,7 @@ public class ServiceManager {
     }
 
     private MonitorManager getMonitorManager() {
-        return this.jeevesApplicationContext.getBean(MonitorManager.class);
+        return ApplicationContextHolder.get().getBean(MonitorManager.class);
     }
 
     //---------------------------------------------------------------------------
@@ -592,6 +589,7 @@ public class ServiceManager {
 
         //------------------------------------------------------------------------
         //--- write result to output page
+        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
 
         if (outPage == null) {
             //--- if there is no output page we output the xml result (if any)
@@ -646,7 +644,8 @@ public class ServiceManager {
                     //--- build the xml data for the XSL/FO translation
                     Path styleSheet = IO.toPath(outPage.getStyleSheet());
                     Element guiElem;
-                    TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
+                    TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class)
+                            .time();
                     try {
                         guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
                     } finally {
@@ -667,7 +666,7 @@ public class ServiceManager {
 
                     //--- do an XSL transformation
 
-                    styleSheet = dataDir.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
+                    styleSheet = dataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
                     if (!Files.exists(styleSheet))
                         error(" -> stylesheet not found on disk, aborting : " + styleSheet);
@@ -680,7 +679,7 @@ public class ServiceManager {
                             Path file;
                             try {
                                 //--- first we do the transformation
-                                file = Xml.transformFOP(this.dataDir.getUploadDir(), rootElem, styleSheet.toString());
+                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet.toString());
                             } finally {
                                 timerContext.stop();
                             }
@@ -771,7 +770,7 @@ public class ServiceManager {
                 } else {
                     //--- do an XSL transformation
 
-                    styleSheet = this.dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
+                    styleSheet = dataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
 
                     if (!Files.exists(styleSheet))
                         error("     -> stylesheet not found on disk, aborting : " + styleSheet);
@@ -865,7 +864,7 @@ public class ServiceManager {
         } else {
             //--- do an XSL transformation
 
-            styleSheet = dataDir.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
+            styleSheet = context.getBean(GeonetworkDataDirectory.class).resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
             info("     -> transforming with stylesheet : " + styleSheet);
 
@@ -978,7 +977,7 @@ public class ServiceManager {
     }
 
     public ProfileManager getProfileManager() {
-        return jeevesApplicationContext.getBean(ProfileManager.class);
+        return ApplicationContextHolder.get().getBean(ProfileManager.class);
     }
 
 }

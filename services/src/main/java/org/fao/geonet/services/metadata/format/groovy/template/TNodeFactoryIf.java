@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
 import org.fao.geonet.SystemInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 
@@ -18,18 +17,13 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
     public static final String IF = "if";
     public static final String ONLY_CHILDREN = "only-children";
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private SystemInfo info;
-
     public TNodeFactoryIf(SystemInfo info, TextContentParser contentParser) {
-        super(IF);
-        this.info = info;
+        super(IF, info);
         this.textContentParser = contentParser;
     }
 
     public TNodeFactoryIf() {
-        super(IF);
+        super(IF, null);
     }
 
     @Override
@@ -38,7 +32,6 @@ public class TNodeFactoryIf extends TNodeFactoryByAttName {
         final boolean onlyChildren = getBooleanAttribute(attributes, ONLY_CHILDREN, false);
 
         final AttributesFiltered attributesFiltered = new AttributesFiltered(attributes, IF, ONLY_CHILDREN);
-        return new TNodeIf(info, textContentParser, qName, attributesFiltered, value, onlyChildren);
+        return new TNodeIf(SystemInfo.getInfo(this.testingInfo), textContentParser, qName, attributesFiltered, value, onlyChildren);
     }
-
 }

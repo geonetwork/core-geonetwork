@@ -43,7 +43,9 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -70,10 +72,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
@@ -120,40 +120,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class Format extends AbstractFormatService implements ApplicationListener {
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
     public static final Set<String> FIELDS_TO_LOAD = Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
-    @Autowired
-    private ConfigurableApplicationContext springAppContext;
-
-
-    @Autowired
-    private CacheConfig cacheConfig;
-    @Autowired
-    private SettingManager settingManager;
-    @Autowired
-    private AccessManager accessManager;
-    @Autowired
-    private MetadataRepository metadataRepository;
-    @Autowired
-    private XmlSerializer xmlSerializer;
-    @Autowired
-    private XsltFormatter xsltFormatter;
-    @Autowired
-    private GroovyFormatter groovyFormatter;
-    @Autowired
-    private ServiceManager serviceManager;
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private SearchManager searchManager;
-    @Autowired
-    private GeonetworkDataDirectory geonetworkDataDirectory;
-    @Autowired
-    private GeonetHttpRequestFactory requestFactory;
-    @Autowired
-    private IsoLanguagesMapper isoLanguagesMapper;
-    @Autowired
-    private FormatterCache formatterCache;
-    @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -167,17 +133,20 @@ public class Format extends AbstractFormatService implements ApplicationListener
      */
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent) {
+        if (event instanceof GeonetworkDataDirectoryInitializedEvent) {
+            GeonetworkDataDirectoryInitializedEvent dataDirEvent = (GeonetworkDataDirectoryInitializedEvent) event;
             final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+            final GeonetworkDataDirectory geonetworkDataDirectory = dataDirEvent.getSource();
             final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
             final Path toDir = geonetworkDataDirectory.getFormatterDir();
             try {
                 copyNewerFilesToDataDir(fromDir, toDir);
-                final Set<String> schemas = this.schemaManager.getSchemas();
+                SchemaManager schemaManager = dataDirEvent.getApplicationContext().getBean(SchemaManager.class);
+                final Set<String> schemas = schemaManager.getSchemas();
                 for (String schema : schemas) {
                     final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
-                    final Path webappSchemaDir = this.geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
-                    final Path dataDirSchemaFormatterDir = this.schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+                    final Path webappSchemaDir = geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
+                    final Path dataDirSchemaFormatterDir = schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
                     copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
                 }
             } catch (IOException e) {
@@ -206,7 +175,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     @RequestMapping(value = "/{lang}/admin.format.clear")
     @ResponseBody
     public void clear() throws Exception {
-        this.formatterCache.clear();
+        FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
+        formatterCache.clear();
     }
 
     /**
@@ -240,30 +210,30 @@ public class Format extends AbstractFormatService implements ApplicationListener
             throw new IllegalArgumentException("Only one of metadata or url parameter must be declared.");
         }
 
-        if (metadata == null) {
-            metadata = getXmlFromUrl(lang, url, request);
-        }
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
+        final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+        if (metadata == null) {
+            metadata = getXmlFromUrl(context, lang, url, request);
+        }
         Element metadataEl = Xml.loadString(metadata, false);
         Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
         metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
 
-        final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid, width,
                 request, context, metadataEl, metadataInfo);
         final String formattedMetadata = result.one().format(result.two());
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
-        writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+        writeOutResponse(context, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
-    private String getXmlFromUrl(String lang, String url, WebRequest request) throws IOException, URISyntaxException {
+    private String getXmlFromUrl(ServiceContext context, String lang, String url, WebRequest request) throws IOException, URISyntaxException {
         String adjustedUrl = url;
         if (!url.startsWith("http")) {
-            adjustedUrl = settingManager.getSiteURL(lang) + url;
+            adjustedUrl = context.getBean(SettingManager.class).getSiteURL(lang) + url;
         } else {
             final URI uri = new URI(url);
-            Set allowedRemoteHosts = springAppContext.getBean("formatterRemoteFormatAllowedHosts", Set.class);
+            Set allowedRemoteHosts = context.getApplicationContext().getBean("formatterRemoteFormatAllowedHosts", Set.class);
             Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
         }
 
@@ -276,6 +246,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
                 getXmlRequest.addHeader(headerName, header);
             }
         }
+
+        GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
         if (execute.getRawStatusCode() != 200) {
             throw new IllegalArgumentException("Request did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
@@ -297,9 +269,11 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(value = "xsl", required = false) final String xslid) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
+        FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
+
         String resolvedId = resolveId(id);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, true, FormatterWidth._100);
-        byte[] bytes = this.formatterCache.getPublished(key);
+        byte[] bytes = formatterCache.getPublished(key);
 
         if (bytes != null) {
             return new HttpEntity<>(bytes);
@@ -337,19 +311,20 @@ public class Format extends AbstractFormatService implements ApplicationListener
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
-        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) || !accessManager.canEdit(context, resolvedId);
+        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
+                                     !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
-        ISODate changeDate = searchManager.getDocChangeDate(resolvedId);
+        ISODate changeDate = context.getBean(SearchManager.class).getDocChangeDate(resolvedId);
 
         Validator validator;
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(roundedChangeDate) && cacheConfig.allowCaching(key)) {
+            if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool) {
-                    this.dataManager.increasePopularity(context, resolvedId);
+                    context.getBean(DataManager.class).increasePopularity(context, resolvedId);
                 }
                 return;
             }
@@ -371,24 +346,24 @@ public class Format extends AbstractFormatService implements ApplicationListener
             // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
             bytes = formatMetadata.call().data;
         } else {
-            bytes = this.formatterCache.get(key, validator, formatMetadata, false);
+            bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {
             if (!skipPopularityBool) {
-                this.dataManager.increasePopularity(context, resolvedId);
+                context.getBean(DataManager.class).increasePopularity(context, resolvedId);
             }
 
-            writeOutResponse(lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+            writeOutResponse(context, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
-    private void writeOutResponse(String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
+    private void writeOutResponse(ServiceContext context, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
         response.setContentType(formatType.contentType);
         String filename = "metadata." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
         if (formatType == FormatType.pdf) {
-            writerAsPDF(response, formattedMetadata, lang);
+            writerAsPDF(context, response, formattedMetadata, lang);
         } else {
             response.setCharacterEncoding(Constants.ENCODING);
             response.setContentType("text/html");
@@ -410,12 +385,12 @@ public class Format extends AbstractFormatService implements ApplicationListener
     }
 
 
-    private void writerAsPDF(HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.itextpdf.text.DocumentException {
+    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.itextpdf.text.DocumentException {
         final String htmlContent = new String(bytes, Constants.CHARSET);
         try {
             XslUtil.setNoScript();
             ITextRenderer renderer = new ITextRenderer();
-            String siteUrl = this.settingManager.getSiteURL(lang);
+            String siteUrl = context.getBean(SettingManager.class).getSiteURL(lang);
             renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
                     .getReplacedElementFactory()));
             renderer.getSharedContext().setDotsPerPixel(13);
@@ -438,7 +413,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     }
 
     private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
-        return this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+        final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
+        return serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
     }
 
     private Pair<FormatterImpl, FormatterParams> createFormatterAndParams(String lang, FormatType type, String xslid,
@@ -450,8 +426,9 @@ public class Format extends AbstractFormatService implements ApplicationListener
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {
-            schemaDir = schemaManager.getSchemaDir(schema);
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
         }
+        GeonetworkDataDirectory geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
 
         ConfigFile config = new ConfigFile(formatDir, true, schemaDir);
@@ -470,7 +447,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         fparams.schema = schema;
         fparams.schemaDir = schemaDir;
         fparams.formatType = type;
-        fparams.url = settingManager.getSiteURL(lang);
+        fparams.url = context.getBean(SettingManager.class).getSiteURL(lang);
         fparams.metadataInfo = metadataInfo;
         fparams.width = width;
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
@@ -480,10 +457,10 @@ public class Format extends AbstractFormatService implements ApplicationListener
         FormatterImpl formatter;
         if (Files.exists(viewXslFile)) {
             fparams.viewFile = viewXslFile.toRealPath();
-            formatter = this.xsltFormatter;
+            formatter = context.getBean(XsltFormatter.class);
         } else if (Files.exists(viewGroovyFile)) {
             fparams.viewFile = viewGroovyFile.toRealPath();
-            formatter = this.groovyFormatter;
+            formatter = context.getBean(GroovyFormatter.class);
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
         }
@@ -513,8 +490,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     public Pair<Element, Metadata> getMetadata(ServiceContext context, int id,
                                                Boolean hide_withheld) throws Exception {
 
-        Metadata md = loadMetadata(this.metadataRepository, id);
-        Element metadata = xmlSerializer.removeHiddenElements(false, md);
+        Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
+        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md);
 
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
@@ -557,7 +534,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         }
         return translations;
     }
-    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir) throws Exception {
+    public synchronized Element getPluginLocResources(final ServiceContext context, Path formatDir) throws Exception {
         final String formatDirPath = formatDir.toString();
         Element allLangResources = this.pluginLocs.get(formatDirPath);
         if (isDevMode(context) || allLangResources == null) {
@@ -592,6 +569,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
                             try {
                                 final String fileName = getNameWithoutExtension(file.getFileName().toString());
                                 final String[] nameParts = fileName.split("-", 2);
+                                IsoLanguagesMapper isoLanguagesMapper = context.getBean(IsoLanguagesMapper.class);
                                 String lang = isoLanguagesMapper.iso639_1_to_iso639_2(nameParts[0].toLowerCase(), nameParts[0]);
                                 final JSONObject json = new JSONObject(new String(Files.readAllBytes(file), Constants.CHARSET));
                                 Element fileElements = new Element(nameParts[1]);
@@ -635,9 +613,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
-    public void setIsoLanguagesMapper(IsoLanguagesMapper isoLanguagesMapper) {
-        this.isoLanguagesMapper = isoLanguagesMapper;
-    }
     private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
@@ -651,7 +626,6 @@ public class Format extends AbstractFormatService implements ApplicationListener
 
         @Override
         public StoreInfoAndDataLoadResult call() throws Exception {
-            ApplicationContextHolder.set(springAppContext);
             serviceContext.setAsThreadLocal();
 
             Pair<FormatterImpl, FormatterParams> result =
@@ -663,7 +637,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
-            final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished));
+            final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
             final boolean isPublishedMd = one != null;
 
             Key withheldKey = null;

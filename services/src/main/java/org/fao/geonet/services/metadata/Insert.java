@@ -108,14 +108,17 @@ public class Insert extends NotInReadOnlyModeService {
         if (validate) DataManager.validateMetadata(schema, xml, context);
 
         //-----------------------------------------------------------------------
-        //--- if the uuid does not exist and is not a template we generate it
-
+        //--- if the uuid does not exist we generate it for metadata and templates
         String uuid;
-        if (metadataType == MetadataType.METADATA) {
+        if (metadataType == MetadataType.SUB_TEMPLATE) {
+            uuid = UUID.randomUUID().toString();
+        } else {
             uuid = dataMan.extractUUID(schema, xml);
-            if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
-        } else uuid = UUID.randomUUID().toString();
-
+            if (uuid.length() == 0) {
+                uuid = UUID.randomUUID().toString();
+                xml = dataMan.setUUID(schema, uuid, xml);
+            }
+        }
         String uuidAction = Util.getParam(params, Params.UUID_ACTION,
                 Params.NOTHING);
 

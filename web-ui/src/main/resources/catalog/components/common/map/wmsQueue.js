@@ -10,7 +10,7 @@
    * This service have a queue array for pending layers, and errors array
    * for layer for which the getCapabilities failed
    */
-  module.service('gnWmsQueue',[ function() {
+  module.service('gnWmsQueue', [function() {
 
     // wms pending layers list
     var queue = [];
@@ -18,13 +18,14 @@
     // wms for which getCapabilities failed
     var errors = [];
 
+    this.queue = queue;
     this.errors = errors;
 
     var getLayerIndex = function(a, layer) {
       var idx = -1;
-      for(var i= 0;i<queue.length;i++) {
+      for (var i = 0; i < queue.length; i++) {
         var o = queue[i];
-        if(o.name == layer.name && o.url == layer.url) {
+        if (o.name == layer.name && o.url == layer.url) {
           idx = i;
         }
       }
@@ -59,7 +60,7 @@
      */
     this.error = function(layer) {
       this.removeFromQueue(layer);
-      if(getLayerIndex(errors, layer) < 0) {
+      if (getLayerIndex(errors, layer) < 0) {
         errors.push(layer);
       }
     };
@@ -73,7 +74,7 @@
      * @param {string} url
      * @param {string} name
      */
-    this.isPending= function(url, name) {
+    this.isPending = function(url, name) {
       var layer = {
         url: url,
         name: name

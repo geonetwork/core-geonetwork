@@ -1,12 +1,17 @@
 package org.fao.geonet.services.metadata.format.cache;
 
 import com.google.common.collect.Sets;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,6 +30,13 @@ import static org.junit.Assert.assertNull;
 public class FormatterCacheTest {
 
     private FormatterCache formatterCache;
+
+    @Before
+    public void setUp() throws Exception {
+        ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(SystemInfo.class)).thenReturn(SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION));
+    }
 
     @After
     public void tearDown() throws Exception {

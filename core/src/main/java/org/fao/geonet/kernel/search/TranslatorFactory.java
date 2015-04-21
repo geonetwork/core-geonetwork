@@ -22,21 +22,17 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.concurrent.Callable;
-
 import jeeves.JeevesCacheManager;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.concurrent.Callable;
+
 public class TranslatorFactory {
-    
-    private final ConfigurableApplicationContext context;
 
     public static final Translator IDENTITY_TRANSLATOR = new Translator() {
         private static final long serialVersionUID = 1L;
@@ -45,11 +41,6 @@ public class TranslatorFactory {
             return key;
         }
     };
-
-    @Autowired
-    public TranslatorFactory(ConfigurableApplicationContext context) {
-        this.context = context;
-    }
 
     public Translator getTranslator(String translatorString, final String langCode) {
         try {
@@ -79,6 +70,7 @@ public class TranslatorFactory {
         String type = parts[0];
         final String param = parts[1];
 
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         Translator translator;
         if (type.equals("codelist")) {
             translator = new CodeListTranslator(context.getBean(SchemaManager.class), langCode, param);

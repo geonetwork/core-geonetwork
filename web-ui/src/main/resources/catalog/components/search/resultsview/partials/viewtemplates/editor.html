@@ -1,7 +1,7 @@
 <table class="table">
   <tr data-ng-repeat="md in searchResults.records">
     <td>
-        <input data-gn-selection-md type="checkbox"
+      <input data-gn-selection-md type="checkbox"
                data-ng-model="md['geonet:info'].selected"
                data-ng-change="change()"/>
       <i class="fa text-muted" data-ng-class="'gn-recordtype-' + md.isTemplate"

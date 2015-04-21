@@ -98,14 +98,16 @@
           when('/import', {
             templateUrl: tplFolder + 'import.html',
             controller: 'GnImportController'}).
-          otherwise({
+          when('/board', {
             templateUrl: tplFolder + 'editorboard.html',
-            controller: 'GnEditorBoardController'
+            controller: 'GnEditorBoardController'}).
+          otherwise({
+            redirectTo: '/board'
           });
     }]);
 
   /**
-   * Metadata editor controller - draft
+   * Metadata editor controller
    */
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
@@ -345,29 +347,25 @@
           // the snippet returned contains the current field
           // and the newly created attributes.
           // Save to not lose current edits in main field.
-          gnEditor.save(false)
+          return gnEditor.save(false)
             .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
               });
         } else {
-          gnEditor.add(gnCurrentEdit.id, ref, name,
+          return gnEditor.add(gnCurrentEdit.id, ref, name,
               insertRef, position, attribute);
         }
-        return false;
       };
       $scope.addChoice = function(ref, name, insertRef, position) {
-        gnEditor.addChoice(gnCurrentEdit.id, ref, name,
+        return gnEditor.addChoice(gnCurrentEdit.id, ref, name,
             insertRef, position);
-        return false;
       };
       $scope.remove = function(ref, parent, domRef) {
-        gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
-        return false;
+        return gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
       };
       $scope.removeAttribute = function(ref) {
-        gnEditor.removeAttribute(gnCurrentEdit.id, ref);
-        return false;
+        return gnEditor.removeAttribute(gnCurrentEdit.id, ref);
       };
       $scope.switchTypeAndSave = function(refreshForm) {
         $scope.setTemplate(!$scope.isTemplate());

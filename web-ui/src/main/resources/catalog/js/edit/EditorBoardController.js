@@ -19,10 +19,11 @@
     '$q',
     'gnSearchSettings',
     'gnMetadataActions',
+    'gnGlobalSettings',
     function($scope, $location, $rootScope, $translate, $q,
-        gnSearchSettings, gnMetadataActions) {
+        gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
       $scope.onlyMyRecord = false;
-
+      $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,

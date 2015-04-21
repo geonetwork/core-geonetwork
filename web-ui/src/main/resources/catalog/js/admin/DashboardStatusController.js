@@ -116,6 +116,33 @@
         $scope.warninghealthcheck = data;
       });
 
+      // log activity
+      $scope.openLogActivity = function(leaveOpen) {
+        var logActivityEl = $('#logActivity');
+        if (!leaveOpen) {
+          logActivityEl.collapse('toggle');
+        }
+        $scope.logInfoLoading = true;
+        $http.get('log/activity').success(function(data) {
+          $scope.logInfoLoading = false;
+          $scope.logActivity = data;
+
+          if (!leaveOpen) {
+            $('html, body').animate({
+              scrollTop: $('#logActivityHeading').offset().top
+            }, 1000);
+          }
+
+          setTimeout(function() {
+            if (logActivityEl.hasClass('in')) {
+              $scope.openLogActivity(true);
+            }
+          }, 2000);
+        }).error(function() {
+          $scope.logInfoLoading = false;
+        });
+      };
+
       $scope.indexMessages = function(md) {
         if (angular.isArray(md.idxMsg)) {
           return md.idxMsg;

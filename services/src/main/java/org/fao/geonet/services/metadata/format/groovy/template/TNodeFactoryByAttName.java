@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy.template;
 
+import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
 /**
@@ -10,9 +11,11 @@ import org.xml.sax.Attributes;
  */
 public abstract class TNodeFactoryByAttName extends TNodeFactory {
     private final String applicableAtt;
+    protected final SystemInfo testingInfo;
 
-    protected TNodeFactoryByAttName(String applicableAtt) {
+    protected TNodeFactoryByAttName(String applicableAtt, SystemInfo testingInfo) {
         this.applicableAtt = applicableAtt;
+        this.testingInfo = testingInfo;
     }
 
     @Override

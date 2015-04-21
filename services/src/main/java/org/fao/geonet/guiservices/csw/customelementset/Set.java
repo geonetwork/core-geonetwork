@@ -22,12 +22,12 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.customelementset;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +43,6 @@ import java.util.List;
  */
 @Controller("admin.config.csw.customelementset.save")
 public class Set {
-    @Autowired
-    private CustomElementSetRepository customElementSetRepository;
-
     /**
      * Saves custom element sets.
      *
@@ -70,6 +67,7 @@ public class Set {
      * @throws Exception
      */
     private void saveCustomElementSets(List<String> xpathList) throws Exception {
+        CustomElementSetRepository customElementSetRepository = ApplicationContextHolder.get().getBean(CustomElementSetRepository.class);
         if (Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET)) {
             Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Arrays.toString(xpathList.toArray()));
         }

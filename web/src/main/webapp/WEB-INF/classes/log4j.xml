@@ -6,7 +6,7 @@
 
     <!-- Appender Configurations -->
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="INFO" />
+        <param name="Threshold" value="ALL" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
@@ -34,6 +34,9 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="geonetwork.search" additivity="true">
+        <level value="WARN" />
+    </logger>
+    <logger name="geonetwork.database">
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.editor">
@@ -192,7 +195,7 @@
         <level value="WARN" />
     </logger>
     <logger name="ro.isdc.wro.http" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="allConsoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>

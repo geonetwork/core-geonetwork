@@ -242,7 +242,8 @@
               vectorSource.forEachFeature(function(feature) {
                 var clone = feature.clone();
                 clone.setId(feature.getId());
-                //geoJson commonly uses wgs84 (view usually has spherical mercator)
+                // geoJson commonly uses wgs84
+                // (view usually has spherical mercator)
                 clone.getGeometry().transform(
                     map.getView().getProjection(), 'EPSG:4326');
                 features.push(clone);
@@ -253,8 +254,8 @@
               exportElement.href =
                   'data:application/vnd.geo+json;base64,' + base64;
             }
-          };    
-          
+          };
+
           var deleteF = new ol.interaction.Select();
           deleteF.getFeatures().on('add',
               function(evt) {
