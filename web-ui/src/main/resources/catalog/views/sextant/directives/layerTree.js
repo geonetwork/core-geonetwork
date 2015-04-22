@@ -126,11 +126,13 @@
 
           scope.layerFilter = '';
           var filterFn = function(layer) {
-            var labelLc = layer.get('label').toLowerCase();
-            var groupLc = layer.get('group').toLowerCase();
+            var labelLc = layer.get('label') && layer.get('label').
+                toLowerCase();
+            var groupLc = layer.get('group') && layer.get('group').
+                toLowerCase();
             var filterLc = scope.layerFilter.toLowerCase();
-            return labelLc.indexOf(filterLc) >= 0 ||
-                groupLc.indexOf(filterLc) >= 0;
+            return (labelLc && labelLc.indexOf(filterLc)) >= 0 ||
+                (groupLc && groupLc.indexOf(filterLc) >= 0);
           };
 
           scope.filterLayers = function() {
