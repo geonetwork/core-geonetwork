@@ -219,6 +219,9 @@
         }
       };
 
+      // Manage tabs height for api
+      $scope.tabFullHeight = gnSearchSettings.tabFullHeight;
+
       angular.extend($scope.searchObj, {
         advancedMode: false,
         viewerMap: viewerMap,
