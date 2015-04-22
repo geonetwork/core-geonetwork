@@ -363,6 +363,8 @@
     "chooseOrDropResource": "Sélectionner un fichier",
     "harvestedRecordPrivileges": "Privilèges pour les fiches moissonnées",
     "harvester": "noeuds distants",
+    "harvesterSetting": "Configuration",
+    "harvesterReport": "Rapport",
     "harvester-arcsde": "ESRI ArcSDE",
     "harvester-arcsdeHelp": "Moissonnage des métadonnées enregistrées depuis une base de données ArcSDE.",
     "harvester-csw": "Catalogue CSW",
