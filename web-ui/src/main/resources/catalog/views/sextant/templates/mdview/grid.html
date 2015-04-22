@@ -5,7 +5,7 @@
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
 
-      <div class="gn-grid-item" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
+      <div class="gn-grid-item">
 
 
           <!--Edit button-->
@@ -13,8 +13,8 @@
           <!--   <i class="fa fa-pencil"></i> -->
           <!-- </a> -->
 
-          <h4 class="row gn-md-title">
-            <a  href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md" title="{{md.title || md.defaultTitle}}">
+          <h4 class="row gn-md-title" title="{{md.title || md.defaultTitle}}">
+            <a  href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md">
               <!--Icon for types - usually only one-->
               <span data-ng-if="md.type.indexOf('dataset')>=0"
                 class="fa fa-database"
@@ -38,7 +38,7 @@
           </h4>
 
 
-          <div class="gn-md-details">
+          <div class="gn-md-details" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
 
             <!-- Thumbnail -->
             <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small }">
@@ -69,7 +69,7 @@
         <div class="gn-md-links">
 
           <div class="btn-group pull-right" ng-if="links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Liens">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
               <span class="fa fa-link"></span>
               <span class="caret"></span>
             </button>
@@ -80,31 +80,31 @@
           </div>
 
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Télécharger">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}">
               <span class="fa fa-download"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="link in downloads">
-                <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)">
+                <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc}}">
                   <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
                   {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="Télécharger">
+                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="{{'download' | translate}}">
             <span class="fa fa-download"></span>
           </button>
 
 
           <!--Layers to map button-->
           <div class="btn-group pull-right" ng-if="layers.length > 1 ">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Visualiser">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}">
               <span class="fa fa-globe"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)">
+              <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc}}">
                 <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
                 <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
                 {{layer.desc}} </a></li>
@@ -113,13 +113,13 @@
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
-                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="Visualiser">
+                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="{{'view' | translate}}">
             <span class="fa fa-globe"></span>
           </button>
 
           <!--admin button-->
           <div class="btn-group pull-right md-actions" ng-if="user.canEditRecord(md)">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="Administrer">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'admin' | translate}}">
               <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>
