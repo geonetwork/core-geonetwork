@@ -61,7 +61,7 @@
 
       <div class="sx-md-footer">
 
-        <div class="gn-md-relations">
+        <div class="gn-md-relations" ng-if="md.type == 'series'">
           <div gn-related="{{md.getUuid()}}" types="parent|children"
                template="../../catalog/views/sextant/templates/related.html"></div>
          </div>
