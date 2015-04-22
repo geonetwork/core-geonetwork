@@ -226,7 +226,8 @@
         advancedMode: false,
         viewerMap: viewerMap,
         searchMap: searchMap,
-        panier: []
+        panier: [],
+        hiddenParams: gnSearchSettings.hiddenParams
       });
     }]);
 

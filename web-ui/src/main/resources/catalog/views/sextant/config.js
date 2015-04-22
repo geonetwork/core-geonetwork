@@ -273,11 +273,22 @@
         maxExtent: [-2499215.9244278017, 4985853.6451996025,
           829769.5314481944, 7243497.712630568],
         configWho: ''
+        //configWho: 'IFREMER'
       };
 
-      var configWhat = sxtSettings.configWhat.replace(/,/, ' or ');
-      searchSettings.hiddenParams = {
-        _groupPublished: configWhat
-      };
+      searchSettings.hiddenParams = {};
+      searchSettings.configWho = searchSettings.configWho || '';
+      if(searchSettings.configWho) {
+        angular.extend(searchSettings.hiddenParams, {
+          orgName: searchSettings.configWho.replace(/,/, ' or ')
+        })
+      }
+
+      searchSettings.configWhat = searchSettings.configWhat || '';
+      if(searchSettings.configWhat) {
+        angular.extend(searchSettings.hiddenParams, {
+          _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
+        })
+      }
     }]);
 })();
