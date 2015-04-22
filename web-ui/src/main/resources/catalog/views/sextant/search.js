@@ -69,7 +69,17 @@
         $location.path('/panier');
       };
 
+      var unregisterMapsize = $scope.$on('locationBackToSearch', function() {
+        if (angular.isUndefined(searchMap.getSize()) ||
+            searchMap.getSize()[0] == 0 ||
+            searchMap.getSize()[1] == 0) {
+          $timeout(function() {searchMap.updateSize()}, 100);
+        }
+        unregisterMapsize();
+      });
+
       $scope.locService = gnSearchLocation;
+
 
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
