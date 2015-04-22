@@ -11,9 +11,9 @@ import com.fasterxml.jackson.xml.annotate.JacksonXmlRootElement;
 @JacksonXmlRootElement(localName = "user")
 public class UserSpec {
 
-	private String lastname;
-	private String firstname;
-	private String mail;
+	private String lastname = "";
+	private String firstname = "";
+	private String mail = "";
 
 	public UserSpec () {}
 

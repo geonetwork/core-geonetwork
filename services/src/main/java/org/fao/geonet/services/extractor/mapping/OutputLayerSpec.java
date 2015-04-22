@@ -11,15 +11,15 @@ import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
 public class OutputLayerSpec {
 
 	@JacksonXmlProperty(isAttribute = true)
-	private String format;
+	private String format = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String name;
+	private String name = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String epsg;
+	private String epsg = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String xmin, ymin, xmax, ymax;
+	private String xmin = "", ymin = "", xmax = "", ymax = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String mercator_lat;
+	private String mercator_lat = "";
 
 	public OutputLayerSpec() {}
 	

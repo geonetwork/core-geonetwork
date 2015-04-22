@@ -10,13 +10,13 @@ import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputLayerSpec {
 	@JacksonXmlProperty(isAttribute = true)
-	private String format;
+	private String format = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String epsg;
+	private String epsg = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String protocol;
+	private String protocol = "";
 	@JacksonXmlProperty(isAttribute = true)
-	private String linkage;
+	private String linkage = "";
 
 	public InputLayerSpec() {};
 	

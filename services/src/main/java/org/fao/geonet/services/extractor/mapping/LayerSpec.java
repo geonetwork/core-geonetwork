@@ -14,7 +14,7 @@ import com.fasterxml.jackson.xml.annotate.JacksonXmlRootElement;
 public class LayerSpec {
 
 	@JacksonXmlProperty(isAttribute = true)
-	private String id;
+	private String id = "";
 	private InputLayerSpec input;
 	private OutputLayerSpec output;
 	
