@@ -23,8 +23,8 @@
 
     var getLayerIndex = function(a, layer) {
       var idx = -1;
-      for (var i = 0; i < queue.length; i++) {
-        var o = queue[i];
+      for (var i = 0; i < a.length; i++) {
+        var o = a[i];
         if (o.name == layer.name && o.url == layer.url) {
           idx = i;
         }
