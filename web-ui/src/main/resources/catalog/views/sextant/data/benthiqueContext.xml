@@ -1,0 +1,156 @@
+<ows-context:OWSContext xmlns:ows-context="http://www.opengis.net/ows-context"
+                        version="0.3.1" id="ows-context-ex-1-v3">
+  <ows-context:General>
+    <ows:BoundingBox xmlns:ows="http://www.opengis.net/ows" crs="EPSG:3857">
+      <ows:LowerCorner>-38470450.587816074 -17200165.8528435</ows:LowerCorner>
+      <ows:UpperCorner>36670205.69764359 20722384.116224423</ows:UpperCorner>
+    </ows:BoundingBox>
+  </ows-context:General>
+  <ows-context:ResourceList>
+    <ows-context:Layer name="{type=bing_aerial}" group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Bing Aerial</ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=osm}" group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">OpenStreetMap
+      </ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=mapquest}" group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">MapQuest</ows:Title>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=wmts,name=web_mercator_etopo1_hillshade}"
+                       group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Etopo1</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=wmts,name=emodnet:mean_multicolour}"
+                       group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Emodnet MNT</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://ows.emodnet-bathymetry.eu/gwc/service/wmts?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=wmts,name=sextant}" group="Background layers"
+                       hidden="false" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Sextant</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="{type=wmts,name=Ocean_Basemap}"
+                       group="Background layers"
+                       hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Base Map</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://server.arcgisonline.com/arcgis/rest/services/Ocean_Basemap/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_1069 LIOCDEP Abondance"
+                       group="/Especes/Arthropoda/Malacostraca/Decapoda"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Liocarcinus depurator
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_6804 FUNIQUA Abondance"
+                       group="/Especes/Cnidaria/Anthozoa/Pennatulacea"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Funiculina
+        quadrangularis
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_3006 PRTOGRI Abondance"
+                       group="/Especes/Cnidaria/Anthozoa/Pennatulacea"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Pteroeides griseum
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_134 PENNPHO Abondance"
+                       group="/Especes/Cnidaria/Anthozoa/Pennatulacea"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Pennatula phosphorea
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_1145 ANSEPLA Abondance"
+                       group="/Especes/Echinodermata/Asteroidea/Valvatida"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Anseropoda placenta
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_1070 LIOCHOL Abondance"
+                       group="/Especes/Arthropoda/Malacostraca/Decapoda"
+                       groupcombo="species" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Liocarcinus holsatus
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+
+
+
+    <ows-context:Layer name="CPERM_1145 ANSEPLA Abondance"
+                       group="/Especes2/Echinodermata/Asteroidea/Valvatida"
+                       groupcombo="species2" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Anseropoda placenta
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+    <ows-context:Layer name="CPERM_1070 LIOCHOL Abondance"
+                       group="/Especes2/Arthropoda/Malacostraca/Decapoda"
+                       groupcombo="species2" hidden="true" opacity="1">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Liocarcinus holsatus
+      </ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource
+                xlink:href="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wms/atlas_benthos?"
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </ows-context:Server>
+    </ows-context:Layer>
+
+  </ows-context:ResourceList>
+</ows-context:OWSContext>
