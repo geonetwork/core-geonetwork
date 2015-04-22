@@ -571,7 +571,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         }
         // missing typeNames element
         else {
-            return cswPrefix + ":Record";
+            throw new MissingParameterValueEx("typeNames","Attribute 'typeNames' is missing. Add typeNames=\"gmd:MD_Metadata\" to Query Element.");
         }
     }
 
