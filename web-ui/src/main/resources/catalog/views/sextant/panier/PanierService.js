@@ -12,11 +12,12 @@
       var panierUrl = 'extractor.doExtract';
 
       var callExtractService = function(panier) {
+        console.log(panier);
         $http({
           url: panierUrl,
           method: 'POST',
-          data: panierUrl,
-          headers: {'Content-Type': 'application/xml'}
+          data: panier,
+          headers: {'Content-Type': 'application/json'}
         }).then(function(data) {
 
         });

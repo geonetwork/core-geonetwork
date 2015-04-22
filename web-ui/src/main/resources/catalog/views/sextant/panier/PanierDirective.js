@@ -28,7 +28,15 @@
         }],
         link: function(scope, element, attrs, controller) {
 
-          scope.formObj = [];
+          scope.formObj = {
+            user: {
+              lastname: scope.user.name,
+              firstname: scope.user.surname,
+              mail: angular.isArray(scope.user.email) && scope.user.email[0],
+              organisation: scope.user.organisation
+            },
+            layers: []
+          };
           scope.extract = function() {
             sxtPanierService.extract(scope.formObj);
             //scope.panier = [];
@@ -138,11 +146,12 @@
             },
             post: function preLink(scope, iElement, iAttrs, controller) {
 
-              scope.formObj.push(scope.form);
+              scope.formObj.layers.push(scope.form);
 
               scope.del = function(md, form) {
                 controller.del(md);
-                scope.formObj.splice(scope.formObj.indexOf(form), 1);
+                scope.formObj.layers.splice(
+                    scope.formObj.layers.indexOf(form), 1);
               };
 
               var format = new ol.format.WKT();
@@ -152,10 +161,11 @@
                     var g = format.readGeometry(n);
                     var e = g.getExtent();
                     angular.extend(scope.form.output, {
-                      xmin: e[0],
-                      ymin: e[1],
-                      xmax: e[2],
-                      ymax: e[3]
+                      xmin: e[0].toString(),
+                      ymin: e[1].toString(),
+                      xmax: e[2].toString(),
+                      ymax: e[3].toString(),
+                      mercator_lat: ''
                     })
                   }
                   catch(e) {}
