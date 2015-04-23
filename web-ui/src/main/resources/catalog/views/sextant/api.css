@@ -10363,7 +10363,7 @@
 .gn [sxt-main-viewer] .sxt-layers-tabset .tab-content {
   background: white;
   padding-top: .6em;
-  height: calc(100% - 4em);
+  height: calc(100% - 3.2em);
   overflow-y: scroll;
 }
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layers-tabset {
@@ -10870,6 +10870,8 @@
 }
 .gn .sxt-map-btn {
   right: 0;
+  top: 0;
+  bottom: 0;
 }
 .gn .sxt-map-btn span {
   bottom: 51%;
@@ -10893,7 +10895,7 @@
 }
 .gn .row.hfull {
   height: calc(100% - 2em);
-  margin: 1em 0 0 ;
+  padding: 1em 0 0 ;
 }
 .gn .expander {
   position: absolute;
@@ -11430,10 +11432,9 @@
   height: 50%;
 }
 .gn [sxt-main-viewer] .sxt-layertree {
-  max-height: calc(100% - 4em);
-  height: calc(100% - 4em);
+  max-height: calc(100% - 4.1em);
+  height: calc(100% - 4.1em);
   overflow-y: auto;
-  margin-bottom: .6em;
 }
 .gn [sxt-main-viewer] .layers-tools {
   position: absolute;
