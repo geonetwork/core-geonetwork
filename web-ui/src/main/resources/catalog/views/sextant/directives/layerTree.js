@@ -17,8 +17,8 @@
           var $this = this;
 
           this.setNCWMS = function(layer) {
-            $scope.active.layersTools = false;
             $scope.active.NCWMS = layer;
+            $scope.layerTabSelect('ncwms');
           };
 
           this.comboGroups = {};

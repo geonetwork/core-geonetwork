@@ -56,6 +56,21 @@
               };
               scope.locService = gnSearchLocation;
 
+              var activeTab = null;
+              scope.layerTabSelect = function(tab) {
+                if (!scope.active.layersTools) {
+                  scope.active.layersTools = true;
+                  scope.layerTabs[tab].active = true;
+                  activeTab = tab;
+                } else if (tab == activeTab) {
+                  //disable others
+                  scope.active.layersTools = false;
+                }
+                  //disable others
+                scope.layerTabs[tab].active = true;
+                activeTab = tab;
+              };
+
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 
@@ -149,26 +164,6 @@
             } else if (document.webkitCancelFullScreen) {
               document.webkitCancelFullScreen();
             }
-          }
-        });
-      }
-    }
-  }]);
-
-  module.directive('sxtLayersTools', [ function() {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        element.find('.flux button').on('click', function(e) {
-          var active = $(this).hasClass('active');
-          var elem = $(this);
-          scope.$apply(function(){
-            scope.active.NCWMS = null;
-            scope.active.layersTools = !active;
-          });
-          if (active) {
-            elem.removeClass('active');
-            e.stopImmediatePropagation();
           }
         });
       }
