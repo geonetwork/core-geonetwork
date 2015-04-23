@@ -97,7 +97,7 @@
             if (o.name == f['@name']) {
               f['@label'] = o.label[lang];
             }
-            f['name'] = f['@name'];
+            f['name'] = f['@label'] || f['@name'];
           }
         });
       };
@@ -154,6 +154,9 @@
                           if (scope.facetConfig.label == 'publishedForGroup') {
                             updateLabelFromInfo(facets, groups, scope.lang);
                             facets = $filter('orderBy')(facets, 'name');
+                            facets = $filter('filter')(facets, function(i) {
+                              return i.name != 'INTERNET';
+                            });
 
                           }
                           scope.facetObj = facets;
