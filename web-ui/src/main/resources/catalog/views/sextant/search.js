@@ -62,6 +62,7 @@
 
       var localStorage = $window.localStorage || {};
 
+
       // Manage routing
       if (!$location.path()) {
         gnSearchLocation.setSearch();
@@ -74,6 +75,10 @@
         $location.path('/panier');
       };
 
+      $scope.locService = gnSearchLocation;
+
+
+      // make sure search map is correctly rendered
       var unregisterMapsize = $scope.$on('locationBackToSearch', function() {
         if (angular.isUndefined(searchMap.getSize()) ||
             searchMap.getSize()[0] == 0 ||
@@ -82,8 +87,6 @@
         }
         unregisterMapsize();
       });
-
-      $scope.locService = gnSearchLocation;
 
 
       // Manage the collapsed search panel
@@ -103,20 +106,36 @@
       };
       $scope.$watch('collapsed.search', storeCollapsed);
 
-      $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
-        gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
-      });
+      var mapVisited = false; // Been once in mapviewer
+      var waitingLayers = []; // Layers added from catalog but not visited yet
 
       $scope.displayMapTab = function() {
+
+        // Make sure viewer map is correctly rendered
         if (angular.isUndefined(viewerMap.getSize()) ||
             viewerMap.getSize()[0] == 0 ||
             viewerMap.getSize()[1] == 0) {
           $timeout(function() {
             viewerMap.updateSize();
+/*
             if (gnViewerSettings.initialExtent) {
               viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
                   viewerMap.getSize());
             }
+*/
+            // Zoom to last added layer on first visit to viewer map
+            if(!mapVisited) {
+              var extent = ol.extent.createEmpty();
+              for(var i=0;i<waitingLayers.length;++i) {
+                ol.extent.extend(extent, waitingLayers[i].get('cextent'));
+              }
+              if (!ol.extent.isEmpty(extent)) {
+                viewerMap.getView().fitExtent(extent, viewerMap.getSize());
+              }
+              mapVisited = true;
+            }
+            waitingLayers = [];
+
           }, 0);
         }
         $scope.mainTabs.map.titleInfo = 0;
@@ -205,6 +224,7 @@
                     'WFS', 'WCS', 'COPYFILE');
 
                 layer.set('downloads', downloads);
+                waitingLayers.push(layer);
               });
           $scope.mainTabs.map.titleInfo += 1;
 
