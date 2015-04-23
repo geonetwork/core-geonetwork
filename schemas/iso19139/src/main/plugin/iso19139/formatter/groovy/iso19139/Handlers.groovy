@@ -457,6 +457,7 @@ public class Handlers {
                     el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
                 def replacements = bbox(thumbnail, el)
                 replacements['label'] = f.nodeLabel(el)
+                replacements['gnUrl'] = env.getLocalizedUrl();
                 //replacements['pdfOutput'] = env.formatType == FormatType.pdf
 
                 handlers.fileResult("html/sxt-bbox.html", replacements)
