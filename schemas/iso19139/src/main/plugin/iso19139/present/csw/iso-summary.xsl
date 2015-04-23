@@ -21,6 +21,7 @@
 			<xsl:apply-templates select="gmd:parentIdentifier"/>
 			<xsl:apply-templates select="gmd:hierarchyLevel"/>
 			<xsl:apply-templates select="gmd:hierarchyLevelName"/>
+			<gmd:contact />
 			<xsl:apply-templates select="gmd:dateStamp"/>
 			<xsl:apply-templates select="gmd:metadataStandardName"/>
 			<xsl:apply-templates select="gmd:metadataStandardVersion"/>
@@ -87,6 +88,7 @@
 
 	<xsl:template match="gmd:DQ_DataQuality">
 		<xsl:copy>
+		    <gmd:scope/>
 			<xsl:apply-templates select="gmd:lineage"/>
 		</xsl:copy>
 	</xsl:template>
@@ -102,8 +104,8 @@
 	<xsl:template match="gmd:EX_GeographicBoundingBox">
 		<xsl:copy>
 			<xsl:apply-templates select="gmd:westBoundLongitude"/>
-			<xsl:apply-templates select="gmd:southBoundLatitude"/>
 			<xsl:apply-templates select="gmd:eastBoundLongitude"/>
+			<xsl:apply-templates select="gmd:southBoundLatitude"/>
 			<xsl:apply-templates select="gmd:northBoundLatitude"/>
 		</xsl:copy>
 	</xsl:template>
@@ -139,12 +141,17 @@
 	<!-- =================================================================== -->
 
 	<xsl:template match="gmd:MD_DataIdentification
-		|*[contains(@gco:isoType, 'MD_DataIdentification')]">
+		|*[contains(@gco:isoType, 'MD_DataIdentification')]|*[contains(@gco:isoType, 'CI_Date')]">
 		<xsl:copy>
-			<xsl:apply-templates select="gmd:citation"/>
+			<gmd:citation>
+            <gmd:CI_Citation>
+                <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:title"/>
+                <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:date"/>
+            </gmd:CI_Citation>
+            </gmd:citation>
 			<xsl:apply-templates select="gmd:abstract"/>
-			<xsl:apply-templates select="gmd:graphicOverview"/>
 			<xsl:apply-templates select="gmd:pointOfContact"/>
+			<xsl:apply-templates select="gmd:graphicOverview"/>
 			<xsl:apply-templates select="gmd:resourceConstraints"/>
 			<xsl:apply-templates select="gmd:spatialRepresentationType"/>
 			<xsl:apply-templates select="gmd:spatialResolution"/>
@@ -161,12 +168,17 @@
 	<!-- =================================================================== -->
 
 	<xsl:template match="srv:SV_ServiceIdentification|
-		*[contains(@gco:isoType, 'SV_ServiceIdentification')]">
+		*[contains(@gco:isoType, 'SV_ServiceIdentification')]|*[contains(@gco:isoType, 'CI_Date')]">
 		<xsl:copy>
-			<xsl:apply-templates select="gmd:citation"/>
+			<gmd:citation>
+            <gmd:CI_Citation>
+                <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:title"/>
+                <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:date"/>
+            </gmd:CI_Citation>
+            </gmd:citation>
 			<xsl:apply-templates select="gmd:abstract"/>
-			<xsl:apply-templates select="gmd:graphicOverview"/>
 			<xsl:apply-templates select="gmd:pointOfContact"/>
+			<xsl:apply-templates select="gmd:graphicOverview"/>
 			<xsl:apply-templates select="gmd:resourceConstraints"/>
 			<xsl:apply-templates select="srv:serviceType"/>
 			<xsl:apply-templates select="srv:serviceTypeVersion"/>

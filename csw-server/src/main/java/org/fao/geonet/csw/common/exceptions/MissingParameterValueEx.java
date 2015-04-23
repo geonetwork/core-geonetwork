@@ -43,12 +43,16 @@ public class MissingParameterValueEx extends CatalogException
 		super(MISSING_PARAMETER_VALUE, null, name);
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+
+	public MissingParameterValueEx(String name, String description) { super(MISSING_PARAMETER_VALUE, description, name); }
 
 	public MissingParameterValueEx(String name, CatalogException prev)
 	{
 		super(MISSING_PARAMETER_VALUE, null, name, prev);
 	}
+
+
 }
 
 //=============================================================================

@@ -86,6 +86,7 @@ public class LuceneQueryBuilder {
     private static final String FIELD_OR_SEPARATOR = "_OR_";
     private static final String FACET_QUERY_AND_SEPARATOR = "&";
     private static final String STRING_TOKENIZER_DELIMITER = " \n\r\t";
+    private final LuceneConfig luceneConfig;
     private Set<String> _tokenizedFieldSet;
     private PerFieldAnalyzerWrapper _analyzer;
     private Map<String, LuceneConfig.LuceneConfigNumericField> _numericFieldSet;
@@ -115,20 +116,17 @@ public class LuceneQueryBuilder {
     /**
      * TODO javadoc.
      *
-     * @param tokenizedFieldSet names of tokenized fields
-     * @param numericFieldSet names of numeric fields
+     * @param _tokenizedFieldSet
      * @param analyzer Lucene analyzer
      * @param langCode language of search terms
      */
-    public LuceneQueryBuilder(Set<String> tokenizedFieldSet,
-                              Map<String, LuceneConfig.LuceneConfigNumericField> numericFieldSet,
-                              FacetsConfig taxonomyConfiguration,
-                              PerFieldAnalyzerWrapper analyzer, String langCode) {
+    public LuceneQueryBuilder(LuceneConfig luceneConfig, Set<String> _tokenizedFieldSet, PerFieldAnalyzerWrapper analyzer, String langCode) {
         BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
         
-        _tokenizedFieldSet = tokenizedFieldSet;
-        _numericFieldSet = numericFieldSet;
-        _taxonomyConfiguration = taxonomyConfiguration;
+        this._tokenizedFieldSet = _tokenizedFieldSet;
+        _numericFieldSet = luceneConfig.getNumericFields();
+        _taxonomyConfiguration = luceneConfig.getTaxonomyConfiguration();
+        this.luceneConfig = luceneConfig;
         _analyzer = analyzer;
         _language = langCode;
     }
@@ -170,7 +168,7 @@ public class LuceneQueryBuilder {
         Set<String> processedRangeFields = new HashSet<String>();
 
         // top query to hold all sub-queries for each search parameter
-        BooleanQuery query = new BooleanQuery();
+         BooleanQuery query = new BooleanQuery();
 
         // Filter according to user session
         addPrivilegeQuery(luceneQueryInput, query);
@@ -712,11 +710,11 @@ public class LuceneQueryBuilder {
             analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
         }
 
-        query = constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, _tokenizedFieldSet);
+        query = constructQueryFromAnalyzedString(this.luceneConfig, string, luceneIndexField, similarity, query, analyzedString, _tokenizedFieldSet);
         return query;
     }
 
-    static Query constructQueryFromAnalyzedString(String string, String luceneIndexField, String similarity, Query query,
+    static Query constructQueryFromAnalyzedString(LuceneConfig luceneConfig, String string, String luceneIndexField, String similarity, Query query,
             String analyzedString, Set<String> tokenizedFieldSet) {
         if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
@@ -728,10 +726,10 @@ public class LuceneQueryBuilder {
                     BooleanQuery booleanQuery = new BooleanQuery();
                     query = booleanQuery;
                     for (String term : terms) {
-                        booleanQuery.add(createFuzzyOrTermQuery(luceneIndexField, similarity, term), Occur.MUST);
+                        booleanQuery.add(createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, term), Occur.MUST);
                     }
                 } else {
-                    query = createFuzzyOrTermQuery(luceneIndexField, similarity, analyzedString);
+                    query = createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, analyzedString);
                 }
             }
             // wildcards
@@ -742,9 +740,9 @@ public class LuceneQueryBuilder {
         return query;
     }
 
-    private static Query createFuzzyOrTermQuery(String luceneIndexField, String similarity, String analyzedString) {
+    private static Query createFuzzyOrTermQuery(LuceneConfig luceneConfig, String luceneIndexField, String similarity, String analyzedString) {
         Query query = null;
-        if (similarity != null) {
+        if (similarity != null && luceneConfig.applySimilarity(luceneIndexField)) {
             Float minimumSimilarity = Float.parseFloat(similarity);
             
             if (minimumSimilarity < 1) {

@@ -67,6 +67,7 @@ public class LuceneConfig {
 	private static final int DOC_BOOST_CLASS = 3;
 
 	private Path configurationFile;
+	private HashSet<String> fuzzyMatching;
 
 	/**
 	 * Lucene numeric field configuration
@@ -304,6 +305,24 @@ public class LuceneConfig {
 									"Tokenized element must have a name attribute, check Lucene configuration file.");
 						} else {
 							tokenizedFields.add(name);
+						}
+					}
+				}
+			}
+
+			// similarity fields
+			elem = luceneConfig.getChild("fuzzyMatching");
+			if (elem != null && "true".equalsIgnoreCase(elem.getAttributeValue("enabled"))) {
+				fuzzyMatching = new HashSet<String>();
+				for (Object o : elem.getChildren()) {
+					if (o instanceof Element) {
+						String name = ((Element) o).getAttributeValue("name");
+						if (name == null) {
+							Log.warning(
+									Geonet.SEARCH_ENGINE,
+									"fuzzyMatching element must have a name attribute, check Lucene configuration file.");
+						} else {
+							fuzzyMatching.add(name);
 						}
 					}
 				}
@@ -584,6 +603,17 @@ public class LuceneConfig {
 	 */
 	public Set<String> getTokenizedField() {
 		return this.tokenizedFields;
+	}
+
+	/**
+	 * Check if similarity can be applied to the field
+	 * @param fieldName the name of the field to check.
+	 */
+	public boolean applySimilarity(String fieldName) {
+		if (fuzzyMatching != null) {
+			return fuzzyMatching.contains(fieldName);
+		}
+		return true;
 	}
 
 	/**
