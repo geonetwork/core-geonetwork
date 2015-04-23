@@ -58,6 +58,13 @@
               }
             }
           };
+
+          var sortNodeFn = function(a, b) {
+            var aName = a.name || a.get('label');
+            var bName = b.name || b.get('label');
+            return aName < bName ? -1 : 1;
+          };
+
           var createNode = function(layer, node, g, index) {
             var group = g[index];
             if (group) {
@@ -68,11 +75,15 @@
                 };
                 if (!node.nodes) node.nodes = [];
                 node.nodes.push(newNode);
+                node.nodes.sort(sortNodeFn);
               }
               createNode(layer, newNode, g, index + 1);
             } else {
               if (!node.nodes) node.nodes = [];
               node.nodes.push(layer);
+              node.nodes.sort(sortNodeFn);
+
+
             }
           };
 
@@ -104,6 +115,8 @@
                 var groups = l.get('group');
                 if (!groups) {
                   scope.layerTree.nodes.push(l);
+                  scope.layerTree.nodes.sort(sortNodeFn);
+
                 }
                 else {
                   var g = groups.split(sep);
