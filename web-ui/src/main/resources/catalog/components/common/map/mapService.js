@@ -454,22 +454,24 @@
                 gnWmsQueue.error(o);
                 defer.reject(o);
               } else {
-                if (createOnly) {
-                  olL = $this.createOlWMTSFromCap(map, capL);
-                } else {
-                  olL = $this.addWmsToMapFromCap(map, capL);
-                }
+                olL = $this.createOlWMSFromCap(map, capL);
+
+                var finishCreation = function() {
+                  if (!createOnly) {
+                    map.addLayer(olL);
+                  }
+                  gnWmsQueue.removeFromQueue(url, name);
+                  defer.resolve(olL);
+                };
 
                 // attach the md object to the layer
                 if(md) {
                   olL.set('md', md);
+                  finishCreation();
                 }
                 else {
-                  $this.feedLayerMd(olL);
+                  $this.feedLayerMd(olL).finally(finishCreation);
                 }
-
-                gnWmsQueue.removeFromQueue(url, name);
-                defer.resolve(olL);
               }
 
             }, function() {
@@ -745,11 +747,14 @@
            * @param {ol.Layer} layer
            */
           feedLayerMd: function(layer) {
+            var defer = $q.defer();
+            defer.resolve(layer);
+
             if (layer.get('metadataUrl')) {
 
               var mdUrl = gnUrlUtils.urlResolve(layer.get('metadataUrl'));
               if (mdUrl.host == gnSearchLocation.host()) {
-                gnSearchManagerService.gnSearch({
+                return gnSearchManagerService.gnSearch({
                   uuid: layer.get('metadataUuid'),
                   fast: 'index',
                   _content_type: 'json'
@@ -757,9 +762,11 @@
                   if (data.metadata.length == 1) {
                     layer.set('md', new Metadata(data.metadata[0]));
                   }
+                  return layer;
                 });
               }
             }
+            return defer.promise;
           }
 
         };
