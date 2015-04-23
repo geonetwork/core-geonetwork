@@ -362,7 +362,7 @@
     "groups": "Groupes",
     "chooseOrDropResource": "Sélectionner un fichier",
     "harvestedRecordPrivileges": "Privilèges pour les fiches moissonnées",
-    "harvester": "noeuds distants",
+    "harvester": "Noeuds distants",
     "harvesterSetting": "Configuration",
     "harvesterReport": "Rapport",
     "harvester-arcsde": "ESRI ArcSDE",
