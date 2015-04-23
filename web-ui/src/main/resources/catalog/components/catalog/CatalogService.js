@@ -563,6 +563,15 @@
       getLinks: function() {
         return this.link;
       },
+      getLinkGroup: function(layer) {
+        var links = this.getLinksByType('OGC');
+        for(var i=0;i<links.length;++i) {
+          var link = links[i];
+          if(link.name == layer.getSource().getParams().LAYERS) {
+            return link.group;
+          }
+        }
+      },
       getLinksByType: function() {
         var ret = [];
 
