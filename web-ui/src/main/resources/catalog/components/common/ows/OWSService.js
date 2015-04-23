@@ -115,7 +115,8 @@
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities'
+                REQUEST: 'GetCapabilities',
+                service: 'WMTS'
               });
 
               if (gnUrlUtils.isValid(url)) {

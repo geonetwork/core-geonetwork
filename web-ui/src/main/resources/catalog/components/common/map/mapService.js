@@ -21,9 +21,11 @@
       '$q',
       '$translate',
       'gnWmsQueue',
+      'gnSearchManagerService',
+      'Metadata',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
-          gnWmsQueue) {
+          gnWmsQueue, gnSearchManagerService, Metadata) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -406,14 +408,17 @@
            *
            * Return a promise with ol.Layer as data is succeed, and url/name
            * if failure.
-           * If createOnly, we don't add the layer to the map
+           * If createOnly, we don't add the layer to the map.
+           * If the md object is given, we add it to the layer, or we try
+           * to retrieve it in the catalog
            *
            * @param {ol.Map} map
            * @param {string} url
            * @param {string} name
            * @param {boolean} createOnly
+           * @param {!Object} md
            */
-          addWmsFromScratch: function(map, url, name, createOnly) {
+          addWmsFromScratch: function(map, url, name, createOnly, md) {
             var defer = $q.defer();
             var $this = this;
 
@@ -453,6 +458,14 @@
                   olL = $this.createOlWMTSFromCap(map, capL);
                 } else {
                   olL = $this.addWmsToMapFromCap(map, capL);
+                }
+
+                // attach the md object to the layer
+                if(md) {
+                  olL.set('md', md);
+                }
+                else {
+                  $this.feedLayerMd(olL);
                 }
 
                 gnWmsQueue.removeFromQueue(url, name);
@@ -723,7 +736,32 @@
               }
             }
             return false;
+          },
+
+          /**
+           * If the layer contains a metadataUrl, we check if it is on
+           * the same host as the catalog, if yes i search for this md in
+           * the catalog and bind it to the layer.
+           * @param {ol.Layer} layer
+           */
+          feedLayerMd: function(layer) {
+            if (layer.get('metadataUrl')) {
+
+              var mdUrl = gnUrlUtils.urlResolve(layer.get('metadataUrl'));
+              if (mdUrl.host == gnSearchLocation.host()) {
+                gnSearchManagerService.gnSearch({
+                  uuid: layer.get('metadataUuid'),
+                  fast: 'index',
+                  _content_type: 'json'
+                }).then(function(data) {
+                  if (data.metadata.length == 1) {
+                    layer.set('md', new Metadata(data.metadata[0]));
+                  }
+                });
+              }
+            }
           }
+
         };
       }];
   });

@@ -830,7 +830,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
                 luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 
-                _query = new LuceneQueryBuilder(_tokenizedFieldSet, _luceneConfig.getNumericFields(), _luceneConfig.getTaxonomyConfiguration(), SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
+                _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
 
@@ -1163,12 +1163,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (name.equals("TermQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-            returnValue = LuceneSearcher.textFieldToken(xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
+            returnValue = LuceneSearcher.textFieldToken(luceneConfig, xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
 		}
 		else if (name.equals("FuzzyQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-            returnValue = LuceneSearcher.textFieldToken(xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
+            returnValue = LuceneSearcher.textFieldToken(luceneConfig, xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
 		}
 		else if (name.equals("PrefixQuery"))
 		{
@@ -1183,7 +1183,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		else if (name.equals("WildcardQuery"))
 		{
 			String fld = xmlQuery.getAttributeValue("fld");
-            returnValue = LuceneSearcher.textFieldToken(xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
+            returnValue = LuceneSearcher.textFieldToken(luceneConfig, xmlQuery.getAttributeValue("txt"), fld, xmlQuery.getAttributeValue("sim"), analyzer, tokenizedFieldSet);
 		}
 		else if (name.equals("PhraseQuery"))
 		{
@@ -1269,7 +1269,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @param tokenizedFieldSet
      * @return
      */
-    private static Query textFieldToken(String string, String luceneIndexField, String similarity,
+    private static Query textFieldToken(LuceneConfig luceneConfig, String string, String luceneIndexField, String similarity,
                                     PerFieldAnalyzerWrapper analyzer, Set<String> tokenizedFieldSet) {
             if(string == null) {
                 throw new IllegalArgumentException("Cannot create Lucene query for null string");
@@ -1288,7 +1288,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, analyzer, tokenizedFieldSet);
             }
 
-            return LuceneQueryBuilder.constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, tokenizedFieldSet);
+            return LuceneQueryBuilder.constructQueryFromAnalyzedString(luceneConfig, string, luceneIndexField, similarity, query, analyzedString, tokenizedFieldSet);
         }
 
 

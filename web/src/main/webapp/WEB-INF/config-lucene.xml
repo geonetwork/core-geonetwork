@@ -323,4 +323,18 @@
     <Field name="southBL" type="double"/>
     <Field name="westBL" type="double"/>
   </numeric>
+
+  <!-- List all of the lucene field names which will have similarity applied to them
+       To disable set enabled to false.
+
+       If enabled is false or not present then similarity will be applied to all fields (except some special case instances)
+  -->
+  <fuzzyMatching enabled="true">
+    <Field name="any"/>
+    <Field name="anylight"/>
+    <Field name="title"/>
+    <Field name="altTitle"/>
+    <Field name="abstract"/>
+    <Field name="specificationTitle"/>
+  </fuzzyMatching>
 </config>
