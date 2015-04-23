@@ -2,5 +2,10 @@
   "sextantThemes" : "Thèmes Sextant",
   "publishedForGroup" : "Catalogue",
   "fullView": "Métadonnées complètes",
-  "simpleView": "Métadonnées essentielles"
+  "simpleView": "Métadonnées essentielles",
+  "panierSuccessMsg" : "Votre demande de téléchargement de données a été prise en compte. Le jeu de données est en cours de constitution.<br>Un message vous avertira de sa mise à disposition sur le site FTP de l'IFREMER. ",
+  "panierErrorMsg" : "Un problème est survenu dans votre demande de téléchargement de données. Veuillez essayer de nouveau ultériorement.",
+  "basket": "Panier",
+  "inbasket": "dans le panier"
+
 }

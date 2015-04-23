@@ -38,7 +38,19 @@
             layers: []
           };
           scope.extract = function() {
-            sxtPanierService.extract(scope.formObj);
+            sxtPanierService.extract(scope.formObj).then(function(data) {
+              element.find('.modal').modal('hide');
+              if(data.data.success) {
+                scope.report = {
+                  success: true
+                };
+                scope.panier = [];
+              } else {
+                scope.report = {
+                  success: false
+                };
+              }
+            });
             //scope.panier = [];
           };
 
@@ -51,6 +63,13 @@
             scope.downloadDisabled = !enable;
           }
 
+          scope.goBack = function() {
+            window.history.back();
+          };
+
+          scope.resetReport = function() {
+            scope.report = undefined;
+          };
         }
       };
     }]);

@@ -12,14 +12,11 @@
       var panierUrl = 'extractor.doExtract';
 
       var callExtractService = function(panier) {
-        console.log(panier);
-        $http({
+        return $http({
           url: panierUrl,
           method: 'POST',
           data: panier,
           headers: {'Content-Type': 'application/json'}
-        }).then(function(data) {
-
         });
       };
 
@@ -34,7 +31,7 @@
         });
         console.log(output);
 */
-        callExtractService(panier);
+        return callExtractService(panier);
       };
     }
   ]);
