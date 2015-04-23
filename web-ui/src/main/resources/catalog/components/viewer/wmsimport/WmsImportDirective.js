@@ -108,8 +108,10 @@
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
             scope.serviceDesc = angular.isObject(srv) ? srv : null;
+            scope.load();
           };
-          function load() {
+
+          scope.load = function () {
             if (scope.url) {
               scope.loading = true;
               gnOwsCapabilities['get' + scope.format.toUpperCase() +
@@ -119,8 +121,6 @@
               });
             }
           };
-
-          scope.$watch('url', load);
         }
       };
     }]);

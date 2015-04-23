@@ -24,7 +24,7 @@
       <label data-translate="">orTypeAServiceUrl</label>
       <div class="dropdown">
         <input class="form-control input-sm" type="text" data-toggle="dropdown"
-               data-ng-model="url"
+               data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
                placeholder="{{'serviceUrl' | translate}}"/>
         <ul class="dropdown-menu" role="menu" data-ng-show="servicesList.length > 0">
           <li data-ng-repeat="srv in servicesList">
