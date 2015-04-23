@@ -10644,6 +10644,43 @@
 .gn .gn-metadata-view .dropdown-menu {
   font-size: 90%;
 }
+.gn .overview .gn-metadata-display {
+  margin-top: 2em;
+}
+.gn .overview .gn-metadata-display .dl-horizontal dt {
+  font-weight: bold;
+  font-style: normal;
+  color: black;
+}
+.gn .overview .gn-metadata-display .dl-horizontal dd {
+  background: inherit;
+  border: none;
+}
+.gn .overview .gn-metadata-display ul.container-list {
+  background: inherit;
+  border-width: 0;
+  margin-left: 0;
+  padding-left: 0;
+}
+.gn .overview .gn-metadata-display ul.md-value-list {
+  display: inline;
+  padding-left: 0;
+}
+.gn .overview .gn-metadata-display ul.md-value-list:before {
+  content: ': ';
+}
+.gn .overview .gn-metadata-display ul.md-value-list li {
+  border: none;
+  background: inherit;
+  display: inline;
+  padding-left: 0;
+}
+.gn .overview .gn-metadata-display ul.md-value-list li:before {
+  content: ', ';
+}
+.gn .overview .gn-metadata-display ul.md-value-list li:first-child:before {
+  content: '';
+}
 .gn .gn-related-resources .gn-related-item button.btn-block {
   text-align: left;
   padding-left: 15px;
@@ -10722,7 +10759,7 @@
 .gn ul.container-list {
   list-style-type: none;
   background: #eeeeee;
-  border-left: 1px solid #999999 !important;
+  border-left: 1px solid #999999;
   padding-left: 1em;
   margin-left: 1em;
 }
