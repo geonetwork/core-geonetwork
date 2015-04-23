@@ -164,6 +164,22 @@
           titleInfo: 0
         }};
 
+      /** Layers tabs configuration */
+      searchSettings.layerTabs = {
+        legend: {
+          active: false
+        },
+        sort: {
+          active: false
+        },
+        source: {
+          active: false
+        },
+        ncwms: {
+          active: false
+        }
+      };
+
       /** Facets configuration */
       searchSettings.facetsSummaryType = 'hits';
 

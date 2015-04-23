@@ -89,7 +89,18 @@
           <button type="button" class="btn btn-default close" sxt-close-tool>
             &times;
           </button>
-          <h5 data-translate="">ThemeLayers</h5>
+          <h5>
+            <span translate>ThemeLayers</span>
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
+              <i class="fa fa-picture-o fa-fw"></i>
+            </button>
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('sort')" ng-class="{'active': layerTabs.sort.active}">
+              <i class="fa fa-sort fa-fw"></i>
+            </button>
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('source')" ng-class="{'active': layerTabs.source.active}">
+              <i class="fa fa-info fa-fw"></i>
+            </button>
+          </h5>
         </div>
 
         <div class="sxt-layertree">
@@ -97,33 +108,46 @@
           <div sxt-layertree="map"></div>
         </div>
 
-        <div ng-repeat="layer in map.getLayers().getArray()">
-          <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
-            <div class="panel-heading">
-            <button type="button" class="btn btn-default close" ng-click="active.NCWMS = null">
-                &times;
-              </button>
-              <h5>{{layer.get('label')}}</h5>
-            </div>
-            <div gn-ncwms-transect="" map="map" layer="layer"></div>
-          </div>
-        </div>
+        <tabset class="sxt-layers-tabset">
 
-        <div class="panel-body layers-tools" ng-class="{'layers-tools-expanded': active.layersTools}" sxt-layers-tools>
-          <div class="btn-group flux">
-            <button type="button" class="btn btn-default active" translate>legends</i></button>
-            <button type="button" class="btn btn-default" translate>sort</i></button>
-            <button type="button" class="btn btn-default" translate>sources</button>
-          </div>
-
-          <div class="panel-carousel-window">
-            <div class="panel-carousel-container">
+          <tab active="layerTabs.legend.active">
+            <tab-heading>
+              <i class="fa fa-picture-o fa-fw"></i>
+              <span translate>legends</span>
+            </tab-heading>
             <div class="panel-carousel" gn-legend-panel="map"></div>
+          </tab>
+
+          <tab active="layerTabs.sort.active">
+            <tab-heading>
+              <i class="fa fa-sort fa-fw"></i>
+              <span translate>sort</span>
+            </tab-heading>
             <div class="panel-carousel" gn-layerorder-panel="map"></div>
+          </tab>
+
+          <tab active="layerTabs.source.active">
+            <tab-heading>
+              <i class="fa fa-info fa-fw"></i>
+              <span translate>sources</span>
+            </tab-heading>
             <div class="panel-carousel" gn-layersources-panel="map"></div>
-          </div>
-        </div>
-      </div>
+          </tab>
+
+          <tab active="layerTabs.ncwms.active">
+            <tab-heading>
+              <i class="fa fa-anchor fa-fw"></i>
+              <span translate>ncwms</span>
+            </tab-heading>
+            <div ng-repeat="layer in map.getLayers().getArray()">
+              <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
+                <div class="panel-heading">{{layer.get('label')}}</div>
+                <div gn-ncwms-transect="" map="map" layer="layer"></div>
+              </div>
+            </div>
+          </tab>
+
+        </tabset>
 
       </div>
     </div>

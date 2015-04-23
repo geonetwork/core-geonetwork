@@ -243,6 +243,32 @@
     }
   }
 
+  .sxt-layers-tabset {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: none;
+    & > .nav-tabs {
+      li:not(.active) {
+        display: none;
+      }
+      li.active {
+        width: 10em;
+        margin-left: ~"calc(50% - 5em)";
+        text-align: center;
+      }
+    }
+    .tab-content {
+      background: white;
+      padding-top: .6em;
+      height: ~"calc(100% - 4em)";
+      overflow-y: scroll;
+    }
+  }
+  .layers-tools-expanded .sxt-layers-tabset {
+    display: block;
+  }
+
   [sxt-layertree], .sxtb-speciestree  {
     padding: 3px 15px 0 0;
     font-size: 90%;
@@ -266,6 +292,7 @@
     ul.sxt-layertree-node, ul.sxt-layertree-node > li {
       list-style-type: none;
       padding-left: 10px;
+      min-height: 1.9em;
       .fa-minus-square-o, .fa-plus-square-o {
         font-size: 14px;
       }
@@ -285,22 +312,6 @@
     .sxt-layertree-filter {
       margin: 0 0 15px 15px;
       position:relative;
-    }
-  }
-
-  .panel-ncwms-container {
-    position: absolute;
-    top: 50%;
-    height: ~"calc(50% - 4em)";
-    left: 15px;
-    right: 15px;
-    .panel-heading {
-      h5 {
-        line-height: 3.8em;
-      }
-      .close {
-        margin-top: .7em;
-      }
     }
   }
 

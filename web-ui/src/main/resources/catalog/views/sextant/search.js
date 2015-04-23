@@ -57,6 +57,7 @@
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.mainTabs = gnSearchSettings.mainTabs;
+      $scope.layerTabs = gnSearchSettings.layerTabs;
       $scope.gnMetadataActions = gnMetadataActions;
 
       var localStorage = $window.localStorage || {};
@@ -126,7 +127,6 @@
           $scope.$broadcast('renderPanierMap');
         },0)
       };
-
 
       //Check if a added layer is NcWMS
       viewerMap.getLayers().on('add', function(e) {
