@@ -461,7 +461,7 @@
                 }
 
                 // attach the md object to the layer
-                if(md) {
+                if (md) {
                   olL.set('md', md);
                 }
                 else {
