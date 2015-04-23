@@ -52,7 +52,7 @@
           if (gnSearchSettings.dismissMdView) {
             scope.dismiss = gnSearchSettings.dismissMdView;
           }
-          unRegister = scope.$on('closeMdView', function() {
+          unRegister = scope.$on('locationBackToSearchFromMdview', function() {
             scope.dismiss();
           });
         }

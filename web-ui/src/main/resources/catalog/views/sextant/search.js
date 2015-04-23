@@ -69,7 +69,17 @@
         $location.path('/panier');
       };
 
+      var unregisterMapsize = $scope.$on('locationBackToSearch', function() {
+        if (angular.isUndefined(searchMap.getSize()) ||
+            searchMap.getSize()[0] == 0 ||
+            searchMap.getSize()[1] == 0) {
+          $timeout(function() {searchMap.updateSize()}, 100);
+        }
+        unregisterMapsize();
+      });
+
       $scope.locService = gnSearchLocation;
+
 
       // Manage the collapsed search panel
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
@@ -193,7 +203,6 @@
           gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name).then(function(layer) {
                 layer.set('group', group);
-                layer.set('md', md);
                 var downloads = md.getLinksByType(link.group,
                     'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
                     'WFS', 'WCS', 'COPYFILE');
