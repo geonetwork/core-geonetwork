@@ -25,9 +25,9 @@
     '$translate',
     '$q',
     '$filter',
-    'gnWmsQueue',
+    '$rootScope',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter) {
+             $translate, $q, $filter, $rootScope) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -327,6 +327,7 @@
                   olL.set('title', layer.title);
                   olL.set('label', layer.title);
                 }
+                $rootScope.$broadcast('layerAddedFromContext', olL);
                 return olL;
               });
         }
