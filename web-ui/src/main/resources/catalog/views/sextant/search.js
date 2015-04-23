@@ -197,6 +197,24 @@
 
       ///////////////////////////////////////////////////////////////////
 
+      var feedLayerWithDownloads = function(layer, linkGroup) {
+        var md = layer.get('md');
+        var downloads = md && md.getLinksByType(linkGroup,
+            'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+            'WFS', 'WCS', 'COPYFILE');
+
+        layer.set('downloads', downloads);
+
+      };
+
+      $scope.$on('layerAddedFromContext', function(e,l) {
+        var md = l.get('md');
+        if(md) {
+          var linkGroup = md.getLinkGroup(l);
+          feedLayerWithDownloads(l,linkGroup);
+        }
+      });
+
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
@@ -217,13 +235,9 @@
           }
 
           gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
-              link.url, link.name).then(function(layer) {
+              link.url, link.name, undefined, md).then(function(layer) {
                 layer.set('group', group);
-                var downloads = md.getLinksByType(link.group,
-                    'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-                    'WFS', 'WCS', 'COPYFILE');
-
-                layer.set('downloads', downloads);
+                feedLayerWithDownloads(layer, link.group);
                 waitingLayers.push(layer);
               });
           $scope.mainTabs.map.titleInfo += 1;
