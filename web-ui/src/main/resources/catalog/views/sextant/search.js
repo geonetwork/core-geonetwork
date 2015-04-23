@@ -200,7 +200,6 @@
           gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name).then(function(layer) {
                 layer.set('group', group);
-                layer.set('md', md);
                 var downloads = md.getLinksByType(link.group,
                     'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
                     'WFS', 'WCS', 'COPYFILE');
