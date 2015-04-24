@@ -419,8 +419,9 @@ public final class Geonet {
         public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
         public static final String SUMMARY_ITEMS = "summaryItems";
+		public static final java.lang.String EXTRA_DUMP_FIELDS = "extraDumpFields";
 
-        /**
+		/**
          * TODO javadoc.
          */
         public static final class ResultType  {
