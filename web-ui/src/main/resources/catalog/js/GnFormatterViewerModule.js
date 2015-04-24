@@ -7,12 +7,10 @@
   goog.require('gn_formatter_lib');
   goog.require('gn_utility_directive');
   goog.require('gn_popup_directive');
-  // GEOCAT
   goog.require('gn_search_default_directive');
   goog.require('gn_mdactions_service');
   goog.require('gn_alert');
   goog.require('gn_popup_service');
-  // END GEOCAT
 
 
 
@@ -21,11 +19,9 @@
 
 
 
-  // GEOCAT
   var module = angular.module('gn_formatter_viewer',
       ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service', 'gn_search_default_directive',
         'gn_popup_service', 'gn_mdactions_service', 'gn_alert']);
-  // END GEOCAT
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core']);
