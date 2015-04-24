@@ -8,8 +8,9 @@
     <table class="table row target">
         <tr fmt-repeat="link in linkBlock.links" class="row">
             <td class="col-md-2 link-block-title">
-                <i fmt-if="link.type.iconClasses" class="{{link.type.iconClasses}} pad-right"></i>
-                <img fmt-if="link.type.icon" src="{{link.type.icon}}" class="icon pad-right"></img>
+                <span fmt-if="link.type.iconHtml" fmt-only-children="true">{{link.type.iconHtml}}</span>
+                <i fmt-if="link.type.iconClasses" title="{{link.type.iconTitle | capitalize}}" class="{{link.type.iconClasses}} pad-right"></i>
+                <img fmt-if="link.type.icon" src="{{link.type.icon}}" title="{{link.type.iconTitle | capitalize}}" class="icon pad-right"></img>
                 <span fmt-translate="">{{link.type.name}}-link</span>
             </td>
             <td class="col-md-10">
