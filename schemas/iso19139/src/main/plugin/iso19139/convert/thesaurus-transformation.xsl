@@ -57,7 +57,7 @@
     <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
     <xsl:variable name="textgroupOnly"
                   as="xs:boolean"
-                  select="if (/root/request/textgroupOnly)
+                  select="if (/root/request/textgroupOnly and normalize-space(/root/request/textgroupOnly) != '')
                           then /root/request/textgroupOnly
                           else false()"/>
 

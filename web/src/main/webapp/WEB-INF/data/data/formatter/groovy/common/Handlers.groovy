@@ -152,7 +152,7 @@ public class Handlers {
                     type = association;
                     direction = Direction.PARENT
                 }
-            } else if (type == "services" || type == "sources") {
+            } else if (type == "services" || type == "sources" || type == "parent" || type == "fcats") {
                 direction = Direction.PARENT
             }
 
@@ -170,11 +170,12 @@ public class Handlers {
                         if (isAggSibling) {
                             addRelation(hierarchy, parentUUID, potentialSiblingRel, association, Direction.SIBLING)
                         }
-                    } else if (relType == 'datasets') {
+                    } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
                         addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
-                    } else if (relType == 'hassource') {
-                        addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
+                    } else if (relType == 'children') {
+                        addRelation(hierarchy, parentUUID, potentialSiblingRel, "siblings", Direction.SIBLING)
                     }
+
                 }
             }
         }
