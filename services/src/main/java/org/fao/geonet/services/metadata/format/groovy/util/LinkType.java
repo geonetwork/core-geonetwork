@@ -15,41 +15,57 @@ public class LinkType {
     /**
      * The untranslated name of the link.
      */
-    @Nonnull
-    public final String name;
+    public String name;
+    /**
+     * The direction of the relationship.  Indicates if the current metadata is the parent, child,sibling of the related item.
+     *
+     * In some cases this is not important (link linking to webpages), in those cases it can be null.
+     */
+    public Direction relationDirection;
     /**
      * The url of the icon for this link group.  This may be null.
      */
-    @Nullable
-    public final String icon;
+    public String icon;
     /**
-     * The classes to put on the i element
+     * The classes to put on the &lt;i> element
      */
-    @Nullable
-    public final String iconClasses;
+    public String iconClasses;
+    /**
+     * The title attribute to put on the icon elements (&lt;i> if iconClasses != null and &lt;img> if icon != null)
+     */
+    public String iconTitle;
+    /**
+     * Raw HTML for the icon.
+     */
+    public String iconHtml;
+    public LinkType(){}
+    public LinkType(@Nonnull String name, @Nullable Direction relationDirection,
+                    @Nullable String icon, @Nullable String iconClasses) {
+        this(name, relationDirection, icon, iconClasses, null);
+    }
 
-    public LinkType(@Nonnull String name, @Nullable String icon, @Nullable String iconClasses) {
+    public LinkType(@Nonnull String name, @Nullable Direction relationDirection,
+                    @Nullable String icon, @Nullable String iconClasses, @Nullable String iconTitle) {
         Objects.requireNonNull(name);
         this.name = name;
+        this.relationDirection = relationDirection;
         this.icon = icon;
         this.iconClasses = iconClasses;
+        this.iconTitle = iconTitle;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         LinkType linkType = (LinkType) o;
-
-        if (!name.equals(linkType.name)) return false;
-
-        return true;
+        return com.google.common.base.Objects.equal(name, linkType.name) &&
+               com.google.common.base.Objects.equal(relationDirection, linkType.relationDirection);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return com.google.common.base.Objects.hashCode(name, relationDirection);
     }
 
     public String getName(Functions functions) throws Exception {
@@ -58,6 +74,6 @@ public class LinkType {
 
     @Override
     public String toString() {
-        return "LinkType{" + "name='" + name + '\'' + '}';
+        return "LinkType{" + "dir='" + relationDirection + '\'' +  "name='" + name + '\'' + '}';
     }
 }

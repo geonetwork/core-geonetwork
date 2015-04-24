@@ -73,8 +73,8 @@ public class Handlers {
             return link
         }
 
-        def relatedLinkType = new LinkType("related", null, "fa fa-sitemap")
-        def referencesLinkType = new LinkType("references", null, "fa fa-arrows-h")
+        def relatedLinkType = new LinkType("related", null, null, "fa fa-sitemap")
+        def referencesLinkType = new LinkType("references", null, null, "fa fa-arrows-h")
         el.'dc:relation'.each{linkBlock.put(relatedLinkType, toLink(it))}
         el.'dc:URI'.each{linkBlock.put(referencesLinkType, toLink(it))}
 

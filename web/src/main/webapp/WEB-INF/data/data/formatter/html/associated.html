@@ -16,8 +16,9 @@
                         <button type="button" class="btn btn-default toggler" toggle-ancestor="2" toggle-selector="div">
                             <i class="fa fa-arrow-circle-down"></i>
                         </button>
-                        <i fmt-if="link.type.iconClasses" class="{{link.type.iconClasses}} pad-right"></i>
-                        <img fmt-if="link.type.icon" src="{{link.type.icon}}" class="icon pad-right"></img>
+                        <span fmt-if="link.type.iconHtml" fmt-only-children="true">{{link.type.iconHtml}}</span>
+                        <i fmt-if="link.type.iconClasses" class="{{link.type.iconClasses}} pad-right" title="{{link.type.iconTitle | capitalize}}"></i>
+                        <img fmt-if="link.type.icon" src="{{link.type.icon}}" title="{{link.type.iconTitle | capitalize}}" class="icon pad-right"></img>
                         <span fmt-translate="">{{link.type.name}}-link</span>
                     </h3>
                 </td>
@@ -39,6 +40,7 @@
                                     <button type="button" class="btn btn-default toggler">
                                         <i class="fa fa-arrow-circle-down"></i>
                                     </button>
+                                    <i class="fa fa-sitemap pad-right"></i>
                                     <span fmt-translate="">associated-link</span>
                                 </h3>
                                 <div class="target">

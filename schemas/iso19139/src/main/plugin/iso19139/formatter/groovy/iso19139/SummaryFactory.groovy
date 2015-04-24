@@ -171,7 +171,7 @@ class SummaryFactory {
                         }
                     }
 
-                    def linkType = new LinkType(type, icon, iconClasses)
+                    def linkType = new LinkType(type, null, icon, iconClasses)
 
                     def linkObj = new Link(href, title, linkClass)
                     if (urlAndTextEquals) {

@@ -441,7 +441,7 @@
 					<xsl:variable name="initiativeType" select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
 					<Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
 					<Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
-					<Field name="agg_{$associationType}" string="{$code}" store="false" index="true"/>
+					<Field name="agg_{$associationType}" string="{$code}" store="true" index="true"/>
 					<Field name="agg_associated" string="{$code}" store="false" index="true"/>
 					<Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
 					<Field name="agg_use" string="true" store="false" index="true"/>

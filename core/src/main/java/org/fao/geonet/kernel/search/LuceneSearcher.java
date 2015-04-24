@@ -269,6 +269,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		boolean fast = sFast != null && sFast.equals("true");
 		boolean inFastMode = fast || "index".equals(sFast) || "indexpdf".equals(sFast);
 
+        Set<String> extraDumpFields = Sets.newHashSet();
+        if (inFastMode) {
+            String[] fields = Util.getParam(request, Geonet.SearchResult.EXTRA_DUMP_FIELDS, "").split(",");
+            extraDumpFields.addAll(Arrays.asList(fields));
+        }
+
 		// build response
 		Element response =  new Element("response");
 		response.setAttribute("from", getFrom() + "");
@@ -306,7 +312,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         Element md = null;
 
                         if (fast) {
-                            md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
+                            md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null, extraDumpFields);
                         } else if ("indexpdf".equals(sFast)) {
                             if (userGroups == null) {
                                 userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
@@ -314,10 +320,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                             }
 
                             // Retrieve information from the index for the record
-                            md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+                            md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id,
+                                    _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields(), extraDumpFields);
                         } else if ("index".equals(sFast)) {
                             // Retrieve information from the index for the record
-                            md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+                            md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields(), extraDumpFields);
 
                             buildPrivilegesMetadataInfo(srvContext, doc, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
                         } else if (srvContext != null) {
@@ -1415,12 +1422,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * @param id
 	 * @param searchLang
 	 * @param multiLangSearchTerm
-	 * @param dumpFields			dump only the fields define in {@link LuceneConfig#getDumpFields()}.
-	 * @return
+	 * @param dumpFields            dump only the fields define in {@link LuceneConfig#getDumpFields()}.
+	 * @param extraDumpFields
+     * @return
 	 */
     private static Element getMetadataFromIndexForPdf(UserSession us, Set<Integer> userGroups, Document doc, String id, String
-            searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
-        Element md = LuceneSearcher.getMetadataFromIndex(doc, id, true, searchLang, multiLangSearchTerm, dumpFields);
+            searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields, Set<String> extraDumpFields){
+        Element md = LuceneSearcher.getMetadataFromIndex(doc, id, true, searchLang, multiLangSearchTerm, dumpFields, extraDumpFields);
 
         // Add download/dynamic privileges
         Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
@@ -1488,7 +1496,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * @param dumpFields	If not null, dump only the fields define in {@link LuceneConfig#getDumpFields()}.
 	 * @return
 	 */
-	private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
+	private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, String searchLang,
+                                                Set<String> multiLangSearchTerm, Map<String, String> dumpFields,
+                                                Set<String> extraDumpFields){
         // Retrieve the info element
         String schema     = doc.get("_schema");
         String source     = doc.get("_source");
@@ -1534,12 +1544,19 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (dumpFields != null) {
             for (Map.Entry<String, String> entry : dumpFields.entrySet()) {
                 String fieldName = entry.getKey();
-                IndexableField[] values = doc.getFields(fieldName);
-                for (IndexableField f : values) {
-                    if (f != null) {
-                        if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
-                            md.addContent(new Element(entry.getValue()).setText(f.stringValue()));
+                addIndexValues(doc, md, addedTranslation, entry.getValue(), fieldName);
+            }
+            if (extraDumpFields != null) {
+                for (String fieldName : extraDumpFields) {
+                    if (fieldName.contains("*")) {
+                        fieldName = fieldName.replace("*", ".*");
+                        for (IndexableField indexableField : doc) {
+                            if (indexableField.name().matches(fieldName)) {
+                                addIndexValue(md, addedTranslation, indexableField.name(), indexableField.name(), indexableField);
+                            }
                         }
+                    } else {
+                        addIndexValues(doc, md, addedTranslation, fieldName, fieldName);
                     }
                 }
             }
@@ -1563,7 +1580,24 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         return md;
 	}
 
-	/**
+    private static void addIndexValues(Document doc, Element md, HashSet<String> addedTranslation, String outputName,
+                                       String fieldName) {
+        IndexableField[] values = doc.getFields(fieldName);
+        for (IndexableField f : values) {
+            addIndexValue(md, addedTranslation, outputName, fieldName, f);
+        }
+    }
+
+    private static void addIndexValue(Element md, HashSet<String> addedTranslation, String outputName, String fieldName, IndexableField
+            f) {
+        if (f != null) {
+            if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
+                md.addContent(new Element(outputName).setText(f.stringValue()));
+            }
+        }
+    }
+
+    /**
 	 * <p>
 	 * Gets all metadata uuids in current searcher.
 	 * </p>
