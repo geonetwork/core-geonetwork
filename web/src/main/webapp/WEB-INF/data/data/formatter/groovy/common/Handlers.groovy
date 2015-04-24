@@ -152,9 +152,9 @@ public class Handlers {
                     type = association;
                     direction = Direction.PARENT
                 }
-            } else if (type == "services") {
+            } else if (type == "services" || type == "sources") {
                 direction = Direction.PARENT
-            }   // TODO source
+            }
 
             def relatedIdInfo = addRelation(hierarchy, uuid, rel, type, direction)
 
@@ -162,7 +162,7 @@ public class Handlers {
                 def parentUUID = relatedIdInfo['uuid'] as String
                 def report = getRelatedReport(relatedIdInfo['id'] as int, parentUUID)
                 report.getChildren("relation").each { potentialSiblingRel ->
-                    def relType = potentialSiblingRel.getAttributeValue("type")
+                     def relType = potentialSiblingRel.getAttributeValue("type")
                     if (association != null) {
                         boolean isAggSibling = potentialSiblingRel.getChildren("agg_$association").any {
                             it.getTextTrim() == parentUUID
@@ -172,7 +172,9 @@ public class Handlers {
                         }
                     } else if (relType == 'datasets') {
                         addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
-                    } // TODO source
+                    } else if (relType == 'hassource') {
+                        addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
+                    }
                 }
             }
         }
