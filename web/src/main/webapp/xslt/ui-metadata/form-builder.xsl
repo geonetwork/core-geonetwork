@@ -458,15 +458,18 @@
                         </xsl:if>
                        </input>&#160;</span>
                   </xsl:when>
-                  <xsl:when test="@use = 'gn-date-picker'">
+                  <!-- A directive -->
+                  <xsl:when test="starts-with(@use, 'gn-')">
                     <input class="form-control"
                            type="hidden"
                            value=""
                            id="{$id}_{@label}"/>
 
                     <div data-gn-field-tooltip="{$schema}|{@tooltip}"
-                         data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
                          data-id="#{$id}_{@label}">
+                      <xsl:attribute name="data-{@use}">
+                        <xsl:value-of select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''"/>
+                      </xsl:attribute>
                       <xsl:for-each select="directiveAttributes/attribute::*">
                         <xsl:variable name="directiveAttributeName" select="name()"/>
 

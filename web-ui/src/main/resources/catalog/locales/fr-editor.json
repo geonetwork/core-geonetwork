@@ -189,5 +189,8 @@
     "toggleSection": "Déplier / replier la section",
     "editorBoardInfo": "A partir de cette page, créer ou importer de nouvelles fiches. Gérer vos fiches avec les accès rapides.",
     "minorEditHelp": "Lorsque cette option est activée, la date de mise à jour de la fiche n'est pas modifiée. Lors de l'utilisation des suggestions, ou de la mise à jour d'une imagette, cette option est sans effet, la date est mise à jour.",
-    "minorEdit": "Modification mineure"
+    "minorEdit": "Modification mineure",
+    "notEvaluated": "Non évalué",
+    "notConformant": "Non conforme",
+    "conformant": "Conforme"
 }

@@ -189,5 +189,8 @@
     "toggleSection": "Toggle expand / collapse",
     "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records.",
     "minorEditHelp": "Do not update timestamp on save",
-    "minorEdit": "Minor edit"
+    "minorEdit": "Minor edit",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }

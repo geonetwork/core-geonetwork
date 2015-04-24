@@ -907,30 +907,36 @@
             </template>
           </action>
 
+
+
           <field name="conformity" templateModeOnly="true"
-                 isMissingLabel="notEvaluated"
-            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result"
-            del="../..">
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                    gmd:report/gmd:DQ_DomainConsistency/gmd:result"
+                 del="../..">
             <template>
               <values>
                 <key label="conformity_title"
-                  xpath="gmd:DQ_ConformanceResult/
-                  gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
-                  tooltip="gmd:pass">
-                  <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"></helper>
+                     xpath="gmd:DQ_ConformanceResult/
+                          gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
+                     tooltip="gmd:pass">
+                  <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date"
-                  xpath="gmd:DQ_ConformanceResult/
-                        gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
-                  use="date"/>
+                     xpath="gmd:DQ_ConformanceResult/
+                          gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
+                     use="date"/>
                 <key label="explanation"
-                  xpath="gmd:DQ_ConformanceResult/
-                        gmd:explanation/gco:CharacterString"
-                  use="textarea"/>
+                     xpath="gmd:DQ_ConformanceResult/
+                          gmd:explanation/gco:CharacterString"
+                     use="textarea"/>
                 <key label="pass"
-                  use="checkbox"
-                  xpath="gmd:DQ_ConformanceResult/
-                        gmd:pass/gco:Boolean"/>
+                     xpath="gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean"
+                     use="gn-checkbox-with-nilreason">
+                  <directiveAttributes
+                          data-tag-name="gmd:pass"
+                          data-nilreason="eval#gmd:DQ_ConformanceResult/gmd:pass/@gco:nilReason"
+                          data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
+                </key>
               </values>
               <snippet>
                 <gmd:result>
@@ -948,8 +954,8 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                codeListValue="publication"/>
+                                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                      codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
                         </gmd:date>
@@ -968,9 +974,7 @@
                     <gmd:explanation>
                       <gco:CharacterString>{{explanation}}</gco:CharacterString>
                     </gmd:explanation>
-                    <gmd:pass>
-                      <gco:Boolean>{{pass}}</gco:Boolean>
-                    </gmd:pass>
+                    {{pass}}
                   </gmd:DQ_ConformanceResult>
                 </gmd:result>
               </snippet>
@@ -978,8 +982,9 @@
           </field>
 
 
-          <!--<action type="add" name="conformity" or="report"
-            in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+          <action type="add" name="conformity" or="report"
+                  forceLabel="true"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
                 <gmd:report>
@@ -998,8 +1003,8 @@
                                 </gmd:date>
                                 <gmd:dateType>
                                   <gmd:CI_DateTypeCode
-                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                    codeListValue="publication"/>
+                                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                          codeListValue="publication"/>
                                 </gmd:dateType>
                               </gmd:CI_Date>
                             </gmd:date>
@@ -1008,7 +1013,7 @@
                         <gmd:explanation>
                           <gco:CharacterString/>
                         </gmd:explanation>
-                        <gmd:pass>
+                        <gmd:pass gco:nilReason="unknown">
                           <gco:Boolean/>
                         </gmd:pass>
                       </gmd:DQ_ConformanceResult>
@@ -1017,7 +1022,7 @@
                 </gmd:report>
               </snippet>
             </template>
-          </action>-->
+          </action>
 
 
 
