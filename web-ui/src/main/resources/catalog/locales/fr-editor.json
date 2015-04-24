@@ -95,7 +95,7 @@
     "linkToSource": "Associer à une donnée source",
     "linkToSourceTitle": "Associer une donnée source utilisée pour créer ce jeu de données",
     "linkUrl": "URL à supprimer",
-    "mefFile": "MEF",
+    "mefFile": "ZIP ou MEF",
     "metadataContent": "Contenu de la métadonnée",
     "metadataNotFound": "Attention ! La fiche avec l'identifiant {{id}} n'a pas été trouvée. <a href='#/create'>En créer une nouvelle ?</a>",
     "metadataType": "Type de fiche",

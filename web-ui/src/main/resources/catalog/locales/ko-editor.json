@@ -30,7 +30,7 @@
     "cancelling": "취소중 ...",
     "check": "확인",
     "linkToServiceWithoutURLError": "No WMS URL found in that service. Choose a service with a WMS URL to be able to choose a layer.",
-    "linkToServiceError": "An error occurred when linking the dataset with the service",
+    "linkToServiceError": "데이터셋을 서비스에 연결하는 중 오류가 발생했습니다",
     "chooseAProj": "좌표를 표시할 때 사용할 좌표체계 선택(주: 항상 좌표는 메타데이터 레코드에 WGS84 좌표체계로 저장됨)",
     "chooseAType": "유형 선택",
     "chooseOnlinesrc": "여기에 자원을 선택하거나 끌어오기",

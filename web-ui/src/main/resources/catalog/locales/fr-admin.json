@@ -461,6 +461,7 @@
     "loadSchemaSamplesOrTemplates": "Charger les exemples et les modèles",
     "loadTemplatesForSelectedSchema": "Charger les modèles pour les standards sélectionnés",
     "loadTemplatesReport": "Modèles importés pour",
+    "logActivity" : "Activité",
     "logFile": "Fichier journal",
     "logoUpdated": "Logo du catalogue mis à jour",
     "logoUploadHelp": "Glisser & déposer ici une ou plusieurs images à ajouter à la liste des logos",
@@ -1025,6 +1026,5 @@
     "region/getmap/summaryWidth": "Summary width",
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
-    "metadata/editor/schemaConfig": "Configuration par standard",
-    "logActivity" : "Activité"
+    "metadata/editor/schemaConfig": "Configuration par standard"
 }
