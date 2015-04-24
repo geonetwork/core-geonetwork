@@ -369,6 +369,30 @@
             <jsSource webappPath="/apps/tabsearch/js/App.js"/>
     </declarative>
 
+    <declarative name="geonetwork-client-sextant-app"
+                 pathOnDisk="${project.basedir}/src/main/resources">
+      <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryTree.js"/>
+      <jsSource webappPath="/apps/sextant/js/Settings.js"/>
+      <jsSource webappPath="/apps/sextant/js/Settings.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.map/Settings.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.lang/fr.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.lang/es.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.lang/it.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.lang/en.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.edit.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.ipc.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.list.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.MetadataResultsView.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.ViewPanel.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.ViewWindow.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.what.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.when.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.where.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.who.js"/>
+      <jsSource webappPath="/apps/sextant/js/Shortcuts.js"/>
+      <jsSource webappPath="/apps/sextant/js/cat.main.js"/>
+    </declarative>
+
     <!-- search/css/style.css
     <declarative name="geonetwork-client-style_css" pathOnDisk="${project.basedir}/src/main/resources">
          <cssSource webappPath="/apps/js/OpenLayers/theme/dark/style.css" />
