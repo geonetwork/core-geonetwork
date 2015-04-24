@@ -59,7 +59,7 @@
   <conformity_title>Spécification</conformity_title>
   <conformity_date>Date de publication</conformity_date>
   <explanation>Explanation</explanation>
-  <pass>Conforme</pass>
+  <pass>Conformité</pass>
   <pointOfContact>Organisation responsable de la ressource</pointOfContact>
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
@@ -80,7 +80,7 @@
   <spatialDistance>Résolution spatiale (distance)</spatialDistance>
   <accessConstraints>Limitations d'accès public</accessConstraints>
   <useLimitation>Conditions applicables à l'accès et à l'utilisation</useLimitation>
-  <notEvaluated>Non évaluée</notEvaluated>
+
   <add-resource-id>Générer un identifiant</add-resource-id>
   <add-resource-idHelp>Construit un identifiant en utilisant le préfixe défini dans les paramètres du catalogue ou l'URL du catalogue et l'identifiant de la fiche (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
   <add-extent-from-geokeywords>Calculer les emprises à partir des mots clés</add-extent-from-geokeywords>

@@ -64,7 +64,7 @@
   <conformity_title>Title</conformity_title>
   <conformity_date>Date</conformity_date>
   <explanation>Explanation</explanation>
-  <pass>Pass</pass>
+  <pass>Conformity</pass>
   <indeterminatePosition>Indeterminate position</indeterminatePosition>
   <pointOfContact>Contact for the resource</pointOfContact>
   <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
@@ -80,7 +80,6 @@
   <spatialDistance>Spatial resolution (distance)</spatialDistance>
   <accessConstraints>Access constraints</accessConstraints>
   <useLimitation>Use limitation</useLimitation>
-  <notEvaluated>Not evaluated</notEvaluated>
   <add-resource-id>Compute resource identifier</add-resource-id>
   <add-resource-idHelp>Compose the resource identifier using the catalog URL and the metadata identifier (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
   <add-extent-from-geokeywords>Compute extent from keyword</add-extent-from-geokeywords>
