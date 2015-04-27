@@ -1,7 +1,9 @@
 package org.fao.geonet.services.log;
 
 import jeeves.server.ServiceConfig;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.log.ListLogFilesResponse.LogFileResponse;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +49,11 @@ public class List {
     @ResponseBody
     ListLogFilesResponse exec() throws Exception {
         java.util.List<LogFileResponse> logFileList = new ArrayList<LogFileResponse>();
-        File folder = null;
-        try {
-            folder = appContext.getResource("/WEB-INF/classes").getFile();
-        } catch (IOException e) {
-            Log.error(Geonet.GEONETWORK, "error folder resource.");
-        }
-        
+        final GeonetworkDataDirectory dataDirectory =
+                ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        String classesFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
+        File folder = new File(classesFolder);
+
         if (folder != null && folder.isDirectory()) {
             Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
             Matcher matcher;
