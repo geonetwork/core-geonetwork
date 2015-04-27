@@ -365,20 +365,30 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
 
-                if (!scope.mdLangs && gnCurrentEdit.mdOtherLanguages) {
+                if (angular.isUndefined(scope.isMdMultilingual) &&
+                    gnCurrentEdit.mdOtherLanguages) {
+
                   scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                   scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
-                  scope.mdLang = gnCurrentEdit.mdLanguage;
 
-                  for (var p in scope.mdLangs) {
-                    var v = scope.mdLangs[p];
-                    if (v.indexOf('#') == 0) {
-                      var l = v.substr(1);
-                      if (!l) {
-                        l = scope.mdLang;
+                  // not multilingual {"fre":"#"}
+                  if(Object.keys(scope.mdLangs).length > 1) {
+                    scope.isMdMultilingual = true;
+                    scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                    for (var p in scope.mdLangs) {
+                      var v = scope.mdLangs[p];
+                      if (v.indexOf('#') == 0) {
+                        var l = v.substr(1);
+                        if (!l) {
+                          l = scope.mdLang;
+                        }
+                        scope.mdLangs[p] = l;
                       }
-                      scope.mdLangs[p] = l;
                     }
+                  }
+                  else {
+                    scope.isMdMultilingual = false;
                   }
                 }
 
