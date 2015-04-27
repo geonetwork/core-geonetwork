@@ -677,7 +677,7 @@
     "system/autodetect/enable-help": "If set, the search language is automatically detected. Note that this doesn't work very well for short search terms.",
     "system/autofixing": "Metadata update",
     "system/autofixing/enable": "Automatic Fixes",
-    "system/autofixing/enable-help": "When enabled, GeoNetwork automatically applies certain fixes when you save metadata.",
+    "system/autofixing/enable-help": "When enabled, GeoNetwork automatically applies certain fixes when you save metadata (eg. last update date). Don't disable this option unless you know what you're doing (ie. update-fixed-info.xsl will not be applied anymore if disabled).",
     "system/clickablehyperlinks": "Link in metadata records",
     "system/clickablehyperlinks/enable": "Clickable hyperlinks",
     "system/clickablehyperlinks/enable-help": "If set, GeoNetwork will display clickable hyperlinks in the metadata.",
