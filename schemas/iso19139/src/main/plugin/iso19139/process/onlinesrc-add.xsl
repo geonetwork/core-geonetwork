@@ -22,7 +22,11 @@ attached it to the metadata for data.
 	<!-- ============================================================================= -->
 
 	<xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
-		<xsl:copy>
+    <xsl:variable name="mainLang">
+      <xsl:value-of select="gmd:language/gmd:LanguageCode/@codeListValue" />
+    </xsl:variable>
+
+    <xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:copy-of
 				select="gmd:fileIdentifier|
@@ -124,6 +128,9 @@ attached it to the metadata for data.
                     created online element. -->
 
                     <xsl:variable name="separator" select="'\|'"/>
+                    <xsl:variable name="useOnlyPTFreeText">
+                      <xsl:value-of select="count(//*[gmd:PT_FreeText and not(gco:CharacterString)]) > 0" />
+                    </xsl:variable>
 
                     <gmd:onLine>
                       <xsl:if test="$uuidref">
@@ -147,14 +154,30 @@ attached it to the metadata for data.
                         <xsl:if test="$name != ''">
                           <gmd:name>
                             <xsl:choose>
+
+                              <!--Multilingual-->
                               <xsl:when test="contains($name, '|')">
+                                <xsl:for-each select="tokenize($name, $separator)">
+                                  <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                                  <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+                                  <xsl:if test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                                    <gco:CharacterString>
+                                      <xsl:value-of select="$nameValue"/>
+                                    </gco:CharacterString>
+                                  </xsl:if>
+                                </xsl:for-each>
+
                                 <gmd:PT_FreeText>
                                   <xsl:for-each select="tokenize($name, $separator)">
                                     <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
                                     <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
-                                    <gmd:textGroup>
-                                      <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
-                                    </gmd:textGroup>
+
+                                    <xsl:if test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                                      <gmd:textGroup>
+                                        <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                                      </gmd:textGroup>
+                                    </xsl:if>
+
                                   </xsl:for-each>
                                 </gmd:PT_FreeText>
                               </xsl:when>
@@ -171,13 +194,25 @@ attached it to the metadata for data.
                           <gmd:description>
                             <xsl:choose>
                               <xsl:when test="contains($desc, '|')">
+                                <xsl:for-each select="tokenize($desc, $separator)">
+                                  <xsl:variable name="descLang" select="substring-before(., '#')"></xsl:variable>
+                                  <xsl:variable name="descValue" select="substring-after(., '#')"></xsl:variable>
+                                  <xsl:if test="$useOnlyPTFreeText = 'false' and $descLang = $mainLang">
+                                    <gco:CharacterString>
+                                      <xsl:value-of select="$descValue"/>
+                                    </gco:CharacterString>
+                                  </xsl:if>
+                                </xsl:for-each>
+
                                 <gmd:PT_FreeText>
                                   <xsl:for-each select="tokenize($desc, $separator)">
                                     <xsl:variable name="descLang" select="substring-before(., '#')"></xsl:variable>
                                     <xsl:variable name="descValue" select="substring-after(., '#')"></xsl:variable>
-                                    <gmd:textGroup>
-                                      <gmd:LocalisedCharacterString locale="{concat('#', $descLang)}"><xsl:value-of select="$descValue" /></gmd:LocalisedCharacterString>
-                                    </gmd:textGroup>
+                                      <xsl:if test="$useOnlyPTFreeText = 'true' or $descLang != $mainLang">
+                                        <gmd:textGroup>
+                                          <gmd:LocalisedCharacterString locale="{concat('#', $descLang)}"><xsl:value-of select="$descValue" /></gmd:LocalisedCharacterString>
+                                        </gmd:textGroup>
+                                      </xsl:if>
                                   </xsl:for-each>
                                 </gmd:PT_FreeText>
                               </xsl:when>
