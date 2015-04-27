@@ -72,9 +72,9 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Online resources",
     "hasFeatureCatalog": "Using this feature catalog",
-    "importCPResult": "One record imported:<br>id: {{id}}<br>uuid: {{uuid}}",
+    "importCPResult": "One record imported. Record identifier is: {{id}}.",
     "importEntry": "Import directory entry",
-    "importFromDir": "Import from a folder on the server",
+    "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds.",
     "importRecords": "Import",
     "importReport": "Import report",
@@ -164,7 +164,7 @@
     "unpublish": "Annullare la pubblicazione",
     "unpublishSuccess": "Successful unpublication",
     "unsupportedSchemaAlert": "Metadata <strong>{{title}}</strong> is using <strong>{{schema}}</strong> standard. This is not supported by the editor. <a href='#'>Return to editor board</a>.",
-    "uploadFile": "Upload d'un fichier local",
+    "uploadFile": "Upload a file from your computer",
     "uuidAction": "Record identifier processing",
     "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
@@ -189,5 +189,8 @@
     "toggleSection": "Toggle expand / collapse",
     "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records.",
     "minorEditHelp": "Do not update timestamp on save",
-    "minorEdit": "Minor edit"
+    "minorEdit": "Minor edit",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }

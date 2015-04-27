@@ -109,7 +109,7 @@
     "chooseAservice": "Elegir un servicio",
     "chooseAserviceHelp": "Todos los servicios registrados en el catálogo están aquí.",
     "orTypeAServiceUrl": "O escribe una URL de servicio",
-    "addAllLayersToMap": "Mapear todas las capas",
+    "addAllLayersToMap": "Add all {{number}} layers to the map",
     "downloadsAndResources": "Descargas y enlaces",
     "sourceCatalog": "Proporcionado por",
     "tempExtent": "Extensión temporal",
@@ -278,5 +278,6 @@
     "loadUsersError": "Error al cargar los usuarios",
     "loadUserGroupsError": "Error al cargar los grupos",
     "transferOwnershipError": "Error al transferir la propiedad del metadato",
-    "transferOwnershipSuccessMsg": "<h4>Transferido al nuevo propietario satisfactoriamente.</h4><dl class=\"dl-horizontal\"><dt>Transferidos:</dt><dd>{{done}}</dd><dt>Sin privilegios:</dt><dd>{{notOwner}}</dd><dt>No encontrados:</dt><dd>{{notFound}}</dd></dl>"
+    "transferOwnershipSuccessMsg": "<h4>Transferido al nuevo propietario satisfactoriamente.</h4><dl class=\"dl-horizontal\"><dt>Transferidos:</dt><dd>{{done}}</dd><dt>Sin privilegios:</dt><dd>{{notOwner}}</dd><dt>No encontrados:</dt><dd>{{notFound}}</dd></dl>",
+    "filterGroup": "Filter groups ..."
 }

@@ -109,7 +109,7 @@
     "chooseAservice": "Kies een service",
     "chooseAserviceHelp": "Alle in de catalogus geregistreerde diensten worden hier getoond.",
     "orTypeAServiceUrl": "Of voor een service URL in",
-    "addAllLayersToMap": "Toon alle lagen op kaart",
+    "addAllLayersToMap": "Add all {{number}} layers to the map",
     "downloadsAndResources": "Download en links",
     "sourceCatalog": "Aangeboden door",
     "tempExtent": "Temporele dekking",
@@ -278,5 +278,6 @@
     "loadUsersError": "Fout bij inladen gebruikers",
     "loadUserGroupsError": "Fout bij inladen gebruikersgroepen",
     "transferOwnershipError": "Fout bij overzetten metadata eigendom",
-    "transferOwnershipSuccessMsg": "<h4>Metadata succesvol overgezet naar nieuwe Eigenaar.</h4><dl class=\"dl-horizontal\"><dt>Overgezet:</dt><dd>{{done}}</dd><dt>Niet in Eigendom:</dt><dd>{{notOwner}}</dd><dt>Niet gevonden:</dt><dd>{{notFound}}</dd></dl>"
+    "transferOwnershipSuccessMsg": "<h4>Metadata succesvol overgezet naar nieuwe Eigenaar.</h4><dl class=\"dl-horizontal\"><dt>Overgezet:</dt><dd>{{done}}</dd><dt>Niet in Eigendom:</dt><dd>{{notOwner}}</dd><dt>Niet gevonden:</dt><dd>{{notFound}}</dd></dl>",
+    "filterGroup": "Filter groups ..."
 }

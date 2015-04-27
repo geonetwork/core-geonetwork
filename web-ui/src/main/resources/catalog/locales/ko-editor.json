@@ -72,9 +72,9 @@
     "mcc:MD_BrowseGraphic": "로고",
     "gmd:MD_Distribution": "온라인 자원",
     "hasFeatureCatalog": "이 피처 카탈로그 사용",
-    "importCPResult": "하나의 레코드를 가져옴:<br>id: {{id}}<br>uuid: {{uuid}}",
+    "importCPResult": "One record imported. Record identifier is: {{id}}.",
     "importEntry": "디렉토리 엔트리 가져오기",
-    "importFromDir": "서버의 폴더에서 가져오기",
+    "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} 레코드(들)을  {{time}}초에 성공적으로 가져왔습니다.",
     "importRecords": "가져오기",
     "importReport": "보고서 가져오기",
@@ -164,7 +164,7 @@
     "unpublish": "게시 취소",
     "unpublishSuccess": "게시 취소 성공",
     "unsupportedSchemaAlert": "메타데이터 <strong>{{title}}</strong>은 <strong>{{schema}}</strong> 표준을 사용하고 있습니다. 현재 편집기에서 지원되지 않습니다. <a href='#'>에디터 보드로 돌아가기</a>.",
-    "uploadFile": "로컬파일 업로드",
+    "uploadFile": "Upload a file from your computer",
     "uuidAction": "레코드 식별자 처리",
     "validate": "유효성 검사",
     "validate-help": "표준 유효성검사 규칙에 대한 레코드 확인",
@@ -189,5 +189,8 @@
     "toggleSection": "확장/축소 전환",
     "editorBoardInfo": "이 페이지에서 새로운 레코드는 만들거나 가져옵니다. 모든 메타데이터 레코드를 신속하게 액세스하고 관리할 수 있습니다.",
     "minorEditHelp": "저장할 때 타임스탬프 갱신하지 않기",
-    "minorEdit": "사소한 편집"
+    "minorEdit": "사소한 편집",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }

@@ -72,9 +72,9 @@
     "mcc:MD_BrowseGraphic": "Logo's",
     "gmd:MD_Distribution": "Online bronnen",
     "hasFeatureCatalog": "Met behulp van deze functie catalogus",
-    "importCPResult": "Één record geïmporteerd:<br>id: {{id}}<br>uuid: {{uuid}}",
+    "importCPResult": "One record imported. Record identifier is: {{id}}.",
     "importEntry": "Import Telefoonboekvermelding",
-    "importFromDir": "Importeren uit een map op de server",
+    "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}} / {{records}} registers record(s) succesvol geïmporteerd in {{time}} seconden.",
     "importRecords": "import",
     "importReport": "Import rapport",
@@ -164,7 +164,7 @@
     "unpublish": "depubliceren",
     "unpublishSuccess": "succesvolle unpublication",
     "unsupportedSchemaAlert": "Metadata <strong> {{title}} < / strong > gebruikt <strong> {{schema}} < / strong > standaard . Deze wordt niet ondersteund door de editor. <a href='#'> Terug naar editor scherm </a> .",
-    "uploadFile": "Upload van een lokaal bestand",
+    "uploadFile": "Upload a file from your computer",
     "uuidAction": "Record identifier verwerking",
     "validate": "bevestigen",
     "validate-help": "Controleer verslag tegen standaard validatieregels",
@@ -189,5 +189,8 @@
     "toggleSection": "Uitklappen / inklappen",
     "editorBoardInfo": "Importeer of maak een nieuw record aan vanuit deze pagina. Snel alle metadata records benaderen en beheren.",
     "minorEditHelp": "De tijdstempel niet bijwerken bij opslaan",
-    "minorEdit": "Kleine bewerking"
+    "minorEdit": "Kleine bewerking",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }
