@@ -21,7 +21,7 @@
   </condition>
 
   <property name="appName" value="geonetwork"/>
-  <property name="version" value="3.0.1"/>
+  <property name="version" value="3.1.0"/>
   <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.7.0"/>
   <!-- Minimum version required -->
