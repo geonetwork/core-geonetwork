@@ -87,7 +87,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="link in downloads">
-                <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc}}">
+                <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc || (link.name + ' - ' + link.contentType)}}">
                   <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
                   {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
               <li class="divider"></li>
@@ -115,7 +115,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc}}">
+              <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc || layer.name}}">
                 <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
                 <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'"></span>
                 {{layer.desc || layer.name}} </a></li>
