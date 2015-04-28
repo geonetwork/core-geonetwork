@@ -116,11 +116,11 @@ echo
 
 # Update SQL - needs improvements
 echo 'SQL script'
-sed $sedopt "s/'system/platform/version', '.*'/'system/platform/version', '${new_version_main}'/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
-sed $sedopt "s/'system/platform/subVersion', '.*'/'system/platform/subVersion', '${sub_version}'/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
+sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
+sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system/platform/version'/value='${new_version_main}' WHERE name='system/platform/version'/g" {} \;
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system/platform/subVersion'/value='${sub_version}' WHERE name='system/platform/subVersion'/g" {} \;
+find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
+find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
 
 
 # Update version pom files
