@@ -604,5 +604,149 @@
               }
             }
           };
-        }]);
+        }])
+
+  /*
+   * Inspired by https://github.com/camptocamp/geocat/blob/geocat_develop/web-ui/src/main/resources/catalog/geocat-shared-objects/js/extent-directive.js
+   */
+  .directive('gnWktPolygonInput', [
+    'gnMap',
+    'gnSearchSettings',
+    'ngeoDecorateInteraction',
+    function(gnMap, gnSearchSettings, goDecoI){
+
+      // Create overlay to draw bbox and polygon
+      var featureOverlay = new ol.FeatureOverlay({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      var map = gnSearchSettings.viewerMap;
+      featureOverlay.setMap(map);
+
+      // create draw and bbox interaction
+      var drawInteraction = new ol.interaction.Draw({
+        features: featureOverlay.getFeatures(),
+        type: 'Polygon',
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      map.addInteraction(drawInteraction);
+
+      var dragboxInteraction = new ol.interaction.DragBox({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      map.addInteraction(dragboxInteraction);
+
+      var clearMap = function() {
+        featureOverlay.getFeatures().clear();
+      };
+
+      drawInteraction.on('drawstart', clearMap);
+      dragboxInteraction.on('boxstart', clearMap);
+
+      goDecoI(drawInteraction);
+      drawInteraction.active = false;
+
+      goDecoI(dragboxInteraction);
+      dragboxInteraction.active = false;
+
+      var formatWkt = new ol.format.WKT();
+
+      return {
+        restrict: 'AE',
+        scope: {
+          options: '='
+        },
+        templateUrl: '../../catalog/components/search/formfields/' +
+          'partials/wktPolygonInput.html',
+
+        link: function(scope, element, attrs) {
+          scope.projection = scope.options.projection || 'EPSG:4326';
+          scope.extent = [];
+          scope.wkt_error = '';
+
+          /**
+           * Clear features on map and geometry input.
+           */
+          scope.clearMap = function() {
+            clearMap();
+            scope.extent = [];
+            scope.options.value = '';
+          };
+
+          /**
+           * Set geometry as text input value. I could be formated
+           * to WKT or GML.
+           * @geom {ol.geometry}
+           */
+          scope.fillInput = function() {
+            var geom = featureOverlay.getFeatures().item(0).getGeometry().clone()
+              .transform(map.getView().getProjection(), scope.projection);
+            scope.options.value = formatWkt.writeGeometry(geom);
+            scope.$apply();
+          };
+
+          drawInteraction.on('drawend', function() {
+            scope.extent = [];
+            scope.fillInput();
+          });
+
+          dragboxInteraction.on('boxend', function() {
+            //featureOverlay.getFeatures().clear();
+            var f = new ol.Feature();
+            var g = dragboxInteraction.getGeometry().clone();
+            f.setGeometry(g);
+            featureOverlay.addFeature(f);
+            scope.extent = g.getExtent();
+            scope.fillInput();
+          });
+
+          scope.drawInteraction = drawInteraction;
+          scope.dragboxInteraction = dragboxInteraction;
+
+          /**
+           * Update featureOverlay drawn bbox after bbox form change
+           */
+          scope.onBboxChange = function() {
+            clearMap();
+            drawInteraction.active = false;
+            dragboxInteraction.active = false;
+
+            var coordinates, geom, f;
+            coordinates = gnMap.getPolygonFromExtent(scope.extent);
+            geom = new ol.geom.Polygon(coordinates)
+              .transform(scope.projection, map.getView().getProjection());
+            f = new ol.Feature();
+            f.setGeometry(geom);
+            featureOverlay.addFeature(f);
+            scope.fillInput();
+          };
+
+          /**
+           * On form input WKT change, update the map geometry.
+           */
+          scope.onValueChange = function(value) {
+            clearMap();
+            drawInteraction.active = false;
+            dragboxInteraction.active = false;
+
+            var geom, f;
+            try {
+              geom = formatWkt.readGeometry(scope.options.value)
+              .transform(scope.projection, map.getView().getProjection());
+              f = new ol.Feature();
+              f.setGeometry(geom);
+              featureOverlay.addFeature(f);
+            }
+            catch(err) {
+              scope.wkt_error = err.message;
+            }
+          };
+
+          element.on('$destroy', function() {
+            clearMap();
+          });
+        }
+      };
+    }
+  ]);
+
 })();
