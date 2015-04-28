@@ -245,32 +245,6 @@
                <workingDirectory>${basedir}/fra/users</workingDirectory>
              </configuration>
            </execution>
-            
-
-          <execution>
-            <id>ant-widgets-clean</id>
-            <phase>clean</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <commandlineArgs>clean</commandlineArgs>               
-              <workingDirectory>${basedir}/widgets</workingDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>ant-widgets</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              
-              <workingDirectory>${basedir}/widgets</workingDirectory>
-            </configuration>
-          </execution>
         </executions>      
       </plugin>
     </plugins>
