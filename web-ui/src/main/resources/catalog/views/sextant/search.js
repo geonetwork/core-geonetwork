@@ -340,4 +340,31 @@
       };
     }]);
 
+  module.directive('sxtSize', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: {
+          size: '@sxtSize'
+        },
+        link: function(scope, element) {
+          if (scope.size == 'auto') {
+            var fitHeight = function() {
+              var height = $(document.body).height() - $(element).offset().top;
+              element.css('height', height+'px');
+            };
+            $(window).on('resize', fitHeight);
+            fitHeight();
+          } else if (parseInt(scope.size, 10) != NaN) {
+            var height = parseInt(scope.size, 10) + 'px';
+            element.css('height', height);
+          }
+
+        }
+      };
+    }]);
+
+
+
 })();

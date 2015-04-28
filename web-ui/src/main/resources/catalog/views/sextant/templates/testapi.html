@@ -14,15 +14,6 @@
   <!-- Sextant -->
   <link href="/geonetwork/static/api.css" rel="stylesheet" media="screen">
 
-  <style>
-    body > .container-fluid, #wrapper {
-      height: 100%;
-    }
-    .gn {
-      height: calc(100% - 77px - 38px);
-      border-top: 1px solid #dddddd;
-    }
-  </style>
 </head>
 <body>
   <div class="container-fluid">
@@ -48,6 +39,7 @@
       <div ng-app="gn_search_sextant"
            ng-controller="GnCatController"
            class="gn sxt-max-md"
+           sxt-size="auto"
            ng-include="'../../catalog/views/sextant/templates/index.html'">
        </div>
 
