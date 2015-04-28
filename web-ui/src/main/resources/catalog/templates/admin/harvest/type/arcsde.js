@@ -11,6 +11,7 @@ var gnHarvesterarcsde = {
               "name": "",
               "translations": {},
               "uuid": "",
+              "icon" : "blank.png",
               "account":     {
                 "use": true,
                 "username": "",

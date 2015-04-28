@@ -11,6 +11,7 @@ var gnHarvestergeoPREST = {
               "name": "",
               "translations": {},
               "uuid": "",
+              "icon" : "blank.png",
               "account":     {
                 "use": false,
                 "username": "",

@@ -15,7 +15,7 @@ var gnHarvesterfilesystem = {
                 "recurse" : true,
                 "nodelete" : true,
                 "checkFileLastModifiedForUpdate" : true,
-                "icon" : "blank.gif"
+                "icon" : "blank.png"
             },
             "content" : {
                 "validate" : "NOVALIDATION",

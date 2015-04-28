@@ -33,7 +33,7 @@ public class AssociatedResource {
     }
 
     public String getAssociationType() {
-        if (initiativeType == null) {
+        if (associationType == null) {
             return "";
         } else {
             return associationType;

@@ -365,22 +365,32 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
 
-                if(!scope.mdLangs && gnCurrentEdit.mdOtherLanguages) {
+                if (angular.isUndefined(scope.isMdMultilingual) &&
+                    gnCurrentEdit.mdOtherLanguages) {
+
                   scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                   scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
-                  scope.mdLang = gnCurrentEdit.mdLanguage;
 
-                  for(var p in scope.mdLangs) {
-                    var v = scope.mdLangs[p];
-                    if(v.indexOf('#') == 0) {
-                      var l = v.substr(1);
-                      if(!l) {
-                        l = scope.mdLang;
+                  // not multilingual {"fre":"#"}
+                  if(Object.keys(scope.mdLangs).length > 1) {
+                    scope.isMdMultilingual = true;
+                    scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                    for (var p in scope.mdLangs) {
+                      var v = scope.mdLangs[p];
+                      if (v.indexOf('#') == 0) {
+                        var l = v.substr(1);
+                        if (!l) {
+                          l = scope.mdLang;
+                        }
+                        scope.mdLangs[p] = l;
                       }
-                      scope.mdLangs[p] = l;
                     }
                   }
-                };
+                  else {
+                    scope.isMdMultilingual = false;
+                  }
+                }
 
                 $(scope.popupid).modal('show');
 
@@ -442,17 +452,17 @@
                 if (scope.mode == 'upload') {
                   return scope.submit();
                 } else {
-                  if(angular.isObject(scope.params.name)) {
+                  if (angular.isObject(scope.params.name)) {
                     var name = [];
-                    for(var p in scope.params.name) {
-                      name.push(p + '#' + scope.params.name[p])
+                    for (var p in scope.params.name) {
+                      name.push(p + '#' + scope.params.name[p]);
                     }
                     scope.params.name = name.join('|');
                   }
-                  if(angular.isObject(scope.params.desc)) {
+                  if (angular.isObject(scope.params.desc)) {
                     var desc = [];
-                    for(var p in scope.params.desc) {
-                      desc.push(p + '#' + scope.params.desc[p])
+                    for (var p in scope.params.desc) {
+                      desc.push(p + '#' + scope.params.desc[p]);
                     }
                     scope.params.desc = desc.join('|');
                   }

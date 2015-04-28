@@ -43,6 +43,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -113,15 +114,17 @@ public class Validate extends NotInReadOnlyModeService {
             Path file = schemaDir.resolve("loc").resolve(context.getLanguage()).resolve(rule + ".xml");
 
             Document document;
-            try (InputStream in = IO.newInputStream(file)) {
-                document = builder.build(in);
-            }
-            Element element = document.getRootElement();
+            if (Files.isRegularFile(file)) {
+                try (InputStream in = IO.newInputStream(file)) {
+                    document = builder.build(in);
+                }
+                Element element = document.getRootElement();
 
-            Element s = new Element(rule);
-            element.detach();
-            s.addContent(element);
-            schematronTranslations.addContent(s);
+                Element s = new Element(rule);
+                element.detach();
+                s.addContent(element);
+                schematronTranslations.addContent(s);
+            }
         }
         elResp.addContent(schematronTranslations);
 

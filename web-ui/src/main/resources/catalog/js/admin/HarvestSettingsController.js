@@ -116,7 +116,7 @@
         loadHistory(true);
       };
       function loadHarvesterTypes() {
-        $http.get('admin.harvester.info@json?type=harvesterTypes',
+        $http.get('admin.harvester.info?_content_type=json&type=harvesterTypes',
             {cache: true})
           .success(function(data) {
               angular.forEach(data[0], function(value) {
@@ -161,7 +161,7 @@
       };
 
       $scope.cloneHarvester = function(id) {
-        $http.get('admin.harvester.clone@json?id=' +
+        $http.get('admin.harvester.clone?_content_type=json&id=' +
             id)
           .success(function(data) {
               $scope.$parent.loadHarvesters().then(function() {
@@ -342,7 +342,7 @@
         var status = $scope.harvesterSelected.options.status;
         $http.get('admin.harvester.' +
             (status === 'active' ? 'start' : 'stop') +
-            '@json?id=' +
+            '?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
 
@@ -403,7 +403,7 @@
         var body = '<request><type url="' +
             $scope.harvesterSelected.site.url +
             '">oaiPmhServer</type></request>';
-        $http.post('admin.harvester.info@json', body, {
+        $http.post('admin.harvester.info?_content_type=json', body, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           if (data[0].sets && data[0].formats) {
@@ -524,7 +524,7 @@
       // WFS GetFeature harvester
       $scope.harvesterTemplates = null;
       var loadHarvesterTemplates = function() {
-        $http.get('info@json?type=templates')
+        $http.get('info?_content_type=json&type=templates')
           .success(function(data) {
               $scope.harvesterTemplates = data.templates;
             });
@@ -537,7 +537,7 @@
         var body = '<request><type>wfsFragmentStylesheets</type><schema>' +
             $scope.harvesterSelected.options.outputSchema +
             '</schema></request>';
-        $http.post('admin.harvester.info@json', body, {
+        $http.post('admin.harvester.info?_content_type=json', body, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           $scope.harvesterGetFeatureXSLT = data[0];
@@ -558,7 +558,8 @@
       // Z3950 GetFeature harvester
       $scope.harvesterZ3950repositories = null;
       var loadHarvesterZ3950Repositories = function() {
-        $http.get('info@json?type=z3950repositories', {cache: true})
+        $http.get('info?_content_type=json&type=z3950repositories',
+            {cache: true})
           .success(function(data) {
               $scope.harvesterZ3950repositories = data.z3950repositories;
             });
@@ -586,7 +587,7 @@
         var body = '<request><type>threddsFragmentStylesheets</type><schema>' +
             schema +
             '</schema></request>';
-        $http.post('admin.harvester.info@json', body, {
+        $http.post('admin.harvester.info?_content_type=json', body, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           $scope.harvesterThreddsXSLT = data[0];

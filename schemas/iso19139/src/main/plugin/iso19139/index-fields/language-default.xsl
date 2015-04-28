@@ -303,6 +303,44 @@
                 </xsl:if>
             </xsl:for-each>
 
+            <!-- Index aggregation info and provides option to query by type of association
+              and type of initiative
+
+            Aggregation info is indexed by adding the following fields to the index:
+             * agg_use: boolean
+             * agg_with_association: {$associationType}
+             * agg_{$associationType}: {$code}
+             * agg_{$associationType}_with_initiative: {$initiativeType}
+             * agg_{$associationType}_{$initiativeType}: {$code}
+
+            Sample queries:
+             * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
+             * Search for records having a crossReference with another record:
+             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+             * Search for records having a crossReference with another record:
+             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+             * Search for records having a crossReference of type "study" with another record:
+             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+             * Search for records having a crossReference of type "study":
+             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
+             * Search for records having a "crossReference" :
+             http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
+            -->
+            <xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
+                <xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|
+												gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+                <xsl:if test="$code != ''">
+                    <xsl:variable name="associationType" select="gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
+                    <xsl:variable name="initiativeType" select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
+                    <Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
+                    <Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
+                    <Field name="agg_{$associationType}" string="{$code}" store="true" index="true"/>
+                    <Field name="agg_associated" string="{$code}" store="false" index="true"/>
+                    <Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
+                    <Field name="agg_use" string="true" store="false" index="true"/>
+                </xsl:if>
+            </xsl:for-each>
+
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <!--  Fields use to search on Service -->
 
@@ -335,22 +373,16 @@
 
         </xsl:for-each>
 
-        <xsl:variable name="identification" select="." />
-        <Field name="anylight" store="false" index="true">
-          <xsl:attribute name="string">
-            <xsl:for-each
-              select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:abstract/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:credit/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification//gmd:organisationName/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:supplementalInformation/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmd:LocalisedCharacterString[@locale=$langId]|
-                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
-              <xsl:value-of select="concat(., ' ')"/>
-            </xsl:for-each>
-          </xsl:attribute>
-        </Field>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- === Content info === -->
+        <xsl:for-each select="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref]">
+            <Field  name="hasfeaturecat" string="{string(@uuidref)}" store="false" index="true"/>
+        </xsl:for-each>
+
+        <!-- === Data Quality  === -->
+        <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
+            <Field  name="hassource" string="{string(@uuidref)}" store="false" index="true"/>
+        </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Distribution === -->

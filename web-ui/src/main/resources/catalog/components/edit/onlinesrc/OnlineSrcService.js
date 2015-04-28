@@ -100,7 +100,9 @@
       var parseRelations = function(data) {
 
         var relations = {};
-        if (!angular.isArray(data.relation)) {
+        if (data === null) {
+          data = {relation: []};
+        } else if (!angular.isArray(data.relation)) {
           data.relation = [data.relation];
         }
         angular.forEach(data.relation, function(rel) {

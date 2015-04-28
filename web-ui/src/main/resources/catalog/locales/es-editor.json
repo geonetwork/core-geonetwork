@@ -72,9 +72,9 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Recursos en línea",
     "hasFeatureCatalog": "Usar este catálogo de features",
-    "importCPResult": "Una entrada importada:<br>id: {{id}}<br>uuid: {{uuid}}",
+    "importCPResult": "One record imported. Record identifier is: {{id}}.",
     "importEntry": "Importar una entrada del directorio",
-    "importFromDir": "Importar desde una carpeta en el servidor",
+    "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} entrada(s) importadas con éxito en {{time}} segundos.",
     "importRecords": "Importar",
     "importReport": "Importar entrada",
@@ -164,7 +164,7 @@
     "unpublish": "Despublicado",
     "unpublishSuccess": "Despublicación exitosa",
     "unsupportedSchemaAlert": "El metadato <strong>{{title}}</strong> usa el estandar <strong>{{schema}}</strong>. Este estandar no está soportado por el editor. <a href='#'>Volver a la página principal del editor</a>.",
-    "uploadFile": "Subir un fichero local",
+    "uploadFile": "Upload a file from your computer",
     "uuidAction": "Procesando identificador de la entrada",
     "validate": "Validar",
     "validate-help": "Comprobar la entrada con las reglas de validación estándar",
@@ -189,5 +189,8 @@
     "toggleSection": "Expandir / Colapsar",
     "editorBoardInfo": "Crear o importar una nueva entrada desde esta página. Acceder y Administrar rápidamente todas las entradas de metadatos.",
     "minorEditHelp": "No actualizar la fecha de actualización al salvar",
-    "minorEdit": "Edición menor"
+    "minorEdit": "Edición menor",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }

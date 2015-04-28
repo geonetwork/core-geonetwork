@@ -19,6 +19,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -26,34 +27,59 @@ import org.springframework.web.bind.annotation.ResponseBody;
 * @author bmaire
 *
 */
-
 @Controller("/log")
 public class LogConfig {
     private FileAppender fileAppender = null;
     
     private final String fileAppenderName = "fileAppender";
-    private final int maxLines = 2000;
-    
-    //--------------------------------------------------------------------------
-    // ---
-    // --- Init
-    // ---
-    // --------------------------------------------------------------------------
+    private final int maxLines = 20000;
+
     @PostConstruct
     public void init() throws Exception {
-        fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
-        
-        if (fileAppender == null) {
-            fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
-        }    
-        
+        isAppenderLogFileLoaded();
     }
-    
+
+
+    private boolean isAppenderLogFileLoaded () {
+        if (fileAppender == null || fileAppender.getFile() == null) {
+            fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
+
+            if (fileAppender == null) {
+                fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
+            }
+
+            if (fileAppender == null) {
+                Log.error(Geonet.GEONETWORK,
+                        "Error when getting appender named 'fileAppender'. " +
+                        "Check your log configuration file. " +
+                        "No appender found.");
+                return false;
+            } else {
+                String logFileName = fileAppender.getFile();
+                if (logFileName == null) {
+                    Log.error(Geonet.GEONETWORK,
+                            "Error when getting logger file for the " +
+                            "appender named 'fileAppender'. " +
+                            "Check your log configuration file. " +
+                            "A FileAppender is required to return last activity to the user interface." +
+                            "Appender file not found.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Download the log file in a ZIP.
+     * @param response
+     * @throws IOException
+     */
     @RequestMapping(value = "/{lang}/log/file", produces = {
         MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     public void getLog(HttpServletResponse response) throws IOException {
-        if (fileAppender != null) {
+        if (isAppenderLogFileLoaded()) {
             File file = new File(fileAppender.getFile());
             
             // create ZIP FILE
@@ -85,22 +111,35 @@ public class LogConfig {
                 zos.flush();
                 zos.close(); 
             }
+        } else {
+            throw new RuntimeException("No log file found for download. Check logger configuration.");
         }
     }
-    
+
+    /**
+     * Return the last lines of the log file.
+     * @param lines Number of lines to return.
+     *              Default 2000.
+     *              Max number of lines returned 20000.
+     * @return
+     */
     @RequestMapping(value = "/{lang}/log/activity", produces = {
         MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    public String activity() {
+    public String activity(@RequestParam(value = "lines",
+            required = false, defaultValue = "2000") int lines) {
         String lastActivity = null;
-        
-        if (fileAppender != null) {
-            lastActivity = readLastLines(new File(fileAppender.getFile()));
-        }          
+
+        if (isAppenderLogFileLoaded()) {
+            lastActivity = readLastLines(new File(fileAppender.getFile()),
+                    Math.min(lines, maxLines));
+        } else {
+            throw new RuntimeException("No log file found. Check logger configuration.");
+        }
         return lastActivity;
     }
     
-    private String readLastLines(File file) {
+    private String readLastLines(File file, int lines) {
         RandomAccessFile fileHandler = null;
         try {
             fileHandler = new RandomAccessFile( file, "r" );
@@ -122,7 +161,7 @@ public class LogConfig {
                         line = line + 1;
                     }
                 }
-                if (line >= maxLines) {
+                if (line >= lines) {
                     break;
                 }
                 sb.append( ( char ) readByte );

@@ -20,7 +20,7 @@ var gnHarvesterz3950 = {
                 "repositories" : [{
                     "@id": ""
                   }],
-                "icon" : "blank.gif"
+                "icon" : "blank.png"
             },
             "content" : {
                 "validate" : "NOVALIDATION",

@@ -36,6 +36,7 @@
     <xsl:apply-templates mode="relation" select="*">
       <xsl:with-param name="type" select="'sibling'"/>
       <xsl:with-param name="subType" select="@initiative"/>
+      <xsl:with-param name="association" select="@association"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -55,6 +56,7 @@
   <xsl:template mode="relation" match="*">
     <xsl:param name="type"/>
     <xsl:param name="subType" select="''"/>
+    <xsl:param name="association" select="''"/>
 
     <!-- Fast output doesn't produce a full metadata record -->
     <xsl:variable name="md">
@@ -66,6 +68,11 @@
 			<xsl:if test="normalize-space($subType)!=''">
 				<xsl:attribute name="subType">
 					<xsl:value-of select="$subType"/>		
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="normalize-space($association)!=''">
+				<xsl:attribute name="association">
+					<xsl:value-of select="$association"/>
 				</xsl:attribute>
 			</xsl:if>
       <xsl:copy-of select="$metadata" copy-namespaces="no"/>

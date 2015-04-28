@@ -109,7 +109,7 @@
     "chooseAservice": "Choose a service",
     "chooseAserviceHelp": "All services registered in the catalogue are presented here.",
     "orTypeAServiceUrl": "Or type a service URL",
-    "addAllLayersToMap": "Alle Layer visualisieren",
+    "addAllLayersToMap": "Add all {{number}} layers to the map",
     "downloadsAndResources": "Download and links",
     "sourceCatalog": "Bereitgestellt von",
     "tempExtent": "Zeitliche Ausdehnung",
@@ -270,13 +270,14 @@
     "recordNotFound": "Der Datensatz mit der UUID <strong>{{uuid}}</strong> wurde nicht gefunden oder kann nicht angezeigt werden.",
     "intersectWith": "Intersects with",
     "fullyOutsideOf": "Fully outside of",
-    "encloses": "Enclosing",
-    "within": "Within",
+    "encloses": "umfasst mindestens",
+    "within": "vollständig innerhalb",
     "transferOwnership": "Transfer Ownership",
     "selectNewOwner": "Select New Owner",
     "selectGroup": "Select Group",
     "loadUsersError": "Error loading users",
     "loadUserGroupsError": "Error loading user groups",
     "transferOwnershipError": "Error transferring metadata ownership",
-    "transferOwnershipSuccessMsg": "<h4>Successfully transferred metadata to a new Owner.</h4><dl class=\"dl-horizontal\"><dt>Transferred:</dt><dd>{{done}}</dd><dt>Not Owned:</dt><dd>{{notOwner}}</dd><dt>Not found:</dt><dd>{{notFound}}</dd></dl>"
+    "transferOwnershipSuccessMsg": "<h4>Successfully transferred metadata to a new Owner.</h4><dl class=\"dl-horizontal\"><dt>Transferred:</dt><dd>{{done}}</dd><dt>Not Owned:</dt><dd>{{notOwner}}</dd><dt>Not found:</dt><dd>{{notFound}}</dd></dl>",
+    "filterGroup": "Filter groups ..."
 }

@@ -18,7 +18,7 @@ var gnHarvesterogcwxs = {
                 },
                 "url" : "http://",
                 "ogctype" : "WMS1.3.0",
-                "icon" : "blank.gif"
+                "icon" : "blank.png"
             },
             "content" : {
                 "validate" : "NOVALIDATION",

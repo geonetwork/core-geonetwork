@@ -72,9 +72,9 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Online resources",
     "hasFeatureCatalog": "Diesen Feature Katalog gebrauchen",
-    "importCPResult": "importierter Datensatz:<br>id: {{id}}<br>uuid: {{uuid}}",
+    "importCPResult": "One record imported. Record identifier is: {{id}}.",
     "importEntry": "Verzeichniseintrag importieren",
-    "importFromDir": "Importiere von einem Ordner auf den Server",
+    "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds.",
     "importRecords": "Importieren",
     "importReport": "Bericht importieren",
@@ -164,7 +164,7 @@
     "unpublish": "Zur Rücknahme der Veröffentlichung",
     "unpublishSuccess": "Depublikation erfolgreich",
     "unsupportedSchemaAlert": "Metadatensatz <strong>{{title}}</strong> braucht <strong>{{schema}}</strong> als Standard. Das wird von diesem Editor nicht unterstützt. <a href='#'>Zurück zum Editor Board</a>.",
-    "uploadFile": "Lokale Datei hochladen",
+    "uploadFile": "Upload a file from your computer",
     "uuidAction": "Datensatzidentifikator in Bearbeitung",
     "validate": "Überprüfen",
     "validate-help": "Datensatz gemäss Stadard-Validierungsregeln überprüfen",
@@ -189,5 +189,8 @@
     "toggleSection": "Vergrössern / verkleinern anzeigen",
     "editorBoardInfo": "Erstelle oder importiere neue Datensätze auf dieser Seite. Metadaten sind rasch zugänglich und können einfach verwaltet werden.",
     "minorEditHelp": "Zeitstempel beim Speichern nicht aktualisieren",
-    "minorEdit": "Kleinere Bearbeitung"
+    "minorEdit": "Kleinere Bearbeitung",
+    "notEvaluated": "Not evaluated",
+    "notConformant": "Not conformant",
+    "conformant": "Conformant"
 }

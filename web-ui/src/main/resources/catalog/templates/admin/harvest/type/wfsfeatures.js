@@ -17,7 +17,7 @@ var gnHarvesterwfsfeatures = {
                     "password" : []
                 },
                 "url" : "http://",
-                "icon" : "blank.gif"
+                "icon" : "blank.png"
             },
             "content" : {
                 "validate" : "NOVALIDATION",
