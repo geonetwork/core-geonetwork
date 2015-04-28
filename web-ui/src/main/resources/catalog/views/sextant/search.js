@@ -243,13 +243,26 @@
           $scope.mainTabs.map.titleInfo += 1;
 
         },
+        addAllMdLayersToMap: function (layers, md) {
+          angular.forEach(layers, function (layer) {
+            $scope.resultviewFns.addMdLayerToMap(layer, md);
+          });
+        },
+
         addMdLayerToPanier: function(link, md) {
           $scope.searchObj.panier.push({
             link: link,
             md: md
           });
           $scope.mainTabs.panier.titleInfo += 1;
+        },
+
+        addAllMdLayersToPanier: function (layers, md) {
+          angular.forEach(layers, function (layer) {
+            $scope.resultviewFns.addMdLayerToPanier(layer, md);
+          });
         }
+
       };
 
       // Manage tabs height for api

@@ -79,6 +79,7 @@
             </ul>
           </div>
 
+          <!--Downloads to panier button-->
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}">
               <span class="fa fa-download"></span>
@@ -89,6 +90,16 @@
                 <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc}}">
                   <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
                   {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
+              <li class="divider"></li>
+              <li>
+                <a href="" data-ng-click="resultviewFns.addAllMdLayersToPanier(downloads, md)">
+                  <i class="fa fa-plus"></i>&nbsp;
+                  <span data-translate=""
+                        data-translate-values="{number: '{{downloads.length}}'}">
+                    addAllLayersToPanier</span>
+                </a>
+              </li>
+
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
@@ -106,10 +117,17 @@
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc}}">
                 <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
-                <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
-                {{layer.desc}} </a></li>
+                <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'"></span>
+                {{layer.desc || layer.name}} </a></li>
               <li class="divider"></li>
-              <li><a href="#">Add all layers</a></li>
+              <li>
+                <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
+                <i class="fa fa-plus"></i>&nbsp;
+                  <span data-translate=""
+                        data-translate-values="{number: '{{layers.length}}'}">
+                    addAllLayersToMap</span>
+              </a>
+              </li>
             </ul>
           </div>
           <button type="button" class="btn btn-default btn-sm pull-right"
