@@ -20,7 +20,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 	},
 	
 	getPermaLink : function() {
-		return formatterUrl = this.catalogue.services.mdFormatter + '?uuid=' + encodeURI(this.metadataUuid) + '&xsl=mdviewer';
+		return formatterUrl = this.catalogue.services.mdFormatter + '?id=' + encodeURI(this.metadataUuid) + '&xsl=mdviewer';
 	},
 	
 	/**

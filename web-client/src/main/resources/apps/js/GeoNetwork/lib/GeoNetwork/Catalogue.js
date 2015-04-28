@@ -393,7 +393,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             logoUrl: this.URL + '/images/logos/',
             imgUrl: this.URL + '/images/',
             harvesterLogoUrl: this.URL + '/images/harvesting/',
-            mdFormatter: serviceUrl + 'metadata.formatter.html',
+            mdFormatter: serviceUrl + 'md.format.html',
             getImportXSL: serviceUrl + 'get.conversions.xsl',
             proxy: this.URL + '/proxy'
         };
