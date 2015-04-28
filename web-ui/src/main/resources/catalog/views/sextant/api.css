@@ -10445,6 +10445,10 @@
 .gn .gn-md-view table tr th {
   width: 25%;
 }
+.gn .gn-md-view .badge {
+  word-break: break-all;
+  white-space: normal;
+}
 .gn .gn-metadata-view {
   font-family: Arial "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -10640,6 +10644,9 @@
 }
 .gn .gn-metadata-view .pad-right {
   margin-right: .4em;
+}
+.gn .gn-metadata-view .pad-left {
+  margin-left: .4em;
 }
 .gn .gn-metadata-view .dropdown-menu {
   font-size: 90%;
@@ -10879,6 +10886,16 @@
 .gn .sxt-max-sm .sxt-center-panel {
   float: none;
   width: 100%;
+}
+@media (max-width: 1199px) {
+  .gn .row .sxt-left-panel {
+    float: none;
+    width: 100%;
+  }
+  .gn .row .sxt-center-panel {
+    float: none;
+    width: 100%;
+  }
 }
 .gn [data-ng-search-form] {
   margin-right: 15px;
@@ -11540,4 +11557,13 @@
 }
 .gn [gn-share] .gn-share-help {
   display: none;
+}
+.gn .sxt-panier {
+  margin: 15px 20px 0 20px;
+}
+.gn .sxt-panier h3 {
+  margin-bottom: 30px;
+}
+.gn .sxt-panier > ul {
+  margin-top: 10px;
 }
