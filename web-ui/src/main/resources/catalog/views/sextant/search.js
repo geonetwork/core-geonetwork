@@ -317,9 +317,11 @@
         scope: false,
         link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD', '#FILE',
-              '#DB', '#COPYFILE', 'WFS');
-          scope.layers = scope.md.getLinksByType('OGC');
+
+          scope.downloads = scope.md.getGroupedLinksByTypes('#FILE',
+              '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+          scope.layers = scope.md.getGroupedLinksByTypes('OGC:WMTS',
+              'OGC:WMS', 'OGC:OWS-C');
 
         }
       };
