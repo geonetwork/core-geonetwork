@@ -14,6 +14,8 @@
             <option value="WFS">Download (WFS)</option>
             <option value="WCS">Download (WCS)</option>
             <option value="OGC:WMS-1.1.1-http-get-map">View (WMS)</option>
+            <option value="OGC:WMTS">View (WMTS)</option>
+            <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
             <option value="OGC:OWS-C">View (OWS Context)</option>
         </helper>
     </element>
