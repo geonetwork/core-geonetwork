@@ -84,6 +84,7 @@
 
         };
         return {
+          mergeDefaultParams: mergeDefaultParams,
 
           getWMSCapabilities: function(url) {
             var defer = $q.defer();
