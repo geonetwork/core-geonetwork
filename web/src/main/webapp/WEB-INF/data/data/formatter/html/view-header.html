@@ -38,23 +38,23 @@
     </ul>
     <div class="entry overview">
         <h3 class="view-header">
-            <button type="button" class="btn btn-default toggler">
+            <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
                 <i class="fa fa-arrow-circle-down"></i>
             </button>
             <span fmt-translate="">overview</span>
         </h3>
 
-        <div class="entry target">
+        <div id="{{'' | lastUUID}}" class="entry target">
             <img fmt-if="thumbnail" class="thumbnail" src="{{thumbnail | escapeXmlAttrs}}"></img>
             <div fmt-if="abstract" class="entry abstract">
                 <h3>
-                    <button type="button" class="btn btn-default toggler">
+                    <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
                         <i class="fa fa-arrow-circle-down"></i>
                     </button>
                     <span fmt-translate="">abstract</span>
                 </h3>
 
-                <dd class="target">
+                <dd id="{{'' | lastUUID}}" class="target">
                     {{abstract}}
                 </dd>
             </div>

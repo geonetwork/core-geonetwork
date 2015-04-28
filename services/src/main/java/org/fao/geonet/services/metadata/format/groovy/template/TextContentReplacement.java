@@ -20,9 +20,8 @@ public class TextContentReplacement implements TextContent {
     public String text(TRenderContext content) {
         Object value = content.getModelValue(key);
         if (value == null) {
-            return key;
+            value = key;
         }
-
         for (TextContentFilter filter : filters) {
             value = filter.process(content, value.toString());
         }

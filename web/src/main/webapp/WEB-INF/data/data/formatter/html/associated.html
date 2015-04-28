@@ -4,16 +4,16 @@
     </div>
     <div fmt-if="!isPDF" >
         <h3>
-            <button type="button" class="btn btn-default toggler">
+            <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
                 <i class="fa fa-arrow-circle-down"></i>
             </button>
             <i fmt-if="linkBlock.iconClasses" class="{{linkBlock.iconClasses}} pad-right"></i><span fmt-translate="">{{linkBlock.name | escapeXmlContent}}</span>
         </h3>
-        <table class="table row target">
+        <table id="{{'' | lastUUID}}" class="table row">
             <tr fmt-repeat="link in linkBlock.links" class="row">
                 <td class="col-md-2 link-block-title">
                     <h3>
-                        <button type="button" class="btn btn-default toggler" toggle-ancestor="2" toggle-selector="div">
+                        <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
                             <i class="fa fa-arrow-circle-down"></i>
                         </button>
                         <span fmt-if="link.type.iconHtml" fmt-only-children="true">{{link.type.iconHtml}}</span>
@@ -22,30 +22,23 @@
                         <span fmt-translate="">{{link.type.name}}-link</span>
                     </h3>
                 </td>
-                <td class="col-md-10 target">
-                    <div fmt-repeat="link in link.links">
-                        <a onclick="gnFormatter.loadAssociated('div#associated-{{link.metadataId}}', '{{link.metadataId}}');" title="{{link.tip}}" class="toggler {{link.cls}}" toggle-ancestor="0">{{link.text | escapeXmlContent}}</a>
-                        <a href="{{link.href}}" target="_blank" title="{{link.href}}" class="{{link.cls}}">
-                            <i class="fa fa-external-link"></i>
-                        </a>
+                <td class="col-md-10">
+                    <div id="{{'' | lastUUID}}">
+                        <div fmt-repeat="link in link.links">
+                            <a onclick="gnFormatter.loadAssociated(event, 'div#associated-{{- | generateUUID}}', '{{link.metadataId}}');"
+                               title="{{link.tip}}" class="{{link.cls}} associated-link-a"
+                               target="{{'' | lastUUID}}">{{link.text | escapeXmlContent}}</a>
+                            <a href="{{link.href}}" target="_blank" title="{{link.href}}" class="{{link.cls}}">
+                                <i class="fa fa-external-link"></i>
+                            </a>
 
-                        <div class="target" style="display: none;">
-                            <img class="logo" src="{{link.logo}}" fmt-if="link.logo"/>
-                            <h3 class="text-justify" >{{link.tip | capitalize}}</h3>
-                            <p class="text-justify" fmt-if="link.abstract">{{link.abstract}}</p>
+                            <div id="{{'' | lastUUID}}" style="display: none;" class="associated-link-row">
+                                <img class="logo" src="{{link.logo}}" fmt-if="link.logo"/>
+                                <h3 class="text-justify" >{{link.tip | capitalize}}</h3>
+                                <p class="text-justify" fmt-if="link.abstract">{{link.abstract}}</p>
 
 
-                            <div id="associated-{{link.metadataId}}">
-                                <h3 class="view-header">
-                                    <button type="button" class="btn btn-default toggler">
-                                        <i class="fa fa-arrow-circle-down"></i>
-                                    </button>
-                                    <i class="fa fa-sitemap pad-right"></i>
-                                    <span fmt-translate="">associated-link</span>
-                                </h3>
-                                <div class="target">
-                                    <div><i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i>Loading...</div>
-                                </div>
+                                <div id="associated-{{'' | lastUUID}}"/>
                             </div>
                         </div>
                     </div>

@@ -1,13 +1,13 @@
 <div class="entry {{name}}">
 
     <h3>
-        <button type="button" class="btn btn-default toggler">
+        <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
             <i class="fa fa-arrow-circle-down"></i>
         </button>
         {{label}}
     </h3>
 
-    <div class="target">
+    <div id="{{'' | lastUUID}}">
         <dl class="dl-horizontal">
             {{childData}}
         </dl>
