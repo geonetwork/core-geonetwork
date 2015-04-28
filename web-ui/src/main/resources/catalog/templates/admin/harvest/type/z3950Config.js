@@ -11,6 +11,7 @@ var gnHarvesterz3950Config = {
               "name": "",
               "translations": {},
               "uuid": "",
+              "icon" : "blank.png",
               "account":     {
                 "use": false,
                 "username": "",

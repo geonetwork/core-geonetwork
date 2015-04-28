@@ -17,7 +17,7 @@ var gnHarvesterthredds = {
                     "password" : []
                 },
                 "url" : "http://",
-                "icon" : "blank.gif"
+                "icon" : "blank.png"
             },
             "content" : {
             },

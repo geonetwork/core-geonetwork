@@ -17,7 +17,7 @@ var gnHarvesteroaipmh = {
                 "password": ""
               },
               "url": "",
-              "icon" : "blank.gif"
+              "icon" : "blank.png"
             },
             "options":   {
               "every": "0 0 0 ? * *",
