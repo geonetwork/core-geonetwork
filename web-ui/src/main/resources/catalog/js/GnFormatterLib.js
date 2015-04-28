@@ -83,35 +83,37 @@
       parentParam = '&parentUuid=' + parentUuid;
     }
 
-    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' + metadataId + parentParam, {
-      dataType: 'text',
-      success: function(html) {
-        if (spinnerSel) {
-          spinner.hide();
-        }
-        if (!html) {
-          return;
-        }
+    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' +
+        metadataId + parentParam, {
+          dataType: 'text',
+          success: function(html) {
+            if (spinnerSel) {
+              spinner.hide();
+            }
+            if (!html) {
+              return;
+            }
 
-        var el = linkBlockEl.replaceWith(html);
-        linkBlockEl = $('.summary-links-associated-link');
+            var el = linkBlockEl.replaceWith(html);
+            linkBlockEl = $('.summary-links-associated-link');
 
-        linkBlockEl.find('.toggler').on('click',
-            gnFormatter.formatterSectionTogglersEventHandler);
-        if (linkBlockEl.find('table').children().length == 0) {
-          linkBlockEl.hide();
-          $('a[rel = ".container > .associated"]').attr('disabled', 'disabled');
-        }
-      },
-      error: function(req, status, error) {
-        if (spinnerSel) {
-          spinner.hide();
-        }
-        linkBlockEl.html('<h3>Error loading related metadata</h3><p><pre>' +
-            '<code>' + error.replace('<', '&lt;') + '</code></pre></p>');
-        linkBlockEl.show();
-      }
-    });
+            linkBlockEl.find('.toggler').on('click',
+               gnFormatter.formatterSectionTogglersEventHandler);
+            if (linkBlockEl.find('table').children().length == 0) {
+              linkBlockEl.hide();
+              $('a[rel = ".container > .associated"]').
+                 attr('disabled', 'disabled');
+            }
+          },
+          error: function(req, status, error) {
+            if (spinnerSel) {
+              spinner.hide();
+            }
+            linkBlockEl.html('<h3>Error loading related metadata</h3><p><pre>' +
+               '<code>' + error.replace('<', '&lt;') + '</code></pre></p>');
+            linkBlockEl.show();
+          }
+        });
   };
 
 })();

@@ -2,15 +2,24 @@
   goog.provide('gn_formatter_viewer');
 
 
+
+
+
+
+
+
+
+
+
   goog.require('gn');
+  goog.require('gn_alert');
   goog.require('gn_catalog_service');
   goog.require('gn_formatter_lib');
-  goog.require('gn_utility_directive');
-  goog.require('gn_popup_directive');
-  goog.require('gn_search_default_directive');
   goog.require('gn_mdactions_service');
-  goog.require('gn_alert');
+  goog.require('gn_popup_directive');
   goog.require('gn_popup_service');
+  goog.require('gn_search_default_directive');
+  goog.require('gn_utility_directive');
 
 
 
@@ -20,7 +29,8 @@
 
 
   var module = angular.module('gn_formatter_viewer',
-      ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service', 'gn_search_default_directive',
+      ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service',
+        'gn_search_default_directive',
         'gn_popup_service', 'gn_mdactions_service', 'gn_alert']);
 
   // Define the translation files to load
@@ -47,7 +57,8 @@
            $scope.metadata = $sce.trustAsHtml(data);
          });
          var indexField = isNaN(mdId) ? '_uuid' : '_id';
-         $http.get('qi?_content_type=json&fast=index&'+indexField+'=' + mdId).success(function(data){
+         $http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
+         mdId).success(function(data) {
            $scope.md = new Metadata(data.metadata);
          });
        }]);
