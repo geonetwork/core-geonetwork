@@ -90,10 +90,12 @@ public class TemplateParser {
 
         public TNode root;
         public Stack<TNode> stack = new Stack<>();
+        public char[] textContent;
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             try {
+                processText();
                 TNodeFactory found = null;
                 for (TNodeFactory factory : tnodeFactories) {
                     if (factory.applicable(localName, qName, attributes)) {
@@ -126,18 +128,35 @@ public class TemplateParser {
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
+            processText();
             this.stack.pop();
         }
 
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            final char[] content = new char[length];
-            System.arraycopy(ch, start, content, 0, length);
-            try {
-                this.stack.peek().setTextContent(new String(content));
-            } catch (IOException e) {
-                throw new TemplateException(e);
+        public void characters(final char[] ch, final int start, final int length) throws SAXException {
+            final int copyToStart;
+            if (this.textContent != null) {
+                char[] tmp = this.textContent;
+                this.textContent = new char[tmp.length + length];
+                System.arraycopy(tmp, 0, this.textContent, 0, tmp.length);
+                copyToStart = tmp.length;
+            } else {
+                copyToStart = 0;
+                this.textContent = new char[length];
             }
+            System.arraycopy(ch, start, this.textContent, copyToStart, length);
         }
+
+        private void processText() {
+            if (this.textContent != null && !this.stack.isEmpty()) {
+                try {
+                    this.stack.peek().setTextContent(new String(this.textContent));
+                } catch (IOException e) {
+                    throw new TemplateException(e);
+                }
+            }
+            this.textContent = null;
+        }
+
     }
 }

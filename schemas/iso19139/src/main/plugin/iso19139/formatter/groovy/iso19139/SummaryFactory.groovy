@@ -189,7 +189,7 @@ class SummaryFactory {
         def html = """
 <script type="text/javascript">
 //<![CDATA[
-gnFormatter.loadAssociated('.${LinkBlock.CSS_CLASS_PREFIX + associated}', ${this.env.metadataId}, undefined, '.associated-spinner')
+gnFormatter.loadAssociated(undefined, '.${LinkBlock.CSS_CLASS_PREFIX + associated}', ${this.env.metadataId}, undefined, '.associated-spinner')
 //]]></script>
 <div><i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i>Loading...</div>
 """

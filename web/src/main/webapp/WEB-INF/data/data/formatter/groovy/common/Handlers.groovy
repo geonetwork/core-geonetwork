@@ -154,6 +154,11 @@ public class Handlers {
                 }
             } else if (type == "services" || type == "sources" || type == "parent" || type == "fcats") {
                 direction = Direction.PARENT
+            } else if( type == 'associated') {
+                Element aggIndexEl = rel.getChildren().find{it.getName() startsWith "agg_"}
+                if (aggIndexEl != null) {
+                    type = aggIndexEl.name.substring(4)
+                }
             }
 
             def relatedIdInfo = addRelation(hierarchy, uuid, rel, type, direction)
