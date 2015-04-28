@@ -120,7 +120,14 @@
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
-      var finalParams = angular.extend(params, hiddenParams);
+      var finalParams = angular.copy(params);
+      if(hiddenParams) {
+        for(var p in hiddenParams) {
+          if(!finalParams.hasOwnProperty(p)) {
+            finalParams[p] = hiddenParams[p];
+          }
+        }
+      }
       gnSearchManagerService.gnSearch(finalParams).then(
           function(data) {
             $scope.searching--;
