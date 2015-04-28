@@ -111,7 +111,7 @@
             scope.load();
           };
 
-          scope.load = function () {
+          scope.load = function() {
             if (scope.url) {
               scope.loading = true;
               gnOwsCapabilities['get' + scope.format.toUpperCase() +

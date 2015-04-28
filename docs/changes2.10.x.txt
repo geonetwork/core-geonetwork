@@ -1,0 +1,1598 @@
+================================================================================
+===
+=== GeoNetwork 2.10.4: List of changes
+===
+================================================================================
+
+- #699 Use also import stylesheets defined in schema plugins.
+- #671 Restore update-srv-*Dataset processes.
+- #677 Classic UI: Metadata view links in metadata show cause a javascript error in debug mode.
+- #655 Add search criteria in harvesters fails in Internet Explorer.
+- Don't let map and about be repeatedly added to breadcrumbs.
+- Fixed translations for time period in metadata editor and other spanish translations.
+- Restore pluginrepository but use mvnrepository.com
+- #548 CSW Harvester: Search filters returning queriables with apiso prefix causes harvester save to fail.
+- #538 Harvesters doesn't update the change date of the local metadata.
+- #425 Transfer ownership doesn't add the permissions for the new user/group properly.
+- Html5ui: Remove wildcard on any search string - if the user wants that they can add it themselves.
+- Include login for pre 2.10.x geonetwork instances.
+- GeoNetwork can use Basic/Digest now (no need for xml.login service anymore).
+- Html5ui: Provide search form with a resetCb.
+- Html5ui: Hide advanced search panel when doing search.
+- Download URL hanging in classic interface viewer because URL.
+- Remove geonet: elements from metadata before commit.
+- Relax validation on responses and records in oaipmh.
+- Don't cause an exception if the schemaLocation is not defined for a schema - just log an error that we don't have a schemaLocation.
+- Avoid writing empty multipolygons to spatialindex.
+- Bring in commit from develop that fixes webdav uuid overwrite bug.
+- Don't display status if Unknown.
+- Add workflow status to fast search results so that it can be displayed in search summary.
+- Allow admin to set any status.
+- Remove logic that prevented a reviewer from modifying privileges on a record they are allowed to review.
+- hasEditPermission check not necessary.
+- Status actions should use html5ui.
+- Include search on status for metadata workflow.
+- Fix bug in pdf output.
+- Fix excessive memory bug in XmlSearcher - if from-to not specified XmlSearcher may try and return the whole catalogue with rather bad results for memory consumption on the server.
+- Force indexsearchers to refresh so that results don't get out of date, etc.
+- Tidy pom file to provider versions for plugins.
+- Include output redirect for mef.export.
+- Add xml.mef.import and xml.mef.export.
+- Add in xml services interface from 2.8.x - dev doco for 2.8.x now applies to 2.10.x as well.
+- Restore Shibboleth auth on 2.10.x.
+- #582 CSW harvester: removing the search filter doesn't work.
+- #543 CSW Harvester: Hide the Add search criteria button if a search criteria is added (only 1 supported in each harvester).
+- #564 Update main pom.xml sections to point GitHub instead of old SVN/Trac.
+- #550 Metadata set thumbnail service doesn't use the preferred protocol.
+- #542 CSW harvester can't be saved with a search criteria defined. Occurs only if also an empty search criteria section exists.
+- #541 Changes in the scheduler of a harvester type affects all other harvester schedules of same type.
+- Html5ui: Remove trailing commas that can cause problems for IE.
+- #422 Harvesters break when the change date of metadata makes fail the ISODate parsing.
+- #535 Harvesters consuming database connections.
+- #354 ConcurrentModificationException in spring security interceptor when selecting metadata records.
+- #387 Postgres database loading hangs webapp when trying to drop services and serviceparameters table.
+- #534 html5ui: delete with record in viewer leaves viewer active.
+- #532 html5ui: login when viewing a record does not change actions menu.
+- #453 Suggestion processes (like inspire-add-conformity) that include thesaurus files doesn't work when running GeoNetwork in windows.
+- Html5ui: Display extra help in edit mode only.
+- Html5ui: Remove potential javascript error when looking for tabs in EditorPanel.
+- Always load results from subtemplate search, even if nothing returned, otherwise subtemplate search panel will hang.
+- #473 Widgets UI (htmlui): Sorting results issues. Fix identifier for sort order component.
+- Html5ui: Use default view defined on Settings.
+- Html5ui: Adding close button to help popup.
+- Html5ui: Add LinkTools to debug list of javascript files.
+- Html5ui: Adding default css. If this css is missing, the validation status is not shown.
+- Metadata editor: In descriptiveKeywords: Don't display anchor xlink:href unless the keyword/term is blank.
+- Metadata editor: descriptiveKeywords template should look up schema using $schema instead of hard coded iso19139.
+- Html5ui: Adding (deactivated by default) a button next to label fields to show a help pop-up.
+- #506 XLink processing on local:// fails due to null servlet context in detachXLinks.
+- #511 GetCurrentMDTab service should retrieve the default view from the settings.
+- Move thredds harvester to local://
+- Move fragment harvester from urls to local://
+- Allow failures to stop xlink processing for general usage.
+- Remove override that caused database connections to be consumed when calling local services.
+- XLinks not resolving because null Service Context in detachXLinks.
+- Html5ui: Set line-height on relationship descriptions (IE adopts something odd otherwise).
+- Html5ui: Update mappings from relationship types to CSS.
+- Html5ui: Move links from metadata viewer to util.LinkTools.js
+- Html5ui: Fix grid view - rows weren't displaying.
+- Html5ui: Re-organise icons to remove smart image directory.
+- Html5ui: Place harvesting icons in the place where GeoNetwork expects to find them.
+- Html5ui: Move text 20px to write to allow for background image.
+- Html5ui: Remove sprites and icons that have been replaced with fa stuff.
+- Html5ui: Fix spelling mistake in related resource table.
+- Html5ui: Anchor layout meant list of records to link to was not showing in related resources for parent, dataset etc.
+- Html5ui: Split styling for tag aside from main aside.
+- Html5ui: Re-organise home page: tag cloud into aside, latest and popular to use better width calculation and display 4 instead of 3.
+- Html5ui: Only add download selector/add button when more than one download link in metadata record. Ensure that mimetypes other than zip archives will trigger this button being added.
+- Html5ui: Clear out list of recently viewed/edited metadata records after logout.
+- Html5ui: Make sure ie doesn't calculate a different heights for the free text search box and submit search button.
+- Html5ui: Restore footer with config option to remove it if necessary.
+- Html5ui: Remove icon separator line from language menu.
+- Html5ui: Tidy up language menu to ensure that it fits with the rest of the outer header.
+- Html5ui: Include font-awesome.
+- Html5ui fixes and improvements.
+- #431 WAF harvester doesn't process folders.
+- Backport of pull request #463: Allow harvesting history to be accessible via an XML interface.
+- #465 html5ui metadata editor doesn't highlight in red mandatory elements if empty.
+- #455 Metadata share links in html5 UI are broken.
+- #441 Metadata editor can be accessed after user logout in html5ui.
+- Disable dtd capabilities that could be used inappropriately. Thanks to Graeme Glen, University of Auckland.
+- Enforce check on database connection before doing anything.
+- #413 Tab search widget UI doesn't show correct groups in the advanced search panel.
+- #403 Pagination buttons are not displayed on the top of the search results in the widgets UI (htmlui).
+- #394 ExtJs search and tabsearch apps doesn't show any message when login is not valid.
+- Html5ui: hide debug CSS style.
+- #382 Metadata delete service throws NumberFormatException if the uuid provided doesn't exist. Use a meaningful exception instead.
+- Update macosx launch4j.
+- Update windows launch4j.
+- Shortcuts failing to install on windows x64 so include correct shell link dll for x64.
+- Add extra files to be included with updated launch4j and to override windows default install path in izpack installer.
+- Update launch4j to build a windows exe file that will work with a 64bit.
+- CSW services documentation: Fix url for trasaction services and GeoNetwork camel case fixes.
+
+================================================================================
+===
+=== GeoNetwork 2.10.3: List of changes
+===
+================================================================================
+- Update version to 2.10.3-0
+- Update version to 2.10.3-0
+- Fix for issue #373
+- Metadata update by XML / record title and abstract not displayed in search results when having a default namespace #372.
+- Search suggestion / some record fields may contains new line and make the JSON invalid.
+- Improve french translation.
+- Widgets / relation panel / display relation if no distribution section (#368).
+- Can't delete a logo (#363).
+- RSS / add the mdlinkonly parameter to only get the link for the record (get from develop branch).
+- CSW test / Drop old out of date samples.
+- Merge pull request #359 from anzmest/pull3
+- Merge pull request #1 from smart-geonetwork/pull
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Autocompletion / value should be analyzed (#357).
+- Widgets / Avoid undefined in results summary if a summary only request is made.
+- Merge pull request #356 from sppigot/2.10.x
+- Move metadata.select calls outside of loop that sets checkboxes to remove unnecessary metadata.select server load
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Editor / Region list / Avoid NoSuchBeanDefinitionException
+- Merge pull request #350 from Delawen/del2.10.x
+- If metadata contains invalid layer name, when trying to add the layer to the map, it shows a wms layer selection window
+- pull in update to maven_repo
+- Fix for #347
+- Use eclipse URIUtils to avoid java7 dependency
+- Updating submodule maven_repo to latest commit
+- Fixes for correct URLs on windows and linux - some fixes are similar to those proposed by fxp in #135 and this patch fixes problems described in #218 Requires patched xml-resolver jar from commit 0e5b1af75f05a00d02bb6c85dbbc573aec7395ff which is a fix for issue #339
+- #340 readwriteUuid usage on metadata creation
+- #338 CSW harvester fails when using http POST and filter query for GetRecords queries
+- Italian translation: improvements and updates to js files (mostly provided by DGuidi)
+- ISO19139 / AggregationInfo / Relations are only displayed from the record defining the aggregate (#335). Improve doc about relation.
+- ISO19110 / Relation display no title (#258).
+- Italian translation: some improvements. Close #277.
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- #334 Metadata editor: datetimes values are lost in IE after editing and saving the metadata
+- Added uuidAction parameter in xml.metadata.insert and update language in service urls
+- Schematron ruleset titles in schema-plugins. Close #325.
+- Fix for #319
+- Fix for issue #318
+- Italian translation / Update GUI and ISO19139 labels (by DGuidi)
+- Merge pull request #296 from geosolutions-it/2.10.x
+- Widgets / User menu : Fix username display on IE7+ and fix tooltip display on IE9-.
+- #308 CSW ExceptionReport version is incorrect, should be 1.2.0
+- #305 Date filter calendars in Advanced Search (classic UI) render wrongly in Chrome/Safari/IE
+- #305 Date filter calendars in Advanced Search (classic UI) render wrongly in Chrome/Safari/IE
+- Improvements to schema-conversions
+- Improvements to schema-conversions
+- Fix log level in ProfileManager
+- Merge pull request #281 from ianwallen/Fix_Issue_274
+- Merge pull request #280 from ianwallen/Fix_url
+- Improve string handling in xsl back calls
+- #289 getGNServiceURL function adds extra slash if the parameter starts with slash
+- Update docs versions
+- Update version to 2.10.2-SNAPSHOT
+- Update version to 2.10.2-SNAPSHOT
+- Update version to 2.10.2-SNAPSHOT
+- 2.10.2 release changes.
+- 2.10.2 release. Fix for duplicated user info in header.
+- Update version to 2.10.2-0
+- Update version to 2.10.2-0
+- Fixed typo in url.
+- Fix metadata links in the pdf so that it works in the widgets and classic interface.
+- #267 HTML5 UI: Use WMC context in map and allow OSM layers
+- #271 Transfer ownership displays target users repeated
+- #266 HTML5 UI: Hide special groups from New Metadata panel
+- Merge pull request #265 from Delawen/origin/2.10.x
+- Fixing a really weird bug on IE I don't even know how to report.
+- Merge pull request #263 from Delawen/136
+- Check if we passed an override parameter for layers #136
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- #257 WMS harvester thumbnail issue (classic UI)
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Editor / XML view / Do not escape &#10; (#254).
+- #247 HTML5 UI: Context menu in search results displaying admin options when unlogged
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- #246 HTML5 UI: Click on search result metadata title doesn't open the metadata detail page
+- #241 Fix MySql create sql script
+- Bug fix: Pressing <Enter> key instead [Search] button sends only Simple Search request. http://trac.osgeo.org/geonetwork/ticket/1041
+- Merge pull request #220 from ianwallen/Branch_a6a1b2af565d7e159c4a644e8c82475063912773
+- Merge pull request #221 from ianwallen/Fix_Issue_174
+- Fixed issue when the referer was null
+- Merge pull request #173 from ianwallen/Jetty-7.6.8
+- Fix issue 213 Fixed issues related to last commit (dcd363f2cb8cbb08a0113a370c0fcc506061aa8b)    - characterset issue with ita    - commited conflict info from nor
+- Fix bug edit linkresource service selection
+- Widgets / Editor / User defined frequency is not properly saved.
+- Update version to 2.10.1.
+- Fix for #206
+- Adding a temporal element in editor would produce an invalid record because suggestion checking for nested OR types was not coping with duplicate element names in the 19115/19139 element hierarchy (in this case gmd:extent).
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-0
+- Update version to 2.10.1-0
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Forgotten password in self-registration system broken due to arguments to PasswordEncoder matches function being wrong way round
+- Fixed issue with registration and password reset not working
+- ISO19139 / RDF / Properly encode rdf:resource for point of contact organisation.
+- Security / JeevesException extending AuthenticationException make the user to be logged off when an Exception is thrown.
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #172 from ianwallen/Issue_#153
+- Merge pull request #188 from ianwallen/Fix_Issue_176
+- Issue #166: Spatial Filters in CSW etc for 2.10.x were trimming too many search results - problem was caused by switching from a Set implementation in 2.8.x to an array[] in 2.10.x whilst processing search results the counter on the array was not being incremented
+- Change log4j.logger.jeeves from DEBUG to INFO    DEBUG should probably not be a default    DEBUG was causing all the config overrides to be placed in the log files - in some cases this was username passwords for the database.
+- Bring in commit 45edb70 from 2.8.x to make batch import transactional and faster
+- Merge pull request #175 from ianwallen/Fix_Issue_174
+- Merge pull request #178 from ianwallen/Fix_question_mark_search
+- Merge pull request #180 from Delawen/2.10.x
+- Adding translatable text to "no thumbnail" caption
+- Fix for issue when searching for "?" which was returning the following error. StringIndexOutOfBoundsException : String index out of range: -1
+- Added another fix where if we cannot get the language from the spring security then we can use the referer.
+- Fix for Issue #174 Retreived savedRequest from spring security and parse language out of the url.
+- Upgrade from Jetty 7.3.1 to Jetty 7.6.8 It seems to have fixes the issue with jsp pages not being compiled properly.
+- Re-Fix Issue #153 Apparently there may still be links which use the 2 char language code -i.e. "fr" which get redirected to "fre". In order for these links to work we need to allow for 2 to 3 chars for the language.
+- Merge pull request #161 from ianwallen/2.10.x
+- Merge pull request #163 from ianwallen/fix-Issue-158
+- Merge pull request #165 from ianwallen/Fix-Issue-153
+- Fix for issue 153 Updated the regular expression related to the languages to be more specific.
+- Fix for Issue #158 Changed logic so that it will only check for the proper permission if there is a need to make a change. Since the user interface does now allow editor to change the group <= 1 they should not be any attempt to changes.
+- Remove console.log debug stuff
+- Updated Help link so that it will link to the proper language if the correct files exists.
+- CRS selection change for sensorML
+- Exception processing should be done by schema to avoid confusion caused by unqualified names being present in more than one schema
+- Merge pull request #156 from ianwallen/2.10.x
+- Switch from status List service to Info service for advanced search menu
+- Add thesaurus selector which can be predefined with thesaurus name, can select one or many values - used for sensorML at present but could be used elsewhere
+- French changes failed in the last update. Trying again.
+- Widgets / Keyword selection / Fix keyword update when using arrow control.
+- Overrides / Add support for geoserver nodes (#154).
+- When processing geonet:child, exclude geonet: namespace attributes
+- Subtemplate import / Add the capability to update existing record (#152).
+- Merge branch 'UTF-8' of git://github.com/ianwallen/core-geonetwork into ianwallen-UTF-8
+- Another Fix for Ticket 1295 - Thanks Ian Wallen.
+- Add same map options as mini search map.
+- Add missing JS file required for zoom control.
+- Add warning when permalink points to a deleted or not visible to user record.
+- Ignore geonet:* in INSPIRE view edit mode.
+- Harvester / Error retrieving remote node groups (#150).
+- ISO19139 profile / Make add source templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- ISO19139 profile / Make relation templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- Test CSW / This interface is accessible from the admin now - Use the same layout.
+- Merge pull request #145 from ianwallen/2.10.x
+- Widgets / Add capability to customize tagcloud (#144).
+- Fixed broken image issue that was occurring when the image src variable was null.
+- BaseURL should not contain Host URL Otherwise if the site hostname is not configured properly then you will get errors such as the following. "bad URI or cross-site access not allowed"
+- Widgets apps / Support IE10.
+- Widgets / HTML5UI / Fix image path for icon in editor (Related to ba19858).
+- LDAP / Get highest profile if more than one defined.
+- Administration / Subtemplate / Allow sort by title (#140).
+- Improve french translation.
+- Widgets / Add capability to configure default edit mode on per schema basis. Add option to disable a calendar (eg. when indeterminatePosition=something for example in ISO19139).
+- Widgets / Keyword selection / Add the capability to search by URI instead of keyword label. Properly escape & in gmx:Anchor.
+- Administration / Import / Restore the capability to load subtemplates.
+- Update version to 2.10.0-SNAPSHOT
+- Documentation / Add 2.10 feature list. Fix release doc due to submodule changes.
+- Documentation / Add missing files related to submodule removal and .gitignore rule.
+- Only ignore installer creation folder.
+- Merge pull request #131 from ianwallen/2.10.x
+- added missing file to docs
+- Permit anyone to view the docs if they exists.
+- Merge pull request #127 from Delawen/2.10.x
+- Print Panel improved, now with more scroll bars!
+- Merge pull request #126 from Delawen/2.10.x
+- More margin changes for main content div, so the editor looks better #108
+- Merge pull request #125 from Delawen/2.10.x
+- Improved style for metadata editor, adding a better "delete" icon for buttons
+- Improved styling on metadata editor
+- Fix typo that made the rule invalid
+- Merge pull request #124 from Delawen/2.10.x
+- Adding checkboxes for results view fixing #103
+- Merge pull request #123 from Delawen/2.10.x
+- Fixing logout not clearing the user defined on catalogue
+- Merge pull request #122 from Delawen/2.10.x
+- Putting Login dropdown box above everything else
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #120 from Delawen/2.10.x
+- Minimum height for pupular and latest metadata, so it is completely visible at all times #104
+- Merge pull request #119 from Delawen/2.10.x
+- Consistent resizing of resultsPanel for different css rules
+- Margins on main content will degrade on smaller screens to have more space for content. Related to #100, not being able to see "actions" button
+- Merge pull request #118 from Delawen/2.10.x
+- Removing testing with latest ExtJS library
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- Merge pull request #114 from Delawen/2.10.x
+- Simplifying font-face css3 definitions
+- Fixing fonts css
+- patch fixes #106 Using document mode of IE9
+- Cleanup/formating of harvesting.xml and config.xml   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English elements
+- Adding eot version of the fonts
+- added docs, installer and release into main repo
+- removed submodules installer, docs, releases
+- Updated the compare to use the xsl:for-each to loop through language as it is cleaner. Added missing "tur" and "pol"
+- Added missing "pol"
+- Formatting - spaces to tabs
+- Added missing <add js="true">
+- Added missing <url> and <filter>
+-   Added missing elements that existed in English but not in the other.   Fixed typos in attributes
+- * Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
+- Formating changes - mostly spaces to tabs.
+- Fixed XML related errors.
+- Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Fix compile error.
+- Converted another file to UTF-8 for better support.
+- Merge pull request #97 from ianwallen/UTF-8
+- Fix statistics compile error.
+- Self Registration - not adding profile (#1298).
+- Fix findbugs checks.
+- Feedback form / JS error.
+- ISO19139 / Improve label in french.
+- Add configuration option to update or not schema plugin catalog on startup (allows to modify it manually if necessary).
+- Widgets / Translate user role in user menu.
+- Fix logo size on IE7.
+- Fix all statistics services broken by ReadOnlyMode and some IOUtils changes.
+- Converted some file to UTF-8 for better support.
+- Fixed for Ticket #1295 Change encoding for login.jsp to utf-8
+- Merge pull request #96 from ianwallen/2.10.x
+- Remove "developer" user as it is not required.
+- RSS / FF does not render feed as usual (#1297).
+- Merge pull request #95 from ianwallen/2.10.x
+- Change oracle varchar to varchar2.
+- Rename migration scripts from 2.9 to 2.10 since 2.9 was not a supported version.
+- Widgets / misc fix.
+- UPDATE HarvestHistory moved to db-default so that it applies to all databases.
+- Add missing SQL statement in migration scripts required for CSW virtual admin.
+- Removed blank lines in Oracle statements so that it can be executed from sqlplus if required.
+- SQL table name error (from last commit) - "service" should be "services"
+- Widgets / Add missing i18n.
+- Widgets / Fix uuid to call to addWMSLayer.
+- gco:nilReson not translated (#1293).
+- French translation / Add missing string.
+- Suggestion / Keyword comma exploder / Only process required keywords and do not forget thesaurus name.
+- Related to #1276 for login.jsp page
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #92 from Delawen/2.10.x
+- Removing some deprecated "importants" on css that made very difficult to work
+- A bigger tag cloud (width) as some long keywords have problems
+- When clicking on a tag, change tab to search to see results for the tag
+- Merge remote branch 'origin/2.10.x' into 2.10.x
+- Merge pull request #91 from Delawen/2.10.x
+- Log-out bug fixing
+- Authentication was incorrectly determined at start, so the login/logout/admin buttons were broken
+- Full link on label on tag cloud
+- Fixing bug on tag-cloud that made the facet filters search not to load
+- #1288 Fix link code for thumbnails
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Updated installer submodule in 2.10.x
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Update version to 2.10.0-SNAPSHOT
+- Update doc.
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Merge pull request #90 from Delawen/2.10.x
+- NullPointer check. If there is no such field, just don't fail, go on.
+- Adding reset icon to reset button on advanced search form
+- Better image icon for add wms layer to map buttons
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Fixes to bookmark function (search result)
+- Generic addMap icon
+- Cookies text
+- Adding font to style (html5ui)
+- Fonts for style
+- Buttons for metadata view panel
+- Using more space (width), do not waste it
+- Small changes for metadata panel
+- Adding two new tabs: Catalog and Map
+- Perfecting styling for Home page
+- Widgets / Add harvesting menu to user action menu.
+- Harvester / OGC WxS / Scale hint conversion error on harvesting (#1289).
+- Widgets / Fix quick links menu.
+- Widgets / Removed unused variable.
+- Add HTML5 UI to the list.
+- Proxy / if allowedHost is  then localhost was the only allowed host.
+- reenabled option of controlling allowed hosts in proxy
+- Using a better styling, first approach
+- Widgets / LoginForm / Add user info & quick search links (#1285).
+- HTML5UI / Simplify URLs. Add missing OpenSearch link. Fix RSS link and duplicated href attribute.
+- HTML5UI / Add missing styling.
+- Widgets / Suggestion / Add css class for custom styling.
+- HTML5UI / Remove unused CSS.
+- HTML5UI / Ignore minified JS.
+- Widgets / toggle on clicking on section title (and not only icon).
+- Merge pull request "New html5 based UI" from Maria Arias
+- Widgets / Metadata link / default label if no custom label defined in translation for protocol.
+- Harvester / Sort icons by name and add a blank icon.
+- Widgets / Add css class for call for actions.
+- Admin / template / display order is not saved & restored properly (#1287).
+- Widgets / Relation manager / Fix label and improve style.
+- Widgets / Cleaning and properly set protocol with value instead of label in relation manager.
+- Harvester / Add missing files for OGC WxS CSW and SOS services.
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Cleaning / Remove or replace console.log from JS.
+- ArcSDE harvester: use instance ArcSDEResult variable
+- ArcSDE harvester: use instance ArcSDEResult variable
+- Add logo class when needed.
+- RSS link update & content
+- Fix check for http method to use in CSW harvester
+- Fix check for http method to use in CSW harvester
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Fix bug for surname in xml.info?type=me
+- #1277 some harvesters do not retrieve groups
+- Update version to 2.10.0-SNAPSHOT
+- #1277 magic string typo
+- #1277 magic string typo
+- #1277 fix saving ownerGroup for some harvesters
+- #1277 prevent NPE if harvester has no owner
+- #1277 missing i18n
+- #1277 fix 'sample' is not a system group
+- #1278 Reduce code duplication - fix test
+- Harvester / XSL error (#1280).
+- #1278 Reduce code duplication
+- #1277 Harvesters belonging to a group, and can be managed by UserAdmin
+- #1275 Extend temporal search
+- Fix classname for list of status (related to eaba7b10adfdf76df38ade8802c5482ba210c0b7).
+- Fix migration script error in 280 and 290 steps.
+- fixed a harvester history bug where there is bad data in database it kills history with null pointer
+- Harvester / CSW / cleaning (related to #1259).
+- #1276 Fix spring security rules for service not allowed and login form
+- #1274 feedback on specific metadata
+- #1266 Align the Interactive Map button behavior in the widgets UI and the classic UI
+- #1266 Align the Interactive Map button behavior in the widgets UI and the classic UI
+- #1266 Align the Interactive Map button behavior in the widgets UI and the classic UI
+- Do not search for migration task if db version > webapp version.
+- Fix typo in label for.
+- Administration / reordering menu.
+- Widgets / Create INSPIRE field only if INSPIRE enableSearchPanel is set.
+- Add missing SQL statement required for CSW virtual admin.
+- Move schema list and status values list services into xml.info service
+- PRE_EVALUATE_DOC_FUNCTION (from http://www.saxonica.com/documentation9.0/javadoc/net/sf/saxon/FeatureKeys.html#PRE_EVALUATE_DOC_FUNCTION) should be set to false so that XSLTs that use document function are able to pick up changes eg. when using a metadata record from the catalog via xml.metadata.get it is very desirable that the document function be evaluated each time the XSLT is run rather than just once at compile time
+- more findbugs warnings fixed
+- a few more findbugs fixes
+- fix build error by fixing several findbugs errors
+- PRE_EVALUATE_DOC_FUNCTION (from http://www.saxonica.com/documentation9.0/javadoc/net/sf/saxon/FeatureKeys.html#PRE_EVALUATE_DOC_FUNCTION) should be set to false so that XSLTs that use document function are able to pick up changes eg. when using a metadata record from the catalog via xml.metadata.get it is very desirable that the document function be evaluated each time the XSLT is run rather than just once at compile time
+- Search suggestion / Improve layout.
+- Search suggestion / Add option for sorting
+- update to a fixed webspecs version
+- fixed more warning reported by findbugs
+- Search suggestion / Add option to place results which starts with requested string on top of the results (#1148).
+- fixes to account for spaces in path on windows
+- CSW / Return exception while reindexing all records (#1273).
+- Delete rss.latest service and redirect url to rss.search?sortBy=changeDate
+- fixed bug when datadir is not absolute
+- #1269 Show html error page when invoking a non existent jeeves service
+- Subtemplate / Minor layout improvements.
+- Indexing / Subtemplate indexing does not work (#1272) - do not add taxonomy for a document if empty eg. for subtemplates.
+- Support search for metadata or template (#1271).
+- Merge pull request #82 from ianwallen/2.8.x
+- Fixed bug - ID on help tags were being duplicated which was causing tooltip to popup next to incorrect location.
+- #1269 Show html error page when invoking a non existent jeeves service
+- Update version to 2.10.0-SNAPSHOT
+- Update version to 2.10.0-SNAPSHOT
+- Latest commit for docs module.
+- Latest commit for docs module.
+- Merge remote-tracking branch 'origin/master'
+- Update doc module and add shell script for updating version number.
+- fixed case where htcontexts wasn't making it into app context
+- fixed all find bugs warnings
+- Ignore installer and list of changes.
+- Merge remote-tracking branch 'origin/master'
+- Update docs to latest commit.
+- Add gmiTogmd.xsl to import XSLTs
+- Add gmiTogmd.xsl to import XSLTs
+- Add profile for doc build. Use -Pwith-doc to build doc.
+- added forgotten code quality files
+- fixed intermittant test failure
+- Harvester / CSW / Add all queryables as filter (#1259) - Thanks Thierry Chevallier.
+- Widgets / Add missing label for protocol JEPG.
+- Editor / Expand element error (#1267).
+- Widgets / Improve layout (#1268).
+- Widgets / Editor / In XML view mode resize textarea according to the editor size.
+- Widgets / Improve labels.
+- Widgets / Editor / Fix view menu when an element is added in a view mode which contains more than one tab.
+- Widgets / Only display validation status to identified users and improve alignement of thumbnails.
+- Widgets / Add highlight class for call for action button.
+- Widgets / Make editor down and up button the same size.
+- ISO19115 / Fix duplicated label.
+- ISO19139 / Improve french translation. Thanks Benjamin Chartier.
+- Fix facet name when empty label (eg. not a codelist).
+- Relation / Do not restrict aggregate relation to crossReference.
+- Add label for DateTime element.
+- Fix GAST compilation error due to WAR plugin version changes.
+- maven-war-plugin version set to 2.1.1 to fix build errors with java7. Thanks François Van Der Biest.
+- updated submodules
+- fixed occasional test failure caused by test ording execution
+- Widgets / editor helper / trigger all events on radio layout.
+- Virtual CSW / admin / Properly update service name.
+- Metadata privileges / Add support for updating privileges (keep remove all+add strategy by default).
+- Virtual CSW / Administration panel (#1207) - Thanks Thierry Chevallier.
+- Merge remote-tracking branch 'origin/master'
+- Added some changes to make recovering from a corrupt index or corrupt spatial index more robust
+- Widgets / Editing metadata related resources (#1255).
+- Fixed bug - ID on help tags were being duplicated which was causing tooltip to popup next to incorrect location.
+- Escape line-feeds too in escapeXMLEntities otherwise breaks when title contains a \n (bug #1229)
+- make database healthcheck cross database
+- Xsl processing / Allows editor to process records (#1265).
+- fixed a mis-placed ' in xsl
+- fixed last commit...
+- make database healthcheck cross database
+- Widgets / Improve login form layout - align button, overlaping labels. Thanks Arnaud de Groof.
+- Editor window unusable in IE if a <gmd:Date> is empty (#1262).
+- Editor window unusable in IE if a <gmd:Date> is empty (#1262).
+- Add support for ISO extended element references by type (using isoType attribute) (#1263).
+- CSW / Add OutputSchema = own to retrieve ISO records in their own schema (GeoNetwork extension).
+- Remove extra comma - causing issue on IE.
+- Fix layout of shortcut in help panel.
+- Fix IE7 error on map initialization in editor.
+- Properly initialize new logo on startup.
+- Widgets / Fix create metadata link from administration on IE which does not take #create into account.
+- Properly display node name in the page title for widgets and administration pages.
+- Harvester / GeoNetwork / Add custom filter (#1260).
+- Merge remote-tracking branch 'origin/master'
+- ISO19139 / Improve support for making metadata on maps (#1250).
+- Improve french translation.
+- Load WMC / Add load.wmc service to the allowed services. Remove old intermap services.
+- Load WMC / Fix error related to OL 2.12 update.
+- ISO19139 / Improve French translation (Thanks to Metawal metadata working group).
+- fixed 2 bugs in withheld implementation
+- Normalize line endings
+- Improve french translation (Thanks Etienne Taffoureau).
+- Harvester / File system / Add labels for easier configuration.
+- Widgets / Editor / Collapse all section should be reset after metadata editor is loaded.
+- Improve French translation (Thanks Etienne Taffoureau).
+- Merge remote-tracking branch 'origin/master'
+- updated submodule with added csw test
+- Merge remote-tracking branch 'origin/master'
+- Thesaurus / add date or datetime according to thesaurus info.
+- ISO19139 / View mode / keyword type is not translated (#1257), ISO19139 profile / topicCategory not translated (#1256)
+- Widgets / Layout / Center view and editor map widget.
+- ISO19139 / Ordering instruction requires a medium textarea for easier editing.
+- Widgets / Editor / Properly trigger metadataUpdated event after form is initialized.
+- ISO19139 / Improve translation (Add missing GML elements, Comment helper only relevant for France).
+- commit line normalization
+- Widgets / Fix language list configuration examples.
+- Merge branch 'master', remote-tracking branch 'origin'
+- Send the metadataAbstract when publishing a layer to GeoServer (#1232)
+- Refix #950: thumbnails not showing overview upon click in widgets UI
+- Send the metadataAbstract when publishing a layer to GeoServer (#1232)
+- Dont add the last link menu if it's empty (#1226)
+- Refix #950: thumbnails not showing overview upon click in widgets UI
+- Also create a TC211 metadataLink when posting to geoserver (#1227).
+- Thesaurus / Set title and namespace when creating a local thesaurus (#1251).
+- Merge pull request #79 from landryb/bug-1227-1229-1231-improve-geopublishing
+- Thesaurus / Set title and namespace when creating a local thesaurus (#1251).
+- Bug #1227, createFeatureType part: Also create a TC211 metadataLink when posting to geoserver
+- Create StringEntityRequest with the proper contentType and encoding (#1231)
+- Post the link to the widgetsUI view rather than the csw/xml view for <metadataLink> (#1227)
+- Escape line-feeds too in escapeXMLEntities otherwise breaks when title contains a \n (bug #1229)
+- Thesaurus / Add keyword to newly created local thesaurus return exception (#1234).
+- Widgets / Editor / Keyword : add config for height and width (#1248).
+- Support DB in readonly mode (#1246) - properly convert string to boolean, avoid multiple calls for readonly status check on the same action, Use log instead of system.out.
+- Lucene / ImportantDocument boosting class does not work due to Lucene 4.1 update (#1249).
+- Fix for ticket #1245 - user groups should only be added if no group restrict to parameter specified or group restrict to parameter *is* empty
+- Merge remote-tracking branch 'origin/master'
+- Widgets / Editor / Thesaurus initialization failed. Store.query search by identifier from the beginning of the id and not exact match.
+- updated submodules to latest
+- fixed line ending
+- normalize line endings
+- Reset H2 as default DB and default sample config for postgresql.
+- Editor / iso19139 / Adding a language does not set language id (#1246).
+- Widgets / Editor / Save vertical scroll position after editor widgets (eg. extentMap, Thesaurus) initialization.
+- Indexing / iso19139 / add XSL mode to easily add new field in a profile (#1247).
+- Widgets / New metadata panel / Only 50 templates displayed, increase limit for catalog with lots of templates.
+- Widgets / Editor / Save vertical scroll position after editor widgets (eg. extentMap, Thesaurus) initialization.
+- Layout / Add specific CSS class for thumbnail.
+- Layout / Prevent logo to be to large in harvester config and metadata view.
+- Editor / Suggestion / Add date of the INSPIRE specification in the citation.
+- Editor / iso19139 / Adding a language does not set language id (#1246).
+- Merge pull request #76 from heikkidoeleman/master
+- GeoNetwork in read-only mode
+- Fix for ticket #1223
+- GeoNetwork in read-only mode
+- Fix for ticket #1223
+- corrected order of stack trace in logging
+- add logging to XmlSerializer for withheld
+- Include gmx:Anchor content when indexing gmd:keyword in descriptiveKeywords
+- Fix for ticket #1228 - thanks to Landry Breuil
+- Fix for ticket #1228 - thanks to Landry Breuil
+- Set Thumbnail only commit after all changes made
+- Fixes for running on windows
+- changed the mapfish print dependency to the pre-spring version.  and official version.
+- normalize line endings
+- Pull in commit a3131b7d850ddb887c720749ced1541d02708d51
+- Rebuild schemaplugin oasis catalog when the SchemaManager is initialized Allows instance to be moved and mvn jetty:run without problems
+- Editor / Suggestion / INSPIRE specification references (#1241).
+- Widgets / Selection / On load and first search properly disable action on selection (#1242).
+- CSW / config / Sort language by name.
+- Editor / Helper ilst / Fix related element update for radio layout (#1211).
+- #1233 OGC WebServices harvester doesn't work in 2.8.x
+- Merge remote-tracking branch 'origin/master'
+- one of the characters was ö not é
+- fixed encoding bug in webspecs test
+- fix sorting with data containing accents
+- fix for #1236 Metadata not being spatially indexed in Oracle database
+- Widgets / Editor / sort thesaurus title in ASC order.
+- Improve french translation.
+- Widgets / Editor / i18n for thesaurus add label.
+- Widget / Search form / INSPIRE / Improve french translation.
+- Fix for Ticket #953 Second fix Accidentally removed the wrong line - corrected and remove the correct line.
+- Fix the check for showMapPanel config variable. If showMapPanel variable was not defined it was not showing the map but it should.
+- Merge pull request #75 from ianwallen/master
+- Fix for Ticket #953 Second fix Accidentally removed the wrong line - corrected and remove the correct line.
+- Fix the check for showMapPanel config variable. If showMapPanel variable was not defined it was not showing the map but it should.
+- Merge pull request #74 from ianwallen/2.8.x
+- Merge pull request #73 from ianwallen/Branch_2.8.x
+- modified metadata-show so that the metadata-show showMapPanel gui parameter works better
+- added option to enable or disable map panel in metadata.show
+- Fix for Ticket #871 Most of the code for this fix was taken from the main-page.xsl
+- Fix for Ticket #996 Cleanup headers to avoid duplicate loading of the same headers. Duplicate loading of the protocol.js was causing ie7 to fail.
+- Fix multilingual template local codes.
+- Update version to 2.8.1 snapshot
+- updated all submodules
+- update to jts 1.13
+- Merge branch 'master' of github.com:geonetwork/core-geonetwork
+- .gitignore
+- .gitignore files
+- Catalan translations: escape quotes for strings used in javascript methods for actions on selection
+- Fixes in polish sql scripts
+- Catalan translations: escape quotes for strings used in javascript methods for actions on selection
+- Merge remote branch 'origin/2.8.x' into 2.8.x
+- Fixes in polish sql scripts
+- mailing list fix and version update
+- Update version to 2.8.0 in sql scripts
+- modified metadata-show so that the metadata-show showMapPanel gui parameter works better
+- removed poorly thought out update index method
+- fixed increase popularity task
+- fixed healthcheck name
+- added another health check to keep track of FieldCache
+- #1225 TableExport service is prone to SQL injection and allows export any GeoNetwork table
+- #1225 TableExport service is prone to SQL injection and allows export any GeoNetwork table
+- added option to enable or disable map panel in metadata.show
+- Fix for Ticket #871 Most of the code for this fix was taken from the main-page.xsl
+- Fix for Ticket #953
+- ported back memory leak fix
+- added special updateIndex method to SearchManager which allows very fast updating of a document without full reindexing
+- ensure old lucene searchers are correctly purged
+- Update module version to 2.8.0
+- Update module version to 2.8.0
+- Update module version to 2.8.0
+- don't cache indexAndTaxony in LuceneSearcher, just version
+- analysis and fixing potential leaks leaving lucene readers open
+- fixed compile errors
+- fixed lucene version
+- reduce instance size of CatalogSearcher
+- changed lucene to official 4.1 release
+- reverted version until I get compile errors fixed.  I didn't realize it had an API change
+- fixed lucene version
+- changed lucene to official 4.1 release
+- rename TestBean to not have Test in name so maven 2 doesn't think it is a test
+- fixed accidental import
+- Ensure gmd prefix xslt works for records with prefix and without
+- Add geoportal REST harvester
+- Ensure gmd prefix xslt works for records with prefix and without
+- Add geoportal REST harvester
+- fix for withheld elements
+- fixed regression with XmlFileCache
+- login will now redirect back to same page that login was made from
+- add overrides that update the spring application context
+- better detection of apppath and config path when running in jetty with multiple locations
+- Fix for ticket #1199
+- Fix for ticket #1199
+- Merge branch 'master' of https://github.com/ianwallen/core-geonetwork
+- Editor / Helper / Conditional helper (#1220) - properly get helper.
+- ISO19139 / french documentation / typo.
+- Fix for Ticket #996 Cleanup headers to avoid duplicate loading of the same headers. Duplicate loading of the protocol.js was causing ie7 to fail.
+- ISO19139 / french documentation / Add some more details and use conditional helper when relevant.
+- Editor / Helper / Conditional helper (#1220).
+- Merge remote-tracking branch 'origin/master'
+- ISO19139 / french labels / Remove unused option.
+- Editor / Keyword selection / Add definition if available in thesaurs.
+- fixed OrSpatialFilter
+- improved find by id method
+- update version of webspecs
+- Merge extended regions API
+- Add missing services to Spring security mapping.
+- Harvester / CSW / Add option to check for duplicate resource identifier (#1212) - define all NS to avoid XPath error if prefix defined with other value.
+- Virtual CSW / Add rule to allow service which starts with csw-. Remove reference to old user-profiles configuration.
+- Editor / Helper list / Add radio layout (#1211) - Fix error for non iso19139 schema.
+- Harvester / CSW / Add option to check for duplicate resource identifier (#1212).
+- Harvester / CSW / Add option to check for duplicate resource identifier (#1212).
+- Harvester / History / Add default value for elapsed time on migration.
+- ISO19139 / Make indexing more profile aware (Useful when you delegate indexing to ISO19139 from the profile).
+- ISO19139 / French loc file - fix suggestion error.
+- Harvester / W*S / harvest INSPIRE fields from the GetCapabilities document (#595) - Improve conformity section.
+- ISO19110 / Change type field values for feature catalog.
+- Fix multilingual template local codes.
+- Index / duplicate documents (#1215).
+- Fix XSL error when retrieving helper for multilingual records.
+- Use WMC or OWS to load maps in GN widget interface (#1208).
+- Merge remote-tracking branch 'origin/master'
+- Use WMC or OWS to load maps in GN widget interface (#1208). Thanks Florent Gravin.
+- another fix for when the servlet is not geonetwork
+- another fix for when the servlet is not geonetwork
+- Hidden elements not displayed for user with editing privilege (#1213) - workaround for test.
+- Hidden elements not displayed for user with editing privilege (#1213).
+- Merge remote-tracking branch 'origin/master'
+- Editor / Helper list / Add radio layout (#1211)
+- Fix for select all
+- Merge remote-tracking branch 'origin/master'
+- Editor / Helper list / Add radio layout (#1211)
+- fix resource loading when servlet is not called geonetwork
+- fix resource loading when servlet is not called geonetwork
+- Restore protocol choice in french translation.
+- Fix start record when looking for suggestion.
+- Add missing translation. Do not check WMS version. (#1209).
+- Merge pull request #70 from fgravin/serviceExtract-PR
+- fixed a csw endpoint error in the case where the query is not a boolean query
+- changed csw constraint parser for csw endpoints so it works correctly with numeric values
+- New otherMenu action that add all layers from metadata.service.extract (selection) to the map
+- Implement metadata.service.extract that retrieve all wms from metadata in the cart
+- Harvester / W*S / harvest INSPIRE fields from the GetCapabilities document (#595).
+- align submodules with master branch
+- add geoserver submodule back
+- Harvester / WxS / Wrong service link in operatesOn (#1206).
+- Schema configuration / Add support for read/write UUID (#1205).
+- added place holder for preauthentication
+- Merge remote-tracking branch 'origin/master'
+- LDAP Improvements
+- Merge pull request #69 from fgravin/numSelect-PR
+- Merge pull request #68 from fgravin/customMenu-PR
+- widget (fix bug) - Get number of selected Metadata on MetadataResultsToolbar init
+- Widget - Customised otherAction menu and MetadataMenu
+- ISO19139 / French loc / Fix wrong units in helper for spatial resolution.
+- removed accidentally merged method
+- merge the improved search based on lucene 4.1.
+- Merge branch 'protocol-PR' of https://github.com/fgravin/core-geonetwork
+- Merge pull request #67 from ianwallen/master
+- Move DDL from migrate default to db scripts as each DB can be different.    - Updated oracle scripts to use varchar2 instead of varchar    - Also fixed some missing defaults for users.security
+- Fix bug with oracle column modification - wrong syntax - it was failing.
+- Fixed bug with the harvestUri being set to 455 when it should be 512 like in the create scripts.
+- Format files - Added NOT NULL to all the primary keys to make it consistent - Applied formating so that it similar to all database creation scripts.
+- Fixed username size - should be 255 like the other databases.
+- Added missing foreign key constraints related to the status tables.
+- Editor / gmd:protocol is not a closed list (#984)
+- #1200 Converter icons in metadata results are not displayed
+- retargetted installer to master branch
+- update to latest docs
+- Use MetadataNotFoundEx for consistency
+- Add xml-error.xsl for harvesting services to provide XML error responses
+- Merge pull request #65 from fgravin/PR-OLcss
+- Harvester / WxS thumbnail creation failure (#1197) and SQL error if user #1 removed (#1198).
+- Indexing / withheld element removed from index when user is not logged in eg. when increasePopularity task is launched (#1195).
+- Indexing / withheld element removed from index when user is not logged in eg. when increasePopularity task is launched (#1195).
+- Add OL style.css for minified js
+- added english translation for requestedlanguagesorted
+- RDF improvements
+- ISO19139 / Improve label and suggestion for INSPIRE conformity for service metadata.
+- ISO19139 / Improve label and suggestion.
+- Widget / Cleaning.
+-   SQL script improvements
+- SQL script improvements
+- Schematron / constraint validation error (#1194).
+- Search / Group search does not work (#1193).
+- Schema / ISO19139 / Improve service type list in French.
+- Privileges / hasEditPermission is wrong for some user (#1192).
+- Merge remote-tracking branch 'origin/master'
+- Widgets / Search results / Properly truncate abstract and avoid layout error when html tags are in the abstract which may interact with search results HTML.
+- added sort language back to ui
+- keep sorted.  it is still needed for something.  need to figure out what
+- SDE harvester validation rules: remove trailing comma causing issues in IE
+- SDE harvester validation rules: remove trailing comma causing issues in IE
+- Merge remote-tracking branch 'origin/master'
+- Admin / Batch import / FK error on first record (#1189).
+- update web-itests jetty configuration with ssl
+- Move 'Clone' into Operation column.
+- added default namespace for each thesaurus to make editing thesauri easier
+- changed how search by keyword works so that it checks ids as well as keyword labels
+- added default namespace to thesaurus
+- fixed keyword selection panel to add keywords
+- Config GUI / Fix wrong example in config-gui.xml. Turn off Google translate widget by default for multilingual metadata.
+- Widgets / Trigger file upload popup when clicking on the field (and not only on the button).
+- Widgets / Add translation needed when uploading PDF.
+- Index aggregation info (#1187).
+- Update thesaurus RSS feed to point to Github instead of sourceforge.
+- Enable xml.metadata.schema.add,delete,update services
+- Some services need to use MetadataNotFoundEx Add services for xml_services (mainly for xml error handling) Add simple Validation service Bug fix in DataManager getMetadataNoInfo NPE Bug fix to add www.opengis.net to iso19139 oasis remap error-xml.xml and xml-error.xml doing the same thing - combine
+- Update thesaurus RSS feed to point to Github instead of sourceforge.
+- Improve french translation.
+- Widgets / form panel / resize form elements (#1180)
+- Merge remote-tracking branch 'origin/master'
+- Switch from status List service to Info service for advanced search menu
+- Move schema list and status values list services into xml.info service
+- #1186 WebDav harvester doesn't keep in synch uuid in database and xml metadata content after reharvest
+- #1186 WebDav harvester doesn't keep in synch uuid in database and xml metadata content after reharvest
+- Fix editor metadata section tooltips
+- Fix editor metadata section tooltips
+- Include xml.schema.list service
+- Clean up unused options as system configuration was broken
+- updated docs submodule
+- updated docs submodule
+- updated config page's multilingual settings so only the correct settings are available
+- Added missing script (fi language) for debug mode.
+- Fixed few issues with wrong/missing scripts in debug mode. - When in debug mode use the non-compressed version of the openlayers - Also added a missing CSW js scripts for debug mode.
+- Merge pull request #64 from ianwallen/2.8.x
+- Added missing script (fi language) for debug mode.
+- Fixed few issues with wrong/missing scripts in debug mode. - When in debug mode use the non-compressed version of the openlayers - Also added a missing CSW js scripts for debug mode.
+- added logging for java migration classes
+- fixes for transfer metadata
+- Batch import was not transactional any more - MEFLib/Importer should not control the dbms connection as threads need to do that - split out indexing from database because some indexing methods in DataManager commit the dbms
+- Fix help text for gmd:protocol in metadata editor
+- Fix help text for gmd:protocol in metadata editor
+- changed withheld param to hide_witheld and added to view as well
+- allow hide_withheld parameter on show and other export functions to force the withheld elements to be withheld even if you are the owner or admin
+- fixed issue with jetty 7 and ssl connector
+- Allow config overrides on schema conversions files
+- Allow config overrides on schema conversions files
+- Merge remote-tracking branch 'origin/master'
+- Improve french translation.
+- Box DQ report and result in default view mode.
+- #1090 Duplicate key "selectOneFile" in strings.xml
+- #1090 Duplicate key "selectOneFile" in strings.xml
+- Move jetty to 7.5.0 for mvn jetty:run
+- Move jetty to 7.5.0 for mvn jetty:run
+- Merge pull request #63 from josegar74/iso19110_schema_update
+- Merge remote branch 'origin/iso19110_schema_update' into iso19110_schema_update
+- Merge pull request #5 from geonetwork/master
+- gmx labels in iso19139, seem metadata editor for iso19110 takes labels from this schema (to check)
+- Make path added to schemaplugin-uri-catalog.xml a uri - fix for ticket #1024
+- Include changes to jetty cherry-picked from 2.8.x
+- Add sample config file for jetty to access JNDIPool
+- Add sample config file for jetty to access JNDIPool
+- Fix for reader acquire of a previous version.
+- Don't set _title lucene field again - it is already set Don't reset isoLangId - it is already set
+- improve getting help.  first try with context and then parent as context then fall back to name alone
+- fixed job scheduling
+- fixed selection with csw
+- Merge pull request #3 from geonetwork/master
+- fixed problem searching by uuid
+- added webspecs submodule
+- Fix for ticket #1088 - thanks to bjohare
+- Fix for ticket #1088 - thanks to bjohare
+- Improve french translation for harvester admin.
+- Relation / Improve layout (ie. line break and padding) for long name or links.
+- Relation / only display subtype when defined (ie. usually only for aggregation info element).
+- Improve french translation.
+- Fix search form label initialization.
+- INSPIRE test suite (http://testsuite.gdi-de.org/gdi/) seem not agnostic about namespace prefix for http://inspire.ec.europa.eu/schemas/common/1.0 and requires inspire_com prefix
+- INSPIRE test suite (http://testsuite.gdi-de.org/gdi/) seem not agnostic about namespace prefix for http://inspire.ec.europa.eu/schemas/common/1.0 and requires inspire_com prefix
+- field _title is being added to lucene index document twice
+- #1178 New UI - Display default pointer in search results, except for links/actions (display hand pointer)
+- #1178 New UI - Display default pointer in search results, except for links/actions (display hand pointer)
+- When calculating default index language allow for case where language element may be present but blank
+- Jesse's patch to improve lucene search manager and fix too many open files bug
+- italian codelist label one line
+- fixed commented xml code in ita
+- check file timestamp to see if favicon and dummy image need to be loaded
+- Comment invalid comparison operators according to INSPIRE
+- Merge remote branch 'origin/master'
+- Comment invalid comparison operators according to INSPIRE
+- minified files are not output in war if there has not been a previous build.
+- make default lang first and therefore the default visible in editor
+- #1137 Hovering over "+" symbol in editor displays "Add add"
+- #1137 Hovering over "+" symbol in editor displays "Add add"
+- less verbose isAccessible implementation and slightly more performant
+- PDF output / search results / avoid page break in a result item (#1176).
+- Fix variable name in INSPIRE schematron rule
+- Add gmx labels to iso19110 schema
+- Merge pull request #2 from fxprunayre/improvement/schema/iso19110
+- ISO19110 schema update / do not break backward compatibility with old records.
+- Merge remote-tracking branch 'jose/iso19110_schema_update' into improvement/schema/iso19110
+- WFS Data downloader and WMS layer improvements.
+- Restore GeoServer submodule.
+- Add faceted search (http://trac.osgeo.org/geonetwork/wiki/NarrowYourSearchWidget)
+- * Fix metadata template to validate. * Fix schema suggestions to use gmx namespace for changed elements in new schema version * Add process to upgrade legacy metadata in catalog using old schema
+- Applied patch for ticket #789 (Feature catalogue schema in GeoNetwork is outdated)
+- Merge pull request #1 from geonetwork/master
+- Read-only webapp / move public xsd to resource directory in datadir (#1175).
+- Fix missing scrollbar in logo manager. JSLint validation improvements.
+- make getting images more robust from resource
+- save edit when combo is changed
+- fixed an issue where admin page showed all services even when user does not have access
+- Allow access to the proxy (required for adding WMS for example).
+- put basic auth filter before form login so basic auth can be used for authentication
+- fixed mapfish print to a specific version (used by georchestra as well
+- Keyword selection improvements
+- Subtemplate / When adding a contact from the directory without role, use the contact default role from the directory.
+- RDF / Fix parser errors (#1173).
+- added spring config search for mapfish print
+- fixed an issue with cas configuration when there is no ssl enabled for geonetwork
+- fix catalog searcher (csw) for spatial searches and paging
+- fix catalog searcher (csw) for spatial searches and paging
+- User use 2 letter characters instead of 3 so one can harvest old geonetwork instances
+- fixed compilation error and use 2 letter char
+- fixed geonetwork harvester for harvesting from geonetwork 2.9+ servers (new security)
+- Fixed small bug in case where the original local id is lower case. It was being missed in the conversion in gmd:LocalisedCharacterString. Applying uppercase conversion fixes the issue.
+- fixed geonetwork harvester for harvesting from geonetwork 2.9+ servers (new security)
+- Fixed small bug in case where the original local id is lower case. It was being missed in the conversion in gmd:LocalisedCharacterString. Applying uppercase conversion fixes the issue.
+- moved trash files out of source dir so eclipse won't keep picking it up
+- fixed cross browser bug
+- Fix for ticket #1169
+- Fix for ticket #1169
+- added security mapping for formater.pdf
+- finally correctly fixed syntax error
+- fixed compile error
+- fixed compile error
+- removed vestigial ProfileManager methods getAccessibleServices.  It is impossible to implement that method with new security so instead use isAccessible to check for access of a service
+- remove hit limitting in spatial filters to work around bug in calculating the end hit
+- remove hit limitting in spatial filters to work around bug in calculating the end hit
+- remove redundant path in security settings
+- Merge branch 'security-PR' of https://github.com/fgravin/core-geonetwork
+- CSW / output dublin core / Only local small thumbnail is returned (#1168).
+- PDF output / don't display gco:nilReason attribute as simple element.
+- Subtemplate selector panel has namespaces hardcoded - doesn't work for profiles (related to #1152).
+- Validation / INSPIRE / keyword in gmx:Anchor not take into account (#1167).
+- Fix missing codelist when requesting keywords.
+- Make subtemplate search more robust against invalid XML snippet (eg. CI_ResponsibleParty with more than one contactInfo).
+- Import / dublin-core / Some dct elements are removed on import (#1165).
+- Allow access to xsl/harvest xsl files
+- modification so that isAccessible in XslUtil will take into account both core-mappings and ovveride mappings
+- Editor / Metadata search does not work in non debug mode (#1164).
+- updated conversion methods from 3 letter to 2 letter lang code to handle more cases
+- removed cas configuration (accidental commit)
+- add configuration for both https and http urls in same system since we allow this, even require it sometimes.  Also fix an issue when using cas and updating configuration
+- removed unwanted import
+-     hiding metadata elements works but UI still needs to be updated     widget UI updated to have note about the missing elements     Added option to completely hide hidden objects
+- #1053 scripts/ext/locale/* not loading
+- #1053 scripts/ext/locale/* not loading
+- updated spring version to 1.5.5 for #1161
+- Add missing download service in INSPIRE service type criteria.
+- Merge remote-tracking branch 'origin/master'
+- Widget / EditorPanel may not be in a container (like Window - eg. when used in a plain HTML page).
+- Fix for ticket #1159 - move form save into afterHide event on modal box that shows file upload results - otherwise modalbox gets treated badly by form save and won't come back to life again
+- Fix for ticket #1159 - move form save into afterHide event on modal box that shows file upload results - otherwise modalbox gets treated badly by form save and won't come back to life again
+- added forgotten clear class
+- Fix for ticket #1154 - already applied to 2.8.x
+- Fix for ticket #1145 - cannot use root element of metadata because sometimes it is not present (eg. when adding a gmd:onlineResource element) - also not necessary to have that check because only ever editing 1 record and the record is the only xml element in /root with a geonet:info child (other elements in /root are gui and request)
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Merge branch 'master' of https://github.com/ianwallen/core-geonetwork
+- Previous cherry pick from Ticket #525 added files that were removed from commit 46a0f7e8ea696d2aad4b0210a108eee98096d01e As they are no longer used - removing them.
+- Another fix related to Ticket #525 Missing POL in the build
+- Fix for ticket #1154
+- Fix for ticket #1154
+- Merge pull request #58 from fgravin/ui-itemSelector-PR
+- forgot to include following file
+- fixed security so that there is only a white list
+- again fix trunk ticket 1034
+- UI editor panel - customise imagePth for item selector
+- fix fix trunk ticket 1034
+- fix trunk ticket 1034
+- fixed logout url config
+- several security fixes:
+- Harvester / CSW / layer metadata not registered in coupled resource (#1141).
+- Proposal to add Metadata Sibling Relations via aggregationInfo
+- Add metadata siblings proposal (#1068).
+- #1153 UrlRewriteFilter url and Spring Security NullPointerException
+- Merge branch 'privileges-PR' of https://github.com/fgravin/core-geonetwork
+- Merge branch 'index-PR' of https://github.com/fgravin/core-geonetwork
+- Fix issue where it was not displaying category icons correctly when there were several.
+- Only display div for categories if categories exists.  fixes issues in cases where no category exists was messing up the display
+- Fix for Ticket #1146 Add missing category icons if the <display-in-search mode="db"/> is on
+- Supposed to be the same image as web-client/src/main/resources/apps/images/default/category
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Merge pull request #52 from fgravin/geocat_trunk_pdfformatter
+- Fix for ticket #1152
+- Fix for ticket #1152
+- Widget / Search results : display children not only for series (#1143).
+- Add linebreak in superbox when needed.
+-  Add option to give all privileges to the group on MD creation
+- Add linebreak when needed in validation report.
+- Fix issue where it was not displaying category icons correctly when there were several.
+- Only display div for categories if categories exists.  fixes issues in cases where no category exists was messing up the display
+- ISO19110 / valueMeasurementUnit not displayed (#1132).
+- ISO19110 / gml:id attribute not generated (#1139).
+- Indexation of keywords and organisationName with gmx:anchor
+- TooManyClauses when printing too many records (#1149).
+- In validation panel, display XLink in report tooltip.
+- LDAP / Add editor privilege for a reviewer.
+- Fix for Ticket #1146 Add missing category icons if the <display-in-search mode="db"/> is on
+- Supposed to be the same image as web-client/src/main/resources/apps/images/default/category
+- Fix for ticket #1130
+- Improve schema selection process in MEFv2 files - use schema from info.xml as suggested by Ian to choose metadata to load, if not present then try preferredSchema, if neither present then select first one with valid schema to load.
+- Fix for ticket #1130
+- Improve schema selection process in MEFv2 files - use schema from info.xml as suggested by Ian to choose metadata to load, if not present then try preferredSchema, if neither present then select first one with valid schema to load.
+- Fix for Ticket #998 typo in local rating
+- Merge pull request #51 from ianwallen/2.8.x
+- Fix for Ticket #998 typo in local rating
+- Fix for Ticket #757 fix typo for term "Gazzetteer" should be "Gazetteer"
+- Fix for Ticket #757 fix typo for term "Gazzetteer" should be "Gazetteer"
+- forgot to adda few submodules for the last commit
+- Another related fix for Ticket #1128 Removed extra parameter from call checkForFileUpload as it was no longer required.
+- Merge pull request #48 from ianwallen/master
+- retargetted some submodules on 2.8.x to correct branch
+- fixed gast submodule
+- added geoserver module
+- Another related fix for Ticket #1128 Removed extra parameter from call checkForFileUpload as it was no longer required.
+- Changed regular expression from ^WWW:DOWNLOAD-.*-http--download$ to ^WWW:DOWNLOAD-.*-http--download.* So that it would include WWW:DOWNLOAD-.*-http--downloaddata
+- Standardized the search for WWW:DOWNLOAD-*-http--download. There were a few variations Used a regular expression as it was cleaner.
+- Fix for ticket Ticket #1128 Only show file related error if we are dealing with the "File for download" protocol.
+- update gast submodule version
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Changed regular expression from ^WWW:DOWNLOAD-.*-http--download$ to ^WWW:DOWNLOAD-.*-http--download.* So that it would include WWW:DOWNLOAD-.*-http--downloaddata
+- Standardized the search for WWW:DOWNLOAD-*-http--download. There were a few variations Used a regular expression as it was cleaner.
+- Fix for ticket Ticket #1128 Only show file related error if we are dealing with the "File for download" protocol.
+- Editor / Improve keyword selection (#1129)
+- Set maxWritesInTransaction on spatial database to 1 by default - this is safest as it sets the spatial index writer to autocommit thus protecting it from problems when connection to db is lost. Now safe to use as a result of earlier bug fixes.
+- Fix for 1135, Transaction fails to import if user does not have a group
+- Fix for 1135, Transaction fails to import if user does not have a group
+- Updated MEF load process to generate better debugging messages and better error message so that it would be easier to identify where the error is. By better, in this case it meant adding the folder to the error message otherwise it would generally only specify "metadata.xml" which is the default filename...
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Updated MEF load process to generate better debugging messages and better error message so that it would be easier to identify where the error is. By better, in this case it meant adding the folder to the error message otherwise it would generally only specify "metadata.xml" which is the default filename...
+- Widgets / display link to feature catalogue in dataset's metadata default view (#1133)
+- Merge pull request #45 from heikkidoeleman/2.8.x
+- 1116 add missing directory
+- Set maxWritesInTransaction on spatial database to 1 by default - this is safest as it sets the spatial index writer to autocommit thus protecting it from problems when connection to db is lost. Now safe to use as a result of earlier bug fixes.
+- Do not display @geonet:addedObj attribute in the editor.
+- Add element will now add language combo box if required
+- fixed healthcheck security
+- implemented accessDenied page
+- fixed a bug when multiple requests change thesaurus
+- Create pdf formatter
+- add element will now add language combo box if required
+- a few changes to make local:// link more robust in cases of failure or exceptions
+- Merge pull request #44 from heikkidoeleman/2.8.x
+- using latest version of maven repo again so that config-migration can be resolved
+- 1116: GetRecords hardcoded prefixes in TypeNames check
+- Added support for local:// xlinks to improve performance of linking back to same geonewtork instance
+- Merge pull request #43 from heikkidoeleman/master
+- 1116: GetRecords hardcoded prefixes in TypeNames check
+- Fix a bug when saving configuration related to LDAP settings.
+- fixed a bug with the security extension configuration which broke security of some urls
+- Fix bad closing tags.
+- Label in CategoryDes table is a varchar(255). Increase size in loc admin to match db table structure.
+- Remove old LDAP util.
+- Merge remote-tracking branch 'upstream/master' into feature/user-with-profiles
+- Merge remote-tracking branch 'origin/master' into feature/user-with-profiles
+- protect against a null pointer exception in AccessManager
+- Added the option to easily add new access permissions without modifying the main security mappings
+- [PATCH] Fix minified js encoding, enforce UTF-8 (bug #980)
+- [PATCH] Fix minified js encoding, enforce UTF-8 (bug #980)
+- Fix #1120.  Error retrieving template during THREDDS fragment harvest due to user session not being present in context while running harvest
+- Fix #1120.  Error retrieving template during THREDDS fragment harvest due to user session not being present in context while running harvest
+- Merge spring security branch
+- #1118 Add xlink:href with CSW link to srv:operatesOn when editing the element in metadata editor
+- Merge remote branch 'origin/2.8.x' into 2.8.x
+- #1118 Add xlink:href with CSW link to srv:operatesOn when editing the element in metadata editor
+- update to use latest installer commit
+- update to use latest installer commit
+- Update versions to RC2
+- Revert "Add MarLIN app (based on tabsearch)" Mistakenly upstreamed
+- Revert "Update MapApp.js" Mistakenly upstreamed
+- Revert "Let MarLIN app use more of the underlying tabsearch capability" Mistakenly upstreamed
+- Revert "Changes to jeeves to display params on service - always on is good here" Mistakenly upstreamed
+- #1114 Thesaurus Manager - Delete thesaurus doesn't remove the related record from datatabase
+- #1114 Thesaurus Manager - Delete thesaurus doesn't remove the related record from datatabase
+- Merge remote-tracking branch 'upstream/2.8.x' into 2.8.x
+- Update web/src/main/java/org/fao/geonet/kernel/DataManager.java
+- Update web/src/main/java/org/fao/geonet/services/thumbnail/Unset.java
+- Update web/src/main/java/org/fao/geonet/services/thumbnail/Set.java
+- Merge pull request #42 from stormtek/2.8.x
+- Update web/src/main/java/org/fao/geonet/kernel/DataManager.java
+- Update web/src/main/java/org/fao/geonet/services/thumbnail/Unset.java
+- Update web/src/main/java/org/fao/geonet/services/thumbnail/Set.java
+- Restrict download summary form to protocols that are understood by GeoNetwork - too difficult to handle other cases correctly
+- Restrict download summary form to protocols that are understood by GeoNetwork - too difficult to handle other cases correctly
+- Set gmx:FileName resources to use uuid rather than id
+- Set gmx:FileName resources to use uuid rather than id
+- Use uuid param instead of id param in download links and sample data Avoid localization when handling gmx:MimeFileType
+- Use uuid param instead of id param in download links and sample data Avoid localization when handling gmx:MimeFileType
+- Tidy up list of links offered to user for download - see ticket #1080
+- Tidy up list of links offered to user for download - see ticket #1080
+- Editor / Validation report / Switch to red for error reporting.
+- Editor / Add config option to hide minor edit toggle.
+- Editor / Add flat mode exception. No element by default.
+- Fix for ticket #1081
+- Fix for ticket #1081
+- Improve subtemplate search layout (Add email, display separator only when relevant)
+- Changes to jeeves to display params on service - always on is good here Also don't stop after failures in XLinks - we have lots of local XLinks here sometimes they aren't resolveable - we don't want indexing and other ops to fail as a result
+- Modify map app so that GeoExt print provider loadcapabilities event is used to ensure that capabilities are actually present in store before being used
+- Let MarLIN app use more of the underlying tabsearch capability
+- Fix NPE for harvester which does not provide UserSession.
+- Add metadata siblings proposal port to 2.8.x for ANZMEST/MarLIN usage
+- Update MapApp.js
+- Add MarLIN app (based on tabsearch)
+- Fix for ticket #1106 Upgrade to geotools 8.2 Also, remove class cast exception error when invalid CSW filter specified
+- run AllGeonetworkSpecs test suite instead of all tests because that suite has tests that currently pass consistently on runs Added clean configuration to web-itest pom so that it deletes the files from running the webapp *.db, jcache and logs
+- run AllGeonetworkSpecs test suite instead of all tests because that suite has tests that currently pass consistently on runs Added clean configuration to web-itest pom so that it deletes the files from running the webapp *.db, jcache and logs
+- Fix for IE7.
+- Fix for IE7.
+- Merged Jmeter feature
+- Invalid element name causing DOM exception.
+- Merge remote-tracking branch 'fxprunayre/feature/html-meta'
+- Widgets / Search results / improve link layout (#1107).
+- fixed gast submodule link
+- fixed geoserver submodule link
+- Merge branch '2.8.x' of https://github.com/geonetwork/core-geonetwork into 2.8.x
+- Exception when retrieving keyword in raw format (#1085).
+- Fix missing polish language - should have been done in  Ticket #525  - fix issue with pol language not loading js file properly in new interface   -Added opentLayer polish translation. Taken from OpenLayers github site. https://github.com/openlayers/openlayers/blob/master/lib/OpenLayers/Lang/pl.js Conflicts:
+- Completing Ticket #1087 - fixed a few remaining issues.  - fix issue with cat language was not loading js file properly in new interface  - Fix charset issue in cat.js
+- Added missing languages to the list of locales
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- fixed an issue with the fix to spatial filter where getFrom was used instead of getTo
+- fixed an issue with the fix to spatial filter where getFrom was used instead of getTo
+- fix for 1105: postgis query too large
+- fix for 1105: postgis query too large
+- updated core-geonetwork to reference installer commit with the gast shortcut fix
+- had installer pointing to master branch.  This is fixed
+- updated core-geonetwork to reference installer commit with the gast shortcut fix
+- Fix missing polish language - should have been done in  Ticket #525  - fix issue with pol language not loading js file properly in new interface   -Added opentLayer polish translation. Taken from OpenLayers github site. https://github.com/openlayers/openlayers/blob/master/lib/OpenLayers/Lang/pl.js
+- Completing Ticket #1087 - fixed a few remaining issues.  - fix issue with cat language was not loading js file properly in new interface  - Fix charset issue in cat.js
+- Added missing languages to the list of locales
+- Widgets / Disable keyboard shortcuts when not logged in (#1103). Fix JSLint warning.
+- change maven build so that web classes are contained in a jar instead of in WEB-INF/classes
+- change maven build so that web classes are contained in a jar instead of in WEB-INF/classes
+- Harvester / WxS / broken (#910).
+- Squashed commit of the following:
+- Squashed commit of the following:
+- Remove extra format text in sitemap when format = xml.
+- Widget / Fixed duration field layout.
+- Widget / Fixed duration field layout.
+- Editor / Add a function to create a add subtemplate button outside an element control (#1101).
+- Widget / Create new metadata allows multiple select (#1102).
+- Editor / Add the option to overrides gml:time* or gml:duration element title (#1100). gco:ScopedName and LocalName always set to Name (#1099).
+- CSW / GetDomain error (#1097)
+- fixed compile errors
+- Renamed get and set UriCode methods of Keyword bean so that it is more clear which method to use Renamed getResult methods on KeywordSearcher so that it is more clear which method to use added null checks for language while searching
+- gitignore
+- #1096 Enforce INSPIRE implementing rule 2.9.1
+- #1096 Enforce INSPIRE implementing rule 2.9.1
+- #1096 Enforce INSPIRE implementing rule 2.9.1
+- Fix lower case letter in namespace.
+- Misc fix in tabsearch.
+- Fix JSLint warning.
+- Misc fix in tabsearch.
+- Fix JSLint warning.
+- Add extra langs in OpenLayers required to make the debug mode work properly.
+- Fix #1095 : Exception occurs when upperCorner/lowerCorner tags are empty in a geographic thesaurus
+- Add label for form elements for easier checkbox selection.
+- Improve layout of images into superbox widget item (max size and vertical alignment).
+- Fix langdetect jar version in pom files (#1094)
+- Fix langdetect jar version in pom files (#1094)
+- Exception when retrieving keyword in raw format (#1085).
+- Add a GeoNetwork.map.RESOLUTIONS config parameter (#1093).
+- Argg!! - fix copy past bug
+- Modifed the id for CswServerCapabilitiesInfo as they were confliting.
+- Ticket #525 - Polish Translation
+- Fix small typo in namespace
+- Migrate all the local specific changed from the migrate-defautl to the specific local. This will allow someone to configure the migration within config-db.xml to only migrate the locale that they have in there database (if desired).
+- Increase size of fields withing tables Categories,CategoriesDes,Settings during the upgrade.
+- Added missing not null - It does not change the database structure but somehow seems to help with the db compare tools.
+- Fixed bugs in migration script   - ara missing   - rus has bug where it was removing categories.
+- removed duplicate ara entry
+- Fixed missing ";" Put "," on the same line for translation to reduce extra lines in the output.
+- Added polish to the gui config.
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Added polish to the gui config.
+- Argg!! - fix copy past bug
+- Modifed the id for CswServerCapabilitiesInfo as they were confliting.
+- Ticket #525 - Polish Translation
+- Fix small typo in namespace
+- Migrate all the local specific changed from the migrate-defautl to the specific local. This will allow someone to configure the migration within config-db.xml to only migrate the locale that they have in there database (if desired).
+- Increase size of fields withing tables Categories,CategoriesDes,Settings during the upgrade.
+- Added missing not null - It does not change the database structure but somehow seems to help with the db compare tools.
+- Fixed bugs in migration script   - ara missing   - rus has bug where it was removing categories.
+- removed duplicate ara entry
+- Fixed missing ";" Put "," on the same line for translation to reduce extra lines in the output.
+- Merge branch 'thesaurus_fixes'
+- fixed keyword namespaces for add and update keywords
+- Another fix for Ticket #1087 Fixed issue with unterminated literals which was causing builds to fails.
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Uncommenting PDF panel http://trac.osgeo.org/geonetwork/ticket/1049
+- Another fix for Ticket #1087 Fixed issue with unterminated literals which was causing builds to fails.
+- Uncommenting PDF panel http://trac.osgeo.org/geonetwork/ticket/1049
+- Tidy tabsearch - remove unused vars, combine options panel to allow room for inspire
+- Tidy tabsearch - remove unused vars, combine options panel to allow room for inspire
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Merge branch 'master' of https://github.com/ianwallen/core-geonetwork
+- Fix various bugs in tabsearch including:
+- Fix various bugs in tabsearch including:
+- Merge 2.7 migration scripts with 2.8 (Ticket #1086)
+- Fix for Ticket #1087 Updates to catalan translation as provided by Montse
+- Merge 2.7 migration scripts with 2.8 (Ticket #1086)
+- Fix for Ticket #1087 Updates to catalan translation as provided by Montse
+- Rename setCode to setURI code
+- Merge branch '2.8.x' of github.com:geonetwork/core-geonetwork into 2.8.x
+- Fix for Ticket #850 This completes the fixes for ticket #850 - Performed a compare of a 2.6.4 db upgraded to 2.8 to a fresh install of 2.8 and they seem to now be the same. - Note: Reverted previous change regarding 'SP' and 'PO' from migrate-defautl.sql as this was automatically corrected later on down the script - the previous change broke the script. These codes were incorrect in 2.6 and converting to the 3 char codes fixes it.
+- Fix for Ticket #1083 Split DDL into db specific script. Fixed the Oracle script so that it now works. - Note: From what seems to be a bug in Oracle, converting the long to clob was invalidating some indexes - added code to drop and recreate these indexes.
+- Fix for Ticket #1084 Migrate translation from 2.6.4
+- Fix for Ticket #850 This completes the fixes for ticket #850 - Performed a compare of a 2.6.4 db upgraded to 2.8 to a fresh install of 2.8 and they seem to now be the same. - Note: Reverted previous change regarding 'SP' and 'PO' from migrate-defautl.sql as this was automatically corrected later on down the script - the previous change broke the script. These codes were incorrect in 2.6 and converting to the 3 char codes fixes it.
+- Fix for Ticket #1083 Split DDL into db specific script. Fixed the Oracle script so that it now works. - Note: From what seems to be a bug in Oracle, converting the long to clob was invalidating some indexes - added code to drop and recreate these indexes.
+- Fix for Ticket #1084 Migrate translation from 2.6.4
+- Widget / Editor / improve validation report layout (#1082).
+- added option to override crs definitions used by geonetwork for reprojecting geometries
+- Widgets / Update META tag in HTML HEAD according to user actions (#1079).
+- ensure that the languages being writen to the keyword bean is 2 letter code
+- #1078 New UI - tabsearch interface doesn't get default language
+- #1078 New UI - tabsearch interface doesn't get default language
+- #1075 New UI - Quick search links in Administration panel doesn't work with tabbed search UI
+- Merge remote branch 'origin/master'
+- #1075 New UI - Quick search links in Administration panel doesn't work with tabbed search UI
+- need CatalogSearcher to clear old selection on new searches
+- need CatalogSearcher to clear old selection on new searches
+- make csw stateless and resilient in the face of many simultaneous requests
+- updated geotools to 8.1
+- make csw stateless and resilient in the face of many simultaneous requests
+- Remove unused JS.
+- Do not minify two times the JS in the web-client module.
+- More fixed for Ticket #1045 (Tur language)
+- Fix for Ticket #1069 Spanish translations for iso19139 as supplied by Richard Camejo
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- Update installer submodule.
+- More fixed for Ticket #1045 (Tur language)
+- Fix for Ticket #1069 Spanish translations for iso19139 as supplied by Richard Camejo
+- Schematron rules part of the schema plugin (#1066)
+- Update versions to RC1
+- Use rewriteURI instead of one-to-one URI mapping in OASIS catalog (#1034)
+- Bug from last version - fixed missing tur language in the strings.xml
+- Fix for Ticket #1045 Also contains fix for Ticket #850
+- Bug from last version - fixed missing tur language in the strings.xml
+- Fix for Ticket #1045 Also contains fix for Ticket #850
+- Merge remote-tracking branch 'mine/feature/harvester-timer'
+- Display harvesting time in minutes and seconds.
+- Data Catalog Vocabulary services (#912)
+- Fix for ticket ticket #550
+- Updated broken links. (Fix for Ticket #905)  - Removed "Geographic Metadata Standard ISO-19115 related" section since none of the links worked and could not find replacement links  - Updated links for digitalearth and ESRI ArcData Online  - NIMA changed to NGA - so updated the link to reflect the changes.
+- Widgets / improve error reporting layout.
+- Schematron rules part of the schema plugin.
+- Fix for ticket ticket #550
+- Updated broken links. (Fix for Ticket #905)  - Removed "Geographic Metadata Standard ISO-19115 related" section since none of the links worked and could not find replacement links  - Updated links for digitalearth and ESRI ArcData Online  - NIMA changed to NGA - so updated the link to reflect the changes.
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Patch for Ticket 950 was supposed to revert changes from SVN Rev 7893. Just noticed that there was a "string" function that was not reverted. Not 100% sure why this is require but it is probably safer to put it back in. Added it to the fix.
+- Merge pull request #29 from ianwallen/master
+- Fix for ticket #1063
+- Fix for ticket #1063
+- Harvester / Add timer: display time in min or sec.
+- Merge remote-tracking branch 'upstream/master' into feature/harvester-timer
+- csw-publication is allowed to Editor profile (#1061).
+- Fix css file path (related to #1059).
+- Fix images for statistics not displayed (#1060).
+- Fix images for statistics not displayed (#1060).
+- Add empty folder for CSS.
+- Merge remote-tracking branch 'origin/master'
+- Minify CSS (#1059).
+- Remove schema location from dublin-core - forces schema location to be generated using GeoNetwork schema.xsd ie. <geonetwork_url>/xml/schemas/dublin-core/schema.xsd
+- Remove schema location from dublin-core - forces schema location to be generated using GeoNetwork schema.xsd ie. <geonetwork_url>/xml/schemas/dublin-core/schema.xsd
+- Fix generation of schema location URL (used when a schemalocation is not specified in schema-ident.xml)
+- Fix generation of schema location URL (used when a schemalocation is not specified in schema-ident.xml)
+- CSW / Add option to increase popularity or not for GetRecordById operation (#1046)
+- the last commits failed to correctly commit the files I changed for reasons i don't understand so I am very carefully committing again.  This is for remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983.  Yet again
+- the last commits failed to correctly commit the files I changed for reasons i don't understand so I am very carefully committing again.  This is for remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983.  Yet again
+- remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983
+- remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983
+- Revert "remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983"
+- Revert "remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983"
+- remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983
+- remove password and username so that data cannot be downloaded to client.  See http://trac.osgeo.org/geonetwork/ticket/983
+- CSW / Harvester / try a GET+CQL harvest operation if no constraintLanguage defined in the GetCapabilities (#1044).
+- CSW / Harvester / try a GET+CQL harvest operation if no constraintLanguage defined in the GetCapabilities (#1044).
+- Reset search form and results when clicking reset. Display info panel.
+- JSLint validation.
+- Reset search form and results when clicking reset. Display info panel.
+- JSLint validation.
+- CSV export improvements
+- CSV export improvements
+- Change svnkit version to 1.3.8 to pick up latest bug fixes
+- Change svnkit version to 1.3.8 to pick up latest bug fixes
+- Log / For jeeves and schemaLoader use Log instead of System.out (#1036).
+- Add harvester timer to display how long is the harvesting task and display relative time.
+- Use rewriteURI instead of one-to-one URI mapping in OASIS catalog
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Patch for Ticket 950 was supposed to revert changes from SVN Rev 7893. Just noticed that there was a "string" function that was not reverted. Not 100% sure why this is require but it is probably safer to put it back in. Added it to the fix.
+- Fix JSLint warning.
+- Widgets / username field / browser does not remember previous values (#1033).
+- Widgets / username field / browser does not remember previous values (#1033).
+- Fix JSLint warning.
+- Thumbnail overview not working on iso19139 schema (#950). Thanks ianwallen.
+- Thumbnail overview not working on iso19139 schema (#950). Thanks ianwallen.
+- Fix subtemplate search (search form panel toolbar field not take into account).
+- Fixing search on subtemplates.
+- For subtemplates, use the computed title instead of the title column by default (fix the subtemplate title name in search results).
+- Fix subtemplate search (search form panel toolbar field not take into account).
+- Fixing search on subtemplates.
+- For subtemplates, use the computed title instead of the title column by default (fix the subtemplate title name in search results).
+- Fix OL path in debug mode.
+- Avoid root element not set for subtemplate import. Related to change in commit 89a7f553e71917bada2b13d2ded04cacfac5de31.
+- Invalid element name causing DOM exception.
+- Full Url thumbnail : add baseUrl to thumbnail url instead of hardcoded /geonetwork
+- Merge pull request #27 from fgravin/thumbnailPR
+- Full Url thumbnail : add baseUrl to thumbnail url instead of hardcoded /geonetwork
+- Maps / Update OpenLayers to 2.12 (#1020). Minified version.
+- Editor / Suggestion / compute extent from keyword does not work with Anchor (#1021).
+- Maps / Update OpenLayers to 2.12
+- Added another fix related to ticket #960. The date fields were not loading the invalid dates. i.e. setting a date to "TEST" would reload as null so the data was lost. It is better to keep the invalid date than to loose it.
+- Applied same changes that were recently made to the following file. web\src\main\webapp\scripts\map\Ext.ux\form\DateTime.js
+- Believe the original version came from following site. Applied the most recent changes as it looks like it fixed some bugs with IE. http://www.sencha.com/forum/showthread.php?22661-new-version-DateTime-Field Added documentation for dateAltFormats and timeAltFormats that was added in the last version.
+- Fix for Ticket #960 Updated date/time selection logic so that if it does not understand the date/time then it leaves it as is.
+- Merge pull request #26 from ianwallen/2.8.x
+- Added another fix related to ticket #960. The date fields were not loading the invalid dates. i.e. setting a date to "TEST" would reload as null so the data was lost. It is better to keep the invalid date than to loose it.
+- Applied same changes that were recently made to the following file. web\src\main\webapp\scripts\map\Ext.ux\form\DateTime.js
+- Believe the original version came from following site. Applied the most recent changes as it looks like it fixed some bugs with IE. http://www.sencha.com/forum/showthread.php?22661-new-version-DateTime-Field Added documentation for dateAltFormats and timeAltFormats that was added in the last version.
+- IsoLanguagesMapper trigger error when used with Jeevlet (#1019).
+- Schematron does not always use net.sf.saxon.TransformerFactoryImpl (#1018).
+- Fix broken links (#1016) and add new ones.
+- Remove extra dct:spatial tag.
+- Fix for Ticket #960 Updated date/time selection logic so that if it does not understand the date/time then it leaves it as is.
+- Update instructions for controlling spatial index transactions
+- Update instructions for controlling spatial index transactions
+- Update web/src/main/java/org/fao/geonet/kernel/KeywordBean.java
+- Add siteUrl as parameter to xslts called by wfs getfeature harvester Allows these xslts to query the local geonetwork catalog for things like register definitions etc
+- Add siteUrl as parameter to xslts called by wfs getfeature harvester Allows these xslts to query the local geonetwork catalog for things like register definitions etc
+- Some widget apps may not provide selection action.
+- Improve autocompletion mechanism.
+- IE fix.
+- IE fix.
+- Fix yui error. related to #1003.
+- Widgets / Create metadata window improvements (#1003).
+- Search suggestion / invalid JSON if field contains double quote (#1005).
+- Fix rating widget initialization.
+- Widgets / download and dynamic record info not available (#1008)
+- Fix IE8 JS errors.
+- Privileges not set when using CSW harvester (#1010).
+- Improve SQL migration script.
+- Privileges not set when using CSW harvester (#1010).
+- Fix IE8 JS errors.
+- Widgets / download and dynamic record info not available (#1008)
+- Fix rating widget initialization.
+- gmd:credit could be multiple (#1004).
+- Search suggestion / invalid JSON if field contains double quote (#1005).
+- Fix yui error. related to #1003.
+- Indexing / iso19139 / add gmd:credit (#1004).
+- Add missing loc for LDAP settings.
+- Widgets / Create metadata window improvements (#1003).
+- Profile / Can't create custom tabs for more than one profile (#1001). Use profileIdCompleteTab instead of extraTabs mode (removed).
+- * Formating Changes - Re-indent content with tabs instead of spaces. - Converted <script></script> to <script/> as it is better XML. It does not affect the output. - Rearrange some attribute for consistency
+- Fixed bug with missing / from commit def36cfcf2760b4b87067d8421957e394d3a599e Also rearrange a few attribute for consistency.
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Added <xsl:text>&#10;</xsl:text> to the end of the <script> elements so that it would produce a return in the output. This makes it easier to read the html source output. Otherwise it can be placed as one long line....
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Changed ../../ to {/root/gui/url} where appropriate for consistency as it is follows the same format as the others.
+- * Formating Changes - Re-indent content with tabs instead of spaces. - Converted <script></script> to <script/> as it - Rearrange some attribute for consistency
+- * Formating Changes - Re-indent content with tabs instead of spaces. - Converted <script></script> to <script/> as it is better XML. It does not affect the output. - Rearrange some attribute for consistency
+- Fixed bug with missing / from commit def36cfcf2760b4b87067d8421957e394d3a599e Also rearrange a few attribute for consistency.
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Added <xsl:text>&#10;</xsl:text> to the end of the <script> elements so that it would produce a return in the output. This makes it easier to read the html source output. Otherwise it can be placed as one long line....
+- Formating Changes - Re-indent content with tabs instead of spaces.
+- Changed ../../ to {/root/gui/url} where appropriate for consistency as it is follows the same format as the others.
+- * Formating Changes - Re-indent content with tabs instead of spaces. - Converted <script></script> to <script/> as it - Rearrange some attribute for consistency
+- Add label for harvesting schedule checkboxes.
+- Fix capabilities xml docs to validate
+- Fix capabilities xml docs to validate
+- Disjunct fields search (#769)
+- updated master's submodules to use https for checking out to avoid firewall problems
+- updated master's submodules to use https for checking out to avoid firewall problems
+- Small fix to make superBrief more general for those profiles that define their own CI_Ciation
+- Small fix to make superBrief more general for those profiles that define their own CI_Ciation
+- no longer throw nullpointer if isTemplate is null
+- Merge bryce's pull request for subtree ldap search
+- Look across all ISO profiles to allow thesaurus type to be chosen from a profile as well as base standard
+- Look across all ISO profiles to allow thesaurus type to be chosen from a profile as well as base standard
+- Merge pull request #21 from ianwallen/2.8.x
+- Added missing category "Physical Samples" - missed in Patch for ticket #973
+- Catalan translation as identified from Ticket #964 Only apply English to Catalan - did not apply any Catalan typos
+- Merge pull request #19 from ianwallen/master
+- Catalan translation as identified from Ticket #964 Only apply English to Catalan - did not apply any Catalan typos
+- Fix disk deletion of thumbnail and gui bug of thumbnail widget form
+- Fix disk deletion of thumbnail and gui bug of thumbnail widget form
+- Added missing category "Physical Samples" - missed in Patch for ticket #973
+- Widgets / Search form scale denominator not initialized to min and max (#994).
+- Widgets / printUrl for HTML print mode as parameter.
+- Metadata formatter remove resource after first call (#992).
+- put 'eng' in full url for thumbnail
+- Add full url for thumbnails
+- Add '_groupPublish' in Lcuene index corresponding on all group name the MD is refered to
+- Add _groupPublished in fieldSpecificAnalyzer (lucene config)
+- As pointed out by César in http://osgeo-org.1560.n6.nabble.com/New-category-physical-samples-tc4984030.html. The icon used from http://www.iconarchive.com/show/medical-toolbar-icons-by-aha-soft/DNA-helix-icon.html is not free for commercial use. Changed image to the following http://www.iconfinder.com/icondetails/20817/16/applications_labs_science_icon which is GPL
+- Merge pull request #17 from ianwallen/master
+- Merge pull request #15 from fgravin/topull-urlThumbnail
+- Merge pull request #14 from fgravin/topull-csw
+- As pointed out by César in http://osgeo-org.1560.n6.nabble.com/New-category-physical-samples-tc4984030.html. The icon used from http://www.iconarchive.com/show/medical-toolbar-icons-by-aha-soft/DNA-helix-icon.html is not free for commercial use. Changed image to the following http://www.iconfinder.com/icondetails/20817/16/applications_labs_science_icon which is GPL
+- Displayed scrollbar when needed according to number of groups.
+- Remove duplicates for label in loc files for widgets added for tabbed search.
+- Improve label for french
+- Add currTab as CSS class name to customize styling based on current tab.
+- fixed reflection used to create spatial filters
+- put 'eng' in full url for thumbnail
+- Add full url for thumbnails
+- Add '_groupPublish' in Lcuene index corresponding on all group name the MD is refered to
+- Add _groupPublished in fieldSpecificAnalyzer (lucene config)
+- Merge pull request #13 from ianwallen/2.8.x
+- Merge pull request #12 from ianwallen/master
+- Added some missing ext js locales (CA, RU, PT, CN, FI and NO) that seems to be missing - This corrects the calendar so that the proper language is displayed. This issues was discovered while patching Ticket #986
+- Added some missing ext js locales (CA, RU, PT, CN, FI and NO) that seems to be missing - This corrects the calendar so that the proper language is displayed. This issues was discovered while patching Ticket #986
+- Fix for Ticket #986 - Correct the calendar so that the proper language is used.
+- Fix for Ticket #986 - Correct the calendar so that the proper language is used.
+- Include version var
+- Fixes for tickets #982 and #977
+- Fixes for tickets #968 and #969
+- Fixes for tickets #968 and #969
+- fixed reflection used to create spatial filters
+- Fix for a potential short term memory leak
+- Fix for a potential short term memory leak
+- Merge pull request #11 from ianwallen/master
+- In Fix for Ticket #519 - accidentally converted to DOS format converting back to UNIX
+- Filter server.prop using maven on build, not only when building installer (#985).
+- Merge pull request #9 from ianwallen/2.8.x
+- Merge pull request #10 from ianwallen/master
+- Fixes for tickets #982 and #977
+- Editor / Codelist / Add new editor field type (#931)
+- revert accidental space change from last version
+- Fixed a small bug related to Ticket #957 in regards to upper-case
+- Fixed a small bug related to Ticket #957 in regards to upper-case
+- Cleanup and simplified code related to Ticket #957 - and also corrected a small typo bug.
+- Cleanup and simplified code related to Ticket #957 - and also corrected a small typo bug.
+- Fix for Ticket #519
+- Fix bug for Ticket #662 Allow return to submit the query.
+- Fix for Ticket #519
+- Return to setting changedate on harvested records when the source record has been modified. Fix if else statement issues for this harvester
+- Return to setting changedate on harvested records when the source record has been modified. Fix if else statement issues for this harvester
+- More flexibility for extract register items Remove println
+- Fix for ticket #966
+- Fix issue with privileges and categories not being set on harvested WxS resources and services
+- Fix issue with privileges and categories not being set on harvested WxS resources and services
+- Remove dependencies not permitted under licensing rules
+- Fix null pointer exception when harvesting from a WMS server with non-requestable category layers (i.e. layers without a name element)
+- Fix null pointer exception when harvesting from a WMS server with non-requestable category layers (i.e. layers without a name element)
+- Remove dependencies not permitted under licensing rules
+- Add RDF save as option in web client. Add rewrite rules.
+- Add RDF service configuration.
+- Add blank XSL for schema URI catalog loader. Add RDF services configuration. Add RDF sitemap.
+- Add schema conversion to RDF.
+- Merge branch 'feature/user-with-profiles' of github.com:fxprunayre/core-geonetwork into feature/user-with-profiles
+- Fix status update according to user profile and group
+- Add more control when inserting metadata and setting operation (#979). Fix system configuration, user group only checkbox status on load.
+- Widgets / clean other action menu (#781).
+- Add migration and creation SQL scripts for multiple profiles per users.
+- Fix getUserGroups call
+- Improve labels
+- Remove GeoServer.
+- Add basic support for user with multi-profils.
+- Refine previous fix, use updated copy rather than previous parameter
+- Refine previous fix, use updated copy rather than previous parameter
+- Fix issue with OAI-PMH harvester not updating icons correctly
+- Fix issue with OAI-PMH harvester not updating icons correctly
+- #981 return to adding privileges and categories to harvested OAI-PMH records
+- #981 return to adding privileges and categories to harvested OAI-PMH records
+- Add more control when inserting metadata and setting operation (#979). Fix system configuration, user group only checkbox status on load.
+- Widgets / clean other action menu (#781).
+- Add migration and creation SQL scripts for multiple profiles per users.
+- Merge branch 'feature/user-with-profiles' of github.com:fxprunayre/core-geonetwork into feature/user-with-profiles
+- Fix getUserGroups call
+- Improve labels
+- Remove GeoServer.
+- Add basic support for user with multi-profils.
+- Merge remote-tracking branch 'origin/master'
+- Renamed migration folders 290 as done for others in svn r9229
+- Remove GeoServer.
+- Merge branch 'master' into feature/user-with-profiles
+- Add tab in front of comments
+- Fix bug for Ticket #662 Allow return to submit the query.
+- Several new options for monitoring
+- made webspecs a submodule
+- include stack trace in logs
+- added a debug method where exception can be logged
+- Avoid errors during indexing on some type of records (#975, #976)
+- #972: New UI: Groups combobox preserves old values when login with a different user
+- Merge remote branch 'origin/master'
+- #972: New UI: Groups combobox preserves old values when login with a different user
+- #932 new line issue with Oracle scripts
+- Applied patch for ticker 932 Fix script so that it can be executed via sqlplus if required. http://trac.osgeo.org/geonetwork/ticket/932
+- Fix for issue #974 harvesting missing after migration
+- Fix for issue #974 harvesting missing after migration
+- Patch for ticket #973
+- Fix for Ticket #957  (which also fixed Ticket #519) updated gmd:LocalisedCharacterString@locale as well to keep them in sink with gmd:PT_Locale changes
+- Patch for ticket #973
+- Fix for Ticket #957  (which also fixed Ticket #519) updated gmd:LocalisedCharacterString@locale as well to keep them in sink with gmd:PT_Locale changes
+- Merge pull request #5 from ianwallen/2.8.x
+- Merge branch '2.8.x' of https://github.com/ianwallen/core-geonetwork into 2.8.x
+- #967 : Security: GN vulnerable to XML bombs
+- #967 : Security: GN vulnerable to XML bombs
+- delete compiled javascript
+- delete compiled javascript
+- Update RC0 in sql scripts
+- Update pom.xml to RC0
+- Applied patch for ticker 932 Fix script so that it can be executed via sqlplus if required. http://trac.osgeo.org/geonetwork/ticket/932
+- Fix for ticket #966
+- Add basic support for user with multi-profils.
+- http://trac.osgeo.org/geonetwork/ticket/954 Changing 'Gemeente' to Municipality Lets see if I can get all the changes this time...
+- made output be standard nagios output and added option for warning output
+- stupid mistake in check.  need to test better
+- nagios requires an echo even for success.  echo added on success
+- using bash for healthcheck script because of redirection code
+- More flexibility for extract register items Remove println
+- fixed another script bug in nagios script
+- fixed monitor script to work better when bash is not present
+- Return metadata permissions when using index search (#963)
+- Return metadata permissions when using index search (#963)
+- Fix in dispatcher to prevent NullPointerException on CSW request
+- Merge branch 'github-fix-csw' of https://github.com/florianesser/core-geonetwork into fix-csw
+- http://trac.osgeo.org/geonetwork/ticket/954 Changing 'Gemeente' to Municipality more changes
+- http://trac.osgeo.org/geonetwork/ticket/954 Changing 'Gemeente' to Municipality Lets see if I can get all the changes this time...
+- http://trac.osgeo.org/geonetwork/ticket/954 Changing 'Gemeente' to Municipality more changes
+- Fix for ticket #962
+-  #962 Fixed issue with search for downloads/interactive maps options on advanced search tab
+- Fix in dispatcher to prevent NullPointerException on CSW request
+- fixed bug running these scripts on darwin11.0 machines
+- fixed bug running these scripts on darwin11.0 machines
+- Fix layer title in map FeatureInfo panel
+- Fix layer title in map FeatureInfo panel
+- fixed file parsing so it parses last line
+- fixed configuration file where it was once again postgres enabled by default
+- added a shell script that can be used by nagios to perform health checks
+- improved log message
+- improved log message
+- added new option to overrides to handle case where path slashes are / in Configuration overrides, hopefull this will fix windows build
+- updated maven_repo reference so have corrected pom.xml
+- added new option to overrides to handle case where path slashes are / in Configuration overrides, hopefull this will fix windows build
+- Merge pull request 2
+- Merge pull request #2 from ianwallen/patch-1
+- http://trac.osgeo.org/geonetwork/ticket/954 Changing 'Gemeente' to Municipality Not sure if there are other files to change as well...
+- reverted gitmodules url to read only after unintentional commit, I should add postcommit trigger
+- updated geoserver and installer modules to have new git ignores
+- added git ignores
+- Merge pull request #1 from pvgenuchten/master
+- Fix for ticket #959
+- Merge commit '9383aaafdbe066e0c17e41a1cb2edf40a3b5f57f'
+- added geoserver as submodule
+- deleted geoserver, will add as submodule
+- german translation javascript translations checked by native speaker volker Mische
+- fixed submodule urls
+- remove duplication of code in metdata-edit xsl as discussed in http://trac.osgeo.org/geonetwork/ticket/956
+- fixed git-all script
+- updated docs ref to version with git instructions
+- fixed pom syntax error
+- Updated git modules to use readonly url
+- update fast submodules reference
+- modified pom so gast is build only if present
+- last minute merges from svn
+- added submodules for master
+- added submodules for main
+- Rejoined branches 2.8.x and master in GIT so that future merges will be simpler
+- Show thesaurus name if present
+- New UI updated translations
+- Bring rev 9241 from 2.8.x to trunk
+- Update files in tabsearch UI for 3-char languages codes
+- Widgets / PermalinkProvider overrides CookieProvider (#945)
+- fixed creeping harvester ids bug
+- Fix NPE on sample metadata import when default group is removed. Related to Log.isDebugEnabled if statement without {.
+- Fix WHERE clause order in SERQL queries and keyword should be returned as XML, not Bean.
+- Add support for gmx:Anchor instead of replacing them by gco:CharacterString in update-fixed-info (#681). Use schema-suggestion.xml for configuration.
+- added git support files
+- added migration for https when harvesting other geonetwork nodes
+- Updated migration scripts for 2.8
+- Translation fixes related to #803
+- #803
+- Widgets / PermalinkProvider overrides CookieProvider (#945)
+- Add missing services section required for category action filtering. (related to r9175 - #925: Categories list should display add/edit/delete buttons only to allowed users).
+- updated thesaurus for multilingual.  Added documentation and tests as described in #924 (take 2)
+- Revert "updated thesaurus for multilingual.  Added documentation and tests as described in #924"  Need to reapply patch.  I missed some classes
+- Add user interface configuration section.
+- updated thesaurus for multilingual.  Added documentation and tests as described in #924
+- updated german translation
+- updated french translation
+- Widgets / Report error when a modal action return serviceNotAllowed (#943). Avoid error when inspire options is not set in info service.
+- Fix for ticket #933 - apply to trunk
+- Fix for ticket #926 - thanks to ianwallen
+- added a new profile 'Monitor'.
+- Fix for ticket #929
+- #927 New UI: Add search INSPIRE panel in Advanced Search options if INSPIRE is enabled
+- changed formatter lang node to have iso639_2 and iso639_1 nodes instead to make finding localized elements easier
+- #925: Categories list should display add/edit/delete buttons only to allowed users
+- fixed a bug where the shared metrics registry was not being used by monitor manager.
+- Updated the metrics registry filter so it adds the different health check registries
+- added jmx reporter so that monitoring can be done via jmx
+- divided health checks into critical, warning and expensive so that a monitoring system can monitor these different aspects at differnt intervals and report errors based on which category the health checks fall into
+- Add footer information to dublin core and ISO19110 records in simple view mode.
+- apply patch for #921 can't shutdown/undeploy because of quartz scheduler threads
+- Fix CSW Transaction/Harvest end-points names in Capabilities document
+- #919: New UI: Show Options panel below advanced search options
+- Fix missing individual or organisation name in simple view mode.
+- #917: Individual metadata ZIP export contains previously exported records
+- New UI: Fix metadata results store getTitle checks
+- #916: Multilingual metadata: No thumbnails shown in result overview page depending on language
+- Updated dutch labels
+- Fix lang codes in migration script
+- #913: New ui: Make language selector wider so that Nederlands fits
+- Add conversion to clob as part of migration process - thanks to Ian Allen
+- WebDav harvester: restored options removed incorrectly with new harvester scheduling code
+- Import / IllegalArgumentException when undeclared namespace in schema is used as default namespace. Raise a warning instead of the Exception and load the metadata properly. Fix namespace URI in error message too. #909
+- Trunk: Update files to version 2.9.0-SNAPSHOT

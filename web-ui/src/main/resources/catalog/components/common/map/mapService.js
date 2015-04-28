@@ -280,8 +280,12 @@
             var unregisterEventKey = olLayer.getSource().on('tileloaderror',
                 function(tileEvent, target) {
                   var msg = $translate('layerTileLoadError', {
-                    url: tileEvent.tile.getKey(),
-                    layer: tileEvent.currentTarget.getParams().LAYERS
+                    url: tileEvent.tile && tileEvent.tile.getKey ?
+                        tileEvent.tile.getKey() : '- no tile URL found-',
+                    layer: tileEvent.currentTarget &&
+                        tileEvent.currentTarget.getParams ?
+                        tileEvent.currentTarget.getParams().LAYERS :
+                        layerParams.LAYERS
                   });
                   console.warn(msg);
                   $rootScope.$broadcast('StatusUpdated', {

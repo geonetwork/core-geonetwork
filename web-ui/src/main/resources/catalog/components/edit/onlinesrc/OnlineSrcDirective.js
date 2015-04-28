@@ -372,7 +372,7 @@
                   scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
 
                   // not multilingual {"fre":"#"}
-                  if(Object.keys(scope.mdLangs).length > 1) {
+                  if (Object.keys(scope.mdLangs).length > 1) {
                     scope.isMdMultilingual = true;
                     scope.mdLang = gnCurrentEdit.mdLanguage;
 
