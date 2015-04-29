@@ -26,28 +26,28 @@
 				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/sextant/css/schema/main.css"/>
 			</head>
 			<body class="view-win">
-			
-			<script >
-				<xsl:variable name="apos">'</xsl:variable>
-				var title = '<xsl:value-of select="translate($title,$apos,concat('\', $apos))" />';
-			</script>
-			
-			<script src="{root/url}../../apps/js/ext/adapter/ext/ext-base.js">//</script>
-			<script src="{root/url}../../apps/js/ext/ext-all.js">//</script>
+
+			</body>
+      <script >
+        <xsl:variable name="apos">'</xsl:variable>
+        var title = '<xsl:value-of select="translate($title,$apos,concat('\', $apos))" />';
+      </script>
+
+      <script src="{root/url}../../apps/js/ext/adapter/ext/ext-base.js">//</script>
+      <script src="{root/url}../../apps/js/ext/ext-all.js">//</script>
       <script src="{root/url}../../static/geonetwork-client-mini-nomap.js">//</script>
 
-			<script src="{root/url}../../apps/sextant/js/cat.lang/fr.js">//</script>
-			<script src="{root/url}../../apps/sextant/js/cat.lang/en.js">//</script>
-			
-			<script src="{root/url}../../apps/sextant/js/Settings.js">//</script>
-			<script src="{root/url}../../apps/sextant/js/cat.map/Settings.js">//</script>
-			<script src="{root/url}../../apps/sextant/js/cat.ViewWindow.js">//</script>
-			<script src="{root/url}../../apps/sextant/js/cat.ViewPanel.js">//</script>
+      <script src="{root/url}../../apps/sextant/js/cat.lang/fr.js">//</script>
+      <script src="{root/url}../../apps/sextant/js/cat.lang/en.js">//</script>
 
-			<script src="{root/resourceUrl}/js/fmt-mdviewer-main.js"/>
-			
-			</body>
-		</html>
+      <script src="{root/url}../../apps/sextant/js/Settings.js">//</script>
+      <script src="{root/url}../../apps/sextant/js/cat.map/Settings.js">//</script>
+      <script src="{root/url}../../apps/sextant/js/cat.ViewWindow.js">//</script>
+      <script src="{root/url}../../apps/sextant/js/cat.ViewPanel.js">//</script>
+
+      <script src="{root/url}md.formatter.resource?id=mdviewer&amp;fname=js/fmt-mdviewer-main.js">//</script>
+
+    </html>
 	</xsl:template>
 
 </xsl:stylesheet>

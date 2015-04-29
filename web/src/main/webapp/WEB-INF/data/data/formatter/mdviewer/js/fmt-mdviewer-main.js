@@ -8,16 +8,16 @@ Ext.onReady(function() {
 	var style = urlParameters.style || 'sextant';
 	var screenMode = urlParameters.screen || 'full';
 
-	var uuid = urlParameters.uuid;
+	var uuid = urlParameters.id;
 	
 	if(!uuid && urlParameters.url) {
 		var paramsCsw = GeoNetwork.Util.getParameters(urlParameters.url);
 		uuid = paramsCsw.uuid || paramsCsw.id;
 	}
-	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/metadata.formatter.*/, '')[1];
+	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/md.format.*/, '')[1];
 	var lang = window.location.href.substring(
 			window.location.href.indexOf('/srv')+5, 
-			window.location.href.indexOf('/metadata.formatter')) 
+			window.location.href.indexOf('/md.format'))
 		|| GeoNetwork.Util.defaultLocale;
 	
 	GeoNetwork.Util.setLang(lang, '../../apps/js');
@@ -35,7 +35,7 @@ Ext.onReady(function() {
 	if(urlParameters.url) {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
 	} else {
-		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
+		formatterServiceUrl = catalogue.services.mdFormatter + '?id=' + escape(uuid) + '&xsl=' + style;
 	}
 	
 	if(screenMode == 'win') {
