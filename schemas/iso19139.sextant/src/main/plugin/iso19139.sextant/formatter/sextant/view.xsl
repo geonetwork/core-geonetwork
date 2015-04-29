@@ -24,6 +24,10 @@
 	</xsl:template>
 	
 	<xsl:template match="/root/gmd:MD_Metadata" priority="5">
+    <xsl:message>
+      ######################
+      <xsl:value-of select="string(/root/schemas/iso19139.sextant)" />
+    </xsl:message>
 		<html>
 			<!-- Set some vars. -->
 			<xsl:variable name="title">
@@ -77,7 +81,7 @@
 										/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
 								</div>
 								
-								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
+								<h5><xsl:value-of select="$label//constraints_access" /></h5>
 								<div class="result-metadata-modal-content">
 									<xsl:for-each select="/root/gmd:MD_Metadata/gmd:distributionInfo">
 										<xsl:apply-templates mode="iso19139"
@@ -89,7 +93,7 @@
 										<p></p>
 								</div>
 								
-								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
+								<h5><xsl:value-of select="$label//contact" /></h5>
 								<div class="result-metadata-modal-content">
 									<p></p>
 									<ul>
@@ -293,13 +297,19 @@
 	<xsl:template name="getTitle">
 		<xsl:param name="name" />
 		<xsl:variable name="title"
-			select="string($label/labels/element[@name=$name and not(@context)]/label)" />
-		<xsl:choose>
+			select="string($label//element[@name=$name and not(@context)]/label)" />
+    <xsl:message>
+      ######################
+      title: <xsl:value-of select="$name" />#
+      title: <xsl:copy-of select="$label" />#
+    </xsl:message>
+
+    <xsl:choose>
 			<xsl:when test="normalize-space($title)">
 				<xsl:value-of select="$title" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="string($labelIso/labels/element[@name=$name and not(@context)]/label)" />
+				<xsl:value-of select="string($labelIso//element[@name=$name and not(@context)]/label)" />
 			</xsl:otherwise>
 		</xsl:choose>
 
@@ -309,7 +319,8 @@
         <xsl:variable name="langId">
          	<xsl:value-of select="concat('#', upper-case($lang))" />
         </xsl:variable>
-        <xsl:choose>
+
+    <xsl:choose>
             <xsl:when
                 test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] and
                 gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != ''">
