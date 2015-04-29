@@ -24,10 +24,6 @@
   </xsl:template>
 
   <xsl:template match="/root/gmd:MD_Metadata" priority="5">
-    <xsl:message>
-      ######################
-      <xsl:value-of select="string(/root/schemas/iso19139.sextant)" />
-    </xsl:message>
     <html>
       <!-- Set some vars. -->
       <xsl:variable name="title">
