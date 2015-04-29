@@ -408,8 +408,10 @@
   }
 }
 .sxt-max-md {
-  .list-group-item.sxt-col-lg-4 {
-    width: 50%;
+  @media (min-width: @screen-md-min) {
+    .list-group-item.sxt-col-lg-4 {
+      width: 50%;
+    }
   }
   .expander {
     display: none;
@@ -475,6 +477,11 @@ ul.gn-resultview {
     }
     .sxt-max-md &:nth-child(2n+1) {
       padding-left: 10px;
+    }
+    @media (max-width: @screen-md-max) {
+      .sxt-max-md &:nth-child(3n+1), .sxt-max-md & {
+        padding-left: 10px;
+      }
     }
     &:hover {
       background: white;
