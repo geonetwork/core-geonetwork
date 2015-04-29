@@ -10094,7 +10094,7 @@
   display: block;
 }
 .gn [gn-share] .gn-share-grid tbody {
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
 }
