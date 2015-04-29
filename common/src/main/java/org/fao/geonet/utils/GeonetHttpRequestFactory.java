@@ -98,7 +98,7 @@ public class GeonetHttpRequestFactory {
      * @return the XmlRequest.
      */
     public final XmlRequest createXmlRequest(URL url) {
-        final int port = url.getPort() == -1 ? url.getDefaultPort() : url.getPort();
+        final int port = url.getPort();
         final XmlRequest request = createXmlRequest(url.getHost(), port,
                 url.getProtocol());
 
@@ -153,6 +153,7 @@ public class GeonetHttpRequestFactory {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         configurator.apply(clientBuilder);
         CloseableHttpClient httpClient = clientBuilder.build();
+
         if (r.isPreemptiveBasicAuth() || r.getHttpClientContext() != null) {
             return new AdaptingResponse(httpClient, httpClient.execute(request, r.getHttpClientContext()));
         } else {
