@@ -266,7 +266,7 @@
       };
 
       // Manage tabs height for api
-      $scope.tabFullHeight = gnSearchSettings.tabFullHeight;
+      $scope.tabOverflow = gnSearchSettings.tabOverflow;
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
