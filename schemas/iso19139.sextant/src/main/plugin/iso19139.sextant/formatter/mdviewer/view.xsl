@@ -44,7 +44,7 @@
 			<script src="{root/url}../../apps/sextant/js/cat.ViewWindow.js">//</script>
 			<script src="{root/url}../../apps/sextant/js/cat.ViewPanel.js">//</script>
 
-			<script src="{root/resourceUrl}/js/main.js"/>
+			<script src="{root/resourceUrl}/js/fmt-mdviewer-main.js"/>
 			
 			</body>
 		</html>
