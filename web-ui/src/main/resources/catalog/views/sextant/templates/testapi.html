@@ -68,9 +68,16 @@
     function(gnSearchSettings) {
       gnSearchSettings.configWhat = 'AMBIO';
       gnSearchSettings.configWho = 'IFREMER';
-      gnSearchSettings.tabFullHeight = {
+
+      /**
+       * Tab display overflow. If false, the tab content is rendered within
+       * the container height. If true, the tab content get out of its container
+       * and take the height it needs.
+       * @type {{search: boolean, panier: boolean}}
+       */
+      gnSearchSettings.tabOverflow = {
         search: true,
-        panier: false
+        panier: true
       }
     }]);
 
