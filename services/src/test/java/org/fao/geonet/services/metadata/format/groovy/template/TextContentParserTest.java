@@ -61,7 +61,7 @@ public class TextContentParserTest {
     public static TextContentParser createTestTextContentParser() throws InstantiationException, IllegalAccessException {
         final TextContentParser parser = new TextContentParser();
         addFilters(parser, FilterCapitalize.class, FilterEscapeXmlAttrs.class, FilterEscapeXmlContent.class, FilterLowerCase.class,
-                FilterUpperCase.class);
+                FilterUpperCase.class, FilterGenerateUUID.class, FilterLastUUID.class);
         return parser;
     }
 

@@ -3,27 +3,14 @@
 
   gnFormatter = {};
   gnFormatter.formatterSectionTogglersEventHandler = function(e) {
-    var thisEl = $(this);
+    var thisEl = $(e.currentTarget);
     thisEl.toggleClass('closed');
-    var toggleAncestor = thisEl.attr('toggle-ancestor');
-    if (!angular.isDefined(toggleAncestor)) {
-      toggleAncestor = 1;
-    } else {
-      toggleAncestor = parseInt(toggleAncestor);
-    }
-    var ancestor = thisEl;
-    while (toggleAncestor > 0) {
-      ancestor = ancestor.parent();
-      toggleAncestor--;
-    }
-    var toggleSelector = thisEl.attr('toggle-selector');
-    if (toggleSelector) {
-      ancestor.nextAll('.target').find(toggleSelector).toggle();
-    } else {
-      ancestor.nextAll('.target').first().toggle();
-    }
 
     e.preventDefault();
+
+    var visible = $("#" + thisEl.attr('target')).toggle().is(":visible");
+    console.log()
+    return visible;
   };
 
   gnFormatter.formatterOnComplete = function() {
@@ -63,21 +50,59 @@
     }
   };
 
-  gnFormatter.loadAssociated = function(linkBlockSel, metadataId,
-                                        parentUuid, spinnerSel) {
+  gnFormatter.depth = function (linkBlockEl){
+    if (linkBlockEl.length > 0) {
+      var inc = 0, parent = linkBlockEl.parent();
+      if (parent.hasClass('associated-link-row')) {
+        inc ++;
+      }
+      return inc + gnFormatter.depth(parent);
+    }
+
+    return 0;
+  };
+  gnFormatter.loadAssociated = function(event, linkBlockSel, metadataId, parentUuid, spinnerSel) {
+
     var linkBlockEl = $(linkBlockSel);
 
+    if (angular.isDefined(event)) {
+      var isLoading = $('div[associated-loading=loading]').length > 0;
+      if (isLoading) {
+        return;
+      }
+
+      var closeAssociated = linkBlockEl.is(":visible");
+      var rowSelector = 'div.associated-link-row';
+      var loadingDoneSel = 'div[associated-loading=done]';
+      var parentSelector = linkBlockEl.parent().attr("parent");
+      var rows, loaded;
+      if (angular.isDefined(parentSelector)){
+        var parent = $(parentSelector);
+        rows = parent.find(rowSelector);
+        loaded = parent.find(loadingDoneSel);
+      } else {
+        rows = $(rowSelector);
+        loaded = $(loadingDoneSel);
+      }
+      rows.toggle(false);
+      loaded.removeAttr("associated-loading").html('');
+      if (closeAssociated) {
+        return;
+      }
+      var associatedLinkAClass = 'associated-link-a';
+      $("a." + associatedLinkAClass).addClass("disabled");
+      gnFormatter.formatterSectionTogglersEventHandler(event);
+      linkBlockEl.attr('associated-loading', 'loading');
+    }
+
+    linkBlockEl.html(
+      '<h3><i class="fa fa-sitemap pad-right"></i>' +
+          '<i class="fa fa-circle-o-notch fa-spin pad-right associated-spinner"></i></h3>');
     if (spinnerSel) {
       var spinner = $(spinnerSel);
       spinner.show();
     }
 
-    if (linkBlockEl.length < 1) {
-      if (spinner) {
-        spinner.hide();
-      }
-      return;
-    }
     var parentParam = '';
     if (angular.isDefined(parentUuid)) {
       parentParam = '&parentUuid=' + parentUuid;
@@ -85,35 +110,46 @@
 
     $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' +
         metadataId + parentParam, {
-          dataType: 'text',
-          success: function(html) {
-            if (spinnerSel) {
-              spinner.hide();
-            }
-            if (!html) {
-              return;
-            }
+      dataType: 'text',
+      success: function(html) {
+        if (spinnerSel) {
+          spinner.hide();
+        }
 
-            var el = linkBlockEl.replaceWith(html);
-            linkBlockEl = $('.summary-links-associated-link');
+        $('a.associated-link-a').removeClass("disabled");
+        if (!html) {
+          return;
+        }
+        if (angular.isDefined(event)) {
+          linkBlockEl.html(html);
+          linkBlockEl.attr('associated-loading', 'done');
+          linkBlockEl.find("div.associated-link-row").attr("parent", linkBlockSel);
+          if (gnFormatter.depth(linkBlockEl) >= 2) {
+            linkBlockEl.find("a." + associatedLinkAClass).removeClass(associatedLinkAClass).removeAttr("onclick").attr("style", "color:black; text-decoration:initial")
+          }
+        } else {
+          linkBlockEl.replaceWith(html);
+        linkBlockEl = $('.summary-links-associated-link');
+        }
+        var togglerElements = linkBlockEl.find('.toggler');
+        togglerElements.off('click', gnFormatter.formatterSectionTogglersEventHandler);
+        togglerElements.on('click', gnFormatter.formatterSectionTogglersEventHandler);
 
-            linkBlockEl.find('.toggler').on('click',
-               gnFormatter.formatterSectionTogglersEventHandler);
-            if (linkBlockEl.find('table').children().length == 0) {
-              linkBlockEl.hide();
+        if (linkBlockEl.find('table').children().length == 0) {
+          linkBlockEl.hide();
               $('a[rel = ".container > .associated"]').
                  attr('disabled', 'disabled');
-            }
-          },
-          error: function(req, status, error) {
-            if (spinnerSel) {
-              spinner.hide();
-            }
-            linkBlockEl.html('<h3>Error loading related metadata</h3><p><pre>' +
-               '<code>' + error.replace('<', '&lt;') + '</code></pre></p>');
-            linkBlockEl.show();
-          }
-        });
+        }
+      },
+      error: function(req, status, error) {
+        if (spinnerSel) {
+          spinner.hide();
+        }
+        linkBlockEl.html('<h3>Error loading related metadata</h3><p><pre>' +
+            '<code>' + error.replace('<', '&lt;') + '</code></pre></p>');
+        linkBlockEl.show();
+      }
+    });
   };
 
 })();

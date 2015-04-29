@@ -104,8 +104,6 @@ echo ' * updating docs/eng/training/source/conf.py'
 sed $sedopt "s/${version}/${new_version_main}/g" docs/eng/training/source/conf.py
 echo ' * updating docs/eng/source/source/conf.py'
 sed $sedopt "s/${version}/${new_version_main}/g" docs/fra/users/source/conf.py
-echo ' * updating docs/widgets/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/widgets/conf.py
 echo
 
 # Update installer
@@ -118,11 +116,11 @@ echo
 
 # Update SQL - needs improvements
 echo 'SQL script'
-sed $sedopt "s/15,14,'version','.*'/15,14,'version','${new_version_main}'/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
-sed $sedopt "s/16,14,'subVersion','.*'/16,14,'subVersion','${sub_version}'/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
+sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
+sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='version'/value='${new_version_main}' WHERE name='version'/g" {} \;
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='subVersion'/value='${sub_version}' WHERE name='subVersion'/g" {} \;
+find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
+find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
 
 
 # Update version pom files
