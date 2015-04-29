@@ -75,6 +75,20 @@
         $location.path('/panier');
       };
 
+      //
+      if(gnSearchSettings.tabOverflow && gnSearchSettings.tabOverflow.search) {
+        var updateTabVisibility = function() {
+          if(gnSearchLocation.isMdView()) {
+            $scope.inMdView = true;
+          }
+          else {
+            $scope.inMdView = false;
+          }
+        };
+        updateTabVisibility();
+        $scope.$on('$locationChangeSuccess', updateTabVisibility);
+      }
+
       $scope.locService = gnSearchLocation;
 
 
