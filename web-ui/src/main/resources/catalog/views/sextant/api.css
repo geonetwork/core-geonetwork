@@ -10887,7 +10887,7 @@
   float: none;
   width: 100%;
 }
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .gn .row .sxt-left-panel {
     float: none;
     width: 100%;
@@ -11543,6 +11543,7 @@
 }
 .gn [gn-metadata-display] .metadata {
   height: 100%;
+  margin-bottom: 0;
 }
 .gn-img-modal .modal-dialog {
   background: white;
