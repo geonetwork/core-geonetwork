@@ -161,8 +161,25 @@
              scope.elementRefBackup = scope.elementRef;
              scope.invalidKeywordMatch = false;
              scope.selected = [];
-             scope.initialKeywords = scope.keywords ?
-             scope.keywords.split(',') : [];
+             scope.initialKeywords = [];
+             if (scope.keywords) {
+               var buffer = "";
+               for (var i = 0; i < scope.keywords.length; i++) {
+                 var next = scope.keywords.charAt(i);
+                 if (next !== ',') {
+                   buffer += next;
+                 } else if (i === scope.keywords.length - 1 || scope.keywords.charAt(i + 1) === ',') {
+                   buffer += next;
+                   i++;
+                 } else {
+                   scope.initialKeywords.push(buffer);
+                   buffer = "";
+                 }
+               }
+               if (buffer.length > 0) {
+                 scope.initialKeywords.push(buffer);
+               }
+             }
              scope.transformationLists =
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
