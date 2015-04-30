@@ -42,6 +42,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,13 +74,15 @@ public class Sitemap implements Service {
 
         final OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         Specifications<OperationAllowed> spec = Specifications.where(OperationAllowedSpecs.hasOperation(ReservedOperation.view));
+        List<Integer> groupIds = new ArrayList<>();
         for (Integer grpId : groups) {
-            spec = spec.and(OperationAllowedSpecs.hasGroupId(grpId));
+            groupIds.add(grpId);
         }
+        spec = spec.and(OperationAllowedSpecs.hasGroupIdIn(groupIds));
         final List<Integer> list = operationAllowedRepository.findAllIds(spec, OperationAllowedId_.metadataId);
 
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName()+"."+MetadataDataInfo_.changeDate);
+        Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
         Element result = metadataRepository.findAllAsXml(MetadataSpecs.hasMetadataIdIn(list), sortByChangeDateDesc);
 

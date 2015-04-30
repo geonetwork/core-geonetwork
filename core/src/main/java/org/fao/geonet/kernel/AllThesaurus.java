@@ -56,8 +56,7 @@ public class AllThesaurus extends Thesaurus {
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
     }
 
-    @VisibleForTesting
-    static String buildKeywordUri(KeywordBean actualWord) {
+    public static String buildKeywordUri(KeywordBean actualWord) {
         return buildKeywordUri(actualWord.getThesaurusKey(), actualWord.getUriCode());
     }
 

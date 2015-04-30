@@ -22,24 +22,25 @@
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.search.keyword.XmlParams;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
+import org.fao.geonet.kernel.search.keyword.XmlParams;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.util.Comparator;
 
 /**
  * Returns a list of keywords given a list of thesaurus
@@ -63,7 +64,7 @@ public class GetKeywords implements Service {
 		KeywordsSearcher searcher = null;
 		
 		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-		if (newSearch) {			
+		if (newSearch) {
 			// perform the search and save search result into session
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -71,14 +72,14 @@ public class GetKeywords implements Service {
 
             if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
 			searcher = new KeywordsSearcher(context, thesaurusMan);
-			searcher.search(context.getLanguage(), params);
-
 			String searchTerm = params.getChildText(XmlParams.pKeyword);
+			Comparator<KeywordBean> comparator;
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-				searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+				comparator = KeywordSort.defaultLabelSorter(SortDirection.DESC);
 			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
+				comparator = KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC);
 			}
+			searcher.search(context.getLanguage(), params, comparator);
 			session
 					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
 							searcher);

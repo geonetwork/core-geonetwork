@@ -1,0 +1,45 @@
+<div class="panel-body panel-wps">
+  <button type="button" class="btn btn-default close" data-ng-click="close()">×</button>
+
+  <div ng-switch="status">
+
+    <div ng-switch-when="loading">
+      <h4><span translate>wpsLoadingProcessDescription</span></h4>
+    </div>
+
+    <div ng-switch-when="loaded">
+      <form>
+        <h5>{{::title}}</h5>
+        <div ng-repeat="input in inputs" class="form-group" ng-class="{'gn-required': input.required}">
+          <label for="{{::input.name}}">{{::input.title}}</label>
+          <input type="{{::input.type}}" id="{{::input.name}}" class="form-control input-sm" ng-model="input.value"></input>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default" data-ng-click="submit()" >
+            <span class="fa fa-gear"></span><span translate>wpsExecute</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div ng-switch-when="error">
+      <h4>{{exception.msg|translate}}</h4>
+      <div ng-if="exception.owsExceptionReport">
+        <div ng-repeat="exception in exception.owsExceptionReport.exception">
+          <div ng-repeat="(key, value) in exception">
+            {{key}}: {{value}}
+          </div>
+        </div>
+      </div>
+      <div ng-if="exception.httpResponse">
+        <div><span translate>wpsErrorCodeReturned</span> {{exception.httpResponse.status}} - {{exception.httpResponse.statusText}}</div>
+        <div>{{exception.httpResponse.data}}</div>
+      </div>
+    </div>
+
+    <div ng-switch-default>
+      <p>{{status}}</p>
+    </div>
+
+  </div>
+</div>
