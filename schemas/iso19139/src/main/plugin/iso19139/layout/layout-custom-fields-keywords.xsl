@@ -134,8 +134,8 @@
         -->
         <xsl:variable name="keywords" select="string-join(
                   if ($guiLangId and gmd:keyword//*[@locale = concat('#', $guiLangId)]) then
-                    replace(gmd:keyword//*[@locale = concat('#', $guiLangId)], ',', ',,')
-                  else replace(gmd:keyword/*[1], ',', ',,'), ',')"/>
+                    gmd:keyword//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
+                  else gmd:keyword/*[1]/replace(text(), ',', ',,'), ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
