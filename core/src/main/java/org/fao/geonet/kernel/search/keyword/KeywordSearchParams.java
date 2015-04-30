@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.search.keyword;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.annotation.Nullable;
@@ -86,21 +88,39 @@ public class KeywordSearchParams {
         }
         return results;
     }
-    private List<KeywordBean> executeSpecific(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        List<KeywordBean> results = new ArrayList<KeywordBean>();
-        int id = 0;
-
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
-            Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
-            if(thesauriNames.contains(thesaurus.getKey())) {
-                for (KeywordBean keywordBean : query.execute(thesaurus)) {
-                    keywordBean.setId(id);
-                    results.add(keywordBean);
-                    id++;
-                }
+    private List<KeywordBean> executeSpecific(QueryBuilder<KeywordBean> queryBuilder, final ThesaurusFinder finder)
+            throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
+        return executeAll(queryBuilder, new ThesaurusFinder() {
+            @Override
+            public boolean existsThesaurus(String name) {
+                return thesauriNames.contains(name) && finder.existsThesaurus(name);
             }
-        }
-        return results;
+
+            @Override
+            public Thesaurus getThesaurusByName(String thesaurusName) {
+                if (thesauriNames.contains(thesaurusName)) {
+                    return finder.getThesaurusByName(thesaurusName);
+                }
+                return null;
+            }
+
+            @Override
+            public Thesaurus getThesaurusByConceptScheme(String conceptSchemeUri) {
+                return finder.getThesaurusByName(conceptSchemeUri);
+            }
+
+            @Override
+            public Map<String, Thesaurus> getThesauriMap() {
+                Map<String, Thesaurus> thesaurusMap = Maps.newHashMap();
+                for (String name : thesauriNames) {
+                    Thesaurus th = finder.getThesaurusByName(name);
+                    if (th != null) {
+                        thesaurusMap.put(name, th);
+                    }
+                }
+                return thesaurusMap;
+            }
+        });
     }
     private List<KeywordBean> executeAll(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws
             IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
@@ -145,8 +165,8 @@ public class KeywordSearchParams {
             if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
                 continue;
             }
+            Query<KeywordBean> query = queryBuilder.build();
             if(thesauriDomainName==null || thesauriDomainName.equals(thesaurus.getDname())) {
-                Query<KeywordBean> query = queryBuilder.limit(maxResults).build();
                 for (KeywordBean keywordBean : query.execute(thesaurus)) {
                     keywordBean.setId(id);
                     results.add(keywordBean);

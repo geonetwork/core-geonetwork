@@ -566,9 +566,9 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         searcher.search("eng", params, KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
         List<KeywordBean> results = searcher.getResults();
         assertEquals(10, results.size());
-        assertStartsWith(results, 0, "10_blah");
-        assertStartsWith(results, 1, "10_foo");
-        assertStartsWith(results, 2, "10_test");
+        assertStartsWith(results, 0, "100_test");
+        assertStartsWith(results, 1, "101_test");
+        assertStartsWith(results, 2, "102_test");
         assertTrue(results.get(0).getDefaultValue().contains(searchTerm));
         params.removeChild("pThesauri");
         for (KeywordBean result : results) {
@@ -578,9 +578,9 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         searcher.search("eng", params, KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
         results = searcher.getResults();
         assertEquals(10, results.size());
-        assertStartsWith(results, 0, "10_blah");
-        assertStartsWith(results, 1, "10_foo");
-        assertStartsWith(results, 2, "10_test");
+        assertStartsWith(results, 0, "100_test");
+        assertStartsWith(results, 1, "101_test");
+        assertStartsWith(results, 2, "102_test");
         assertTrue(results.get(0).getDefaultValue().contains(searchTerm));
         params.removeChild("pThesauri");
         for (KeywordBean result : results) {
