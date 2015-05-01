@@ -146,11 +146,6 @@
       <class name=".guiservices.metadata.GetByOwner" />
     </service>
 
-
-    <service name="xml.search.keywords" type="xml" deprecated="true" xmlapi="true">
-      <class name=".services.thesaurus.GetKeywords"/>
-    </service>
-
     <service name="xml.search.keywordlink" type="xml" deprecated="true" xmlapi="true">
       <class name=".services.thesaurus.GetNarrowerBroader"/>
       <output sheet="thesaurus/thesaurus-autosearchlist.xsl"/>
