@@ -13,6 +13,7 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class KeywordSearchParamsBuilder {
     private LinkedList<Selector> selectClauses = new LinkedList<Selector>();
     private boolean lenient;
     private boolean requireBoundedBy = false;
-    
+    private Comparator<KeywordBean> comparator;
+
     public KeywordSearchParamsBuilder(IsoLanguagesMapper mapper) {
         this.isoLangMapper = mapper;
     }
@@ -56,7 +58,7 @@ public class KeywordSearchParamsBuilder {
             KeywordSearchType searchType = KeywordSearchType.parseString(Util.getParam(params, XmlParams.pTypeSearch, KeywordSearchType.MATCH.name()));
             parsedParams.keyword(keyword, searchType, true);
         }
-        
+
         String uri = Util.getParam(params, XmlParams.pUri, null);
         if(uri != null) {
             parsedParams.uri(uri);
@@ -202,7 +204,7 @@ public class KeywordSearchParamsBuilder {
      */
     public KeywordSearchParams build() {
         checkState(false);
-        return new KeywordSearchParams(createQuery(), thesauriNames, thesauriDomainName, maxResults);
+        return new KeywordSearchParams(createQuery(), thesauriNames, thesauriDomainName, maxResults, this.comparator);
     }
 
     private QueryBuilder<KeywordBean> createQuery() {
@@ -317,5 +319,9 @@ public class KeywordSearchParamsBuilder {
     public void requireBoundedBy(boolean require) {
         this.requireBoundedBy  = require;
         
+    }
+
+    public void setComparator(Comparator<KeywordBean> comparator) {
+        this.comparator = comparator;
     }
 }

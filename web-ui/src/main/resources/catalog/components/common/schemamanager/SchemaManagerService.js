@@ -19,7 +19,7 @@
     mri: 'http://standards.iso.org/19115/-3/mri/1.0',
     mrd: 'http://standards.iso.org/19115/-3/mrd/1.0',
     mcc: 'http://standards.iso.org/19115/-3/mcc/1.0',
-    gco3: 'http://standards.iso.org/19139/gco/1.0',
+    gco3: 'http://standards.iso.org/19115/-3/gco/1.0',
     gml32: 'http://www.opengis.net/gml/3.2'
   });
 

@@ -233,15 +233,15 @@ public class GetRelated implements Service, RelatedMetadata {
 
         byte[] response;
         String contentType;
-        if (acceptContentType.isEmpty() ||
+        if (acceptsType(acceptContentType, "json")) {
+            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
+            contentType = "application/json";
+        } else if (acceptContentType.isEmpty() ||
             acceptsType(acceptContentType, "xml") ||
             acceptContentType.contains("*/*")||
             acceptContentType.contains("text/plain")) {
             response = Xml.getString(transform).getBytes(Constants.CHARSET);
             contentType = "application/xml";
-        } else if (acceptsType(acceptContentType, "json")) {
-            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
-            contentType = "application/json";
         } else {
             throw new IllegalArgumentException(acceptContentType + " is not supported");
         }
