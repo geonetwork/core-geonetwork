@@ -195,7 +195,8 @@ public class GetKeywords {
 
 	}
 
-	private KeywordSearchParamsBuilder parseBuilder(String uiLang, String searchTerm, String maxResults, String offset, List<String> targetLangs, List<String> thesauri, String thesauriDomainName,
+	private KeywordSearchParamsBuilder parseBuilder(String uiLang, String searchTerm, String maxResults, String offset,
+													List<String> targetLangs, List<String> thesauri, String thesauriDomainName,
 													String typeSearch, String keywordUriCode, IsoLanguagesMapper mapper) {
 		KeywordSearchParamsBuilder parsedParams = new KeywordSearchParamsBuilder(mapper).lenient(true);
 
