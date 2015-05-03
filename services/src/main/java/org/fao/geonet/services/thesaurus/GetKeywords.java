@@ -24,13 +24,13 @@
 package org.fao.geonet.services.thesaurus;
 import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
@@ -53,7 +53,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -63,8 +62,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class GetKeywords {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -111,6 +108,7 @@ public class GetKeywords {
 		Element responseXml = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
 
+
 		KeywordsSearcher searcher;
 		if (newSearch) {
 			// perform the search and save search result into session
@@ -124,11 +122,17 @@ public class GetKeywords {
 			IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
 			KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
 					targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
+
+			if (checkModified(webRequest, thesaurusMan, builder)) {
+				return null;
+			}
+
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
 				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			} else {
 				builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
 			}
+
 			searcher.search(builder.build());
 			session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
 					searcher);
@@ -168,8 +172,27 @@ public class GetKeywords {
 
 		MultiValueMap<String, String> headers = new HttpHeaders();
 		headers.add("Content-Type", contentType);
+		headers.add("Cache-Control", "no-cache");
 
 		return new HttpEntity<>(response, headers);
+	}
+
+	private boolean checkModified(NativeWebRequest webRequest, ThesaurusManager thesaurusMan, KeywordSearchParamsBuilder builder) {
+		long latestLastModified = -1;
+		for (String thesName : builder.getThesauriNames()) {
+			Thesaurus thesaurus = thesaurusMan.getThesaurusByName(thesName);
+			if (thesaurus == null) {
+				return false;
+			}
+			long thesLastModified = thesaurus.getLastModifiedTime().toMillis();
+			if (latestLastModified < thesLastModified) {
+				latestLastModified = thesLastModified;
+			}
+		}
+
+		long roundedChangeDate = latestLastModified / 1000 * 1000;
+		return webRequest.checkNotModified(roundedChangeDate);
+
 	}
 
 	private KeywordSearchParamsBuilder parseBuilder(String uiLang, String searchTerm, String maxResults, String offset, List<String> targetLangs, List<String> thesauri, String thesauriDomainName,
