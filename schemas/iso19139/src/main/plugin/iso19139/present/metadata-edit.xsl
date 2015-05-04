@@ -3534,8 +3534,7 @@
                 <xsl:variable name="text">
                     <xsl:variable name="ref"
                         select="gco:CharacterString/geonet:element/@ref" />
-                    <input onfocus="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '');"
-                        class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
+                    <input class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
                     <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
                       onclick="javascript:Ext.getCmp('editorPanel').showLinkedMetadataSelectionPanel('{$ref}', '');"/>
                 </xsl:variable>
