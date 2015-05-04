@@ -96,7 +96,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +118,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Lazy
 public class Format extends AbstractFormatService implements ApplicationListener {
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
-    public static final Set<String> FIELDS_TO_LOAD = Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)

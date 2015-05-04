@@ -32,7 +32,7 @@
           "xmlns:mcc='http://standards.iso.org/19115/-3/mcc/1.0' " +
           "xmlns:mdb='http://standards.iso.org/19115/-3/mdb/1.0' " +
           "xmlns:cit='http://standards.iso.org/19115/-3/cit/1.0' " +
-          "xmlns:gco='http://standards.iso.org/19139/gco/1.0'>" +
+          "xmlns:gco='http://standards.iso.org/19115/-3/gco/1.0'>" +
           '<mrs:MD_ReferenceSystem>' +
           '  <mrs:referenceSystemIdentifier>' +
           '    <mcc:MD_Identifier>' +

@@ -10,26 +10,7 @@
       <class name=".services.thesaurus.GetList"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
-    <service name="keywords">
-      <documentation><![CDATA[
-        Search for keywords
-        
-        Parameters are:
-        * pNewSearch=true
-        * pTypeSearch=1
-        * pThesauri=external.place.regions
-        * pMode=searchBox
-        * maxResults=50
-        * pKeyword=*
-        ]]>
-      </documentation>
-      <class name=".services.thesaurus.GetKeywords"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
-    </service>
-    
-    
-    
+
     <service name="thesaurus.upload">
       <documentation><![CDATA[
         Upload a new thesaurus.
