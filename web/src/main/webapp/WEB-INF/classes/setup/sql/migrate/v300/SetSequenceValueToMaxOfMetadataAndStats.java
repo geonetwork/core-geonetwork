@@ -1,4 +1,4 @@
-package v300;
+//package v300;
 
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
@@ -48,6 +48,10 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
                         "RESTART WITH " + newSequenceValue;
                 statement.execute(updateSequenceSQL);
 
+                // TODO: Probably a scenario for Oracle db
+                // ALTER sequence HIBERNATE_SEQUENCE increment by X;
+                // select seq1.nextval from dual;
+                // ALTER sequence HIBERNATE_SEQUENCE increment by 1;
                 Log.debug(Geonet.DB, "  Sequence updated.");
             } catch (Exception e) {
                 Log.debug(Geonet.DB, "  Sequence not updated. Error is: " + e.getMessage());
