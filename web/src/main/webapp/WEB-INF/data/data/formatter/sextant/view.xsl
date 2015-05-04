@@ -294,11 +294,6 @@
     <xsl:param name="name" />
     <xsl:variable name="title"
                   select="string($label//element[@name=$name and not(@context)]/label)" />
-    <xsl:message>
-      ######################
-      title: <xsl:value-of select="$name" />#
-      title: <xsl:copy-of select="$label" />#
-    </xsl:message>
 
     <xsl:choose>
       <xsl:when test="normalize-space($title)">

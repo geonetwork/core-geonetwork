@@ -287,12 +287,16 @@
           <param-name>${display.name}.schema.dir</param-name>
           <param-value>${gn.webappdir}/WEB-INF/data/config/schema_plugins</param-value>
         </init-param>
+        <init-param>
+          <param-name>${display.name}.formatter.dir</param-name>
+          <param-value>${gn.webappdir}/WEB-INF/data/data/formatter</param-value>
+        </init-param>
         <!--
-            Specified what geonetwork data directory to use.
-            <init-param>
-            <param-name>geonetwork.dir</param-name>
-            <param-value>/app/geonetwork_data_dir</param-value>
-        </init-param>-->
+          Specified what geonetwork data directory to use.
+          <init-param>
+          <param-name>geonetwork.dir</param-name>
+          <param-value>/app/geonetwork_data_dir</param-value>
+      </init-param>-->
         <load-on-startup>1</load-on-startup>
     </servlet>
 

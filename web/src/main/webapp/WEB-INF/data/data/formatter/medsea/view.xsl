@@ -205,12 +205,13 @@
                       <xsl:when test="$nodes/*[count(gmd:MD_Keywords/gmd:keyword[* != '']) > 0 or
                                               */@codeListValue != '' or
                                               (not(gmd:MD_Keywords) and normalize-space() != '')]">
+
                         <xsl:variable name="label"
                                       select="if (normalize-space($overrideLabel) != '')
                                   then $overrideLabel
                                   else gn-fn-metadata:getLabel(
                                           'iso19139',
-                                          $nodes[1]/*/name(),
+                                          $nodes/*[1]/name(),
                                           $schemaLabels,
                                           '', '', '')/label"/>
 
