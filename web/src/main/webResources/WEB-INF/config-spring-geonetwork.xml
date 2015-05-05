@@ -126,5 +126,11 @@
   <bean id="panierXmlPathAnonymous" class="java.io.File">
     <constructor-arg index="0" type="java.lang.String" value="${panier.xml.path.anonymous}"/>
   </bean>
+  <bean id="extractorLdapUserSearchBase" class="java.lang.String">
+    <constructor-arg value="${ldap.base.search.base}"/>
+  </bean>
+  <bean id="extractorLdapUserSearchAttribute" class="java.lang.String">
+    <constructor-arg value="${ldap.base.search.filter}"/>
+  </bean>
 
 </beans>

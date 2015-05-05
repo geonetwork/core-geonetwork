@@ -14,6 +14,8 @@ public class UserSpec {
 	private String lastname = "";
 	private String firstname = "";
 	private String mail = "";
+	private String org = "";
+	private String usage = "";
 
 	public UserSpec () {}
 
@@ -22,6 +24,8 @@ public class UserSpec {
 		lastname  = (String) props.get("lastname");
 		firstname = (String) props.get("firstname");
 		mail      = (String) props.get("mail");
+		org       = (String) props.get("org");
+		usage     = (String) props.get("usage");
 	}
 
 	public String getLastname() {
@@ -46,5 +50,20 @@ public class UserSpec {
 
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getOrg() {
+		return org;
+	}
+
+	public void setOrg(String org) {
+		this.org = org;
+	}
+
+	public String getUsage() {
+		return usage;
+	}
+
+	public void setUsage(String usage) {
+		this.usage = usage;
 	}
 }

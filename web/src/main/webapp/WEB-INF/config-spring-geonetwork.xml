@@ -128,5 +128,11 @@
   </bean>
 
 
+  <bean id="extractorLdapUserSearchBase" class="java.lang.String">
+    <constructor-arg value="ou=annuaire" />
+  </bean>
+  <bean id="extractorLdapUserSearchAttribute" class="java.lang.String">
+    <constructor-arg value="(uid={0})" />
+  </bean>
 
 </beans>

@@ -2,12 +2,14 @@ package org.fao.geonet.services.extractor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.SearchResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -20,13 +22,18 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.LDAPUser;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.security.ldap.LDAPUtils;
 import org.fao.geonet.services.extractor.mapping.ExtractRequestSpec;
 import org.fao.geonet.services.extractor.mapping.LayerSpec;
 import org.fao.geonet.services.extractor.mapping.UserSpec;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,7 +73,8 @@ public class SextantExtractor {
 	}
 
 	@RequestMapping(value = "/{lang}/extractor.doExtract", method = RequestMethod.POST)
-	public HttpEntity<byte[]> exec(@RequestBody ExtractRequestSpec jsonExtractionSpec, HttpServletRequest request) throws Exception {
+	public HttpEntity<byte[]> exec(@RequestBody ExtractRequestSpec jsonExtractionSpec, HttpServletRequest request)
+			throws Exception {
 		JSONObject status = new JSONObject();
 		try {
 			XmlMapper xmlMapper = new XmlMapper();
@@ -80,11 +88,29 @@ public class SextantExtractor {
 			boolean isAuthenticated = us.isAuthenticated();
 
 			if (isAuthenticated) {
+				// Some infos in the XML should come from the LDAP
+				DefaultSpringSecurityContextSource contextSource = (DefaultSpringSecurityContextSource) ApplicationContextHolder
+						.get().getBean("contextSource");
+				String ldapUserSearchBase = (String) ApplicationContextHolder.get().getBean(
+						"extractorLdapUserSearchBase");
+				String ldapUserSearchAttribute = (String) ApplicationContextHolder.get().getBean(
+						"extractorLdapUserSearchAttribute");
+
+				NamingEnumeration<SearchResult> ldapRes = contextSource.getReadOnlyContext().search(ldapUserSearchBase,
+						ldapUserSearchAttribute.replace("{0}", us.getUsername()), null);
+				String uidNumberStr = "";
+				while (ldapRes.hasMore()) {
+					SearchResult r = ldapRes.next();
+					Attribute uidNumber = r.getAttributes().get("uidNumber");
+					uidNumberStr = uidNumber.get().toString();
+				}
+
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
-								+ " uidNumber=\"%s\" login=\"%s\" />", us.getName(), us.getSurname(),
-						us.getEmailAddr(), us.getPrincipal().getOrganisation().equals("ifremer"), us.getUserId(),
-						us.getUsername()).getBytes());
+								+ " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />", us.getName(),
+						us.getSurname(), us.getEmailAddr(), us.getPrincipal().getOrganisation().equals("ifremer"),
+						uidNumberStr, us.getUsername(), jsonExtractionSpec.getUser().getOrg(),
+						jsonExtractionSpec.getUser().getUsage()).getBytes());
 			} else {
 				// using data provided by the user
 				UserSpec usr = jsonExtractionSpec.getUser();
@@ -93,8 +119,8 @@ public class SextantExtractor {
 				}
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
-								+ " uidNumber=\"%s\" login=\"%s\" />", usr.getLastname(), usr.getFirstname(),
-						usr.getMail(), "false", "", "").getBytes());
+								+ " org=\"%s\" usage=\"%s\" />", usr.getLastname(), usr.getFirstname(), usr.getMail(),
+						"false", usr.getOrg(), usr.getUsage()).getBytes());
 			}
 			out.write("<layers>".getBytes());
 			for (LayerSpec l : jsonExtractionSpec.getLayers()) {
@@ -115,8 +141,8 @@ public class SextantExtractor {
 				FileUtils.writeStringToFile(new File(panierXmlPathLogged, us.getEmailAddr() + "_" + UUID.randomUUID()
 						+ ".xml"), xmlString);
 			} else {
-				FileUtils.writeStringToFile(new File(panierXmlPathAnonymous, "anonymous_" + UUID.randomUUID() + ".xml"),
-						xmlString);
+				FileUtils.writeStringToFile(
+						new File(panierXmlPathAnonymous, "anonymous_" + UUID.randomUUID() + ".xml"), xmlString);
 			}
 			status.put("success", true);
 		} catch (Exception e) {
