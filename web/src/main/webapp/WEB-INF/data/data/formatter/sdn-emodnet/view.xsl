@@ -13,7 +13,7 @@
 
 	<!-- CG: 20150213
 		IMPORTANT NOTE: For definition values, we use label and string from schemas iso19139.sdn-product AND iso19139
-		We use emodnet.css and default.css   
+		We use emodnet-core.css and default.css
 		So becareful if any of these files are modified
 	-->
 
