@@ -53,7 +53,7 @@
             data-ng-disabled="searchResults.count > 0"
             data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
-            <i class="fa fa-trash-o"></i> <span data-translate="">deleteGroup</span>
+            <i class="fa fa-times"></i> <span data-translate="">deleteGroup</span>
           </button>
         </div>
       </div>
@@ -118,7 +118,7 @@
                                   <li data-ng-repeat="file in queue">
                                       <div class="preview" data-file-upload-preview="file"></div>
                                       {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                                      <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
+                                      <i class="fa fa-times" data-ng-click="clear(file)"></i>
                                   </li>
                               </ul>
                           </div>

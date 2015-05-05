@@ -64,7 +64,7 @@
               <ul>
                 <li data-ng-repeat="file in queue">
                   {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                  <i class="fa fa-trash-o" data-ng-click="clear(file)"/>
+                  <i class="fa fa-times" data-ng-click="clear(file)"/>
                 </li>
               </ul>
               <div class="checkbox">

@@ -85,7 +85,7 @@
             <li data-ng-repeat="schema in selectedSchemas">{{schema | translate}} <ul class="icons-ul">
                 <li data-ng-repeat="record in loadTplReport[schema]">
                   <i class=""
-                    data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
+                    data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-times'"/>
                   {{record['@name']}}</li>
               </ul>
             </li>
