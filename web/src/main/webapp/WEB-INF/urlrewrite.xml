@@ -157,6 +157,27 @@
         <from>^(.*)/rss.latest(\.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
+
+  <!-- Rules for direct links (for RDF at least) -->
+    <rule>
+        <note>
+            Retrieves xml format for a metadata. No language
+            Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+        </note>
+        <from>^/(metadata|resource)/(.*)$</from>
+        <to type="forward">/srv/eng/xml.metadata.get?uuid=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves xml format for a thesaurus
+            Example URL: http://localhost:8080/geonetwork/thesaurus/external.theme.inspire-service-taxonomy
+        </note>
+        <from>^/thesaurus/(.*)$</from>
+        <to type="forward">/srv/eng/thesaurus.download?ref=$1</to>
+    </rule>
+
+    <!-- /Rules for direct links (for RDF at least) -->
     
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">

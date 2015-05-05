@@ -10,7 +10,16 @@
   
   <xsl:output indent="yes"/>
   
-  <xsl:variable name="port" select="/root/gui/env/server/port"/>
+  <xsl:variable name="port">
+    <xsl:choose>
+        <xsl:when test="/root/gui/env/server/protocol = 'https'">
+            <xsl:value-of select="/root/gui/env/server/securePort"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="/root/gui/env/server/port"/>
+        </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:variable name="url" select="concat(/root/gui/env/server/protocol, '://', 
     /root/gui/env/server/host, 
     if ($port='80') then '' else concat(':', $port),

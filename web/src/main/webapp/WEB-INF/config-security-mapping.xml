@@ -398,6 +398,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/region.getmap.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/region\.geom\.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
 
+                <!-- Direct links -->
+                <sec:intercept-url pattern="/metadata/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/resource/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/organization/.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/thesaurus/.*" access="permitAll"></sec:intercept-url>
 
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
