@@ -1,5 +1,6 @@
 .gn {
   position: relative;
+  font-size: 14px;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -10454,6 +10455,10 @@
   font-size: 13px;
   /* .dl-horizontal .dl-horizontal dt { */
 }
+.gn .gn-metadata-view a.disabled {
+  color: lightgrey;
+  cursor: not-allowed;
+}
 .gn .gn-metadata-view .nav li:hover {
   background-color: #ffffff;
 }
@@ -11209,6 +11214,10 @@
 .gn .sxt-max-sm .expander {
   display: none;
 }
+.gn ul.gn-resultview {
+  width: 100%;
+  margin: 0;
+}
 .gn ul.gn-resultview .caret {
   color: #f28033;
 }
@@ -11356,7 +11365,16 @@
   background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #dadada 50%, #dadada);
 }
+.gn ul.gn-resultview li.gn-grid .ellipsis p {
+  font-size: 11px;
+  line-height: inherit;
+  text-align: left;
+  padding: 0;
+}
 .gn ul.gn-resultview li.gn-grid h4 {
+  display: block;
+  letter-spacing: normal;
+  border: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -436,6 +436,8 @@
 
 ul.gn-resultview {
 
+  width: 100%;
+  margin: 0;
   @thumbnail-width: 170px;
 
   .caret {
@@ -588,7 +590,16 @@ ul.gn-resultview {
         }
       }
     }
+    .ellipsis p {
+      font-size: 11px;
+      line-height: inherit;
+      text-align: left;
+      padding: 0;
+    }
     h4 {
+      display: block;
+      letter-spacing: normal;
+      border: none;
       .text-overflow();
     }
     .gn-md-details {
