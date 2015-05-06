@@ -119,7 +119,7 @@ public class SextantExtractor {
 				}
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
-								+ " org=\"%s\" usage=\"%s\" />", usr.getLastname(), usr.getFirstname(), usr.getMail(),
+								+ " uidNumber=\"\" login=\"\" org=\"%s\" usage=\"%s\" />", usr.getLastname(), usr.getFirstname(), usr.getMail(),
 						"false", usr.getOrg(), usr.getUsage()).getBytes());
 			}
 			out.write("<layers>".getBytes());
