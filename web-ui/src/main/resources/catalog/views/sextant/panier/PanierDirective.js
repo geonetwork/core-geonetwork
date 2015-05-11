@@ -32,8 +32,9 @@
             user: {
               lastname: scope.user.name,
               firstname: scope.user.surname,
-              mail: angular.isArray(scope.user.email) && scope.user.email[0],
-              organisation: scope.user.organisation
+              mail: angular.isArray(scope.user.email) ?
+                  scope.user.email[0] : '',
+              org: scope.user.organisation
             },
             layers: []
           };
@@ -101,11 +102,16 @@
               var rendered = false;
 
               /** object that contains the form values */
+              var aCrs = scope.md.crs && scope.md.crs.split('::');
+
               scope.form = {
                 id: scope.md.getUuid(),
                 input: {
-                  format: gnPanierSettings.defaults.format,
-                  epsg: gnPanierSettings.defaults.proj,
+                  format: angular.isArray(scope.md.format) ?
+                      scope.md.format[0] : gnPanierSettings.defaults.format,
+                  epsg: scope.md.crs ? scope.md.crs.split('::')
+                      [scope.md.crs.split('::').length-1] :
+                      gnPanierSettings.defaults.proj,
                   protocol: scope.link.protocol,
                   linkage: scope.link.url
                 },
