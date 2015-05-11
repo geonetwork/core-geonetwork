@@ -1,6 +1,5 @@
 <div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsSextant">
-
     <tabset class="hfull" id="main-tabset" type="pills">
       <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active" class="sxt-scroll">
 
@@ -53,12 +52,12 @@
 
                       <div class="btn-group sxt-adminbtn clearfix" data-ng-if="authenticated">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                          <span translate>adminConsole</span>&nbsp;
+                          <span translate>toAdmin</span>&nbsp;
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                          <li><a href="{{pages.admin}}">
-                            <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
+                          <li data-ng-if="user.isAdministrator()"><a href="{{pages.admin}}">
+                            <i class="fa fa-th"></i>&nbsp;<span translate>toAdmin</span></a></li>
                           <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
                             <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
                           <li><a href="catalog.edit#/import" target="_blank">
