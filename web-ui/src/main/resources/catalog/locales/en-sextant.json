@@ -7,7 +7,8 @@
   "panierErrorMsg" : "Un problème est survenu dans votre demande de téléchargement de données. Veuillez essayer de nouveau ultériorement.",
   "basket": "Basket",
   "inbasket": "in basket",
-  "addAllLayersToPanier": "Add all {{number}} layers to the basket"
+  "addAllLayersToPanier": "Add all {{number}} layers to the basket",
+  "toAdmin": "Admin"
 
 
 }
