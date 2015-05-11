@@ -279,6 +279,10 @@
   "loadUserGroupsError": "Error loading user groups",
   "transferOwnershipError": "Error transferring metadata ownership",
   "transferOwnershipSuccessMsg": "<h4>Successfully transferred metadata to a new Owner.</h4><dl class=\"dl-horizontal\"><dt>Transferred:</dt><dd>{{done}}</dd><dt>Not Owned:</dt><dd>{{notOwner}}</dd><dt>Not found:</dt><dd>{{notFound}}</dd></dl>",
-  "filterGroup": "Filter groups ..."
-
+  "filterGroup": "Filter groups ...",
+  "wpsLoadingProcessDescription": "Loading process description ...",
+  "wpsDescribeProcessFailed": "DescribeProcess failed",
+  "wpsExecute": "Execute",
+  "wpsExecuteFailed": "Execute failed",
+  "wpsErrorCodeReturned": "The serveur returned status code"
 }
