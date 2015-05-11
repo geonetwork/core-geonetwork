@@ -81,7 +81,7 @@
 
           <!--Downloads to panier button-->
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
               <span class="fa fa-download"></span>
               <span class="caret"></span>
             </button>
@@ -102,7 +102,7 @@
 
             </ul>
           </div>
-          <button type="button" class="btn btn-default btn-sm pull-right"
+          <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].download == 'false'"
                   ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="{{'download' | translate}}">
             <span class="fa fa-download"></span>
           </button>
@@ -110,7 +110,7 @@
 
           <!--Layers to map button-->
           <div class="btn-group pull-right" ng-if="layers.length > 1 ">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
               <span class="fa fa-globe"></span>
               <span class="caret"></span>
             </button>
@@ -130,7 +130,7 @@
               </li>
             </ul>
           </div>
-          <button type="button" class="btn btn-default btn-sm pull-right"
+          <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].dynamic == 'false'"
                   ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="{{'view' | translate}}">
             <span class="fa fa-globe"></span>
           </button>
