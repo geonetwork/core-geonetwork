@@ -103,18 +103,32 @@
     </filter-mapping>
 
     <!-- Resources servlet -->
-    <filter>
-        <filter-name>resources</filter-name>
-        <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
-        <!-- Specified what overrides to use if the
-        	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
-        	system parameter is not specified.
-        -->
-        <init-param>
-            <param-name>jeeves.configuration.overrides.file</param-name>
-            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
-        </init-param>
-    </filter>
+  <filter>
+    <filter-name>resources</filter-name>
+    <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
+    <!-- Specified what overrides to use if the
+      (servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
+      system parameter is not specified.
+    -->
+    <init-param>
+      <param-name>jeeves.configuration.overrides.file</param-name>
+      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+    </init-param>
+  </filter>
+
+  <!-- Add CORS Header -->
+  <filter>
+    <filter-name>cors</filter-name>
+    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
+    <!-- Specified what overrides to use if the
+      (servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
+      system parameter is not specified.
+    -->
+    <init-param>
+      <param-name>jeeves.configuration.overrides.file</param-name>
+      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+    </init-param>
+  </filter>
     <filter>
         <!--
             WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
@@ -185,10 +199,15 @@
         <url-pattern>/htmlcache/*</url-pattern>
     </filter-mapping>
 
-    <filter-mapping>
-        <filter-name>resources</filter-name>
-        <url-pattern>/map/*</url-pattern>
-    </filter-mapping>
+  <filter-mapping>
+    <filter-name>resources</filter-name>
+    <url-pattern>/map/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>cors</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
     <!-- Print servlet -->
     <servlet>

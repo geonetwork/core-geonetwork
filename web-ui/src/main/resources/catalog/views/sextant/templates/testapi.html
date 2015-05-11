@@ -54,8 +54,8 @@
 
 
 <script>var geonet={provide:function(s){},require:function(s){}}</script>
-<script src="/geonetwork/static/lib.js"></script>
-<script src="/geonetwork/static/gn_search_sextant.js"></script>
+<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
 
 <script type="text/javascript">
 
@@ -65,7 +65,7 @@
       gnGlobalSettings.locale = {
         lang: 'en'
       };
-      gnGlobalSettings.gnUrl = '/geonetwork/srv/eng/';
+      gnGlobalSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/eng/';
     }]);
 
   var searchModule = angular.module('gn_search');
