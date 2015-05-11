@@ -33,5 +33,8 @@
     </monitors>
     <monitors package="org.fao.geonet.monitor.gauge">
        <gauge class="jeeves.monitor.guage.FreeFileDescriptorsGuage"/>
+       <gauge class="org.fao.geonet.monitor.gauge.SystemLoadAverageGauge"/>
+       <gauge class="org.fao.geonet.monitor.gauge.SystemCpuLoadGauge"/>
+       <gauge class="org.fao.geonet.monitor.gauge.ProcessCpuLoadGauge"/>
     </monitors>
 </config>
