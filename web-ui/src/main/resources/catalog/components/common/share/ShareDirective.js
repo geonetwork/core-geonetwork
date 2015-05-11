@@ -23,8 +23,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', '$translate',
-    function(gnShareService, gnShareConstants, $translate) {
+    'gnShareService', 'gnShareConstants', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -35,7 +35,14 @@
           id: '=gnShare',
           batch: '@gnShareBatch'
         },
-        link: function(scope) {
+        link: function(scope, elt, attrs) {
+
+          var filterOper = attrs.operFilter && attrs.operFilter.split(',');
+          scope.disableAllCol = attrs.disableAllCol;
+
+          var filterOperFn = function(oper) {
+            return filterOper.indexOf(oper.id) >= 0;
+          };
 
           angular.extend(scope, {
             batch: scope.batch === 'true',
@@ -53,7 +60,9 @@
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.groups = data.groups;
-            scope.operations = data.operations;
+            scope.operations = filterOper ?
+                $filter('filter')(data.operations, filterOperFn) :
+                data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
