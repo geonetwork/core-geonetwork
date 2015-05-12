@@ -1,12 +1,8 @@
 <span data-ng-search-form="">
   <div class="input-group">
     <div class="input-group-btn"
-         data-ng-show="templateAddAction == 'true'">
-      <button class="btn btn-default" type="button" title="{{'add' | translate}}"
-        data-gn-click-and-spin="add();">
-        <i class="fa fa-plus"/>
-        <span>&nbsp;</span>
-      </button>
+         data-ng-show="templateAddAction == 'true'"
+         data-ng-transclude="">
     </div>
 
     <!-- TODO: could be nice to filter by organisation -->
