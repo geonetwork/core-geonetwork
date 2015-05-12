@@ -190,4 +190,41 @@
   </medsea-more-help>
 
 
+  <!-- Emodnet hydrography -->
+  <emodnetHydrography-what>What</emodnetHydrography-what>
+  <emodnetHydrography-details>Details</emodnetHydrography-details>
+  <emodnetHydrography-where>Where</emodnetHydrography-where>
+  <emodnetHydrography-when>When</emodnetHydrography-when>
+  <emodnetHydrography-who>Who</emodnetHydrography-who>
+  <emodnetHydrography-access>Access</emodnetHydrography-access>
+  <emodnetHydrography>Emodnet</emodnetHydrography>
+  <emodnetMetadataInfoTitle>Metadata information</emodnetMetadataInfoTitle>
+  <emodnetCatalogueType>Catalogue type</emodnetCatalogueType>
+  <emodnetMetadataInfo>Metadata details</emodnetMetadataInfo>
+  <emodnetDisseminationLevel>Dissemination level</emodnetDisseminationLevel>
+  <emodnetIdentificationTitle>Identification</emodnetIdentificationTitle>
+  <emodnetWhatTitle>What</emodnetWhatTitle>
+  <emodnetAbstractTitle>Abstract</emodnetAbstractTitle>
+  <emodnetNbLinesTitle>Number of lines</emodnetNbLinesTitle>
+  <emodnetNbColumnsTitle>Number of columns</emodnetNbColumnsTitle>
+  <emodnetQualityTitle>Quality / Accuracy / Calibration</emodnetQualityTitle>
+  <emodnetDataSourcesTitle>Description of processed data sources</emodnetDataSourcesTitle>
+  <emodnetDataProcessingTitle>Description of data processing</emodnetDataProcessingTitle>
+  <emodnetVertAccuracyTitle>Vert. accuracy</emodnetVertAccuracyTitle>
+  <emodnetHorAccuracyTitle>Hor. accuracy</emodnetHorAccuracyTitle>
+  <emodnetShoalBias>Shoal bias</emodnetShoalBias>
+  <emodnetScaleDenominator>Maximum scale of use</emodnetScaleDenominator>
+  <emodnetSuitabilityTitle>Suitability, Expected type of users / uses and limitations</emodnetSuitabilityTitle>
+  <emodnetIntellectualPropertyTitle>Intellectual property</emodnetIntellectualPropertyTitle>
+  <emodnetWhereTitle>Where</emodnetWhereTitle>
+  <emodnetWhenTitle>When</emodnetWhenTitle>
+  <emodnetWhoTitle>Who</emodnetWhoTitle>
+  <emodnetSpatialResolution>Spatial resolution</emodnetSpatialResolution>
+  <emodnetOriginatorTitle>Originator</emodnetOriginatorTitle>
+  <emodnetDataHoldingCenterTitle>Data Holding Center</emodnetDataHoldingCenterTitle>
+  <emodnetDistributor>Distributor</emodnetDistributor>
+  <emodnetProcessingSoftware>Processing software</emodnetProcessingSoftware>
+  <emodnetShortName>Short name of dataset (SDN Local Product-ID)</emodnetShortName>
+  <emodnetName>Dataset name</emodnetName>
+  <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
 </strings>
