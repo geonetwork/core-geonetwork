@@ -163,17 +163,18 @@
              scope.selected = [];
              scope.initialKeywords = [];
              if (scope.keywords) {
-               var buffer = "";
+               var buffer = '';
                for (var i = 0; i < scope.keywords.length; i++) {
                  var next = scope.keywords.charAt(i);
                  if (next !== ',') {
                    buffer += next;
-                 } else if (i === scope.keywords.length - 1 || scope.keywords.charAt(i + 1) === ',') {
+                 } else if (i === scope.keywords.length - 1 ||
+                 scope.keywords.charAt(i + 1) === ',') {
                    buffer += next;
                    i++;
                  } else {
                    scope.initialKeywords.push(buffer);
-                   buffer = "";
+                   buffer = '';
                  }
                }
                if (buffer.length > 0) {
