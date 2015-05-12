@@ -1,68 +1,35 @@
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:gts="http://www.isotc211.org/2005/gts"
                  xmlns:gml="http://www.opengis.net/gml"
-                 xmlns:geonet="http://www.fao.org/geonetwork">
+                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xmlns:geonet="http://www.fao.org/geonetwork"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd">
   <gmd:fileIdentifier>
-    <gco:CharacterString>73baaa61-572e-496d-b73f-50989f473781</gco:CharacterString>
+    <gco:CharacterString>783b8ee9-de07-4dd4-b509-84b4956590a7</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
-    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
   </gmd:language>
   <gmd:characterSet>
     <gmd:MD_CharacterSetCode codeListValue="utf8"
                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
   </gmd:characterSet>
-  <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
-                      codeListValue="dataset"/>
-  </gmd:hierarchyLevel>
   <gmd:hierarchyLevelName gco:nilReason="missing">
     <gco:CharacterString/>
   </gmd:hierarchyLevelName>
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
-      <gmd:individualName gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:individualName>
       <gmd:organisationName>
-        <gco:CharacterString></gco:CharacterString>
+        <gco:CharacterString>SDN:EDMO::2281 = ATLIS</gco:CharacterString>
       </gmd:organisationName>
-      <gmd:positionName gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:positionName>
       <gmd:contactInfo>
         <gmd:CI_Contact>
-          <gmd:phone>
-            <gmd:CI_Telephone>
-              <gmd:voice gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:voice>
-              <gmd:facsimile gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:facsimile>
-            </gmd:CI_Telephone>
-          </gmd:phone>
           <gmd:address>
             <gmd:CI_Address>
-              <gmd:deliveryPoint gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:deliveryPoint>
-              <gmd:city gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:city>
-              <gmd:administrativeArea gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:administrativeArea>
-              <gmd:postalCode gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:postalCode>
-              <gmd:country gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:country>
               <gmd:electronicMailAddress>
-                <gco:CharacterString></gco:CharacterString>
+                <gco:CharacterString>spoelstra@atlis.nl</gco:CharacterString>
               </gmd:electronicMailAddress>
             </gmd:CI_Address>
           </gmd:address>
@@ -70,12 +37,12 @@
       </gmd:contactInfo>
       <gmd:role>
         <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                         codeListValue="pointOfContact"/>
+                         codeListValue="author"/>
       </gmd:role>
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
   <gmd:dateStamp>
-    <gco:DateTime>2015-05-11T10:16:01</gco:DateTime>
+    <gco:DateTime>2015-05-12T15:20:10</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
     <gco:CharacterString>ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY</gco:CharacterString>
@@ -86,8 +53,19 @@
   <gmd:spatialRepresentationInfo>
     <gmd:MD_Georectified>
       <gmd:numberOfDimensions>
-        <gco:Integer/>
+        <gco:Integer>3</gco:Integer>
       </gmd:numberOfDimensions>
+      <gmd:axisDimensionProperties>
+        <gmd:MD_Dimension>
+          <gmd:dimensionName>
+            <gmd:MD_DimensionNameTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_DimensionNameTypeCode"
+                                          codeListValue="column"/>
+          </gmd:dimensionName>
+          <gmd:dimensionSize>
+            <gco:Integer/>
+          </gmd:dimensionSize>
+        </gmd:MD_Dimension>
+      </gmd:axisDimensionProperties>
       <gmd:axisDimensionProperties>
         <gmd:MD_Dimension>
           <gmd:dimensionName>
@@ -103,56 +81,42 @@
         <gmd:MD_Dimension>
           <gmd:dimensionName>
             <gmd:MD_DimensionNameTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_DimensionNameTypeCode"
-                                          codeListValue="column"/>
+                                          codeListValue="time"/>
           </gmd:dimensionName>
           <gmd:dimensionSize>
-            <gco:Integer/>
+            <gco:Integer>1</gco:Integer>
           </gmd:dimensionSize>
         </gmd:MD_Dimension>
       </gmd:axisDimensionProperties>
       <gmd:cellGeometry>
         <gmd:MD_CellGeometryCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CellGeometryCode"
-                                 codeListValue=""/>
+                                 codeListValue="point"/>
       </gmd:cellGeometry>
       <gmd:transformationParameterAvailability>
-        <gco:Boolean/>
+        <gco:Boolean>false</gco:Boolean>
       </gmd:transformationParameterAvailability>
       <gmd:checkPointAvailability>
-        <gco:Boolean/>
+        <gco:Boolean>false</gco:Boolean>
       </gmd:checkPointAvailability>
       <gmd:pointInPixel>
-        <gmd:MD_PixelOrientationCode/>
+        <gmd:MD_PixelOrientationCode>center</gmd:MD_PixelOrientationCode>
       </gmd:pointInPixel>
     </gmd:MD_Georectified>
   </gmd:spatialRepresentationInfo>
-  <gmd:referenceSystemInfo>
-    <gmd:MD_ReferenceSystem>
-      <gmd:referenceSystemIdentifier>
-        <gmd:RS_Identifier>
-          <gmd:code gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:code>
-          <gmd:codeSpace gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:codeSpace>
-          <gmd:version gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:version>
-        </gmd:RS_Identifier>
-      </gmd:referenceSystemIdentifier>
-    </gmd:MD_ReferenceSystem>
-  </gmd:referenceSystemInfo>
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>Template for Emodnet Hydrography</gco:CharacterString>
+            <gco:CharacterString>Template for EMODNET HYDROGRAPHY</gco:CharacterString>
           </gmd:title>
+          <gmd:alternateTitle gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:alternateTitle>
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
-                <gco:Date/>
+                <gco:Date>0NaN-NaN-NaN</gco:Date>
               </gmd:date>
               <gmd:dateType>
                 <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -160,13 +124,10 @@
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
-          <gmd:date xmlns:gn="http://www.fao.org/geonetwork"
-                    xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                    xmlns:srv="http://www.isotc211.org/2005/srv"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+          <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
-                <gco:Date/>
+                <gco:Date>0NaN-NaN-NaN</gco:Date>
               </gmd:date>
               <gmd:dateType>
                 <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -176,8 +137,7 @@
           </gmd:date>
           <gmd:date xmlns:gn="http://www.fao.org/geonetwork"
                     xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                    xmlns:srv="http://www.isotc211.org/2005/srv"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                    xmlns:srv="http://www.isotc211.org/2005/srv">
             <gmd:CI_Date>
               <gmd:date>
                 <gco:Date/>
@@ -200,58 +160,17 @@
       <gmd:abstract gco:nilReason="missing">
         <gco:CharacterString/>
       </gmd:abstract>
-      <gmd:purpose gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:purpose>
-      <gmd:credit gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:credit>
-      <gmd:status>
-        <gmd:MD_ProgressCode codeListValue="onGoing"
-                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"/>
-      </gmd:status>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
-          <gmd:individualName gco:nilReason="missing">
+          <gmd:organisationName gco:nilReason="missing">
             <gco:CharacterString/>
-          </gmd:individualName>
-          <gmd:organisationName>
-            <gco:CharacterString></gco:CharacterString>
           </gmd:organisationName>
-          <gmd:positionName gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:positionName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
-              <gmd:phone>
-                <gmd:CI_Telephone>
-                  <gmd:voice gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:voice>
-                  <gmd:facsimile gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:facsimile>
-                </gmd:CI_Telephone>
-              </gmd:phone>
               <gmd:address>
                 <gmd:CI_Address>
-                  <gmd:deliveryPoint gco:nilReason="missing">
+                  <gmd:electronicMailAddress gco:nilReason="missing">
                     <gco:CharacterString/>
-                  </gmd:deliveryPoint>
-                  <gmd:city gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:city>
-                  <gmd:administrativeArea gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:administrativeArea>
-                  <gmd:postalCode gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:postalCode>
-                  <gmd:country gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:country>
-                  <gmd:electronicMailAddress>
-                    <gco:CharacterString></gco:CharacterString>
                   </gmd:electronicMailAddress>
                 </gmd:CI_Address>
               </gmd:address>
@@ -259,22 +178,37 @@
           </gmd:contactInfo>
           <gmd:role>
             <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                             codeListValue="pointOfContact"/>
+                             codeListValue="custodian"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:resourceMaintenance>
-        <gmd:MD_MaintenanceInformation>
-          <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeListValue="asNeeded"
-                                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"/>
-          </gmd:maintenanceAndUpdateFrequency>
-        </gmd:MD_MaintenanceInformation>
-      </gmd:resourceMaintenance>
-      <gmd:descriptiveKeywords>
+      <gmd:pointOfContact>
+        <gmd:CI_ResponsibleParty>
+          <gmd:organisationName gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:organisationName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:address>
+                <gmd:CI_Address>
+                  <gmd:electronicMailAddress gco:nilReason="missing">
+                    <gco:CharacterString/>
+                  </gmd:electronicMailAddress>
+                </gmd:CI_Address>
+              </gmd:address>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                             codeListValue="originator"/>
+          </gmd:role>
+        </gmd:CI_ResponsibleParty>
+      </gmd:pointOfContact>
+      <gmd:descriptiveKeywords xmlns:srv="http://www.isotc211.org/2005/srv"
+                               xmlns:gmx="http://www.isotc211.org/2005/gmx">
         <gmd:MD_Keywords>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
@@ -296,9 +230,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.sextant-theme">geonetwork.thesaurus.local.theme.sextant-theme</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.sextant-theme">geonetwork.thesaurus.local.theme.sextant-theme</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -308,6 +240,9 @@
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
+          <gmd:keyword>
+            <gco:CharacterString>Hydrography</gco:CharacterString>
+          </gmd:keyword>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -332,7 +267,6 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
                                 xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
@@ -344,7 +278,7 @@
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
@@ -367,8 +301,109 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
                                 xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.emodnet.project-name">geonetwork.thesaurus.local.theme.emodnet.project-name</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+                                    codeListValue="parameter"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Parameter Discovery Vocabulary (P02)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2015-01-30</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P02">geonetwork.thesaurus.external.parameter.NVS.P02</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Measuring Instruments (SDN L54)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2009-06-11</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.emodnet.sdn.L054">geonetwork.thesaurus.local.theme.emodnet.sdn.L054</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Positioning instruments (SDN L56)</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2009-06-11</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.emodnet.sdn.L056">geonetwork.thesaurus.local.theme.emodnet.sdn.L056</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -382,11 +417,11 @@
             <gco:CharacterString/>
           </gmd:useLimitation>
           <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeListValue="copyright"
+            <gmd:MD_RestrictionCode codeListValue=""
                                     codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"/>
           </gmd:accessConstraints>
           <gmd:useConstraints>
-            <gmd:MD_RestrictionCode codeListValue=""
+            <gmd:MD_RestrictionCode codeListValue="copyright"
                                     codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"/>
           </gmd:useConstraints>
           <gmd:otherConstraints gco:nilReason="missing">
@@ -402,7 +437,7 @@
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector"
+        <gmd:MD_SpatialRepresentationTypeCode codeListValue="grid"
                                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
@@ -416,8 +451,15 @@
           </gmd:equivalentScale>
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+          <gmd:distance>
+            <gco:Distance uom="meter"/>
+          </gmd:distance>
+        </gmd:MD_Resolution>
+      </gmd:spatialResolution>
       <gmd:language>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </gmd:language>
       <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeListValue="utf8"
@@ -431,8 +473,9 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="d10706e412a1050910">
-                  <gml:beginPosition/>
+                <gml:TimePeriod gml:id="d4530e493a1050910">
+                  <gml:beginPosition>null</gml:beginPosition>
+                  <gml:endPosition>null</gml:endPosition>
                 </gml:TimePeriod>
               </gmd:extent>
             </gmd:EX_TemporalExtent>
@@ -444,24 +487,21 @@
           <gmd:geographicElement>
             <gmd:EX_GeographicBoundingBox>
               <gmd:westBoundLongitude>
-                <gco:Decimal>-180</gco:Decimal>
+                <gco:Decimal/>
               </gmd:westBoundLongitude>
               <gmd:eastBoundLongitude>
-                <gco:Decimal>180</gco:Decimal>
+                <gco:Decimal/>
               </gmd:eastBoundLongitude>
               <gmd:southBoundLatitude>
-                <gco:Decimal>-90</gco:Decimal>
+                <gco:Decimal/>
               </gmd:southBoundLatitude>
               <gmd:northBoundLatitude>
-                <gco:Decimal>90</gco:Decimal>
+                <gco:Decimal/>
               </gmd:northBoundLatitude>
             </gmd:EX_GeographicBoundingBox>
           </gmd:geographicElement>
         </gmd:EX_Extent>
       </gmd:extent>
-      <gmd:supplementalInformation gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:supplementalInformation>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
   <gmd:distributionInfo>
@@ -469,10 +509,10 @@
       <gmd:distributionFormat>
         <gmd:MD_Format>
           <gmd:name>
-            <gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+            <gco:CharacterString>ASCII</gco:CharacterString>
           </gmd:name>
           <gmd:version>
-            <gco:CharacterString>10</gco:CharacterString>
+            <gco:CharacterString>1.0</gco:CharacterString>
           </gmd:version>
         </gmd:MD_Format>
       </gmd:distributionFormat>
@@ -480,46 +520,15 @@
         <gmd:MD_Distributor>
           <gmd:distributorContact>
             <gmd:CI_ResponsibleParty>
-              <gmd:individualName gco:nilReason="missing">
+              <gmd:organisationName gco:nilReason="missing">
                 <gco:CharacterString/>
-              </gmd:individualName>
-              <gmd:organisationName>
-                <gco:CharacterString>Ifremer - Sextant</gco:CharacterString>
               </gmd:organisationName>
-              <gmd:positionName>
-                <gco:CharacterString>Administrateur du serveur Sextant</gco:CharacterString>
-              </gmd:positionName>
               <gmd:contactInfo>
                 <gmd:CI_Contact>
-                  <gmd:phone>
-                    <gmd:CI_Telephone>
-                      <gmd:voice gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:voice>
-                      <gmd:facsimile gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:facsimile>
-                    </gmd:CI_Telephone>
-                  </gmd:phone>
                   <gmd:address>
                     <gmd:CI_Address>
-                      <gmd:deliveryPoint gco:nilReason="missing">
+                      <gmd:electronicMailAddress gco:nilReason="missing">
                         <gco:CharacterString/>
-                      </gmd:deliveryPoint>
-                      <gmd:city gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:city>
-                      <gmd:administrativeArea gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:administrativeArea>
-                      <gmd:postalCode gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:postalCode>
-                      <gmd:country gco:nilReason="missing">
-                        <gco:CharacterString/>
-                      </gmd:country>
-                      <gmd:electronicMailAddress>
-                        <gco:CharacterString>sextant@ifremer.fr</gco:CharacterString>
                       </gmd:electronicMailAddress>
                     </gmd:CI_Address>
                   </gmd:address>
@@ -527,33 +536,12 @@
               </gmd:contactInfo>
               <gmd:role>
                 <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                                 codeListValue="resourceProvider"/>
+                                 codeListValue="distributor"/>
               </gmd:role>
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
         </gmd:MD_Distributor>
       </gmd:distributor>
-      <gmd:transferOptions>
-        <gmd:MD_DigitalTransferOptions>
-          <gmd:onLine>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns:gmx="http://www.isotc211.org/2005/gmx"/>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:name gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:name>
-              <gmd:description gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:description>
-            </gmd:CI_OnlineResource>
-          </gmd:onLine>
-        </gmd:MD_DigitalTransferOptions>
-      </gmd:transferOptions>
     </gmd:MD_Distribution>
   </gmd:distributionInfo>
   <gmd:dataQualityInfo>
@@ -564,44 +552,113 @@
             <gmd:MD_ScopeCode codeListValue="dataset"
                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"/>
           </gmd:level>
+          <gmd:extent>
+            <gmd:EX_Extent>
+              <gmd:verticalElement>
+                <gmd:EX_VerticalExtent>
+                  <gmd:minimumValue>
+                    <gco:Real/>
+                  </gmd:minimumValue>
+                  <gmd:maximumValue>
+                    <gco:Real/>
+                  </gmd:maximumValue>
+                  <gmd:verticalCRS>
+                    <gml:VerticalCRS gml:id="d50e683a1049886">
+                      <gml:identifier codeSpace="">VerticalDatum</gml:identifier>
+                      <gml:scope>VerticalDatum scope</gml:scope>
+                      <gml:verticalCS>
+                        <gml:VerticalCS gml:id="d94e470a1049886">
+                          <gml:identifier codeSpace=""/>
+                          <gml:axis>
+                            <gml:CoordinateSystemAxis gml:id="d98e474a1049886" gml:uom="">
+                              <gml:identifier codeSpace=""/>
+                              <gml:axisAbbrev>vert</gml:axisAbbrev>
+                              <gml:axisDirection codeSpace="">vertical</gml:axisDirection>
+                            </gml:CoordinateSystemAxis>
+                          </gml:axis>
+                        </gml:VerticalCS>
+                      </gml:verticalCS>
+                      <gml:verticalDatum>
+                        <gml:VerticalDatum gml:id="d51e690a1049886">
+                          <gml:description>desc</gml:description>
+                          <gml:identifier codeSpace="">SDN:L111:7:D01 = Lowest Astronomical Tide</gml:identifier>
+                          <gml:name>VerticalDatum</gml:name>
+                          <gml:scope>not defined</gml:scope>
+                        </gml:VerticalDatum>
+                      </gml:verticalDatum>
+                    </gml:VerticalCRS>
+                  </gmd:verticalCRS>
+                </gmd:EX_VerticalExtent>
+              </gmd:verticalElement>
+            </gmd:EX_Extent>
+          </gmd:extent>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:statement>
+            <gco:CharacterString>no information</gco:CharacterString>
+          </gmd:statement>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                              codeListValue="feature"/>
+          </gmd:level>
+          <gmd:levelDescription>
+            <gmd:MD_ScopeDescription>
+              <gmd:dataset>
+                <gco:CharacterString>accuracy</gco:CharacterString>
+              </gmd:dataset>
+            </gmd:MD_ScopeDescription>
+          </gmd:levelDescription>
         </gmd:DQ_Scope>
       </gmd:scope>
       <gmd:report>
-        <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+        <gmd:DQ_GriddedDataPositionalAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>horizontal accuracy</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:measureIdentification>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>horizontal accuracy of coordinate</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:measureIdentification>
+          <gmd:measureDescription>
+            <gco:CharacterString>IHO S-44</gco:CharacterString>
+          </gmd:measureDescription>
+          <gmd:evaluationMethodDescription>
+            <gco:CharacterString>IHO S-44</gco:CharacterString>
+          </gmd:evaluationMethodDescription>
           <gmd:result>
-            <gmd:DQ_ConformanceResult>
-              <gmd:specification>
-                <gmd:CI_Citation>
-                  <gmd:title>
-                    <gco:CharacterString>Inspire specifications</gco:CharacterString>
-                  </gmd:title>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>2012-01-16</gco:Date>
-                      </gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                             codeListValue="creation"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </gmd:CI_Citation>
-              </gmd:specification>
-              <gmd:explanation>
-                <gco:CharacterString>Non évalué</gco:CharacterString>
-              </gmd:explanation>
-              <gmd:pass>
-                <gco:Boolean>false</gco:Boolean>
-              </gmd:pass>
-            </gmd:DQ_ConformanceResult>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:valueType>
+                <gco:RecordType>horizontal accuracy</gco:RecordType>
+              </gmd:valueType>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="d61e521a1049886">
+                  <gml:identifier codeSpace=""/>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
           </gmd:result>
-        </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+        </gmd:DQ_GriddedDataPositionalAccuracy>
         <gmd:DQ_DomainConsistency>
           <gmd:result xmlns:gn="http://www.fao.org/geonetwork"
                       xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                      xmlns:srv="http://www.isotc211.org/2005/srv"
-                      xmlns:xlink="http://www.w3.org/1999/xlink">
+                      xmlns:srv="http://www.isotc211.org/2005/srv">
             <gmd:DQ_ConformanceResult>
               <gmd:specification>
                 <gmd:CI_Citation>
@@ -631,13 +688,136 @@
           </gmd:result>
         </gmd:DQ_DomainConsistency>
       </gmd:report>
+      <gmd:report>
+        <gmd:DQ_QuantitativeAttributeAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>depth</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:measureIdentification>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>depth accuracy</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:measureIdentification>
+          <gmd:measureDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:measureDescription>
+          <gmd:evaluationMethodDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:evaluationMethodDescription>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="d61e548a1049886">
+                  <gml:identifier codeSpace=""/>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
+              <gmd:value>
+                <gco:Record>not defined</gco:Record>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_QuantitativeAttributeAccuracy>
+      </gmd:report>
+      <gmd:report>
+        <gmd:DQ_NonQuantitativeAttributeAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>shoal bias</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:measureDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:measureDescription>
+          <gmd:evaluationMethodDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:evaluationMethodDescription>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="d61e569a1049886">
+                  <gml:identifier codeSpace=""/>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
+              <gmd:value>
+                <gco:Record>not defined</gco:Record>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_NonQuantitativeAttributeAccuracy>
+      </gmd:report>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                              codeListValue="software"/>
+          </gmd:level>
+          <gmd:extent>
+            <gmd:EX_Extent>
+              <gmd:description gco:nilReason="missing">
+                <gco:CharacterString/>
+              </gmd:description>
+            </gmd:EX_Extent>
+          </gmd:extent>
+          <gmd:levelDescription>
+            <gmd:MD_ScopeDescription>
+              <gmd:other>
+                <gco:CharacterString>software</gco:CharacterString>
+              </gmd:other>
+            </gmd:MD_ScopeDescription>
+          </gmd:levelDescription>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                              codeListValue="propertyType"/>
+          </gmd:level>
+          <gmd:extent>
+            <gmd:EX_Extent>
+              <gmd:description>
+                <gco:CharacterString>parameters of data processing</gco:CharacterString>
+              </gmd:description>
+            </gmd:EX_Extent>
+          </gmd:extent>
+          <gmd:levelDescription>
+            <gmd:MD_ScopeDescription>
+              <gmd:attributes uuidref="SDN:P011:294:MINCDIST = Minimum depth below surface of the bed"/>
+            </gmd:MD_ScopeDescription>
+          </gmd:levelDescription>
+        </gmd:DQ_Scope>
+      </gmd:scope>
       <gmd:lineage>
         <gmd:LI_Lineage>
           <gmd:statement gco:nilReason="missing">
             <gco:CharacterString/>
           </gmd:statement>
+          <gmd:source>
+            <gmd:LI_Source>
+              <gmd:description gco:nilReason="missing">
+                <gco:CharacterString/>
+              </gmd:description>
+            </gmd:LI_Source>
+          </gmd:source>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </gmd:DQ_DataQuality>
   </gmd:dataQualityInfo>
+  <gmd:metadataConstraints>
+    <gmd:MD_LegalConstraints>
+      <gmd:useLimitation gco:nilReason="missing">
+        <gco:CharacterString/>
+      </gmd:useLimitation>
+    </gmd:MD_LegalConstraints>
+  </gmd:metadataConstraints>
 </gmd:MD_Metadata>

@@ -1853,6 +1853,7 @@
           -->
           <action type="add"
                   name="emodnetOriginatorTitle"
+                  forceLabel="true"
                   addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
@@ -1922,6 +1923,7 @@
           <action type="add"
                   name="emodnetDataHoldingCenterTitle"
                   addDirective="data-gn-directory-entry-selector"
+                  forceLabel="true"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <!-- TODO: filter on a group  ?
@@ -1988,7 +1990,8 @@
           if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"
           -->
           <action type="add"
-                  name="emodnetOriginatorTitle"
+                  name="emodnetMetadataAuthor"
+                  forceLabel="true"
                   addDirective="data-gn-directory-entry-selector"
                   or="contact"
                   in="/gmd:MD_Metadata">
@@ -2022,7 +2025,7 @@
                      use="email"/>
               </values>
               <snippet>
-                <gmd:contact>
+                <gmd:distributorContact>
                   <gmd:CI_ResponsibleParty>
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
@@ -2051,7 +2054,7 @@
                     </gmd:contactInfo>
                     <gn:copy select="gmd:role"/>
                   </gmd:CI_ResponsibleParty>
-                </gmd:contact>
+                </gmd:distributorContact>
               </snippet>
             </template>
           </field>
@@ -2062,7 +2065,7 @@
           <action type="add"
                   name="emodnetDistributor"
                   addDirective="data-gn-directory-entry-selector"
-                  or="pointOfContact"
+                  or="distributorContact"
                   in="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
                           gmd:distributorContact">
             <!-- TODO: filter on a group  ?
