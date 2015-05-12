@@ -3965,6 +3965,12 @@ l’IGN (WPS)
     ]]></help>
     <condition/>
     <helper displayIf="ancestor::node()[
+               name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'EMODNET - HYDROGRAPHY')]"
+            editorMode="radio">
+      <option value="Public">Public</option>
+      <option value="Confidential">Confidential</option>
+    </helper>
+    <helper displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
             editorMode="radio">
