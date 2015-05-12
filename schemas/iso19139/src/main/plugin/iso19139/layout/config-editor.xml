@@ -1465,9 +1465,674 @@
       </tab>
     </view>
 
+    <!--
+    Emodnet view
+    https://forge.ifremer.fr/mantis/view.php?id=24534
+    -->
+    <view name="emodnetHydrography" upAndDownControlHidden="true"
+          displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
+          'EMODNET - HYDROGRAPHY')">
 
+      <thesaurusList>
+        <thesaurus key="local.theme.emodnet.catalogue-type" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P02"/>
+      </thesaurusList>
+
+
+      <tab id="emodnetHydrography-what"
+           mode="flat"
+           default="true">
+        <section>
+          <field name="emodnetCatalogueType"
+                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                'emodnet.project-name')]"/>
+
+          <field name="emodnetName"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
+
+          <!-- TODO: Check label -->
+          <field name="emodnetShortName"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier"/>
+
+          <field name="emodnetDisseminationLevel"
+                 xpath="/gmd:MD_Metadata/gmd:metadataConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'NVS.P02')]"/>
+
+
+          <field name="emodnetNbColumnsTitle"
+                 xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                          gmd:MD_Georectified/gmd:axisDimensionProperties/
+                            gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/
+                                  @codeListValue = 'column']/gmd:dimensionSize"/>
+
+          <field name="emodnetNbLinesTitle"
+                 xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                          gmd:MD_Georectified/gmd:axisDimensionProperties/
+                            gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/
+                                  @codeListValue = 'row']/gmd:dimensionSize"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                          gmd:MD_Georectified/gmd:pointInPixel/
+                            gmd:MD_PixelOrientationCode"/>
+
+          <field name="emodnetScaleDenominator"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:spatialResolution/gmd:MD_Resolution/
+                            gmd:equivalentScale/gmd:MD_RepresentativeFraction/
+                              gmd:denominator"/>
+
+        </section>
+
+
+        <section name="emodnetAbstractTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'L054')]"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'L056')]"/>
+
+          <field name="emodnetDataSourcesTitle"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/
+                          gmd:source/*/gmd:description"/>
+
+          <field name="emodnetDataProcessingTitle"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*[gmd:source]/
+                          gmd:statement"/>
+
+          <field name="emodnetProcessingSoftware"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:scope/*[
+                 gmd:level/gmd:MD_ScopeCode/@codeListValue = 'software']/
+                          gmd:extent/*/gmd:description"/>
+
+        </section>
+      </tab>
+
+
+      <tab id="emodnetHydrography-details"
+           mode="flat">
+
+        <section name="emodnetQualityTitle">
+          <section name="emodnetHorAccuracyTitle">
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:value"/>
+          </section>
+          <section name="emodnetVertAccuracyTitle">
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                            gmd:DQ_QuantitativeAttributeAccuracy/gmd:measureDescription"/>
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                            gmd:DQ_QuantitativeAttributeAccuracy/gmd:evaluationMethodDescription"/>
+          </section>
+
+          <!-- TODO: Should be a boolean ? -->
+          <field name="emodnetShoalBias"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                          gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:measureDescription"/>
+
+          <field name="emodnetSuitabilityTitle"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+        </section>
+
+        <section name="emodnetIntellectualPropertyTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+        </section>
+
+
+        <section name="emodnetMetadataInfo">
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+        </section>
+      </tab>
+
+      <tab id="emodnetHydrography-where"
+           mode="flat">
+        <section>
+          <field
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:extent/*/gmd:geographicElement/
+                            gmd:EX_GeographicBoundingBox"/>
+
+          <field name="emodnetSpatialResolution"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:spatialResolution/*/gmd:distance"/>
+
+          <field
+                  name="minDepth"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
+
+          <field
+                  name="maxDepth"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
+
+          <field
+                  name="minDepth"
+                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/
+                gmd:scope/*[gmd:level/*/@codeListValue = 'dataset']/gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
+
+          <field
+                  name="maxDepth"
+                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/
+                gmd:scope/*[gmd:level/*/@codeListValue = 'dataset']/gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
+
+
+
+          <field name="rsIdentifier" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
+                 del="../..">
+            <template>
+              <values>
+                <key label="code"
+                     xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:MD_ReferenceSystem"/>
+              </values>
+              <snippet>
+                <gmd:referenceSystemIdentifier>
+                  <gmd:RS_Identifier>
+                    <gn:copy select="gmd:authority"/>
+                    <gmd:code>
+                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                    </gmd:code>
+                    <gn:copy select="gmd:codeSpace"/>
+                    <gn:copy select="gmd:version"/>
+                  </gmd:RS_Identifier>
+                </gmd:referenceSystemIdentifier>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
+                  or="referenceSystemInfo" in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString/>
+                        </gmd:code>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+        </section>
+      </tab>
+
+
+      <tab id="emodnetHydrography-when"
+           mode="flat">
+        <section>
+          <field name="creationDate" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/
+                    gmd:date[*/gmd:dateType/*/@codeListValue = 'creation']">
+            <template>
+              <values>
+                <key label="date"
+                     xpath="gmd:CI_Date/gmd:date/*"
+                     use="gn-date-picker"
+                     tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
+              </values>
+              <snippet>
+                <gmd:date>
+                  <gmd:CI_Date>
+                    <gmd:date>{{date}}</gmd:date>
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode
+                              codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                              codeListValue="creation"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+              </snippet>
+            </template>
+          </field>
+
+
+          <field name="revisionDate" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/
+                    gmd:date[*/gmd:dateType/*/@codeListValue = 'revision']">
+            <template>
+              <values>
+                <key label="date"
+                     xpath="gmd:CI_Date/gmd:date/*"
+                     use="gn-date-picker"
+                     tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
+              </values>
+              <snippet>
+                <gmd:date>
+                  <gmd:CI_Date>
+                    <gmd:date>{{date}}</gmd:date>
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode
+                              codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                              codeListValue="revision"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+              </snippet>
+            </template>
+          </field>
+
+          <field name="temporalExtent" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                        >
+                  <directiveAttributes
+                          data-tag-name="gml:endPosition"
+                          data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+
+          <field
+                  name="timeResolution"
+                  xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
+                gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
+        </section>
+
+
+      </tab>
+
+
+      <tab id="emodnetHydrography-who"
+           mode="flat">
+        <section>
+          <field name="emodnetOriginatorTitle"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'originator']"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <!-- TODO: check cardinality
+          if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"
+          -->
+          <action type="add"
+                  name="emodnetOriginatorTitle"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <!-- TODO: filter on a group  ?
+            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
+          </action>
+
+
+
+          <field name="emodnetDataHoldingCenterTitle"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'custodian']"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <!-- TODO: check cardinality
+          if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"-->
+          <action type="add"
+                  name="emodnetDataHoldingCenterTitle"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <!-- TODO: filter on a group  ?
+            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
+          </action>
+
+
+
+
+          <field name="emodnetMetadataAuthor"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <!-- TODO: check cardinality
+          if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"
+          -->
+          <action type="add"
+                  name="emodnetOriginatorTitle"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="contact"
+                  in="/gmd:MD_Metadata">
+            <!-- TODO: filter on a group  ?
+            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
+          </action>
+        </section>
+      </tab>
+
+
+      <tab id="emodnetHydrography-access"
+           mode="flat">
+        <section>
+          <field name="emodnetDistributor"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
+                          gmd:distributorContact[*/gmd:role/*/@codeListValue = 'distributor']"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <!-- TODO: check cardinality
+          if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
+                          gmd:distributorContact[*/gmd:role/*/@codeListValue = 'distributor']) = 0"-->
+          <action type="add"
+                  name="emodnetDistributor"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
+                          gmd:distributorContact">
+            <!-- TODO: filter on a group  ?
+            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~distributor"/>
+          </action>
+
+
+          <field name="dataFormats" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 del=".">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="gmd:MD_Format/gmd:name/gco:CharacterString"
+                     tooltip="gmd:name|gmd:MD_Format">
+                  <helper name="gmd:name" context="gmd:MD_Format"/>
+                </key>
+                <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString>{{format_version}}</gco:CharacterString>
+                    </gmd:version>
+                    <gn:copy select="gmd:amendmentNumber"/>
+                    <gn:copy select="gmd:specification"/>
+                    <gn:copy select="gmd:fileDecompressionTechnique"/>
+                    <gn:copy select="gmd:formatDistributor"/>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+            <template>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:version>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+        </section>
+      </tab>
+    </view>
+
+    <!--
+    MedSea checkpoint view
+    https://forge.ifremer.fr/mantis/view.php?id=21605
+    -->
     <view name="medsea" upAndDownControlHidden="true"
-          displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')">
+          displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
+          'MedSea')">
 
       <thesaurusList>
         <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
