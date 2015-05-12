@@ -142,7 +142,7 @@ public class SextantExtractor {
 						+ ".xml"), xmlString);
 			} else {
 				FileUtils.writeStringToFile(
-						new File(panierXmlPathAnonymous, "mickael.treguer@ifremer.fr_" + UUID.randomUUID() + ".xml"), xmlString);
+						new File(panierXmlPathAnonymous, jsonExtractionSpec.getUser().getMail() + "_" + UUID.randomUUID() + ".xml"), xmlString);
 			}
 			status.put("success", true);
 		} catch (Exception e) {
