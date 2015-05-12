@@ -7,6 +7,7 @@
   "panierErrorMsg" : "Un problème est survenu dans votre demande de téléchargement de données. Veuillez essayer de nouveau ultériorement.",
   "basket": "Panier",
   "inbasket": "dans le panier",
-  "addAllLayersToPanier": "Ajouter les {{number}} couches au panier"
+  "addAllLayersToPanier": "Ajouter les {{number}} couches au panier",
+  "toAdmin": "Administrer"
 
 }

@@ -121,7 +121,7 @@ public class AbstractHttpRequest {
 
     public void setUrl(URL url) {
         host = url.getHost();
-        port = (url.getPort() == -1) ? url.getDefaultPort() : url.getPort();
+        port = url.getPort();
         protocol = url.getProtocol();
         address = url.getPath();
         query = url.getQuery();

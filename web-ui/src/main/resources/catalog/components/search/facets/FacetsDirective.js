@@ -168,14 +168,12 @@
                             });
                           }
                           // Specific Sextant
-                          else if(scope.facetConfig.key == 'orgName') {
+                          else if(scope.facetConfig.key == 'orgName' &&
+                              gnSearchSettings.configWho) {
                             facets = $filter('filter')(facets, function(i) {
-                              if(gnSearchSettings.configWho) {
-                                var catalog =
-                                    gnSearchSettings.configWho.split(',');
-                                return catalog.indexOf(i['@name']) >= 0;
-
-                              }
+                              var catalog =
+                                  gnSearchSettings.configWho.split(',');
+                              return catalog.indexOf(i['@name']) >= 0;
                             });
                           }
                           // end specific

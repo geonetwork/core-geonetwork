@@ -147,7 +147,7 @@
         openModal({
           title: $translate('privileges') + ' - ' +
               (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>'
+          content: '<div gn-share="' + md.getId() + '" oper-filter="0,1,2,5" disable-all-col="true"></div>'
         }, scope, 'PrivilegesUpdated');
       };
 
@@ -183,7 +183,7 @@
       this.openPrivilegesBatchPanel = function(scope) {
         openModal({
           title: 'privileges',
-          content: '<div gn-share="" gn-share-batch="true"></div>'
+          content: '<div gn-share="" gn-share-batch="true" ></div>'
         }, scope, 'PrivilegesUpdated');
       };
       this.openCategoriesBatchPanel = function(scope) {

@@ -5,6 +5,7 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Level;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
@@ -297,7 +298,22 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139", _100,
+        formatService.execXml("eng", "xml", "partial_view", Xml.getString(element), null, "iso19139", _100, null,
+                new ServletWebRequest(request, response));
+
+        final String view = response.getContentAsString();
+        assertTrue(view.contains("KML (1)"));
+        assertTrue(view.contains("Format"));
+    }
+
+    @Test
+    public void testXmlFormatUploadWithXpath() throws Exception {
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-getrecordbyidresponse.iso19139.xml");
+        final Element sampleMetadataXml = Xml.loadStream(resource.openStream());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.execXml("eng", "xml", "partial_view", Xml.getString(sampleMetadataXml), null, "iso19139", _100, "gmd:MD_Metadata",
                 new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
@@ -317,7 +333,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", _100, new ServletWebRequest(request, response));
+        formatService.execXml("eng", "xml", "partial_view", null, url, "iso19139", _100, null, new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
@@ -337,7 +353,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", _100, new ServletWebRequest(request, response));
+        formatService.execXml("eng", "xml", "partial_view", null, "request", "iso19139", _100, null, new ServletWebRequest(request, response));
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));

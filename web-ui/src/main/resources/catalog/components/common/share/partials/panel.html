@@ -40,7 +40,7 @@
           data-ng-class="internalGroups.indexOf(g.id) != -1 && internalOperations.indexOf(o.id) != -1 ? 'hidden' : ''"
           data-ng-model="g.privileges[o.id].value"/>
         </td>
-        <td>
+        <td data-ng-if="!disableAllCol">
           <input type="checkbox"
           data-ng-disabled="!isAdminOrReviewer"
           data-ng-click="checkAll(g)"
@@ -54,7 +54,7 @@
           data-ng-disabled="g.privileges[o.id].disabled"
           data-ng-model="g.privileges[o.id].value"/>
         </td>
-        <td>
+        <td data-ng-if="!disableAllCol">
           <input type="checkbox"
           data-ng-click="checkAll(g)"
           data-ng-model="g.isCheckedAll"/>

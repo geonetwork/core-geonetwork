@@ -27,9 +27,9 @@
 			<body>
 
 				<link rel="stylesheet" type="text/css"
-					href="{root/url}/apps/sextant/css/schema/reset.css" />
+					href="{/root/url}../../apps/sextant/css/schema/reset.css" />
 				<link rel="stylesheet" type="text/css"
-					href="{root/url}/apps/sextant/css/schema/emodnet.css" />
+					href="{/root/url}../../apps/sextant/css/schema/emodnet.css" />
 				<div class="tpl-emodnet">
 					<div class="ui-layout-content">
 						<table class="print_table" border="0" cellpadding="0"
