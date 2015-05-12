@@ -71,7 +71,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.xpath.XPath;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEvent;
@@ -190,7 +189,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
      * @param width the approximate size of the element that the formatter output will be embedded in compared to the full device
      *              width.  Allowed options are the enum values: {@link org.fao.geonet.services.metadata.format.FormatterWidth}
      *              The default is _100 (100% of the screen)
-     * @param mdpath (optional) the xpath to the metadata node if it's not the root node of the XML
+     * @param mdPath (optional) the xpath to the metadata node if it's not the root node of the XML
      */
     @RequestMapping(value = "/{lang}/xml.format.{type}")
     @ResponseBody
@@ -220,10 +219,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Element metadataEl = Xml.loadString(metadata, false);
 
         if(mdPath != null) {
-            XPath xpath = XPath.newInstance(mdPath);
-            xpath.addNamespace(Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"));
-
-            metadataEl = (Element)xpath.selectSingleNode(metadataEl);
+            final List<Namespace> namespaces = context.getBean(SchemaManager.class).getSchema(schema).getNamespaces();
+            metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
             metadataEl.detach();
         }
         Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
