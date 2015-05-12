@@ -26,10 +26,27 @@
     'sxt_mdactionmenu'
   ]);
 
+
+  if(typeof sxtSettings != 'undefined') {
+    var catModule = angular.module('gn_cat_controller');
+    catModule.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        var lang = sxtSettings.lang || 'eng';
+        gnGlobalSettings.locale = {
+          lang: lang.substr(0,2)
+        };
+        gnGlobalSettings.gnUrl =
+            'http://sextant-test.ifremer.fr/geonetwork/srv/' + lang + '/';
+      }]);
+  }
+
+
   module.value('sxtGlobals', {});
 
-  module.config(['$LOCALES', function($LOCALES) {
+  module.config(['$LOCALES', 'gnGlobalSettings',
+    function($LOCALES, gnGlobalSettings) {
     $LOCALES.push('sextant');
+
   }]);
 
   module.controller('gnsSextant', [
