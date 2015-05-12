@@ -1,0 +1,1000 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        >
+  <skos:ConceptScheme
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument">
+    <dc:title>Measuring Instruments (SDN L54)</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2009-06-11</dcterms:issued>
+    <dcterms:modified>2009-06-11</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:364">
+    <skos:prefLabel xml:lang="en">1000 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 1000
+      Hz (sampling interval ranging from 2-0.5 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">1000 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 1000
+      Hz (sampling interval ranging from 2-0.5 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:363">
+    <skos:prefLabel xml:lang="en">1000 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 1000
+      Hz (sampling interval ranging from 2-0.5 msec) plus a single string of
+      towed hydrophones (streamer) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">1000 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 1000
+      Hz (sampling interval ranging from 2-0.5 msec) plus a single string of
+      towed hydrophones (streamer) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:365">
+    <skos:prefLabel xml:lang="en">2000 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 2000
+      Hz (sampling interval ranging from 0.5-0.25 msec) plus a multiple strings
+      of towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">2000 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 2000
+      Hz (sampling interval ranging from 0.5-0.25 msec) plus a multiple strings
+      of towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:372">
+    <skos:prefLabel xml:lang="en">2000 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 2000
+      Hz (sampling interval ranging from 0.5-0.25 msec) plus a single string of
+      towed hydrophones (streamer) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">2000 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 2000
+      Hz (sampling interval ranging from 0.5-0.25 msec) plus a single string of
+      towed hydrophones (streamer) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:375">
+    <skos:prefLabel xml:lang="en">250 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 250
+      Hz (sampling interval ranging from 2-8 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">250 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 250
+      Hz (sampling interval ranging from 2-8 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:362">
+    <skos:prefLabel xml:lang="en">250 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 250
+      Hz (sampling interval ranging from 2-8 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">250 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 250
+      Hz (sampling interval ranging from 2-8 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:374">
+    <skos:prefLabel xml:lang="en">60 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz
+      (sampling interval higher than 8 msec) plus a multiple strings of towed
+      hydrophones (streamers) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">60 Hz top-bandwidth multi-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 60 Hz
+      (sampling interval higher than 8 msec) plus a multiple strings of towed
+      hydrophones (streamers) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:371">
+    <skos:prefLabel xml:lang="en">60 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz
+      (sampling interval higher than 8 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">60 Hz top-bandwidth single-channel seismic
+      reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to 60 Hz
+      (sampling interval higher than 8 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:366">
+    <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth multi-channel
+      seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000
+      Hz (sampling interval lower than 0.25 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">&gt;2000 Hz top-bandwidth multi-channel
+      seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to &gt;2000
+      Hz (sampling interval lower than 0.25 msec) plus a multiple strings of
+      towed hydrophones (streamers) that determine geologic structure by
+      detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:373">
+    <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth single-channel
+      seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000
+      Hz (sampling interval lower than 0.25 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">&gt;2000 Hz top-bandwidth single-channel
+      seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source with a frequency up to &gt;2000
+      Hz (sampling interval lower than 0.25 msec) plus a single string of towed
+      hydrophones (streamer) that determine geologic structure by detecting
+      waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:367">
+    <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth sub-bottom
+      penetrator and mud profiler systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">Devices that provide information on
+      unconsolidated sediment structure through transmission and reception of an
+      energy source with a frequency corresponding to a sampling interval lower
+      than 0.25 msec.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">&gt;2000 Hz top-bandwidth sub-bottom
+      penetrator and mud profiler systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices that provide information on
+      unconsolidated sediment structure through transmission and reception of an
+      energy source with a frequency corresponding to a sampling interval lower
+      than 0.25 msec.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:384">
+    <skos:prefLabel xml:lang="en">ADVs and turbulence probes</skos:prefLabel>
+    <skos:definition xml:lang="en">ADV is the acronym for acoustic doppler
+      velocimeter. The group includes all in-situ instruments that make high
+      frequency measurements of three-dimensional current velocity in order to
+      determine the extent of turbulence within a water body.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">ADVs and turbulence probes</skos:prefLabel>
+    <skos:definition xml:lang="fr">ADV is the acronym for acoustic doppler
+      velocimeter. The group includes all in-situ instruments that make high
+      frequency measurements of three-dimensional current velocity in order to
+      determine the extent of turbulence within a water body.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:386">
+    <skos:prefLabel xml:lang="en">Aerosol physical characterisers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that determine physical
+      attributes such as size and abundance of atmospheric aerosols.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">Aerosol physical characterisers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that determine physical
+      attributes such as size and abundance of atmospheric aerosols.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:387">
+    <skos:prefLabel xml:lang="en">Aethalometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that quantify atmospheric
+      particulate carbon ('black carbon') concentrations.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">Aethalometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that quantify atmospheric
+      particulate carbon ('black carbon') concentrations.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:130">
+    <skos:prefLabel xml:lang="en">CTD</skos:prefLabel>
+    <skos:definition xml:lang="en">A package lowered and raised vertically from
+      a surface platform, usually a ship, always carrying pressure, temperature
+      and conductivity sensors. Addional optional sensors include fluorometers,
+      transmissometers and radiometers. The package may also carry water
+      bottles.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">CTD</skos:prefLabel>
+    <skos:definition xml:lang="fr">A package lowered and raised vertically from
+      a surface platform, usually a ship, always carrying pressure, temperature
+      and conductivity sensors. Addional optional sensors include fluorometers,
+      transmissometers and radiometers. The package may also carry water
+      bottles.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:131">
+    <skos:prefLabel xml:lang="en">CTD undulators</skos:prefLabel>
+    <skos:definition xml:lang="en">A package towed at varying depths by a ship,
+      always carrying pressure, temperature and conductivity sensors. Addional
+      optional sensors include fluorometers, transmissometers and radiometers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">CTD undulators</skos:prefLabel>
+    <skos:definition xml:lang="fr">A package towed at varying depths by a ship,
+      always carrying pressure, temperature and conductivity sensors. Addional
+      optional sensors include fluorometers, transmissometers and radiometers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:183">
+    <skos:prefLabel xml:lang="en">acoustic backscatter sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the amount of sound
+      energy transmitted into the water column returned to the instrument.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">acoustic backscatter sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the amount of sound
+      energy transmitted into the water column returned to the instrument.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:353">
+    <skos:prefLabel xml:lang="en">active fluorometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Fluorometers that measure photosynthetic
+      parameters by taking measurements whilst manipulating the phytoplankton
+      with controlled high-intensity illumination such as pump and probe and
+      FRRF
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">active fluorometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Fluorometers that measure photosynthetic
+      parameters by taking measurements whilst manipulating the phytoplankton
+      with controlled high-intensity illumination such as pump and probe and
+      FRRF
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:379">
+    <skos:prefLabel xml:lang="en">altimiters</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure their distance above
+      a specified elevation such as the sea surface or the seabed.
+      Classification includes acoustic and pressure-based instruments that are
+      designed to provide platform z co-ordinate spatial coverage in the
+      atmosphere or a water body. It excludes remote sensing instruments such as
+      LIDAR and satellite radar altimeters designed to map surface elevation.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">altimiters</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure their distance above
+      a specified elevation such as the sea surface or the seabed.
+      Classification includes acoustic and pressure-based instruments that are
+      designed to provide platform z co-ordinate spatial coverage in the
+      atmosphere or a water body. It excludes remote sensing instruments such as
+      LIDAR and satellite radar altimeters designed to map surface elevation.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:101">
+    <skos:prefLabel xml:lang="en">anemometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures wind speed and
+      direction at a single elevation
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">anemometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures wind speed and
+      direction at a single elevation
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:382">
+    <skos:prefLabel xml:lang="en">atmospheric gas analysers</skos:prefLabel>
+    <skos:definition xml:lang="en">In-situ instruments that can determine the
+      proportion of one or more gaseous components of the atmosphere.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">atmospheric gas analysers</skos:prefLabel>
+    <skos:definition xml:lang="fr">In-situ instruments that can determine the
+      proportion of one or more gaseous components of the atmosphere.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:132">
+    <skos:prefLabel xml:lang="en">bathythermographs</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure vertical profiles of
+      sea temperature by either lowering a pressure plus temperature senor
+      package (MBT) or dropping a free falling disposable sensor (XBT).
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">bathythermographs</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure vertical profiles of
+      sea temperature by either lowering a pressure plus temperature senor
+      package (MBT) or dropping a free falling disposable sensor (XBT).
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:358">
+    <skos:prefLabel xml:lang="en">bubble detectors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure the concentration
+      and size of air bubbles in the water column.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">bubble detectors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure the concentration
+      and size of air bubbles in the water column.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:114">
+    <skos:prefLabel xml:lang="en">current meters</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures current speed and
+      direction at a single depth
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">current meters</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures current speed and
+      direction at a single depth
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:115">
+    <skos:prefLabel xml:lang="en">current profilers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures current speed and
+      direction at multiple predetermined depths simultaneously
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">current profilers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures current speed and
+      direction at multiple predetermined depths simultaneously
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:351">
+    <skos:prefLabel xml:lang="en">dissolved gas sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the concentration of
+      gases, generally oxygen, dissolved in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">dissolved gas sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the concentration of
+      gases, generally oxygen, dissolved in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:EMSR">
+    <skos:prefLabel xml:lang="en">elecromagnetic sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">In-situ sensors that simultaneuously measure
+      electrical and magnetic fields. They are usually moored on the seabed for
+      long periods of time for determination of deep structure through
+      monitoring magnetotelluric currents. However, some may also be configured
+      to be receivers for active electromagnetic surveys such as CSEM.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">elecromagnetic sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">In-situ sensors that simultaneuously measure
+      electrical and magnetic fields. They are usually moored on the seabed for
+      long periods of time for determination of deep structure through
+      monitoring magnetotelluric currents. However, some may also be configured
+      to be receivers for active electromagnetic surveys such as CSEM.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:354">
+    <skos:prefLabel xml:lang="en">expendable CTDs</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure vertical profiles of
+      sea temperature and salinity with a free falling disposable temperature
+      and conductivity sensor package.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">expendable CTDs</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure vertical profiles of
+      sea temperature and salinity with a free falling disposable temperature
+      and conductivity sensor package.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:388">
+    <skos:prefLabel xml:lang="en">flow meters</skos:prefLabel>
+    <skos:definition xml:lang="en">Sensors that quantify the rate at which
+      fluids (e.g. water or air) pass through sensor packages, instruments or
+      sampling devices.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">flow meters</skos:prefLabel>
+    <skos:definition xml:lang="fr">Sensors that quantify the rate at which
+      fluids (e.g. water or air) pass through sensor packages, instruments or
+      sampling devices.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:113">
+    <skos:prefLabel xml:lang="en">fluorometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the amount of
+      stimulated electromagnetic radiation produced by pulses of electromagnetic
+      radiation emitted into the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">fluorometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the amount of
+      stimulated electromagnetic radiation produced by pulses of electromagnetic
+      radiation emitted into the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:370">
+    <skos:prefLabel xml:lang="en">geothermometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments carrying a sensor that determines
+      the temperature (degree of hotness) within geological units.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">geothermometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments carrying a sensor that determines
+      the temperature (degree of hotness) within geological units.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:158">
+    <skos:prefLabel xml:lang="en">gravimeters</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that makes measurements of the
+      Earth's gravity field
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">gravimeters</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that makes measurements of the
+      Earth's gravity field
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:369">
+    <skos:prefLabel xml:lang="en">hydrophones</skos:prefLabel>
+    <skos:definition xml:lang="en">Devices containing transducers that convert
+      underwater sound waves into electrical signals.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">hydrophones</skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices containing transducers that convert
+      underwater sound waves into electrical signals.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:112">
+    <skos:prefLabel xml:lang="en">inverted echosounders</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that locate acoustic reflectors
+      such as fronts in the water column by transmitting pulses of sound from
+      the seabed and determing reflection return times
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">inverted echosounders</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that locate acoustic reflectors
+      such as fronts in the water column by transmitting pulses of sound from
+      the seabed and determing reflection return times
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:116">
+    <skos:prefLabel xml:lang="en">lowered current profilers</skos:prefLabel>
+    <skos:definition xml:lang="en">An acoustic doppler current meter lowered and
+      raised vertically from a surface platform, typically a ship.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">lowered current profilers</skos:prefLabel>
+    <skos:definition xml:lang="fr">An acoustic doppler current meter lowered and
+      raised vertically from a surface platform, typically a ship.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:159">
+    <skos:prefLabel xml:lang="en">magnetometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that makes measurements of the
+      Earth's magnetic field
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">magnetometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that makes measurements of the
+      Earth's magnetic field
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:383">
+    <skos:prefLabel xml:lang="en">metal analysers</skos:prefLabel>
+    <skos:definition xml:lang="en">In-situ instruments that can determine the
+      total, dissolved or particulate concentration of one or more metallic
+      elements (including trace metalloids like arsenic) in a water body.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">metal analysers</skos:prefLabel>
+    <skos:definition xml:lang="fr">In-situ instruments that can determine the
+      total, dissolved or particulate concentration of one or more metallic
+      elements (including trace metalloids like arsenic) in a water body.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:102">
+    <skos:prefLabel xml:lang="en">meteorological packages</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that makes routine meteorological
+      measurements on the atmosphere, typically air pressure, temperature and
+      humidity
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">meteorological packages</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that makes routine meteorological
+      measurements on the atmosphere, typically air pressure, temperature and
+      humidity
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:157">
+    <skos:prefLabel xml:lang="en">multi-beam echosounders</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure water depth along
+      several tracks parallel to the platform track by timing pulses of sound
+      reflected on the seafloor
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">multi-beam echosounders</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure water depth along
+      several tracks parallel to the platform track by timing pulses of sound
+      reflected on the seafloor
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:154">
+    <skos:prefLabel xml:lang="en">multi-channel seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source of unspecified frequency
+      plus a multiple strings of towed hydrophones (streamers) that determine
+      geologic structure by detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">multi-channel seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source of unspecified frequency
+      plus a multiple strings of towed hydrophones (streamers) that determine
+      geologic structure by detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:181">
+    <skos:prefLabel xml:lang="en">nutrient analysers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that makes in-situ measurements of
+      one or more of nitrate, nitrite, ammonium, urea, phosphate or silicate
+      dissolved in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">nutrient analysers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that makes in-situ measurements of
+      one or more of nitrate, nitrite, ammonium, urea, phosphate or silicate
+      dissolved in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:123">
+    <skos:prefLabel xml:lang="en">optical backscatter sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the amount of
+      electromagnetic radiation emitted into the water column returned to the
+      instrument.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">optical backscatter sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the amount of
+      electromagnetic radiation emitted into the water column returned to the
+      instrument.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:355">
+    <skos:prefLabel xml:lang="en">pH sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure the hydrogen ion
+      concentration in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">pH sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure the hydrogen ion
+      concentration in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:150">
+    <skos:prefLabel xml:lang="en">particle sizers</skos:prefLabel>
+    <skos:definition xml:lang="en">An instrument that measures the size spectrum
+      of particles suspended in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">particle sizers</skos:prefLabel>
+    <skos:definition xml:lang="fr">An instrument that measures the size spectrum
+      of particles suspended in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:361">
+    <skos:prefLabel xml:lang="en">penetrometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Dynamic or passive devices that determine the
+      consistency or hardness of soil or sediment by measuring the depth or rate
+      of penetration of a needle or cone rig into it when a known force is
+      applied.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">penetrometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Dynamic or passive devices that determine the
+      consistency or hardness of soil or sediment by measuring the depth or rate
+      of penetration of a needle or cone rig into it when a known force is
+      applied.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:360">
+    <skos:prefLabel xml:lang="en">piezometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Devices that measure fluid (air, gas, water,
+      or oil) pressure within soil, sediment, rock or concrete providing
+      information such as water table level in an aquifer system.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">piezometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices that measure fluid (air, gas, water,
+      or oil) pressure within soil, sediment, rock or concrete providing
+      information such as water table level in an aquifer system.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:352">
+    <skos:prefLabel xml:lang="en">plankton counters</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that categorise and count
+      plankton in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">plankton counters</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that categorise and count
+      plankton in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:385">
+    <skos:prefLabel xml:lang="en">platform attitude sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure platform orientation
+      or rates of platform motion or acceleration in any direction or along any
+      axis. Excludes inertial navigation systems that are designed to determine
+      platform location with respect to an external co-ordinate reference
+      system.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">platform attitude sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure platform orientation
+      or rates of platform motion or acceleration in any direction or along any
+      axis. Excludes inertial navigation systems that are designed to determine
+      platform location with respect to an external co-ordinate reference
+      system.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:359">
+    <skos:prefLabel xml:lang="en">plummets</skos:prefLabel>
+    <skos:definition xml:lang="en">Devices comprising a weight attached to the
+      end of a graduated rope used to measure point water depths.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">plummets</skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices comprising a weight attached to the
+      end of a graduated rope used to measure point water depths.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:381">
+    <skos:prefLabel xml:lang="en">precipitation gauges</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure either the rate of
+      fall or integrated amount of rain, snow, sleet, hail or graupel.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">precipitation gauges</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure either the rate of
+      fall or integrated amount of rain, snow, sleet, hail or graupel.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:122">
+    <skos:prefLabel xml:lang="en">radiometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the intensity of
+      electromagnetic radiation in either the atmosphere or the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">radiometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the intensity of
+      electromagnetic radiation in either the atmosphere or the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:103">
+    <skos:prefLabel xml:lang="en">radiosondes</skos:prefLabel>
+    <skos:definition xml:lang="en">A balloon-borne package equipped with a radio
+      transmitter and meteorological sensors typically measuring temperature,
+      pressure, and humidity.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">radiosondes</skos:prefLabel>
+    <skos:definition xml:lang="fr">A balloon-borne package equipped with a radio
+      transmitter and meteorological sensors typically measuring temperature,
+      pressure, and humidity.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:356">
+    <skos:prefLabel xml:lang="en">redox potential sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure the tendency of the
+      water column to either gain or lose electrons when it is subject to change
+      by introduction of a new species
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">redox potential sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure the tendency of the
+      water column to either gain or lose electrons when it is subject to change
+      by introduction of a new species
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:350">
+    <skos:prefLabel xml:lang="en">salinity sensor</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that simultaneously measures
+      electrical conductivity and temperature in the water column to provide
+      temperature and salinity data
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">salinity sensor</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that simultaneously measures
+      electrical conductivity and temperature in the water column to provide
+      temperature and salinity data
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:111">
+    <skos:prefLabel xml:lang="en">sea level recorders</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that make smoothed measuremeants
+      of the elevation of the sea surface relative to a fixed vertical datum
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">sea level recorders</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that make smoothed measuremeants
+      of the elevation of the sea surface relative to a fixed vertical datum
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:378">
+    <skos:prefLabel xml:lang="en">sediment profile imagers</skos:prefLabel>
+    <skos:definition xml:lang="en">Devices that provide in-situ still or video
+      images of a section including bottom water, the undisturbed sediment-water
+      interface and the upper sediment layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">sediment profile imagers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices that provide in-situ still or video
+      images of a section including bottom water, the undisturbed sediment-water
+      interface and the upper sediment layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:376">
+    <skos:prefLabel xml:lang="en">sediment surface markers</skos:prefLabel>
+    <skos:definition xml:lang="en">Physical markers that allow changes in the
+      position of the boundary between sediment and air or water by visible
+      comparison against marked graduations in units of measurement of dimension
+      length.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">sediment surface markers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Physical markers that allow changes in the
+      position of the boundary between sediment and air or water by visible
+      comparison against marked graduations in units of measurement of dimension
+      length.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:155">
+    <skos:prefLabel xml:lang="en">seismic refraction systems</skos:prefLabel>
+    <skos:definition xml:lang="en">A network of seismometers or geophones plus
+      an energy source that determine geologic structure by detecting waves
+      refracted by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">seismic refraction systems</skos:prefLabel>
+    <skos:definition xml:lang="fr">A network of seismometers or geophones plus
+      an energy source that determine geologic structure by detecting waves
+      refracted by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:368">
+    <skos:prefLabel xml:lang="en">seismometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Devices placed on the ground or seabed to
+      measure physical movement of that substrate.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">seismometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Devices placed on the ground or seabed to
+      measure physical movement of that substrate.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:152">
+    <skos:prefLabel xml:lang="en">sidescan sonars</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments with directional acoustic
+      transmitters and receivers fitted to an underwater platform that emit
+      fan-shaped pulses down toward the seafloor across a wide angle
+      perpendicular to the path of the platform through the water.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">sidescan sonars</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments with directional acoustic
+      transmitters and receivers fitted to an underwater platform that emit
+      fan-shaped pulses down toward the seafloor across a wide angle
+      perpendicular to the path of the platform through the water.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:156">
+    <skos:prefLabel xml:lang="en">single-beam echosounders</skos:prefLabel>
+    <skos:definition xml:lang="en">Instruments that measure water depth at a
+      single point below the platform by timing pulses of sound reflected on the
+      seafloor
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">single-beam echosounders</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instruments that measure water depth at a
+      single point below the platform by timing pulses of sound reflected on the
+      seafloor
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:153">
+    <skos:prefLabel xml:lang="en">single-channel seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">An energy source of unspecified frequency
+      plus a single string of towed hydrophones (streamer) that determine
+      geologic structure by detecting waves reflected by subsurface layers.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">single-channel seismic reflection systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">An energy source of unspecified frequency
+      plus a single string of towed hydrophones (streamer) that determine
+      geologic structure by detecting waves reflected by subsurface layers.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:185">
+    <skos:prefLabel xml:lang="en">sound velocity sensors</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures the velocity of
+      sound in seawater
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">sound velocity sensors</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures the velocity of
+      sound in seawater
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:380">
+    <skos:prefLabel xml:lang="en">submarine cables</skos:prefLabel>
+    <skos:definition xml:lang="en">Electrical conductors routed beneath the sea
+      and connecting land stations. Oceanographic interest focuses on changes in
+      electrical resistance that may be related to the magnitude of Lagrangian
+      currents.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">submarine cables</skos:prefLabel>
+    <skos:definition xml:lang="fr">Electrical conductors routed beneath the sea
+      and connecting land stations. Oceanographic interest focuses on changes in
+      electrical resistance that may be related to the magnitude of Lagrangian
+      currents.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:135">
+    <skos:prefLabel xml:lang="en">thermistor chains</skos:prefLabel>
+    <skos:definition xml:lang="en">A group of rigidly-mounted temperature
+      sensors sampled by a common data logger held at various depths in the
+      water column.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">thermistor chains</skos:prefLabel>
+    <skos:definition xml:lang="fr">A group of rigidly-mounted temperature
+      sensors sampled by a common data logger held at various depths in the
+      water column.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:133">
+    <skos:prefLabel xml:lang="en">thermosalinographs</skos:prefLabel>
+    <skos:definition xml:lang="en">Temperature and conductivity sensors mounted
+      on a sea-surface platform continuously measuring a surface water supply.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">thermosalinographs</skos:prefLabel>
+    <skos:definition xml:lang="fr">Temperature and conductivity sensors mounted
+      on a sea-surface platform continuously measuring a surface water supply.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:124">
+    <skos:prefLabel xml:lang="en">transmissometers</skos:prefLabel>
+    <skos:definition xml:lang="en">Systems that measure the attenuation of
+      electromagnetic radiation by the water column. Includes human observer
+      plus Secchi Disk.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">transmissometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Systems that measure the attenuation of
+      electromagnetic radiation by the water column. Includes human observer
+      plus Secchi Disk.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:184">
+    <skos:prefLabel xml:lang="en">turbulence energy dissipation sensors
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that makes high frequency
+      measurements of kinetic energy in the water column
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">turbulence energy dissipation sensors
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that makes high frequency
+      measurements of kinetic energy in the water column
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:180">
+    <skos:prefLabel xml:lang="en">underwater cameras</skos:prefLabel>
+    <skos:definition xml:lang="en">All types of photographic equipment that may
+      be deployed underwater including stills, video, film and digital systems
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">underwater cameras</skos:prefLabel>
+    <skos:definition xml:lang="fr">All types of photographic equipment that may
+      be deployed underwater including stills, video, film and digital systems
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:377">
+    <skos:prefLabel xml:lang="en">water level markers</skos:prefLabel>
+    <skos:definition xml:lang="en">Fixed physical markers that allow changes in
+      the position of the boundary between a water body and the atmosphere by
+      visible comparison against marked graduations in units of measurement of
+      dimension length.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">water level markers</skos:prefLabel>
+    <skos:definition xml:lang="fr">Fixed physical markers that allow changes in
+      the position of the boundary between a water body and the atmosphere by
+      visible comparison against marked graduations in units of measurement of
+      dimension length.
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:134">
+    <skos:prefLabel xml:lang="en">water temperature sensor</skos:prefLabel>
+    <skos:definition xml:lang="en">An instrument that measures the temperature
+      of the water with which it is in contact
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">water temperature sensor</skos:prefLabel>
+    <skos:definition xml:lang="fr">An instrument that measures the temperature
+      of the water with which it is in contact
+    </skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/measuring-instrument#SDN:L054:12:110">
+    <skos:prefLabel xml:lang="en">wave recorders</skos:prefLabel>
+    <skos:definition xml:lang="en">Instrument that measures water column surface
+      wave parameters including height, period, direction and energy spectra.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">wave recorders</skos:prefLabel>
+    <skos:definition xml:lang="fr">Instrument that measures water column surface
+      wave parameters including height, period, direction and energy spectra.
+    </skos:definition>
+  </skos:Concept>
+</rdf:RDF>

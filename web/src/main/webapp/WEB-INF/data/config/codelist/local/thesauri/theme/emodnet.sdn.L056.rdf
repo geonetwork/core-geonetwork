@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument">
+    <dc:title>Positioning instruments (SDN L56)</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2009-06-11</dcterms:issued>
+    <dcterms:modified>2009-06-11</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS16">
+    <skos:prefLabel xml:lang="en">Argos GPS-localised transmitters
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;mode&gt;GPS localisation²&lt;/mode&gt;&lt;accuracy&gt;betterthan100m&lt;/accuracy&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Argos GPS-localised transmitters
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;mode&gt;GPS localisation²&lt;/mode&gt;&lt;accuracy&gt;betterthan100m&lt;/accuracy&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS17">
+    <skos:prefLabel xml:lang="en">Argos doppler-localised transmitters
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;mode&gt;Doppler-derived Argoslocalisation&lt;/mode&gt;&lt;accuracy&gt;better
+      than 250m (class 3) toworse than1500m (class
+      0)&lt;/accuracy&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Argos doppler-localised transmitters
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;mode&gt;Doppler-derived Argoslocalisation&lt;/mode&gt;&lt;accuracy&gt;better
+      than 250m (class 3) toworse than1500m (class
+      0)&lt;/accuracy&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS10">
+    <skos:prefLabel xml:lang="en">Automatic Ranging Grid Overlay DM 54
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;1.6-2MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;450km&lt;/range&gt;&lt;accuracy&gt;4-7mdown
+      to 20m at maximum range&lt;/accuracy&gt;&lt;operational&gt;from
+      1977(mid-80sin Europe)&lt;/operational&gt;&lt;notes&gt;Survey
+      positioningsystem.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Automatic Ranging Grid Overlay DM 54
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;1.6-2MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;450km&lt;/range&gt;&lt;accuracy&gt;4-7mdown
+      to 20m at maximum range&lt;/accuracy&gt;&lt;operational&gt;from
+      1977(mid-80sin Europe)&lt;/operational&gt;&lt;notes&gt;Survey
+      positioningsystem.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS08">
+    <skos:prefLabel xml:lang="en">Decca Navigator System HiFix receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;1.6MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;under100km&lt;/range&gt;&lt;accuracy&gt;better
+      than 10m: maximum accuracy at50km rangeis 1.5m&lt;/accuracy&gt;&lt;operating&gt;1962
+      to2000&lt;/operating&gt;&lt;notes&gt;Not for general navigation.
+      Chainsusually set upfor specific surveys.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Decca Navigator System HiFix receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;1.6MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;under100km&lt;/range&gt;&lt;accuracy&gt;better
+      than 10m: maximum accuracy at50km rangeis 1.5m&lt;/accuracy&gt;&lt;operating&gt;1962
+      to2000&lt;/operating&gt;&lt;notes&gt;Not for general navigation.
+      Chainsusually set upfor specific surveys.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS01">
+    <skos:prefLabel xml:lang="en">Decca Navigator System main chain receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;70 and130kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;450km(day)to
+      750km (night)&lt;/range&gt;&lt;accuracy&gt;50m(day) to 200m (night)
+      ingoodconditions down to 2km near range limit&lt;/accuracy&gt;&lt;operating&gt;WWIIto2001-03
+      (2000-03-31 in UK)&lt;/operating&gt;&lt;notes&gt; Transmittergroups,
+      eachwith a master and three slaves&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Decca Navigator System main chain receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;70 and130kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;450km(day)to
+      750km (night)&lt;/range&gt;&lt;accuracy&gt;50m(day) to 200m (night)
+      ingoodconditions down to 2km near range limit&lt;/accuracy&gt;&lt;operating&gt;WWIIto2001-03
+      (2000-03-31 in UK)&lt;/operating&gt;&lt;notes&gt; Transmittergroups,
+      eachwith a master and three slaves&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS04">
+    <skos:prefLabel xml:lang="en">Differential Global Positioning System
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;accuracy&gt;better than 100m to better
+      than10m&lt;/accuracy&gt;&lt;notes&gt;GPS augmented by a network of
+      fixedground stationsthat continuously broadcast the difference between
+      their true locationsand thelocation determined from the satellites.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Differential Global Positioning System
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;accuracy&gt;better than 100m to better
+      than10m&lt;/accuracy&gt;&lt;notes&gt;GPS augmented by a network of
+      fixedground stationsthat continuously broadcast the difference between
+      their true locationsand thelocation determined from the satellites.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS02">
+    <skos:prefLabel xml:lang="en">Global Navigation Satellite System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;Based on a network of satellites
+      deployed by theformer SovietUnion. The network was initiated in 1976 but
+      fell into disrepair beforefull globalcoverage was reached during the
+      political upheaval of the early90s&lt;/notes&gt;.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">Global Navigation Satellite System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;Based on a network of satellites
+      deployed by theformer SovietUnion. The network was initiated in 1976 but
+      fell into disrepair beforefull globalcoverage was reached during the
+      political upheaval of the early90s&lt;/notes&gt;.
+    </skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS21">
+    <skos:prefLabel xml:lang="en">Hyperfix receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;1.6-3.4MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic(usual),
+      circular or combined&lt;/mode&gt;&lt;range&gt;250km (night) to700km(day)&lt;/range&gt;&lt;accuracy&gt;up
+      to0.5-1m&lt;/accuracy&gt;&lt;operating&gt;until2000&lt;/operating&gt;&lt;notes&gt;Racal
+      positioning system similar toDecca HiFixbased on temporary or permanent
+      transmitter chains comprising a masterplus at leasttwo slaves.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Hyperfix receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;1.6-3.4MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic(usual),
+      circular or combined&lt;/mode&gt;&lt;range&gt;250km (night) to700km(day)&lt;/range&gt;&lt;accuracy&gt;up
+      to0.5-1m&lt;/accuracy&gt;&lt;operating&gt;until2000&lt;/operating&gt;&lt;notes&gt;Racal
+      positioning system similar toDecca HiFixbased on temporary or permanent
+      transmitter chains comprising a masterplus at leasttwo slaves.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS05">
+    <skos:prefLabel xml:lang="en">Long Range Navigation version C receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;70-130kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;950kmto1700km
+      (day): 650km to 1250km (day)&lt;/range&gt;&lt;operational&gt;1947to
+      2010.Maintained as GPS backup in the EU.&lt;notes&gt;Global navigation
+      based ontransmitters in several European countries, Japan, Canada (until
+      2002-10)and USA(until 2010-02-08).&lt;notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Long Range Navigation version C receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;70-130kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;950kmto1700km
+      (day): 650km to 1250km (day)&lt;/range&gt;&lt;operational&gt;1947to
+      2010.Maintained as GPS backup in the EU.&lt;notes&gt;Global navigation
+      based ontransmitters in several European countries, Japan, Canada (until
+      2002-10)and USA(until 2010-02-08).&lt;notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS06">
+    <skos:prefLabel xml:lang="en">Marine chronometers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;Timepieces of sufficient
+      precision to allow theiruse ofportable time
+      standards.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Marine chronometers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;Timepieces of sufficient
+      precision to allow theiruse ofportable time
+      standards.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS20">
+    <skos:prefLabel xml:lang="en">Motorola Mini-Ranger receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;5410-5890MHz&lt;range&gt;up
+      to75km&lt;/range&gt;&lt;accuracy&gt;up to 2m&lt;/accuracy&gt;&lt;notes&gt;Afamily
+      ofshort-wave receivers that determine position by determining
+      theline-of-sightdistance from 3 or more transmitters set up for
+      thesurvey..&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Motorola Mini-Ranger receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;5410-5890MHz&lt;range&gt;up
+      to75km&lt;/range&gt;&lt;accuracy&gt;up to 2m&lt;/accuracy&gt;&lt;notes&gt;Afamily
+      ofshort-wave receivers that determine position by determining
+      theline-of-sightdistance from 3 or more transmitters set up for
+      thesurvey..&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS03">
+    <skos:prefLabel xml:lang="en">NAVSTAR Global Positioning System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;accuracy&gt;better than 100m&lt;/accuracy&gt;&lt;notes&gt;Globalnavigation
+      based on a network of satellites deployed and maintained by theUSA.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">NAVSTAR Global Positioning System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;accuracy&gt;better than 100m&lt;/accuracy&gt;&lt;notes&gt;Globalnavigation
+      based on a network of satellites deployed and maintained by theUSA.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS18">
+    <skos:prefLabel xml:lang="en">Navy Navigation Satellite System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;mode&gt;Doppler-derived localisation&lt;/mode&gt;&lt;accuracy&gt;betterthan
+      10km or 2km if combined with relative water velocityem-log&lt;/accuracy&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Navy Navigation Satellite System receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;mode&gt;Doppler-derived localisation&lt;/mode&gt;&lt;accuracy&gt;betterthan
+      10km or 2km if combined with relative water velocityem-log&lt;/accuracy&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS15">
+    <skos:prefLabel xml:lang="en">Omega receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;10-14kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;upto
+      15000km&lt;/range&gt;&lt;accuracy&gt;better than7.4km&lt;/accuracy&gt;&lt;operational&gt;1968-1997&lt;/operational&gt;&lt;notes&gt;Globallong-range
+      but low accuracy navigation system&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Omega receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;10-14kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;upto
+      15000km&lt;/range&gt;&lt;accuracy&gt;better than7.4km&lt;/accuracy&gt;&lt;operational&gt;1968-1997&lt;/operational&gt;&lt;notes&gt;Globallong-range
+      but low accuracy navigation system&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS14">
+    <skos:prefLabel xml:lang="en">Pulse8 receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;100kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;250kmto
+      750km&lt;/range&gt;&lt;accuracy&gt;30m to500m&lt;/accuracy&gt;&lt;operational&gt;1970s
+      to late1990s&lt;/operational&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Pulse8 receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;100kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;250kmto
+      750km&lt;/range&gt;&lt;accuracy&gt;30m to500m&lt;/accuracy&gt;&lt;operational&gt;1970s
+      to late1990s&lt;/operational&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS13">
+    <skos:prefLabel xml:lang="en">Rana receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;around300-400kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Rana receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;around300-400kHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS07">
+    <skos:prefLabel xml:lang="en">Sextants</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;Optical instruments that
+      accurately measure theangle betweenpairs of visible celestial bodies such
+      as the sun, moon or stars.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Sextants</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;Optical instruments that
+      accurately measure theangle betweenpairs of visible celestial bodies such
+      as the sun, moon or stars.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS12">
+    <skos:prefLabel xml:lang="en">Système leger de measure de distance
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;420-450MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolicorcircular&lt;/mode&gt;&lt;range&gt;400km
+      hyperbolic; 75-100kmcircular&lt;/range&gt;&lt;accuracy&gt;better than 2m
+      below horizon (10mabovehorizon)&lt;/accuracy&gt;&lt;operational&gt;1980s
+      to1995&lt;/operational&gt;&lt;notes&gt;Navigation and positioning system
+      forthe NorthSea petroleum industry.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Système leger de measure de distance
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;420-450MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolicorcircular&lt;/mode&gt;&lt;range&gt;400km
+      hyperbolic; 75-100kmcircular&lt;/range&gt;&lt;accuracy&gt;better than 2m
+      below horizon (10mabovehorizon)&lt;/accuracy&gt;&lt;operational&gt;1980s
+      to1995&lt;/operational&gt;&lt;notes&gt;Navigation and positioning system
+      forthe NorthSea petroleum industry.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS09">
+    <skos:prefLabel xml:lang="en">Toran receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;around2MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;150-200km&lt;/range&gt;&lt;accuracy&gt;betterthan
+      20m&lt;/accuracy&gt;&lt;notes&gt;Mostly used
+      foraircraft.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Toran receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;around2MHz&lt;/frequency&gt;&lt;mode&gt;hyperbolic&lt;/mode&gt;&lt;range&gt;150-200km&lt;/range&gt;&lt;accuracy&gt;betterthan
+      20m&lt;/accuracy&gt;&lt;notes&gt;Mostly used
+      foraircraft.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS11">
+    <skos:prefLabel xml:lang="en">Trident receivers</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;frequency&gt;420-450MHz&lt;/frequency&gt;&lt;mode&gt;circular&lt;/mode&gt;&lt;range&gt;150km&lt;/range&gt;&lt;accuracy&gt;betterthan
+      3m&lt;/accuracy&gt;&lt;notes&gt;Survey
+      positioningsystem.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Trident receivers</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;frequency&gt;420-450MHz&lt;/frequency&gt;&lt;mode&gt;circular&lt;/mode&gt;&lt;range&gt;150km&lt;/range&gt;&lt;accuracy&gt;betterthan
+      3m&lt;/accuracy&gt;&lt;notes&gt;Survey
+      positioningsystem.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS22">
+    <skos:prefLabel xml:lang="en">Trisponder navigation systems</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;range&gt;80km&lt;/range&gt;&lt;accuracy&gt;1m
+      (resolution0.1m)&lt;/accuracy&gt;&lt;notes&gt;Family of microwave
+      short-rangepositioningsystems with vessel equipment and three shore
+      transponders (master and twoslaves)set up specifically for surveys.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Trisponder navigation systems</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;range&gt;80km&lt;/range&gt;&lt;accuracy&gt;1m
+      (resolution0.1m)&lt;/accuracy&gt;&lt;notes&gt;Family of microwave
+      short-rangepositioningsystems with vessel equipment and three shore
+      transponders (master and twoslaves)set up specifically for surveys.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:357">
+    <skos:prefLabel xml:lang="en">acoustic tracking systems</skos:prefLabel>
+    <skos:definition xml:lang="en">A network of acoustic sensors that determine
+      the location of asound sourceby triangulation such as acoustically active
+      float tracking systems.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">acoustic tracking systems</skos:prefLabel>
+    <skos:definition xml:lang="fr">A network of acoustic sensors that determine
+      the location of asound sourceby triangulation such as acoustically active
+      float tracking systems.
+    </skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS24">
+    <skos:prefLabel xml:lang="en">dead reckoning</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;The process of estimating
+      current position basedupon apreviously determined position, or fix, and
+      advancing that position basedupon knownor estimated speeds over elapsed
+      time, andcourse.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">dead reckoning</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;The process of estimating
+      current position basedupon apreviously determined position, or fix, and
+      advancing that position basedupon knownor estimated speeds over elapsed
+      time, andcourse.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS19">
+    <skos:prefLabel xml:lang="en">inertial navigation systems</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;Systems that determine spatial
+      position usinghigh-accuracyinertial measurements plus input from other
+      sensors such as dopplercurrent sensorsto determine platform 3-D location
+      by interpolation between
+      satellitenetworkfixes.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">inertial navigation systems</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;Systems that determine spatial
+      position usinghigh-accuracyinertial measurements plus input from other
+      sensors such as dopplercurrent sensorsto determine platform 3-D location
+      by interpolation between
+      satellitenetworkfixes.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS23">
+    <skos:prefLabel xml:lang="en">radio tracking systems</skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;notes&gt;Directional radio receivers that
+      determine thelocation of amobile radio transmitter (such as a bird or
+      animal tag) bytriangulation.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">radio tracking systems</skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;notes&gt;Directional radio receivers that
+      determine thelocation of amobile radio transmitter (such as a bird or
+      animal tag) bytriangulation.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS25">
+    <skos:prefLabel xml:lang="en">Kinematic Global Positioning System
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">&lt;accuracy&gt;Horizontal Accuracy: Fixed
+      RTK mode: 1-5cm,Float RTK mode: 20cm-1m. Vertical accuracy : twice the
+      horizontal accuracy&lt;/accuracy&gt;&lt;operating&gt;Sincethe mid-1990s&lt;/operating&gt;&lt;notes&gt;Real
+      Time Kinematic (RTK)satellite navigation technique based on the use of
+      carrier phasemeasurements of the GPS signals where a single reference
+      station or anetwork of reference stations provides the real-time
+      corrections.&lt;/notes&gt;</skos:definition>
+    <skos:prefLabel xml:lang="fr">Kinematic Global Positioning System
+      receivers
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">&lt;accuracy&gt;Horizontal Accuracy: Fixed
+      RTK mode: 1-5cm,Float RTK mode: 20cm-1m. Vertical accuracy : twice the
+      horizontal accuracy&lt;/accuracy&gt;&lt;operating&gt;Sincethe mid-1990s&lt;/operating&gt;&lt;notes&gt;Real
+      Time Kinematic (RTK)satellite navigation technique based on the use of
+      carrier phasemeasurements of the GPS signals where a single reference
+      station or anetwork of reference stations provides the real-time
+      corrections.&lt;/notes&gt;</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept
+          rdf:about="http://www.seadatanet.org/emodnet/positioning-instrument#SDN:L056:3:POS26">
+    <skos:prefLabel xml:lang="en">Ultra Short Baseline Positioning Systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="en">Systems dedicated to the positioning of
+      subsea vehicles such asROV and AUV. They are based on acoustic transmitted
+      signals between one orseveral transponders and one acoustic antenna
+      installed on a surfacevessel. The transponders are mounted on the
+      underwater vehicle or arefixed on the seafloor. These underwater acoustic
+      positioning systems arecoupled with inertial navigation systems.
+    </skos:definition>
+    <skos:prefLabel xml:lang="fr">Ultra Short Baseline Positioning Systems
+    </skos:prefLabel>
+    <skos:definition xml:lang="fr">Systems dedicated to the positioning of
+      subsea vehicles such asROV and AUV. They are based on acoustic transmitted
+      signals between one orseveral transponders and one acoustic antenna
+      installed on a surfacevessel. The transponders are mounted on the
+      underwater vehicle or arefixed on the seafloor. These underwater acoustic
+      positioning systems arecoupled with inertial navigation systems.
+    </skos:definition>
+  </skos:Concept>
+</rdf:RDF>

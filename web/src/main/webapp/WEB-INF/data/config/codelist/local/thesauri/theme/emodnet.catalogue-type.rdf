@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme
+          rdf:about="http://www.seadatanet.org/emodnet/catalogue-type">
+    <dc:title>EMODNET Catalogue type</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2009-06-11</dcterms:issued>
+    <dcterms:modified>2009-06-11</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:CDI">
+    <skos:prefLabel xml:lang="en">Common Data Index record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record providing discovery and evaluation metadata for a SeaDataNet data object.</skos:definition>
+    <skos:prefLabel xml:lang="fr">Common Data Index record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record providing discovery and evaluation metadata for a SeaDataNet data object.</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:CPRD">
+    <skos:prefLabel xml:lang="en">Composite Product Record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record providing discovery metadata for a product such as a DTM which is provided by a data provider in place of their actual survey data as source for the project.</skos:definition>
+    <skos:prefLabel xml:lang="fr">Composite Product Record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record providing discovery metadata for a product such as a DTM which is provided by a data provider in place of their actual survey data as source for the project.</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:CSR">
+    <skos:prefLabel xml:lang="en">Cruise Summary record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a cruise that has already taken place.</skos:definition>
+    <skos:prefLabel xml:lang="fr">Cruise Summary record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a cruise that has already taken place.</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:EDIOSDS">
+    <skos:prefLabel xml:lang="en">EDIOS data series record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a data series from the European Directory of the
+      Initial Ocean Observing System</skos:definition>
+    <skos:prefLabel xml:lang="fr">EDIOS data series record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a data series from the European Directory of the
+      Initial Ocean Observing System</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:EDIOSOP">
+    <skos:prefLabel xml:lang="en">EDIOS observing programme record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing an observing programme from the European
+      Directory of the Initial Ocean Observing System</skos:definition>
+    <skos:prefLabel xml:lang="fr">EDIOS observing programme record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing an observing programme from the European
+      Directory of the Initial Ocean Observing System</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:EDIOSPL">
+    <skos:prefLabel xml:lang="en">EDIOS platform record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a data collection platform from the European
+      Directory of the Initial Ocean Observing System</skos:definition>
+    <skos:prefLabel xml:lang="fr">EDIOS platform record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a data collection platform from the European
+      Directory of the Initial Ocean Observing System</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:EDMED">
+    <skos:prefLabel xml:lang="en">EDMED record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a dataset from the European Directory of Marine
+      Environmental Datasets</skos:definition>
+    <skos:prefLabel xml:lang="fr">EDMED record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a dataset from the European Directory of Marine
+      Environmental Datasets</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:EDMERP">
+    <skos:prefLabel xml:lang="en">EDMERP project record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a project in the European Directory of Marine
+      Environmental Research Projects</skos:definition>
+    <skos:prefLabel xml:lang="fr">EDMERP project record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a project in the European Directory of Marine
+      Environmental Research Projects</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:IPRD">
+    <skos:prefLabel xml:lang="en">Intermediate Product record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record providing discovery metadata for a product such as a DTM
+      which is produced following the project methodology for the construction of a final
+      product eg a DTM delivered by partners to a regional integrator.</skos:definition>
+    <skos:prefLabel xml:lang="fr">Intermediate Product record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record providing discovery metadata for a product such as a DTM
+      which is produced following the project methodology for the construction of a final
+      product eg a DTM delivered by partners to a regional integrator.</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:PCR">
+    <skos:prefLabel xml:lang="en">Planned Cruise record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record describing a cruise that is planned for the
+      future</skos:definition>
+    <skos:prefLabel xml:lang="fr">Planned Cruise record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record describing a cruise that is planned for the
+      future</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/catalogue-type#SDN:L231:6:PRODUCT">
+    <skos:prefLabel xml:lang="en">Product record</skos:prefLabel>
+    <skos:definition xml:lang="en">Metadata record providing discovery metadata for a data
+      product</skos:definition>
+    <skos:prefLabel xml:lang="fr">Product record</skos:prefLabel>
+    <skos:definition xml:lang="fr">Metadata record providing discovery metadata for a data
+      product</skos:definition>
+  </skos:Concept>
+</rdf:RDF>

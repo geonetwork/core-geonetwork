@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://www.seadatanet.org/emodnet/project-name">
+    <dc:title>EMODNET Project name</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2009-06-11</dcterms:issued>
+    <dcterms:modified>2009-06-11</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::12055">
+    <skos:prefLabel xml:lang="en">EMODNet Bathymetry</skos:prefLabel>
+    <skos:definition xml:lang="en">European Marine Observation and Data Network - Bathymetry</skos:definition>
+    <skos:prefLabel xml:lang="fr">EMODNet Bathymetry</skos:prefLabel>
+    <skos:definition xml:lang="fr">European Marine Observation and Data Network - Bathymetry</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::11805">
+    <skos:prefLabel xml:lang="en">EMODNet Chemistry</skos:prefLabel>
+    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 3
+      - Chemistry</skos:definition>
+    <skos:prefLabel xml:lang="fr">EMODNet Chemistry</skos:prefLabel>
+    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 3
+      - Chemistry</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::11696">
+    <skos:prefLabel xml:lang="en">EMODNet Seabed Mapping</skos:prefLabel>
+    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network -
+      Seabed Mapping Lot</skos:definition>
+    <skos:prefLabel xml:lang="fr">EMODNet Seabed Mapping</skos:prefLabel>
+    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network -
+      Seabed Mapping Lot</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::11451">
+    <skos:prefLabel xml:lang="en">EMODNet Biology</skos:prefLabel>
+    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
+      - Biology</skos:definition>
+    <skos:prefLabel xml:lang="fr">EMODNet Biology</skos:prefLabel>
+    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
+      - Biology</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::11373">
+    <skos:prefLabel xml:lang="en">EMODNet Hydrography</skos:prefLabel>
+    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
+      – Hydrography</skos:definition>
+    <skos:prefLabel xml:lang="fr">EMODNet Hydrography</skos:prefLabel>
+    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
+      – Hydrography</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.seadatanet.org/emodnet/project-name#SDN:EDMERP::11344">
+    <skos:prefLabel xml:lang="en">Geo-Seas</skos:prefLabel>
+    <skos:definition xml:lang="en">Pan-European infrastructure for management of marine and ocean geological
+      and geophysical data</skos:definition>
+    <skos:prefLabel xml:lang="fr">Geo-Seas</skos:prefLabel>
+    <skos:definition xml:lang="fr">Pan-European infrastructure for management of marine and ocean geological
+      and geophysical data</skos:definition>
+  </skos:Concept>
+</rdf:RDF>
