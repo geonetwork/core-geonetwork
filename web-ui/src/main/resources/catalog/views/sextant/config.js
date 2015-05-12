@@ -89,16 +89,19 @@
             color: 'rgba(255,255,0,0.3)'
           })
         })
-
       };
 
       /** *************************************
        * Define maps
        */
       var mapsConfig = {
-        zoom: 2,
+        zoom: 0,
         maxResolution: '39135.75848201024'
       };
+
+      if(typeof sxtSettings != 'undefined') {
+        angular.extend(mapsConfig, sxtSettings.olView);
+      }
 
       var viewerMap = new ol.Map({
         view: new ol.View(mapsConfig),
