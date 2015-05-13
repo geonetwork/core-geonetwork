@@ -146,13 +146,6 @@
               <li data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"><a ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
 
               <li><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
-              <li>
-                <a ng-click="mdService.publish(md)">
-                  <i class="fa" data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
-                  <span data-ng-if="md.isPublished()" translate>unpublish</span>
-                  <span data-ng-if="!md.isPublished()" translate>publish</span>
-                </a>
-              </li>
               <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
