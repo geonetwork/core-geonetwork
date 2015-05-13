@@ -47,12 +47,12 @@
           name: 'Pigma - IGN',
           url: 'http://ids.pigma.org/geoserver/ign/wms'
         }, {
-          name: 'Ifremer - Océanographie Physique',
-          url: 'http://ids.pigma.org/geoserver/wms'
+          name: 'Ifremer - Biologie',
+          url: 'ttp://www.ifremer.fr/services/wms/biologie?'
         }],
         wmts: [{
-            name: 'geOrchestra WMTS',
-            url: 'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
+            name: 'Ifremer - maps.ngdc.noaa.gov',
+            url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
           }]
       };
       proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
@@ -292,6 +292,9 @@
 
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
+        if(sxtSettings.servicesUrl) {
+          viewerSettings.servicesUrl = sxtSettings.servicesUrl;
+        }
       }
 
       searchSettings.hiddenParams = {};
