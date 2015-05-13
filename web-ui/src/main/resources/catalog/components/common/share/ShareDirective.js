@@ -123,6 +123,9 @@
             if (scope.sorter.predicate == 'g') {
               return g.label[scope.lang];
             }
+            else if (scope.sorter.predicate == 'p') {
+              return g.userProfile;
+            }
             else {
               return g.privileges[scope.sorter.predicate].value;
             }
