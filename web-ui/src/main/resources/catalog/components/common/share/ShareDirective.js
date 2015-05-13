@@ -35,14 +35,10 @@
           id: '=gnShare',
           batch: '@gnShareBatch'
         },
-        link: function(scope, elt, attrs) {
+        link: function(scope) {
 
-          var filterOper = attrs.operFilter && attrs.operFilter.split(',');
-          scope.disableAllCol = attrs.disableAllCol;
-
-          var filterOperFn = function(oper) {
-            return filterOper.indexOf(oper.id) >= 0;
-          };
+          scope.disableAllCol = gnShareConstants.disableAllCol;
+          scope.displayProfile = gnShareConstants.displayProfile;
 
           angular.extend(scope, {
             batch: scope.batch === 'true',
@@ -60,9 +56,7 @@
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.groups = data.groups;
-            scope.operations = filterOper ?
-                $filter('filter')(data.operations, filterOperFn) :
-                data.operations;
+            scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
