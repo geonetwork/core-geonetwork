@@ -41,3 +41,7 @@ DELETE FROM metadatanotifications WHERE metadataid in (SELECT id FROM metadata W
 DELETE FROM metadatastatus WHERE metadataid in (SELECT id FROM metadata WHERE schemaid in ('iso19115', 'fgdc-std'));
 DELETE FROM validation WHERE metadataid in (SELECT id FROM metadata WHERE schemaid in ('iso19115', 'fgdc-std'));
 DELETE FROM metadata WHERE schemaid in ('iso19115', 'fgdc-std');
+
+INSERT INTO Operations (id, name) VALUES (7, 'process');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (7,'fre','Processus');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (7,'eng','Process');

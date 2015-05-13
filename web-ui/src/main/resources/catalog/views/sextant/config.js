@@ -11,10 +11,10 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap',
+    'gnGlobalSettings', 'gnMap', 'gnShareConstants',
 
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap) {
+             gnGlobalSettings, gnMap, gnShareConstants) {
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
@@ -311,5 +311,8 @@
           _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
         })
       }
+
+      gnShareConstants.columnOrder= ['0', '5', '1', '2', '7'];
+
     }]);
 })();

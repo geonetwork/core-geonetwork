@@ -92,6 +92,7 @@
       <field name="_download" tagName="download"/>
       <field name="_dynamic" tagName="dynamic"/>
       <field name="_featured" tagName="featured"/>
+      <field name="_process" tagName="process"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
       <field name="_ownername" tagName="ownername"/>
