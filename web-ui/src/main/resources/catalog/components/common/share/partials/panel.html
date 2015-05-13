@@ -27,7 +27,11 @@
             <i data-ng-if="sorter.predicate == o.id" class="fa" data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
           </a>
         </th>
-        <th></th>
+        <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
+          <span translate>profile</span>
+          <i data-ng-if="sorter.predicate == 'p'" class="fa" ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
+        </a>
+        </th>
       </tr>
     </thead>
 
@@ -46,6 +50,9 @@
           data-ng-click="checkAll(g)"
           data-ng-model="g.isCheckedAll"/>
         </td>
+        <td class="text-center" data-ng-if="displayProfile">
+          {{g.userProfile}}
+        </td>
       </tr>
       <tr data-ng-repeat="g in groups | filter:{reserved: 'false'} | filter:groupSearch | orderBy:sortGroups:sorter.reverse">
         <td title="{{g.description}}">{{g.label[lang]}}</td>
@@ -59,6 +66,10 @@
           data-ng-click="checkAll(g)"
           data-ng-model="g.isCheckedAll"/>
         </td>
+        <td class="text-center" data-ng-if="displayProfile">
+          {{g.userProfile || (user.isAdministrator() ? 'Administrator' : '')}}
+        </td>
+
       </tr>
     </tbody>
 
