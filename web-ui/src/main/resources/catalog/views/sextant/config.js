@@ -313,6 +313,8 @@
       }
 
       gnShareConstants.columnOrder= ['0', '5', '1', '2', '7'];
+      gnShareConstants.disableAllCol = true;
+      gnShareConstants.displayProfile = true;
 
     }]);
 })();
