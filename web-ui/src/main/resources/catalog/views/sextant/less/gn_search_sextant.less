@@ -8,6 +8,20 @@
 @ellipsis-height: 124px;
 @results-toolbar-height: 2.8em;
 
+@sxt-base-color: #FF4666;
+@sxt-base-color-light: lighten(#FF4666, 8%);
+@sxt-base-color-dark: darken(#FF4666, 8%);
+
+@sxt-base-color-dark: #2A6284;
+@sxt-base-color: lighten(@sxt-base-color-dark, 20%);
+@sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
+
+@sxt-viewer-top: 4em;
+@sxt-vieweritem-top: 1.5em;
+
+@sxt-shadow: 0px 1px 3px rgba(0,0,0,0.4);
+
+
 @media (min-width: @screen-md-min) {
   html, body,
   body > div,
@@ -697,8 +711,9 @@ ul.gn-resultview {
   bottom: 0;
   top: 0;
   overflow: hidden;
+  background: white;
   [ngeo-map] {
-    height: 100%;
+    height: ~"calc(100% - @{sxt-viewer-top})";
   }
 
   .panel-tools {
@@ -816,5 +831,26 @@ ul.gn-resultview {
   }
   > ul {
     margin-top: 10px;
+  }
+}
+
+.sxt-main-tabs {
+  .btn-group {
+    margin-left: 29.7em;
+    margin-top: @sxt-vieweritem-top;
+    box-shadow: @sxt-shadow;
+  }
+  .btn {
+    padding: 3px 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    color: @sxt-base-color-dark;
+    border-top-color: white;
+    border-bottom-color: white;
+    &.active {
+      color: @sxt-base-color;
+      background: white;
+    }
   }
 }
