@@ -28,6 +28,7 @@ import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -310,6 +311,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     public void testXmlFormatUploadWithXpath() throws Exception {
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-getrecordbyidresponse.iso19139.xml");
         final Element sampleMetadataXml = Xml.loadStream(resource.openStream());
+        final Element element = Xml.selectElement(sampleMetadataXml, "*//csw:GetRecordByIdResponse",
+                Lists.newArrayList(Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2")));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -318,7 +321,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         final String view = response.getContentAsString();
         assertTrue(view.contains("KML (1)"));
-        assertTrue(view.contains("Format"));
     }
 
     @Test @DirtiesContext

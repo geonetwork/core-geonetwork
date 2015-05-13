@@ -14,7 +14,7 @@
           'http://www.opengis.net/wps/1.0.0': 'wps'
         }
       }
-  );
+      );
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
@@ -27,7 +27,7 @@
     function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings, $q) {
 
       this.proxyUrl = function(url) {
-        return gnGlobalSettings.proxyUrl+encodeURIComponent(url);
+        return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
       };
 
       this.describeProcess = function(uri, processId) {
@@ -46,20 +46,20 @@
           $http.get(proxyUrl, {
             cache: true
           }).then(
-            function(data) {
-              var response = unmarshaller.unmarshalString(data.data).value;
-              if (response.exception != undefined) {
-                defer.reject({msg:"wpsDescribeProcessFailed",
-                              owsExceptionReport: response});
+              function(data) {
+                var response = unmarshaller.unmarshalString(data.data).value;
+                if (response.exception != undefined) {
+                  defer.reject({msg: 'wpsDescribeProcessFailed',
+                    owsExceptionReport: response});
+                }
+                else {
+                  defer.resolve(response);
+                }
+              },
+              function(data) {
+                defer.reject({msg: 'wpsDescribeProcessFailed',
+                  httpResponse: data});
               }
-              else {
-                defer.resolve(response);
-              }
-            },
-            function(data) {
-              defer.reject({msg:"wpsDescribeProcessFailed",
-                            httpResponse: data});
-            }
           );
 
           return defer.promise;
@@ -72,111 +72,116 @@
         var me = this;
 
         this.describeProcess(uri, processId).then(
-          function(data) {
-            var description = data.processDescription[0];
+            function(data) {
+              var description = data.processDescription[0];
 
-            var url = me.proxyUrl(uri);
-            var request = {
-              name: {
-                localPart: "Execute",
-                namespaceURI: "http://www.opengis.net/wps/1.0.0"
-              },
-              value: {
-                service: "WPS",
-                version: "1.0.0",
-                identifier: {
-                  value: description.identifier.value
+              var url = me.proxyUrl(uri);
+              var request = {
+                name: {
+                  localPart: 'Execute',
+                  namespaceURI: 'http://www.opengis.net/wps/1.0.0'
                 },
-                dataInputs: {
-                  input: []
-                }
-              }
-            };
-
-            var setInputData = function(input, data) {
-              var inputValue;
-              request.value.dataInputs.input.push({
-                identifier: {
-                  value: input.identifier.value
-                },
-                data: {
-                  literalData: {
-                    value: data
+                value: {
+                  service: 'WPS',
+                  version: '1.0.0',
+                  identifier: {
+                    value: description.identifier.value
+                  },
+                  dataInputs: {
+                    input: []
                   }
-                }
-              });
-            };
-
-            for (i=0, ii=description.dataInputs.input.length; i<ii; ++i) {
-              input = description.dataInputs.input[i];
-              if (inputs[input.identifier.value] !== undefined) {
-                setInputData(input, inputs[input.identifier.value]);
-              }
-            }
-
-            var getOutputIndex = function(outputs, identifier) {
-              var output;
-              if (identifier) {
-                for (var i=outputs.length-1; i>=0; --i) {
-                  if (outputs[i].identifier.value === identifier) {
-                    output = i;
-                    break;
-                  }
-                }
-              } else {
-                output = 0;
-              }
-              return output;
-            };
-
-            var setResponseForm = function(options) {
-              options = options || {};
-              var output = description.processOutputs.output[options.outputIndex || 0];
-              request.value.responseForm = {
-                responseDocument: {
-                  lineage: false,
-                  storeExecuteResponse: true,
-                  status: false,
-                  output: [{
-                    asReference: true,
-                    identifier: {
-                      value: output.identifier.value
-                    }
-                  }]
                 }
               };
-            };
 
-            var outputIndex = getOutputIndex(
-              description.processOutputs.output, output);
-            setResponseForm({outputIndex: outputIndex});
+              var setInputData = function(input, data) {
+                var inputValue;
+                request.value.dataInputs.input.push({
+                  identifier: {
+                    value: input.identifier.value
+                  },
+                  data: {
+                    literalData: {
+                      value: data
+                    }
+                  }
+                });
+              };
 
-            var body = marshaller.marshalString(request);
-
-            $http.post(url, body, {
-              headers: {'Content-Type': 'application/xml'}
-            }).then(
-              function(data) {
-                var response = unmarshaller.unmarshalString(data.data).value;
-                var status = response.status;
-                if (status.processFailed != undefined) {
-                  defer.reject({msg:"wpsExecuteFailed",
-                                owsExceptionReport: status.processFailed.exceptionReport});
-                } else {
-                  var url = response.processOutputs.output[0].reference.href;
-                  defer.resolve(url);
+              for (i = 0, ii = description.dataInputs.input.length;
+                   i < ii; ++i) {
+                input = description.dataInputs.input[i];
+                if (inputs[input.identifier.value] !== undefined) {
+                  setInputData(input, inputs[input.identifier.value]);
                 }
-              },
-              function(data) {
-                defer.reject({msg:"wpsExecuteFailed",
-                              httpResponse: data});
               }
-            );
 
-          },
-          function(data) {
-            defer.reject(data);
-          }
+              var getOutputIndex = function(outputs, identifier) {
+                var output;
+                if (identifier) {
+                  for (var i = outputs.length - 1; i >= 0; --i) {
+                    if (outputs[i].identifier.value === identifier) {
+                      output = i;
+                      break;
+                    }
+                  }
+                } else {
+                  output = 0;
+                }
+                return output;
+              };
+
+              var setResponseForm = function(options) {
+                options = options || {};
+                var output =
+                    description.processOutputs.output[options.outputIndex || 0];
+                request.value.responseForm = {
+                  responseDocument: {
+                    lineage: false,
+                    storeExecuteResponse: true,
+                    status: false,
+                    output: [{
+                      asReference: true,
+                      identifier: {
+                        value: output.identifier.value
+                      }
+                    }]
+                  }
+                };
+              };
+
+              var outputIndex = getOutputIndex(
+                  description.processOutputs.output, output);
+              setResponseForm({outputIndex: outputIndex});
+
+              var body = marshaller.marshalString(request);
+
+              $http.post(url, body, {
+                headers: {'Content-Type': 'application/xml'}
+              }).then(
+                  function(data) {
+                    var response =
+                        unmarshaller.unmarshalString(data.data).value;
+                    var status = response.status;
+                    if (status.processFailed != undefined) {
+                      defer.reject({msg: 'wpsExecuteFailed',
+                        owsExceptionReport:
+                            status.processFailed.exceptionReport});
+                    } else {
+                      var url =
+                          response.processOutputs.output[0].reference.href;
+                      defer.resolve(url);
+                    }
+                  },
+                  function(data) {
+                    defer.reject({msg: 'wpsExecuteFailed',
+                      httpResponse: data});
+                  }
+              );
+
+            },
+            function(data) {
+              defer.reject(data);
+            }
         );
 
         return defer.promise;
