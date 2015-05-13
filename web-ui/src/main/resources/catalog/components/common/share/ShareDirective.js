@@ -39,6 +39,7 @@
 
           var filterOper = attrs.operFilter && attrs.operFilter.split(',');
           scope.disableAllCol = attrs.disableAllCol;
+          scope.displayProfile = attrs.displayProfile;
 
           var filterOperFn = function(oper) {
             return filterOper.indexOf(oper.id) >= 0;
@@ -128,6 +129,9 @@
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
               return g.label[scope.lang];
+            }
+            else if (scope.sorter.predicate == 'p') {
+              return g.userProfile;
             }
             else {
               return g.privileges[scope.sorter.predicate].value;
