@@ -35,8 +35,14 @@
         gnGlobalSettings.locale = {
           lang: lang.substr(0,2)
         };
-        gnGlobalSettings.gnUrl =
-            'http://sextant-test.ifremer.fr/geonetwork/srv/' + lang + '/';
+        if(sxtGnUrl) {
+          gnGlobalSettings.gnUrl =
+              sxtGnUrl + lang + '/';
+          console.log(gnGlobalSettings.gnUrl);
+        }
+        else {
+          console.error('The variable sxtGnUrl is not defined !');
+        }
       }]);
   }
 
