@@ -305,6 +305,10 @@ form.gn-tab-inspire {
   }
   .list-group.fixed {
     min-height: 100px;
+    /* Avoid the content of the div
+    to be higher than view port
+    as the modal does not have overflow. */
+    max-height: 50vh;
     li.active {
         background-color: #428bca;
     }

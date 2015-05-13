@@ -74,12 +74,12 @@
       *   desc : title1,title2,title3
       */
       var setLayersParams = function(params) {
-        if (angular.isArray(params.layers) &&
-            params.layers.length > 0) {
+        if (angular.isArray(params.selectedLayers) &&
+            params.selectedLayers.length > 0) {
           var names = [],
               descs = [];
 
-          angular.forEach(params.layers, function(layer) {
+          angular.forEach(params.selectedLayers, function(layer) {
             names.push(layer.Name || layer.name);
             descs.push(layer.Title || layer.title);
           });
@@ -364,7 +364,6 @@
         linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
           var scope = this;
-
           return gnBatchProcessing.runProcessMdXml({
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
@@ -376,6 +375,7 @@
               scopedName: qParams.name,
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
+              url: qParams.url,
               process: qParams.process
             }).then(function() {
               closePopup(popupid);
@@ -406,7 +406,9 @@
           var scope = this;
 
           return gnBatchProcessing.runProcessMdXml({
-            scopedName: qParams.name,
+            name: qParams.name,
+            desc: qParams.desc,
+            url: qParams.url,
             uuidref: qParams.uuidSrv,
             uuid: qParams.uuidDS,
             process: qParams.process
