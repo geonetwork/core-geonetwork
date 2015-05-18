@@ -3,6 +3,28 @@
     <tabset class="hfull" id="main-tabset" type="pills">
       <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active" class="sxt-scroll">
 
+        <div class="sxt-main-tabs">
+
+          <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool">
+            <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-plus'"></span>
+          </button>
+
+          <div class="btn-group sxt-panel-button">
+            <button class="btn btn-default" data-ng-click="locService.setSearch()">
+              <span translate>Catalogue</span>
+            </button>
+            <button class="btn btn-default active" data-ng-click="locService.setMap()" >
+              <span translate>Carte</span>
+              <span ng-if="mainTabs.map.titleInfo">({{mainTabs.map.titleInfo}})</span>
+            </button>
+            <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
+              <span translate>Mes téléchargements</span>
+              <span ng-if="searchObj.panier.length">({{searchObj.panier.length}})</span>
+            </button>
+          </div>
+
+        </div>
+
         <div class="hfull" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
                 data-ng-hide="inMdView">
 
