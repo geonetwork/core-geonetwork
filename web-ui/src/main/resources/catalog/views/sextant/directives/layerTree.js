@@ -233,7 +233,7 @@
           };
 
           scope.showWPS = function() {
-            scope.wpsUri = "http://wps.localhost/cgi-bin/pywps.cgi";
+            scope.wpsUri = "http://visi-sextant.ifremer.fr/cgi-bin/sextant/wps/pywps2.cgi";
             scope.wpsProcessId = "script:especesbenthiques";
             //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
             // template="' + template + '"
