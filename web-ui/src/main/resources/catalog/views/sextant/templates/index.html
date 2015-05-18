@@ -28,15 +28,12 @@
         <div class="hfull" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
                 data-ng-hide="inMdView">
 
+
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
             <div class="row hfull">
 
-              <div class="maincol hfull sxt-left-panel col-md-4" ng-class="{'sxt-collapsed': !collapsed.search}">
-                <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
-                  <span ng-show="collapsed.search">»</span>
-                  <span ng-show="!collapsed.search">«</span>
-                </button>
+              <div class="maincol hfull sxt-left-panel col-md-4">
                 <div class="panel panel-default hfull">
                   <div class="panel-body gn-searchform">
                     <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
@@ -44,7 +41,7 @@
                 </div>
               </div>
 
-              <div ng-class="{'sxt-collapsed': !collapsed.search}" class="maincol hfull sxt-center-panel col-md-8">
+              <div class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
                     <div class="btn-toolbar">

@@ -125,24 +125,6 @@
         unregisterMapsize();
       });
 
-
-      // Manage the collapsed search panel
-      $scope.collapsed = localStorage.searchWidgetCollapsed ?
-          JSON.parse(localStorage.searchWidgetCollapsed) :
-          { search: true};
-
-      $scope.toggleSearch = function() {
-        $scope.collapsed.search = !$scope.collapsed.search;
-        $timeout(function() {
-          gnSearchSettings.searchMap.updateSize();
-        }, 300);
-      };
-
-      var storeCollapsed = function() {
-        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
-      };
-      $scope.$watch('collapsed.search', storeCollapsed);
-
       var mapVisited = false; // Been once in mapviewer
       var waitingLayers = []; // Layers added from catalog but not visited yet
 
