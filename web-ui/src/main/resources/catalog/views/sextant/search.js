@@ -8,6 +8,7 @@
   goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
   goog.require('gn_legendpanel_directive');
+  goog.require('gn_wps');
   goog.require('sxt_directives');
   goog.require('sxt_panier');
   goog.require('sxt_interceptors');
@@ -20,6 +21,7 @@
     'gn_search_default_directive',
     'gn_legendpanel_directive',
     'gn_thesaurus',
+    'gn_wps',
     'sxt_directives',
     'sxt_panier',
     'sxt_interceptors',

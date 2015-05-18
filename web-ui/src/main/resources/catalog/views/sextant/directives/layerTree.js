@@ -231,6 +231,16 @@
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);
           };
+
+          scope.showWPS = function() {
+            scope.wpsUri = "http://wps.localhost/cgi-bin/pywps.cgi";
+            scope.wpsProcessId = "script:especesbenthiques";
+            //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
+            // template="' + template + '"
+            var el = angular.element('<gn-wps-process-form data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
+            $compile(el)(scope);
+            element.append(el);
+          };
         }
       };
     }]);
