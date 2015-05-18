@@ -1,43 +1,41 @@
-<div data-ng-controller="gnsSextantSearchForm">
+<div data-ng-controller="gnsSextantSearchForm" class="form-horizontal" role="form">
 
-  <div class="form-horizontal" role="form">
-
-    <!--any field-->
-    <div class="input-group gn-search-input">
-      <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
-             typeahead="address for address in getAnySuggestions($viewValue)" typeahead-focus-first="false" typeahead-loading="anyLoading" class="form-control"
-             typeahead-min-length="1" id="anySearchField" autocomplete="off">
-      <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
-        <span class="input-group-btn">
-          <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
-            <i class="fa fa-search"></i>
-          </button>
-          <button type="submit" data-ng-click="resetSearch()" class="btn btn-default" data-ng-disabled="!searchObj.canReset">
-           <span class="fa fa-times"></span>
-          </button>
-        </span>
-    </div>
-
-    <!--Map field-->
-    <div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry" gn-map-field-opt="mapfieldOpt"></div>
-
-    <!--multi facets groups-->
-    <div gn-facet-multiselect="publishedForGroup" gn-facet-multiselect-collapsed="true"></div>
-
-    <!--Category Tree-->
-    <div class="gn-facet">
-      <h5 gn-collapse="{{isFacetsCollapse('sextantTheme')}}">
-        <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
-        {{'sextantThemes' | translate}}
-      </h5>
-      <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': isFacetsCollapse('sextantTheme')}" sxt-category-tree-conf="thesaurus[0]"></div>
-    </div>
-
-    <!--TEST FACET MULTI-->
-    <div gn-facet-multiselect="inspireTheme" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme')}}"></div>
-    <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="{{isFacetsCollapse('keyword')}}"></div>
-    <div gn-facet-multiselect="orgName" gn-facet-multiselect-collapsed="{{isFacetsCollapse('orgName')}}"></div>
-    <div gn-facet-multiselect="createDateYear" gn-facet-multiselect-collapsed="{{isFacetsCollapse('createDateYear')}}"></div>
-
+  <!--any field-->
+  <div class="input-group gn-search-input">
+    <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
+           typeahead="address for address in getAnySuggestions($viewValue)" typeahead-focus-first="false" typeahead-loading="anyLoading" class="form-control"
+           typeahead-min-length="1" id="anySearchField" autocomplete="off">
+    <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
+      <span class="input-group-btn">
+        <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default search-btn">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
   </div>
+
+  <!--Map field-->
+  <div gn-map-field="searchObj.searchMap" gn-map-field-geom="searchObj.params.geometry" gn-map-field-opt="mapfieldOpt"></div>
+
+  <!--multi facets groups-->
+  <div gn-facet-multiselect="publishedForGroup" gn-facet-multiselect-collapsed="true"></div>
+
+  <!--Category Tree-->
+  <div class="gn-facet">
+    <h5 gn-collapse="{{isFacetsCollapse('sextantTheme')}}">
+      <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+      {{'sextantThemes' | translate}}
+    </h5>
+    <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': isFacetsCollapse('sextantTheme')}" sxt-category-tree-conf="thesaurus[0]"></div>
+  </div>
+
+  <!--TEST FACET MULTI-->
+  <div gn-facet-multiselect="inspireTheme" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme')}}"></div>
+  <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="{{isFacetsCollapse('keyword')}}"></div>
+  <div gn-facet-multiselect="orgName" gn-facet-multiselect-collapsed="{{isFacetsCollapse('orgName')}}"></div>
+  <div gn-facet-multiselect="createDateYear" gn-facet-multiselect-collapsed="{{isFacetsCollapse('createDateYear')}}"></div>
+
+  <button type="submit" data-ng-click="resetSearch()" class="btn btn-default" data-ng-disabled="!searchObj.canReset">
+    <span class="fa fa-times"></span>
+  </button>
+
 </div>

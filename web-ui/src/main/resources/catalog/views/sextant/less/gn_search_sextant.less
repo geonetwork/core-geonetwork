@@ -33,6 +33,7 @@
 @sxt-fontsize: 12px;
 @sxt-fontsize-small: 11px;
 
+@sxt-searchbtn-height: 50px;
 
 @media (min-width: @screen-md-min) {
   body {
@@ -130,10 +131,6 @@
   }
 }
 
-[data-ng-search-form] {
-  margin-right: 15px;
-}
-
 .btn {
   background: @sxt-base-color;
   color: white;
@@ -208,21 +205,6 @@
   }
 }
 
-.expander {
-  position: absolute;
-  right: 0px;
-  z-index: 4;
-  top: .5em;
-  border-width: 1px 1px 1px 0;
-  border-radius: 0 3px 3px 0;
-  padding-left: 3px;
-  padding-right: 4px;
-  transition: right ease .25s;
-  &.collapsed {
-    right: 16.6667%;
-  }
-}
-
 .jumbotron {
   padding: 150px 100px;
 }
@@ -235,6 +217,15 @@
 
 .datepicker {
   height: auto;
+}
+
+.sxt-left-panel {
+  margin-top: -3.5em;
+  > div {
+    border-radius: 0;
+    background-color: white;
+
+  }
 }
 
 [data-ng-search-form] {
@@ -271,21 +262,39 @@
   [gn-collapse] {
     cursor: pointer;
   }
-  .gn-search-input input[type='text'] {
-    height: 34px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.5;
+  .gn-search-input {
+    input[type='text'] {
+
+      height: @sxt-searchbtn-height;
+      padding: 12px 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      border: none;
+      border-radius: 0;
+    }
+    .search-btn {
+      width: @sxt-searchbtn-height;
+      height: @sxt-searchbtn-height;
+      border-radius: 0;
+      background-color: white;
+      color: #000;
+      border: none;
+      box-shadow: none;
+      font-size: 18px;
+    }
+    .dropdown-menu {
+      border:none;
+      border-radius: 0;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
   }
   [gn-map-field] {
-    width: ~"calc(100% + 30px)";
-    margin-left: -15px;
     margin-top: 25px;
     border-radius: 0;
     background: #fff;
     border: none;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
     .btn {
       .btn-sm;
       opacity: .80;
