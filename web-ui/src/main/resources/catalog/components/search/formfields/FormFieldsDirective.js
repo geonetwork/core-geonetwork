@@ -275,8 +275,11 @@
           return {
             restrict: 'A',
             require: '^ngSearchForm',
-            templateUrl: '../../catalog/components/search/formfields/' +
-                'partials/sortByCombo.html',
+            templateUrl: function(elem, attrs) {
+              return attrs.template ||
+                  '../../catalog/components/search/formfields/' +
+                  'partials/sortByCombo.html';
+            },
             scope: {
               params: '=',
               values: '=gnSortbyValues'

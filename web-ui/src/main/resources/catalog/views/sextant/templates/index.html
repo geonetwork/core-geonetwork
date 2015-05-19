@@ -3,52 +3,54 @@
     <tabset class="hfull" id="main-tabset" type="pills">
       <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active" class="sxt-scroll">
 
-        <div class="hfull" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
-                data-ng-hide="inMdView">
+        <div class="sxt-main-tabs">
 
-          <button class="btn btn-default sxt-side-btn sxt-map-btn" data-ng-click="locService.setMap()" >
-            <span class="side-label">
-              <span translate>Carte</span>
-              <i class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</i>
-            </span>
-            <i class="fa fa-play fa-flip-horizontal"></i>
+          <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool">
+            <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-plus'"></span>
           </button>
+
+          <div class="btn-group sxt-panel-button">
+            <button class="btn btn-default" data-ng-click="locService.setSearch()">
+              <span translate>Catalogue</span>
+            </button>
+            <button class="btn btn-default active" data-ng-click="locService.setMap()" >
+              <span translate>Carte</span>
+              <span ng-if="mainTabs.map.titleInfo">({{mainTabs.map.titleInfo}})</span>
+            </button>
+            <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
+              <span translate>Mes téléchargements</span>
+              <span ng-if="searchObj.panier.length">({{searchObj.panier.length}})</span>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="hfull sxt-search-main-container" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
+             data-ng-hide="inMdView">
+
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
             <div class="row hfull">
 
-              <div class="maincol hfull sxt-left-panel col-md-4" ng-class="{'sxt-collapsed': !collapsed.search}">
-                <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
-                  <span ng-show="collapsed.search">»</span>
-                  <span ng-show="!collapsed.search">«</span>
-                </button>
-                <div class="panel panel-default hfull">
-                  <div class="panel-body gn-searchform">
-                    <div data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'"></div>
-                  </div>
-                </div>
+              <div class="maincol hfull sxt-left-panel col-md-4"
+                   data-ng-include="'../../catalog/views/sextant/templates/searchForm.html'">
               </div>
 
-              <div ng-class="{'sxt-collapsed': !collapsed.search}" class="maincol hfull sxt-center-panel col-md-8">
+              <div class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
-                    <div class="btn-toolbar">
-
-                      <!-- To Basket button-->
-                      <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
-                        <span class="fa fa-shopping-cart"></span>
-                        <span class="badge" ng-if="searchObj.panier.length">{{searchObj.panier.length}}</span>
-                        <span role="tooltip" data-translate="">Basket</span>
-                      </button>
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
                            gn-sortby-values="searchObj.sortbyValues"
+                           template="../../catalog/views/sextant/templates/formfields/sortByCombo.html"
                            class="pull-right"></div>
 
                       <div class="pull-left" data-gn-pagination="paginationInfo"
-                           data-hits-values="searchObj.hitsperpageValues"></div>
+                           data-hits-values="searchObj.hitsperpageValues"
+                           template="../../catalog/views/sextant/templates/formfields/pagination.html">
+                      </div>
 
                       <div class="btn-group sxt-adminbtn clearfix" data-ng-if="authenticated">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -64,8 +66,6 @@
                             <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
                         </ul>
                       </div>
-
-                    </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
                   <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
@@ -76,14 +76,14 @@
           </form>
         </div>
       </tab>
-<!--
-      <tab heading="{{mainTabs.metadata.title}}"
-           active="mainTabs.metadata.active">
-        <div class="container-fluid sxt-md-container">
-          <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
-        </div>
-      </tab>
--->
+      <!--
+            <tab heading="{{mainTabs.metadata.title}}"
+                 active="mainTabs.metadata.active">
+              <div class="container-fluid sxt-md-container">
+                <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
+              </div>
+            </tab>
+      -->
       <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
         <tab-heading>
           {{mainTabs.map.title}}

@@ -8,6 +8,8 @@
   "basket": "Panier",
   "inbasket": "dans le panier",
   "addAllLayersToPanier": "Ajouter les {{number}} couches au panier",
-  "toAdmin": "Administrer"
+  "toAdmin": "Administrer",
+  "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
+  "byPage": "par page"
 
 }

@@ -172,8 +172,8 @@
           var el = element;
 
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square-o')
-                .toggleClass('fa-plus-square-o');
+            el.find('.fa').first().toggleClass('fa-minus-square')
+                .toggleClass('fa-plus-square');
             el.children('ul').toggle();
             !evt || evt.preventDefault();
             return false;
@@ -228,7 +228,7 @@
           }
 
           if (angular.isArray(scope.member.nodes)) {
-            element.append("<gn-categorytree-col class='list-grou' " +
+            element.append("<gn-categorytree-col class='list-group' " +
                 "collection='member.nodes' map='map'></gn-categorytree-col>");
             $compile(element.contents())(scope);
 

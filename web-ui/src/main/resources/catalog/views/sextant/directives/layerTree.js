@@ -198,8 +198,8 @@
             $compile(element.contents())(scope);
           }
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square-o')
-                .toggleClass('fa-plus-square-o');
+            el.find('.fa').first().toggleClass('fa-minus-square')
+                .toggleClass('fa-plus-square');
             el.children('ul').toggle();
             evt.stopPropagation();
             return false;

@@ -127,24 +127,6 @@
         unregisterMapsize();
       });
 
-
-      // Manage the collapsed search panel
-      $scope.collapsed = localStorage.searchWidgetCollapsed ?
-          JSON.parse(localStorage.searchWidgetCollapsed) :
-          { search: true};
-
-      $scope.toggleSearch = function() {
-        $scope.collapsed.search = !$scope.collapsed.search;
-        $timeout(function() {
-          gnSearchSettings.searchMap.updateSize();
-        }, 300);
-      };
-
-      var storeCollapsed = function() {
-        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
-      };
-      $scope.$watch('collapsed.search', storeCollapsed);
-
       var mapVisited = false; // Been once in mapviewer
       var waitingLayers = []; // Layers added from catalog but not visited yet
 
@@ -368,11 +350,31 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
+          var md = scope.md;
 
-          scope.downloads = scope.md.getGroupedLinksByTypes('#FILE',
+          if(md.type.indexOf('dataset')>=0) {
+            md.icon = {cls: 'fa-database', title: 'dataset'}
+          }
+          else if(md.type.indexOf('software')>=0) {
+            md.icon = {cls: 'fa-hdd-o', title: 'software'}
+          }
+          else if(md.type.indexOf('map')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'map'}
+          }
+          else if(md.type.indexOf('application')>=0) {
+            md.icon = {cls: 'fa-hdd-o', title: 'application'}
+          }
+          else if(md.type.indexOf('basicgeodata')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
+          }
+          else if(md.type.indexOf('service')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'service'}
+          }
+
+          scope.links = md.getLinksByType('LINK');
+          scope.downloads = md.getGroupedLinksByTypes('#FILE',
               '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
-          scope.layers = scope.md.getGroupedLinksByTypes('OGC:WMTS',
+          scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
               'OGC:WMS', 'OGC:OWS-C');
 
         }
