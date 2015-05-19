@@ -169,6 +169,31 @@
   position: relative;
   .sxt-panel-button .btn {
     background: white;
+    color: @sxt-base-color-dark;
+    border-top-color: white;
+    border-bottom-color: white;
+    &.active {
+      color: @sxt-base-color;
+      background: white;
+    }
+
+  }
+  .btn-group {
+    margin-top: @sxt-vieweritem-top;
+    box-shadow: @sxt-shadow;
+    &.sxt-panel-button {
+      margin-left: 29.7em;
+    }
+    &.sxt-adminbtn {
+      margin-right: 1.2em;
+    }
+
+  }
+  .btn {
+    padding: 3px 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
   }
 }
 
@@ -440,17 +465,6 @@
     background: rgba(255,255,255,.7);
     border-radius: 1em;
     padding: .2em;
-  }
-
-  .sxt-adminbtn {
-    float: none;
-    position: absolute;
-    left: 50%;
-    top: 3px;
-    margin-left: -5em;
-    .caret {
-      color: @sxt-orange;
-    }
   }
 }
 
@@ -922,23 +936,3 @@ ul.gn-resultview {
   }
 }
 
-.sxt-main-tabs {
-  .btn-group {
-    margin-left: 29.7em;
-    margin-top: @sxt-vieweritem-top;
-    box-shadow: @sxt-shadow;
-  }
-  .btn {
-    padding: 3px 10px;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: bold;
-    color: @sxt-base-color-dark;
-    border-top-color: white;
-    border-bottom-color: white;
-    &.active {
-      color: @sxt-base-color;
-      background: white;
-    }
-  }
-}

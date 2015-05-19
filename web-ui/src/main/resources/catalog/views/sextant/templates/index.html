@@ -5,11 +5,23 @@
 
         <div class="sxt-main-tabs">
 
-          <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool">
-            <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-plus'"></span>
-          </button>
+          <sxt-tab-switcher></sxt-tab-switcher>
 
-          <sxt-tab-switcher />
+          <!--Admin button-->
+          <div class="btn-group sxt-adminbtn pull-right" data-ng-if="authenticated">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="fa fa-cog"></span>&nbsp;
+              <span translate>administration</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li data-ng-if="user.isAdministrator()"><a href="admin.console">
+                <i class="fa fa-th"></i>&nbsp;<span translate>toAdmin</span></a></li>
+              <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
+                <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+              <li><a href="catalog.edit#/import" target="_blank">
+                <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+            </ul>
+          </div>
         </div>
 
         <div class="hfull sxt-search-main-container" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
@@ -37,21 +49,6 @@
                       <div class="pull-left" data-gn-pagination="paginationInfo"
                            data-hits-values="searchObj.hitsperpageValues"
                            template="../../catalog/views/sextant/templates/formfields/pagination.html">
-                      </div>
-
-                      <div class="btn-group sxt-adminbtn clearfix" data-ng-if="authenticated">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                          <span translate>toAdmin</span>&nbsp;
-                          <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                          <li data-ng-if="user.isAdministrator()"><a href="admin.console">
-                            <i class="fa fa-th"></i>&nbsp;<span translate>toAdmin</span></a></li>
-                          <li><a title="{{'adminConsole' | translate}}" href="catalog.edit#/create" target="_blank">
-                            <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
-                          <li><a href="catalog.edit#/import" target="_blank">
-                            <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
-                        </ul>
                       </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
