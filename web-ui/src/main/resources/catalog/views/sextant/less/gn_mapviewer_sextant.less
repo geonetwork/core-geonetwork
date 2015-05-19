@@ -218,12 +218,21 @@
     right: 0;
     bottom: 2.3em;
     .results {
-      left: 0;
-      right: 0;
-      bottom: 0;
+      background: white;
+      left: .5em;
+      right: .5em;
+      bottom: .5em;
+      box-shadow: @sxt-shadow;
       border-radius: 0;
       width: auto;
+      overflow: visible;
       .panel-heading {
+        position: absolute;
+        box-shadow: inset @sxt-shadow;
+        top: -1em;
+        right: 1em;
+        background: @sxt-base-color;
+        width: 15em;
         height: auto;
         border-radius: 0;
         z-index: 0;
@@ -253,14 +262,19 @@
       .table-scroller {
         overflow-x: auto;
       }
+      h5 {
+        color: @sxt-base-color;
+      }
       table {
         width: 100%;
         background: #fff;
         border-bottom: 1px solid @gray-lighter;
-        font-size: 13px;
+        font-size: 11px;
         margin-bottom: 0;
         th {
           font-weight: bold;
+          background: #eee;
+          border-right: 1px solid #aaa;
         }
       }
     }
