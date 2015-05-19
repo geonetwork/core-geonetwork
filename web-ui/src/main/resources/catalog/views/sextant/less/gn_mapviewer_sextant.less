@@ -9,6 +9,10 @@
     background: @sxt-base-color-dark;
     height: @sxt-viewer-top;
     position: relative;
+    .sxt-panel-button .btn {
+      background: white;
+    }
+
   }
 
   .sxt-search-btn {
@@ -34,8 +38,19 @@
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
-      left: 2.8em;
-      border-radius: 0 .2em .2em 0;
+      margin-left: -1.7em;
+      top: 2.9em;
+      border-radius: .2em;
+      &:after {
+        content: ' ';
+        height: 0;
+        position: absolute;
+        width: 0;
+        border: 5px solid transparent;
+        border-bottom-color: rgba(0,0,0,.6);
+        left: .9em;
+        top: -10px;
+      }
     }
     &.activeTool {
       height: auto;
@@ -57,6 +72,12 @@
       border-radius: 2px;
       width: @sxt-btn-size;
       margin-left: 0;
+    }
+  }
+  .control-tools button {
+    &:focus [role=tooltip],
+    &:hover [role=tooltip] {
+      right: 2.3em;
     }
   }
 
@@ -102,6 +123,14 @@
 
   [gn-baselayerswitcher] {
     margin: 1em 0 2em;
+    .dropdown-toggle {
+      margin: 0 -15px;
+      background: transparent;
+      border: 1px solid #ddd;
+      box-shadow: none;
+      border-width: 1px 0;
+      padding: .5em;
+    }
   }
 
   .panel-tools-container {
@@ -198,6 +227,25 @@
         height: auto;
         border-radius: 0;
         z-index: 0;
+        height: 2em;
+        padding: 0;
+        border-radius: 2px;
+        h5 {
+          margin: 0 .5em;
+          text-transform: uppercase;
+          font-size: 12px;
+          line-height: 2.3em;
+          color: white;
+        }
+        .btn {
+          background: white;
+          box-shadow: @sxt-shadow;
+          opacity: 1;
+          width: 1.2em;
+          border-radius: 2px;
+          padding: 3px 0 3px;
+          color: black;
+        }
       }
       .sxt-layer {
         padding: 0 2em;
@@ -224,7 +272,7 @@
     left: 0;
     right: 0;
     height: 32px;
-    background: rgba(0,0,0,.4);
+    background: rgba(255,255,255,.4);
   }
 
   .ol-scale-line {
@@ -233,9 +281,11 @@
     left: auto;
     right: 0;
     .ol-scale-line-inner {
+      color: #555;
+      border-color: #555;
       height: 22px;
       font-size: 13px;
-      text-shadow: 0px 0px 1px rgb(0, 0, 0);
+      text-shadow: 0px 0px 1px white;
     }
   }
 
@@ -299,8 +349,34 @@
     .list-group {
       margin: .5em 0;
     }
+    .sxt-layer-visibility {
+      color: @sxt-base-color;
+    }
     button.dropdown-toggle {
-      border-color: rgba(0,0,0,0.1);
+      border: none;
+      background: transparent;
+      color: @sxt-base-color;
+      height: 1.2em;
+      line-height: 1.2em;
+      box-shadow: none;
+      padding: 0;
+    }
+    .sxt-layertree-filter {
+      &:before {
+        font-family: FontAwesome;
+        content: "\f0b0";
+        float: right;
+        margin: 0.5em 0.4em 0 0;
+        font-size: 16px;
+      }
+      .clear {
+        right: 2em;
+      }
+    }
+
+    .layerfilter {
+      border: none;
+      box-shadow: none;
     }
     ul.sxt-layertree-node, ul.sxt-layertree-node > li {
       list-style-type: none;
@@ -310,8 +386,10 @@
         font-size: 14px;
       }
     }
-    ul {
-      border-left: 1px dashed rgba(0,0,0,.2);
+    ul .list-group {
+      border-left: 1px solid rgba(0,0,0,.2);
+      margin-left: 4px;
+      padding-left: 6px;
     }
     .dropdown-menu > li {
       font-size: 90%;
