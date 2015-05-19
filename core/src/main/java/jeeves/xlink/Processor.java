@@ -1,5 +1,6 @@
 package jeeves.xlink;
 
+import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
@@ -16,7 +17,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -69,11 +76,14 @@ public final class Processor {
 
     /**
      * Resolve all XLinks of the input XML document.
+     *
+     * @return All set of all the xlinks that failed to resolve.
      */
-    public static Element processXLink(Element xml, ServiceContext srvContext) {
-        searchXLink(xml, ACTION_RESOLVE, srvContext);
-        searchLocalXLink(xml, ACTION_RESOLVE);
-        return xml;
+    public static Set<String> processXLink(Element xml, ServiceContext srvContext) {
+        Set<String> errors = Sets.newHashSet();
+        errors.addAll(searchXLink(xml, ACTION_RESOLVE, srvContext));
+        errors.addAll(searchLocalXLink(xml, ACTION_RESOLVE));
+        return errors;
     }
 
     //--------------------------------------------------------------------------
@@ -160,26 +170,24 @@ public final class Processor {
         if (failures.size()>MAX_FAILURES) {
             throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
         }
+        Element remoteFragment = null;
+        try {
+            if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
+                LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+                request.setDebug(false);
+                if(request.getLanguage() == null) {
+                    request.setLanguage(srvContext.getLanguage());
+                }
+                request.setInputMethod(InputMethod.GET);
+                remoteFragment = srvContext.execute(request);
+            } else {
+                uri = uri.replaceAll("&+","&");
+                String mappedURI = mapURI(uri);
 
-        uri = uri.replaceAll("&+","&");
-        String mappedURI = mapURI(uri);
-
-        JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
-        Element remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
-
-        if (remoteFragment == null) {
-            Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
-
-            try {
-                if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-                    LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
-                    request.setDebug(false);
-                    if(request.getLanguage() == null) {
-                        request.setLanguage(srvContext.getLanguage());
-                    }
-                    request.setInputMethod(InputMethod.GET);
-                    remoteFragment = srvContext.execute(request);
-                } else {
+                JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
+                remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
+                if (remoteFragment == null) {
+                    Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
                     URL url = new URL(uri.replaceAll("&amp;", "&"));
 
                     URLConnection conn = url.openConnection();
@@ -193,25 +201,25 @@ public final class Processor {
                     } finally {
                         in.close();
                     }
-                }
-            } catch (Exception e) {	// MalformedURLException, IOException
-                synchronized(Processor.class) {
-                    failures.add (System.currentTimeMillis());
+                } else {
+                    Log.debug(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
                 }
 
-                Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri, e);
+                if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
+                    xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
+                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
+                        Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
+                } else {
+                    return null;
+                }
+
+            }
+        } catch (Exception e) {	// MalformedURLException, IOException
+            synchronized(Processor.class) {
+                failures.add (System.currentTimeMillis());
             }
 
-            if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
-                xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
-                if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                    Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
-            } else {
-                return null;
-            }
-
-        } else {
-            Log.debug(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
+            Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri, e);
         }
 
         // search for and return only the xml fragment that has @id=idSearch
@@ -230,7 +238,11 @@ public final class Processor {
                 return null;
             }
         } else {
-            res = (Element)remoteFragment.clone();
+            if (remoteFragment == null) {
+                return null;
+            } else {
+                res = (Element) remoteFragment.clone();
+            }
         }
         if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
             Log.debug(Log.XLINK_PROCESSOR,"Read:"+Xml.getString(res));
@@ -300,13 +312,15 @@ public final class Processor {
      * @param action
      *            Define what to do with XLink ({@link #ACTION_DETACH,
      *            #ACTION_REMOVE, #ACTION_RESOLVE}).
+     * @return All set of all the xlinks that failed to resolve.
      *
      */
-    private static void searchXLink(Element md, String action, ServiceContext srvContext) {
+    private static Set<String> searchXLink(Element md, String action, ServiceContext srvContext) {
         List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
         if(Log.isDebugEnabled(Log.XLINK_PROCESSOR)) Log.debug(Log.XLINK_PROCESSOR, "returned "+xlinks.size()+" elements");
 
+        Set<String> errors = Sets.newHashSet();
         // process remote xlinks, skip local xlinks for later
         for (Attribute xlink : xlinks) {
             String hrefUri = xlink.getValue();
@@ -319,9 +333,14 @@ public final class Processor {
             }
 
             if (hash != 0) { // skip local xlinks eg. xlink:href="#details"
-                doXLink(hrefUri, idSearch, xlink, action, srvContext);
+                String error = doXLink(hrefUri, idSearch, xlink, action, srvContext);
+                if (error != null) {
+                    errors.add(error);
+                }
             }
         }
+
+        return errors;
     }
 
     //--------------------------------------------------------------------------
@@ -334,13 +353,15 @@ public final class Processor {
      *            Define what to do with XLink ({@link #ACTION_DETACH,
      *            #ACTION_REMOVE, #ACTION_RESOLVE}).
      *
+     * @return All set of all the xlinks that failed to resolve.
      */
-    private static void searchLocalXLink(Element md, String action) {
+    private static Set<String> searchLocalXLink(Element md, String action) {
         List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href[starts-with(.,'#')]");
 
         if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
             Log.debug(Log.XLINK_PROCESSOR, "local xlink search returned "+xlinks.size()+" elements");
 
+        Set<String> errors = Sets.newHashSet();
         // now all remote fragments have been added, process local xlinks (uncached)
         Map<String,Element> localIds = new HashMap<String,Element>();
         for (Attribute xlink : xlinks) {
@@ -380,14 +401,23 @@ public final class Processor {
                     // replace children of this element with the fragment
                     element.removeContent();
                     element.addContent(localFragment);
+                } else {
+                    errors.add(xlink.getValue());
                 }
             }
             cleanXLinkAttributes(element, action);
         }
+        return errors;
     }
 
     //--------------------------------------------------------------------------
-    private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
+
+    /**
+     * Resolve the xlink of an element and if resolved correctly, updates the xlink.
+     *
+     * Returns null if the XLINK was correctly resolved, or if there was a failure, returns the xlink that was not resolved.
+     */
+    private static String doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
         Element element = xlink.getParent();
 
         // Don't process XLink for operatesOn
@@ -398,7 +428,7 @@ public final class Processor {
         // TODO: Add configuration file
 
         if (excludedXlinkElements.contains(element.getName())) {
-            return;
+            return null;
         }
 
         if (!hrefUri.equals("")) {
@@ -420,7 +450,7 @@ public final class Processor {
 
                         // Not resolved in cache or using href
                         if (remoteFragment == null)
-                            return;
+                            return hrefUri;
 
                         searchXLink(remoteFragment, action, srvContext);
 
@@ -448,6 +478,8 @@ public final class Processor {
                 Log.error(Log.XLINK_PROCESSOR,"Invalid xlink:show attribute '"+show+"'");
             }
         }
+
+        return null;
     }
 
     //--------------------------------------------------------------------------
