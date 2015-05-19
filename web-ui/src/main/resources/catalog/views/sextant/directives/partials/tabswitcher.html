@@ -1,12 +1,12 @@
-<div class="btn-group sxt-panel-button">
-  <button class="btn btn-default" data-ng-class="{active: mainTabs.search.active}" data-ng-click="locService.setSearch()">
+<div class="btn-group sxt-panel-button" ng-if="isVisible">
+  <button data-ng-if="mainTabs.search" class="btn btn-default" data-ng-class="{active: mainTabs.search.active}" data-ng-click="locService.setSearch()">
     <span translate>catalog</span>
   </button>
-  <button class="btn btn-default" data-ng-class="{active: mainTabs.map.active}" data-ng-click="locService.setMap()" >
+  <button data-ng-if="mainTabs.map" class="btn btn-default" data-ng-class="{active: mainTabs.map.active}" data-ng-click="locService.setMap()" >
     <span translate>map</span>
     <span ng-if="mainTabs.map.titleInfo">({{mainTabs.map.titleInfo}})</span>
   </button>
-  <button class="btn btn-default" data-ng-class="{active: mainTabs.panier.active}" data-ng-click="gotoPanier()">
+  <button data-ng-if="mainTabs.panier" class="btn btn-default" data-ng-class="{active: mainTabs.panier.active}" data-ng-click="gotoPanier()">
     <span translate>myDownloads</span>
     <span ng-if="searchObj.panier.length">({{searchObj.panier.length}})</span>
   </button>

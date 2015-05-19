@@ -12,7 +12,8 @@
         replace: true,
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/tabswitcher.html',
-        link: function linkFn(scope, element, attrs) {
+        link: function linkFn(scope) {
+          scope.isVisible = Object.keys(scope.mainTabs).length > 1;
         }
       };
     }
