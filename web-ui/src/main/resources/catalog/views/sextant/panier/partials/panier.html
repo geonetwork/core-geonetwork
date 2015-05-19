@@ -71,19 +71,19 @@
               <div class="form-group">
                 <label for="inputNom" class="col-sm-2 control-label" translate>name</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputNom" placeholder="{{'name' | translate}}" ng-model="formObj.user.lastname">
+                  <input data-ng-disabled="user" type="text" class="form-control" id="inputNom" placeholder="{{'name' | translate}}" ng-model="formObj.user.lastname">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputPrenom" class="col-sm-2 control-label" translate>surname</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputPrenom" placeholder="{{'surname' | translate}}" ng-model="formObj.user.firstname">
+                  <input data-ng-disabled="user" type="text" class="form-control" id="inputPrenom" placeholder="{{'surname' | translate}}" ng-model="formObj.user.firstname">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputEmail" class="col-sm-2 control-label" translate>email</label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="inputEmail" placeholder="{{'email' | translate}}" ng-model="formObj.user.mail">
+                  <input data-ng-disabled="user" type="email" class="form-control" id="inputEmail" placeholder="{{'email' | translate}}" ng-model="formObj.user.mail">
                 </div>
               </div>
               <div class="form-group">

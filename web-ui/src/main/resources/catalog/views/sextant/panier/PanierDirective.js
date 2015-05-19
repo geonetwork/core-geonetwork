@@ -48,6 +48,7 @@
                   success: true
                 };
                 scope.panier = [];
+                scope.formObj.layers = [];
               } else {
                 scope.report = {
                   success: false
