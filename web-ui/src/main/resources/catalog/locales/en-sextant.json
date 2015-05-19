@@ -8,7 +8,9 @@
   "basket": "Basket",
   "inbasket": "in basket",
   "addAllLayersToPanier": "Add all {{number}} layers to the basket",
-  "toAdmin": "Admin"
-
-
+  "toAdmin": "Admin",
+  "paginationInfo": "Results {{from}} to {{to}} <em> on {{total}}</em> :",
+  "byPage": "by page",
+  "sortBy": "Sort by",
+  "myDownloads": "My downloads"
 }

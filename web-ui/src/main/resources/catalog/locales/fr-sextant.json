@@ -10,6 +10,8 @@
   "addAllLayersToPanier": "Ajouter les {{number}} couches au panier",
   "toAdmin": "Administrer",
   "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
-  "byPage": "par page"
+  "byPage": "par page",
+  "sortBy": "Tri par",
+  "myDownloads": "Mes téléchargements"
 
 }

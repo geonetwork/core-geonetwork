@@ -5,21 +5,8 @@
       <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-plus'"></span>
     </button>
 
-    <div class="btn-group sxt-panel-button">
-      <button class="btn btn-default" data-ng-click="locService.setSearch()">
-        <span translate>Catalogue</span>
-      </button>
-      <button class="btn btn-default active" data-ng-click="locService.setMap()" >
-        <span translate>Carte</span>
-        <span ng-if="mainTabs.map.titleInfo">({{mainTabs.map.titleInfo}})</span>
-      </button>
-      <button class="btn btn-default" type="submit" data-ng-click="gotoPanier()">
-        <span translate>Mes téléchargements</span>
-        <span ng-if="searchObj.panier.length">({{searchObj.panier.length}})</span>
-      </button>
-    </div>
+    <sxt-tab-switcher />
   </div>
-
   <div data-gn-alert-manager=""></div>
   <div id="map" ngeo-map="map" class="map"></div>
   <div gn-gfi="" map="map" ng-class="{'leftBarExpanded': active.tool}"></div>
