@@ -16,11 +16,13 @@
 @ellipsis-height: 124px;
 @results-toolbar-height: 2.8em;
 
-@sxt-base-color-dark: #2F6383;
+@sxt-base-color: #FF4666;
+@sxt-base-color-light: lighten(#FF4666, 8%);
+@sxt-base-color-dark: darken(#FF4666, 8%);
+
+@sxt-base-color-dark: #2A6284;
 @sxt-base-color: lighten(@sxt-base-color-dark, 20%);
-@sxt-base-color: #4BA2D9;
 @sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
-@sxt-base-color-light: #81BEE4;
 
 @sxt-viewer-top: 4em;
 @sxt-vieweritem-top: 1.5em;
@@ -33,6 +35,7 @@
 
 @sxt-searchbtn-height: 50px;
 
+
 @media (min-width: @screen-md-min) {
   body {
     font-family: Roboto, sans-serif;
@@ -43,6 +46,9 @@
   .hfull, .tab-pane
   {
     height: 100%;
+  }
+  .sxt-search-main-container {
+    height: calc(~"100% - "@sxt-viewer-top);
   }
   .sxt-scroll {
     position: relative;
@@ -91,6 +97,21 @@
     }
   }
 }
+/*
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: white;
+  border: none;
+
+}
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 3px;
+}
+*/
+
 @media (min-width: @screen-lg-min) {
   .sxt-left-panel {
     width: 25%;
@@ -129,7 +150,7 @@
   }
 }
 
-.btn {
+.btn-default {
   background: @sxt-base-color;
   color: white;
   border: none;
@@ -199,7 +220,6 @@
   }
   .row& {
     height: ~"calc(100% - 2em)";
-    padding: 1em 0 0 ;
   }
 }
 
@@ -218,14 +238,24 @@
 }
 
 .sxt-left-panel {
-  margin-top: -3.5em;
+  margin-top: -2.5em;
   > div {
     border-radius: 0;
     background-color: white;
+    box-shadow: @sxt-shadow;
 
   }
 }
+.sxt-center-panel {
+  > .panel {
+    border-top: none;
+    border-radius: 0;
+  }
+  .panel-heading {
+    background-color: white;
+  }
 
+}
 [data-ng-search-form] {
   .gn-top-search {
     text-align: center;
@@ -301,46 +331,13 @@
       }
     }
   }
-  [gn-facet-multiselect] {
-    &>div {
-      overflow: auto;
-      max-height: 140px;
-    }
-    .list-group-item {
-      padding: 0.15em;
-      min-height:20px;
-      color: @brand-primary;
-      border: none;
-      &:hover {
-        cursor: pointer;
-        color: white;
-        background-color: @brand-primary;
-      }
-      &.selected {
-        background-color: #55af32;
-        color: white;
-        &:hover {
-          background-color: #e52923;
-        }
-      }
-
-    }
-
-  }
-
-  .inner-spinner {
-    position: absolute;
-    top: 1.3em;
-    right: 1.6em;
+  .sxt-searchform-content {
+    padding: 15px;
   }
   .sxt-categorytree {
-    font-family: arial, tahoma, helvetica, sans-serif;
-    font-size: 11px;
-    input[type='checkbox'] {
-      margin-right: 3px;
-    }
     ul ul {
       display: none;
+      font-size: @sxt-fontsize-small;
     }
     ul {
       padding-left:30px;
@@ -350,15 +347,62 @@
         margin-bottom: -1px;
         label {
           margin-bottom: 2px;
-          .fa {
-            font-size: 15px;
-          }
+          font-weight: normal;
         }
       }
     }
     > ul {
       padding-left:0;
     }
+    .sxt-categorytree-leaf {
+      margin-left: 1.7em;
+    }
+  }
+
+  .gn-facet {
+    font-size: @sxt-fontsize;
+    .fa {
+      margin-right: .3em;
+    }
+
+    h5 .fa {
+      color: @sxt-base-color;
+    }
+
+    > div {
+      overflow: auto;
+      max-height: 9.7em;
+    }
+
+    .list-group {
+      border-left: 1px dotted rgba(0, 0, 0, 0.2);
+      margin-left: .5em;
+      padding-left: 1em;
+      margin-bottom: 0;
+    }
+    .list-group-item {
+      padding: 0.15em;
+      min-height:20px;
+      color: #444;
+      border: none;
+      .fa {
+        font-size: @sxt-fontsize-big;
+      }
+      .fa-check-square, .fa-minus-square, .fa-plus-square {
+        color: @sxt-base-color;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  .inner-spinner {
+    position: absolute;
+    top: 1.3em;
+    right: 1.6em;
   }
   .panel-heading {
     height: @results-toolbar-height;
@@ -367,9 +411,6 @@
       background-color: transparent;
       border: none;
       padding: 0 5px;
-    }
-    .pull-right {
-      margin-top: 0.15em;
     }
   }
 

@@ -1,16 +1,13 @@
 <div class="gn-facet" data-ng-show="facetObj">
   <h5 gn-collapse="{{contentCollapsed}}" >
-    <span class="fa fa-arrow-circle-o-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+    <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
     {{facetConfig.label | translate}}
   </h5>
   <div class="list-group" ng-class="{'collapse': contentCollapsed}">
 
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj"
             data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
-      <label>
-        <input data-ng-checked="isInSearch(f['@name'])" type="checkbox">
-        {{f['@label'] || f['@name']}}&nbsp;({{f['@count']}})
-      </label>
+      <i class="fa" data-ng-class="isInSearch(f['@name']) ? 'fa-check-square' : 'fa-square-o'"></i>{{f['@label'] || f['@name']}}&nbsp;({{f['@count']}})
     </div>
   </div>
 </div>

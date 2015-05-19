@@ -1,12 +1,15 @@
-<li>
-    <label ng-if="isParentNode()">
-      <span ng-click="toggleNode($event)" class="fa" data-ng-class="selectedOnInit ? 'fa-minus-square-o' : 'fa-plus-square-o'" ></span>
+<li class="list-group-item">
+  <label ng-if="isParentNode()">
+      <span ng-click="toggleNode($event)" class="fa" data-ng-class="selectedOnInit ? 'fa-minus-square' : 'fa-plus-square'" ></span>
       <span data-ng-click="onClick()">
-        <input type="checkbox" ng-click="" ng-model="member.selected" ng-change="selectChildren(member, member.selected)">{{member.name}}
+        <input type="checkbox" ng-click="" ng-model="member.selected" ng-change="selectChildren(member, member.selected)" class="hidden">
+        <i class="fa" data-ng-class="member.selected ? 'fa-check-square' : 'fa-square-o'"></i>
+        {{member.name}}
       </span>
     </label>
-  <label ng-if="!isParentNode()" data-ng-click="onClick()">
-    <input type="checkbox" class="sxt-categorytree-leaf" ng-model="member.selected" />
-      {{member.name}}&nbsp;({{member.count}})
+  <label ng-if="!isParentNode()" class="sxt-categorytree-leaf" data-ng-click="onClick()">
+    <input class="hidden" type="checkbox"  ng-model="member.selected" />
+    <i class="fa" data-ng-class="member.selected ? 'fa-check-square' : 'fa-square-o'"></i>
+    {{member.name}}&nbsp;({{member.count}})
   </label>
  </li>

@@ -1,12 +1,14 @@
 <div class="gn-sort-by">
+  <div class="pull-left">
+    <span translate>sortBy</span>&nbsp;:&nbsp;
+  </div>
   <div class="btn-group">
     <button type="button"
-            class="btn btn-default dropdown-toggle"
+            class="btn btn-link dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false">
-      <i class="fa fa-sort"/>&nbsp;
       <span data-translate=""
-            data-translate-values="{field: '{{params.sortBy | translate}}'}">sortedBy</span>
+            >{{params.sortBy}}</span>&nbsp;
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">

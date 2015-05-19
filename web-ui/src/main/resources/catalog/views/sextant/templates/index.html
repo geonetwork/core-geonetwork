@@ -25,8 +25,8 @@
 
         </div>
 
-        <div class="hfull" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
-                data-ng-hide="inMdView">
+        <div class="hfull sxt-search-main-container" data-ng-controller="gnsSextantSearch" data-ng-class="{'sxt-scroll' : tabOverflow.search}"
+             data-ng-hide="inMdView">
 
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
@@ -40,14 +40,6 @@
               <div class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
                   <div class="panel-heading">
-                    <div class="btn-toolbar">
-
-                      <!-- To Basket button-->
-                      <button class="btn btn-default pull-right" data-ng-click="gotoPanier()">
-                        <span class="fa fa-shopping-cart"></span>
-                        <span class="badge" ng-if="searchObj.panier.length">{{searchObj.panier.length}}</span>
-                        <span role="tooltip" data-translate="">Basket</span>
-                      </button>
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
@@ -71,8 +63,6 @@
                             <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
                         </ul>
                       </div>
-
-                    </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
                   <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
@@ -83,14 +73,14 @@
           </form>
         </div>
       </tab>
-<!--
-      <tab heading="{{mainTabs.metadata.title}}"
-           active="mainTabs.metadata.active">
-        <div class="container-fluid sxt-md-container">
-          <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
-        </div>
-      </tab>
--->
+      <!--
+            <tab heading="{{mainTabs.metadata.title}}"
+                 active="mainTabs.metadata.active">
+              <div class="container-fluid sxt-md-container">
+                <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
+              </div>
+            </tab>
+      -->
       <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
         <tab-heading>
           {{mainTabs.map.title}}
