@@ -316,6 +316,19 @@
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency> <!-- custom openAM library -->
+      <groupId>opensso-springsecurity</groupId>
+      <artifactId>opensso-springsecurity</artifactId>
+      <version>0.2.1</version>
+    </dependency>
+    <dependency>
+       <groupId>org.forgerock.openam</groupId>
+       <artifactId>openam-clientsdk</artifactId>
+       <version>${openam.version}</version>
+       <scope>compile</scope>
+    </dependency>
+    
 
     <!-- Handled locally by a temporarly repository -->
     <dependency>
@@ -993,5 +1006,6 @@
     <widgets.webapp.resources></widgets.webapp.resources>
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
-  </properties>
+    <openam.version>10.1.0-Xpress</openam.version>
+   </properties>
 </project>
