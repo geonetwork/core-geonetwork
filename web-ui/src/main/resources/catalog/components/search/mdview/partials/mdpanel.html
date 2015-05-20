@@ -1,10 +1,10 @@
 <div class="panel panel-default metadata">
   <div class="panel-heading">
-    <div sxt-md-actions-menu="md" class="pull-right">
-    </div>
-    <button class="btn btn-default" ng-click="dismiss()" translate>backToList</button>
-    {{md.title}}
+    <button class="btn btn-default pull-right" ng-click="dismiss()" translate>
+      <i class="fa fa-share fa-flip-horizontal"></i>
+    </button>
+    <span>{{md.title}}</span>
   </div>
-  <div class="panel-body" ng-bind-html="fragment">
-  </div>
+  <div sxt-md-actions-menu="md"></div>
+  <div class="panel-body" ng-bind-html="fragment"></div>
 </div>
