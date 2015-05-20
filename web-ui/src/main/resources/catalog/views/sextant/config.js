@@ -55,6 +55,12 @@
             url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
           }]
       };
+
+      viewerSettings.localisations = [{
+        name: 'France',
+        extent: [-817059, 4675034, 1719426, 7050085]
+      }];
+
       proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
           '+lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,' +
           '0,0' +
@@ -292,8 +298,13 @@
 
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
+        angular.extend(gnPanierSettings, sxtSettings.panier);
+
         if(sxtSettings.servicesUrl) {
           viewerSettings.servicesUrl = sxtSettings.servicesUrl;
+        }
+        if(sxtSettings.localisations) {
+          viewerSettings.localisations = sxtSettings.localisations;
         }
       }
 
