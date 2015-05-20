@@ -26,7 +26,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('map/is
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'false', 2, 9160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'sextant', 0, 10100, 'n');
 
-INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j',0,250,'y');
+INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
 
 
 UPDATE Settings SET value='3.0.0' WHERE name='system/platform/version';
