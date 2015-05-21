@@ -1423,6 +1423,7 @@
           <xsl:choose>
             <xsl:when test="$helpLink!=''">
               <xsl:value-of select="$title"/>
+              <!--Hide https://forge.ifremer.fr/mantis/view.php?id=24781
               <span class="editor-help-inline">
               	<xsl:attribute name="onclick">
               		<xsl:text>GeoNetwork.util.HelpTools.get(&quot;</xsl:text>
@@ -1437,7 +1438,7 @@
                 		<xsl:text>/apps/images/default/help.png</xsl:text>
                 	</xsl:attribute>
                 </img>
-              </span>
+              </span>-->
             </xsl:when>
             <xsl:otherwise>
               <xsl:call-template name="showTitleWithTag">
