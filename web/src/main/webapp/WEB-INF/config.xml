@@ -91,7 +91,7 @@
     <param name="statLogSpatialObjects" value="false" />
     <param name="statLogAsynch" value="true" />
     <!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
-    <param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
+    <param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_op7,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
 
     <!-- The maximum number of writes in a transaction on the spatial index
 

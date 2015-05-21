@@ -10,8 +10,8 @@
    *
    * @description
    */
-  module.directive('sxtPanier', [ 'sxtPanierService',
-    function(sxtPanierService) {
+  module.directive('sxtPanier', [ 'sxtPanierService', 'gnSearchLocation',
+    function(sxtPanierService, gnSearchLocation) {
       return {
         restrict: 'A',
         replace: true,
@@ -27,6 +27,8 @@
           };
         }],
         link: function(scope, element, attrs, controller) {
+
+          scope.locService = gnSearchLocation;
 
           scope.formObj = {
             user: {
@@ -46,6 +48,7 @@
                   success: true
                 };
                 scope.panier = [];
+                scope.formObj.layers = [];
               } else {
                 scope.report = {
                   success: false

@@ -1350,7 +1350,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                             }
                             
                             // Test if the auth have been made
-                            var connectedDiv = innerDoc.getElementById('content_container');
+                            var connectedDiv = innerDoc.getElementById('userinfo');
                             if(connectedDiv) {
                                 clearInterval (intervalID);
                                 loginEvent = true;
@@ -1395,7 +1395,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
-            casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/login.form?casLogin');
+            casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/catalog.signin?casLogin');
             casLoginFrame.setAttribute('style','display:none');
             document.body.appendChild(casLoginFrame);
             

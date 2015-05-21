@@ -606,6 +606,8 @@
           </xsl:if>
         </label>
         <div class="col-sm-9">
+
+        <xsl:variable name="addActionDom">
           <xsl:choose>
             <!-- When element have different types, provide
                   a list of those types to be selected. The type list
@@ -638,11 +640,12 @@
                 </button>
                 <ul class="dropdown-menu">
                   <xsl:for-each select="$childEditInfo/gn:choose">
+                    <xsl:sort select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-                    
+
                     <li title="{$label/description}">
                       <a
-                        data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
+                              data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
                         <xsl:value-of select="$label/label"/>
                       </a>
                     </li>
@@ -656,26 +659,30 @@
                 like for projection.
                 The directive is in charge of displaying the default add button if needed.
               -->
-              <xsl:choose>
-                <xsl:when test="$directive/@addDirective != ''">
-                  <div>
-                    <xsl:attribute name="{$directive/@addDirective}"/>
-                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
-                    <xsl:attribute name="data-dom-id" select="$id"/>
-                    <xsl:attribute name="data-element-name" select="$qualifiedName"/>
-                    <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-                    <xsl:copy-of
-                            select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+              <a class="btn btn-default"
+                 data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                <i class="fa fa-plus gn-add"/>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+          <xsl:choose>
+            <xsl:when test="$directive/@addDirective != ''">
+              <div>
+                <xsl:attribute name="{$directive/@addDirective}"/>
+                <xsl:copy-of select="$directive/directiveAttributes/@*"/>
+                <xsl:attribute name="data-dom-id" select="$id"/>
+                <xsl:attribute name="data-element-name" select="$qualifiedName"/>
+                <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+                <xsl:copy-of
+                        select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
                                     $qualifiedName)"/>
-                  </div>
-                </xsl:when>
-                <xsl:otherwise>
-                  <a class="btn btn-default"
-                     data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
-                    <i class="fa fa-plus gn-add"/>
-                  </a>
-                </xsl:otherwise>
-              </xsl:choose>
+                <xsl:copy-of select="$addActionDom"/>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy-of select="$addActionDom"/>
             </xsl:otherwise>
           </xsl:choose>
         </div>

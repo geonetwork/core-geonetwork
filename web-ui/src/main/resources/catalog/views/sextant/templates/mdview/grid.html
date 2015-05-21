@@ -13,32 +13,21 @@
           <!--   <i class="fa fa-pencil"></i> -->
           <!-- </a> -->
 
-          <h4 class="row gn-md-title" title="{{md.title || md.defaultTitle}}">
+        <div class="row gn-md-title">
+
+          <!--Icon for types - usually only one-->
+          <span class="pull-left fa" data-ng-class="md.icon.cls"
+                title="{{md.icon.title | translate}}"></span>
+
+          <h4 title="{{md.title || md.defaultTitle}}">
             <a  href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md">
-              <!--Icon for types - usually only one-->
-              <span data-ng-if="md.type.indexOf('dataset')>=0"
-                class="fa fa-database"
-                title="{{'dataset' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('software')>=0"
-                class="fa fa-hdd-o"
-                title="{{'software' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('map')>=0"
-                class="fa fa-globe"
-                title="{{'map' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('application')>=0"
-                class="fa fa-hdd-o"
-                title="{{'application' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('basicgeodata')>=0"
-                class="fa fa-globe"
-                title="{{'geodata' | translate}}"></span>
-              <span data-ng-if="md.type.indexOf('service')>=0"
-                class="fa fa-globe"
-                title="{{'service' | translate}}"></span>
               {{md.title || md.defaultTitle}}</a>
           </h4>
 
+        </div>
 
-          <div class="gn-md-details" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
+
+        <div class="gn-md-details" title="{{(md.abstract || md.defaultAbstract) | striptags}}">
 
             <!-- Thumbnail -->
             <div class="gn-md-thumbnail" ng-class="{'gn-md-emptythumbnail': !md.getThumbnails().small }">
@@ -146,13 +135,6 @@
               <li data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"><a ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
 
               <li><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
-              <li>
-                <a ng-click="mdService.publish(md)">
-                  <i class="fa" data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
-                  <span data-ng-if="md.isPublished()" translate>unpublish</span>
-                  <span data-ng-if="!md.isPublished()" translate>publish</span>
-                </a>
-              </li>
               <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>

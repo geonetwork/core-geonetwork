@@ -11,10 +11,10 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap',
+    'gnGlobalSettings', 'gnMap', 'gnShareConstants',
 
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap) {
+             gnGlobalSettings, gnMap, gnShareConstants) {
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
@@ -47,14 +47,20 @@
           name: 'Pigma - IGN',
           url: 'http://ids.pigma.org/geoserver/ign/wms'
         }, {
-          name: 'Ifremer - Océanographie Physique',
-          url: 'http://ids.pigma.org/geoserver/wms'
+          name: 'Ifremer - Biologie',
+          url: 'ttp://www.ifremer.fr/services/wms/biologie?'
         }],
         wmts: [{
-            name: 'geOrchestra WMTS',
-            url: 'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
+            name: 'Ifremer - maps.ngdc.noaa.gov',
+            url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
           }]
       };
+
+      viewerSettings.localisations = [{
+        name: 'France',
+        extent: [-817059, 4675034, 1719426, 7050085]
+      }];
+
       proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
           '+lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,' +
           '0,0' +
@@ -89,16 +95,19 @@
             color: 'rgba(255,255,0,0.3)'
           })
         })
-
       };
 
       /** *************************************
        * Define maps
        */
       var mapsConfig = {
-        zoom: 2,
+        zoom: 0,
         maxResolution: '39135.75848201024'
       };
+
+      if(typeof sxtSettings != 'undefined') {
+        angular.extend(mapsConfig, sxtSettings.olView);
+      }
 
       var viewerMap = new ol.Map({
         view: new ol.View(mapsConfig),
@@ -287,16 +296,17 @@
         proj: '4326'
       };
 
-      // Sextant API params
-      var sxtSettings = {
-        configWhat: '',
-        //configWhat: 'AMBIO,CARIBSAT,INTERNET',
-        gnUrl: 'http://localhost:8080/geonetwork/srv/eng',
-        maxExtent: [-2499215.9244278017, 4985853.6451996025,
-          829769.5314481944, 7243497.712630568],
-        configWho: ''
-        //configWho: 'IFREMER'
-      };
+      if(typeof sxtSettings != 'undefined') {
+        angular.extend(searchSettings, sxtSettings);
+        angular.extend(gnPanierSettings, sxtSettings.panier);
+
+        if(sxtSettings.servicesUrl) {
+          viewerSettings.servicesUrl = sxtSettings.servicesUrl;
+        }
+        if(sxtSettings.localisations) {
+          viewerSettings.localisations = sxtSettings.localisations;
+        }
+      }
 
       searchSettings.hiddenParams = {};
       searchSettings.configWho = searchSettings.configWho || '';
@@ -312,5 +322,10 @@
           _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
         })
       }
+
+      gnShareConstants.columnOrder= ['0', '5', '1', '2', '7'];
+      gnShareConstants.disableAllCol = true;
+      gnShareConstants.displayProfile = true;
+
     }]);
 })();

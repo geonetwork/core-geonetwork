@@ -8,6 +8,7 @@
   goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
   goog.require('gn_legendpanel_directive');
+  goog.require('gn_wps');
   goog.require('sxt_directives');
   goog.require('sxt_panier');
   goog.require('sxt_interceptors');
@@ -20,16 +21,40 @@
     'gn_search_default_directive',
     'gn_legendpanel_directive',
     'gn_thesaurus',
+    'gn_wps',
     'sxt_directives',
     'sxt_panier',
     'sxt_interceptors',
     'sxt_mdactionmenu'
   ]);
 
+
+  if(typeof sxtSettings != 'undefined') {
+    var catModule = angular.module('gn_cat_controller');
+    catModule.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        var lang = sxtSettings.lang || 'eng';
+        gnGlobalSettings.locale = {
+          lang: lang.substr(0,2)
+        };
+        if(sxtGnUrl) {
+          gnGlobalSettings.gnUrl =
+              sxtGnUrl + lang + '/';
+          console.log(gnGlobalSettings.gnUrl);
+        }
+        else {
+          console.error('The variable sxtGnUrl is not defined !');
+        }
+      }]);
+  }
+
+
   module.value('sxtGlobals', {});
 
-  module.config(['$LOCALES', function($LOCALES) {
+  module.config(['$LOCALES', 'gnGlobalSettings',
+    function($LOCALES, gnGlobalSettings) {
     $LOCALES.push('sextant');
+
   }]);
 
   module.controller('gnsSextant', [
@@ -101,24 +126,6 @@
         }
         unregisterMapsize();
       });
-
-
-      // Manage the collapsed search panel
-      $scope.collapsed = localStorage.searchWidgetCollapsed ?
-          JSON.parse(localStorage.searchWidgetCollapsed) :
-          { search: true};
-
-      $scope.toggleSearch = function() {
-        $scope.collapsed.search = !$scope.collapsed.search;
-        $timeout(function() {
-          gnSearchSettings.searchMap.updateSize();
-        }, 300);
-      };
-
-      var storeCollapsed = function() {
-        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
-      };
-      $scope.$watch('collapsed.search', storeCollapsed);
 
       var mapVisited = false; // Been once in mapviewer
       var waitingLayers = []; // Layers added from catalog but not visited yet
@@ -343,11 +350,31 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
+          var md = scope.md;
 
-          scope.downloads = scope.md.getGroupedLinksByTypes('#FILE',
+          if(md.type.indexOf('dataset')>=0) {
+            md.icon = {cls: 'fa-database', title: 'dataset'}
+          }
+          else if(md.type.indexOf('software')>=0) {
+            md.icon = {cls: 'fa-hdd-o', title: 'software'}
+          }
+          else if(md.type.indexOf('map')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'map'}
+          }
+          else if(md.type.indexOf('application')>=0) {
+            md.icon = {cls: 'fa-hdd-o', title: 'application'}
+          }
+          else if(md.type.indexOf('basicgeodata')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
+          }
+          else if(md.type.indexOf('service')>=0) {
+            md.icon = {cls: 'fa-globe', title: 'service'}
+          }
+
+          scope.links = md.getLinksByType('LINK');
+          scope.downloads = md.getGroupedLinksByTypes('#FILE',
               '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
-          scope.layers = scope.md.getGroupedLinksByTypes('OGC:WMTS',
+          scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
               'OGC:WMS', 'OGC:OWS-C');
 
         }

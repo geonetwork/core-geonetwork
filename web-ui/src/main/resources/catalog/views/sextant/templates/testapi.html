@@ -12,7 +12,7 @@
   <link href="/ifremer/new/css/themesextant.css" rel="stylesheet"/>
 
   <!-- Sextant -->
-  <link href="/geonetwork/static/api.css" rel="stylesheet" media="screen">
+  <link href="http://sextant-test.ifremer.fr/geonetwork/static/api.css" rel="stylesheet" media="screen">
 
   <style>
     #wrapper {
@@ -21,70 +21,92 @@
   </style>
 </head>
 <body>
-  <div class="container-fluid">
-    <div id="wrapper" style="min-height: 100%">
-      <header class="navbar navbar-static-top withmargin">
-        <div class="container">
-          <div class="navbar-header">
-            <h1 class="navbar-brand">
-              <a href="index.htm">SEXTANT</a><span class="hidden-xs">Infrastructure de donn&eacute;es g&eacute;ographiques marines et littorales</span>
-            </h1>
-          </div>
-
-          <div class="container right hidden-xs hidden-sm">
-            <a href="" ><img src="/ifremer/new/images/projets/ifremer.png" alt="[]" /></a>
-          </div>
-        </div>
-      </header>
-
+<div class="container-fluid">
+  <div id="wrapper" style="min-height: 100%">
+    <header class="navbar navbar-static-top withmargin">
       <div class="container">
-        <h1>Test API Sextant6 </h1>
+        <div class="navbar-header">
+          <h1 class="navbar-brand">
+            <a href="index.htm">SEXTANT</a><span class="hidden-xs">Infrastructure de donn&eacute;es g&eacute;ographiques marines et littorales</span>
+          </h1>
+        </div>
+
+        <div class="container right hidden-xs hidden-sm">
+          <a href="" ><img src="/ifremer/new/images/projets/ifremer.png" alt="[]" /></a>
+        </div>
       </div>
+    </header>
 
-      <div ng-app="gn_search_sextant"
-           ng-controller="GnCatController"
-           class="gn sxt-max-md"
-           sxt-size="auto"
-           ng-include="'../../catalog/views/sextant/templates/index.html'">
-       </div>
+    <div class="container">
+      <h1>Test API Sextant6 </h1>
+    </div>
 
+    <div ng-app="gn_search_sextant"
+         ng-controller="GnCatController"
+         class="gn sxt-max-md"
+         sxt-size="auto"
+         ng-include="'../../catalog/views/sextant/templates/index.html'">
     </div>
   </div>
+</div>
 </body>
-
-
-<script>var geonet={provide:function(s){},require:function(s){}}</script>
-<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
-<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
 
 <script type="text/javascript">
 
-  var catModule = angular.module('gn_cat_controller');
-  catModule.config(['gnGlobalSettings',
-    function(gnGlobalSettings) {
-      gnGlobalSettings.locale = {
-        lang: 'en'
-      };
-      gnGlobalSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/eng/';
-    }]);
+  var sxtSettings = {
+    lang: 'fre',
+    configWhat: 'AMBIO',
+    configWho: 'IFREMER',
+    tabOverflow : {
+      search: true,
+      panier: true
+    },
+    olView: {
+      extent: [-377935.51545759046, 5411955.532673891, 942896.3333102552,
+        6456391.087162538],
+      maxResolution: 2445.98490512564
+    },
+    servicesUrl: {
+      wms: [{
+        name: 'Ifremer - Biologie',
+        url: 'ttp://www.ifremer.fr/services/wms/biologie?'
+      }],
+      wmts: [{
+        name: 'Ifremer - maps.ngdc.noaa.gov',
+        url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+      }]
+    },
+    localisations: [{
+      name: 'United States',
+      extent: [-13884991, 2870341, -7455066, 6338219]
+    }, {
+      name: 'France',
+      extent: [-817059, 4675034, 1719426, 7050085]
+    },{
+      name: 'Brest',
+      extent: [-510281, 6164880, -490464, 6183435]
+    }],
 
-  var searchModule = angular.module('gn_search');
-  searchModule.config(['gnSearchSettings',
-    function(gnSearchSettings) {
-      gnSearchSettings.configWhat = 'AMBIO';
-      gnSearchSettings.configWho = 'IFREMER';
-
-      /**
-       * Tab display overflow. If false, the tab content is rendered within
-       * the container height. If true, the tab content get out of its container
-       * and take the height it needs.
-       * @type {{search: boolean, panier: boolean}}
-       */
-      gnSearchSettings.tabOverflow = {
-        search: true,
-        panier: true
+    panier: {
+      projs: [{
+        value: '4326',
+        label: 'Geographique - Datum WGS84'
+      }],
+      formats: [{
+        value: 'ESRI Shapefile',
+        label: 'ESRI Shapefile'
+      }],
+      defaults: {
+        format: 'ESRI Shapefile',
+        proj: '4326'
       }
-    }]);
+    }
+  };
 
 </script>
+
+<script>var geonet={provide:function(s){},require:function(s){}}</script>
+<script src="http://sextant-test.ifremer.fr/geonetwork/static/lib.js"></script>
+<script src="http://sextant-test.ifremer.fr/geonetwork/static/gn_search_sextant.js"></script>
+
 </html>

@@ -402,6 +402,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         addOperationsElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
         addOperationsElement(infoEl, ReservedOperation.dynamic.name(), operations.contains(ReservedOperation.dynamic));
         addOperationsElement(infoEl, ReservedOperation.featured.name(), operations.contains(ReservedOperation.featured));
+        addOperationsElement(infoEl, ReservedOperation.process.name(), operations.contains(ReservedOperation.process));
 
         if (!operations.contains(ReservedOperation.download)) {
             addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, hasOperation(doc, ReservedGroup.guest, ReservedOperation.download));

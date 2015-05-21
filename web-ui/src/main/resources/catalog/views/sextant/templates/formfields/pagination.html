@@ -1,0 +1,35 @@
+<div class="gn-pager"
+     data-ng-show="config.pages > 0">
+
+  <!--Previous and Next buttons-->
+  <button class="btn btn-default" data-ng-class="config.currentPage == 1 ? 'disabled' : ''" data-ng-click="previous()">
+    <i class="fa fa-angle-left"></i>
+  </button>
+  <button class="btn btn-default" data-ng-class="config.currentPage == config.pages ? 'disabled' : ''" data-ng-click="next()">
+    <i class="fa fa-angle-right"></i>
+  </button>
+
+  <!--Amount and pagination position-->
+  <span class="pagination-info sxt-tb-middle" translate=""
+        data-translate-values="{from:'{{config.from}}', to:'{{config.to}}', total:'{{config.resultsCount}}'}">
+    paginationInfo
+  </span>
+
+  <div class="btn-group"
+       title="{{'chooseRecordsPerPage' | translate}}">
+    <button type="button"
+            class="btn dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      {{config.hitsPerPage}}
+      <em data-translate="">byPage</em>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li data-ng-repeat="nb in values"
+              data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''">
+        <a data-ng-click="updateSearch(nb)">{{nb}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

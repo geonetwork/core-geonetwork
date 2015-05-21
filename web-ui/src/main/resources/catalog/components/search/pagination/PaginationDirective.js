@@ -14,8 +14,12 @@
           config: '=gnPagination',
           values: '=hitsValues'
         },
-        templateUrl: '../../catalog/components/search/pagination/partials/' +
-            'pagination.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template ||
+              '../../catalog/components/search/pagination/partials/' +
+              'pagination.html';
+        },
+
         link: function(scope, element, attrs, controller) {
 
           // Init config from default and eventual given one

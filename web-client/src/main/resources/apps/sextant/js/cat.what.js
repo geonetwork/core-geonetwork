@@ -43,7 +43,7 @@ cat.what = function() {
 					url : services.opensearchSuggest,
 					rootId : 1,
 					baseParams : {
-						field : '_groupPublished',
+						field : 'publishedForGroup',
 						sortBy: 'ALPHA'
 					}
 				});

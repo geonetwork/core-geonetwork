@@ -1,0 +1,63 @@
+<div class="panel-body panel-wps">
+  <button type="button" class="btn btn-default close" data-ng-click="close()">×</button>
+
+  <div ng-switch="status">
+
+    <div ng-switch-when="loading">
+      <h4><span translate>wpsLoadingProcessDescription</span></h4>
+    </div>
+
+    <div ng-switch-when="loaded">
+      <form ng-controller="sxtbWpsProcessForm" >
+        <h5>{{::title}}</h5>
+        <div ng-repeat="input in inputs" class="form-group" ng-class="{'gn-required': input.required}">
+          <div ng-switch="::input.name">
+            <div ng-switch-when="wkt_polygon">
+              <label for="wkt_polygon">polygon</label>
+              <input type="checkbox" ng-model="polygon" />
+              <gn-wkt-polygon-input data-options="wkt_polygon_options" ng-show="polygon" />
+            </div>
+            <div ng-switch-when="espece">
+              <div class="form-group">
+                <label for="espece">espece</label>
+                <input type="checkbox" ng-model="espece" />
+                <input type="text" id="espece" class="form-control input-sm"
+                       ng-model="input_espece.value" ng-show="espece" />
+              </div>
+            </div>
+            <div ng-switch-default>
+              <label for="{{::input.name}}">{{::input.title}}</label>
+              <input type="{{::input.type}}" id="{{::input.name}}" class="form-control input-sm" ng-model="input.value" />
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default" data-ng-click="submit()" >
+            <span class="fa fa-gear"></span><span translate>wpsExecute</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div ng-switch-when="error">
+      <h4>{{exception.msg}}</h4>
+      <div ng-if="exception.owsExceptionReport">
+        <div ng-repeat="exception in exception.owsExceptionReport.exception">
+          <div ng-repeat="(key, value) in exception">
+            {{key}}: {{value}}
+          </div>
+        </div>
+      </div>
+      <div ng-if="exception.httpResponse">
+        <div>The serveur returned status code {{exception.httpResponse.status}} - {{exception.httpResponse.statusText}}</div>
+        <div>{{exception.httpResponse.data}}</div>
+      </div>
+    </div>
+
+    <div ng-switch-default>
+      <p>{{status}}</p>
+    </div>
+
+  </div>
+</div>

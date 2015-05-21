@@ -120,4 +120,44 @@
       };
     }]);
 
+  module.controller('sxtbWpsProcessForm', [
+    '$scope',
+    function($scope) {
+      $.each($scope.inputs, function(index, input){
+        if (input.name == 'wkt_polygon') {
+          $scope.input_wkt_polygon = input;
+        }
+        if (input.name == 'espece') {
+          $scope.input_espece = input;
+        }
+      });
+
+      var wkt_value = $scope.input_wkt_polygon.value;
+      if (wkt_value == '*') {
+        wkt_value = '';
+      }
+
+      $scope.polygon = false;
+      $scope.espece = false;
+      $scope.wkt_polygon_options = {
+        value: wkt_value,
+        projection: 'EPSG:4326',
+        required: true
+      };
+      $scope.$watch('wkt_polygon_options.value', function(newValue, oldValue) {
+        $scope.input_wkt_polygon.value = newValue;
+      });
+      $scope.$watch('polygon', function(newValue, oldValue) {
+        if (newValue == false) {
+          $scope.input_wkt_polygon.value = '*';
+        }
+      });
+      $scope.$watch('espece', function(newValue, oldValue) {
+        if (newValue == false) {
+          $scope.input_espece.value = '*';
+        }
+      });
+    }
+  ]);
+
 })();

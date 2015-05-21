@@ -1,5 +1,5 @@
 <li class="" data-ng-class="{'active': member.showInfo}">
-  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="fa fa-minus-square-o"></i>&nbsp;<span>{{member.name}}</span></div>
+  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="sxt-layer-visibility fa fa-minus-square"></i>&nbsp;<span>{{member.name}}</span></div>
   <div ng-if="!isParentNode()">
 
     <!--Drop down button for layer actions-->
@@ -39,12 +39,18 @@
           <i class="fa fa-download"></i>&nbsp;<span translate="">download</span>
         </a></li>
 
+        <!--WPS-->
+        <li><a href="" data-ng-click="showWPS()">
+          <i class="fa fa-gear"></i>&nbsp;<span translate="">WPS</span>
+        </a></li>
+
       </ul>
     </div>
 
     <!-- Visibility check box & Layer title-->
     <label>
-      <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" title="{{'layerVisible'|translate}}" />
+      <i class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
+      <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
       <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}"
              type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}" data-ng-change="switchGroupCombo(groupCombo)"/>
       {{member.get('label')}}

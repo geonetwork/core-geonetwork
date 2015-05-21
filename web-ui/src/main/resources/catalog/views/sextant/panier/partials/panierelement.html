@@ -1,33 +1,30 @@
-<li class="list-group-item">
-  <button type="button" class="close" ng-click="del(md, form)">&times;</button>
-  <h4>{{md.title || md.defaultTitle}}</h4>
+<li class="list-group-item clearfix">
+  <button type="button" class="btn btn-default sxt-panier-remove" ng-click="del(md, form)">
+    <i class="fa fa-trash-o"></i>
+  </button>
 
-  <div class="row">
+  <!--Map Draw Extent-->
+  <div class="col-md-5" gn-map-field="map" class=""
+       gn-map-field-geom="extent" gn-map-field-extent="extentCoords"></div>
+
+  <div class="col-md-6">
+    <h4>{{md.title || md.defaultTitle}}</h4>
 
     <!--Panier Form-->
-    <div class="col-md-7 form-horizontal">
-      <div class="form-group">
-        <label for="projectionPF" class="col-md-3 col-sm-9 control-label">projection</label>
-        <div class="dynamic-list col-sm-6" >
-          <select class="form-control input-sm" id="projectionPF" data-ng-model="form.output.epsg">
-            <option data-ng-repeat="p in settings.projs" value="{{p.value}}"
-                    data-ng-selected="p.value == form.output.epsg">{{p.label}}</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="formatPF" class="col-md-3 col-sm-9 control-label">format</label>
-        <div class="dynamic-list col-sm-6" >
-          <select class="form-control input-sm col-sm-6" id="formatPF" data-ng-model="form.output.format">
-              <option data-ng-repeat="f in settings.formats" value="{{f.value}}"
-                      data-ng-selected="f.value == form.output.format">{{f.label}}</option>
-            </select>
-          </div>
-      </div>
+    <div class="form-group">
+      <label for="projectionPF" class="control-label">projection</label>
+      <select class="form-control input-sm" id="projectionPF" data-ng-model="form.output.epsg">
+        <option data-ng-repeat="p in settings.projs" value="{{p.value}}"
+        data-ng-selected="p.value == form.output.epsg">{{p.label}}</option>
+      </select>
     </div>
-
-    <!--Map Draw Extent-->
-    <div class="col-md-5" gn-map-field="map" class=""
-         gn-map-field-geom="extent" gn-map-field-extent="extentCoords"></div>
+    <div class="form-group">
+      <label for="formatPF" class="control-label">format</label>
+      <select class="form-control input-sm" id="formatPF" data-ng-model="form.output.format">
+        <option data-ng-repeat="f in settings.formats" value="{{f.value}}"
+        data-ng-selected="f.value == form.output.format">{{f.label}}</option>
+      </select>
+    </div>
   </div>
+
 </li>

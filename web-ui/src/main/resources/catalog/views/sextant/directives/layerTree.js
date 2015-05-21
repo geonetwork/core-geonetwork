@@ -198,8 +198,8 @@
             $compile(element.contents())(scope);
           }
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square-o')
-                .toggleClass('fa-plus-square-o');
+            el.find('.fa').first().toggleClass('fa-minus-square')
+                .toggleClass('fa-plus-square');
             el.children('ul').toggle();
             evt.stopPropagation();
             return false;
@@ -230,6 +230,16 @@
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);
+          };
+
+          scope.showWPS = function() {
+            scope.wpsUri = "http://visi-sextant.ifremer.fr/cgi-bin/sextant/wps/pywps2.cgi";
+            scope.wpsProcessId = "script:especesbenthiques";
+            //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
+            // template="' + template + '"
+            var el = angular.element('<gn-wps-process-form data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
+            $compile(el)(scope);
+            element.append(el);
           };
         }
       };
