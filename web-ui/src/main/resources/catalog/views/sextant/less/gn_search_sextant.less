@@ -893,18 +893,65 @@ ul.gn-resultview {
 
 [gn-metadata-display] {
   position: absolute;
-  top: 0;
-  right: 0;
+  left: 1.1em;
+  right: 1.1em;
+  top: 1.5em;
   bottom: 0;
-  left: 0;
   z-index: 100;
+  & > .panel-default {
+    border-radius: 0;
+  }
   .panel-body {
+    padding-top: 0;
     overflow-y: auto;
     height: calc(~"100% - 55px");
   }
   .metadata {
     height: 100%;
     margin-bottom: 0;
+  }
+  .panel-heading {
+    height: 3.8em;
+    line-height: 2.6em;
+    background: white;
+    span {
+      color: @sxt-base-color;
+      display: inline-block;
+      max-width: ~"calc(100% - 3.5em)";
+      .text-overflow();
+    }
+  }
+  ul {
+    padding-top: 1em;
+  }
+  [sxt-md-actions-menu] {
+    position: absolute;
+    top: 4.6em;
+    right: 2.2em;
+    .dropdown-menu {
+      font-size: 12px;
+    }
+  }
+  .nav-tabs {
+    li{
+      a {
+        border-radius: 0;
+        color: black;
+      }
+      &.active a {
+        font-weight: bold;
+      }
+    }
+  }
+  .gn-record .dl-horizontal dt {
+    font-weight: normal;
+  }
+
+  .graphic-overview,
+  .img-thumbnail {
+    border-radius: 0;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
 }
 
