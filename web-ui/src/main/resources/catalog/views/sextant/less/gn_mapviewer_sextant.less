@@ -3,6 +3,8 @@
 @sxt-orange: #F28033;
 @sxt-btn-size: 2.2em;
 
+@tmp-max-height: 250px;
+
 [sxt-main-viewer] {
 
   .sxt-search-btn {
@@ -24,7 +26,7 @@
     top: @sxt-vieweritem-top;
     padding: 0 10px;
     box-shadow: @sxt-shadow;
-    max-height: 80%;
+    max-height: 90%;
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
@@ -195,6 +197,18 @@
     .clear {
       top: 1.2em;
     }
+    .dropdown-menu {
+      border-radius: 0;
+      li {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        font-size: 12px;
+        em {
+          font-size: 11px;
+        }
+      }
+    }
   }
 
   .panel-carousel-container {
@@ -310,30 +324,104 @@
     }
   }
 
+  .sxt-layer-separator {
+    margin-bottom: -.8em;
+  }
+  .sxt-layer-tabs {
+    margin-left: 2em;
+    margin-bottom: 1em;
+    button.btn {
+      background: white;
+      color: @sxt-base-color;
+      text-transform: uppercase;
+      flex: 0;
+      padding: 2px 6px;
+      font-weight: bold;
+      &.active {
+        box-shadow: inset @sxt-shadow;
+        background: @sxt-base-color;
+        color: white;
+      }
+    }
+  }
+  .tools {
+    button[sxt-layer-tools-toggle] {
+      background: @sxt-base-color-dark;
+      color: #fff;
+      padding: 2px 0 1px;
+      float: left;
+      margin: 0 1em;
+      width: 1.7em;
+      visibility: hidden;
+    }
+    .layers-tools-expanded button[sxt-layer-tools-toggle] {
+      visibility: visible;
+    }
+  }
+
   .sxt-layers-tabset {
-    height: 100%;
+    height: @tmp-max-height;
     overflow-x: hidden;
     overflow-y: auto;
     display: none;
     & > .nav-tabs {
-      li:not(.active) {
-        display: none;
-      }
-      li.active {
-        width: 10em;
-        margin-left: ~"calc(50% - 5em)";
-        text-align: center;
-      }
+      display: none;
     }
     .tab-content {
       background: white;
       padding-top: .6em;
-      height: ~"calc(100% - 3.2em)";
+      height: ~"calc(100% - .2em)";
       overflow-y: scroll;
     }
   }
   .layers-tools-expanded .sxt-layers-tabset {
     display: block;
+  }
+
+  .layers .sxt-layertree {
+    height: @tmp-max-height;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .sxt-maximize-layer-tools {
+    .sxt-layertree {
+      display: none;
+    }
+    .sxt-layers-tabset {
+      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+    }
+  }
+
+  .sxt-hidden {
+    visibility: hidden;
+  }
+
+  .layers .sxt-ncwms-tabs {
+    float: none !important;
+    position: absolute;
+    right: .9em;
+    margin-left: 0px;
+    width: auto;
+    margin-top: -1px;
+    display: block;
+    button.btn {
+      width: auto;
+      padding: 0 .5em;
+      line-height: 2em;
+    }
+    span.btn {
+      background: white;
+      color: @sxt-base-color;
+      margin-top: -2px;
+      height: 2.2em;
+      width: 2em;
+      line-height: 2em;
+      margin-right: -.5em;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      margin-left: .5em;
+    }
   }
 
   [sxt-layertree], .sxtb-speciestree  {

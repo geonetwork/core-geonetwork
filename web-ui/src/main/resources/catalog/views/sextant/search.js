@@ -406,6 +406,27 @@
       };
     }]);
 
+  module.directive('sxtLayerToolsToggle', [
+    function() {
+
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var target = $(attrs['sxtLayerToolsToggle']);
+          var fa = element.find('.fa');
+          element.on('click', function() {
+            scope.$apply(function(){
+              element.toggleClass('active');
+              fa.toggleClass('fa-plus');
+              fa.toggleClass('fa-minus');
+              target.toggleClass('sxt-maximize-layer-tools',
+                element.hasClass('active'));
+            });
+          });
+        }
+      };
+    }]);
+
 
 
 })();

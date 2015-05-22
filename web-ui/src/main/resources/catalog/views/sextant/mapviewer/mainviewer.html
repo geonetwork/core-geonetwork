@@ -1,9 +1,9 @@
 <div class="wrapper" data-ng-controller="gnViewerController">
   <div class="sxt-main-tabs">
 
-    <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool">
-      <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-plus'"></span>
-    </button>
+    <!-- <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool"> -->
+    <!--   <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-minus'"></span> -->
+    <!-- </button> -->
 
     <sxt-tab-switcher />
   </div>
@@ -51,31 +51,40 @@
 
       <!--Layer tree & background layers-->
       <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
-        <div class="layers" ng-class="{'layers-tools-expanded': active.layersTools}">
+        <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools}">
 
-          <div class="panel-body">
-            <h5>
-              <span translate>ThemeLayers</span>
-              <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
-                <i class="fa fa-picture-o fa-fw"></i>
-              </button>
-              <button class="btn btn-default btn-xs" ng-click="layerTabSelect('sort')" ng-class="{'active': layerTabs.sort.active}">
-                <i class="fa fa-sort fa-fw"></i>
-              </button>
-              <button class="btn btn-default btn-xs" ng-click="layerTabSelect('source')" ng-class="{'active': layerTabs.source.active}">
-                <i class="fa fa-info fa-fw"></i>
-              </button>
-            </h5>
-          </div>
 
           <div class="sxt-layertree">
             <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
             <div sxt-layertree="map"></div>
           </div>
 
+          <hr class="sxt-layer-separator">
+          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.ncwms.active">
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('ncwms')" ng-class="{'active': layerTabs.ncwms.active}">
+              <span class="btn btn-default btn-xs pull-right">&times;</span>
+              <span translate>ncwms</span>
+            </button>
+          </div>
+          <button class="btn btn-default btn-xs" sxt-layer-tools-toggle=".main-tools">
+            <i class="fa fa-plus"></i>
+          </button>
+          <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': layerTabs.ncwms.active}">
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
+              <span translate>legend</span>
+            </button>
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('sort')" ng-class="{'active': layerTabs.sort.active}">
+              <span translate>sort</span>
+            </button>
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('source')" ng-class="{'active': layerTabs.source.active}">
+              <span translate>source</span>
+            </button>
+          </div>
+
+
           <tabset class="sxt-layers-tabset">
 
-            <tab active="layerTabs.legend.active">
+            <tab active="layerTabs.legend.active" select="handleTabParsing()">
               <tab-heading>
                 <i class="fa fa-picture-o fa-fw"></i>
                 <span translate>legends</span>

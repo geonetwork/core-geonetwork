@@ -33,6 +33,13 @@
               /** print definition */
               scope.activeTools = {};
 
+              var firstRun = true;
+              scope.handleTabParsing = function() {
+                if (!firstRun) { return; }
+                firstRun = false;
+                scope.layerTabs.legend.active = false;
+              };
+
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);
               };
@@ -65,10 +72,12 @@
                 } else if (tab == activeTab) {
                   //disable others
                   scope.active.layersTools = false;
+                  scope.layerTabs[tab].active = false;
+                  activeTab = null;
+                } else {
+                  scope.layerTabs[tab].active = true;
+                  activeTab = tab;
                 }
-                  //disable others
-                scope.layerTabs[tab].active = true;
-                activeTab = tab;
               };
 
             },
