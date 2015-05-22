@@ -115,7 +115,7 @@ abstract class AbstractFormatService {
     }
 
     /**
-     * Check if a record exist with matching the uuid of the id.
+     * Check if a record exist with matching the uuid or the id.
      *  If uuid is provided
      *  <ul>
      *      <li>the resolution check that the record
