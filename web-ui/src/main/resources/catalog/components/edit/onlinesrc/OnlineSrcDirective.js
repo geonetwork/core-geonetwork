@@ -262,7 +262,8 @@
               scope.thumbnailUploadOptions = {
                 autoUpload: false,
                 url: 'md.thumbnail.upload',
-                //maxNumberOfFiles: 1,
+                maxNumberOfFiles: 1,
+                dropZone: $('#gn-upload-thumbnail'),
                 //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
                 done: uploadThumbnailDone,
                 fail: uploadThumbnailError
@@ -438,6 +439,7 @@
               scope.onlinesrcUploadOptions = {
                 autoUpload: false,
                 url: 'resource.upload.and.link',
+                dropZone: $('#gn-upload-onlinesrc'),
                 // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                 done: uploadOnlinesrcDone,
                 fail: uploadOnlineSrcError
