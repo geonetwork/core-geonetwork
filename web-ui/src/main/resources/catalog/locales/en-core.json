@@ -208,6 +208,8 @@
     "isHarvested": "Harvested",
     "y": "Yes",
     "n": "No",
+    "yes": "Yes",
+    "no": "No",
     "publishedForGroup": "Visible by",
     "_op0": "Visible by",
     "status": "Workflow progress",

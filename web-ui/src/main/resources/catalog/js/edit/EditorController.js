@@ -114,12 +114,12 @@
     '$translate', '$compile', '$timeout', '$location',
     'gnEditor', 'gnSearchManagerService',
     'gnConfigService', 'gnUtilityService',
-    'gnCurrentEdit', 'gnConfig', 'gnMetadataActions',
+    'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService,
         gnConfigService, gnUtilityService,
-        gnCurrentEdit, gnConfig, gnMetadataActions) {
+        gnCurrentEdit, gnConfig, gnMetadataActions, Metadata) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -195,7 +195,7 @@
               }
               // Get the schema configuration for the current record
               gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig = config;
-
+              gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
 
 
               var defaultTab = 'default';

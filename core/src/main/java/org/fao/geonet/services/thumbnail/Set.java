@@ -125,7 +125,7 @@ public class Set {
 
 		if (createSmall)
 		{
-			Path smallFile = getFileName(file.getName(), true);
+			Path smallFile = getFileName(file.getOriginalFilename(), true);
             Path outFile   = metadataPublicDatadir.resolve(smallFile);
 
 			removeOldThumbnail(context, id, "small", false);
@@ -140,7 +140,7 @@ public class Set {
 
 		if (scaling)
 		{
-			Path newFile = getFileName(file.getName(), type.equals("small"));
+			Path newFile = getFileName(file.getOriginalFilename(), type.equals("small"));
 			Path outFile = metadataPublicDatadir.resolve(newFile);
 
 			createThumbnail(file, outFile, scalingFactor, scalingDir);
@@ -150,9 +150,9 @@ public class Set {
 		else
 		{
 			//--- move uploaded file to destination directory
-            Files.copy(file.getInputStream(), metadataPublicDatadir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), metadataPublicDatadir.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), file.getName(), false);
+			dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false);
 		}
 
         dataMan.indexMetadata(id, true);
