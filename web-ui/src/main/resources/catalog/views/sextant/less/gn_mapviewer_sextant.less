@@ -3,7 +3,7 @@
 @sxt-orange: #F28033;
 @sxt-btn-size: 2.2em;
 
-@tmp-max-height: 250px;
+@tmp-max-height: 350px;
 
 [sxt-main-viewer] {
 
@@ -389,6 +389,45 @@
       display: none;
     }
     .sxt-layers-tabset {
+      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+    }
+  }
+
+  @media (max-height: 866px) {
+    @tmp-max-height: 300px;
+    .sxt-layers-tabset {
+      height: @tmp-max-height;
+    }
+    .layers .sxt-layertree {
+      height: @tmp-max-height;
+    }
+    .sxt-maximize-layer-tools .sxt-layers-tabset {
+      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+    }
+  }
+
+  @media (max-height: 766px) {
+    @tmp-max-height: 250px;
+    .sxt-layers-tabset {
+      height: @tmp-max-height;
+    }
+    .layers .sxt-layertree {
+      height: @tmp-max-height;
+    }
+    .sxt-maximize-layer-tools .sxt-layers-tabset {
+      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+    }
+  }
+
+  @media (max-height: 666px) {
+    @tmp-max-height: 200px;
+    .sxt-layers-tabset {
+      height: @tmp-max-height;
+    }
+    .layers .sxt-layertree {
+      height: @tmp-max-height;
+    }
+    .sxt-maximize-layer-tools .sxt-layers-tabset {
       height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
     }
   }
