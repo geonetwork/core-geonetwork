@@ -88,6 +88,8 @@
         <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/GML_2_1_2.js"></script>
         <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/SLD_1_0_0.js"></script>
         <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWC_0_3_1.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWS_1_1_0.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/WPS_1_0_0.js"></script>
 
 
         <!--<xsl:if test="$isEditing">-->

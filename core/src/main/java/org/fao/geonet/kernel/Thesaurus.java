@@ -101,7 +101,6 @@ public class Thesaurus {
     private String keywordUrl;
 
     private IsoLanguagesMapper isoLanguageMapper;
-    private FileTime lastModifiedTime;
 
 /*    @SuppressWarnings("unused")
 	private String version;
@@ -141,7 +140,10 @@ public class Thesaurus {
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
-		this.thesaurusFile = thesaurusFile; 
+		this.thesaurusFile = thesaurusFile;
+        if (!siteUrl.endsWith("/")) {
+            siteUrl += '/';
+        }
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
 		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 		
@@ -191,7 +193,18 @@ public class Thesaurus {
 
     @Nonnull
     public FileTime getLastModifiedTime() {
-        return lastModifiedTime;
+        FileTime lastModified;
+        try {
+            lastModified = Files.getLastModifiedTime(getFile());
+        } catch (IOException e) {
+            lastModified = FileTime.fromMillis(System.currentTimeMillis());
+        }
+
+        if (Log.isDebugEnabled(Geonet.THESAURUS)) {
+            Log.debug(Geonet.THESAURUS, title + " has lastModified of: " + lastModified.toMillis());
+        }
+
+        return lastModified;
     }
 
     public String getDownloadUrl() {
@@ -225,14 +238,14 @@ public class Thesaurus {
 
 	protected String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
 		if (type.equals(Geonet.CodeList.REGISTER)) {
-			return siteUrl + "/?uuid="+fname.substring(0, fname.indexOf(".rdf"));
+			return siteUrl + "?uuid="+fname.substring(0, fname.indexOf(".rdf"));
 		} else {
-			return siteUrl + "/thesaurus.download?ref="+Thesaurus.buildThesaurusKey(fname, type, dname);
+			return siteUrl + "thesaurus.download?ref="+Thesaurus.buildThesaurusKey(fname, type, dname);
 		}
 	}
 
     protected String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
-		return siteUrl + "/xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id="; 
+		return siteUrl + "xml.keyword.get?thesaurus="+Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id=";
 		// needs to have term/concept id tacked onto the end
 	}
 
@@ -765,19 +778,20 @@ public class Thesaurus {
                 this.date = df.format(thesaususDate);
             }
 
+            FileTime lastModifiedTime = null;
             if (this.date != null) {
                 try {
-                    this.lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toDate().getTime());
+                    lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toDate().getTime());
                 } catch (IOException e) {
                     Log.warning(Geonet.THESAURUS, "Unable to parse " + this.date + " into an actual java.util.Date object", e);
                 }
             }
 
-            if (this.lastModifiedTime == null) {
+            if (lastModifiedTime == null) {
                 try {
-                    this.lastModifiedTime = Files.getLastModifiedTime(thesaurusFile);
+                    lastModifiedTime = Files.getLastModifiedTime(thesaurusFile);
                 } catch (IOException e) {
-                    this.lastModifiedTime = FileTime.fromMillis(new Date().getTime());
+                    lastModifiedTime = FileTime.fromMillis(new Date().getTime());
                 }
                 if (this.date == null) {
                     this.date = new ISODate(lastModifiedTime.toMillis(), true).toString();

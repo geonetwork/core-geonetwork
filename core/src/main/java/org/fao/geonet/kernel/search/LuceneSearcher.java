@@ -376,24 +376,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         } else {
             final Collection<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
             operations = Sets.newHashSet();
-            if (context.getUserSession() != null && context.getUserSession().getUserId() != null) {
-                for (ReservedOperation operation : ReservedOperation.values()) {
-                    IndexableField[] opFields = doc.getFields(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
+            for (ReservedOperation operation : ReservedOperation.values()) {
+                IndexableField[] opFields = doc.getFields(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
 
-                    for (IndexableField field : opFields) {
-                        Integer groupId = Integer.valueOf(field.stringValue());
-                        if (groups.contains(groupId)) {
-                            operations.add(operation);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                final IndexableField[] groupsPublished = doc.getFields(Geonet.IndexFieldNames.OP_PREFIX + ReservedOperation.view.getId());
-                for (IndexableField field : groupsPublished) {
+                for (IndexableField field : opFields) {
                     Integer groupId = Integer.valueOf(field.stringValue());
                     if (groups.contains(groupId)) {
-                        operations.add(ReservedOperation.view);
+                        operations.add(operation);
                         break;
                     }
                 }

@@ -27,15 +27,15 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -84,10 +84,8 @@ public class GetNarrowerBroader implements Service {
 			else 
 				reqType = KeywordRelation.RELATED;
 			
-			searcher.searchForRelated(params, reqType, context.getLanguage());
+			searcher.searchForRelated(params, reqType, KeywordSort.defaultLabelSorter(SortDirection.DESC), context.getLanguage());
 		
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-			
 			// Build response
 			response.setAttribute("relation", request);
             response.setAttribute("to", conceptId);

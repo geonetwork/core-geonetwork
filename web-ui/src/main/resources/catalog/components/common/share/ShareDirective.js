@@ -23,8 +23,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', '$translate',
-    function(gnShareService, gnShareConstants, $translate) {
+    'gnShareService', 'gnShareConstants', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -36,6 +36,9 @@
           batch: '@gnShareBatch'
         },
         link: function(scope) {
+
+          scope.disableAllCol = gnShareConstants.disableAllCol;
+          scope.displayProfile = gnShareConstants.displayProfile;
 
           angular.extend(scope, {
             batch: scope.batch === 'true',
@@ -119,6 +122,9 @@
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
               return g.label[scope.lang];
+            }
+            else if (scope.sorter.predicate == 'p') {
+              return g.userProfile;
             }
             else {
               return g.privileges[scope.sorter.predicate].value;

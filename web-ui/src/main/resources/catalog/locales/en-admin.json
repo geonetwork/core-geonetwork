@@ -274,6 +274,7 @@
     "data.codeListDir": "Thesaurus folder: ",
     "data.configDir": "Configuration folder: ",
     "data.dataDir": "Data directory: ",
+    "data.formatterPath": "Formatter directory: ",
     "data.resources": "Resources folder: ",
     "data.schemaPluginsDir": "Standard folder: ",
     "data.subversionPath": "Subversion repository: ",
