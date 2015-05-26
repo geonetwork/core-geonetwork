@@ -158,8 +158,9 @@
     background: @sxt-base-color-light;
     color: white;
   }
-  &.disabled {
-    background-color: @sxt-base-color;
+  &.disabled, &[disabled] {
+    background: @sxt-base-color-light;
+    color: white;
   }
 }
 
@@ -618,7 +619,7 @@ ul.gn-resultview {
       box-shadow: @sxt-shadow;
 
       &:hover {
-        background-color: rgba(10, 10, 10, 0.15);
+        background-color: #eee;
         cursor: default;
       }
     }
@@ -646,7 +647,6 @@ ul.gn-resultview {
         }
 
         margin-top: 0;
-        font-weight: 700;
         display: block;
         letter-spacing: normal;
         border: none;
@@ -686,7 +686,6 @@ ul.gn-resultview {
       clear: left;
       color: #000;
       font-size: @sxt-fontsize-small;
-      font-weight: bold;
     }
 
     div.gn-md-links {
