@@ -125,8 +125,8 @@
       system parameter is not specified.
     -->
     <init-param>
-      <param-name>jeeves.configuration.overrides.file</param-name>
-      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+      <param-name>hostExceptions</param-name>
+      <param-value>${cors.urls}</param-value>
     </init-param>
   </filter>
     <filter>
