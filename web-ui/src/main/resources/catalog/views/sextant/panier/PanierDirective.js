@@ -15,10 +15,7 @@
       return {
         restrict: 'A',
         replace: true,
-        scope: {
-          panier: '=sxtPanier',
-          user: '=sxtPanierUser'
-        },
+        scope: true,
         templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panier.html',
         controller: ['$scope', function($scope) {
@@ -27,6 +24,10 @@
           };
         }],
         link: function(scope, element, attrs, controller) {
+
+          scope.$watch('searchObj.panier', function(v) {
+            scope.panier = v;
+          });
 
           scope.locService = gnSearchLocation;
 

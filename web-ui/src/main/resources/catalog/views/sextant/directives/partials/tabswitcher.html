@@ -6,7 +6,8 @@
     <span translate>map</span>
     <span ng-if="mainTabs.map.titleInfo">({{mainTabs.map.titleInfo}})</span>
   </button>
-  <button data-ng-if="mainTabs.panier" class="btn btn-default" data-ng-class="{active: mainTabs.panier.active}" data-ng-click="gotoPanier()">
+  <button data-ng-if="mainTabs.panier" class="btn btn-default" data-ng-class="{active: mainTabs.panier.active}" data-ng-click="gotoPanier()"
+          data-ng-disabled="searchObj.panier.length == 0">
     <span translate>myDownloads</span>
     <span ng-if="searchObj.panier.length">({{searchObj.panier.length}})</span>
   </button>
