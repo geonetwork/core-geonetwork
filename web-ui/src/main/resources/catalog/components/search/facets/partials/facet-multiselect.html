@@ -1,6 +1,6 @@
 <div class="gn-facet" data-ng-show="facetObj">
   <h5 gn-collapse="{{contentCollapsed}}" >
-    <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !collapsed}"></span>
+    <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !collapsed, 'gn-field-empty': isFacetsCollapse(facetConfig.key)}"></span>
     {{facetConfig.label | translate}}
   </h5>
   <div class="list-group" ng-class="{'collapse': contentCollapsed}">
