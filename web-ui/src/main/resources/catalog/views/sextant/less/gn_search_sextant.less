@@ -173,6 +173,7 @@
     color: @sxt-base-color-dark;
     border-top-color: white;
     border-bottom-color: white;
+    font-size: 11px;
     &.active {
       color: @sxt-base-color;
       background: white;
@@ -187,6 +188,9 @@
     box-shadow: @sxt-shadow;
     &.sxt-panel-button {
       margin-left: 29.7em;
+      @media (min-width:  1680px) {
+        margin-left: ~"calc(25% + 2em)";
+      }
     }
     &.sxt-adminbtn {
       margin-right: 1.2em;
@@ -194,7 +198,7 @@
 
   }
   .btn {
-    padding: 3px 10px;
+    padding: 3px 10px 2px;
     text-transform: uppercase;
     font-size: 12px;
     font-weight: bold;
@@ -271,6 +275,7 @@
 }
 
 .sxt-left-panel {
+  padding: 0 .5em 0 1.5em;
   margin-top: -2.5em;
   > div {
     border-radius: 0;
@@ -566,6 +571,7 @@ ul.gn-resultview {
 
   width: 100%;
   margin: 0;
+  padding-top: 2px;
   @thumbnail-width: 170px;
 
   .caret {
@@ -592,7 +598,7 @@ ul.gn-resultview {
     @grid-bottom-margin: 2px;
     border-radius: 4px;
     border: none;
-    padding: 10px 10px 10px 0;
+    padding: 8px 10px 4px 0;
 
     &:nth-child(2n+1) {
       padding-left: 10px;
@@ -634,12 +640,13 @@ ul.gn-resultview {
     .gn-md-title {
       background-color: @sxt-base-color;
       color: white;
-      padding: .8em 1em 0 .7em;
       white-space: normal;
+      width: 100%;
+      display: table;
+      height: 3.8em;
       span {
         font-size: 18px;
-        margin-top: .4em;
-        margin-right: .4em;
+        margin: .9em .4em 0;
       }
       h4 {
         font-size: @sxt-fontsize-big;
@@ -652,9 +659,9 @@ ul.gn-resultview {
             text-decoration: none;
           }
         }
-
         margin-top: 0;
-        display: block;
+        display: table-cell;
+        vertical-align: middle;
         letter-spacing: normal;
         border: none;
       }

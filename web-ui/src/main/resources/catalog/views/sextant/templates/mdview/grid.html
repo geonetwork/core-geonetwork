@@ -21,7 +21,7 @@
 
           <h4 title="{{md.title || md.defaultTitle}}">
             <a  href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md">
-              {{md.title || md.defaultTitle}}</a>
+              {{(md.title || md.defaultTitle) | characters : 100}}</a>
           </h4>
 
         </div>
