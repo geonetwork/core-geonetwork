@@ -12,5 +12,7 @@
   "paginationInfo": "Results {{from}} to {{to}} <em> on {{total}}</em> :",
   "byPage": "by page",
   "sortBy": "Sort by",
-  "myDownloads": "My downloads"
+  "myDownloads": "My downloads",
+  "addLayerPopovermap": "Data added to the map !",
+  "addLayerPopoverpanier": "Data added to the basket !"
 }

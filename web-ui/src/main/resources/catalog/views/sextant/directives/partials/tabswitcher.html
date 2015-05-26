@@ -1,5 +1,6 @@
-<div class="btn-group sxt-panel-button" ng-if="isVisible">
-  <button data-ng-if="mainTabs.search" class="btn btn-default" data-ng-class="{active: mainTabs.search.active}" data-ng-click="locService.setSearch()">
+<div class="btn-group sxt-panel-button" ng-if="isVisible" id="sxt-tabswitcher">
+  <button  data-ng-if="mainTabs.search" class="btn btn-default" data-ng-class="{active: mainTabs.search.active}" data-ng-click="locService.setSearch()"
+          placement="bottom">
     <span translate>catalog</span>
   </button>
   <button data-ng-if="mainTabs.map" class="btn btn-default" data-ng-class="{active: mainTabs.map.active}" data-ng-click="locService.setMap()" >

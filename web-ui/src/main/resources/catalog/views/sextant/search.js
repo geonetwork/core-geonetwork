@@ -74,10 +74,12 @@
     'gnMdViewObj',
     'gnSearchLocation',
     'gnMetadataActions',
+    '$translate',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions) {
+        $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
+        $translate) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -236,6 +238,24 @@
         }
       });
 
+      $scope.addLayerPopover = function(to) {
+        var pop = $('#sxt-tabswitcher');
+        if(!pop) {
+          return;
+        }
+        var content = $translate('addLayerPopover' + to);
+        var opts = {
+          content:content,
+          placement:'bottom'
+        };
+
+        pop.popover(opts);
+        pop.popover('show');
+        $timeout(function() {
+          pop.popover('destroy');
+        }, 5000);
+      };
+
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
@@ -261,6 +281,7 @@
                 feedLayerWithDownloads(layer, link.group);
                 waitingLayers.push(layer);
               });
+          $scope.addLayerPopover('map');
           $scope.mainTabs.map.titleInfo += 1;
 
         },
@@ -275,7 +296,7 @@
             link: link,
             md: md
           });
-          $scope.mainTabs.panier.titleInfo += 1;
+          $scope.addLayerPopover('panier');
         },
 
         addAllMdLayersToPanier: function (layers, md) {

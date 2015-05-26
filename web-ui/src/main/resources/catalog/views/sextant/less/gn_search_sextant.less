@@ -174,14 +174,14 @@
     border-top-color: white;
     border-bottom-color: white;
     font-size: 11px;
-    &.active {
+    &.active, &:hover {
       color: @sxt-base-color;
       background: white;
+      box-shadow: none ;
     }
     &[disabled] {
       color: #d3d3d3;
     }
-
   }
   .btn-group {
     margin-top: @sxt-vieweritem-top;
@@ -197,12 +197,24 @@
     }
 
   }
-  .btn {
+  .btn, .popover-content {
     padding: 3px 10px 2px;
     text-transform: uppercase;
     font-size: 12px;
     font-weight: bold;
   }
+  .popover {
+    margin-top: 4px;
+    border-radius: 2px;
+    .arrow {
+      display: none;
+    }
+  }
+  .popover-content {
+    color: red;
+    font-size: 11px;
+  }
+
 }
 
 .sxt-side-btn {
