@@ -636,12 +636,13 @@ ul.gn-resultview {
     .gn-md-title {
       background-color: @sxt-base-color;
       color: white;
-      padding: .8em 1em 0 .7em;
       white-space: normal;
+      width: 100%;
+      display: table;
+      height: 3.8em;
       span {
         font-size: 18px;
-        margin-top: .4em;
-        margin-right: .4em;
+        margin: .9em .4em 0;
       }
       h4 {
         font-size: @sxt-fontsize-big;
@@ -654,9 +655,9 @@ ul.gn-resultview {
             text-decoration: none;
           }
         }
-
         margin-top: 0;
-        display: block;
+        display: table-cell;
+        vertical-align: middle;
         letter-spacing: normal;
         border: none;
       }
