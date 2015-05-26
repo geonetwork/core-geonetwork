@@ -70,10 +70,10 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 } else if (tab == activeTab) {
-                  //disable others
                   scope.active.layersTools = false;
                   scope.layerTabs[tab].active = false;
                   activeTab = null;
+                  iElement.find('.main-tools').removeClass('sxt-maximize-layer-tools');
                 } else {
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;

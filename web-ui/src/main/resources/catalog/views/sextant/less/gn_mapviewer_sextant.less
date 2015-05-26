@@ -46,6 +46,7 @@
     }
     &.activeTool {
       height: auto;
+      padding-bottom: 1em;
     }
   }
 
@@ -327,10 +328,12 @@
   .sxt-layer-separator {
     margin-bottom: -.8em;
   }
-  .sxt-layer-tabs {
+  .panel-tools .sxt-layer-tabs {
+    display: block;
     margin-left: 2em;
     margin-bottom: 1em;
     button.btn {
+      width: auto;
       background: white;
       color: @sxt-base-color;
       text-transform: uppercase;
@@ -364,6 +367,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     display: none;
+    clear: both;
     & > .nav-tabs {
       display: none;
     }
