@@ -468,6 +468,7 @@
                     }
                     scope.params.desc = desc.join('|');
                   }
+
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {
                         resetForm();
