@@ -448,6 +448,22 @@
       };
     }]);
 
+  module.directive('sxtCustomScroll', [ function() {
+      return {
+        restrict: 'A',
+        link: {
+          post: function(scope, element, attrs) {
+            element.mCustomScrollbar({
+              theme: 'dark-3',
+              scrollButtons: {
+                enable: true
+              }
+            });
+          }
+        }
+      };
+    }]);
+
 
 
 })();

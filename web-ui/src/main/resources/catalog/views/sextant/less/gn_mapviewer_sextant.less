@@ -378,7 +378,13 @@
       background: white;
       padding-top: .6em;
       height: ~"calc(100% - .2em)";
-      overflow-y: scroll;
+      .tab-pane {
+        height: 100%;
+        .panel-carousel {
+          height: 100%;
+          overflow-y: scroll;
+        }
+      }
     }
     .list-group, .list-group-item {
       border: none;

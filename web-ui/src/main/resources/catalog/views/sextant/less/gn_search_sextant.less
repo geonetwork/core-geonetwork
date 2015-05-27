@@ -1,6 +1,13 @@
 @import "../../../style/gn_search";
 @import "gn_mapviewer_sextant.less";
 @import "../../../style/gn_metadata";
+@import (less) "../../../lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.css";
+.mCSB_scrollTools .mCSB_buttonUp,
+.mCSB_scrollTools .mCSB_buttonDown,
+.mCSB_scrollTools .mCSB_buttonLeft,
+.mCSB_scrollTools .mCSB_buttonRight{
+  background-image: url(../catalog/style/mCSB_buttons.png);
+}
 
 @import "ellipsis.less";
 
@@ -406,6 +413,8 @@
 
   .sxt-searchform-content {
     padding: 15px;
+    height: ~"calc(100% - 200px - 6em)";
+    overflow-y: auto;
   }
   .sxt-categorytree {
     ul ul {

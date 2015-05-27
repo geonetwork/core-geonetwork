@@ -55,6 +55,7 @@
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/catalog/lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.js"/>
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>

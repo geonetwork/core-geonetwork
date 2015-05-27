@@ -54,7 +54,7 @@
         <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools}">
 
 
-          <div class="sxt-layertree">
+          <div class="sxt-layertree" sxt-custom-scroll>
             <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
             <div sxt-layertree="map"></div>
           </div>
@@ -89,7 +89,7 @@
                 <i class="fa fa-picture-o fa-fw"></i>
                 <span translate>legends</span>
               </tab-heading>
-              <div gn-legend-panel="map"></div>
+              <div class="panel-carousel" gn-legend-panel="map" sxt-custom-scroll></div>
             </tab>
 
             <tab active="layerTabs.sort.active">
@@ -97,7 +97,7 @@
                 <i class="fa fa-sort fa-fw"></i>
                 <span translate>sort</span>
               </tab-heading>
-              <div gn-layerorder-panel="map"></div>
+              <div class="panel-carousel" gn-layerorder-panel="map" sxt-custom-scroll></div>
             </tab>
 
             <tab active="layerTabs.source.active">
@@ -105,7 +105,7 @@
                 <i class="fa fa-info fa-fw"></i>
                 <span translate>sources</span>
               </tab-heading>
-              <div gn-layersources-panel="map"></div>
+              <div class="panel-carousel" gn-layersources-panel="map" sxt-custom-scroll></div>
             </tab>
 
             <tab active="layerTabs.ncwms.active">
@@ -113,7 +113,7 @@
                 <i class="fa fa-anchor fa-fw"></i>
                 <span translate>ncwms</span>
               </tab-heading>
-              <div ng-repeat="layer in map.getLayers().getArray()">
+              <div ng-repeat="layer in map.getLayers().getArray()" sxt-custom-scroll>
                 <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
                   <div class="panel-heading">{{layer.get('label')}}</div>
                   <div gn-ncwms-transect="" map="map" layer="layer"></div>

@@ -3,7 +3,7 @@
     <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !collapsed, 'gn-field-empty': isFacetsCollapse(facetConfig.key)}"></span>
     {{facetConfig.label | translate}}
   </h5>
-  <div class="list-group" ng-class="{'collapse': contentCollapsed}">
+  <div class="list-group" ng-class="{'collapse': contentCollapsed}" sxt-custom-scroll>
 
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj"
             data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
