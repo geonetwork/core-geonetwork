@@ -11,6 +11,10 @@
   src: local('Roboto'), local('Roboto-Regular'), url(http://fonts.gstatic.com/s/roboto/v15/oMMgfZMQthOryQo9n22dcuvvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
 }
 
+@font-face {
+  font-family: 'Sextant';
+  src: url('../catalog/views/sextant/less/fonts/sextant.ttf') format('truetype'), url('../catalog/views/sextant/less/fonts/sextant.eot') format('eot');
+}
 
 @sxt-orange: #F28033;
 @ellipsis-height: 124px;
@@ -148,6 +152,10 @@
   }
 }
 
+.fsxt {
+  font-family: Sextant;
+  font-size: 14px;
+}
 .btn-default {
   background: @sxt-base-color;
   color: white;
@@ -426,11 +434,11 @@
       }
     }
 
-
     > div {
       overflow: auto;
       max-height: 9.7em;
     }
+
 
     .list-group {
       border-left: 1px dotted rgba(0, 0, 0, 0.2);

@@ -48,8 +48,12 @@
           url: 'http://ids.pigma.org/geoserver/ign/wms'
         }, {
           name: 'Ifremer - Biologie',
-          url: 'ttp://www.ifremer.fr/services/wms/biologie?'
-        }],
+          url: 'http://www.ifremer.fr/services/wms/biologie?'
+      }, {
+        name: 'Ifremer - Océanographie physique',
+        url: 'http://www.ifremer.fr/services/wms/oceanographie_physique?service=WMS&request=GetCapabilities'
+      }],
+
         wmts: [{
             name: 'Ifremer - maps.ngdc.noaa.gov',
             url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
