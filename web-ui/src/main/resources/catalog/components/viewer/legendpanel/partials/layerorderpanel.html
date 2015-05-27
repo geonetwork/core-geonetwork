@@ -3,8 +3,8 @@
         class="list-group-item" >
 
       <span class="">
-       <a href="" class="fa fa-arrow-up" ng-class="{ 'disabled' : $first}" ng-click="moveLayer(layer, 1)" title="{{'layerMoveUp'|translate}}"></a>
-       <a href="" class="fa fa-arrow-down" ng-class="{ 'disabled' : $last}" ng-click="moveLayer(layer, -1)"  title="{{'layerMoveDown'|translate}}"></a>
+       <a href="" class="fa fa-arrow-up" ng-class="{ 'disabled' : $first}" ng-click="moveLayer(layer, 1, $first)" title="{{'layerMoveUp'|translate}}"></a>
+       <a href="" class="fa fa-arrow-down" ng-class="{ 'disabled' : $last}" ng-click="moveLayer(layer, -1, $last)"  title="{{'layerMoveDown'|translate}}"></a>
       </span>
       <label>
         {{layer.get('label')}}

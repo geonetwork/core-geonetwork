@@ -50,7 +50,8 @@
            * @param {ol.layer} layer
            * @param {float} delta
            */
-          scope.moveLayer = function(layer, delta) {
+          scope.moveLayer = function(layer, delta, dont) {
+            if(dont) return;
             var layersCollection = map.getLayers();
             var index = layersCollection.getArray().indexOf(layer);
             layersCollection.removeAt(index);

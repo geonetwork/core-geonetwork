@@ -14,5 +14,6 @@
   "sortBy": "Sort by",
   "myDownloads": "My downloads",
   "addLayerPopovermap": "Data added to the map !",
-  "addLayerPopoverpanier": "Data added to the basket !"
+  "addLayerPopoverpanier": "Data added to the basket !",
+  "sources": "Sources : "
 }

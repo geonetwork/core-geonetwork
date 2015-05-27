@@ -12,6 +12,9 @@
   "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
   "byPage": "par page",
   "sortBy": "Tri par",
-  "myDownloads": "Mes téléchargements"
+  "myDownloads": "Mes téléchargements",
+  "addLayerPopovermap": "Couche ajoutée à la carte !",
+  "addLayerPopoverpanier": "Couche ajoutée au panier !",
+  "sources": "Sources : "
 
 }
