@@ -164,6 +164,19 @@
   }
 }
 
+.dropdown-menu {
+  font-size: @sxt-fontsize;
+  border-radius: 0px;
+  border: none;
+  box-shadow: @sxt-shadow;
+  > li > a {
+    padding: 1px 10px;
+    &.selected {
+      color: @sxt-base-color;
+    }
+  }
+}
+
 .sxt-main-tabs {
   background: @sxt-base-color-dark;
   height: @sxt-viewer-top;
