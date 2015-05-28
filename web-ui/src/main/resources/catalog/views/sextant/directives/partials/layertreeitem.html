@@ -1,4 +1,4 @@
-<li class="" data-ng-class="{'active': member.showInfo}">
+<li class="" data-ng-class="{'active': member.showInfo, 'sxt-outofrange': !((member.getMaxResolution() >= map.getView().getResolution()) && (member.getMinResolution() <= map.getView().getResolution()))}">
   <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="sxt-layer-visibility fa fa-minus-square"></i>&nbsp;<span>{{member.name}}</span></div>
   <div ng-if="!isParentNode()">
 
