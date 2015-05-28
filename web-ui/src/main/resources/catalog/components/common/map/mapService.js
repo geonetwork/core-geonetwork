@@ -212,6 +212,16 @@
             }
           },
 
+          /**
+           * Compute the resolution from a given scale
+           * @param {ol.Projection} projection
+           * @param {number} scale
+           * @returns {number} resolution
+           */
+          getResolutionFromScale: function(projection, scale) {
+            return scale && scale * 0.00028 / projection.getMetersPerUnit();
+          },
+
           addKmlToMap: function(name, url, map) {
             if (!url || url == '') {
               return;
@@ -262,6 +272,8 @@
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
+              minResolution: options.minResolution,
+              maxResolution: options.maxResolution,
               cextent: options.extent
             });
 
@@ -371,9 +383,12 @@
                 group: layer.group,
                 metadata: metadata,
                 isNcwms: isNcwms,
-                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
-              }
-              );
+                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer),
+                minResolution: this.getResolutionFromScale(
+                    map.getView().getProjection(), layer.MinScaleDenominator),
+                maxResolution: this.getResolutionFromScale(
+                    map.getView().getProjection(), layer.MaxScaleDenominator)
+              });
               layer.set('errors', errors);
               return layer;
             }
