@@ -28,7 +28,7 @@
 
           var drawInteraction, featureOverlay;
           var map = scope.map;
-
+          //element.find('[ui-slider]').slider();
           /**
            * Just manage active button in ui.
            * Values of activeTool can be 'time', 'profile', 'transect'
@@ -200,6 +200,10 @@
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
           };
+
+          element.bind('$destroy', function(e) {
+            element.find('[ui-slider]').slider();
+          });
 
           initNcwmsParams();
         }
