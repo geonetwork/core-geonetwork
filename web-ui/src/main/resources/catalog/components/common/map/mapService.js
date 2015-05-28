@@ -262,6 +262,8 @@
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
+              minResolution: options.minResolution,
+              maxResolution: options.maxResolution,
               cextent: options.extent
             });
 
@@ -371,7 +373,9 @@
                 group: layer.group,
                 metadata: metadata,
                 isNcwms: isNcwms,
-                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
+                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer),
+                minResolution: layer.MinScaleDenominator,
+                maxResolution: layer.MaxScaleDenominator
               }
               );
               layer.set('errors', errors);
