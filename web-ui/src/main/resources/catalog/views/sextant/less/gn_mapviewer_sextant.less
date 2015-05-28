@@ -616,7 +616,6 @@
       label {
         padding: 2px 0 2px 12px;
         &:hover {
-          color: @sxt-base-color;
           text-decoration: none;
           cursor: pointer;
         }
@@ -627,6 +626,22 @@
         content: "\f0fe";
       }
       color: @sxt-base-color;
+    }
+  }
+  .panel-ncwms-container {
+    border: none;
+    font-size: @sxt-fontsize;
+    .panel-heading {
+      padding: 0 5px;
+      height: 2em;
+      line-height: 2em;
+      font-size: @sxt-fontsize-big;
+      background-color: white;
+      border-bottom-color: @sxt-base-color;
+
+    }
+    label {
+      font-weight: 400;
     }
   }
 }

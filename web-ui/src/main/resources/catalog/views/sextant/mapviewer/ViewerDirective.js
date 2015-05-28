@@ -96,6 +96,13 @@
                 target: document.querySelector('footer')
               }));
 
+              scope.map.getLayers().on('remove', function(e) {
+                  if(scope.active.NCWMS && scope.active.NCWMS == e.element) {
+                    scope.active.NCWMS = null;
+                    scope.active.layersTools = false;
+                    scope.layerTabs.ncwms.active = false;
+                  }
+              });
             }
           };
         }
