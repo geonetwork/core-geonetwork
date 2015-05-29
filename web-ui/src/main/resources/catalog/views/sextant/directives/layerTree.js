@@ -13,12 +13,27 @@
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/layertree.html',
-        controller: [ '$scope', function($scope) {
+        controller: [ '$scope', '$compile', function($scope, $compile) {
           var $this = this;
+
+          this.setWPS = function(layer) {
+            $scope.loadTool('wps');
+
+            var scope = $scope.$new();
+            scope.wpsUri = "http://visi-sextant.ifremer.fr/cgi-bin/sextant/wps/pywps2.cgi";
+            scope.wpsProcessId = "script:especesbenthiques";
+            //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
+            // template="' + template + '"
+            var el = angular.element('<gn-wps-process-form data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
+            $compile(el)(scope);
+            var element = $('.sxt-wps-panel');
+            element.empty();
+            element.append(el);
+          };
 
           this.setNCWMS = function(layer) {
             $scope.active.NCWMS = layer;
-            $scope.layerTabSelect('ncwms');
+            $scope.loadTool('ncwms');
           };
 
           this.comboGroups = {};
@@ -220,7 +235,6 @@
             var d =  scope.member.get('downloads');
             if(angular.isArray(d)) {
               scope.download = d[0];
-
             }
           }
 
@@ -233,13 +247,7 @@
           };
 
           scope.showWPS = function() {
-            scope.wpsUri = "http://visi-sextant.ifremer.fr/cgi-bin/sextant/wps/pywps2.cgi";
-            scope.wpsProcessId = "script:especesbenthiques";
-            //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
-            // template="' + template + '"
-            var el = angular.element('<gn-wps-process-form data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
-            $compile(el)(scope);
-            element.append(el);
+            controller.setWPS(scope.member);
           };
         }
       };

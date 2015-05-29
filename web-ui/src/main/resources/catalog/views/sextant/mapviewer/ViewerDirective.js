@@ -79,6 +79,16 @@
                   activeTab = tab;
                 }
               };
+              scope.loadTool = function(tab) {
+                if(activeTab == 'ncwms' || activeTab == 'wps') {
+                  scope.layerTabs[tab].active = true;
+                  scope.active.layersTools = true;
+                  activeTab = tab;
+                }
+                else {
+                  scope.layerTabSelect(tab);
+                }
+              };
 
             },
             post: function postLink(scope, iElement, iAttrs, controller) {

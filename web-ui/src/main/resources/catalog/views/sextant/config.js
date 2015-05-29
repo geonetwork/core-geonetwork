@@ -190,6 +190,9 @@
         },
         ncwms: {
           active: false
+        },
+        wps: {
+          active: false
         }
       };
 
