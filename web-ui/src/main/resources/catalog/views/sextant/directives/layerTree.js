@@ -16,14 +16,12 @@
         controller: [ '$scope', '$compile', function($scope, $compile) {
           var $this = this;
 
-          this.setWPS = function(layer) {
+          this.setWPS = function(process, layer) {
             $scope.loadTool('wps');
 
             var scope = $scope.$new();
-            scope.wpsUri = "http://visi-sextant.ifremer.fr/cgi-bin/sextant/wps/pywps2.cgi";
-            scope.wpsProcessId = "script:especesbenthiques";
-            //var template = "../../catalog/views/sextant/templates/wps/especesbenthiques.html";
-            // template="' + template + '"
+            scope.wpsUri = process.url;
+            scope.wpsProcessId = process.name;
             var el = angular.element('<gn-wps-process-form data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
             $compile(el)(scope);
             var element = $('.sxt-wps-panel');
@@ -236,6 +234,11 @@
             if(angular.isArray(d)) {
               scope.download = d[0];
             }
+            var p =  scope.member.get('processes');
+            if(angular.isArray(p)) {
+              scope.process = p[0];
+            }
+
           }
 
           scope.addToPanier = function(download) {
@@ -246,8 +249,8 @@
             gnMdView.openMdFromLayer(scope.member);
           };
 
-          scope.showWPS = function() {
-            controller.setWPS(scope.member);
+          scope.showWPS = function(process) {
+            controller.setWPS(process, scope.member);
           };
         }
       };

@@ -228,6 +228,11 @@
 
         layer.set('downloads', downloads);
 
+        var process = md && md.getLinksByType(linkGroup,
+            'OGC:WPS');
+
+        layer.set('processes', process);
+
       };
 
       $scope.$on('layerAddedFromContext', function(e,l) {
