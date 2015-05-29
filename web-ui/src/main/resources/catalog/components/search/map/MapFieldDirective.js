@@ -43,9 +43,6 @@
                    * geometry is null.
                    */
                   scope.$watch(scope.gnDrawBboxBtn, function(v) {
-                    if (!v) {
-                      delete scope.searchObj.params.relation;
-                    }
                     scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
                   });
 
