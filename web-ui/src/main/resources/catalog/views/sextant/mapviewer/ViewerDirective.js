@@ -80,7 +80,7 @@
                 }
               };
               scope.loadTool = function(tab) {
-                if(activeTab == 'ncwms' || activeTab == 'wps') {
+                if(scope.isSeparatedTool()) {
                   scope.layerTabs[tab].active = true;
                   scope.active.layersTools = true;
                   activeTab = tab;
@@ -89,6 +89,15 @@
                   scope.layerTabSelect(tab);
                 }
               };
+
+              /**
+               * Tells if a separated tool (everything but legend/sources/sort)
+               * is opened in the tool panel.
+               * @returns {boolean}
+               */
+              scope.isSeparatedTool = function() {
+                return activeTab == 'ncwms' || activeTab == 'wps';
+              }
 
             },
             post: function postLink(scope, iElement, iAttrs, controller) {

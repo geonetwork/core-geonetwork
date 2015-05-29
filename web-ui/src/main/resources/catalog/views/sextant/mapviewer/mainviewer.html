@@ -75,7 +75,7 @@
           <button class="btn btn-default btn-xs" sxt-layer-tools-toggle=".main-tools">
             <i class="fa fa-plus"></i>
           </button>
-          <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': layerTabs.ncwms.active || layerTabs.wps.active}">
+          <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
               <span translate>legend</span>
             </button>
