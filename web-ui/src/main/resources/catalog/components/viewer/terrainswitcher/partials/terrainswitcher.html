@@ -1,0 +1,20 @@
+<div class="btn-group baselayer"
+     data-ng-class="dropup ? 'dropup' : ''"
+     data-ng-showa="terrains.length > 1">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown">
+    <span data-translate="">terrainProvider</span>&nbsp;
+      {{currentTerrain}}
+    <span class="caret"/>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li data-ng-repeat="layer in terrains">
+      <a href="" data-ng-click="setTerrain(layer)">
+        <span class="fa"
+              data-ng-class="layer == currentTerrain ? 'fa-dot-circle-o' : 'fa-circle-o'"/>
+        {{('terrainProvider-' + layer) | translate}}
+      </a>
+    <li>
+  </ul>
+</div>
