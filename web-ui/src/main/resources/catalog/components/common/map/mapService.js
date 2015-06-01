@@ -119,17 +119,28 @@
             var feat = new ol.Feature();
             var extent = this.getBboxFromMd(md);
             if (extent) {
-              // Build multipolygon from the set of bboxes
-              var multipolygon = new ol.geom.MultiPolygon(null);
-              for (var j = 0; j < extent.length; j++) {
-                var projectedExtent =
-                    ol.extent.containsExtent(proj.getWorldExtent(), extent[j]) ?
-                    ol.proj.transformExtent(extent[j], 'EPSG:4326', proj) :
-                    proj.getExtent();
-                var coords = this.getPolygonFromExtent(projectedExtent);
-                multipolygon.appendPolygon(new ol.geom.Polygon(coords));
+              var geometry;
+              // If is composed of one geometry of type point
+              if (extent.length === 1 &&
+                  extent[0][0] === extent[0][2] &&
+                  extent[0][1] === extent[0][3]) {
+                geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
+              } else {
+                // Build multipolygon from the set of bboxes
+                geometry = new ol.geom.MultiPolygon(null);
+                for (var j = 0; j < extent.length; j++) {
+                  // TODO: Point will not be supported in multi geometry
+                  var projectedExtent =
+                      ol.extent.containsExtent(
+                      proj.getWorldExtent(),
+                      extent[j]) ?
+                      ol.proj.transformExtent(extent[j], 'EPSG:4326', proj) :
+                      proj.getExtent();
+                  var coords = this.getPolygonFromExtent(projectedExtent);
+                  geometry.appendPolygon(new ol.geom.Polygon(coords));
+                }
               }
-              feat.setGeometry(multipolygon);
+              feat.setGeometry(geometry);
             }
             return feat;
           },
