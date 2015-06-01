@@ -336,7 +336,7 @@ ul.gn-resultview {
 }
 
 [ngeo-map] {
-  height: 86vh;
+  height: 89.9vh;
   &.gn-search-map {
     height: 200px;
     border: 1px solid #ccc;
@@ -443,7 +443,24 @@ ul.gn-resultview {
 }
 
 [gn-main-viewer] {
-  margin-top: -20px;
+  margin-top: -18px;
+  .panel-tools {
+    .panel-heading {
+      background-color: transparent;
+    }
+  }
+
+  .nav-tabs {
+    > li {
+      cursor: pointer;
+    }
+  }
+
+  [gn-kml-import] {
+    input {
+      margin-top: 15px;
+    }
+  }
 }
 /*
     Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
@@ -458,7 +475,7 @@ ul.gn-resultview {
   border-radius: 0px;
 }
 .gn-search-page {
-  padding-bottom:70px;
+  padding-bottom:50px;
 }
 
 .cookie-warning {
