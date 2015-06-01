@@ -87,24 +87,51 @@
 
           /**
            * Get the extent of the md.
-           * It is stored in the object md.geoBox as a String
+           * It is stored in the object md.geoBox as an array of String
            * '150|-12|160|12'.
-           * Returns it as an array of floats.
+           * Returns it as an array of array of floats.
            *
            * @param {Object} md
            */
           getBboxFromMd: function(md) {
             if (angular.isUndefined(md.geoBox)) return;
+            var bboxes = [];
+            angular.forEach(md.geoBox, function(bbox) {
+              var c = bbox.split('|');
+              if (angular.isArray(c) && c.length == 4) {
+                bboxes.push([parseFloat(c[0]),
+                      parseFloat(c[1]),
+                      parseFloat(c[2]),
+                      parseFloat(c[3])]);
+              }
+            });
+            return bboxes;
+          },
 
-            var bbox = angular.isArray(md.geoBox) ?
-                md.geoBox[0] : md.geoBox;
-            var c = bbox.split('|');
-            if (angular.isArray(c) && c.length == 4) {
-              return [parseFloat(c[0]),
-                parseFloat(c[1]),
-                parseFloat(c[2]),
-                parseFloat(c[3])];
+          /**
+           * Get the extent of the md.
+           * Returns a feature
+           *
+           * @param {Object} md
+           * @param {Object} proj
+           */
+          getBboxFeatureFromMd: function(md, proj) {
+            var feat = new ol.Feature();
+            var extent = this.getBboxFromMd(md);
+            if (extent) {
+              // Build multipolygon from the set of bboxes
+              var multipolygon = new ol.geom.MultiPolygon(null);
+              for (var j = 0; j < extent.length; j++) {
+                var projectedExtent =
+                    ol.extent.containsExtent(proj.getWorldExtent(), extent[j]) ?
+                    ol.proj.transformExtent(extent[j], 'EPSG:4326', proj) :
+                    proj.getExtent();
+                var coords = this.getPolygonFromExtent(projectedExtent);
+                multipolygon.appendPolygon(new ol.geom.Polygon(coords));
+              }
+              feat.setGeometry(multipolygon);
             }
+            return feat;
           },
 
           /**
@@ -216,7 +243,7 @@
            * Compute the resolution from a given scale
            * @param {ol.Projection} projection
            * @param {number} scale
-           * @returns {number} resolution
+           * @return {number} resolution
            */
           getResolutionFromScale: function(projection, scale) {
             return scale && scale * 0.00028 / projection.getMetersPerUnit();
