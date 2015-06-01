@@ -19,7 +19,7 @@
           <class name=".guiservices.templates.Get"/>
       </service>
       
-      <service name="admin.templates.save.order">
+      <service name="admin.templates.save.order" deprecated="true">
           <documentation><![CDATA[
               Save template order.
               ]]></documentation>
