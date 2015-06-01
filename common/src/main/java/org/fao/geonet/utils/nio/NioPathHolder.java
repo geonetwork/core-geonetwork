@@ -52,9 +52,13 @@ public class NioPathHolder {
                     // failed
                 }
             } else {
-                Path srcPath = ACTUAL_RELATIVE_TO.get().resolve(systemId);
-                if (Files.isRegularFile(srcPath)) {
-                    return srcPath;
+                try {
+                    Path srcPath = ACTUAL_RELATIVE_TO.get().resolve(systemId);
+                    if (Files.isRegularFile(srcPath)) {
+                        return srcPath;
+                    }
+                } catch (RuntimeException e) {
+                    return null;
                 }
             }
         }
