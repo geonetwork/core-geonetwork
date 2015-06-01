@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -113,19 +114,64 @@ abstract class AbstractFormatService {
         return formatDir;
     }
 
-    protected String resolveId(String id) throws Exception {
+    /**
+     * Check if a record exist with matching the uuid or the id.
+     *  If uuid is provided
+     *  <ul>
+     *      <li>the resolution check that the record
+     *  exist and is accessible to the user.</li>
+     *      <li>check is done on uuid first.</li>
+     *  </ul>
+     *  If id is provided, there is no check that the metadata record
+     *  is available in the catalogue.
+     *
+     *  Resolving by id will be faster.
+     *
+     * @param id    the internal identifier
+     * @param uuid  the record UUID
+     * @return
+     * @throws Exception
+     */
+    protected String resolveId(String id, String uuid) throws Exception {
         String resolvedId;
-            try {
+        try {
+            if (uuid != null) {
+                return resolveUuid(uuid);
+            } else {
+                if (id == null) {
+                    throw new ResourceNotFoundEx(
+                            "A uuid or an id MUST be provided.");
+                }
                 Integer.parseInt(id);
                 resolvedId = id;
-            } catch (NumberFormatException e) {
-                try {
-                    resolvedId = ApplicationContextHolder.get().getBean(DataManager.class).getMetadataId(id);
-                } catch (Exception e2) {
-                    throw new ResourceNotFoundEx("Metadata with id: id");
-                }
             }
+        } catch (NumberFormatException e) {
+            throw new BadParameterEx(
+                    "Invalid integer value for parameter id '" + id + "'.", id);
+        } catch (BadParameterEx e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResourceNotFoundEx(
+                        "No record found with id '" + id +
+                        "' or uuid '" +uuid + "'.");
+        }
 
+        return resolvedId;
+    }
+
+    protected String resolveUuid(String uuid) throws Exception {
+        if (StringUtils.isEmpty(uuid)) {
+            throw new BadParameterEx(
+                    "UUID can't be null or empty.", uuid);
+        }
+
+        String resolvedId = ApplicationContextHolder.get()
+                                .getBean(DataManager.class)
+                                .getMetadataId(uuid);
+        if (resolvedId == null) {
+            throw new ResourceNotFoundEx(
+                    "No record found with uuid '" + uuid + "'.");
+        }
         return resolvedId;
     }
 }
