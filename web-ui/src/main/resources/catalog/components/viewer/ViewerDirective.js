@@ -173,42 +173,6 @@
         }
       };
     }]);
-  module.directive('gnvLayermanagerBtn', ['$timeout',
-    function($timeout) {
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-
-          var toggleLayer = attrs['gnvLayermanagerBtn'] === 'true';
-          var buttons = element.find('.btn-group.flux button');
-          buttons.bind('click', function() {
-            buttons.removeClass('active');
-            element.addClass('active');
-            $(this).addClass('active');
-            if (toggleLayer) element.find('.layers').addClass('collapsed');
-            element.find('.panel-carousel').removeClass('collapsed');
-            element.find('.unfold').css('opacity', 1);
-            element.find('.panel-carousel-container').css('left',
-                '-' + ($(this).index() * 100) + '%');
-          });
-
-
-          element.find('.unfold').click(function() {
-            element.find('.btn-group button').removeClass('active');
-            if (toggleLayer) element.find('.layers').removeClass('collapsed');
-            element.find('.panel-carousel').addClass('collapsed');
-            element.find('.unfold').css('opacity', 0);
-          });
-
-          // Select the first menu when loaded
-          $timeout(function() {
-            if (buttons.get(0)) {
-              buttons.get(0).click();
-            }
-          });
-        }
-      };
-    }]);
 
   module.directive('gnvClosePanel', [
     function() {
