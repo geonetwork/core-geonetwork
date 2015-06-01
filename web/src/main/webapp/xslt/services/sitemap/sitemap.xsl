@@ -5,19 +5,74 @@
   <xsl:include href="../../common/base-variables.xsl"/>
   
   <xsl:variable name="format" select="/root/request/format"/>
-  
-  
+  <xsl:variable name="indexDocs" select="/root/response/indexDocs"/>
+  <xsl:variable name="changeDate" select="/root/response/changeDate"/>
+
   <xsl:template match="/root">
-      
+    <xsl:choose>
+      <!-- Return index document -->
+      <xsl:when test="string($indexDocs)">
+        <xsl:call-template name="indexDoc"/>
+      </xsl:when>
+      <!-- Return results -->
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="$format='rdf'">
+            <xsl:call-template name="rdf"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="xml"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="indexDoc">
+    <sitemapindex
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
+
+      <xsl:call-template name="displayIndexDocs">
+        <xsl:with-param name="pStart" select="1"/>
+        <xsl:with-param name="pEnd" select="$indexDocs"/>
+      </xsl:call-template>
+    </sitemapindex>
+  </xsl:template>
+
+
+  <xsl:template name="displayIndexDocs">
+    <xsl:param name="pStart"/>
+    <xsl:param name="pEnd"/>
+
+    <xsl:if test="not($pStart > $pEnd)">
       <xsl:choose>
-        <xsl:when test="$format='rdf'">
-          <xsl:call-template name="rdf"/>
+        <xsl:when test="$pStart = $pEnd">
+          <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <xsl:variable name="formatParam">
+              <xsl:if test="string($format)"><xsl:value-of select="$format" />/</xsl:if>
+            </xsl:variable>
+            <loc><xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of select="$formatParam" /><xsl:value-of select="$pStart" />/<xsl:value-of select="/root/gui/language" /></loc>
+            <lastmod><xsl:value-of select="$changeDate" /></lastmod>
+          </sitemap>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:call-template name="xml"/>
+          <xsl:variable name="vMid" select=
+            "floor(($pStart + $pEnd) div 2)"/>
+          <xsl:call-template name="displayIndexDocs">
+            <xsl:with-param name="pStart" select="$pStart"/>
+            <xsl:with-param name="pEnd" select="$vMid"/>
+          </xsl:call-template>
+          <xsl:call-template name="displayIndexDocs">
+            <xsl:with-param name="pStart" select="$vMid+1"/>
+            <xsl:with-param name="pEnd" select="$pEnd"/>
+          </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
+    </xsl:if>
   </xsl:template>
+
   
   <xsl:template name="xml">
     <urlset
