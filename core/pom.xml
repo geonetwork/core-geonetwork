@@ -489,14 +489,14 @@
                 </property>
             </activation>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
+              <plugins>
+                <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>findbugs-maven-plugin</artifactId>
+                </plugin>
+              </plugins>
             </build>
-        </profile>
+          </profile>
     </profiles>
     <properties>
         <rootProjectDir>${basedir}/..</rootProjectDir>
