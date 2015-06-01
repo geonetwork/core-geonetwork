@@ -62,7 +62,11 @@
 				<div class="tpl-emodnet">
 					<!--<div class="ui-layout-content">-->
 					<div class="ui-layout-content mdshow-tabpanel">
-						<a id="md-xml-btn" class="file-xml" title="Export XML" target="_blank" href="{/root/url}/srv/eng/xml.metadata.get?uuid={$identifier}"/>
+						<a id="md-xml-btn"
+               class="file-xml"
+               title="Export XML"
+               target="_blank"
+               href="{/root/url}xml.metadata.get?uuid={$identifier}">&#160;</a>
 
 						<table class="print_table" border="0" cellpadding="0"
 							cellspacing="0">
