@@ -1,2 +1,6 @@
-UPDATE Settings SET value='3.0.1' WHERE name='system/platform/version';
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('map/is3DModeAllowed', 'false', 2, 9593, 'n');
+
+  UPDATE Settings SET value='3.0.1' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';

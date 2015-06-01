@@ -47,7 +47,7 @@
               scope.ol3d = null;
 
               // 3D mode is allowed and disabled by default
-              scope.is3DModeAllowed = gnConfig['is3DModeAllowed'] || true;
+              scope.is3DModeAllowed = gnConfig['map.is3DModeAllowed'] || false;
               scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
 
 
