@@ -95,6 +95,7 @@
                indexKey="thesaurus-external.parameter.NVS.P35"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
+        <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
     </facets>
 
     <summaryTypes>
@@ -177,6 +178,8 @@
             <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>
             <item facet="thesaurus-external.parameter.NVS.P35" max="300"/>
+            <item facet="_groupPublished" max="199" sortBy="value"
+                  translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
         </summaryType>
     </summaryTypes>
 </bean:beans>
