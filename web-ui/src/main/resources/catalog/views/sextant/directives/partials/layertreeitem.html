@@ -4,43 +4,43 @@
 
     <!--Drop down button for layer actions-->
     <div class="btn-group pull-right">
-      <button data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle pull-right btn btn-default btn-xs" type="button">
+      <a role="button" tabindex="0" class="sxt-layer-dropdown-btn dropdown-toggle pull-right btn btn-default btn-xs"  sxt-popover-dropdown>
         <span class="fa fa-cog"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
+      </a>
+      <ul style="display:none" class="list-group">
 
         <!--Zoom To layer-->
-        <li><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
+        <li class="list-group-item"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
           <i class="fa fa-arrows-alt"></i>&nbsp;<span translate="">layerExtentZoom</span>
         </a></li>
 
         <!--Open metadata-->
-        <li data-ng-if="member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata()">
+        <li class="list-group-item" data-ng-if="member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata()">
           <i class="fa fa-file"></i>&nbsp;<span translate="">showMetadata</span>
         </a></li>
 
         <!--Remove layer-->
-        <li><a href="" data-ng-click="map.removeLayer(member)">
+        <li class="list-group-item"><a href="" data-ng-click="map.removeLayer(member)">
           <i class="fa fa-trash-o"></i>&nbsp;<span translate="">remove</span>
         </a></li>
 
         <!--opacity-->
-        <li><label><span translate="">opacity</span>
+        <li class="list-group-item"><label><span translate="">opacity</span>
             <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
         </label></li>
 
         <!--NCWMS-->
-        <li data-ng-if="member.ncInfo"><a href="" data-ng-click="setNCWMS(member)">
+        <li class="list-group-item" data-ng-if="member.ncInfo"><a href="" data-ng-click="setNCWMS(member)">
           <i class="fa fa-anchor"></i>&nbsp;<span translate="">ncwms</span>
         </a></li>
 
         <!--downloads-->
-        <li data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
+        <li class="list-group-item" data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
           <i class="fa fa-download"></i>&nbsp;<span translate="">download</span>
         </a></li>
 
         <!--WPS-->
-        <li data-ng-if="process"><a href="" data-ng-click="showWPS(process)">
+        <li class="list-group-item" data-ng-if="process"><a href="" data-ng-click="showWPS(process)">
           <i class="fa fa-gear"></i>&nbsp;<span translate="">WPS</span>
         </a></li>
 

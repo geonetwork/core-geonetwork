@@ -205,5 +205,40 @@
     }
   }]);
 
+  module.directive('sxtPopoverDropdown', [ function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+          var parent = element.parents('.btn-group').first();
+          var content = parent.find('ul');
+
+          element.popover({
+            container: 'body',
+            placement: 'right',
+            content: ' '
+          });
+
+          element.on('shown.bs.popover', function() {
+            content.css('display', 'inline').appendTo(
+              element.data('bs.popover').$tip.find('.popover-content')
+            );
+          });
+          element.on('hidden.bs.popover', function() {
+            content.css('display', 'none').appendTo(parent);
+          });
+
+          // can’t use dismiss boostrap option: incompatible with opacity slider
+          $('body').on('click', function(e) {
+            if (element.data('bs.popover').$tip
+                && (element[0] != e.target)
+                && (!$.contains(element[0], e.target))
+                && (!$.contains(element.data('bs.popover').$tip, e.target))) {
+              element.popover('hide');
+            }
+          });
+      }
+    }
+  }]);
+
 
 })();

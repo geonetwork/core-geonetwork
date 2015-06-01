@@ -252,7 +252,7 @@
           scope.showWPS = function(process) {
             controller.setWPS(process, scope.member);
           };
-        }
+       }
       };
     }]);
 

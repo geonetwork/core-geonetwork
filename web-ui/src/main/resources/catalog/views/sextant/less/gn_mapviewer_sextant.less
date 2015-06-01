@@ -527,7 +527,7 @@
     .sxt-layer-visibility {
       color: @sxt-base-color;
     }
-    button.dropdown-toggle {
+    a.dropdown-toggle {
       border: none;
       background: transparent;
       color: @sxt-base-color;
@@ -642,6 +642,27 @@
     }
     label {
       font-weight: 400;
+    }
+  }
+
+}
+
+.popover {
+  height: auto;
+  border-radius: 2px;
+  font-size: 12px;
+  .popover-content {
+    padding: 0;
+    display: table-cell;
+    height: 190px;
+    vertical-align: middle;
+    li {
+      padding: 8px 10px;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+      &:first-child { border-top: none; }
+      &:last-child { border-bottom: none; }
     }
   }
 }
