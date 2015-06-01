@@ -350,8 +350,11 @@
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
-                legend = layer.Style[layer.Style.length - 1]
-                    .LegendURL[0].OnlineResource;
+                var url = layer.Style[layer.Style.length - 1]
+                  .LegendURL[0];
+                if (url) {
+                  legend = url.OnlineResource;
+                }
               }
               if (angular.isDefined(layer.Attribution)) {
                 if (angular.isArray(layer.Attribution)) {

@@ -80,29 +80,27 @@
       </h3>
     </div>
     <div class="panel-body">
-      <div class="btn-group flux">
-        <button data-gn-import-button="SEARCH" type="button"
-                class="btn btn-default" data-translate="">SearchLayer</button>
-        <button data-gn-import-button="WMS" type="button"
-                class="btn btn-default active" data-translate="">LayerWMS</button>
-        <button data-gn-import-button="WMTS" type="button"
-                class="btn btn-default" data-translate="">LayerWMTS</button>
-        <button data-gn-import-button="KML" type="button"
-                class="btn btn-default" data-translate="">LayerKML</button>
-      </div>
-
-      <div class="panel-carousel-window">
-        <div class="panel-carousel-container">
-          <div class="panel-carousel"
-               data-gn-search-layer-for-map="map"></div>
-          <div class="panel-carousel"
-               gn-wms-import="wms"
+      <tabset id="info-tabset">
+        <tab heading="{{'SearchLayer' | translate}}"
+             active="addLayerTabs.search">
+          <br/>
+          <div data-gn-search-layer-for-map="map"></div>
+        </tab>
+        <tab heading="{{'LayerWMS' | translate}}"
+             active="addLayerTabs.wms">
+          <div gn-wms-import="wms"
                gn-wms-import-map="map"
                services-list-from-catalog="true"></div>
-          <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
-          <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
-        </div>
-      </div>
+        </tab>
+        <tab heading="{{'LayerWMTS' | translate}}"
+             active="addLayerTabs.wmts">
+          <div gn-wms-import="wmts" gn-wms-import-map="map"></div>
+        </tab>
+        <tab heading="{{'LayerKML' | translate}}"
+             active="addLayerTabs.kml">
+          <div gn-kml-import="" gn-kml-import-map="map"></div>
+        </tab>
+      </tabset>
     </div>
   </div>
 
