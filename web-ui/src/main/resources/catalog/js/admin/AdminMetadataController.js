@@ -30,14 +30,6 @@
               icon: 'fa-archive',
               href: '#/metadata/metadata-and-template'
             },{
-              // Template sorting is not use by the Angular application
-              // Hide it for the time being.
-              // See https://github.com/geonetwork/core-geonetwork/issues/878
-              //  type: 'template-sort',
-              //  label: 'sortTemplate',
-              //  icon: 'fa-sort',
-              //  href: '#/metadata/template-sort'
-              //},{
               type: 'formatter',
               label: 'metadataFormatter',
               icon: 'fa-eye',
@@ -165,20 +157,6 @@
         $http.get('admin.templates.list?_content_type=json')
         .success(function(data) {
               $scope.templates = data;
-            });
-      };
-
-      $scope.saveOrder = function(formId) {
-        $http.get('admin.templates.save.order?' + $(formId).serialize())
-          .success(function(data) {
-              loadTemplates();
-            })
-          .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveTemplateOrderError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
             });
       };
 
@@ -355,9 +333,7 @@
         window.open(url, '_blank');
       };
 
-      if ($routeParams.tab === 'template-sort') {
-        loadTemplates();
-      } else if ($routeParams.tab === 'formatter') {
+      if ($routeParams.tab === 'formatter') {
         loadFormatter();
       } else if ($routeParams.schemaName || $routeParams.tab === 'schematron') {
         $routeParams.tab = 'schematron';

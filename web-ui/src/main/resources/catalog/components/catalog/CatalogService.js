@@ -560,6 +560,9 @@
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
             'false' : 'true';
       },
+
+
+
       getLinks: function() {
         return this.link;
       },

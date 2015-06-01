@@ -10,6 +10,7 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 /**
  * Represents a Jeeves local XML request (within JVM).
@@ -209,6 +210,24 @@ public class LocalServiceRequest extends ServiceRequest
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return this.language + "/" + this.service + "?" + toString(params);
+	}
+
+	@SuppressWarnings("unchecked")
+	private String toString(Element params) {
+		StringBuilder paramsString = new StringBuilder();
+		for (Element el : (List<Element>) params.getChildren()) {
+			if (paramsString.length() > 0) {
+				paramsString.append("&");
+			}
+
+			paramsString.append(el.getName()).append('=').append(el.getTextTrim());
+		}
+		return paramsString.toString();
 	}
 }
 

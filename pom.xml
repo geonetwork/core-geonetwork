@@ -318,7 +318,7 @@
       <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
+        <version>2.5.4</version>
         <configuration>
           <descriptors>
             <descriptor>release/zip-war.xml</descriptor>

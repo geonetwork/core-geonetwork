@@ -70,7 +70,7 @@ public class UploadAndProcess {
     public IdResponse exec(HttpServletRequest request,
                            @PathVariable String lang,
                            @RequestParam(value="filename") MultipartFile file,
-                           @RequestParam(value = Params.TITLE, defaultValue = "") String description,
+                           @RequestParam(defaultValue = "") String description,
                            @RequestParam(defaultValue = "") String id,
                            @RequestParam(defaultValue = "") String uuid,
                            @RequestParam(defaultValue = "private", value = Params.ACCESS) String access,

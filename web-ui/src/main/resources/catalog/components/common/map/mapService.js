@@ -87,24 +87,62 @@
 
           /**
            * Get the extent of the md.
-           * It is stored in the object md.geoBox as a String
+           * It is stored in the object md.geoBox as an array of String
            * '150|-12|160|12'.
-           * Returns it as an array of floats.
+           * Returns it as an array of array of floats.
            *
            * @param {Object} md
            */
           getBboxFromMd: function(md) {
             if (angular.isUndefined(md.geoBox)) return;
+            var bboxes = [];
+            angular.forEach(md.geoBox, function(bbox) {
+              var c = bbox.split('|');
+              if (angular.isArray(c) && c.length == 4) {
+                bboxes.push([parseFloat(c[0]),
+                      parseFloat(c[1]),
+                      parseFloat(c[2]),
+                      parseFloat(c[3])]);
+              }
+            });
+            return bboxes;
+          },
 
-            var bbox = angular.isArray(md.geoBox) ?
-                md.geoBox[0] : md.geoBox;
-            var c = bbox.split('|');
-            if (angular.isArray(c) && c.length == 4) {
-              return [parseFloat(c[0]),
-                parseFloat(c[1]),
-                parseFloat(c[2]),
-                parseFloat(c[3])];
+          /**
+           * Get the extent of the md.
+           * Returns a feature
+           *
+           * @param {Object} md
+           * @param {Object} proj
+           */
+          getBboxFeatureFromMd: function(md, proj) {
+            var feat = new ol.Feature();
+            var extent = this.getBboxFromMd(md);
+            if (extent) {
+              var geometry;
+              // If is composed of one geometry of type point
+              if (extent.length === 1 &&
+                  extent[0][0] === extent[0][2] &&
+                  extent[0][1] === extent[0][3]) {
+                geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
+              } else {
+                // Build multipolygon from the set of bboxes
+                geometry = new ol.geom.MultiPolygon(null);
+                for (var j = 0; j < extent.length; j++) {
+                  // TODO: Point will not be supported in multi geometry
+                  var projectedExtent =
+                      ol.extent.containsExtent(
+                      proj.getWorldExtent(),
+                      extent[j]) ?
+                      ol.proj.transformExtent(extent[j], 'EPSG:4326', proj) :
+                      proj.getExtent();
+                  var coords = this.getPolygonFromExtent(projectedExtent);
+                  geometry.appendPolygon(new ol.geom.Polygon(coords));
+                }
+              }
+              feat.setGeometry(geometry);
             }
+            return feat;
           },
 
           /**
@@ -216,7 +254,7 @@
            * Compute the resolution from a given scale
            * @param {ol.Projection} projection
            * @param {number} scale
-           * @returns {number} resolution
+           * @return {number} resolution
            */
           getResolutionFromScale: function(projection, scale) {
             return scale && scale * 0.00028 / projection.getMetersPerUnit();
@@ -350,8 +388,11 @@
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
-                legend = layer.Style[layer.Style.length - 1]
-                    .LegendURL[0].OnlineResource;
+                var url = layer.Style[layer.Style.length - 1]
+                  .LegendURL[0];
+                if (url) {
+                  legend = url.OnlineResource;
+                }
               }
               if (angular.isDefined(layer.Attribution)) {
                 if (angular.isArray(layer.Attribution)) {
