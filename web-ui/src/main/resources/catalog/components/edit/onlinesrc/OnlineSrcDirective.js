@@ -411,9 +411,9 @@
 
               var resetForm = function() {
                 if (scope.params) {
-                  scope.params.desc = scope.mdLangs ? {} : '';
+                  scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = scope.mdLangs ? {} : '';
+                  scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
                 }
                 scope.clear(scope.queue);
