@@ -140,7 +140,7 @@
 
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
-                  
+
                   <xsl:call-template name="render-form-field">
                     <xsl:with-param name="name" select="@ref"/>
                     <xsl:with-param name="lang" select="@lang"/>
@@ -151,10 +151,34 @@
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>
                     <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                    <!--  Helpers can't be provided for all languages
                     <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                    -->
                     <xsl:with-param name="checkDirective" select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
                   </xsl:call-template>
                 </xsl:for-each>
+
+                <!-- Display the helper for a multilingual field below the field.
+                 The helper will be used only to populate the main language. -->
+                <xsl:if test="count($listOfValues/*) > 0">
+                  <xsl:call-template name="render-form-field-helper">
+                    <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
+                    <!-- The @rel attribute in the helper may define a related field
+                    to update. Check the related element of the current element
+                    which should be in the sibbling axis. -->
+                    <xsl:with-param name="relatedElement"
+                                    select="concat('_',
+                        following-sibling::*[name() = $listOfValues/@rel]/*/gn:element/@ref)"/>
+                    <!-- Related attribute name is based on element name
+                    _<element_ref>_<attribute_name>. -->
+                    <xsl:with-param name="relatedElementRef"
+                                    select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
+                    <xsl:with-param name="dataType" select="$type"/>
+                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                    <xsl:with-param name="tooltip" select="$tooltip"/>
+                    <xsl:with-param name="multilingualField" select="true()"/>
+                  </xsl:call-template>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:call-template name="render-form-field">
@@ -961,7 +985,8 @@
     <xsl:param name="dataType" as="xs:string" required="no" select="'text'"/>
     <xsl:param name="listOfValues" as="node()"/>
     <xsl:param name="tooltip" as="xs:string" required="no" select="''"/>
-    
+    <xsl:param name="multilingualField" as="xs:boolean" required="no" select="false()"/>
+
     <!-- 
     The helper config to pass to the directive in JSON format
     -->
@@ -976,7 +1001,8 @@
       then $relatedElement else ''}"
       data-related-attr="{if ($listOfValues/@relAtt) 
       then $relatedElementRef else ''}"
-      data-tooltip="{$tooltip}">
+      data-tooltip="{$tooltip}"
+      data-multilingual-field="{$multilingualField}">
     </div>
   </xsl:template>
 

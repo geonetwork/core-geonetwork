@@ -27,7 +27,8 @@
           type: '@',
           relatedElement: '@',
           relatedAttr: '@',
-          tooltip: '@'
+          tooltip: '@',
+          multilingualField: '@'
         },
         templateUrl: '../../catalog/components/edit/editorhelper/partials/' +
             'editorhelper.html',
