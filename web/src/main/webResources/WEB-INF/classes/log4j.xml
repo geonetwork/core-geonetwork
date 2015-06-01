@@ -65,6 +65,7 @@
     </logger>
     <logger name="geonetwork.harvester" additivity="false">
         <level value="WARN" />
+        <appender-ref ref="fileAppender" />
     </logger>
     <logger name="geonetwork.lucene">
         <level value="WARN" />
