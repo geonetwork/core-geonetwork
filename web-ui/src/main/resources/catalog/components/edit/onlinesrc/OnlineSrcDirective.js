@@ -191,9 +191,17 @@
 
                 $timeout(function() {
                   if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                    // FIXME : only first extent is took into account
+                    var extent = scope.gnCurrentEdit.extent[0],
+                        proj = ol.proj.get(gnMap.getMapConfig().projection),
+                        projectedExtent =
+                        ol.extent.containsExtent(
+                        proj.getWorldExtent(),
+                        extent) ?
+                        gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
+                        proj.getExtent();
                     scope.map.getView().fitExtent(
-                        gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
-                        'EPSG:4326', gnMap.getMapConfig().projection),
+                        projectedExtent,
                         scope.map.getSize());
                   }
                 });
