@@ -148,7 +148,7 @@ cat.app = function() {
         var win = new cat.view.ViewWindow({
             layout:'fit',
             serviceUrl: style == 'sextant' ? this.services.mdView + '?uuid=' + encodeURI(uuid) : null,
-            formatterServiceUrl: this.services.mdFormatter + '?id=' + encodeURI(uuid) + '&xsl=' + style,
+            formatterServiceUrl: this.services.mdFormatter + '?uuid=' + encodeURI(uuid) + '&xsl=' + style,
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,

@@ -9,7 +9,8 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                exclude-result-prefixes="#all">
 
 	<!-- CG: 20150213
 		IMPORTANT NOTE: For definition values, we use label and string from schemas iso19139.sdn-product AND iso19139
@@ -52,11 +53,11 @@
 			<body>
 
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}/apps/sextant/css/schema/reset.css"/>
+              href="{root/url}../../apps/sextant/css/schema/reset.css"/>
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}/apps/sextant/css/schema/default.css"/>
+              href="{root/url}../../apps/sextant/css/schema/default.css"/>
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}/apps/sextant/css/schema/emodnet.css"/>  
+              href="{root/url}../../apps/sextant/css/schema/emodnet.css"/>
 
 				<div class="tpl-emodnet">
 					<!--<div class="ui-layout-content">-->

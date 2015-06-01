@@ -8,7 +8,7 @@ Ext.onReady(function() {
 	var style = urlParameters.style || 'sextant';
 	var screenMode = urlParameters.screen || 'full';
 
-	var uuid = urlParameters.id;
+	var uuid = urlParameters.uuid || urlParameters.id;
 	
 	if(!uuid && urlParameters.url) {
 		var paramsCsw = GeoNetwork.Util.getParameters(urlParameters.url);
@@ -35,7 +35,7 @@ Ext.onReady(function() {
 	if(urlParameters.url) {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
 	} else {
-		formatterServiceUrl = catalogue.services.mdFormatter + '?id=' + escape(uuid) + '&xsl=' + style;
+		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
 	}
 	
 	if(screenMode == 'win') {
