@@ -15,8 +15,8 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    'gnMap',
-    function(gnMap) {
+    'gnMap', 'gnConfig', 'gnSearchLocation',
+    function(gnMap, gnConfig, gnSearchLocation) {
       return {
         restrict: 'A',
         replace: true,
@@ -27,6 +27,12 @@
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {
               scope.map = scope.$eval(iAttrs['map']);
+              scope.addLayerTabs = {
+                search: true,
+                wms: false,
+                wmts: false,
+                kml: false
+              };
 
               /** Define object to receive measure info */
               scope.measureObj = {};
