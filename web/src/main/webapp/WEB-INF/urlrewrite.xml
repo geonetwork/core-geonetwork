@@ -121,6 +121,12 @@
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
 
+    <rule>
+      <note>old formatter URL</note>
+      <from>^(.*)/metadata.formatter.html(.*)</from>
+      <to type="permanent-redirect" last="true">%{context-path}$1/md.format.html$2</to>
+    </rule>
+
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -211,7 +217,6 @@
         <from>^(.*)/rss.latest(\.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
-
 
     <rule>
         <note>
