@@ -138,7 +138,7 @@
           // TODO: formatter should be defined per schema
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
-            defaultUrl: 'md.format.xml?xsl=xsl-view&id=',
+            defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
             list: [{
             //  label: 'inspire',
             //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
@@ -147,7 +147,7 @@
             //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
             //}, {
               label: 'full',
-              url: 'md.format.xml?xsl=full_view&id='
+              url: 'md.format.xml?xsl=full_view&uuid='
             }]
             // TODO: maybe formatter config should depends
             // on the metadata schema.
