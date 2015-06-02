@@ -482,6 +482,8 @@
     "manageVirtualCSW": "Virtual CSW",
     "map/isMapViewerEnabled": "Enable Map Viewer",
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
+    "map/is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer need to be enabled also.",
+    "map/is3DModeAllowed": "Allow 3D mode (beta)",
     "mapserverConfiguration": "URL configuration",
     "mapserverDescription": "Description",
     "mapserverName": "Name",

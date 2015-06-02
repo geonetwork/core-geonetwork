@@ -5,7 +5,7 @@
   angular.module('gn_formfields_directive', [])
   /**
    * @ngdoc directive
-   * @name gn_form_fields_directive.directive:gnTypeahead
+   * @name gn_formfields.directive:gnTypeahead
    * @restrict A
    *
    * @description
@@ -332,7 +332,7 @@
 
       /**
    * @ngdoc directive
-   * @name gn_form_fields_directive.directive:gnSearchSuggest
+   * @name gn_formfields.directive:gnSearchSuggest
    * @restrict A
    *
    * @description
@@ -383,7 +383,7 @@
 
       /**
    * @ngdoc directive
-   * @name gn_form_fields_directive.directive:gnRegionMultiselect
+   * @name gn_formfields.directive:gnRegionMultiselect
    * @restrict A
    *
    * @description
@@ -480,7 +480,7 @@
 
       /**
    * @ngdoc directive
-   * @name gn_form_fields_directive.directive:schemaInfoCombo
+   * @name gn_formfields.directive:schemaInfoCombo
    * @restrict A
    * @requires gnSchemaManagerService
    * @requires $http

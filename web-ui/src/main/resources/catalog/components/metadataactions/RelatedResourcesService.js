@@ -127,6 +127,16 @@
               label: 'webserviceLink',
               action: openLink
             },
+            'DB' : {
+              iconClass: 'fa-database',
+              label: 'dbLink',
+              action: null
+            },
+            'FILE' : {
+              iconClass: 'fa-file',
+              label: 'fileLink',
+              action: openLink
+            },
             'KML' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
@@ -200,6 +210,10 @@
                 return 'WMTS';
               } else if (protocolOrType.match(/wfs/i)) {
                 return 'WFS';
+              } else if (protocolOrType.match(/db:/i)) {
+                return 'DB';
+              } else if (protocolOrType.match(/file:/i)) {
+                return 'FILE';
               } else if (protocolOrType.match(/kml/i)) {
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {

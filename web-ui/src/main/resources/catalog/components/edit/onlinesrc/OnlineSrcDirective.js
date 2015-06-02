@@ -7,7 +7,7 @@
 
   /**
    * @ngdoc overview
-   * @name gn_onlinesrc_directive
+   * @name gn_onlinesrc
    *
    * @description
    * Provide directives for online resources

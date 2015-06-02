@@ -44,10 +44,36 @@
 							data-translate-values="{url:'{{r.url}}', layer:'{{r.name}}'}">
 					wfsLinkDetails</span>
 			</p>
+
+      <p class="text-muted"
+         data-ng-if="mainType === 'DB'">
+				<span data-translate=""
+              data-translate-values="{url:'{{r.url}}', layer:'{{r.name}}'}">
+					databaseLayerDetails</span>
+      </p>
+      <p class="text-muted"
+         data-ng-if="mainType === 'FILE'">
+				<span data-translate=""
+              data-translate-values="{url:'{{r.url}}', name:'{{r.name}}'}">
+					fileLayerDetails</span>
+        <input class="form-control"
+                 type="text"
+                 onClick="this.setSelectionRange(0, this.value.length)"
+                 value="{{r.url}}"/>
+      </p>
+      <p class="text-muted"
+         data-ng-if="mainType === 'LINKDOWNLOAD'">
+        {{r.name}}
+      </p>
+      <p class="text-muted"
+         data-ng-if="mainType === 'LINK'">
+        {{r.name}}
+      </p>
 		</div>
 		<div class="col-xs-4">
-			<button type="button"
+      <button type="button"
 							class="btn btn-default btn-lg btn-block"
+              data-ng-show="hasAction(mainType)"
 							data-ng-click="config.doAction(mainType, r)">
 
 				<span class="visible-lg-*">

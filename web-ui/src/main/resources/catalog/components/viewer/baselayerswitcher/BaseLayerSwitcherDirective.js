@@ -1,12 +1,12 @@
 (function() {
-  goog.provide('gn_baselayerswitcher_directive');
+  goog.provide('gn_baselayerswitcher');
 
-  var module = angular.module('gn_baselayerswitcher_directive', [
+  var module = angular.module('gn_baselayerswitcher', [
   ]);
 
   /**
    * @ngdoc directive
-   * @name gn_baselayerswitcher_directive.directive:gnBaselayerswitcher
+   * @name gn_viewer.directive:gnBaselayerswitcher
    *
    * @description
    * Provides a button and a dropdown menu to switch background layer of the

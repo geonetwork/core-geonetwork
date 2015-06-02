@@ -21,7 +21,10 @@
         </div>
       </div>
 
-      <label data-translate="">orTypeAServiceUrl</label>
+      <label>
+        <span data-translate="" data-ng-show="catServicesList.length > 0">or</span>&nbsp;
+        <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
+      </label>
       <div class="dropdown">
         <input class="form-control input-sm" type="text" data-toggle="dropdown"
                data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"

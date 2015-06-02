@@ -23,16 +23,19 @@
       <span role="tooltip" data-translate="">Contexts</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.print" type="submit"
+            data-ng-hide="is3dEnabled"
             rel="#print" gi-btn gnv-tools-btn>
       <span class="fa fa-print"></span>
       <span role="tooltip" data-translate="">Print</span>
     </button>
     <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active"
+            data-ng-hide="is3dEnabled"
             rel="#measures" gnv-tools-btn>
       <span class="fa fa-expand"></span>
       <span role="tooltip" data-translate="">Measure</span>
     </button>
     <button gi-btn class="btn btn-default" type="submit"
+            data-ng-hide="is3dEnabled"
             rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
       <span class="fa fa-pencil"></span>
       <span role="tooltip" data-translate="">Annotations</span>
@@ -55,6 +58,13 @@
     <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
       <span class="fa fa-map-marker"></span>
       <span role="tooltip" data-translate="">ZoomToYourLocation</span>
+    </button>
+    <button class="btn btn-default" type="submit"
+            data-ng-if="is3DModeAllowed"
+            data-ng-click="switch2D3D(map)">
+      <span class="fa fa-cube"
+            data-ng-class="is3dEnabled ? 'fa-cube' : 'fa-square-o'"/>
+      <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
     </button>
   </div>
 
@@ -113,6 +123,10 @@
     <div gn-baselayerswitcher=""
          gn-baselayerswitcher-map="map"
          data-dropup=""></div>
+    <br/>
+    <div data-gn-terrain-switcher="ol3d"
+         data-dropup=""
+         data-ng-show="is3dEnabled"></div>
     <br/>
   </div>
 

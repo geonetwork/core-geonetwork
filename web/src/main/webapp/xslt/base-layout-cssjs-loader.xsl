@@ -32,7 +32,7 @@
 
   <xsl:template name="javascript-load">
 
-    <script>var geonet={provide:function(s){},require:function(s){}}</script>
+    <script>var geonet = {provide:function(s){},require:function(s){}};</script>
     <xsl:choose>
       <xsl:when test="$isDebugMode">
 
@@ -40,7 +40,6 @@
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js"></script>
-
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
@@ -111,6 +110,25 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <!-- Load JS libs required for 3D maps when enabled
+    Those scripts are not bundle by Wro4j to avoid to increase size
+    of the bundle when 3D mode is not anabled.
+    -->
+    <xsl:if test="$is3DModeAllowed">
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
+      <xsl:choose>
+        <xsl:when test="/root/request/debug">
+          <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
+          <script src="{$uiResourcesPath}lib/ol3cesium/ol3cesium.js"></script>
+        </xsl:when>
+        <xsl:otherwise>
+          <script src="{/root/gui/url}/static/libcesium.js"></script>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+
+
+
     <xsl:choose>
         <xsl:when test="/root/request/debug">
             <!-- Use Closure to load the application scripts -->
@@ -124,6 +142,10 @@
             <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
+
+
+
+
 
 
     <xsl:variable name="mapConfig"

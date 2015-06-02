@@ -7,7 +7,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_share_directive.directive:gnShare
+   * @name gn_share.directive:gnShare
    * @restrict A
    * @requires gnShareService
    * @requires gnShareConstants

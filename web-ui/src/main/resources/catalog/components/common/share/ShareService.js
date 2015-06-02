@@ -21,7 +21,7 @@
   /**
    * @ngdoc service
    * @kind function
-   * @name gn_share_service.service:gnShareService
+   * @name gn_share.service:gnShareService
    * @requires gnShareConstants
    * @requires $q
    * @requires $http
@@ -57,7 +57,7 @@
       return {
         /**
          * @ngdoc method
-         * @methodOf gn_share_service.service:gnShareService
+         * @methodOf gn_share.service:gnShareService
          * @name gnShareService#isAdminOrReviewer
          *
          * @description
@@ -77,7 +77,7 @@
 
         /**
          * @ngdoc method
-         * @methodOf gn_share_service.service:gnShareService
+         * @methodOf gn_share.service:gnShareService
          * @name gnShareService#loadPrivileges
          *
          * @description
@@ -167,7 +167,7 @@
 
         /**
          * @ngdoc method
-         * @methodOf gn_share_service.service:gnShareService
+         * @methodOf gn_share.service:gnShareService
          * @name gnShareService#savePrivileges
          *
          * @description

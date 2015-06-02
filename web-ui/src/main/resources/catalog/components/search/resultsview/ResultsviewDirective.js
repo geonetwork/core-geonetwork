@@ -110,7 +110,10 @@
               }
               var extent = ol.extent.createEmpty();
               fo.getFeatures().forEach(function(f) {
-                ol.extent.extend(extent, f.getGeometry().getExtent());
+                var g = f.getGeometry();
+                if (g) {
+                  ol.extent.extend(extent, g.getExtent());
+                }
               });
               if (!ol.extent.isEmpty(extent)) {
                 scope.map.getView().fitExtent(extent, scope.map.getSize());

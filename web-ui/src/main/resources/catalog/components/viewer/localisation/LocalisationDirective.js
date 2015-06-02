@@ -6,7 +6,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_localisation.directive:gnLocalisationInput
+   * @name gn_viewer.directive:gnLocalisationInput
    *
    * @description
    * Panel to load WMS capabilities service and pick layers.

@@ -50,6 +50,41 @@
                 map.getView().fitExtent(map.getView().
                     getProjection().getExtent(), map.getSize());
               };
+              scope.ol3d = null;
+
+              // 3D mode is allowed and disabled by default
+              scope.is3DModeAllowed = gnConfig['map.is3DModeAllowed'] || false;
+              scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
+
+
+
+              scope.init3dMode = function(map) {
+                if (map) {
+                  scope.ol3d = new olcs.OLCesium({map: map});
+                } else {
+                  console.warning('3D mode can be only by activated' +
+                      ' on a map instance.');
+                }
+              };
+              scope.switch2D3D = function(map) {
+                if (scope.ol3d === null) {
+                  scope.init3dMode(map);
+                }
+                scope.ol3d.setEnabled(
+                    scope.is3dEnabled = !scope.ol3d.getEnabled());
+              };
+              // Turn off 3D mode when not using it because
+              // it slow down the application.
+              // TODO: improve
+              scope.$on('$locationChangeStart', function() {
+                if (!gnSearchLocation.isMap() && scope.is3dEnabled) {
+                  scope.switch2D3D(scope.map);
+                }
+              });
+
+
+
+
               scope.zoomToYou = function(map) {
                 if (navigator.geolocation) {
                   navigator.geolocation.getCurrentPosition(function(position) {

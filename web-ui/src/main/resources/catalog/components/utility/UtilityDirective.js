@@ -24,7 +24,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_fields_directive.directive:gnCountryPicker
+   * @name gn_utility.directive:gnCountryPicker
    * @deprecated Use gnRegionPicker instead
    *
    * @description
@@ -163,7 +163,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_fields_directive.directive:gnLanguagePicker
+   * @name gn_utility.directive:gnLanguagePicker
    * @function
    *
    * @description
@@ -259,7 +259,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_fields_directive.directive:gnDirectoryEntryPicker
+   * @name gn_utility.directive:gnDirectoryEntryPicker
    * @function
    *
    * @description
@@ -321,7 +321,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_utility_directive.directive:gnAutogrow
+   * @name gn_utility.directive:gnAutogrow
    * @function
    *
    * @description
@@ -566,7 +566,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_utility_directive.directive:gnPaginationList
+   * @name gn_utility.directive:gnPaginationList
    * @function
    *
    * @description

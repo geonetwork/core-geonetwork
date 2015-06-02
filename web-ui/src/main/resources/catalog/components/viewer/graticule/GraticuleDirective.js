@@ -3,6 +3,14 @@
 
   var module = angular.module('gn_graticule', []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnGraticuleBtn
+   *
+   * @description
+   * This directive provides a button to display ol3 graticule on the map.
+   * The graticule style is no customisable for the moment.
+   */
   module.directive('gnGraticuleBtn', [function() {
 
     return {
