@@ -204,9 +204,9 @@
           'templates/mdview/grid.html';
 
       searchSettings.formatter = {
-        defaultUrl: 'md.format.xml?xsl=sxt_view&id=',
+        defaultUrl: 'md.format.xml?xsl=sxt_view&uuid=',
         list: [
-          {label: 'fullView', url: 'md.format.xml?xsl=full_view&id='}
+          {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
         ]
         // TODO: maybe formatter config should depends
         // on the metadata schema.
