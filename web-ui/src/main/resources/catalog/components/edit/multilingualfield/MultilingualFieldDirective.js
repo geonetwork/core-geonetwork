@@ -29,7 +29,9 @@
         },
         link: function(scope, element, attrs) {
           // Only inputs and textarea could be multilingual fields
-          var formFieldsSelector = 'input,textarea';
+          var formFieldsSelector =
+              'div[data-ng-transclude] > input.form-control,' +
+              'div[data-ng-transclude] > textarea.form-control';
 
           // Some input should be displayed in Right-To-Left direction
           var rtlLanguages = ['AR'];
@@ -62,7 +64,6 @@
             mainLanguage = scope.mainLanguage;
             scope.languages[mainLanguage] = '#' + mainLanguage;
           }
-
 
           scope.hasData = {};
 

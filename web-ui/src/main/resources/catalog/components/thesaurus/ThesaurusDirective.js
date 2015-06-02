@@ -4,6 +4,10 @@
   var module = angular.module('gn_thesaurus_directive', []);
 
   /**
+   * @ngdoc directive
+   * @name gn_thesaurus.directive:gnThesaurusSelector
+   *
+   * @description
    * The thesaurus selector is available in 2 modes:
    *
    * One is composed of a drop down list
@@ -111,6 +115,11 @@
 
 
   /**
+   * @ngdoc directive
+   * @name gn_thesaurus.directive:gnKeywordSelector
+   *
+   * @description
+   * The thesaurus selector is available in 2 modes:
    * The keyword selector could be of 2 types:
    * 1) composed of an input with autocompletion. Each tags
    * added to the input
@@ -410,7 +419,7 @@
 
   /**
      * @ngdoc directive
-     * @name gn_fields_directive.directive:gnKeywordPicker
+     * @name gn_thesaurus.directive:gnKeywordPicker
      * @function
      *
      * @description

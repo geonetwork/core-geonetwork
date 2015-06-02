@@ -24,7 +24,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_owscontext_directive.directive:gnOwsContext
+   * @name gn_viewer.directive:gnOwsContext
    *
    * @description
    * Panel to load or export an OWS Context

@@ -104,22 +104,16 @@
                 return;
               }
               for (var i = 0; i < rec.length; i++) {
-                var feat = new ol.Feature();
-                var extent = gnMap.getBboxFromMd(rec[i]);
-                if (extent) {
-                  var proj = scope.map.getView().getProjection();
-                  extent = ol.extent.containsExtent(proj.getWorldExtent(),
-                      extent) ?
-                      ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                      proj.getExtent();
-                  var coords = gnMap.getPolygonFromExtent(extent);
-                  feat.setGeometry(new ol.geom.Polygon(coords));
-                  fo.addFeature(feat);
-                }
+                var feat = gnMap.getBboxFeatureFromMd(rec[i],
+                    scope.map.getView().getProjection());
+                fo.addFeature(feat);
               }
               var extent = ol.extent.createEmpty();
               fo.getFeatures().forEach(function(f) {
-                ol.extent.extend(extent, f.getGeometry().getExtent());
+                var g = f.getGeometry();
+                if (g) {
+                  ol.extent.extend(extent, g.getExtent());
+                }
               });
               if (!ol.extent.isEmpty(extent)) {
                 scope.map.getView().fitExtent(extent, scope.map.getSize());
@@ -142,13 +136,12 @@
           });
 
           scope.zoomToMdExtent = function(md, map) {
-            var extent = gnMap.getBboxFromMd(md);
-            if (extent) {
-              var proj = map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
-                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                  proj.getExtent();
-              map.getView().fitExtent(extent, map.getSize());
+            var feat = gnMap.getBboxFeatureFromMd(md,
+                scope.map.getView().getProjection());
+            if (feat) {
+              map.getView().fitExtent(
+                  feat.getGeometry().getExtent(),
+                  map.getSize());
             }
           };
 
@@ -193,14 +186,9 @@
 
           element.bind('mouseenter', function() {
 
-            var extent = gnMap.getBboxFromMd(scope.md);
-            if (extent) {
-              var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
-                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                  proj.getExtent();
-              var coords = gnMap.getPolygonFromExtent(extent);
-              feat.setGeometry(new ol.geom.Polygon(coords));
+            var feat = gnMap.getBboxFeatureFromMd(scope.md,
+                scope.map.getView().getProjection());
+            if (feat) {
               scope.hoverOL.addFeature(feat);
             }
           });

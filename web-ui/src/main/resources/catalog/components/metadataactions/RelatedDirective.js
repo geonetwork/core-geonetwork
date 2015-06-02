@@ -58,6 +58,10 @@
                 return link.title['#text'] || link.title;
               };
 
+              scope.hasAction = function(mainType) {
+                return angular.isFunction(
+                   gnRelatedResources.map[mainType].action);
+              };
               scope.config = gnRelatedResources;
 
               scope.$watch('uuid', function() {
