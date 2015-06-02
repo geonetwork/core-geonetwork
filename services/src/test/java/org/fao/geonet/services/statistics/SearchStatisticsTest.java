@@ -1,5 +1,10 @@
 package org.fao.geonet.services.statistics;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Calendar;
+import java.util.List;
+
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.statistic.SearchRequest;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
@@ -9,14 +14,11 @@ import org.fao.geonet.services.statistics.response.GeneralSearchStats;
 import org.fao.geonet.services.statistics.response.IpStats;
 import org.fao.geonet.services.statistics.response.SearchTypeStats;
 import org.fao.geonet.services.statistics.response.TermFieldStats;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Calendar;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
+@Ignore
 public class SearchStatisticsTest extends AbstractServiceIntegrationTest {
 
     @Autowired

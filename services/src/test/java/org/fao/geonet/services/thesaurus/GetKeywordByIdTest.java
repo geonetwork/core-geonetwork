@@ -1,9 +1,17 @@
 package org.fao.geonet.services.thesaurus;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.annotation.Nullable;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.AllThesaurus;
@@ -20,20 +28,16 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.annotation.Nullable;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 
 public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
     @Autowired
@@ -72,6 +76,7 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
                 ISO19139Namespaces.GMD);
     }
 
+    @Ignore
     @Test
     public void testExecTextGroupOnly() throws Exception {
         final String thesaurusKey = firstThesaurusKey();
