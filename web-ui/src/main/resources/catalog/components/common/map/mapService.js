@@ -9,6 +9,16 @@
     'ngeo'
   ]);
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_map.service:gnMap
+   *
+   * @description
+   * The `gnMap` service is the main service that offer methods for interacting
+   * with the map of the layers object. It is the interface with ol3 API and
+   * provided lots of tools to help creating map content.
+   */
   module.provider('gnMap', function() {
     this.$get = [
       'ngeoDecorateLayer',
@@ -41,6 +51,14 @@
 
         return {
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#importProj4js
+           *
+           * @description
+           * Import the proj4js projection that are specified in DB config.
+           */
           importProj4js: function() {
             proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0' +
                 '=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +' +
@@ -53,9 +71,18 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#reprojExtent
+           *
+           * @description
            * Reproject a given extent. Extent is an object
            * defined as
            * {left,bottom,right,top}
+           *
+           * @param {Object} extent to reproj
+           * @param {ol.Projection} src projection
+           * @param {ol.Projection} dest projection
            *
            */
           reprojExtent: function(extent, src, dest) {
@@ -68,11 +95,33 @@
             }
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#isPoint
+           * @deprecated
+           *
+           * @description
+           * Check if the extent is just a point.
+           *
+           * @param {Object} extent to check
+           */
           isPoint: function(extent) {
             return (extent[0] == extent[2] &&
                 extent[1]) == extent[3];
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getPolygonFromExtent
+           *
+           * @description
+           * Build a coordinates based object (multypolygon) from a extent
+           *
+           * @param {Object} extent to convert
+           *
+           */
           getPolygonFromExtent: function(extent) {
             return [
                     [
@@ -86,12 +135,17 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getBboxFromMd
+           *
+           * @description
            * Get the extent of the md.
            * It is stored in the object md.geoBox as an array of String
            * '150|-12|160|12'.
            * Returns it as an array of array of floats.
            *
-           * @param {Object} md
+           * @param {Object} md to extract bbox from
            */
           getBboxFromMd: function(md) {
             if (angular.isUndefined(md.geoBox)) return;
@@ -109,11 +163,16 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getBboxFeatureFromMd
+           *
+           * @description
            * Get the extent of the md.
            * Returns a feature
            *
-           * @param {Object} md
-           * @param {Object} proj
+           * @param {Object} md to extract bbox from
+           * @param {Object} proj of the extent
            */
           getBboxFeatureFromMd: function(md, proj) {
             var feat = new ol.Feature();
@@ -146,6 +205,11 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getTextFromCoordinates
+           *
+           * @description
            * Convert coordinates object into text
            *
            * @param {Array} coord must be an array of points (array with
@@ -181,6 +245,16 @@
             return text;
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getMapConfig
+           *
+           * @description
+           * get the DB config of the map components (projection, map etc..)
+           *
+           * @return {Object} defaultMapConfig mapconfig
+           */
           getMapConfig: function() {
             if (gnConfig['map.config'] &&
                 angular.isObject(gnConfig['map.config'])) {
@@ -190,6 +264,17 @@
             }
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getLayersFromConfig
+           *
+           * @description
+           * get the DB config of the layers list that should be in the map
+           * by default
+           *
+           * @return {Object} defaultMapConfig layers config
+           */
           getLayersFromConfig: function() {
             var conf = this.getMapConfig();
             var source;
@@ -210,7 +295,14 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#isValidExtent
+           *
+           * @description
            * Check if the extent is valid or not.
+           *
+           * @param {Array} extent to check
            */
           isValidExtent: function(extent) {
             var valid = true;
@@ -228,12 +320,19 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getDcExtent
+           *
+           * @description
            * Transform map extent into dublin-core schema for
            * dc:coverage metadata element.
            * Ex :
            * North 90, South -90, East 180, West -180
            * or
            * North 90, South -90, East 180, West -180. Global
+           *
+           * @param {Array} extent to transform
            */
           getDcExtent: function(extent) {
             if (angular.isArray(extent)) {
@@ -251,15 +350,33 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getResolutionFromScale
+           *
+           * @description
            * Compute the resolution from a given scale
-           * @param {ol.Projection} projection
-           * @param {number} scale
+           *
+           * @param {ol.Projection} projection of the map
+           * @param {number} scale to convert
            * @return {number} resolution
            */
           getResolutionFromScale: function(projection, scale) {
             return scale && scale * 0.00028 / projection.getMetersPerUnit();
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addKmlToMap
+           *
+           * @description
+           * Add a KML layer to the map from a given source.
+           *
+           * @param {string} name of the layer
+           * @param {number} url of the kml sources
+           * @param {ol.Map} map object
+           */
           addKmlToMap: function(name, url, map) {
             if (!url || url == '') {
               return;
@@ -290,7 +407,21 @@
             $rootScope.$broadcast('requestCapLoad' + type.toUpperCase(), url);
           },
 
-          createOlWMS: function(map, layerParams, layerOptions, index) {
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createOlWMS
+           *
+           * @description
+           * Create a new ol.Layer object, based on given options.
+           *
+           * @param {ol.Map} map to add the layer
+           * @param {Object} layerParams contains the PARAMS that is given to
+           *  the ol.source object
+           * @param {Object} layerOptions options to pass to layer constructor
+           * @param {Object} layerOptions options to pass to layer constructor
+           */
+          createOlWMS: function(map, layerParams, layerOptions) {
 
             var options = layerOptions || {};
 
@@ -349,16 +480,21 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createOlWMSFromCap
+           *
+           * @description
            * Parse an object describing a layer from
            * a getCapabilities document parsing. Create a ol.Layer WMS
            * from this object and add it to the map with all known
            * properties.
            *
-           * @param {ol.map} map
-           * @param {Object} getCapLayer
-           * @return {*}
+           * @param {ol.map} map to add the layer
+           * @param {Object} getCapLayer object to convert
+           * @return {ol.Layer} the created layer
            */
-          createOlWMSFromCap: function(map, getCapLayer, layerCoreInfo) {
+          createOlWMSFromCap: function(map, getCapLayer) {
 
             var legend, attribution, metadata, errors = [];
             if (getCapLayer) {
@@ -435,11 +571,38 @@
             }
 
           },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addWmsToMapFromCap
+           *
+           * @description
+           * Add a new ol.Layer object to the map from a capabilities parsed
+           * ojbect.
+           *
+           * @param {ol.map} map to add the layer
+           * @param {Object} getCapLayer object to convert
+           */
           addWmsToMapFromCap: function(map, getCapLayer) {
             var layer = this.createOlWMSFromCap(map, getCapLayer);
             map.addLayer(layer);
             return layer;
           },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addWmsToMap
+           *
+           * @description
+           * Create a new WMS layer from basic info object containing
+           * the name of the layer and the url of the service.
+           *
+           * @param {ol.map} map to add the layer
+           * @param {Object} layerInfo object
+           * @return {ol.Layer} the created layer
+           */
           addWmsToMap: function(map, layerInfo) {
             if (layerInfo) {
               var layer = this.createOlWMS(map, {
@@ -453,11 +616,13 @@
               return layer;
             }
           },
-          addWmtsToMapFromCap: function(map, getCapLayer) {
-            map.addLayer(this.createOlWMTSFromCap(map, getCapLayer));
-          },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addWmsFromScratch
+           *
+           * @description
            * Here is the method to use when you want to add a wms layer from
            * a url and a layername. It will call the WMS getCapabilities,
            * create the ol.Layer with maximum info we got from capabilities,
@@ -472,11 +637,11 @@
            * If the md object is given, we add it to the layer, or we try
            * to retrieve it in the catalog
            *
-           * @param {ol.Map} map
-           * @param {string} url
-           * @param {string} name
-           * @param {boolean} createOnly
-           * @param {!Object} md
+           * @param {ol.Map} map to add the layer
+           * @param {string} url of the service
+           * @param {string} name of the layer
+           * @param {boolean} createOnly or add it to the map
+           * @param {!Object} md object
            */
           addWmsFromScratch: function(map, url, name, createOnly, md) {
             var defer = $q.defer();
@@ -544,6 +709,29 @@
             return defer.promise;
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addWmtsFromScratch
+           *
+           * @description
+           * Here is the method to use when you want to add a wmts layer from
+           * a url and a layername. It will call the WMTS getCapabilities,
+           * create the ol.Layer with maximum info we got from capabilities,
+           * then add the layer to the map.
+           *
+           * If the layer is not found in the capability, the layer will not
+           * be created.
+           *
+           * Return a promise with ol.Layer as data is succeed, and url/name
+           * if failure.
+           * If createOnly, we don't add the layer to the map.
+           *
+           * @param {ol.Map} map to add the layer
+           * @param {string} url of the service
+           * @param {string} name of the layer
+           * @param {boolean} createOnly or add it to the map
+           */
           addWmtsFromScratch: function(map, url, name, createOnly) {
             var defer = $q.defer();
             var $this = this;
@@ -582,14 +770,19 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createOlWMTSFromCap
+           *
+           * @description
            * Parse an object describing a layer from
            * a getCapabilities document parsing. Create a ol.Layer WMS
            * from this object and add it to the map with all known
            * properties.
            *
-           * @param {ol.map} map
-           * @param {Object} getCapLayer
-           * @return {*}
+           * @param {ol.map} map to add the layer to
+           * @param {Object} getCapLayer object
+           * @return {ol.layer.Tile} created layer
            */
           createOlWMTSFromCap: function(map, getCapLayer, capabilities) {
 
@@ -678,15 +871,32 @@
             }
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addWmtsToMapFromCap
+           *
+           * @description
+           * Add a new WMTS ol.Layer object to the map from a capabilities
+           * parsed ojbect.
+           *
+           * @param {ol.map} map to add the layer
+           * @param {Object} getCapLayer object to convert
+           */
           addWmtsToMapFromCap: function(map, getCapLayer, capabilities) {
             map.addLayer(this.createOlWMTSFromCap(map,
                 getCapLayer, capabilities));
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#zoom
+           *
+           * @description
            * Zoom by delta with animation
-           * @param {ol.map} map
-           * @param {float} delta
+           * @param {ol.map} map obj
+           * @param {float} delta for zoom
            */
           zoom: function(map, delta) {
             var view = map.getView();
@@ -704,11 +914,17 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#zoomLayerToExtent
+           *
+           * @description
            * Zoom map to the layer extent if defined. The layer extent
            * is gotten from capabilities and store in cextent property
            * of the layer.
-           * @param {ol.Layer} layer
-           * @param {ol.map} map
+           *
+           * @param {ol.Layer} layer for the extent
+           * @param {ol.map} map obj
            */
           zoomLayerToExtent: function(layer, map) {
             if (layer.get('cextent')) {
@@ -718,10 +934,16 @@
 
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createLayerForType
+           *
+           * @description
            * Creates an ol.layer for a given type. Useful for contexts
-           * @param {string} type
+           *
+           * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
-           * @return {ol.layer}
+           * @return {ol.layer} layer
            */
           createLayerForType: function(type, opt) {
             switch (type) {
@@ -770,10 +992,16 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#isLayerInMap
+           *
+           * @description
            * Check if the layer is in the map to avoid adding duplicated ones.
-           * @param {ol.Map} map
-           * @param {string} name
-           * @param {string} url
+           *
+           * @param {ol.Map} map obj
+           * @param {string} name of the layer
+           * @param {string} url of the service
            */
           isLayerInMap: function(map, name, url) {
             if (gnWmsQueue.isPending(url, name)) {
@@ -799,10 +1027,16 @@
           },
 
           /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#feedLayerMd
+           *
+           * @description
            * If the layer contains a metadataUrl, we check if it is on
            * the same host as the catalog, if yes i search for this md in
            * the catalog and bind it to the layer.
-           * @param {ol.Layer} layer
+           *
+           * @param {ol.Layer} layer to feed
            */
           feedLayerMd: function(layer) {
             if (layer.get('metadataUrl')) {
