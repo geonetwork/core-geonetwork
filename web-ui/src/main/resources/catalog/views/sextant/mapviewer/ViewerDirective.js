@@ -209,7 +209,6 @@
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
-          var element = element;
           var content = element.find('ul');
           var button = element.find('.dropdown-toggle');
 
@@ -237,6 +236,17 @@
               button.popover('hide');
             }
           });
+      }
+    }
+  }]);
+
+  module.directive('sxtSelect', [ '$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        $timeout(function(){
+          element.selectpicker();
+        }, 0);
       }
     }
   }]);
