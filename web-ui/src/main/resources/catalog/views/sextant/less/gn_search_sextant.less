@@ -783,8 +783,8 @@ ul.gn-resultview {
       }
     }
     .gn-md-relations {
-      float: left;
-      margin: 7px 0 0 4px;
+      float: right;
+      margin: 7px 4px 0 0;
       .dropdown-menu {
         max-width: 100%;
       }
@@ -799,6 +799,12 @@ ul.gn-resultview {
           line-height: normal;
           .text-overflow();
         }
+      }
+    }
+    .md-admin {
+      margin: 12px 0 0 7px;
+      .btn:first-child {
+        border-radius: 2px;
       }
     }
     .md-actions {
@@ -1017,6 +1023,15 @@ ul.gn-resultview {
     .dropdown-menu {
       font-size: 12px;
       text-transform: uppercase;
+    }
+  }
+  h3 button {
+    background: white;
+    color: @sxt-base-color;
+    box-shadow: none;
+    &:hover {
+      background: white;
+      color: @sxt-base-color-dark;
     }
   }
   .nav-tabs {

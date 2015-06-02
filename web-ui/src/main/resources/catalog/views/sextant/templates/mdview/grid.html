@@ -49,24 +49,26 @@
 
 
       <div class="sx-md-footer">
-
-        <div class="gn-md-relations" ng-if="md.type == 'series'">
-          <div gn-related="{{md.getUuid()}}" types="parent|children"
-               template="../../catalog/views/sextant/templates/related.html"></div>
-         </div>
-
-        <div class="gn-md-links">
-
-          <div class="btn-group pull-right" ng-if="links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
-              <span class="fa fa-link"></span>
+        <div class="btn-group pull-left md-admin" ng-if="links.length > 0">
+          <!--admin button-->
+          <div class="btn-group md-actions" ng-if="user.canEditRecord(md)">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'admin' | translate}}">
+              <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="link in links">
-                <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
+              <li data-ng-if="md.standardName.indexOf('MedSea') >= 0"><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
+              <li data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"><a ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
+
+              <li><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
+              <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
+              <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
+              <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
             </ul>
           </div>
+        </div>
+
+        <div class="gn-md-links">
 
           <!--Downloads to panier button-->
           <div class="btn-group pull-right" ng-if="downloads.length > 1">
@@ -96,7 +98,6 @@
             <span class="fa fa-download"></span>
           </button>
 
-
           <!--Layers to map button-->
           <div class="btn-group pull-right" ng-if="layers.length > 1 ">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
@@ -124,24 +125,24 @@
             <span class="fa fa-globe"></span>
           </button>
 
-          <!--admin button-->
-          <div class="btn-group pull-right md-actions" ng-if="user.canEditRecord(md)">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'admin' | translate}}">
-              <span class="fa fa-gear"></span>
+          <div class="btn-group pull-right" ng-if="links.length > 0">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
+              <span class="fa fa-link"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li data-ng-if="md.standardName.indexOf('MedSea') >= 0"><a ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
-              <li data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"><a ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i><span translate>edit</span></a></li>
-
-              <li><a ng-click="mdService.deleteMd(md)"><i class="fa fa-trash-o"></i><span translate>delete</span></a></li>
-              <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
-              <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
-              <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
+              <li ng-repeat="link in links">
+                <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
             </ul>
           </div>
 
         </div>
+
+        <div class="gn-md-relations">
+          <div gn-related="{{md.getUuid()}}" types="parent|children"
+               template="../../catalog/views/sextant/templates/related.html"></div>
+         </div>
+
 
 
       </div> <!-- .gn-md-links -->
