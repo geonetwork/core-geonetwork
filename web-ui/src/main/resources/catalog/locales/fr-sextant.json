@@ -18,6 +18,8 @@
   "sxtExportPDF": "PDF",
   "sxtExportXML": "XML",
   "sxtPermalink": "Lien",
+  "sort": "Tri",
+  "legend": "Légendes",
   "sources": "Sources : "
 
 }
