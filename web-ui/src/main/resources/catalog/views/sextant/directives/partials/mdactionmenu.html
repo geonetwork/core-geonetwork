@@ -3,25 +3,26 @@
           class="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
           aria-expanded="false">
+    <span class="fa fa-cogs"></span>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
     <li>
       <a data-ng-href="" data-ng-click="mdService.getPermalink(md)">
         <i class="fa fa-link"/>&nbsp;
-        <span data-translate="">permalink</span>
+        <span data-translate="">sxtPermalink</span>
       </a>
     </li>
     <li>
       <a data-ng-href="xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">
         <i class="fa fa-file-code-o"></i>&nbsp;
-        <span data-translate="">exportXML</span>
+        <span data-translate="">sxtExportXML</span>
       </a>
     </li>
     <li>
       <a data-ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid())">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
-        <span data-translate="">exportPDF</span>
+        <span data-translate="">sxtExportPDF</span>
       </a>
     </li>
   </ul>

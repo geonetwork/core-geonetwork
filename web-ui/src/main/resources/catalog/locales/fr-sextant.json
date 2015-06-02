@@ -15,6 +15,9 @@
   "myDownloads": "Mes téléchargements",
   "addLayerPopovermap": "Couche ajoutée à la carte !",
   "addLayerPopoverpanier": "Couche ajoutée au panier !",
+  "sxtExportPDF": "PDF",
+  "sxtExportXML": "XML",
+  "sxtPermalink": "Lien",
   "sources": "Sources : "
 
 }

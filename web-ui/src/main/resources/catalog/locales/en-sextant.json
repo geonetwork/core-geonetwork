@@ -15,5 +15,8 @@
   "myDownloads": "My downloads",
   "addLayerPopovermap": "Data added to the map !",
   "addLayerPopoverpanier": "Data added to the basket !",
+  "sxtExportPDF": "PDF",
+  "sxtExportXML": "XML",
+  "sxtPermalink": "Link",
   "sources": "Sources : "
 }
