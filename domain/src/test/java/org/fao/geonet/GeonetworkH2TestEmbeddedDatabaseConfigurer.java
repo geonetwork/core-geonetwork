@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.concurrent.Callable;
 
 /**
- * Configures the H2 database to be a bit more string so mysql and other databases are more likely to work if the tests pass.
+ * Configures the H2 database to be a bit more strict so mysql and other databases are more likely to work if the tests pass.
  *
  * User: Jesse
  * Date: 10/31/13
@@ -42,12 +42,12 @@ public class GeonetworkH2TestEmbeddedDatabaseConfigurer implements EmbeddedDatab
 //        properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE", databaseName));
         if (_dbPathLocator.isPresent()) {
             try {
-                properties.setUrl(String.format("jdbc:h2:%s;DB_CLOSE_DELAY=-1%s", _dbPathLocator.get().call(), _mode));
+                properties.setUrl(String.format("jdbc:h2:%s;DB_CLOSE_DELAY=-1%s;DB_CLOSE_ON_EXIT=FALSE", _dbPathLocator.get().call(), _mode));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
-            properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1%s", databaseName, _mode));
+            properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1%s;DB_CLOSE_ON_EXIT=FALSE", databaseName, _mode));
         }
         properties.setUsername(_username);
         properties.setPassword(_password);
