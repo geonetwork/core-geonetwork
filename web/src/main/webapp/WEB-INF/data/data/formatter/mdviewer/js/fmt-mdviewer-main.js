@@ -14,7 +14,7 @@ Ext.onReady(function() {
 		var paramsCsw = GeoNetwork.Util.getParameters(urlParameters.url);
 		uuid = paramsCsw.uuid || paramsCsw.id;
 	}
-	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/md.format.*/, '')[1];
+	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/.*.format.*/, '')[1];
 	var lang = window.location.href.substring(
 			window.location.href.indexOf('/srv')+5, 
 			window.location.href.indexOf('/md.format'))
@@ -33,7 +33,7 @@ Ext.onReady(function() {
 	
 	var formatterServiceUrl;
 	if(urlParameters.url) {
-		formatterServiceUrl = catalogue.services.mdFormatter + '?xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
+		formatterServiceUrl =  'xml.format.html?schema=iso19139&xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
 	} else {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
 	}
