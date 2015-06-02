@@ -167,6 +167,12 @@ yx-axis
   /* theme "inset-2", "inset-2-dark" */
   /* theme "inset-3", "inset-3-dark" */
   /* ---------------------------------------- */
+  /*!
+ * Bootstrap-select v1.7.2 (http://silviomoreto.github.io/bootstrap-select)
+ *
+ * Copyright 2013-2015 bootstrap-select
+ * Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
+ */
   /*
 ::-webkit-scrollbar {
   width: 6px;
@@ -9161,26 +9167,6 @@ yx-axis
 .gn .gn-main-viewer .panel-ncwms label {
   padding-top: .3em;
 }
-.gn [gn-main-viewer] .panel-carousel-window,
-.gn .gn-main-viewer .panel-carousel-window {
-  overflow-x: hidden;
-}
-.gn [gn-main-viewer] .panel-carousel-container,
-.gn .gn-main-viewer .panel-carousel-container {
-  width: 400%;
-  position: relative;
-  left: 0;
-  transition: left 0.3s ease;
-  display: flex;
-}
-.gn [gn-main-viewer] .panel-carousel,
-.gn .gn-main-viewer .panel-carousel {
-  flex: 1;
-}
-.gn [gn-main-viewer] .panel-carousel .alert,
-.gn .gn-main-viewer .panel-carousel .alert {
-  font-size: 12px;
-}
 .gn [gn-main-viewer] .layerTree,
 .gn .gn-main-viewer .layerTree {
   min-height: 10em;
@@ -10324,6 +10310,9 @@ yx-axis
   border-width: 1px 0;
   padding: .5em;
 }
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle .baselayer-title {
+  color: #4ba2d9;
+}
 .gn [sxt-main-viewer] [gn-baselayerswitcher] .btn {
   border-radius: 0;
 }
@@ -10697,6 +10686,10 @@ yx-axis
   font-weight: normal;
   display: inline;
 }
+.gn [sxt-main-viewer] [sxt-layertree] .sxt-outofrange > div > label,
+.gn [sxt-main-viewer] .sxtb-speciestree .sxt-outofrange > div > label {
+  color: #999;
+}
 .gn [sxt-main-viewer] [sxt-layertree] .list-group,
 .gn [sxt-main-viewer] .sxtb-speciestree .list-group {
   margin: .5em 0;
@@ -10705,8 +10698,8 @@ yx-axis
 .gn [sxt-main-viewer] .sxtb-speciestree .sxt-layer-visibility {
   color: #4ba2d9;
 }
-.gn [sxt-main-viewer] [sxt-layertree] button.dropdown-toggle,
-.gn [sxt-main-viewer] .sxtb-speciestree button.dropdown-toggle {
+.gn [sxt-main-viewer] [sxt-layertree] a.dropdown-toggle,
+.gn [sxt-main-viewer] .sxtb-speciestree a.dropdown-toggle {
   border: none;
   background: transparent;
   color: #4ba2d9;
@@ -10810,7 +10803,6 @@ yx-axis
   padding: 2px 0 2px 12px;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item label:hover {
-  color: #4ba2d9;
   text-decoration: none;
   cursor: pointer;
 }
@@ -10819,6 +10811,44 @@ yx-axis
 }
 .gn [sxt-main-viewer] .layerTree .fa-plus-square-o:before {
   content: "\f0fe";
+}
+.gn [sxt-main-viewer] .panel-ncwms-container {
+  border: none;
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .panel-ncwms-container .panel-heading {
+  padding: 0 5px;
+  height: 2em;
+  line-height: 2em;
+  font-size: 14px;
+  background-color: white;
+  border-bottom-color: #4ba2d9;
+}
+.gn [sxt-main-viewer] .panel-ncwms-container label {
+  font-weight: 400;
+}
+.gn .popover {
+  height: auto;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.gn .popover .popover-content {
+  padding: 0;
+  display: table-cell;
+  height: 190px;
+  vertical-align: middle;
+}
+.gn .popover .popover-content li {
+  padding: 8px 10px;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+.gn .popover .popover-content li:first-child {
+  border-top: none;
+}
+.gn .popover .popover-content li:last-child {
+  border-bottom: none;
 }
 .gn .panel-body .gn-metadata-view {
   width: 100%;
@@ -12466,6 +12496,257 @@ yx-axis
 .gn .mCSB_scrollTools .mCSB_buttonRight {
   background-image: url(../catalog/style/mCSB_buttons.png);
 }
+.gn .bootstrap-select > .dropdown-toggle {
+  width: 100%;
+  padding-right: 25px;
+}
+.gn .error .bootstrap-select .dropdown-toggle,
+.gn .has-error .bootstrap-select .dropdown-toggle {
+  border-color: #b94a48;
+}
+.gn .bootstrap-select.fit-width {
+  width: auto !important;
+}
+.gn .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+  width: 220px;
+}
+.gn .bootstrap-select .dropdown-toggle:focus {
+  outline: thin dotted #333!important;
+  outline: 5px auto -webkit-focus-ring-color !important;
+  outline-offset: -2px;
+}
+.gn .bootstrap-select.form-control {
+  margin-bottom: 0;
+  padding: 0;
+  border: none;
+}
+.gn .bootstrap-select.form-control:not([class*=col-]) {
+  width: 100%;
+}
+.gn .bootstrap-select.form-control.input-group-btn {
+  z-index: auto;
+}
+.gn .bootstrap-select.btn-group:not(.input-group-btn),
+.gn .bootstrap-select.btn-group[class*=col-] {
+  float: none;
+  display: inline-block;
+  margin-left: 0;
+}
+.gn .bootstrap-select.btn-group.dropdown-menu-right,
+.gn .bootstrap-select.btn-group[class*=col-].dropdown-menu-right,
+.gn .row .bootstrap-select.btn-group[class*=col-].dropdown-menu-right {
+  float: right;
+}
+.gn .form-group .bootstrap-select.btn-group,
+.gn .form-horizontal .bootstrap-select.btn-group,
+.gn .form-inline .bootstrap-select.btn-group {
+  margin-bottom: 0;
+}
+.gn .form-group-lg .bootstrap-select.btn-group.form-control,
+.gn .form-group-sm .bootstrap-select.btn-group.form-control {
+  padding: 0;
+}
+.gn .form-inline .bootstrap-select.btn-group .form-control {
+  width: 100%;
+}
+.gn .bootstrap-select.btn-group.disabled,
+.gn .bootstrap-select.btn-group > .disabled {
+  cursor: not-allowed;
+}
+.gn .bootstrap-select.btn-group.disabled:focus,
+.gn .bootstrap-select.btn-group > .disabled:focus {
+  outline: 0 !important;
+}
+.gn .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+  display: inline-block;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+}
+.gn .bootstrap-select.btn-group .dropdown-toggle .caret {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+}
+.gn .bootstrap-select.btn-group[class*=col-] .dropdown-toggle {
+  width: 100%;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu {
+  min-width: 100%;
+  z-index: 1035;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu.inner {
+  position: static;
+  float: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li {
+  position: relative;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li.active small {
+  color: #ffffff;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li.disabled a {
+  cursor: not-allowed;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li a {
+  cursor: pointer;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li a.opt {
+  position: relative;
+  padding-left: 2.25em;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+  display: none;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li a span.text {
+  display: inline-block;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu li small {
+  padding-left: 0.5em;
+}
+.gn .bootstrap-select.btn-group .dropdown-menu .notify {
+  position: absolute;
+  bottom: 5px;
+  width: 96%;
+  margin: 0 2%;
+  min-height: 26px;
+  padding: 3px 5px;
+  background: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+  opacity: .9;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.gn .bootstrap-select.btn-group .no-results {
+  padding: 3px;
+  background: #f5f5f5;
+  margin: 0 5px;
+  white-space: nowrap;
+}
+.gn .bootstrap-select.btn-group.fit-width .dropdown-toggle .filter-option {
+  position: static;
+}
+.gn .bootstrap-select.btn-group.fit-width .dropdown-toggle .caret {
+  position: static;
+  top: auto;
+  margin-top: -1px;
+}
+.gn .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark {
+  position: absolute;
+  display: inline-block;
+  right: 15px;
+  margin-top: 5px;
+}
+.gn .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+  margin-right: 34px;
+}
+.gn .bootstrap-select.show-menu-arrow.open > .dropdown-toggle {
+  z-index: 1036;
+}
+.gn .bootstrap-select.show-menu-arrow .dropdown-toggle:before {
+  content: '';
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid rgba(204, 204, 204, 0.2);
+  position: absolute;
+  bottom: -4px;
+  left: 9px;
+  display: none;
+}
+.gn .bootstrap-select.show-menu-arrow .dropdown-toggle:after {
+  content: '';
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  position: absolute;
+  bottom: -4px;
+  left: 10px;
+  display: none;
+}
+.gn .bootstrap-select.show-menu-arrow.dropup .dropdown-toggle:before {
+  bottom: auto;
+  top: -3px;
+  border-top: 7px solid rgba(204, 204, 204, 0.2);
+  border-bottom: 0;
+}
+.gn .bootstrap-select.show-menu-arrow.dropup .dropdown-toggle:after {
+  bottom: auto;
+  top: -3px;
+  border-top: 6px solid #fff;
+  border-bottom: 0;
+}
+.gn .bootstrap-select.show-menu-arrow.pull-right .dropdown-toggle:before {
+  right: 12px;
+  left: auto;
+}
+.gn .bootstrap-select.show-menu-arrow.pull-right .dropdown-toggle:after {
+  right: 13px;
+  left: auto;
+}
+.gn .bootstrap-select.show-menu-arrow.open > .dropdown-toggle:after,
+.gn .bootstrap-select.show-menu-arrow.open > .dropdown-toggle:before {
+  display: block;
+}
+.gn .bs-actionsbox,
+.gn .bs-donebutton,
+.gn .bs-searchbox {
+  padding: 4px 8px;
+}
+.gn .bs-actionsbox {
+  float: left;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.gn .bs-actionsbox .btn-group button {
+  width: 50%;
+}
+.gn .bs-donebutton {
+  float: left;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.gn .bs-donebutton .btn-group button {
+  width: 100%;
+}
+.gn .bs-searchbox + .bs-actionsbox {
+  padding: 0 8px 4px;
+}
+.gn .bs-searchbox .form-control {
+  margin-bottom: 0;
+  width: 100%;
+}
+.gn select.bs-select-hidden,
+.gn select.selectpicker {
+  display: none !important;
+}
+.gn select.mobile-device {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  display: block!important;
+  width: 100%;
+  height: 100%!important;
+  opacity: 0;
+}
 .gn .ellipsis {
   overflow: hidden;
   height: 124px;
@@ -12510,7 +12791,7 @@ yx-axis
 }
 @font-face {
   font-family: 'Sextant';
-  src: url('../catalog/views/sextant/less/fonts/sextant.ttf') format('truetype'), url('../catalog/views/sextant/less/fonts/sextant.eot') format('eot');
+  src: url('../catalog/views/sextant/less/fonts/sextant-large.ttf') format('truetype'), url('../catalog/views/sextant/less/fonts/sextant-large.eot') format('eot');
 }
 @media (min-width: 992px) {
   .gn body {
@@ -12608,6 +12889,7 @@ yx-axis
 .gn .fsxt {
   font-family: Sextant;
   font-size: 14px;
+  -moz-osx-font-smoothing: grayscale;
 }
 .gn .btn-default {
   background: #4ba2d9;
@@ -13192,8 +13474,8 @@ yx-axis
   margin: 0 3px 0 0;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations {
-  float: left;
-  margin: 7px 0 0 4px;
+  float: right;
+  margin: 7px 4px 0 0;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations .dropdown-menu {
   max-width: 100%;
@@ -13211,6 +13493,12 @@ yx-axis
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.gn ul.gn-resultview li.gn-grid .md-admin {
+  margin: 12px 0 0 7px;
+}
+.gn ul.gn-resultview li.gn-grid .md-admin .btn:first-child {
+  border-radius: 2px;
 }
 .gn ul.gn-resultview li.gn-grid .md-actions {
   margin-top: -0.35em;
@@ -13261,7 +13549,6 @@ yx-axis
 }
 .gn .gn-pager .btn-group .btn {
   border: none;
-  font-weight: bold;
   color: #4ba2d9;
   background-color: white;
   padding: 0;
@@ -13403,6 +13690,16 @@ yx-axis
 }
 .gn [gn-metadata-display] [sxt-md-actions-menu] .dropdown-menu {
   font-size: 12px;
+  text-transform: uppercase;
+}
+.gn [gn-metadata-display] h3 button {
+  background: white;
+  color: #4ba2d9;
+  box-shadow: none;
+}
+.gn [gn-metadata-display] h3 button:hover {
+  background: white;
+  color: #2f6383;
 }
 .gn [gn-metadata-display] .nav-tabs li a {
   border-radius: 0;
@@ -13449,10 +13746,20 @@ yx-axis
 .gn .sxt-panier h4 {
   font-size: 14px;
 }
+.gn .sxt-panier .bootstrap-select.btn-group {
+  width: auto;
+}
+.gn .sxt-panier .bootstrap-select.btn-group .btn {
+  background: white;
+  color: #000;
+  box-shadow: none;
+}
 .gn .sxt-panier .form-group {
   font-size: 12px;
-  border-top: 1px solid #ddd;
   padding-top: .5em;
+}
+.gn .sxt-panier .form-group input {
+  border-radius: 2px;
 }
 .gn .sxt-panier .form-group select {
   display: inline-block;
@@ -13474,4 +13781,10 @@ yx-axis
 }
 .gn .sxt-panier .col-md-5 {
   float: right;
+}
+.gn .modal-content {
+  border-radius: 2px;
+}
+.gn .popover {
+  height: auto;
 }
