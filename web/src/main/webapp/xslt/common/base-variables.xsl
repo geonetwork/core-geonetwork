@@ -85,7 +85,12 @@
   <xsl:variable name="isLoggedIn" select="$session/userId != ''"/>
   
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
-  
+
+  <xsl:variable name="is3DModeAllowed"
+                select="if ($env/map/is3DModeAllowed)
+                        then $env/map/is3DModeAllowed = 'true'
+                        else true()"/>
+
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"
     select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>

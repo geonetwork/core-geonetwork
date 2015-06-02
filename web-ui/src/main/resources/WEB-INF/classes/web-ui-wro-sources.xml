@@ -7,6 +7,10 @@
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
   </require>
+  <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>
+    <jsSource webappPath="/catalog/lib/ol3cesium/ol3cesium.js"/>
+  </declarative>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js"/>
     <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js"/>
