@@ -10832,22 +10832,22 @@ yx-axis
   border-radius: 2px;
   font-size: 12px;
 }
-.gn .popover .popover-content {
+.gn .popover.popover-dropdown .popover-content {
   padding: 0;
   display: table-cell;
   height: 190px;
   vertical-align: middle;
 }
-.gn .popover .popover-content li {
+.gn .popover.popover-dropdown .popover-content li {
   padding: 8px 10px;
   border-left: none;
   border-right: none;
   border-radius: 0;
 }
-.gn .popover .popover-content li:first-child {
+.gn .popover.popover-dropdown .popover-content li:first-child {
   border-top: none;
 }
-.gn .popover .popover-content li:last-child {
+.gn .popover.popover-dropdown .popover-content li:last-child {
   border-bottom: none;
 }
 .gn .panel-body .gn-metadata-view {
