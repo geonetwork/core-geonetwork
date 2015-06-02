@@ -213,9 +213,11 @@
           var button = element.find('.dropdown-toggle');
 
           button.popover({
+            animation: false,
             container: 'body',
             placement: 'right',
-            content: ' '
+            content: ' ',
+            template: '<div class="popover popover-dropdown"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
           });
 
           button.on('shown.bs.popover', function() {
