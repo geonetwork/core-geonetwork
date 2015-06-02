@@ -1,44 +1,6 @@
 (function() {
   goog.provide('gn_editor_controller');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
@@ -198,13 +160,45 @@
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
 
 
-              var defaultTab = 'default';
-              if (gnCurrentEdit.schemaConfig &&
-                  gnCurrentEdit.schemaConfig.defaultTab) {
-                defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
-              }
-
               if ($scope.metadataFound) {
+
+                // Default view to display is default
+                var defaultTab = 'default';
+
+                // It may be overriden by schema configuration
+                // that user can change in the administration
+                // interface > settings > standard config
+                if (gnCurrentEdit.schemaConfig &&
+                    gnCurrentEdit.schemaConfig.defaultTab) {
+                  defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
+                }
+
+
+                // It may be overriden by an application
+                // settings. For example, you may have different
+                // types of ISO19139 record with different characteristics
+                // like standardName and would like to open the editor
+                // in custom view based on the standard.
+                var schemaCustomConfig = {
+                  // Example : open ISO19139 record having
+                  // standardName containing medsea in advanced mode
+                  //'iso19139': function (md) {
+                  //  if (md.standardName && md.standardName.match(/medsea/i)) {
+                  //    return 'identificationInfo';
+                  //  }
+                  //  return defaultTab;
+                  //}
+                };
+                if (schemaCustomConfig) {
+                  var fn = schemaCustomConfig[$scope.mdSchema];
+                  if (angular.isFunction(fn)) {
+                    defaultTab = fn(gnCurrentEdit.metadata);
+                  }
+                }
+
+                // Route param "tab" may also override this setting.
+
+
                 // TODO: Set metadata title in page HEAD ?
                 $scope.layout.hideTopToolBar = true;
 
