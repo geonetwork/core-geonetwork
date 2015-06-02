@@ -99,7 +99,6 @@
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#isPoint
-           * @deprecated
            *
            * @description
            * Check if the extent is just a point.
