@@ -647,6 +647,7 @@
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
 
                     <a class="btn btn-default"
+                       title="{$i18n/addA} {$label/label}"
                        data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
                       <i type="button" class="fa fa-plus gn-add"
                       title="{$label/description}">
@@ -658,7 +659,9 @@
                   If many choices, make a dropdown button -->
             <xsl:when test="count($childEditInfo/gn:choose) > 1">
               <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add"
+                        data-toggle="dropdown"
+                        title="{$i18n/addA} {$label}">
                   <span/>
                   <span class="caret"/>
                 </button>
@@ -684,6 +687,7 @@
                 The directive is in charge of displaying the default add button if needed.
               -->
               <a class="btn btn-default"
+                 title="{$i18n/addA} {$label}"
                  data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
                 <i class="fa fa-plus gn-add"/>
               </a>
@@ -1046,6 +1050,7 @@
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
       <a class="btn btn-default"
+         title="{$i18n/addA} {$name}"
          data-gn-click-and-spin="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})">
         <i class="fa fa-plus gn-add"/>
       </a>
