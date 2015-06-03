@@ -34,7 +34,7 @@
             link: function(scope, element, attrs, controller) {
 
               scope.updateRelations = function() {
-                if(scope.md) {
+                if (scope.md) {
                   scope.uuid = scope.md.getUuid();
                 }
                 scope.relations = [];

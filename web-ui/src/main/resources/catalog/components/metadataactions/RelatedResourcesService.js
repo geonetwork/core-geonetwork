@@ -35,10 +35,12 @@
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
-                     gnMap.addWmsFromScratch(gnSearchSettings.viewerMap, link.url, name, false, md);
+                gnMap.addWmsFromScratch(
+                   gnSearchSettings.viewerMap, link.url, name, false, md);
               });
             } else if (link.name && !angular.isArray(link.name)) {
-              gnMap.addWmsFromScratch(gnSearchSettings.viewerMap, link.url, link.name, false, md);
+              gnMap.addWmsFromScratch(
+                 gnSearchSettings.viewerMap, link.url, link.name, false, md);
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             }
@@ -105,7 +107,8 @@
           };
 
           var addKMLToMap = function(record, md) {
-            gnMap.addKmlToMap(record.name, record.url, gnSearchSettings.viewerMap);
+            gnMap.addKmlToMap(
+               record.name, record.url, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
