@@ -192,62 +192,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-          <groupId>org.codehaus.groovy.maven</groupId>
-          <artifactId>gmaven-plugin</artifactId>
-          <version>1.0</version>
-          <executions>
-              <execution>
-                  <id>Check memory settings</id>
-                  <goals>
-                      <goal>execute</goal>
-                  </goals>
-                  <phase>initialize</phase>
-                  <configuration>
-                      <source><![CDATA[
-                          def converters = [
-                                  "k": 1/10124,
-                                  "m": 1.0,
-                                  "g": 1024.0
-                          ]
-                          def parseInt = {value ->
-                              def intVal = Integer.parseInt(value.substring(0, value.length() - 1));
-                              def unit = value.substring(value.length() - 1).toLowerCase()
-                              def converter = converters[unit]
-                              if (converter == null) {
-                                  throw new AssertionError("unit: $unit is not a recognized unit.  One of k,m,g is required in : $value")
-                              }
-                              return intVal * converter
-                          }
-
-                          final String MAX_PREFIX = "-Xmx"
-                          final String PERMGEN_PREFIX = "-XX:MaxPermSize="
-                          def arguments = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()
-                          def mx = -1;
-                          def permgen = -1;
-                          arguments.each{param ->
-                              if (param.startsWith(MAX_PREFIX)) {
-                                  mx = parseInt (param.substring(MAX_PREFIX.length()))
-                              } else if (param.startsWith(PERMGEN_PREFIX)) {
-                                  permgen = parseInt (param.substring(PERMGEN_PREFIX.length()))
-                              }
-                          }
-
-                          log.info("\n\tMax Heap Memory: "+mx+" MB\n\tMax PermGen Size: "+permgen+" MB")
-                          if (permgen < 0 || mx < 0) {
-                              def mavenOpts = "MAVEN_OPTS=\"${MAX_PREFIX}512M ${PERMGEN_PREFIX}256M\""
-                              def errorMsg = "\n\nIn order for the build to complete both the $MAX_PREFIX parameter and the "+
-                                      "$PERMGEN_PREFIX must be set.  The e2e tests require this because the start Geonetwork and run " +
-                                      "tests against it which takes a lot of memory.\n\nCmd/Powershell:"+
-                                      "\n\n\t \$Env:${mavenOpts}\n\nBash/SH:\n\n\texport ${mavenOpts}"
-                              log.error(errorMsg);
-                              throw new AssertionError(errorMsg);
-                          }
-                          ]]></source>
-                  </configuration>
-              </execution>
-          </executions>
-      </plugin>
       <!--     Compilation.                                        -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -326,23 +270,7 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
-        <!-- run integration tests after unit tests -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.18</version>
-            <configuration>
-                <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M  -XX:-UseSplitVerifier</argLine>
-                <rerunFailingTestsCount>5</rerunFailingTestsCount>
-                <runOrder>alphabetical</runOrder>
-                <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                <forkCount>4</forkCount>
-                <excludes>
-                    <exclude>**/*PerformanceTest.java</exclude>
-                </excludes>
-            </configuration>
-        </plugin>
-        <plugin>
+       <plugin>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>jrebel-maven-plugin</artifactId>
             <version>1.1.5</version>
@@ -1199,6 +1127,11 @@
   </profiles>
 
   <distributionManagement>
+    <site>
+      <id>geonetwork-opensource</id>
+      <name>geonetwork-opensource</name>
+      <url>file:///tmp/geonetwork-maven-site</url>
+    </site>
     <snapshotRepository>
       <id>scp-repository.geonetwork-opensource.org</id>
       <name>GeoNetwork opensource repositories</name>
@@ -1233,11 +1166,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.10</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>2.3</version>
       </plugin>
@@ -1250,9 +1178,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>2.4</version>
-        <configuration>
-          <targetJdk>1.6</targetJdk>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -1268,10 +1193,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.17</version>
-        <configuration>
-          <ignoreFailures>true</ignoreFailures>
-        </configuration>
+        <version>2.18</version>
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
