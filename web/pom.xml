@@ -512,7 +512,7 @@
              </goals>
              <configuration>
                <target>
-                 <delete>
+                 <delete failonerror="false">
                    <fileset dir="${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins" />
                  </delete>
                </target>
