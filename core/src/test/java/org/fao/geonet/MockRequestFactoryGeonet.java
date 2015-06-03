@@ -51,6 +51,15 @@ public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
 
     @Override
     public XmlRequest createXmlRequest(String host, int port, String protocol) {
+    	// doing the same logic as in the regular RequestFactory
+    	if (port == -1) {
+    		if ("http".equalsIgnoreCase(protocol)) {
+    			port = 80;
+                }
+    		else if ("https".equalsIgnoreCase(protocol)) {
+    			port = 443;
+    		}
+    	}
         final Request key = new Request(host, port, protocol, null);
         final Object request = getRequest(key);
         return (XmlRequest) request;

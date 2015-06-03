@@ -24,6 +24,11 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
 
+        // re-logs as admin if the usersession disappeared
+        if ((context.getUserSession() == null) || (context.getUserSession().getUsername().equals("admin"))) {
+              loginAsAdmin(context);
+        }
+
         Path path = MEFExporter.doExport(context, "da165110-88fd-11da-a88f-000d939bc5d8", MEFLib.Format.FULL, false, false, false);
 
         try(FileSystem zipFs = ZipUtil.openZipFs(path)) {

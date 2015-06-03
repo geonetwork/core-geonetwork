@@ -1,13 +1,14 @@
 package org.fao.geonet.services.config;
 
+import static junit.framework.Assert.assertEquals;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Test updating geonetwork settings via the Config Set service.
@@ -16,6 +17,7 @@ import static junit.framework.Assert.assertEquals;
  * Date: 10/17/13
  * Time: 7:55 AM
  */
+@Ignore
 public class ConfigSetIntegrationTest extends AbstractServiceIntegrationTest {
     @Autowired
     SettingManager _settingManager;
