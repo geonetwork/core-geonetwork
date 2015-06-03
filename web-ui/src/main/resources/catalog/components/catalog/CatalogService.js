@@ -172,14 +172,19 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild, tab) {
+            isTemplate, isChild, tab, useExtEditor) {
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-            var path = '/metadata/' + data.id;
-            if (tab) {
-              path += '/tab/' + tab;
-            }
-            $location.path(path);
+              // Sextant / use ExtJS editor for all but not MedSea
+              if (useExtEditor) {
+                window.location.replace('../../apps/sextant/?edit=' + data.id);
+              } else {
+                var path = '/metadata/' + data.id;
+                if (tab) {
+                  path += '/tab/' + tab;
+                }
+                $location.path(path);
+              }
           });
           // TODO : handle creation error
         }

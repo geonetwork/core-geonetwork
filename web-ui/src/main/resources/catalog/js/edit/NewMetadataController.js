@@ -164,7 +164,10 @@
             $scope.ownerGroup,
             isPublic || false,
             $scope.isTemplate,
-            $routeParams.childOf ? true : false
+            $routeParams.childOf ? true : false,
+            null,
+            ($scope.activeTpl.standardName &&
+              $scope.activeTpl.standardName.match(/medsea/i)) === null
         );
       };
 
