@@ -648,7 +648,7 @@
 
             gnWmsQueue.add(url, name);
             gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj),
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj, md.getUuid()),
                   olL;
               if (!capL) {
                 // If layer not found in the GetCapabilities

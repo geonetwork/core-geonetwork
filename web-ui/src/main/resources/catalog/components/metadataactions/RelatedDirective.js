@@ -25,7 +25,7 @@
                       '../../catalog/components/metadataactions/partials/related.html';
             },
             scope: {
-              uuid: '@gnRelated',
+              md: '=gnRelated',
               template: '@',
               types: '@',
               title: '@',
@@ -34,6 +34,9 @@
             link: function(scope, element, attrs, controller) {
 
               scope.updateRelations = function() {
+                if(scope.md) {
+                  scope.uuid = scope.md.getUuid();
+                }
                 scope.relations = [];
                 if (scope.uuid) {
                   $http.get(

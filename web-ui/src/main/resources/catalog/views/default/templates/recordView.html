@@ -92,12 +92,12 @@
 
         <div class="well" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
 
-        <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+        <div data-gn-related="mdView.current.record"
              data-types="online"
              data-title="{{'downloadsAndResources' | translate}}">
         </div>
 
-        <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+        <div data-gn-related="mdView.current.record"
              data-types="parent|children|service|dataset"
              data-title="{{'associatedResources' | translate}}">
         </div>
@@ -243,7 +243,7 @@
                 <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
 
 
-                <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+                <div data-gn-related="mdView.current.record"
                      data-types="source"
                      data-title="{{'sourceDatasets' | translate}}">
                 </div>
@@ -253,11 +253,11 @@
         </table>
 
 
-        <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+        <div data-gn-related="mdView.current.record"
              data-types="fcat"
              data-title="{{'featureCatalog' | translate}}">
         </div>
-        <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+        <div data-gn-related="mdView.current.record"
              data-types="siblings|associated|related"
              data-title="{{'siblings' | translate}}">
         </div>
