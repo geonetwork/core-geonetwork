@@ -43,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  *
@@ -105,6 +106,9 @@ public class KeywordsSearcher {
      * @throws Exception hmm
      */
 	public void search(String contextLanguage, Element params) throws Exception {
+		search(contextLanguage, params, null);
+	}
+	public void search(String contextLanguage, Element params, Comparator<KeywordBean> comparator) throws Exception {
 		if(contextLanguage == null) {
 			contextLanguage = Geonet.DEFAULT_LANGUAGE;
 		}
@@ -112,6 +116,7 @@ public class KeywordsSearcher {
         if(paramsBuilder.getLangs().isEmpty()) {
             paramsBuilder.addLang(contextLanguage);
         }
+		paramsBuilder.setComparator(comparator);
         search(paramsBuilder.build());
 	}
 
@@ -126,15 +131,17 @@ public class KeywordsSearcher {
      * 
      * @param params parameters
      * @param request request
-     * @param extraLangs the languages to load
+	 * @param comparator the comparator to use for sorting the results.  it can be null.
+     * @param languages the languages to load
      */
-	public void searchForRelated(Element params, KeywordRelation request, String... languages) {
+	public void searchForRelated(Element params, KeywordRelation request, @Nullable Comparator<KeywordBean> comparator,
+								 String... languages) {
         //System.out.println("KeywordsSearcher searchBN");
 		// TODO : Add geonetinfo elements.
 		String id = Util.getParam(params, "id");
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 
-		searchForRelated(id, sThesaurusName, request, languages);
+		searchForRelated(id, sThesaurusName, request, comparator, languages);
 	}
 
     /**
@@ -143,14 +150,20 @@ public class KeywordsSearcher {
      * @param id id
      * @param sThesaurusName thesaurus name
      * @param request request
+	 * @param comparator the comparator to use for sorting the results.  it can be null.
      * @param languages the languages to load
      */
-	public void searchForRelated(String id, String sThesaurusName, KeywordRelation request, String... languages) {
+	public void searchForRelated(String id, String sThesaurusName, KeywordRelation request, @Nullable Comparator<KeywordBean> comparator,
+								 String... languages) {
 	    _results.clear();
         Thesaurus thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
 	    for (KeywordBean keywordBean : thesaurus.getRelated(id, request, languages)) {
             _results.add(keywordBean);
         }
+
+		if (comparator != null) {
+			Collections.sort(_results, comparator);
+		}
 	}
 
     /**
@@ -160,15 +173,6 @@ public class KeywordsSearcher {
      */
 	public int getNbResults() {
 		return _results.size();
-	}
-
-    /**
-     * Sort the results according to the comparator.  Build in comparators can be found in the {@link org.fao.geonet.kernel.search.keyword.KeywordSort} class
-     *
-     * @param comparator the comparator to use for sorting
-     */
-	public void sortResults(Comparator<KeywordBean> comparator) {
-		Collections.sort(_results, comparator);
 	}
 
 	public List<KeywordBean> getResults() {

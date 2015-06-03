@@ -10,13 +10,20 @@
       <a href=""
            data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
            title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
-
-      <i class="fa text-muted"
-         data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>
       <br/>
       <span title="{{'metadataAuthor' | translate}}">
         {{md.getOwnername()}}
       </span>
+    </td>
+    <td>
+      <a class="btn btn-link"
+         data-ng-href=""
+         data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+         data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
+         title="{{'privileges' | translate}}">
+        <i class="fa text-muted"
+           data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
+      </a>
     </td>
     <td>
       <!-- TODO: subtemplate link for editing is different -->
@@ -33,13 +40,13 @@
          data-gn-click-and-spin="deleteRecord(md)"
          data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
          title="{{'delete' | translate}}">
-        <i class="fa fa-trash-o text-danger"></i>
+        <i class="fa fa-times text-danger"></i>
       </a>
     </td>
     <td>
       <a class="btn btn-link"
-             data-ng-href="#/create?from={{md['geonet:info'].id}}"
-             title="{{'duplicate' | translate}}">
+         data-ng-href="#/create?from={{md['geonet:info'].id}}"
+         title="{{'duplicate' | translate}}">
         <i class="fa fa-copy text-muted"></i>
       </a>
     </td>

@@ -30,9 +30,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="password" value="${ldap.security.credentials}"/>
     </bean>
 
-    <bean class="org.fao.geonet.kernel.security.ldap.LDAPUtils">
-    </bean>
-    
     <bean id="ldapAuthProvider"
         class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
         <constructor-arg>

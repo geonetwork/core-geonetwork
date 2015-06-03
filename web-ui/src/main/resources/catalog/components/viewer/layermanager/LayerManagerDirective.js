@@ -1,12 +1,12 @@
 (function() {
-  goog.provide('gn_layermanager_directive');
+  goog.provide('gn_layermanager');
 
-  var module = angular.module('gn_layermanager_directive', [
+  var module = angular.module('gn_layermanager', [
   ]);
 
   /**
    * @ngdoc filter
-   * @name gn_wmsimport_directive.filter:gnReverse
+   * @name gn_viewer.filter:gnReverse
    *
    * @description
    * Filter for the gnLayermanager directive's ngRepeat. The filter
@@ -21,11 +21,12 @@
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnWmsImport
+   * @name gn_viewer.directive:gnLayermanager
    *
    * @description
-   * Panel to load WMS capabilities service and pick layers.
-   * The server list is given in global properties.
+   * The `gnLayermanager` directive display a list of all active layers
+   * on the map and provides some tools/actions for each.
+   * It also displays info if some layers failed to load.
    */
   module.directive('gnLayermanager', [
     'gnLayerFilters',
@@ -83,6 +84,19 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnLayermanagerItem
+   *
+   * @description
+   * The `gnLayermanagerItem` directive display one layer in the layer manager
+   * list, and provides all tools to interacts with the layer.
+   * <ul>
+   *   <li>Show metadata</li>
+   *   <li>Zoom to extent</li>
+   *   <li>Change order</li>
+   * </ul>
+   */
   module.directive('gnLayermanagerItem', [
     'gnMdView',
     function(gnMdView) {

@@ -6,9 +6,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.util.Assert;
 import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.utils.Log;
 import org.openrdf.model.GraphException;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.config.AccessDeniedException;
@@ -23,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +59,7 @@ public class AllThesaurus extends Thesaurus {
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
     }
 
-    @VisibleForTesting
-    static String buildKeywordUri(KeywordBean actualWord) {
+    public static String buildKeywordUri(KeywordBean actualWord) {
         return buildKeywordUri(actualWord.getThesaurusKey(), actualWord.getUriCode());
     }
 
@@ -338,6 +340,27 @@ public class AllThesaurus extends Thesaurus {
     @Override
     public synchronized void clear() throws IOException, AccessDeniedException {
         throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public FileTime getLastModifiedTime() {
+        long lastModified = -1;
+        for (Thesaurus thesaurus : this.thesaurusFinder.getThesauriMap().values()) {
+            if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
+                continue;
+            }
+            long thesLastModified = thesaurus.getLastModifiedTime().toMillis();
+            if (thesLastModified > lastModified) {
+                lastModified = thesLastModified;
+            }
+        }
+
+        if (Log.isDebugEnabled(Geonet.THESAURUS)) {
+            Log.debug(Geonet.THESAURUS, ALL_THESAURUS_KEY + " has lastModified of: " + lastModified);
+        }
+
+        return FileTime.fromMillis(lastModified);
     }
 
     @Override

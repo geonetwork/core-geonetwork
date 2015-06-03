@@ -3,6 +3,19 @@
 
   var module = angular.module('gn_ncwms_service', []);
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_viewer.service:gnNcWms
+   * @requires gnMap
+   * @requires gnOwsCapabilities
+   * @requires gnUrlUtils
+   * @requires $http
+   *
+   * @description
+   * The `gnNcWms` service provides provides some method to help
+   * managing NCWMS layers.
+   */
   module.service('gnNcWms', [
     'gnMap',
     'gnUrlUtils',
@@ -11,10 +24,15 @@
     function(gnMap, gnUrlUtils, gnOwsCapabilities, $http) {
 
       /**
-             * TEMP Create a default ncWMS layer
-             * @param {Object} capLayer
-             * @return {ol.layer.Tile}
-             */
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#createNcWmsLayer
+       *
+       * @description
+       * Create sample NCWMS layers.
+       *
+       * @param {Object} capLayer layer ob from capabilities
+       */
       this.createNcWmsLayer = function(capLayer) {
         var source = new ol.source.TileWMS({
           params: {
@@ -33,6 +51,17 @@
 
       };
 
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#feedOlLayer
+       *
+       * @description
+       * Call the NCWMS getMetadata request to fill the layers with
+       * additionnal info.
+       *
+       * @param {Object} capLayer layer ob from capabilities
+       */
       this.feedOlLayer = function(layer) {
         var url = this.getMetadataUrl(layer);
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
@@ -45,13 +74,18 @@
       };
 
       /**
-             * Parse a time serie from capabilities.
-             * Extract from string, 2 limit values.
-             * Ex : 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
-             *
-             * @param {string} s
-             * @return {{tsfromD: *, tstoD: *}}
-             */
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#parseTimeSeries
+       *
+       * @description
+       * Parse a time serie from capabilities.
+       * Extract from string, 2 limit values.
+       * Ex : 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
+       *
+       * @param {string} s serie
+       * @return {Object} date
+       */
       this.parseTimeSeries = function(s) {
         s = s.trim();
         var as = s.split('/');
@@ -87,12 +121,18 @@
       };
 
       /**
-             * Read from capabilities object dimension properties.
-             * (DEPECRATED)
-             * @param {Object} ncInfo capabilities object.
-             * @param {string} name type of the dimension.
-             * @return {*}
-             */
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#getDimensionValue
+       *
+       * @description
+       * Read from capabilities object dimension properties.
+       * (DEPECRATED)
+       *
+       * @param {Object} ncInfo capabilities object.
+       * @param {string} name type of the dimension.
+       * @return {*} dimensions
+       */
       this.getDimensionValue = function(ncInfo, name) {
         var value;
         if (angular.isArray(ncInfo.Dimension)) {
@@ -112,13 +152,19 @@
       };
 
       /**
-             * Compute ncWMS specific services url from parameters.
-             * Could be `GetVerticalProfile` `GetTransect`.
-             * @param {ol.layer} layer
-             * @param {string} proj
-             * @param {aol.geometry} geom
-             * @param {string} service
-             * @return {*}
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#getNcwmsServiceUrl
+       *
+       * @description
+       * Compute ncWMS specific services url from parameters.
+       * Could be `GetVerticalProfile` `GetTransect`.
+       *
+       * @param {ol.layer} layer to request
+       * @param {string} proj param
+       * @param {aol.geometry} geom param
+       * @param {string} service param
+       * @return {string} url
              */
       this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
         var p = {
@@ -140,11 +186,16 @@
       };
 
       /**
-             * Get metadataurl with item=layerDetails to retrieve
-             * all layer basic informations
-             * @param {ol.layer} layer
-             * @return {*}
-             */
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#getMetadataUrl
+       *
+       * @description
+       * Get metadataurl with item=layerDetails to retrieve
+       * all layer basic informations
+       * @param {ol.layer} layer param
+       * @return {string} url
+       */
       this.getMetadataUrl = function(layer) {
         var p = {
           request: 'GetMetadata',
@@ -156,11 +207,16 @@
       };
 
       /**
-             * Get auto colorange bounds depending on an extent.
-             * @param {ol.layer} layer
-             * @param {Array} extent
-             * @return {*}
-             */
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#getColorRangesBounds
+       *
+       * @description
+       * Get auto colorange bounds depending on an extent.
+       * @param {ol.layer} layer param
+       * @param {Array} extent for range
+       * @return {*} promise
+       */
       this.getColorRangesBounds = function(layer, extent) {
         var p = {
           request: 'GetMetadata',

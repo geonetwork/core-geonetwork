@@ -453,7 +453,7 @@ public class Resources {
 					appDir, icon);
 
 			String extension = Files.getFileExtension(src.getFileName().toString());
-			des = Resources.locateLogosDir(context).resolve(destName + extension);
+            des = Resources.locateLogosDir(context).resolve(destName + "." + extension);
             IO.copyDirectoryOrFile(src, des, false);
 		} catch (IOException e) {
 			// --- we ignore exceptions here, just log them

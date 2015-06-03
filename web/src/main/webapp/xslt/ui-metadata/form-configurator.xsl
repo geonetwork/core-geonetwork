@@ -306,17 +306,20 @@
                   <xsl:if test="helper">
                     <!-- Get them, it may contains multiple helpers with context (eg. different for service and dataset) -->
                     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($schema, helper/@name, helper/@context, helper/@xpath)"/>
-                    
+                    <xsl:variable name="node" select="$metadata/descendant::*[gn:element/@ref = $matchingNodeValue/*/gn:element/@parent]"/>
+
+                    <!-- propose the helper matching the current node type -->
                     <xsl:choose>
-                      <xsl:when test="count($helper) > 1">
+                      <xsl:when test="count($helper) > 1 and $node">
                         <!-- If more than one, get the one matching the context of the matching element. -->
-                        <xsl:variable name="chooseHelperBasedOnElement" 
-                          select="gn-fn-metadata:getHelper($helper, 
-                          $metadata/descendant::*[gn:element/@ref = $matchingNodeValue/*/gn:element/@parent])"/>
+                        <xsl:variable name="chooseHelperBasedOnElement"
+                                      select="gn-fn-metadata:getHelper($helper, $node)"/>
                         <xsl:copy-of select="$chooseHelperBasedOnElement"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:copy-of select="$helper"/>
+                        <!-- Return the first helper as the node
+                        does not exist yet in the record. -->
+                        <xsl:copy-of select="$helper[1]"/>
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:if>

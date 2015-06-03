@@ -30,7 +30,7 @@
       <div data-gn-layers-grid 
         data-gn-selection-mode="multiple"
         data-layers="layers"
-        data-selection="srcParams.layers">
+        data-selection="srcParams.selectedLayers">
       </div>
     </div>
     <div class="">
@@ -38,7 +38,8 @@
         data-gn-click-and-spin="linkTo()"
         data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
         <i class="fa fa-cloud" />&nbsp;
-        <span data-translate="">linkToService</span>
+        <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>
+        <span data-translate="" data-ng-hide="mode == 'service'">linkToDataset</span>
       </button>
     </div>
   </form>

@@ -366,7 +366,6 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(existingKeywordBean.getUriCode(), decomposedAllUri.keywordUri);
     }
 
-
     private KeywordBean getExistingKeywordBean() throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
         final KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(isoLangMapper);
         builder.addLang("eng").maxResults(1).addThesaurus(secondThesaurus.getKey());

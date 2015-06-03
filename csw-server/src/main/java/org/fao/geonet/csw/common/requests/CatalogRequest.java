@@ -53,7 +53,7 @@ public abstract class CatalogRequest {
 
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(final ServiceContext context, final String host) { this(context, host, 80); }
+	public CatalogRequest(final ServiceContext context, final String host) { this(context, host, -1); }
 
     //---------------------------------------------------------------------------
 

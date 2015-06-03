@@ -10,6 +10,16 @@
 
   module.value('gfiTemplateURL', gfiTemplateURL);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnGfi
+   *
+   * @description
+   * This directive manage the getFeatureInfo process. If added in the
+   * map viewer template, the directive listen to mapclick and display the
+   * GFI results as an array in a popup.
+   * The template could be overriden using `gfiTemplateURL` constant.
+   */
   module.directive('gnGfi', ['$http', 'gfiTemplateURL',
     function($http, gfiTemplateURL) {
 

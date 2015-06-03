@@ -46,12 +46,12 @@
 
 
 
-  goog.require('gn_baselayerswitcher_directive');
-  goog.require('gn_draw_directive');
+  goog.require('gn_baselayerswitcher');
+  goog.require('gn_draw');
   goog.require('gn_graticule');
-  goog.require('gn_layermanager_directive');
+  goog.require('gn_layermanager');
   goog.require('gn_localisation');
-  goog.require('gn_measure_directive');
+  goog.require('gn_measure');
   goog.require('gn_module');
   goog.require('gn_ncwms');
   goog.require('gn_ows');
@@ -59,27 +59,37 @@
   goog.require('gn_popup');
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
+  goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
-  goog.require('gn_wmsimport_directive');
+  goog.require('gn_wmsimport');
+
+  /**
+   * @ngdoc overview
+   * @name gn_viewer
+   *
+   * @description
+   * Main module for map viewer.
+   */
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
     'gn_viewer_service',
     'gn_viewer_directive',
-    'gn_wmsimport_directive',
+    'gn_wmsimport',
     'gn_owscontext',
-    'gn_layermanager_directive',
-    'gn_baselayerswitcher_directive',
-    'gn_measure_directive',
-    'gn_draw_directive',
+    'gn_layermanager',
+    'gn_baselayerswitcher',
+    'gn_measure',
+    'gn_draw',
     'gn_ows',
     'gn_localisation',
     'gn_popup',
     'gn_print',
     'gn_module',
     'gn_graticule',
-    'gn_searchlayerformap_directive'
+    'gn_searchlayerformap_directive',
+    'gn_terrainswitcher_directive'
   ]);
 
   module.controller('gnViewerController', [

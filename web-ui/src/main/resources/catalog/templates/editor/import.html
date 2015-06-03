@@ -75,7 +75,7 @@
                   <li data-ng-repeat="file in queue">
                     <div class="preview" data-file-upload-preview="file"></div>
                     {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                    <i class="fa fa-trash-o" data-ng-click="clear(file)"/>
+                    <i class="fa fa-times" data-ng-click="clear(file)"/>
                   </li>
                 </ul>
               </div>

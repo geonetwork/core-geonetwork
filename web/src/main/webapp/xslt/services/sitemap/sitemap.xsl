@@ -25,10 +25,10 @@
       xmlns:geo="http://www.google.com/geo/schemas/sitemap/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-      <xsl:for-each select="response/record">
+      <xsl:for-each select="metadata/record">
         <xsl:variable name="uuid" select="uuid"/>
-        <xsl:variable name="schemaid" select="schemaid"/>
-        <xsl:variable name="changedate" select="changedate"/>
+        <xsl:variable name="schemaid" select="datainfo/schemaid"/>
+        <xsl:variable name="changedate" select="datainfo/changedate"/>
         
         <url>
           <loc>
@@ -62,7 +62,7 @@
       xmlns:sc="http://sw.deri.org/2007/07/sitemapextension/scschema.xsd">
       <sc:dataset>
         <sc:datasetLabel><xsl:value-of select="$env/system/site/name"/> content catalogue for Linked Data spiders (RDF)</sc:datasetLabel>
-        <xsl:for-each select="response/record">
+        <xsl:for-each select="metadata/record">
           <sc:dataDumpLocation><xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/srv/eng/rdf.metadata.get?uuid=<xsl:value-of select="uuid"/></sc:dataDumpLocation>
         </xsl:for-each>
         <!--For 5 latests update:

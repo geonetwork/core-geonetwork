@@ -2,6 +2,7 @@
 <i18n>
   <viewInGE>View in Google Earth</viewInGE>
   <warning>Warning!</warning>
+  <addA>Add </addA>
   <nojs>Javascript is not enabled. Enable it or click <a
     href="catalog.search.nojs">here to search</a> in a degraded mode.</nojs>
   <selectView>Choose view</selectView>

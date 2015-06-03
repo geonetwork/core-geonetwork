@@ -110,7 +110,8 @@ public final class Geonet {
 		public static final String ID         = "id";
 		public static final String ON         = "on";
 		public static final String METADATA   = "metadata";
-		public static final String NAME       = "name";
+        public static final String NAME       = "name";
+        public static final String ORGANISATION   = "organisation";
         public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";

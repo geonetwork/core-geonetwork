@@ -22,7 +22,16 @@
              // Manage layers selection
              scope.selectionMode = attrs.gnSelectionMode;
              if (scope.selectionMode) {
-               scope.selection = [];
+               scope.isSelected = function(layerName) {
+                 if (layerName) {
+                   for (var i = 0; i < scope.selection.length; i++) {
+                      if (scope.selection[i].Name === layerName) {
+                        return true;
+                      }
+                   }
+                 }
+                 return false;
+               };
                scope.select = function(layer) {
                  if (scope.selectionMode.indexOf('multiple') >= 0) {
                    if (scope.selection.indexOf(layer) < 0) {

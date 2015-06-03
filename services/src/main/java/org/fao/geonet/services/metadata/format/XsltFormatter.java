@@ -81,9 +81,12 @@ public class XsltFormatter implements FormatterImpl {
                     Element schemaEl = new Element(currentSchema);
                     schemas.addContent(schemaEl);
 
-                    schemaEl.addContent((Element) schemaLocalization.getLabels(fparams.context.getLanguage()).clone());
-                    schemaEl.addContent((Element) schemaLocalization.getCodelists(fparams.context.getLanguage()).clone());
-                    schemaEl.addContent((Element) schemaLocalization.getStrings(fparams.context.getLanguage()).clone());
+                    Element labels = schemaLocalization.getLabels(fparams.context.getLanguage());
+                    schemaEl.addContent((Element) labels.setName("labels").clone());
+                    Element strings = schemaLocalization.getStrings(fparams.context.getLanguage());
+                    schemaEl.addContent((Element) strings.setName("strings").clone());
+                    Element codelists = schemaLocalization.getCodelists(fparams.context.getLanguage());
+                    schemaEl.addContent((Element) codelists.setName("codelists").clone());
                 }
             }
         }

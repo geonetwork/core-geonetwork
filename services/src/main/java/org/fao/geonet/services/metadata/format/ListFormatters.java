@@ -164,7 +164,7 @@ public class ListFormatters extends AbstractFormatService {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         if (id != null || uuid != null) {
             try {
-                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id)));
+                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id, uuid)));
             } catch (Throwable e) {
                 // its ok.  just can't use metadata
             }

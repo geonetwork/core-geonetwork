@@ -56,24 +56,8 @@
        * Creates the records updated report
        */
       $scope.createReport = function(formId, service) {
-        $http({
-          method: 'POST',
-          url: service,
-          data: $(formId).serialize(),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-          .success(function(data) {
-              // Download the csv file. The AngularJs friendly way!
-              var element = angular.element('<a/>');
-              element.attr({
-                href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
-                target: '_blank',
-                download: service
-              })[0].click();
-
-            });
+        $(formId).attr('action', service);
+        $(formId).submit();
       };
 
       /**

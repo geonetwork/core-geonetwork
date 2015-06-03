@@ -11,6 +11,7 @@
     proxyUrl: '../../proxy?url=',
     locale: {},
     isMapViewerEnabled: false,
+    is3DModeAllowed: false,
     modelOptions: {
       updateOn: 'default blur',
       debounce: {

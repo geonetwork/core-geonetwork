@@ -15,8 +15,8 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    'gnMap',
-    function(gnMap) {
+    'gnMap', 'gnConfig', 'gnSearchLocation',
+    function(gnMap, gnConfig, gnSearchLocation) {
       return {
         restrict: 'A',
         replace: true,
@@ -27,6 +27,12 @@
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {
               scope.map = scope.$eval(iAttrs['map']);
+              scope.addLayerTabs = {
+                search: true,
+                wms: false,
+                wmts: false,
+                kml: false
+              };
 
               /** Define object to receive measure info */
               scope.measureObj = {};
@@ -44,6 +50,41 @@
                 map.getView().fitExtent(map.getView().
                     getProjection().getExtent(), map.getSize());
               };
+              scope.ol3d = null;
+
+              // 3D mode is allowed and disabled by default
+              scope.is3DModeAllowed = gnConfig['map.is3DModeAllowed'] || false;
+              scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
+
+
+
+              scope.init3dMode = function(map) {
+                if (map) {
+                  scope.ol3d = new olcs.OLCesium({map: map});
+                } else {
+                  console.warning('3D mode can be only by activated' +
+                      ' on a map instance.');
+                }
+              };
+              scope.switch2D3D = function(map) {
+                if (scope.ol3d === null) {
+                  scope.init3dMode(map);
+                }
+                scope.ol3d.setEnabled(
+                    scope.is3dEnabled = !scope.ol3d.getEnabled());
+              };
+              // Turn off 3D mode when not using it because
+              // it slow down the application.
+              // TODO: improve
+              scope.$on('$locationChangeStart', function() {
+                if (!gnSearchLocation.isMap() && scope.is3dEnabled) {
+                  scope.switch2D3D(scope.map);
+                }
+              });
+
+
+
+
               scope.zoomToYou = function(map) {
                 if (navigator.geolocation) {
                   navigator.geolocation.getCurrentPosition(function(position) {
@@ -164,42 +205,6 @@
             'partials/layerindicator.html',
         link: function(scope, element, attrs) {
           scope.layerQueue = gnWmsQueue;
-        }
-      };
-    }]);
-  module.directive('gnvLayermanagerBtn', ['$timeout',
-    function($timeout) {
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-
-          var toggleLayer = attrs['gnvLayermanagerBtn'] === 'true';
-          var buttons = element.find('.btn-group.flux button');
-          buttons.bind('click', function() {
-            buttons.removeClass('active');
-            element.addClass('active');
-            $(this).addClass('active');
-            if (toggleLayer) element.find('.layers').addClass('collapsed');
-            element.find('.panel-carousel').removeClass('collapsed');
-            element.find('.unfold').css('opacity', 1);
-            element.find('.panel-carousel-container').css('left',
-                '-' + ($(this).index() * 100) + '%');
-          });
-
-
-          element.find('.unfold').click(function() {
-            element.find('.btn-group button').removeClass('active');
-            if (toggleLayer) element.find('.layers').removeClass('collapsed');
-            element.find('.panel-carousel').addClass('collapsed');
-            element.find('.unfold').css('opacity', 0);
-          });
-
-          // Select the first menu when loaded
-          $timeout(function() {
-            if (buttons.get(0)) {
-              buttons.get(0).click();
-            }
-          });
         }
       };
     }]);

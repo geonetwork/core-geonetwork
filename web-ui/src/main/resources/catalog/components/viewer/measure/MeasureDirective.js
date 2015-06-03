@@ -1,7 +1,7 @@
 (function() {
-  goog.provide('gn_measure_directive');
+  goog.provide('gn_measure');
 
-  var module = angular.module('gn_measure_directive', [
+  var module = angular.module('gn_measure', [
     'ngeo',
     'ui.bootstrap.buttons'
   ]);
@@ -46,7 +46,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnWmsImport
+   * @name gn_viewer.directive:gnMeasure
    *
    * @description
    * Panel to load WMS capabilities service and pick layers.
