@@ -42,4 +42,9 @@ public class TransformerFactoryFactory {
     }
 
 	private static void debug  (String message) { Log.debug  (Log.TRANSFORMER_FACTORY, message); }
+
+    // used for JUnit testing into Eclipse (which selects an incompatible TransformerFactory)
+    public static void setTransformerFactory(TransformerFactory _factory) {
+        factory = _factory;
+    }
 }
