@@ -1,3 +1,5 @@
+goog.provide('WFS_1_0_0');
+
 var WFS_1_0_0_Module_Factory = function () {
   var WFS_1_0_0 = {
     n: 'WFS_1_0_0',

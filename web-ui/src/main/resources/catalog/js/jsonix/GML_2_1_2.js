@@ -1,3 +1,5 @@
+goog.provide('GML_2_1_2');
+
 var GML_2_1_2_Module_Factory = function () {
   var GML_2_1_2 = {
     n: 'GML_2_1_2',

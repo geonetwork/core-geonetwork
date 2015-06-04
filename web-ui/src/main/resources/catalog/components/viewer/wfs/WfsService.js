@@ -1,6 +1,13 @@
 (function() {
   goog.provide('gn_wfs_service');
 
+  goog.require('OWS_1_0_0');
+  goog.require('WFS_1_1_0');
+  goog.require('SMIL_2_0');
+  goog.require('SMIL_2_0_Language');
+  goog.require('GML_3_1_1');
+  goog.require('Filter_1_1_0');
+
   var module = angular.module('gn_wfs_service', []);
 
   // WFS Client

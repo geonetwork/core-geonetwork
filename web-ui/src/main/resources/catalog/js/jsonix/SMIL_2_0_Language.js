@@ -1,3 +1,5 @@
+goog.provide('SMIL_2_0_Language');
+
 var SMIL_2_0_Language_Module_Factory = function () {
   var SMIL_2_0_Language = {
     n: 'SMIL_2_0_Language',

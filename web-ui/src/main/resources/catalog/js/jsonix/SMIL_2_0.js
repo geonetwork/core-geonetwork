@@ -1,3 +1,5 @@
+goog.provide('SMIL_2_0');
+
 var SMIL_2_0_Module_Factory = function () {
   var SMIL_2_0 = {
     n: 'SMIL_2_0',

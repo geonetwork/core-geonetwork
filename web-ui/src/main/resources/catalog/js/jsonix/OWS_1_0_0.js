@@ -1,3 +1,5 @@
+goog.provide('OWS_1_0_0');
+
 var OWS_1_0_0_Module_Factory = function () {
   var OWS_1_0_0 = {
     n: 'OWS_1_0_0',

@@ -75,30 +75,13 @@
 
         <xsl:if test="$angularApp = 'gn_search'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
+          <!-- Jsonix resources (OWS Context) -->
+          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
           <script type="text/javascript">
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>
         </xsl:if>
 
-        <!-- Jsonix resources (OWS Context) -->
-        <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/w3c-schemas/XLink_1_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/Filter_1_0_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/GML_2_1_2.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/SLD_1_0_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWC_0_3_1.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWS_1_0_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWS_1_1_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/WPS_1_0_0.js"></script>
-
-        <!--for WFS 1.1.0 Only-->
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWS_1_0_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/WFS_1_0_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/WFS_1_1_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/SMIL_2_0.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/SMIL_2_0_Language.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/GML_3_1_1.js"></script>
-        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/Filter_1_1_0.js"></script>
 
         <!--<xsl:if test="$isEditing">-->
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>

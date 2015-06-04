@@ -1,3 +1,5 @@
+goog.provide('Filter_1_1_0');
+
 var Filter_1_1_0_Module_Factory = function () {
   var Filter_1_1_0 = {
     n: 'Filter_1_1_0',
