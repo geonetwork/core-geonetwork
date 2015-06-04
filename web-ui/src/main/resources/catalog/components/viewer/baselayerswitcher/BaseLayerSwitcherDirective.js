@@ -4,6 +4,11 @@
   var module = angular.module('gn_baselayerswitcher', [
   ]);
 
+  var baselayerTemplateURL = '../../catalog/components/viewer/baselayerswitcher/' +
+      'partials/baselayerswitcher.html';
+
+  module.value('baselayerTemplateURL', baselayerTemplateURL);
+
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnBaselayerswitcher
@@ -13,12 +18,11 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnViewerSettings',
-    function(gnViewerSettings) {
+    'gnViewerSettings', 'baselayerTemplateURL',
+    function(gnViewerSettings, baselayerTemplateURL) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/baselayerswitcher/' +
-            'partials/baselayerswitcher.html',
+        templateUrl: baselayerTemplateURL,
         scope: {
           map: '=gnBaselayerswitcherMap'
         },
