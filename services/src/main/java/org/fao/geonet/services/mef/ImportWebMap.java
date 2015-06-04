@@ -25,7 +25,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-public class ImportWmc extends NotInReadOnlyModeService {
+public class ImportWebMap extends NotInReadOnlyModeService {
 
     private String styleSheetWmc;
 

@@ -19,7 +19,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.services.mef.ImportWmc;
+import org.fao.geonet.services.mef.ImportWebMap;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
@@ -32,9 +32,9 @@ import org.mockito.Mockito;
 
 
 
-public class ImportWmcTest {
+public class ImportWebMapTest {
 
-    private ImportWmc importWmcService;
+    private ImportWebMap importWmcService;
     private ServiceConfig serviceConfig = Mockito.mock(ServiceConfig.class);
     private ServiceContext serviceContext = Mockito.mock(ServiceContext.class);
     private UserSession userSession = Mockito.mock(UserSession.class);
@@ -54,7 +54,7 @@ public class ImportWmcTest {
     	assumeTrue(new File(webDirectory).exists());
     	
         testEnabled = true;
-        importWmcService = new ImportWmc();
+        importWmcService = new ImportWebMap();
         importWmcService.init(new File(webDirectory).toPath(), serviceConfig);
     }
 
@@ -81,7 +81,7 @@ public class ImportWmcTest {
         Mockito.when(sm.getSiteName()).thenReturn("geonetwork-testor");
         
         // The stylesheet should exist in the filesystem
-        Field styleSheet = ImportWmc.class.getDeclaredField("styleSheetWmc");
+        Field styleSheet = ImportWebMap.class.getDeclaredField("styleSheetWmc");
         styleSheet.setAccessible(true);
         String xslPath =  (String) styleSheet.get(importWmcService);
         assertTrue(new File(xslPath).exists());
@@ -99,24 +99,6 @@ public class ImportWmcTest {
 
         Element ret = importWmcService.serviceSpecificExec(reqElem, serviceContext);
         assertTrue(Xml.getString(ret).contains("uuid"));
-    }
-
-    @Test
-    public final void testGenerateLineageSource() {
-
-        // tests a regular url
-        String el = XslUtil.generateLineageSource("http://wiki.openstreetmap.org/wiki/FR:OpenStreetMap_License");
-        assertTrue(el.contains("xlink:href=\"http://wiki.openstreetmap.org/wiki/FR:OpenStreetMap_License\""));
-
-        // tests a GN url with a UUID
-        String el2 = XslUtil.generateLineageSource("http://www.geopicardie.fr/geonetwork/apps/georchestra/?uuid=be1f3319-3d4d-4128-8426-2fe005bb0030");
-        assertTrue(el2.contains("uuidref=\"be1f3319-3d4d-4128-8426-2fe005bb0030\""));
-
-        // an invalid url
-        // is it the WMC sender's responsability to send correctly formatted document ?
-        String el3 = XslUtil.generateLineageSource("Some random junk sent from the WMC document (obviously not a valid URL)");
-        assertTrue(el3.contains("xlink:href=\"Some random junk sent from the WMC document (obviously not a valid URL)\""));
-
     }
 
     @Test
