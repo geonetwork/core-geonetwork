@@ -32,7 +32,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
-        this.styleSheetWmc = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS + File.separator + "OGCWMC-to-ISO19139.xsl";
+        this.styleSheetWmc = appPath + File.separator + Geonet.Path.IMPORT_STYLESHEETS + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
     }
 
 

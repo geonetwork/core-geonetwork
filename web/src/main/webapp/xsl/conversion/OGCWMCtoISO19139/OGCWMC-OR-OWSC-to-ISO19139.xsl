@@ -279,10 +279,8 @@
     <xsl:variable name="maxx" select="string(./@maxx)" />
     <xsl:variable name="maxy" select="string(./@maxy)" />
     <xsl:variable name="fromEpsg" select="string(./@SRS)" />
-    <!-- <xsl:variable name="reprojected" select="java:reprojectCoords($minx,$miny,$maxx,$maxy,$fromEpsg)" />-->
-    <xsl:variable name="reprojected" select="''" />
-    
-    <!--<xsl:copy-of select="saxon:parse($reprojected)" />-->
+    <xsl:variable name="reprojected" select="java:reprojectCoords($minx,$miny,$maxx,$maxy,$fromEpsg)" />
+    <xsl:copy-of select="saxon:parse($reprojected)" />
   </xsl:template>
   
 </xsl:stylesheet>
