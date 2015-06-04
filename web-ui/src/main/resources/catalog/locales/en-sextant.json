@@ -1,4 +1,6 @@
 {
+  "searchPlaces": "Search a place…",
+  "filter": "Filter…",
   "sextantThemes" : "Sextant Themes",
   "publishedForGroup" : "Catalogue",
   "fullView": "Full metadata",
@@ -23,5 +25,6 @@
   "email": "Email",
   "organism": "Organism",
   "usage": "Usage",
+  "source": "Sources",
   "sources": "Sources : "
 }
