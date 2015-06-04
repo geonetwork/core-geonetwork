@@ -17,7 +17,7 @@
   <xsl:param name="lang">eng</xsl:param>
   <xsl:param name="topic"></xsl:param>
   <xsl:param name="viewer_url"></xsl:param>
-  <xsl:param name="wmcOrOws_url"></xsl:param>
+  <xsl:param name="map_url"></xsl:param>
 
   <!-- These are provided by the ImportWmc.java jeeves service -->
   <xsl:param name="currentuser_name"></xsl:param>
@@ -169,7 +169,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL><xsl:value-of select="$wmcOrOws_url"/></gmd:URL>
+                    <gmd:URL><xsl:value-of select="$map_url"/></gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString><xsl:value-of select="if ($isOws) then 'OGC:OWS-C' else 'OGC:WMC'"/></gco:CharacterString>

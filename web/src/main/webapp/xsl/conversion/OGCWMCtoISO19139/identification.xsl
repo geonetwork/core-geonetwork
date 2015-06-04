@@ -86,6 +86,7 @@
       <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="$lang"/>
     </gmd:language>
 
+
     <gmd:topicCategory>
       <gmd:MD_TopicCategoryCode><xsl:value-of select="$topic"/></gmd:MD_TopicCategoryCode>
     </gmd:topicCategory>

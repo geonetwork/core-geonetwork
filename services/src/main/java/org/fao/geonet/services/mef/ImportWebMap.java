@@ -25,6 +25,12 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+/**
+ * TODO:
+ * * If only URL provided and no map as string, download context
+ * * Create map preview
+ * * Save map and attached document to metadata record
+ */
 public class ImportWebMap extends NotInReadOnlyModeService {
 
     private String styleSheetWmc;
@@ -38,18 +44,16 @@ public class ImportWebMap extends NotInReadOnlyModeService {
 
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context)  throws Exception {
-        String wmcString = Util.getParam(params, "wmc_string");
-        String wmcUrl = Util.getParam(params, "wmc_url");
-        String viewerUrl = Util.getParam(params, "viewer_url");
-        String groupId = Util.getParam(params, "group_id", "1");
+        String mapString = Util.getParam(params, "map_string");
+        String mapUrl = Util.getParam(params, "map_url", "");
+        String viewerUrl = Util.getParam(params, "viewer_url", "");
+        String groupId = Util.getParam(params, "group_id", null);
+        String topic = Util.getParam(params, "topic", "");
 
         Map<String,Object> xslParams = new HashMap<String,Object>();
         xslParams.put("viewer_url", viewerUrl);
-        xslParams.put("wmc_url", wmcUrl);
-
-        // Should this be configurable ?
-
-        xslParams.put("topic", "location");
+        xslParams.put("map_url", mapUrl);
+        xslParams.put("topic", topic);
 
         UserSession us = context.getUserSession();
 
@@ -62,7 +66,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         }
 
         // 1. JDOMize the string
-        Element wmcDoc = Xml.loadString(wmcString, false);
+        Element wmcDoc = Xml.loadString(mapString, false);
         // 2. Apply XSL (styleSheetWmc)
         Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
 
