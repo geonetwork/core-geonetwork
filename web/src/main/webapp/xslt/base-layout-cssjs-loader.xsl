@@ -69,6 +69,7 @@
         <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js"></script>
 
         <script src="{$uiResourcesPath}lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-select/bootstrap-select.min.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
