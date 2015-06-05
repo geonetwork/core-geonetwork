@@ -32,7 +32,6 @@
               list: '@'
             },
             link: function(scope, element, attrs, controller) {
-
               scope.updateRelations = function() {
                 if (scope.md) {
                   scope.uuid = scope.md.getUuid();
@@ -67,7 +66,7 @@
               };
               scope.config = gnRelatedResources;
 
-              scope.$watch('uuid', function() {
+              scope.$watchCollection('md', function() {
                 scope.updateRelations();
               });
 
