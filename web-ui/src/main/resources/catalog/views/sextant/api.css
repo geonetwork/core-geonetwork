@@ -10491,18 +10491,50 @@ yx-axis
   font-size: 13px;
   text-shadow: 0px 0px 1px white;
 }
-.gn [sxt-main-viewer] [sxt-mouse-position] select {
-  width: 10em;
-  margin: 1px 4px;
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control {
+  width: auto;
+  float: left;
+  margin-right: 1em;
+}
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn {
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+}
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:active,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn[disabled],
+.gn fieldset[disabled] [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:hover,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:focus,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:active {
+  border-color: transparent;
+}
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:hover,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn[disabled]:hover,
+.gn fieldset[disabled] [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:hover,
+.gn [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn[disabled]:focus,
+.gn fieldset[disabled] [sxt-main-viewer] [sxt-mouse-position] .btn-group.bootstrap-select.form-control .btn:focus {
+  color: #999999;
+  text-decoration: none;
 }
 .gn [sxt-main-viewer] [sxt-mouse-position] .ol-mouse-position {
-  left: 11em;
-  top: 0;
-  right: auto;
+  position: static;
   height: 32px;
   line-height: 32px;
-  color: #ffffff;
-  text-shadow: 0px 0px 1px #000000;
+  color: #555;
+  text-shadow: 0px 0px 1px white;
   font-size: 13px;
 }
 .gn [sxt-main-viewer] .sxt-layer-separator {
@@ -10827,6 +10859,19 @@ yx-axis
 .gn [sxt-main-viewer] .panel-ncwms-container label {
   font-weight: 400;
 }
+.gn [sxt-main-viewer] .panel-carousel-window {
+  overflow-x: hidden;
+}
+.gn [sxt-main-viewer] .panel-carousel-container {
+  width: 300%;
+  position: relative;
+  left: 0;
+  transition: left 0.3s ease;
+  display: flex;
+}
+.gn [sxt-main-viewer] .panel-carousel {
+  flex: 1;
+}
 .gn .popover {
   height: auto;
   border-radius: 2px;
@@ -10849,6 +10894,11 @@ yx-axis
 }
 .gn .popover.popover-dropdown .popover-content li:last-child {
   border-bottom: none;
+}
+.gn .popover .dropdown-menu {
+  position: static;
+  box-shadow: none;
+  padding: 0 0 1em;
 }
 .gn .panel-body .gn-metadata-view {
   width: 100%;
@@ -12950,8 +13000,8 @@ yx-axis
   margin-left: 29.7em;
 }
 @media (min-width: 1680px) {
-  .gn .sxt-main-tabs .btn-group.sxt-panel-button {
-    margin-left: calc(25% + 2em);
+  .gn .gn .sxt-main-tabs .btn-group.sxt-panel-button {
+    margin-left: calc(25% + 1.2em);
   }
 }
 .gn .sxt-main-tabs .btn-group.sxt-adminbtn {
@@ -13064,6 +13114,13 @@ yx-axis
 }
 .gn .sxt-center-panel .panel-heading .btn-group {
   margin-top: -2px;
+}
+.gn .sxt-center-panel .panel-heading .gn-sort-by .pull-right {
+  margin-top: 0;
+  height: 2.8em;
+}
+.gn .sxt-center-panel .panel-heading .gn-sort-by .pull-right .btn {
+  height: 2.8em;
 }
 .gn [data-ng-search-form] .gn-top-search {
   text-align: center;
@@ -13477,6 +13534,9 @@ yx-axis
   float: right;
   margin: 7px 4px 0 0;
 }
+.gn ul.gn-resultview li.gn-grid .gn-md-relations .btn {
+  width: 46px;
+}
 .gn ul.gn-resultview li.gn-grid .gn-md-relations .dropdown-menu {
   max-width: 100%;
 }
@@ -13552,6 +13612,11 @@ yx-axis
   color: #4ba2d9;
   background-color: white;
   padding: 0;
+}
+.gn .gn-pager .btn-group .btn:hover,
+.gn .gn-pager .btn-group .btn:focus {
+  text-decoration: underline;
+  color: #2f6383;
 }
 .gn .gn-pager .btn-group .btn:active {
   box-shadow: none;
@@ -13654,6 +13719,9 @@ yx-axis
   top: 1.5em;
   bottom: 0;
   z-index: 100;
+}
+.gn [gn-metadata-display] .overview .gn-metadata-display {
+  margin: 2em 0 0 -2em;
 }
 .gn [gn-metadata-display] > .panel-default {
   border-radius: 0;
