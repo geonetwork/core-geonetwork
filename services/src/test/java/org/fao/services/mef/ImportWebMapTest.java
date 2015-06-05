@@ -48,14 +48,11 @@ public class ImportWebMapTest {
     private static String testWmcUrl = "http://sdi.georchestra.org/mapfishapp/ws/wmc/geodoc939c9df8121e7953b23a39c22f5b2bdb.wmc";
     private static String testWmcViewerUrl = "http://sdi.georchestra.org/mapfishapp/?wmc=ws/wmc/geodoc939c9df8121e7953b23a39c22f5b2bdb.wmc";
 
-    private boolean testEnabled = false;
-
     @Before
     public void setUp() throws Exception {
     	String webDirectory = this.getClass().getResource("/").getPath() + "../../../web/src/main/webapp";
     	assumeTrue(new File(webDirectory).exists());
     	
-        testEnabled = true;
         importWmcService = new ImportWebMap();
         importWmcService.init(new File(webDirectory).toPath(), serviceConfig);
     }
@@ -105,7 +102,7 @@ public class ImportWebMapTest {
 
     @Test
     public final void testReproject() {
-            // BoundingBox minx=\"-1363723.31702789990\" miny=\"4981331.59563689958\" maxx=\"1994613.95770959998\" maxy=\"6962579.36878869962\" SRS=\"EPSG:3857\"
+        // BoundingBox minx=\"-1363723.31702789990\" miny=\"4981331.59563689958\" maxx=\"1994613.95770959998\" maxy=\"6962579.36878869962\" SRS=\"EPSG:3857\"
         String minx = "-1363723.31702789990", miny = "4981331.59563689958",
                maxx = "1994613.95770959998", maxy= "6962579.36878869962",
                SRS = "EPSG:3857";
@@ -122,9 +119,8 @@ public class ImportWebMapTest {
         }
 
         assertTrue(reprL.size() == 4);
-        // /!\ if forceXY env variable is true
         boolean forceXY = Boolean.parseBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
-        if (forceXY) {
+        if (! forceXY) {
         	assertTrue(new Double(reprL.get(2)) > 40  && new Double(reprL.get(2)) < 41
         			&& new Double(reprL.get(0)) > -13 && new Double(reprL.get(0)) < -12
                     && new Double(reprL.get(3)) > 52  && new Double(reprL.get(3)) < 53
@@ -138,5 +134,4 @@ public class ImportWebMapTest {
                     );
         }
     }
-
 }

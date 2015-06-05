@@ -19,13 +19,11 @@
   <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 
   <xsl:template match="*" mode="DataIdentification">
-    <xsl:param name="topic"/>
-    <xsl:param name="lang"/>
 
     <gmd:citation>
       <gmd:CI_Citation>
         <gmd:title>
-          <gco:CharacterString><xsl:value-of select="wmc:General/wmc:Title|
+          <gco:CharacterString><xsl:value-of select="if ($title) then $title else wmc:General/wmc:Title|
                                                      wmc11:General/wmc11:Title|
                                                      ows-context:General/ows:Title"/></gco:CharacterString>
         </gmd:title>
@@ -51,7 +49,7 @@
     </gmd:citation>
 
     <gmd:abstract>
-      <gco:CharacterString><xsl:value-of select="wmc:General/wmc:Abstract|
+      <gco:CharacterString><xsl:value-of select="if ($abstract) then $abstract else wmc:General/wmc:Abstract|
                                                  wmc11:General/wmc11:Abstract|
                                                  ows-context:General/ows:Abstract"/></gco:CharacterString>
     </gmd:abstract>
@@ -69,6 +67,50 @@
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
     </xsl:for-each>
+    
+    <xsl:if test="$currentuser_name != ''">
+       <gmd:pointOfContact>
+         <gmd:CI_ResponsibleParty>
+           <gmd:individualName>
+             <gco:CharacterString>
+               <xsl:value-of select="$currentuser_name" />
+             </gco:CharacterString>
+           </gmd:individualName>
+           <gmd:organisationName>
+             <gco:CharacterString>
+               <xsl:value-of select="$currentuser_org" />
+             </gco:CharacterString>
+           </gmd:organisationName>
+           <gmd:contactInfo>
+             <gmd:CI_Contact>
+               <!--<gmd:phone>
+                 <gmd:CI_Telephone>
+                   <gmd:voice>
+                     <gco:CharacterString>
+                       <xsl:value-of select="$currentuser_phone" />
+                     </gco:CharacterString>
+                   </gmd:voice>
+                 </gmd:CI_Telephone>
+               </gmd:phone>-->
+               <gmd:address>
+                 <gmd:CI_Address>
+                   <gmd:electronicMailAddress>
+                     <gco:CharacterString>
+                       <xsl:value-of select="$currentuser_mail" />
+                     </gco:CharacterString>
+                   </gmd:electronicMailAddress>
+                 </gmd:CI_Address>
+               </gmd:address>
+             </gmd:CI_Contact>
+           </gmd:contactInfo>
+           <gmd:role>
+             <gmd:CI_RoleCode
+                     codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                     codeListValue="author" />
+           </gmd:role>
+         </gmd:CI_ResponsibleParty>
+       </gmd:pointOfContact>
+      </xsl:if>
 
     <!-- TODO: add graphic overview -->
     
@@ -83,7 +125,7 @@
     </xsl:for-each>
     
     <gmd:language>
-      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="$lang"/>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{$lang}"/>
     </gmd:language>
 
 

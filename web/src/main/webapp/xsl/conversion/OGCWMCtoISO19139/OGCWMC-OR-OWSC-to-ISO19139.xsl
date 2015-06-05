@@ -17,6 +17,8 @@
   <xsl:param name="lang">eng</xsl:param>
   <xsl:param name="topic"></xsl:param>
   <xsl:param name="viewer_url"></xsl:param>
+  <xsl:param name="title"></xsl:param>
+  <xsl:param name="abstract"></xsl:param>
   <xsl:param name="map_url"></xsl:param>
 
   <!-- These are provided by the ImportWmc.java jeeves service -->
@@ -272,15 +274,14 @@
   </xsl:template>
   
   
-  
   <xsl:template match="wmc:BoundingBox|ows:BoundingBox" mode="BoundingBox">
-    <xsl:variable name="minx" select="string(./@minx)" />
-    <xsl:variable name="miny" select="string(./@miny)" />
-    <xsl:variable name="maxx" select="string(./@maxx)" />
-    <xsl:variable name="maxy" select="string(./@maxy)" />
-    <xsl:variable name="fromEpsg" select="string(./@SRS)" />
+    <xsl:variable name="minx" select="if (ows:LowerCorner) then tokenize(ows:LowerCorner, ' ')[1] else string(./@minx)" />
+    <xsl:variable name="miny" select="if (ows:LowerCorner) then tokenize(ows:LowerCorner, ' ')[2] else string(./@miny)" />
+    <xsl:variable name="maxx" select="if (ows:UpperCorner) then tokenize(ows:UpperCorner, ' ')[1] else string(./@maxx)" />
+    <xsl:variable name="maxy" select="if (ows:UpperCorner) then tokenize(ows:UpperCorner, ' ')[2] else string(./@maxy)" />
+    <xsl:variable name="fromEpsg" select="if (@crs) then string(@crs) else string(./@SRS)" />
     <xsl:variable name="reprojected" select="java:reprojectCoords($minx,$miny,$maxx,$maxy,$fromEpsg)" />
     <xsl:copy-of select="saxon:parse($reprojected)" />
   </xsl:template>
-  
+
 </xsl:stylesheet>

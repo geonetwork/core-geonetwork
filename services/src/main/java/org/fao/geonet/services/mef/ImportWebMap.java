@@ -46,14 +46,20 @@ public class ImportWebMap extends NotInReadOnlyModeService {
     public Element serviceSpecificExec(Element params, ServiceContext context)  throws Exception {
         String mapString = Util.getParam(params, "map_string");
         String mapUrl = Util.getParam(params, "map_url", "");
-        String viewerUrl = Util.getParam(params, "viewer_url", "");
+        String viewerUrl = Util.getParam(params, "map_viewer_url", "");
         String groupId = Util.getParam(params, "group_id", null);
+        String mapAbstract = Util.getParam(params, "map_abstract", "");
+        String title = Util.getParam(params, "map_title", "");
         String topic = Util.getParam(params, "topic", "");
 
+        
         Map<String,Object> xslParams = new HashMap<String,Object>();
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", mapUrl);
         xslParams.put("topic", topic);
+        xslParams.put("title", title);
+        xslParams.put("abstract", mapAbstract);        
+        xslParams.put("lang", context.getLanguage());
 
         UserSession us = context.getUserSession();
 
@@ -82,7 +88,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
 
         final List<String> id = new ArrayList<String>();
         final List<Element> md = new ArrayList<Element>();
-        String localId = null;
+
         md.add(transformedMd);
 
         // Import record
