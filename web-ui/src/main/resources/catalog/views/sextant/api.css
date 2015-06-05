@@ -12940,6 +12940,7 @@ yx-axis
   font-family: Sextant;
   font-size: 14px;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 .gn .btn-default {
   background: #4ba2d9;
