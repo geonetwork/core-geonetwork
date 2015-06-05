@@ -13265,6 +13265,10 @@ yx-axis
   border: none;
   padding: 0 5px;
 }
+.gn [data-ng-search-form] .panel-heading [data-gn-pagination] .btn-group .btn {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
 .gn [data-ng-search-form] .sxt-right-panel .panel-body {
   font-size: .9em;
   padding: 15px .5em;
