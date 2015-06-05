@@ -10,6 +10,8 @@
 
   module.value('gfiTemplateURL', gfiTemplateURL);
 
+  module.value('baselayerTemplateURL', '../../catalog/views/sextant/templates/baselayer.html');
+
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
     'gnGlobalSettings', 'gnMap', 'gnShareConstants',
 
