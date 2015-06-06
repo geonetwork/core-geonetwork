@@ -115,6 +115,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
             onlineSrcParams.put("protocol", "WWW:DOWNLOAD-1.0-http--download");
             onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, "map-context.xml"));
             onlineSrcParams.put("name", "map-context.xml");
+            onlineSrcParams.put("desc", title);
             Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);
             dm.updateMetadata(context, id.get(0), mdWithOLRes, false, true, true, context.getLanguage(), null, true);
         }
