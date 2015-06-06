@@ -1,6 +1,7 @@
 package org.fao.geonet.services.mef;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -19,8 +22,10 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -81,7 +86,8 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = context.getBean(SettingManager.class);
         DataManager dm = gc.getBean(DataManager.class);
-        
+        SchemaManager schemaMan = context.getBean(SchemaManager.class);
+
         String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 
         String date = new ISODate().toString();
@@ -95,6 +101,23 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         Importer.importRecord(uuid, uuidAction, md, "iso19139", 0, sm.getSiteId(),
                 sm.getSiteName(), null, context,  id,  date, date,  groupId, 
                 MetadataType.METADATA);
+
+        // Save the context if no context-url provided
+        if (StringUtils.isEmpty(mapUrl)) {
+            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
+            Files.createDirectories(dataDir);
+            Path outFile = dataDir.resolve("map-context.xml");
+            Files.deleteIfExists(outFile);
+            FileUtils.writeStringToFile(outFile.toFile(), Xml.getString(wmcDoc));
+
+            // Update the MD
+            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-1.0-http--download");
+            onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, "map-context.xml"));
+            onlineSrcParams.put("name", "map-context.xml");
+            Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);
+            dm.updateMetadata(context, id.get(0), mdWithOLRes, false, true, true, context.getLanguage(), null, true);
+        }
 
         dm.indexMetadata(id);
 

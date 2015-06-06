@@ -167,23 +167,30 @@
         <gmd:MD_Distribution>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
+
               <!-- Add link to the map -->
-              <gmd:onLine>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL><xsl:value-of select="$map_url"/></gmd:URL>
-                  </gmd:linkage>
-                  <gmd:protocol>
-                    <gco:CharacterString><xsl:value-of select="if ($isOws) then 'OGC:OWS-C' else 'OGC:WMC'"/></gco:CharacterString>
-                  </gmd:protocol>
-                  <gmd:name>
-                    <gco:CharacterString>
-                      <xsl:value-of select="wmc:General/wmc:Title|
-                                            wmc11:General/wmc11:Title|
-                                            ows-context:General/ows:Title"/></gco:CharacterString>
-                  </gmd:name>
-                </gmd:CI_OnlineResource>
-              </gmd:onLine>
+              <xsl:if test="$map_url != ''">
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>
+                        <xsl:value-of select="$map_url" />
+                      </gmd:URL>
+                    </gmd:linkage>
+                    <gmd:protocol>
+                      <gco:CharacterString>
+                        <xsl:value-of select="if ($isOws) then 'OGC:OWS-C' else 'OGC:WMC'" />
+                      </gco:CharacterString>
+                    </gmd:protocol>
+                    <gmd:name>
+                      <gco:CharacterString>
+                        <xsl:value-of
+                          select="wmc:General/wmc:Title|wmc11:General/wmc11:Title|ows-context:General/ows:Title" />
+                      </gco:CharacterString>
+                    </gmd:name>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </xsl:if>
               
               <!-- -->
               <xsl:if test="$viewer_url != ''">

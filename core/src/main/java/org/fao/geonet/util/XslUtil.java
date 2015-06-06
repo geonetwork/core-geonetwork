@@ -21,6 +21,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -454,17 +455,29 @@ public final class XslUtil
 
 			ret = reprojected.getMinX() + "," + reprojected.getMinY() + "," + reprojected.getMaxX() + "," + reprojected.getMaxY();
 
-			Element elemRet = new Element("EX_GeographicBoundingBox", "gmd", "http://www.isotc211.org/2005/gmd");
+			Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
 
-			Element elemminx = new Element("westBoundLongitude")
-					.addContent(new Element("Decimal", "gco", "http://www.isotc211.org/2005/gco").setText("" + reprojected.getMinX()));
-			Element elemmaxx = new Element("eastBoundLongitude")
-					.addContent(new Element("Decimal", "gco", "http://www.isotc211.org/2005/gco").setText("" + reprojected.getMaxX()));
-			Element elemminy = new Element("southBoundLatitude")
-					.addContent(new Element("Decimal", "gco", "http://www.isotc211.org/2005/gco").setText("" + reprojected.getMinY()));
-			Element elemmaxy = new Element("northBoundLatitude")
-					.addContent(new Element("Decimal", "gco", "http://www.isotc211.org/2005/gco").setText("" + reprojected.getMaxY()));
-
+			boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
+			Element elemminx, elemmaxx, elemminy, elemmaxy;
+			if (forceXY) {
+				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+			} else {
+				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+			}
 			elemRet.addContent(elemminx);
 			elemRet.addContent(elemmaxx);
 			elemRet.addContent(elemminy);
