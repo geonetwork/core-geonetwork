@@ -11,6 +11,7 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.value('baselayerTemplateURL', '../../catalog/views/sextant/templates/baselayer.html');
+  module.value('kmlimportTemplateURL', '../../catalog/views/sextant/templates/kmlimport.html');
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
     'gnGlobalSettings', 'gnMap',
