@@ -27,12 +27,27 @@
     </td>
     <td>
       <!-- TODO: subtemplate link for editing is different -->
+
+      <!-- Open Ext or Angular editor based on standard name -->
+      <a class="btn btn-link"
+         data-ng-if="md.standardName.indexOf('MedSea') >= 0"
+         ng-href="#/metadata/{{md['geonet:info'].id}}">
+        <i class="fa fa-pencil"></i>
+      </a>
+      <a class="btn btn-link"
+         data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"
+         ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank">
+        <i class="fa fa-pencil"></i>
+      </a>
+
+
+      <!--
       <a class="btn btn-link"
          data-ng-show="user.canEditRecord(md)"
          data-ng-href="#/metadata/{{md['geonet:info'].id}}"
          title="{{'edit' | translate}}">
         <i class="fa fa-pencil"></i>
-      </a>
+      </a>-->
     </td>
     <td>
       <a class="btn btn-link"
