@@ -141,7 +141,8 @@
               });
 
               // Set initial extent to draw the BBOX
-              var extent = gnMap.getBboxFromMd(scope.md);
+              var extents = gnMap.getBboxFromMd(scope.md);
+              var extent = extents.length > 0 && extents[0];
               if (extent) {
 
                 // Fixed feature overlay to show extent of the md

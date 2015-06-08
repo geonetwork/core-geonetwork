@@ -75,11 +75,12 @@
     'gnSearchLocation',
     'gnMetadataActions',
     '$translate',
+    '$q',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate) {
+        $translate, $q) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -131,6 +132,7 @@
 
       var mapVisited = false; // Been once in mapviewer
       var waitingLayers = []; // Layers added from catalog but not visited yet
+      var loadLayerPromises = []; // Promises to know when all layers are loaded
 
       $scope.displayMapTab = function() {
 
@@ -140,25 +142,21 @@
             viewerMap.getSize()[1] == 0) {
           $timeout(function() {
             viewerMap.updateSize();
-/*
-            if (gnViewerSettings.initialExtent) {
-              viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
-                  viewerMap.getSize());
-            }
-*/
-            // Zoom to last added layer on first visit to viewer map
-            if(!mapVisited) {
-              var extent = ol.extent.createEmpty();
-              for(var i=0;i<waitingLayers.length;++i) {
-                ol.extent.extend(extent, waitingLayers[i].get('cextent'));
-              }
-              if (!ol.extent.isEmpty(extent)) {
-                viewerMap.getView().fitExtent(extent, viewerMap.getSize());
-              }
-              mapVisited = true;
-            }
-            waitingLayers = [];
 
+            // Zoom to last added layer on first visit to viewer map
+            if(loadLayerPromises) {
+              $q.all(loadLayerPromises).finally(function() {
+                var extent = ol.extent.createEmpty();
+                for(var i=0;i<waitingLayers.length;++i) {
+                  ol.extent.extend(extent, waitingLayers[i].get('cextent'));
+                }
+                if (!ol.extent.isEmpty(extent)) {
+                  viewerMap.getView().fitExtent(extent, viewerMap.getSize());
+                }
+                if (loadLayerPromises) delete loadLayerPromises;
+                if (waitingLayers) delete waitingLayers;
+              });
+            }
           }, 0);
         }
         $scope.mainTabs.map.titleInfo = 0;
@@ -280,12 +278,14 @@
             }
           }
 
-          gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
+          var loadLayerPromise = gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name, undefined, md).then(function(layer) {
                 layer.set('group', group);
                 feedLayerWithDownloads(layer, link.group);
-                waitingLayers.push(layer);
+                if(waitingLayers) waitingLayers.push(layer);
               });
+          if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+
           $scope.addLayerPopover('map');
           $scope.mainTabs.map.titleInfo += 1;
 
