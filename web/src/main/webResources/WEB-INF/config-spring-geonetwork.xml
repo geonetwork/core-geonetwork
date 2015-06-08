@@ -98,7 +98,14 @@
     <value>hierarchy_view</value>
   </util:list>
 
-  <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String"></util:set>
+  <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
+    <value>localhost</value>
+    <value>127.0.0.1</value>
+    <value>www.ifremer.fr</value>
+    <value>sextant.ifremer.fr</value>
+    <value>sextant-test.ifremer.fr</value>
+  </util:set>
+
   <bean id="threadResources" class="org.mapfish.print.ThreadResources">
     <property name="connectionTimeout" value="30000" />
     <property name="socketTimeout" value="30000" />
