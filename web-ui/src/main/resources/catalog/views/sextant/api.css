@@ -9473,7 +9473,6 @@ yx-axis
 .gn .gn-popup-content {
   overflow: auto;
   max-width: inherit;
-  max-height: 600px;
   font-size: 12px;
 }
 @media (max-width: 480px) {
@@ -10408,6 +10407,7 @@ yx-axis
   left: 0;
   right: 0;
   bottom: 2.3em;
+  z-index: 50;
 }
 .gn [sxt-main-viewer] [gn-gfi] .results {
   background: white;
@@ -10871,6 +10871,15 @@ yx-axis
 }
 .gn [sxt-main-viewer] .panel-carousel {
   flex: 1;
+}
+.gn [sxt-main-viewer] .fu button {
+  width: 100%;
+}
+.gn [sxt-main-viewer] .fu:hover button {
+  background: #81bee4;
+}
+.gn [sxt-main-viewer] .fu input:hover {
+  cursor: pointer;
 }
 .gn .popover {
   height: auto;
