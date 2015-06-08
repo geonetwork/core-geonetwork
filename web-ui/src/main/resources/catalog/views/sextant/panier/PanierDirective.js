@@ -48,7 +48,7 @@
                 scope.report = {
                   success: true
                 };
-                scope.panier = [];
+                scope.searchObj.panier = [];
                 scope.formObj.layers = [];
               } else {
                 scope.report = {
@@ -107,6 +107,9 @@
 
               /** object that contains the form values */
               var aCrs = scope.md.crs && scope.md.crs.split('::');
+
+              // To pass the extent into an object for scope issues
+              scope.prop = {};
 
               scope.form = {
                 id: scope.md.getUuid(),
@@ -185,7 +188,7 @@
               };
 
               var format = new ol.format.WKT();
-              scope.$watch('extent', function(n) {
+              scope.$watch('prop.extent', function(n) {
                 if(n) {
                   try {
                     var g = format.readGeometry(n);

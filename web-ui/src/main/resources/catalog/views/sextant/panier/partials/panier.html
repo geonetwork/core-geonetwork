@@ -54,31 +54,31 @@
               <div class="form-group">
                 <label for="inputNom" class="col-sm-2 control-label" translate>name</label>
                 <div class="col-sm-10">
-                  <input data-ng-disabled="user.isConnected()" type="text" class="form-control" id="inputNom" placeholder="{{'name' | translate}}" ng-model="formObj.user.lastname">
+                  <input maxlength="80" data-ng-disabled="user.isConnected()" type="text" class="form-control" id="inputNom" placeholder="{{'name' | translate}}" ng-model="formObj.user.lastname">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputPrenom" class="col-sm-2 control-label" translate>surname</label>
                 <div class="col-sm-10">
-                  <input data-ng-disabled="user.isConnected()" type="text" class="form-control" id="inputPrenom" placeholder="{{'surname' | translate}}" ng-model="formObj.user.firstname">
+                  <input maxlength="80" data-ng-disabled="user.isConnected()" type="text" class="form-control" id="inputPrenom" placeholder="{{'surname' | translate}}" ng-model="formObj.user.firstname">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputEmail" class="col-sm-2 control-label" translate>email</label>
                 <div class="col-sm-10">
-                  <input data-ng-disabled="user.isConnected()" type="email" class="form-control" id="inputEmail" placeholder="{{'email' | translate}}" ng-model="formObj.user.mail">
+                  <input maxlength="50" data-ng-disabled="user.isConnected()" type="email" class="form-control" id="inputEmail" placeholder="{{'email' | translate}}" ng-model="formObj.user.mail">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputOrganisme" class="col-sm-2 control-label" translate>organism</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputOrganisme" placeholder="organism" ng-model="formObj.user.org">
+                  <input type="text"  maxlength="500" class="form-control" id="inputOrganisme" placeholder="organism" ng-model="formObj.user.org">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputUse" class="col-sm-2 control-label" translate>usage</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputUse" placeholder="{{'usage' | translate}}" ng-model="formObj.user.usage">
+                  <textarea maxlength="500" rows="2" class="form-control" id="inputUse" placeholder="{{'usage' | translate}}" ng-model="formObj.user.usage" ></textarea>
                 </div>
               </div>
             </form>
