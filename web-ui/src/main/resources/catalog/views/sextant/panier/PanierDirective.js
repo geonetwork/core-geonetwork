@@ -33,10 +33,10 @@
 
           scope.formObj = {
             user: {
-              lastname: scope.user.name,
-              firstname: scope.user.surname,
+              lastname: scope.user.lastname || scope.user.name,
+              firstname: scope.user.firstname || scope.user.surname,
               mail: angular.isArray(scope.user.email) ?
-                  scope.user.email[0] : '',
+                  scope.user.email[0] : scope.user.email,
               org: scope.user.organisation
             },
             layers: []
