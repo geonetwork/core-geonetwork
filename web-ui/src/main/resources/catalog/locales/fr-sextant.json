@@ -13,7 +13,7 @@
   "toAdmin": "Administrer",
   "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
   "byPage": "par page",
-  "sortBy": "Tri par",
+  "sortBy": "Ordre",
   "myDownloads": "Mes téléchargements",
   "addLayerPopovermap": "Couche ajoutée à la carte !",
   "addLayerPopoverpanier": "Couche ajoutée au panier !",
@@ -26,5 +26,12 @@
   "organism": "Organisme",
   "usage": "Utilisation",
   "source": "Sources",
-  "sources": "Sources : "
+  "sources": "Sources : ",
+  "fullScreen": "Plein écran",
+  "downloadContext": "Enregistrer la carte",
+  "add": "Ajouter",
+  "remove": "Supprimer",
+  "opacity" : "Transparence",
+  "ncwms": "Paramètres avancés"
+
 }
