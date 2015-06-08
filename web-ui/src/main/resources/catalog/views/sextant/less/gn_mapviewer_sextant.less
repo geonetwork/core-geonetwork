@@ -426,17 +426,21 @@
   }
 
   .layers .sxt-layertree {
-    height: @tmp-max-height;
-    max-height: none;
+    min-height: @tmp-max-height;
+    height: auto;
+    max-height: calc(@tmp-max-height + @tmp-max-height);
     overflow-x: hidden;
     overflow-y: auto;
+  }
+  .layers-tools-expanded .sxt-layertree {
+    height: @tmp-max-height;
   }
   .sxt-maximize-layer-tools {
     .sxt-layertree {
       display: none;
     }
     .sxt-layers-tabset {
-      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+      height: @tmp-max-height + @tmp-max-height;
     }
   }
 
@@ -446,10 +450,14 @@
       height: @tmp-max-height;
     }
     .layers .sxt-layertree {
+      min-height: @tmp-max-height;
+      max-height: @tmp-max-height + @tmp-max-height;
+    }
+    .layers-tools-expanded .sxt-layertree {
       height: @tmp-max-height;
     }
     .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+      height: @tmp-max-height + @tmp-max-height;
     }
   }
 
@@ -459,10 +467,14 @@
       height: @tmp-max-height;
     }
     .layers .sxt-layertree {
+      min-height: @tmp-max-height;
+      max-height: @tmp-max-height + @tmp-max-height;
+    }
+    .layers-tools-expanded .sxt-layertree {
       height: @tmp-max-height;
     }
     .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+      height: @tmp-max-height + @tmp-max-height;
     }
   }
 
@@ -472,10 +484,14 @@
       height: @tmp-max-height;
     }
     .layers .sxt-layertree {
+      min-height: @tmp-max-height;
+      max-height: @tmp-max-height + @tmp-max-height;
+    }
+    .layers-tools-expanded .sxt-layertree {
       height: @tmp-max-height;
     }
     .sxt-maximize-layer-tools .sxt-layers-tabset {
-      height: ~"calc(@{tmp-max-height} + @{tmp-max-height})";
+      height: @tmp-max-height + @tmp-max-height;
     }
   }
 
