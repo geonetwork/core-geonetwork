@@ -13,10 +13,10 @@
   module.value('baselayerTemplateURL', '../../catalog/views/sextant/templates/baselayer.html');
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap', 'gnShareConstants',
+    'gnGlobalSettings', 'gnMap',
 
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap, gnShareConstants) {
+             gnGlobalSettings, gnMap) {
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
@@ -331,10 +331,5 @@
           _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
         })
       }
-
-      gnShareConstants.columnOrder= ['0', '5', '1', '2', '7'];
-      gnShareConstants.disableAllCol = true;
-      gnShareConstants.displayProfile = true;
-
     }]);
 })();

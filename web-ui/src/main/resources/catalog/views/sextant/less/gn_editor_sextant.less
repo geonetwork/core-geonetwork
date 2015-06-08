@@ -1,1 +1,71 @@
 @import "../../../style/gn_editor";
+
+@gn-popup-max-width: 1200px;
+
+[gn-share] {
+  .gn-share-help {
+    display: none;
+  }
+}
+[gn-share] {
+
+  @media (min-width: @screen-md) {
+    min-width: 600px;
+  }
+  .gn-searchgroup-input {
+    padding-left: 0;
+    max-width: 400px;
+  }
+  .gn-share-grid {
+    table {
+      width: auto;
+    }
+    thead, tbody {
+      display: block;
+    }
+    tbody {
+      max-height: 500px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    td,th {
+      text-align: center;
+      width: 7em;
+      &:first-child {
+        width: 15em;
+        text-align: left;
+      }
+      td {
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+    }
+
+  }
+}
+
+[gn-popup] {
+  display: none;
+  min-width: 200px;
+  max-width: @gn-popup-max-width;
+  min-height: 100px;
+  max-height: ~"calc(100% - 89px)";
+  z-index: 2000;
+  height: auto;
+
+  @media (max-width: @screen-tablet) {
+    z-index: 1500;
+    left: 2%;
+    right: 2%;
+    top: 2%;
+    bottom: 2%;
+    max-height: none;
+    max-width: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: @screen-phone) {
+    position: fixed !important;
+    overflow: hidden;
+  }
+}
