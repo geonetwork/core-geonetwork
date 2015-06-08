@@ -133,7 +133,9 @@
           var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
           Object.keys(properties).forEach(function(k) {
             if (exclude.indexOf(k) !== -1) return;
-            props[k] = properties[k].toString();
+            if(properties[k]) {
+              props[k] = properties[k].toString();
+            }
           });
           return props;
         };
