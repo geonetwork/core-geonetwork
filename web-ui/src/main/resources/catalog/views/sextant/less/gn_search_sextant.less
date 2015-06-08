@@ -1121,13 +1121,27 @@ ul.gn-resultview {
     width: auto;
     .btn {
       background: white;
-      color: #000;
+      color: @sxt-base-color;
       box-shadow: none;
+      &:hover span, &:focus span {
+        color: #2a6496;
+        text-decoration: underline;
+      }
+      &:focus {
+        outline: none !important;
+      }
     }
   }
   .form-group {
-    font-size: 12px;
+    font-size: 14px;
     padding-top: .5em;
+    label {
+      font-weight: 400;
+      height: 30px;
+      line-height: 30px;
+      vertical-align: middle;
+      margin: 0;
+    }
     input {
       border-radius: 2px;
     }
