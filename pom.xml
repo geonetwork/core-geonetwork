@@ -1182,12 +1182,18 @@
     </repository>
 
       <!-- seasar repo, has jsonic - used by langdetect -->
-      <repository>
-          <id>maven.seasar.org</id>
-          <name>The Seasar Foundation Maven2 Repository</name>
-          <url>http://maven.seasar.org/maven2</url>
-      </repository>
+    <repository>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2</url>
+    </repository>
 
+    <!--TEMP TO REMOVE-->
+    <repository>
+      <id>oss.sonatype.org-orgmapfish-1015</id>
+      <name>Temp repository to test mapfish print 2.1.1</name>
+      <url>https://oss.sonatype.org/content/repositories/orgmapfish-1015/</url>
+    </repository>
   </repositories>
 
 
@@ -1273,7 +1279,7 @@
     <wro.version>1.7.7</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
-    <print-lib.version>2.1.0</print-lib.version>
+    <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
   </properties>
 </project>
