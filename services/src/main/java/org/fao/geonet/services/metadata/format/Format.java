@@ -30,6 +30,7 @@ import com.google.common.io.ByteStreams;
 import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -91,6 +92,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -244,22 +246,24 @@ public class Format extends AbstractFormatService implements ApplicationListener
             Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
         }
 
-        HttpUriRequest getXmlRequest = new HttpGet(adjustedUrl);
-        final Iterator<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasNext()) {
-            String headerName = headerNames.next();
-            final String[] headers = request.getHeaderValues(headerName);
-            for (String header : headers) {
-                getXmlRequest.addHeader(headerName, header);
-            }
-        }
+//        HttpUriRequest getXmlRequest = new HttpGet(adjustedUrl);
+//        final Iterator<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasNext()) {
+//            String headerName = headerNames.next();
+//            final String[] headers = request.getHeaderValues(headerName);
+//            for (String header : headers) {
+//                getXmlRequest.addHeader(headerName, header);
+//            }
+//        }
+//
+//        GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+//        final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
+//        if (execute.getRawStatusCode() != 200) {
+//            throw new IllegalArgumentException("Request " + adjustedUrl + " did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
+//        }
 
-        GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
-        final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
-        if (execute.getRawStatusCode() != 200) {
-            throw new IllegalArgumentException("Request " + adjustedUrl + " did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
-        }
-        return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
+        return IOUtils.toString(new URL(adjustedUrl), Constants.CHARSET.name());
+        //new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
     /**
