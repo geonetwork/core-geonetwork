@@ -1039,6 +1039,9 @@ ul.gn-resultview {
     height: 3.8em;
     line-height: 2.6em;
     background: white;
+    .fa {
+      margin: .8em .6em 0 0;
+    }
     span {
       color: @sxt-base-color;
       display: inline-block;
@@ -1056,6 +1059,22 @@ ul.gn-resultview {
     .dropdown-menu {
       font-size: 12px;
       text-transform: uppercase;
+    }
+  }
+  section.links {
+    margin: 0 0 1.5em;
+    padding: 1em;
+    box-shadow: @sxt-shadow;
+    text-align: center;
+    .pull-right {
+      float: none !important;
+    }
+    h3 {
+      padding-bottom: .5em;
+      color: #000;
+    }
+    .dropdown-menu {
+      text-align: left;
     }
   }
   h3 button {
@@ -1087,6 +1106,10 @@ ul.gn-resultview {
     border-radius: 0;
     border: none;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  img.graphic-overview:not(.large):not(.thumbnail) {
+    max-height: none;
+    max-width: 100%;
   }
 }
 

@@ -3,7 +3,11 @@
     <button class="btn btn-default pull-right" ng-click="dismiss()" translate>
       <i class="fa fa-share fa-flip-horizontal"></i>
     </button>
-    <span>{{md.title}}</span>
+    <span>
+      <i class="pull-left fa" data-ng-class="md.icon.cls"
+        title="{{md.icon.title | translate}}"></i>
+      {{md.title}}
+    </span>
   </div>
   <div sxt-md-actions-menu="md"></div>
   <div class="panel-body"></div>
