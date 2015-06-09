@@ -13,6 +13,7 @@
   goog.require('sxt_panier');
   goog.require('sxt_interceptors');
   goog.require('sxt_mdactionmenu');
+  goog.require('sxt_linksbtn');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -25,7 +26,8 @@
     'sxt_directives',
     'sxt_panier',
     'sxt_interceptors',
-    'sxt_mdactionmenu'
+    'sxt_mdactionmenu',
+    'sxt_linksbtn'
   ]);
 
 

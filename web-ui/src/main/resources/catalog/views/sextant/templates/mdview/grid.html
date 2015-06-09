@@ -69,76 +69,7 @@
           </div>
         </div>
 
-        <div class="gn-md-links">
-
-          <!--Downloads to panier button-->
-          <div class="btn-group pull-right" ng-if="downloads.length > 1">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
-              <span class="fa fa-download"></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="link in downloads">
-                <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc || (link.name + ' - ' + link.contentType)}}">
-                  <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-                  {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
-              <li class="divider"></li>
-              <li>
-                <a href="" data-ng-click="resultviewFns.addAllMdLayersToPanier(downloads, md)">
-                  <i class="fa fa-plus"></i>&nbsp;
-                  <span data-translate=""
-                        data-translate-values="{number: '{{downloads.length}}'}">
-                    addAllLayersToPanier</span>
-                </a>
-              </li>
-
-            </ul>
-          </div>
-          <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].download == 'false'"
-                  ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="{{'download' | translate}}">
-            <span class="fa fa-download"></span>
-          </button>
-
-          <!--Layers to map button-->
-          <div class="btn-group pull-right" ng-if="layers.length > 1 ">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
-              <span class="fa fa-globe"></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc || layer.name}}">
-                <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
-                <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'"></span>
-                {{layer.desc || layer.name}} </a></li>
-              <li class="divider"></li>
-              <li>
-                <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
-                <i class="fa fa-plus"></i>&nbsp;
-                  <span data-translate=""
-                        data-translate-values="{number: '{{layers.length}}'}">
-                    addAllLayersToMap</span>
-              </a>
-              </li>
-            </ul>
-          </div>
-          <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].dynamic == 'false'"
-                  ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="{{'view' | translate}}">
-            <span class="fa fa-globe"></span>
-          </button>
-
-          <div class="btn-group pull-right" ng-if="links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
-              <span class="fa fa-link"></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="link in links">
-                <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
-            </ul>
-          </div>
-
-        </div>
-
+        <sxt-links-btn></sxt-links-btn>
         <div class="gn-md-relations">
           <div gn-related="{{md.getUuid()}}" types="parent|children"
                template="../../catalog/views/sextant/templates/related.html"></div>
@@ -146,12 +77,10 @@
 
 
 
-      </div> <!-- .gn-md-links -->
-
       </div> <!-- .sx-md-footer -->
 
-        </div>
+      </div>
 
-
-    </li>
+    </div>
+  </li>
 </ul>
