@@ -8,6 +8,9 @@
 .mCSB_scrollTools .mCSB_buttonRight{
   background-image: url(../catalog/style/mCSB_buttons.png);
 }
+.mCSB_inside > .mCSB_container {
+  margin-right: 15px;
+}
 @import (less) "../../../lib/bootstrap-select/bootstrap-select.min.css";
 
 @import "ellipsis.less";
@@ -204,7 +207,8 @@
     color: @sxt-base-color-dark;
     border-top-color: white;
     border-bottom-color: white;
-    font-size: 11px;
+    font-size: 12px;
+    height: 29px;
     &.active, &:hover {
       color: @sxt-base-color;
       background: white;
@@ -227,11 +231,14 @@
     }
     &.sxt-adminbtn {
       margin-right: 1.2em;
+      .btn {
+        height: 29px;
+      }
     }
 
   }
   .btn, .popover-content {
-    padding: 3px 10px 2px;
+    padding: 6px 10px 5px;
     text-transform: uppercase;
     font-size: 12px;
     font-weight: bold;
@@ -1032,6 +1039,9 @@ ul.gn-resultview {
     height: 3.8em;
     line-height: 2.6em;
     background: white;
+    .fa {
+      margin: .8em .6em 0 0;
+    }
     span {
       color: @sxt-base-color;
       display: inline-block;
@@ -1049,6 +1059,22 @@ ul.gn-resultview {
     .dropdown-menu {
       font-size: 12px;
       text-transform: uppercase;
+    }
+  }
+  section.links {
+    margin: 0 0 1.5em;
+    padding: 1em;
+    box-shadow: @sxt-shadow;
+    text-align: center;
+    .pull-right {
+      float: none !important;
+    }
+    h3 {
+      padding-bottom: .5em;
+      color: #000;
+    }
+    .dropdown-menu {
+      text-align: left;
     }
   }
   h3 button {
@@ -1080,6 +1106,10 @@ ul.gn-resultview {
     border-radius: 0;
     border: none;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  img.graphic-overview:not(.large):not(.thumbnail) {
+    max-height: none;
+    max-width: 100%;
   }
 }
 
@@ -1113,6 +1143,7 @@ ul.gn-resultview {
     color: white;
     box-shadow: @sxt-shadow;
     border-radius: 2px;
+    height: 29px;
   }
   h4 {
     font-size: 14px;

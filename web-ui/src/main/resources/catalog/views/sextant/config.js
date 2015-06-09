@@ -316,6 +316,10 @@
         if(sxtSettings.localisations) {
           viewerSettings.localisations = sxtSettings.localisations;
         }
+        if(sxtSettings.layerFilter)  {
+          viewerSettings.layerFilter = sxtSettings.layerFilter;
+        }
+
       }
 
       searchSettings.hiddenParams = {};

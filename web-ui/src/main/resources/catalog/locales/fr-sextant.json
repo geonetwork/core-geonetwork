@@ -20,11 +20,21 @@
   "sxtExportPDF": "PDF",
   "sxtExportXML": "XML",
   "sxtPermalink": "Lien",
-  "sort": "Tri",
+  "sort": "Ordre",
   "legend": "Légendes",
   "email": "Email",
   "organism": "Organisme",
   "usage": "Utilisation",
   "source": "Sources",
-  "sources": "Sources : "
+  "sources": "Sources : ",
+  "fullScreen": "Plein écran",
+  "downloadContext": "Enregistrer la carte",
+  "add": "Ajouter",
+  "remove": "Supprimer",
+  "opacity" : "Transparence",
+  "ncwms": "Paramètres avancés",
+  "orgs": "Affiliation",
+  "statements": "Généalogie",
+  "accessData": "Accès aux données"
+
 }

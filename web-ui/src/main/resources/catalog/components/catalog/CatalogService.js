@@ -670,6 +670,14 @@
         }
         return ret;
       },
+      getCredits: function() {
+        if(this.credits) return this.credits;
+        if(this.credit) {
+          this.credits = angular.isArray(this.credit) ? this.credit.join(', ') :
+              this.credit;
+          return this.credits
+        }
+      },
       getBoxAsPolygon: function(i) {
         // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
         var bboxes = [];

@@ -11,6 +11,7 @@
     }
     //]]>
   </script>
+
   <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
     <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
     <li fmt-if="associated">
@@ -44,16 +45,16 @@
             {{dates}}
           </dd>
 
-          <dt fmt-translate="">abstract</dt>
+          <dt fmt-translate="" translate="">abstract</dt>
           <dd><p>{{abstract}}</p>
           </dd>
 
           {{contacts}}
 
-          <dt fmt-translate="">keywords</dt>
+          <dt fmt-translate="" translate="">keywords</dt>
           <dd>{{keywords}}</dd>
 
-          <dt fmt-translate="">statements</dt>
+          <dt fmt-translate="" translate="">statements</dt>
           <dd>{{formats}}</dd>
 
         </dl>
@@ -61,9 +62,14 @@
 
       <div class="col-md-3 gn-md-side">
 
+        <section class="links">
+          <h3 translate="">accessData</h3>
+          <sxt-links-btn></sxt-links-btn>
+        </section>
+
         <section>
           <p>
-            <img fmt-if="thumbnail" class="gn-img-thumbnail img-thumbnail graphic-overview" src="{{thumbnail | escapeXmlAttrs}}"></img>
+            <img gn-img-modal="md" fmt-if="thumbnail" class="gn-img-thumbnail img-thumbnail graphic-overview" src="{{thumbnail | escapeXmlAttrs}}"></img>
           </p>
         </section>
 
@@ -74,35 +80,8 @@
           </p>
         </section>
 
-        <section>
-          <div class="well">
-            <h4>
-              <i class="fa fa-fw"></i>
-              <span fmt-translate="">sourceCatalog</span>
-            </h4>
-            <img class="gn-source-logo"/>
-          </div>
-        </section>
-
-        <section>
-          <div class="well">
-            <h4>
-              <i class="fa fa-share-square"></i>
-              <span fmt-translate="">shareOn</span>
-            </h4>
-            <a data-ng-href="https://plus.google.com/share?url="
-               class="btn btn-link"><i class="fa fa-google-plus"></i></a>
-            <a data-ng-href="https://twitter.com/share?url="
-               class="btn btn-link"><i class="fa fa-twitter"></i></a>
-            <a data-ng-href="https://www.facebook.com/sharer.php?u="
-               class="btn btn-link"><i class="fa fa-facebook"></i></a>
-          </div>
-        </section>
-
       </div>
-
     </div>
-
   </div>
   {{content}}
 </div>

@@ -13,6 +13,7 @@
   goog.require('sxt_panier');
   goog.require('sxt_interceptors');
   goog.require('sxt_mdactionmenu');
+  goog.require('sxt_linksbtn');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -25,7 +26,8 @@
     'sxt_directives',
     'sxt_panier',
     'sxt_interceptors',
-    'sxt_mdactionmenu'
+    'sxt_mdactionmenu',
+    'sxt_linksbtn'
   ]);
 
 
@@ -369,40 +371,14 @@
       });
     }]);
 
-  module.directive('sxtFixMdlinks', [
-    function() {
+  module.directive('sxtFixMdlinks', [ 'sxtService',
+    function(sxtService) {
 
       return {
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          var md = scope.md;
-
-          if(md.type.indexOf('dataset')>=0) {
-            md.icon = {cls: 'fa-database', title: 'dataset'}
-          }
-          else if(md.type.indexOf('software')>=0) {
-            md.icon = {cls: 'fa-hdd-o', title: 'software'}
-          }
-          else if(md.type.indexOf('map')>=0) {
-            md.icon = {cls: 'fa-globe', title: 'map'}
-          }
-          else if(md.type.indexOf('application')>=0) {
-            md.icon = {cls: 'fa-hdd-o', title: 'application'}
-          }
-          else if(md.type.indexOf('basicgeodata')>=0) {
-            md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
-          }
-          else if(md.type.indexOf('service')>=0) {
-            md.icon = {cls: 'fa-globe', title: 'service'}
-          }
-
-          scope.links = md.getLinksByType('LINK');
-          scope.downloads = md.getGroupedLinksByTypes('#FILE',
-              '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
-          scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
-              'OGC:WMS', 'OGC:OWS-C');
-
+          sxtService.feedMd(scope);
         }
       };
     }]);
@@ -470,5 +446,36 @@
     }]);
 
 
+  module.service('sxtService', [ function() {
+
+    this.feedMd = function(scope) {
+      var md = scope.md;
+
+      if(md.type.indexOf('dataset')>=0) {
+        md.icon = {cls: 'fa-database', title: 'dataset'}
+      }
+      else if(md.type.indexOf('software')>=0) {
+        md.icon = {cls: 'fa-hdd-o', title: 'software'}
+      }
+      else if(md.type.indexOf('map')>=0) {
+        md.icon = {cls: 'fa-globe', title: 'map'}
+      }
+      else if(md.type.indexOf('application')>=0) {
+        md.icon = {cls: 'fa-hdd-o', title: 'application'}
+      }
+      else if(md.type.indexOf('basicgeodata')>=0) {
+        md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
+      }
+      else if(md.type.indexOf('service')>=0) {
+        md.icon = {cls: 'fa-globe', title: 'service'}
+      }
+
+      scope.links = md.getLinksByType('LINK');
+      scope.downloads = md.getGroupedLinksByTypes('#FILE',
+          '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+      scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
+          'OGC:WMS', 'OGC:OWS-C');
+    }
+  }]);
 
 })();

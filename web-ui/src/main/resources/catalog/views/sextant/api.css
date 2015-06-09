@@ -10627,26 +10627,34 @@ yx-axis
   display: block;
 }
 .gn [sxt-main-viewer] .layers .sxt-layertree {
-  height: 350px;
-  max-height: none;
+  min-height: 350px;
+  height: auto;
+  max-height: calc(700px);
   overflow-x: hidden;
   overflow-y: auto;
+}
+.gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
+  height: 350px;
 }
 .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layertree {
   display: none;
 }
 .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-  height: calc(350px + 350px);
+  height: 700px;
 }
 @media (max-height: 866px) {
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 300px;
   }
   .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 300px;
+    max-height: 600px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
     height: 300px;
   }
   .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-    height: calc(300px + 300px);
+    height: 600px;
   }
 }
 @media (max-height: 766px) {
@@ -10654,10 +10662,14 @@ yx-axis
     height: 250px;
   }
   .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 250px;
+    max-height: 500px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
     height: 250px;
   }
   .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-    height: calc(250px + 250px);
+    height: 500px;
   }
 }
 @media (max-height: 666px) {
@@ -10665,10 +10677,14 @@ yx-axis
     height: 200px;
   }
   .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 200px;
+    max-height: 400px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
     height: 200px;
   }
   .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-    height: calc(200px + 200px);
+    height: 400px;
   }
 }
 .gn [sxt-main-viewer] .sxt-hidden {
@@ -10702,7 +10718,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] [sxt-layertree],
 .gn [sxt-main-viewer] .sxtb-speciestree {
-  padding: 3px 15px 0 0;
+  padding: 3px 0 0 0;
   font-size: 12px;
 }
 .gn [sxt-main-viewer] [sxt-layertree] .btn-cog,
@@ -12991,7 +13007,8 @@ yx-axis
   color: #2f6383;
   border-top-color: white;
   border-bottom-color: white;
-  font-size: 11px;
+  font-size: 12px;
+  height: 29px;
 }
 .gn .sxt-main-tabs .sxt-panel-button .btn.active,
 .gn .sxt-main-tabs .sxt-panel-button .btn:hover {
@@ -13016,6 +13033,9 @@ yx-axis
 }
 .gn .sxt-main-tabs .btn-group.sxt-adminbtn {
   margin-right: 1.2em;
+}
+.gn .sxt-main-tabs .btn-group.sxt-adminbtn .btn {
+  height: 29px;
 }
 .gn .sxt-main-tabs .btn,
 .gn .sxt-main-tabs .popover-content {
@@ -13824,6 +13844,7 @@ yx-axis
   color: white;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
   border-radius: 2px;
+  height: 29px;
 }
 .gn .sxt-panier h4 {
   font-size: 14px;
@@ -13833,12 +13854,27 @@ yx-axis
 }
 .gn .sxt-panier .bootstrap-select.btn-group .btn {
   background: white;
-  color: #000;
+  color: #4ba2d9;
   box-shadow: none;
 }
+.gn .sxt-panier .bootstrap-select.btn-group .btn:hover span,
+.gn .sxt-panier .bootstrap-select.btn-group .btn:focus span {
+  color: #2a6496;
+  text-decoration: underline;
+}
+.gn .sxt-panier .bootstrap-select.btn-group .btn:focus {
+  outline: none !important;
+}
 .gn .sxt-panier .form-group {
-  font-size: 12px;
+  font-size: 14px;
   padding-top: .5em;
+}
+.gn .sxt-panier .form-group label {
+  font-weight: 400;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: 0;
 }
 .gn .sxt-panier .form-group input {
   border-radius: 2px;

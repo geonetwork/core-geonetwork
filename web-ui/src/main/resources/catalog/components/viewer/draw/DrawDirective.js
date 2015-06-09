@@ -4,6 +4,25 @@
   var module = angular.module('gn_draw', [
   ]);
 
+  function readAsText(f, callback) {
+    try {
+      var reader = new FileReader();
+      reader.readAsText(f);
+      reader.onload = function(e) {
+        if (e.target && e.target.result) {
+          callback(e.target.result);
+        } else {
+          console.error('File could not be loaded');
+        }
+      };
+      reader.onerror = function(e) {
+        console.error('File could not be read');
+      };
+    } catch (e) {
+      console.error('File could not be read');
+    }
+  }
+
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnDraw
@@ -259,6 +278,28 @@
                   'data:application/vnd.geo+json;base64,' + base64;
             }
           };
+
+          var fileInput = element.find('input[type="file"]')[0];
+          element.find('.import').click(function() {
+            fileInput.click();
+          });
+
+          //TODO: don't trigger if we load same file twice
+          angular.element(fileInput).bind('change', function(changeEvent) {
+            scope.$apply(function() {
+              if (fileInput.files.length > 0) {
+                readAsText(fileInput.files[0], function(text) {
+                  var format = new ol.format.GeoJSON();
+                  var features = format.readFeatures(text, {
+                    dataProjection: 'EPSG:4326',
+                    featureProjection: map.getView().getProjection()
+                  });
+                  source.addFeatures(features);
+                });
+              }
+            });
+          });
+
 
           var deleteF = new ol.interaction.Select();
           deleteF.getFeatures().on('add',

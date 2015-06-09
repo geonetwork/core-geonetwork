@@ -19,14 +19,14 @@
           <i class="fa fa-file"></i>&nbsp;<span translate="">showMetadata</span>
         </a></li>
 
-        <!--Remove layer-->
-        <li class="list-group-item"><a href="" data-ng-click="map.removeLayer(member)">
-          <i class="fa fa-trash-o"></i>&nbsp;<span translate="">remove</span>
+        <!--downloads-->
+        <li class="list-group-item" data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
+          <i class="fa fa-download"></i>&nbsp;<span translate="">download</span>
         </a></li>
 
         <!--opacity-->
         <li class="list-group-item"><label><span translate="">opacity</span>
-            <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
+          <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
         </label></li>
 
         <!--NCWMS-->
@@ -34,16 +34,15 @@
           <i class="fa fa-anchor"></i>&nbsp;<span translate="">ncwms</span>
         </a></li>
 
-        <!--downloads-->
-        <li class="list-group-item" data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
-          <i class="fa fa-download"></i>&nbsp;<span translate="">download</span>
-        </a></li>
-
         <!--WPS-->
         <li class="list-group-item" data-ng-if="process"><a href="" data-ng-click="showWPS(process)">
           <i class="fa fa-gear"></i>&nbsp;<span translate="">WPS</span>
         </a></li>
 
+        <!--Remove layer-->
+          <li class="list-group-item"><a href="" data-ng-click="remove()">
+            <i class="fa fa-trash-o"></i>&nbsp;<span translate="">remove</span>
+        </a></li>
       </ul>
     </div>
 

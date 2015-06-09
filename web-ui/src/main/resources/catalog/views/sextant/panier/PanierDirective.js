@@ -33,14 +33,26 @@
 
           scope.formObj = {
             user: {
-              lastname: scope.user.lastname || scope.user.name,
-              firstname: scope.user.firstname || scope.user.surname,
-              mail: angular.isArray(scope.user.email) ?
-                  scope.user.email[0] : scope.user.email,
-              org: scope.user.organisation
+              lastname: '',
+              firstname: '',
+              mail: '',
+              org: ''
             },
             layers: []
           };
+          
+          scope.$watch('user', function(user) {
+            if(user) {
+              angular.extend(scope.formObj.user, {
+                lastname: user.name,
+                firstname: user.surname,
+                mail: angular.isArray(user.email) ?
+                    user.email[0] : user.email,
+                org: user.organisation
+              });
+            }
+          });
+
           scope.extract = function() {
             sxtPanierService.extract(scope.formObj).then(function(data) {
               element.find('.modal').modal('hide');

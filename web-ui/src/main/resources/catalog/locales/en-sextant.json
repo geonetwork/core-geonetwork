@@ -26,5 +26,16 @@
   "organism": "Organism",
   "usage": "Usage",
   "source": "Sources",
-  "sources": "Sources : "
+  "sources": "Sources : ",
+  "fullScreen": "Full screen",
+  "downloadContext": "Save the map",
+  "add": "Add",
+  "remove": "Remove",
+  "opacity" : "Opacity",
+  "ncwms": "Advanced parameters",
+  "orgs": "Organism",
+  "statements": "Statements",
+  "showMetadata": "Show metadata",
+  "accessData": "Data access"
+
 }

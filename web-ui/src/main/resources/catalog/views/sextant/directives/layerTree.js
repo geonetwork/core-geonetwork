@@ -8,7 +8,8 @@
     '$filter',
     'gnWmsQueue',
     '$timeout',
-    function (gnLayerFilters, $filter, gnWmsQueue, $timeout) {
+    'gnViewerSettings',
+    function (gnLayerFilters, $filter, gnWmsQueue, $timeout, gnViewerSettings) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
@@ -59,6 +60,8 @@
 
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.selected;
+
+          scope.displayFilter = gnViewerSettings.layerFilter;
 
           var findChild = function(node, name) {
             var n;
@@ -224,6 +227,14 @@
           scope.mapService = gnMap;
 
           scope.setNCWMS = controller.setNCWMS;
+
+          scope.remove = function() {
+            var tip = scope.popover_$tip;
+            if (tip) {
+              tip.detach();
+            }
+            scope.map.removeLayer(scope.member);
+          };
 
           if(!scope.isParentNode()) {
             scope.groupCombo = scope.member.get('groupcombo');

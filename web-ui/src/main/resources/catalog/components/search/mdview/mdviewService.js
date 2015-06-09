@@ -66,6 +66,16 @@
         gnSearchLocation.setUuid(uuid);
       };
 
+      // Sextant specific
+      var currentMdScope;
+      this.setCurrentMdScope = function(scope) {
+        currentMdScope = scope;
+      };
+      this.getCurrentMdScope = function() {
+        return currentMdScope;
+      };
+      // end Sextant specific
+
       /**
        * Called when you want to pass from mdview uuid url back to search.
        * It change path back to search and inject the last parameters saved
@@ -128,11 +138,12 @@
       };
 
       this.initFormatter = function(selector) {
+        var $this = this;
         var loadFormatter = function() {
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
-                selector);
+                selector, $this.getCurrentMdScope());
           }
         };
         loadFormatter();
@@ -171,16 +182,21 @@
     'gnAlertService',
     function($rootScope, $http, $compile, $sce, gnAlertService) {
 
-      this.load = function(url, selector) {
+      this.load = function(url, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
           $rootScope.$broadcast('mdLoadingEnd');
-          var scope = angular.element($(selector)).scope();
-          scope.fragment = $sce.trustAsHtml(response.data);
+
+          var newscope = scope ? scope.$new() :
+              angular.element($(selector)).scope().$new();
+
+          newscope.fragment =
+              $compile(angular.element(response.data))(newscope);
+
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
           $(selector).append(el);
-          $compile(el)(scope);
+          $compile(el)(newscope);
         }, function() {
           $rootScope.$broadcast('mdLoadingEnd');
           gnAlertService.addAlert({

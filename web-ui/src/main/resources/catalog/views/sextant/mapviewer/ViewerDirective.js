@@ -205,7 +205,7 @@
     }
   }]);
 
-  module.directive('sxtPopoverDropdown', [ function() {
+  module.directive('sxtPopoverDropdown', [ '$timeout', function($timeout) {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
@@ -223,8 +223,10 @@
           });
 
           button.on('shown.bs.popover', function() {
+            var $tip = button.data('bs.popover').$tip;
+            scope.popover_$tip = $tip;
             content.css('display', 'inline').appendTo(
-              button.data('bs.popover').$tip.find('.popover-content')
+              $tip.find('.popover-content')
             );
           });
           button.on('hidden.bs.popover', function() {
@@ -232,12 +234,14 @@
           });
 
           // can’t use dismiss boostrap option: incompatible with opacity slider
-          $('body').on('click', function(e) {
-            if (button.data('bs.popover').$tip
+          $('body').on('mousedown click', function(e) {
+            if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
                 && (button[0] != e.target)
                 && (!$.contains(button[0], e.target))
                 && (!$.contains(button.data('bs.popover').$tip, e.target))) {
-              button.popover('hide');
+              $timeout(function(){
+                button.popover('hide');
+              }, 30);
             }
           });
       }
