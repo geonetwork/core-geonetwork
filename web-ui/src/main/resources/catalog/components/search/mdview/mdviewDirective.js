@@ -25,6 +25,7 @@
           element.on('click', function(e) {
             e.preventDefault();
             gnMdView.setLocationUuid(scope.md.getUuid());
+            gnMdView.setCurrentMdScope(scope.$parent);
             scope.$apply();
           });
         }
@@ -37,11 +38,11 @@
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'mdpanel.html',
-        scope: true,
         link: function(scope, element, attrs, controller) {
 
           var unRegister;
 
+          element.find('.panel-body').append(scope.fragment);
           scope.dismiss = function() {
             unRegister();
             gnMdView.removeLocationUuid();
