@@ -604,5 +604,110 @@
               }
             }
           };
-        }]);
+        }])
+
+  /**
+   * @ngdoc directive
+   * @name gn_formfields.directive:gnBboxInput
+   * @restrict A
+   * @requires gnMap
+   * @requires gnSearchSettings
+   * @requires ngeoDecorateInteraction
+   *
+   * @description
+   * The `gnBboxInput` directive provides an input widget for bounding boxes.
+   */
+  // Inspired from https://github.com/camptocamp/geocat/blob/geocat_develop/web-ui/src/main/resources/catalog/geocat-shared-objects/js/extent-directive.js
+  .directive('gnBboxInput', [
+    'gnMap',
+    'gnSearchSettings',
+    'ngeoDecorateInteraction',
+    function(gnMap, gnSearchSettings, goDecoI){
+
+      // Create overlay to draw bbox and polygon
+      var featureOverlay = new ol.FeatureOverlay({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      var map = gnSearchSettings.viewerMap;
+      featureOverlay.setMap(map);
+
+      var dragboxInteraction = new ol.interaction.DragBox({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      map.addInteraction(dragboxInteraction);
+
+      var clearMap = function() {
+        featureOverlay.getFeatures().clear();
+      }
+
+      dragboxInteraction.on('boxstart', clearMap);
+      goDecoI(dragboxInteraction);
+      dragboxInteraction.active = false;
+
+      var extentFromValue = function(value) {
+        if (!value) {
+          return ['', '', '', ''];
+        }
+        return value.split(',');
+      };
+
+      var valueFromExtent = function(extent) {
+        return extent.join(',');
+      };
+
+      return {
+        restrict: 'AE',
+        scope: {
+          crs: '=',
+          value: '='
+        },
+        templateUrl: '../../catalog/components/search/formfields/' +
+          'partials/bboxInput.html',
+
+        link: function(scope, element, attrs) {
+          scope.crs = scope.crs || 'EPSG:4326';
+
+          scope.clear = function() {
+            scope.value = '';
+            scope.extent = extentFromValue(scope.value);
+            scope.updateMap();
+          };
+
+          scope.updateMap = function() {
+            featureOverlay.getFeatures().clear();
+            if (scope.extent == ['', '', '', '']) {
+              return;
+            }
+            var coordinates, geom, f;
+            coordinates = gnMap.getPolygonFromExtent(scope.extent);
+            geom = new ol.geom.Polygon(coordinates)
+              .transform(scope.crs, map.getView().getProjection());
+            f = new ol.Feature();
+            f.setGeometry(geom);
+            featureOverlay.addFeature(f);
+          };
+
+          dragboxInteraction.on('boxend', function() {
+            dragboxInteraction.active = false;
+            var g = dragboxInteraction.getGeometry().clone();
+            var geom = g.clone()
+              .transform(map.getView().getProjection(), scope.crs);
+            scope.extent = geom.getExtent();
+            scope.value = valueFromExtent(scope.extent);
+            scope.updateMap();
+          });
+          scope.dragboxInteraction = dragboxInteraction;
+
+          scope.onBboxChange = function() {
+            scope.value = valueFromExtent(scope.extent);
+            scope.updateMap();
+          };
+
+          element.on('$destroy', function() {
+            clearMap();
+          });
+        }
+      };
+    }
+  ]);
 })();
