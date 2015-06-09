@@ -68,7 +68,6 @@
                 };
               }
             });
-            //scope.panier = [];
           };
 
           scope.downloadDisabled = true;
@@ -87,7 +86,12 @@
           scope.resetReport = function() {
             scope.report = undefined;
           };
-        }
+
+          scope.$on('renderPanierMap', function() {
+            scope.resetReport();
+          });
+
+          }
       };
     }]);
 
