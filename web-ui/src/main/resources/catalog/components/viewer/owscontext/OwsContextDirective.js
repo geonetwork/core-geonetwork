@@ -41,6 +41,7 @@
         templateUrl: '../../catalog/components/viewer/owscontext/' +
             'partials/owscontext.html',
         scope: {
+          user: '=',
           map: '='
         },
         link: function(scope, element, attrs) {
