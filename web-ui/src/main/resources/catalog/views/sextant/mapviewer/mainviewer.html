@@ -237,6 +237,13 @@
       <span class="fa fa-expand"></span>
       <span role="tooltip" data-translate="">fullScreen</span>
     </button>
+    <button class="btn btn-default" type="submit"
+            data-ng-if="is3DModeAllowed"
+            data-ng-click="switch2D3D(map)">
+      <span class="fa fa-cube"
+            data-ng-class="is3dEnabled ? 'fa-cube' : 'fa-square-o'"/>
+      <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
+    </button>
   </div>
 
 
