@@ -1,18 +1,30 @@
 package org.fao.geonet.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.Source;
+import javax.xml.xpath.XPathException;
 
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+
+import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.SingletonIterator;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -30,6 +42,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
