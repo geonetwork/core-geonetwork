@@ -134,17 +134,34 @@
               };
 
               var setInputData = function(input, data) {
-                var inputValue;
-                request.value.dataInputs.input.push({
-                  identifier: {
-                    value: input.identifier.value
-                  },
-                  data: {
-                    literalData: {
-                      value: data
+                if (input.literalData) {
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      literalData: {
+                        value: data.toString()
+                      }
                     }
-                  }
-                });
+                  });
+                }
+                if (input.boundingBoxData) {
+                  var bbox = data.split(',');
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      boundingBoxData: {
+                        crs: "EPSG:4326",
+                        dimensions: 2,
+                        lowerCorner: [bbox[0], bbox[1]],
+                        upperCorner: [bbox[2], bbox[3]]
+                      }
+                    }
+                  });
+                }
               };
 
               for (i = 0, ii = description.dataInputs.input.length;
