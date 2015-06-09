@@ -16,8 +16,8 @@ Ext.onReady(function() {
 	}
 	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/.*.format.*/, '')[1];
 	var lang = window.location.href.substring(
-			window.location.href.indexOf('/srv')+5, 
-			window.location.href.indexOf('/md.format'))
+			window.location.href.indexOf('/srv') + 5,
+      window.location.href.indexOf('/srv') + 8)
 		|| GeoNetwork.Util.defaultLocale;
 	
 	GeoNetwork.Util.setLang(lang, '../../apps/js');
@@ -33,7 +33,7 @@ Ext.onReady(function() {
 	
 	var formatterServiceUrl;
 	if(urlParameters.url) {
-		formatterServiceUrl =  'xml.format.html?schema=iso19139&xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
+		formatterServiceUrl =  'xml.format.html?schema=iso19139&mdpath=gmd:MD_Metadata&xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
 	} else {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
 	}
