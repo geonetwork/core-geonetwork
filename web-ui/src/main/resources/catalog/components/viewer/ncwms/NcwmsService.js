@@ -23,11 +23,10 @@
     '$http',
     function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnViewerSettings) {
 
-     /**
+      /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#createNcWmsLayer
-       * @deprecated
        *
        * @description
        * Create sample NCWMS layers.
@@ -56,7 +55,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#feedOlLayer
-       * @deprecated
        *
        * @description
        * Call the NCWMS getMetadata request to fill the layers with
@@ -79,7 +77,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#parseTimeSeries
-       * @deprecated
        *
        * @description
        * Parse a time serie from capabilities.
@@ -127,7 +124,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#getDimensionValue
-       * @deprecated
        *
        * @description
        * Read from capabilities object dimension properties.
@@ -159,7 +155,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#getNcwmsServiceUrl
-       * @deprecated
        *
        * @description
        * Compute ncWMS specific services url from parameters.
@@ -194,7 +189,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#getMetadataUrl
-       * @deprecated
        *
        * @description
        * Get metadataurl with item=layerDetails to retrieve
@@ -216,7 +210,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#getColorRangesBounds
-       * @deprecated
        *
        * @description
        * Get auto colorange bounds depending on an extent.

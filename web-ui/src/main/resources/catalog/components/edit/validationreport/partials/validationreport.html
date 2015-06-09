@@ -9,17 +9,17 @@
     </button>&nbsp;
      <div class="btn-group pull-right btn-group-xs" role="group" aria-label="..." style="margin-right:5px">
       <button type="button" class="btn btn-default btn-xs"
-      data-ng-class="showSuccess ? 'active' : ''"
-      data-ng-click="toggleShowSuccess()"
-      data-ng-show="hasSuccess" 
-      data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
-      <span class="fa fa-thumbs-up" aria-hidden="true"></span></button>
+              data-ng-class="showSuccess ? 'active' : ''"
+              data-ng-click="toggleShowSuccess()"
+              data-ng-show="hasSuccess"
+              data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
+      <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span></button>
       <button type="button" class="btn btn-default btn-xs"
-      data-ng-class="showErrors ? 'active' : ''"
-      data-ng-click="toggleShowErrors()"
-      data-ng-show="hasErrors" 
-      data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
-      <span class="fa fa-thumbs-down" aria-hidden="true"></span></button>
+              data-ng-class="showErrors ? 'active' : ''"
+              data-ng-click="toggleShowErrors()"
+              data-ng-show="hasErrors"
+              data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
+      <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span></button>
     </div>
   </div>
   <div class="panel-body" data-ng-show="ruleTypes.length !== 0">

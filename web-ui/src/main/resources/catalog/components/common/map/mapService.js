@@ -99,7 +99,6 @@
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#isPoint
-           * @deprecated
            *
            * @description
            * Check if the extent is just a point.
@@ -460,6 +459,11 @@
 
             var unregisterEventKey = olLayer.getSource().on('tileloaderror',
                 function(tileEvent, target) {
+                  var res = map.getView().getResolution();
+                  if(layer.getMaxResolution() <= res &&
+                      layer.getMinResolution() >= res) {
+                    return;
+                  }
                   var msg = $translate('layerTileLoadError', {
                     url: tileEvent.tile && tileEvent.tile.getKey ?
                         tileEvent.tile.getKey() : '- no tile URL found-',
@@ -505,6 +509,7 @@
               // so a WMS 1.1.x will always failed on this
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
+/*
               if (layer.CRS) {
                 var mapProjection = map.getView().getProjection().getCode();
                 for (var i = 0; i < layer.CRS.length; i++) {
@@ -521,6 +526,7 @@
                 errors.push($translate('layerNotAvailableInMapProj'));
                 console.warn($translate('layerNotAvailableInMapProj'));
               }
+*/
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
@@ -649,7 +655,8 @@
 
             gnWmsQueue.add(url, name);
             gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj),
+              var capL = gnOwsCapabilities.getLayerInfoFromCap(
+                  name, capObj, md && md.getUuid()),
                   olL;
               if (!capL) {
                 // If layer not found in the GetCapabilities

@@ -311,7 +311,7 @@ public final class ServiceRequestFactory
             if (size > maxSizeInBytes) {
                 throw new FileUploadTooBigEx();
             }
-            String file = fileEntry.getKey();
+            String file = fileEntry.getValue().getOriginalFilename();
             final String type = multipartFile.getContentType();
             if(Log.isDebugEnabled(Log.REQUEST)) {
                 Log.debug(Log.REQUEST, "Uploading file " + file + " type: " + type + " size: " + size);

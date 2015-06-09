@@ -27,11 +27,15 @@ import com.google.common.collect.Collections2;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobDataMap;
@@ -58,11 +62,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 
 public class LDAPSynchronizerJob extends QuartzJobBean {
-    
+
     private ConfigurableApplicationContext applicationContext;
-    
+
     private DefaultSpringSecurityContextSource contextSource;
-    
+
     @Override
     protected void executeInternal(final JobExecutionContext jobExecContext)
             throws JobExecutionException {
@@ -70,14 +74,14 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 Log.debug(Geonet.LDAP, "LDAPSynchronizerJob starting ...");
             }
-            
+
             // Retrieve application context. A defautl SpringBeanJobFactory
             // will not provide the application context to the job. Use
             // AutowiringSpringBeanJobFactory.
             applicationContext = (ConfigurableApplicationContext) jobExecContext
                     .getJobDetail().getJobDataMap().get("applicationContext");
-            
-            
+
+
             if (applicationContext == null) {
                 Log.error(
                         Geonet.LDAP,
@@ -96,7 +100,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     e);
             e.printStackTrace();
         }
-        
+
         if (Log.isDebugEnabled(Geonet.LDAP)) {
             Log.debug(Geonet.LDAP, "LDAPSynchronizerJob done.");
         }
@@ -113,28 +117,28 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
 
         final DirContext dc = contextSource.getReadOnlyContext();
         try {
-        // Users
-        synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
-                ldapUserSearchAttribute, dc);
+            // Users
+            synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
+                    ldapUserSearchAttribute, dc);
 
-        // And optionaly groups
-        String createNonExistingLdapGroup = (String) jdm
-                .get("createNonExistingLdapGroup");
+            // And optionaly groups
+            String createNonExistingLdapGroup = (String) jdm
+                    .get("createNonExistingLdapGroup");
 
-        if ("true".equals(createNonExistingLdapGroup)) {
-            String ldapGroupSearchFilter = (String) jdm
-                    .get("ldapGroupSearchFilter");
-            String ldapGroupSearchBase = (String) jdm
-                    .get("ldapGroupSearchBase");
-            String ldapGroupSearchAttribute = (String) jdm
-                    .get("ldapGroupSearchAttribute");
-            String ldapGroupSearchPattern = (String) jdm
-                    .get("ldapGroupSearchPattern");
+            if ("true".equals(createNonExistingLdapGroup)) {
+                String ldapGroupSearchFilter = (String) jdm
+                        .get("ldapGroupSearchFilter");
+                String ldapGroupSearchBase = (String) jdm
+                        .get("ldapGroupSearchBase");
+                String ldapGroupSearchAttribute = (String) jdm
+                        .get("ldapGroupSearchAttribute");
+                String ldapGroupSearchPattern = (String) jdm
+                        .get("ldapGroupSearchPattern");
 
-            synchronizeGroup(applicationContext, ldapGroupSearchFilter,
-                    ldapGroupSearchBase, ldapGroupSearchAttribute,
-                    ldapGroupSearchPattern, dc);
-        }
+                synchronizeGroup(applicationContext, ldapGroupSearchFilter,
+                        ldapGroupSearchBase, ldapGroupSearchAttribute,
+                        ldapGroupSearchPattern, dc);
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -157,7 +161,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         // in only.
         NamingEnumeration<?> userList = dc.search(ldapUserSearchBase,
                 ldapUserSearchFilter, null);
-        
+
         // Build a list of LDAP users
         Set<String> usernames = new HashSet<String>();
         while (userList.hasMore()) {
@@ -171,6 +175,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         // metadata
         final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
+        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
         final Specifications<User> spec = Specifications.where(
                 UserSpecs.hasAuthType(LDAPConstants.LDAP_FLAG)
         ).and(
@@ -186,30 +191,40 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             }
         });
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, userIds);
-        userRepository.deleteInBatch(usersFound);
+        for (User u : usersFound) {
+            long nbOfUserRecord = metadataRepository.count(MetadataSpecs.isOwnedByUser(u.getId()));
+            if (nbOfUserRecord > 0) {
+                Log.error(
+                        Geonet.LDAP,
+                        String.format("Cannot delete user '%s' who is owner of %d metadata record(s).",
+                                u.getUsername(), nbOfUserRecord));
+            } else {
+                userRepository.delete(u.getId());
+            }
+        }
     }
-    
-    
+
+
     private void synchronizeGroup(ApplicationContext applicationContext, String ldapGroupSearchFilter,
                                   String ldapGroupSearchBase, String ldapGroupSearchAttribute,
                                   String ldapGroupSearchPattern, DirContext dc) throws  NamingException, SQLException {
-        
+
         NamingEnumeration<?> groupList = dc.search(ldapGroupSearchBase,
                 ldapGroupSearchFilter, null);
         Pattern ldapGroupSearchPatternCompiled = null;
         if (ldapGroupSearchPattern != null && !"".equals(ldapGroupSearchPattern)) {
             ldapGroupSearchPatternCompiled = Pattern.compile(ldapGroupSearchPattern);
         }
-        
+
         while (groupList.hasMore()) {
             SearchResult sr = (SearchResult) groupList.next();
-            
+
             // TODO : should we retrieve LDAP group id and do an update of group
             // name
             // This will require to store in local db the remote id
             String groupName = (String) sr.getAttributes()
                     .get(ldapGroupSearchAttribute).get();
-            
+
             if (ldapGroupSearchPatternCompiled != null && !"".equals(ldapGroupSearchPattern)) {
                 Matcher m = ldapGroupSearchPatternCompiled.matcher(groupName);
                 boolean b = m.matches();
@@ -217,10 +232,10 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     groupName = m.group(1);
                 }
             }
-            
+
             GroupRepository groupRepo = this.applicationContext.getBean(GroupRepository.class);
             Group group = groupRepo.findByName(groupName);
-            
+
             if (group == null) {
                 group = groupRepo.save(new Group().setName(groupName));
             } else {
@@ -230,11 +245,11 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             }
         }
     }
-    
+
     public DefaultSpringSecurityContextSource getContextSource() {
         return contextSource;
     }
-    
+
     public void setContextSource(
             DefaultSpringSecurityContextSource contextSource) {
         this.contextSource = contextSource;

@@ -48,7 +48,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
        * @name gnWpsService#describeProcess
-       * @deprecated
        *
        * @description
        * Call a WPS describeProcess request and parse the XML response, to
@@ -97,7 +96,6 @@
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
        * @name gnWpsService#execute
-       * @deprecated
        *
        * @description
        * Call a WPS execute request and manage response. The request is called

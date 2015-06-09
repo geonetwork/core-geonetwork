@@ -30,7 +30,26 @@
             angular.extend(this.map, options);
           };
 
-          var addWMSToMap = function(link) {
+          var addWMSToMap = function(link, md) {
+
+            if (link.name &&
+                (angular.isArray(link.name) && link.name.length > 0)) {
+              angular.forEach(link.name, function(name) {
+                gnMap.addWmsFromScratch(
+                   gnSearchSettings.viewerMap, link.url, name, false, md);
+              });
+            } else if (link.name && !angular.isArray(link.name)) {
+              gnMap.addWmsFromScratch(
+                 gnSearchSettings.viewerMap, link.url, link.name, false, md);
+            } else {
+              gnMap.addOwsServiceToMap(link.url, 'WMS');
+            }
+
+            gnSearchLocation.setMap();
+          };
+
+
+          var addWFSToMap = function(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -38,8 +57,8 @@
                 gnOwsCapabilities.getWMSCapabilities(link.url).then(
                    function(capObj) {
                      var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                     name, capObj);
-                     gnMap.addWmsToMapFromCap(
+                     name, capObj, uuid);
+                     gnMap.addWfsToMapFromCap(
                      gnSearchSettings.viewerMap, layerInfo, capObj);
                    });
               });
@@ -48,18 +67,18 @@
               gnOwsCapabilities.getWMSCapabilities(link.url).then(
                   function(capObj) {
                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj);
-                    gnMap.addWmsToMapFromCap(
+                   link.name, capObj, uuid);
+                    gnMap.addWfsToMapFromCap(
                         gnSearchSettings.viewerMap, layerInfo, capObj);
                   });
               gnSearchLocation.setMap();
             } else {
-              gnMap.addOwsServiceToMap(link.url, 'WMS');
+              gnMap.addOwsServiceToMap(link.url, 'WFS');
             }
           };
 
 
-          var addWMTSToMap = function(link) {
+          var addWMTSToMap = function(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -67,7 +86,7 @@
                 gnOwsCapabilities.getWMTSCapabilities(link.url).then(
                    function(capObj) {
                      var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                     name, capObj);
+                     name, capObj, uuid);
                      gnMap.addWmtsToMapFromCap(
                      gnSearchSettings.viewerMap, layerInfo, capObj);
                    });
@@ -77,7 +96,7 @@
               gnOwsCapabilities.getWMTSCapabilities(link.url).then(
                   function(capObj) {
                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj);
+                   link.name, capObj, uuid);
                     gnMap.addWmtsToMapFromCap(
                         gnSearchSettings.viewerMap, layerInfo, capObj);
                   });
@@ -87,27 +106,23 @@
             }
           };
 
-          var addWFSToMap = function(md) {
-            //TODO open dialog to download features
+          var addKMLToMap = function(record, md) {
+            gnMap.addKmlToMap(
+               record.name, record.url, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
-          var addKMLToMap = function(md) {
-            gnMap.addKmlToMap(md.name, md.url, gnSearchSettings.viewerMap);
-            gnSearchLocation.setMap();
-          };
-
-          var openMd = function(md) {
+          var openMd = function(record, md) {
             return window.location.hash = '#/metadata/' +
-                (md.uuid || md['geonet:info'].uuid);
+                (record.uuid || record['geonet:info'].uuid);
           };
 
-          var openLink = function(link) {
-            if (link.url.indexOf('http') == 0 ||
-                link.url.indexOf('ftp') == 0) {
-              return window.open(link.url, '_blank');
+          var openLink = function(record, link) {
+            if (record.url.indexOf('http') == 0 ||
+                record.url.indexOf('ftp') == 0) {
+              return window.open(record.url, '_blank');
             } else {
-              return window.location.assign(link.title);
+              return window.location.assign(record.title);
             }
           };
 
@@ -125,7 +140,7 @@
             'WFS' : {
               iconClass: 'fa-link',
               label: 'webserviceLink',
-              action: openLink
+              action: addWFSToMap
             },
             'DB' : {
               iconClass: 'fa-database',
@@ -196,9 +211,9 @@
             return this.map[type || 'DEFAULT'].action;
           };
 
-          this.doAction = function(type, parameters, uuid) {
+          this.doAction = function(type, parameters, md) {
             var f = this.getAction(type);
-            f(parameters, uuid);
+            f(parameters, md);
           };
 
           this.getType = function(resource) {

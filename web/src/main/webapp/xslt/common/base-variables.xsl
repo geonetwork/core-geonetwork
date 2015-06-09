@@ -87,9 +87,10 @@
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
 
   <xsl:variable name="is3DModeAllowed"
-                select="if ($env/map/is3DModeAllowed)
-                        then $env/map/is3DModeAllowed = 'true'
-                        else true()"/>
+                select="if ($service = 'catalog.search' and
+                            ($env/map/is3DModeAllowed = 'true' or /root/request/with3d))
+                        then true()
+                        else false()"/>
 
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"

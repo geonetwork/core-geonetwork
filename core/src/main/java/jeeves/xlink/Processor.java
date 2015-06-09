@@ -425,6 +425,7 @@ public final class Processor {
         excludedXlinkElements.add("operatesOn");
         excludedXlinkElements.add("featureCatalogueCitation");
         excludedXlinkElements.add("Anchor");
+        excludedXlinkElements.add("source");
         // TODO: Add configuration file
 
         if (excludedXlinkElements.contains(element.getName())) {
