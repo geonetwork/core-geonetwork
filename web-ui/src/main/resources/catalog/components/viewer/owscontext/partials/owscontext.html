@@ -8,6 +8,7 @@
   </a>
   <a class="btn btn-default btn-block"
      data-ng-click="saveInCatalog($event)"
+     ng-if="user.isEditorOrMore()"
      title="{{'saveInCatalog'|translate}}">
     <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">saveInCatalog</span>
