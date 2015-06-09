@@ -6,8 +6,8 @@
 
 
   module.directive('sxtMdActionsMenu', ['gnMetadataActions', '$http',
-    '$location', 'Metadata',
-    function(gnMetadataActions, $http, $location, Metadata) {
+    '$location', 'Metadata', 'sxtService',
+    function(gnMetadataActions, $http, $location, Metadata, sxtService) {
       return {
         restrict: 'A',
         replace: true,
@@ -21,6 +21,7 @@
             var uuid = url.substring(url.lastIndexOf('/') + 1);
             $http.get('q?_uuid=' + uuid + '&fast=index&_content_type=json&buildSummary=false').success (function (resp) {
               scope.md = new Metadata(resp.metadata);
+              sxtService.feedMd(scope);
             });
           }
         }

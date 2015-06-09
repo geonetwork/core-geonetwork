@@ -32,5 +32,8 @@
   "add": "Add",
   "remove": "Remove",
   "opacity" : "Opacity",
-  "ncwms": "Advanced parameters"
+  "ncwms": "Advanced parameters",
+  "orgs": "Organism",
+  "statements": "Statements"
+
 }

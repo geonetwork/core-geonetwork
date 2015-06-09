@@ -13,14 +13,14 @@
   "toAdmin": "Administrer",
   "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
   "byPage": "par page",
-  "sortBy": "Ordre",
+  "sortBy": "Tri par",
   "myDownloads": "Mes téléchargements",
   "addLayerPopovermap": "Couche ajoutée à la carte !",
   "addLayerPopoverpanier": "Couche ajoutée au panier !",
   "sxtExportPDF": "PDF",
   "sxtExportXML": "XML",
   "sxtPermalink": "Lien",
-  "sort": "Tri",
+  "sort": "Ordre",
   "legend": "Légendes",
   "email": "Email",
   "organism": "Organisme",
@@ -32,6 +32,9 @@
   "add": "Ajouter",
   "remove": "Supprimer",
   "opacity" : "Transparence",
-  "ncwms": "Paramètres avancés"
+  "ncwms": "Paramètres avancés",
+  "orgs": "Affiliation",
+  "statements": "Généalogie"
+
 
 }
