@@ -40,16 +40,16 @@
               </div>
             </div>
 
-            <p data-ng-if="md.getContacts().resource" class="gn-md-source">
+            <p data-ng-if="md.getCredits()" class="gn-md-source">
               <!--<h5 data-translate="">contacts</h5>-->
-              Source: {{::md.getContacts().resource}}
+              Source: {{::md.getCredits()}}
             </p>
 
           </div>
 
 
       <div class="sx-md-footer">
-        <div class="btn-group pull-left md-admin" ng-if="links.length > 0">
+        <div class="btn-group pull-left md-admin">
           <!--admin button-->
           <div class="btn-group md-actions" ng-if="user.canEditRecord(md)">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'admin' | translate}}">

@@ -34,7 +34,8 @@
   "opacity" : "Transparence",
   "ncwms": "Paramètres avancés",
   "orgs": "Affiliation",
-  "statements": "Généalogie"
+  "statements": "Généalogie",
+  "showMetadata": "Ouvrir la métadonnée"
 
 
 }
