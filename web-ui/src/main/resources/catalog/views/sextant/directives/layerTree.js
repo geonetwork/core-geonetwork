@@ -225,6 +225,14 @@
 
           scope.setNCWMS = controller.setNCWMS;
 
+          scope.remove = function() {
+            var tip = scope.popover_$tip;
+            if (tip) {
+              tip.detach();
+            }
+            scope.map.removeLayer(scope.member);
+          };
+
           if(!scope.isParentNode()) {
             scope.groupCombo = scope.member.get('groupcombo');
             scope.comboGroups = controller.comboGroups;
