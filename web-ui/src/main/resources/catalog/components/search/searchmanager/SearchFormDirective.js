@@ -198,6 +198,7 @@
         // We are getting back to the search, no need to reload it
         if (newUrl == gnSearchLocation.lastSearchUrl) return;
 
+        gnSearchLocation.lastSearchUrl = newUrl;
         var params = angular.copy($location.search());
         gnFacetService.removeFacetsFromParams($scope.currentFacets, params);
 
