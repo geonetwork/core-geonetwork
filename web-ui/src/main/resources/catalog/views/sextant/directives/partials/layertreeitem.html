@@ -11,37 +11,38 @@
 
         <!--Zoom To layer-->
         <li class="list-group-item"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
-          <i class="fa fa-arrows-alt"></i>&nbsp;<span translate="">layerExtentZoom</span>
+          <!--<i class="fa fa-arrows-alt"></i>&nbsp;--><span translate="">layerExtentZoom</span>
         </a></li>
 
         <!--Open metadata-->
         <li class="list-group-item" data-ng-if="member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata()">
-          <i class="fa fa-file"></i>&nbsp;<span translate="">showMetadata</span>
+          <!--<i class="fa fa-file"></i>&nbsp;--><span translate="">showMetadata</span>
         </a></li>
 
         <!--downloads-->
         <li class="list-group-item" data-ng-if="download"><a href="" data-ng-click="addToPanier(download)">
-          <i class="fa fa-download"></i>&nbsp;<span translate="">download</span>
+          <!--<i class="fa fa-download"></i>&nbsp;--><span translate="">download</span>
         </a></li>
 
         <!--opacity-->
-        <li class="list-group-item"><label><span translate="">opacity</span>
-          <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
-        </label></li>
+        <li class="list-group-item">
+          <input class="pull-right" type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
+          <a translate="">opacity</a>
+        </li>
 
         <!--NCWMS-->
         <li class="list-group-item" data-ng-if="member.ncInfo"><a href="" data-ng-click="setNCWMS(member)">
-          <i class="fa fa-anchor"></i>&nbsp;<span translate="">ncwms</span>
+          <!--<i class="fa fa-anchor"></i>&nbsp;--><span translate="">ncwms</span>
         </a></li>
 
         <!--WPS-->
         <li class="list-group-item" data-ng-if="process"><a href="" data-ng-click="showWPS(process)">
-          <i class="fa fa-gear"></i>&nbsp;<span translate="">WPS</span>
+          <!--<i class="fa fa-gear"></i>&nbsp;--><span translate="">WPS</span>
         </a></li>
 
         <!--Remove layer-->
-          <li class="list-group-item"><a href="" data-ng-click="remove()">
-            <i class="fa fa-trash-o"></i>&nbsp;<span translate="">remove</span>
+        <li class="list-group-item"><a href="" data-ng-click="remove()">
+          <!--<i class="fa fa-trash-o"></i>&nbsp;--><span translate="">remove</span>
         </a></li>
       </ul>
     </div>
