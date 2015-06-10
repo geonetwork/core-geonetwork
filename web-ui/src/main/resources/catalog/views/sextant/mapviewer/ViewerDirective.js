@@ -270,7 +270,7 @@
             if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
                 && (button[0] != e.target)
                 && (!$.contains(button[0], e.target))
-                && (!$.contains(button.data('bs.popover').$tip, e.target))) {
+                && (!$(e.target).parents('.popover')[0] == button.data('bs.popover').$tip[0])) {
               $timeout(function(){
                 button.popover('hide');
               }, 30);
