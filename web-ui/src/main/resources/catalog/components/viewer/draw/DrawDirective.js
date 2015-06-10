@@ -262,6 +262,7 @@
             if ('download' in exportElement && !exportElement.href) {
               var vectorSource = scope.vector.getSource();
               var features = [];
+
               vectorSource.forEachFeature(function(feature) {
                 var clone = feature.clone();
                 clone.setId(feature.getId());
@@ -269,8 +270,39 @@
                 // (view usually has spherical mercator)
                 clone.getGeometry().transform(
                     map.getView().getProjection(), 'EPSG:4326');
+
+                // Save the feature style
+                var st = feature.getStyle();
+                if(angular.isFunction(st)) {
+                  st = st(feature)[0];
+                }
+
+                var styleObj = {
+                  fill: {
+                    color: st.getFill().getColor()
+                  },
+                  stroke: {
+                    color: st.getStroke().getColor(),
+                    width: st.getStroke().getWidth()
+                  }
+                };
+                if(st.getText()) {
+                  styleObj.text = {
+                    text: st.getText().getText(),
+                    font: st.getText().getFont(),
+                    stroke: {
+                      color: st.getText().getStroke().getColor(),
+                      width: st.getText().getStroke().getWidth()
+                    },
+                    fill: {
+                      color: st.getText().getFill().getColor()
+                    }
+                  }
+                }
+                clone.set('_style', styleObj);
                 features.push(clone);
               });
+
               var string = new ol.format.GeoJSON().writeFeatures(features);
               //requires /lib/base64.js
               var base64 = base64EncArr(strToUTF8Arr(string));
@@ -289,10 +321,35 @@
             scope.$apply(function() {
               if (fileInput.files.length > 0) {
                 readAsText(fileInput.files[0], function(text) {
-                  var format = new ol.format.GeoJSON();
-                  var features = format.readFeatures(text, {
+                  var features = new ol.format.GeoJSON().readFeatures(text, {
                     dataProjection: 'EPSG:4326',
                     featureProjection: map.getView().getProjection()
+                  });
+
+                  // Set each feature its style
+                  angular.forEach(features, function(f, i) {
+                    var st = f.get('_style');
+                    var style = new ol.style.Style({
+                      fill: new ol.style.Fill({
+                        color: st.fill.color
+                      }),
+                      stroke: new ol.style.Stroke({
+                        color: st.stroke.color,
+                        width: st.stroke.width
+                      }),
+                      text: st.text ? new ol.style.Text({
+                        font: st.text.font,
+                        text: st.text.text,
+                        fill: new ol.style.Fill({
+                          color: st.text.fill.color
+                        }),
+                        stroke: new ol.style.Stroke({
+                          color: st.text.stroke.color,
+                          width: st.text.stroke.width
+                        })
+                      }) : undefined
+                    });
+                    f.setStyle(style);
                   });
                   source.addFeatures(features);
                 });
