@@ -611,7 +611,6 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires gnSearchSettings
    * @requires ngeoDecorateInteraction
    *
    * @description
@@ -620,29 +619,8 @@
   // Inspired from https://github.com/camptocamp/geocat/blob/geocat_develop/web-ui/src/main/resources/catalog/geocat-shared-objects/js/extent-directive.js
   .directive('gnBboxInput', [
     'gnMap',
-    'gnSearchSettings',
     'ngeoDecorateInteraction',
-    function(gnMap, gnSearchSettings, goDecoI){
-
-      // Create overlay to draw bbox and polygon
-      var featureOverlay = new ol.FeatureOverlay({
-        style: gnSearchSettings.olStyles.drawBbox
-      });
-      var map = gnSearchSettings.viewerMap;
-      featureOverlay.setMap(map);
-
-      var dragboxInteraction = new ol.interaction.DragBox({
-        style: gnSearchSettings.olStyles.drawBbox
-      });
-      map.addInteraction(dragboxInteraction);
-
-      var clearMap = function() {
-        featureOverlay.getFeatures().clear();
-      }
-
-      dragboxInteraction.on('boxstart', clearMap);
-      goDecoI(dragboxInteraction);
-      dragboxInteraction.active = false;
+    function(gnMap, goDecoI){
 
       var extentFromValue = function(value) {
         if (!value) {
@@ -659,13 +637,43 @@
         restrict: 'AE',
         scope: {
           crs: '=',
-          value: '='
+          value: '=',
+          map: '='
         },
         templateUrl: '../../catalog/components/search/formfields/' +
           'partials/bboxInput.html',
 
         link: function(scope, element, attrs) {
           scope.crs = scope.crs || 'EPSG:4326';
+
+          var style = new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: 'rgba(255,0,0,0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: '#FF0000',
+              width: 1.25
+            })
+          });
+
+          var dragboxInteraction = new ol.interaction.DragBox({
+            style: style
+          });
+          scope.map.addInteraction(dragboxInteraction);
+
+          // Create overlay to show bbox
+          var featureOverlay = new ol.FeatureOverlay({
+            style: style
+          });
+          featureOverlay.setMap(scope.map);
+
+          var clearMap = function() {
+            featureOverlay.getFeatures().clear();
+          };
+
+          dragboxInteraction.on('boxstart', clearMap);
+          goDecoI(dragboxInteraction);
+          dragboxInteraction.active = false;
 
           scope.clear = function() {
             scope.value = '';
@@ -681,7 +689,7 @@
             var coordinates, geom, f;
             coordinates = gnMap.getPolygonFromExtent(scope.extent);
             geom = new ol.geom.Polygon(coordinates)
-              .transform(scope.crs, map.getView().getProjection());
+              .transform(scope.crs, scope.map.getView().getProjection());
             f = new ol.Feature();
             f.setGeometry(geom);
             featureOverlay.addFeature(f);
@@ -691,7 +699,7 @@
             dragboxInteraction.active = false;
             var g = dragboxInteraction.getGeometry().clone();
             var geom = g.clone()
-              .transform(map.getView().getProjection(), scope.crs);
+              .transform(scope.map.getView().getProjection(), scope.crs);
             scope.extent = geom.getExtent();
             scope.value = valueFromExtent(scope.extent);
             scope.updateMap();
@@ -705,6 +713,7 @@
 
           element.on('$destroy', function() {
             clearMap();
+            scope.map.removeLayer(featureOverlay);
           });
         }
       };
