@@ -154,6 +154,10 @@
                     scope.layerTabs.ncwms.active = false;
                   }
               });
+
+              scope.isNcwms = function(layer) {
+                return layer.ncInfo;
+              }
             }
           };
         }
