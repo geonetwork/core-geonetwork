@@ -769,11 +769,11 @@ ul.gn-resultview {
     .gn-md-thumbnail {
       width: 180px;
       min-height: 40px;
-      max-height: 140px;
+      max-height: 110px;
       height: auto;
       .img-thumbnail {
         max-width: 180px;
-        max-height: 140px;
+        max-height: 110px;
         min-height: 40px;
         height: auto;
       }
@@ -785,9 +785,13 @@ ul.gn-resultview {
       float: left;
       color: #808080;
       width: ~"calc(66% - 1em)";
+      margin-bottom: .3em;
       font-size: @sxt-fontsize;
       &.ellipsis:after {
         background: none;
+      }
+      p {
+        margin-bottom: 0;
       }
     }
     .gn-md-source {
