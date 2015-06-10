@@ -259,7 +259,7 @@
           */
           scope.save = function($event) {
             var exportElement = document.getElementById('export-geom');
-            if ('download' in exportElement && !exportElement.href) {
+            if ('download' in exportElement) {
               var vectorSource = scope.vector.getSource();
               var features = [];
 
@@ -316,45 +316,44 @@
             fileInput.click();
           });
 
-          //TODO: don't trigger if we load same file twice
           angular.element(fileInput).bind('change', function(changeEvent) {
-            scope.$apply(function() {
-              if (fileInput.files.length > 0) {
-                readAsText(fileInput.files[0], function(text) {
-                  var features = new ol.format.GeoJSON().readFeatures(text, {
-                    dataProjection: 'EPSG:4326',
-                    featureProjection: map.getView().getProjection()
-                  });
+            if (fileInput.files.length > 0) {
+              readAsText(fileInput.files[0], function(text) {
+                var features = new ol.format.GeoJSON().readFeatures(text, {
+                  dataProjection: 'EPSG:4326',
+                  featureProjection: map.getView().getProjection()
+                });
 
-                  // Set each feature its style
-                  angular.forEach(features, function(f, i) {
-                    var st = f.get('_style');
-                    var style = new ol.style.Style({
+                // Set each feature its style
+                angular.forEach(features, function(f, i) {
+                  var st = f.get('_style');
+                  var style = new ol.style.Style({
+                    fill: new ol.style.Fill({
+                      color: st.fill.color
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: st.stroke.color,
+                      width: st.stroke.width
+                    }),
+                    text: st.text ? new ol.style.Text({
+                      font: st.text.font,
+                      text: st.text.text,
                       fill: new ol.style.Fill({
-                        color: st.fill.color
+                        color: st.text.fill.color
                       }),
                       stroke: new ol.style.Stroke({
-                        color: st.stroke.color,
-                        width: st.stroke.width
-                      }),
-                      text: st.text ? new ol.style.Text({
-                        font: st.text.font,
-                        text: st.text.text,
-                        fill: new ol.style.Fill({
-                          color: st.text.fill.color
-                        }),
-                        stroke: new ol.style.Stroke({
-                          color: st.text.stroke.color,
-                          width: st.text.stroke.width
-                        })
-                      }) : undefined
-                    });
-                    f.setStyle(style);
+                        color: st.text.stroke.color,
+                        width: st.text.stroke.width
+                      })
+                    }) : undefined
                   });
-                  source.addFeatures(features);
+                  f.setStyle(style);
                 });
-              }
-            });
+                source.addFeatures(features);
+                $('#features-file-input')[0].value = '';
+                scope.$digest();
+              });
+            }
           });
 
 
