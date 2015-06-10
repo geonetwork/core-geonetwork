@@ -151,6 +151,16 @@
             });
           });
 
+          $('body').on('click', function(e) {
+            if ( (element.find('input')[0] != e.target)
+                && ($(e.target).parents('.dropdown-menu')[0] != element.find('.dropdown-menu')[0]) ) {
+              scope.$apply(function() {
+                $(':focus').blur();
+                scope.collapsed = true;
+              });
+            }
+          });
+
         }
       };
     }]);
