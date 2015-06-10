@@ -280,6 +280,13 @@
               }, 30);
             }
           });
+
+          if (attrs['sxtPopoverDismiss']) {
+            $(attrs['sxtPopoverDismiss']).on('scroll', function(){
+              button.popover('hide');
+            });
+          }
+
       }
     }
   }]);

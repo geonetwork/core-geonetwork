@@ -438,6 +438,11 @@
               theme: 'dark-3',
               scrollButtons: {
                 enable: true
+              },
+              callbacks: {
+                onScrollStart: function() {
+                  element.trigger('scroll');
+                }
               }
             });
           }
