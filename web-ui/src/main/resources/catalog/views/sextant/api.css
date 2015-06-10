@@ -8902,6 +8902,10 @@ yx-axis
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+.gn [gn-main-viewer] .panel-tools .gn-layer-outofrange > label,
+.gn .gn-main-viewer .panel-tools .gn-layer-outofrange > label {
+  color: #999;
+}
 .gn [gn-main-viewer] .panel-tools .gn-searchlayer label,
 .gn .gn-main-viewer .panel-tools .gn-searchlayer label {
   font-size: 90%;
@@ -10718,7 +10722,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] [sxt-layertree],
 .gn [sxt-main-viewer] .sxtb-speciestree {
-  padding: 3px 0 0 0;
+  padding: 3px 15px 0 0;
   font-size: 12px;
 }
 .gn [sxt-main-viewer] [sxt-layertree] .btn-cog,
@@ -10903,7 +10907,6 @@ yx-axis
   font-size: 12px;
 }
 .gn .popover.popover-dropdown .popover-content {
-  padding: 0;
   display: table-cell;
   height: 190px;
   vertical-align: middle;
@@ -12571,6 +12574,9 @@ yx-axis
 .gn .mCSB_scrollTools .mCSB_buttonRight {
   background-image: url(../catalog/style/mCSB_buttons.png);
 }
+.gn .mCSB_inside > .mCSB_container {
+  margin-right: 15px;
+}
 .gn .bootstrap-select > .dropdown-toggle {
   width: 100%;
   padding-right: 25px;
@@ -13039,7 +13045,7 @@ yx-axis
 }
 .gn .sxt-main-tabs .btn,
 .gn .sxt-main-tabs .popover-content {
-  padding: 3px 10px 2px;
+  padding: 6px 10px 5px;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: bold;
@@ -13527,12 +13533,12 @@ yx-axis
 .gn ul.gn-resultview li.gn-grid .gn-md-thumbnail {
   width: 180px;
   min-height: 40px;
-  max-height: 140px;
+  max-height: 110px;
   height: auto;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-thumbnail .img-thumbnail {
   max-width: 180px;
-  max-height: 140px;
+  max-height: 110px;
   min-height: 40px;
   height: auto;
 }
@@ -13543,10 +13549,14 @@ yx-axis
   float: left;
   color: #808080;
   width: calc(66% - 1em);
+  margin-bottom: .3em;
   font-size: 12px;
 }
 .gn ul.gn-resultview li.gn-grid .md-abstract.ellipsis:after {
   background: none;
+}
+.gn ul.gn-resultview li.gn-grid .md-abstract p {
+  margin-bottom: 0;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-source {
   clear: left;
@@ -13774,6 +13784,12 @@ yx-axis
   line-height: 2.6em;
   background: white;
 }
+.gn [gn-metadata-display] .panel-heading .fa {
+  margin: .8em .6em 0 0;
+}
+.gn [gn-metadata-display] .panel-heading .pull-right .fa {
+  margin: 0;
+}
 .gn [gn-metadata-display] .panel-heading span {
   color: #4ba2d9;
   display: inline-block;
@@ -13793,6 +13809,22 @@ yx-axis
 .gn [gn-metadata-display] [sxt-md-actions-menu] .dropdown-menu {
   font-size: 12px;
   text-transform: uppercase;
+}
+.gn [gn-metadata-display] section.links {
+  margin: 0 0 1.5em;
+  padding: 1em;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+.gn [gn-metadata-display] section.links .pull-right {
+  float: none !important;
+}
+.gn [gn-metadata-display] section.links h3 {
+  padding-bottom: .5em;
+  color: #000;
+}
+.gn [gn-metadata-display] section.links .dropdown-menu {
+  text-align: left;
 }
 .gn [gn-metadata-display] h3 button {
   background: white;
@@ -13818,6 +13850,10 @@ yx-axis
   border-radius: 0;
   border: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.gn [gn-metadata-display] img.graphic-overview:not(.large):not(.thumbnail) {
+  max-height: none;
+  max-width: 100%;
 }
 .gn-img-modal .modal-dialog {
   background: white;
