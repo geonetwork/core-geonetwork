@@ -32,7 +32,8 @@
         scope: {
           uri: '=',
           processId: '=',
-          defaults: '='
+          defaults: '=',
+          map: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||

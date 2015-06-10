@@ -16,7 +16,11 @@
             <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
           </div>
           <div ng-if="::input.boundingBoxData">
-            <gn-bbox-input id="{{::input.identifier.value}}" data-crs="input._default.crs" data-value="input.value"/>
+            <gn-bbox-input id="{{::input.identifier.value}}"
+                data-crs="input._default.crs"
+                data-value="input.value"
+                data-map="map"
+                />
           </div>
           <div ng-if="input.invalid">
             <p class="text-danger">{{input.invalid}}</p>
