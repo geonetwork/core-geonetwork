@@ -84,13 +84,13 @@
 
           //TODO: don't trigger if we load same file twice
           angular.element(fileInput).bind('change', function(changeEvent) {
-            scope.$apply(function() {
-              if (fileInput.files.length > 0) {
-                readAsText(fileInput.files[0], function(text) {
-                  gnOwsContextService.loadContext(text, scope.map);
-                });
-              }
-            });
+            if (fileInput.files.length > 0) {
+              readAsText(fileInput.files[0], function(text) {
+                gnOwsContextService.loadContext(text, scope.map);
+                scope.$digest();
+              });
+            }
+            $('#owc-file-input')[0].value = '';
           });
 
           // load context from url or from storage
