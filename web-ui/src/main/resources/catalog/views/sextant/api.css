@@ -13855,6 +13855,9 @@ yx-axis
   max-height: none;
   max-width: 100%;
 }
+.gn .sxt-scroll [gn-metadata-display] .panel-body {
+  height: auto;
+}
 .gn-img-modal .modal-dialog {
   background: white;
   padding-bottom: 3em;

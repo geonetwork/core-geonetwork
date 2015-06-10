@@ -229,7 +229,7 @@
           scope.setNCWMS = controller.setNCWMS;
 
           scope.remove = function() {
-            var tip = scope.popover_$tip;
+            var tip = scope.member.$tip;
             if (tip) {
               tip.detach();
             }

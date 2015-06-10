@@ -260,7 +260,9 @@
 
           button.on('shown.bs.popover', function() {
             var $tip = button.data('bs.popover').$tip;
-            scope.popover_$tip = $tip;
+            if (scope.member) {
+              scope.member.$tip = $tip;
+            }
             content.css('display', 'inline').appendTo(
               $tip.find('.popover-content')
             );
