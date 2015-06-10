@@ -180,7 +180,9 @@
     '$compile',
     '$sce',
     'gnAlertService',
-    function($rootScope, $http, $compile, $sce, gnAlertService) {
+    'gnSearchSettings',
+    function($rootScope, $http, $compile, $sce, gnAlertService,
+             gnSearchSettings) {
 
       this.load = function(url, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
@@ -195,6 +197,10 @@
 
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
+          if(gnSearchSettings.tabOverflow &&
+              gnSearchSettings.tabOverflow.search) {
+            el.setAttribute('class', 'sxt-scroll');
+          }
           $(selector).append(el);
           $compile(el)(newscope);
         }, function() {
