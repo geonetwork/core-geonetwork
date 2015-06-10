@@ -40,9 +40,9 @@
               </div>
             </div>
 
-            <p data-ng-if="md.getCredits()" class="gn-md-source">
+            <p data-ng-if="md.getCredits()" class="gn-md-source" title="{{::md.getCredits()}}">
               <!--<h5 data-translate="">contacts</h5>-->
-              Source: {{::md.getCredits()}}
+              Source: {{::md.getCredits() | characters : 70}}
             </p>
 
           </div>
