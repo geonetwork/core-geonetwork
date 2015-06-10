@@ -42,6 +42,7 @@ import org.jdom.Element;
  * @author heikki doeleman
  * 
  */
+@Deprecated
 public class SaveDisplayOrder implements Service {
 	public void init(Path appPath, ServiceConfig params) throws Exception {}
 

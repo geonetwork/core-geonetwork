@@ -140,7 +140,7 @@
 
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
-                  
+
                   <xsl:call-template name="render-form-field">
                     <xsl:with-param name="name" select="@ref"/>
                     <xsl:with-param name="lang" select="@lang"/>
@@ -151,10 +151,34 @@
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>
                     <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                    <!--  Helpers can't be provided for all languages
                     <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                    -->
                     <xsl:with-param name="checkDirective" select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
                   </xsl:call-template>
                 </xsl:for-each>
+
+                <!-- Display the helper for a multilingual field below the field.
+                 The helper will be used only to populate the main language. -->
+                <xsl:if test="count($listOfValues/*) > 0">
+                  <xsl:call-template name="render-form-field-helper">
+                    <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
+                    <!-- The @rel attribute in the helper may define a related field
+                    to update. Check the related element of the current element
+                    which should be in the sibbling axis. -->
+                    <xsl:with-param name="relatedElement"
+                                    select="concat('_',
+                        following-sibling::*[name() = $listOfValues/@rel]/*/gn:element/@ref)"/>
+                    <!-- Related attribute name is based on element name
+                    _<element_ref>_<attribute_name>. -->
+                    <xsl:with-param name="relatedElementRef"
+                                    select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
+                    <xsl:with-param name="dataType" select="$type"/>
+                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                    <xsl:with-param name="tooltip" select="$tooltip"/>
+                    <xsl:with-param name="multilingualField" select="true()"/>
+                  </xsl:call-template>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:call-template name="render-form-field">
@@ -623,6 +647,7 @@
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
 
                     <a class="btn btn-default"
+                       title="{$i18n/addA} {$label/label}"
                        data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
                       <i type="button" class="fa fa-plus gn-add"
                       title="{$label/description}">
@@ -634,7 +659,9 @@
                   If many choices, make a dropdown button -->
             <xsl:when test="count($childEditInfo/gn:choose) > 1">
               <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add"
+                        data-toggle="dropdown"
+                        title="{$i18n/addA} {$label}">
                   <span/>
                   <span class="caret"/>
                 </button>
@@ -660,6 +687,7 @@
                 The directive is in charge of displaying the default add button if needed.
               -->
               <a class="btn btn-default"
+                 title="{$i18n/addA} {$label}"
                  data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
                 <i class="fa fa-plus gn-add"/>
               </a>
@@ -796,39 +824,19 @@
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
-            <select class="" id="gn-field-{$editInfo/@ref}" name="_{$name}">
-              <xsl:if test="$isRequired">
-                <xsl:attribute name="required" select="'required'"/>
-              </xsl:if>
-              <xsl:if test="$isDisabled">
-                <xsl:attribute name="disabled" select="'disabled'"/>
-              </xsl:if>
-              <xsl:if test="$tooltip">
-                <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
-              </xsl:if>
-              <xsl:if test="$lang">
-                <xsl:attribute name="lang" select="$lang"/>
-              </xsl:if>
-              <xsl:if test="$hidden">
-                <xsl:attribute name="display" select="'none'"/>
-              </xsl:if>
-              <xsl:for-each select="$listOfValues/entry">
-                <xsl:sort select="label"/>
-                <option value="{code}" title="{normalize-space(description)}">
-                  <xsl:if test="$valueToEdit = code">
-                    <xsl:attribute name="selected"/>
-                  </xsl:if>
-                  <xsl:value-of select="label"/>
-                </option>
-              </xsl:for-each>
-              <!-- Add the value if not defined in the codelist to not lose it
-                 -->
-              <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
-                <option value="{$valueToEdit}" selected="selected">
-                  <xsl:value-of select="$valueToEdit"/>
-                </option>
-              </xsl:if>
-            </select>
+            <xsl:variable name="elementRef" select="$editInfo/@ref"/>
+
+            <xsl:call-template name="render-codelist-as-select">
+              <xsl:with-param name="listOfValues" select="$listOfValues"/>
+              <xsl:with-param name="lang" select="$lang"/>
+              <xsl:with-param name="isDisabled" select="$isDisabled"/>
+              <xsl:with-param name="elementRef" select="$elementRef"/>
+              <xsl:with-param name="isRequired" select="$isRequired"/>
+              <xsl:with-param name="hidden" select="$hidden"/>
+              <xsl:with-param name="valueToEdit" select="$valueToEdit"/>
+              <xsl:with-param name="name" select="$name"/>
+              <xsl:with-param name="tooltip" select="$tooltip"/>
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -928,6 +936,52 @@
   </xsl:template>
 
 
+  <xsl:template name="render-codelist-as-select">
+    <xsl:param name="listOfValues"/>
+    <xsl:param name="lang"/>
+    <xsl:param name="isDisabled"/>
+    <xsl:param name="elementRef"/>
+    <xsl:param name="isRequired"/>
+    <xsl:param name="hidden"/>
+    <xsl:param name="valueToEdit"/>
+    <xsl:param name="name"/>
+    <xsl:param name="tooltip"/>
+    <select class="" id="gn-field-{$elementRef}" name="_{$name}">
+      <xsl:if test="$isRequired">
+        <xsl:attribute name="required" select="'required'"/>
+      </xsl:if>
+      <xsl:if test="$isDisabled">
+        <xsl:attribute name="disabled" select="'disabled'"/>
+      </xsl:if>
+      <xsl:if test="$tooltip">
+        <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
+      </xsl:if>
+      <xsl:if test="$lang">
+        <xsl:attribute name="lang" select="$lang"/>
+      </xsl:if>
+      <xsl:if test="$hidden">
+        <xsl:attribute name="display" select="'none'"/>
+      </xsl:if>
+      <xsl:for-each select="$listOfValues/entry">
+        <xsl:sort select="label"/>
+        <option value="{code}" title="{normalize-space(description)}">
+          <xsl:if test="code = $valueToEdit">
+            <xsl:attribute name="selected"/>
+          </xsl:if>
+          <xsl:value-of select="label"/>
+        </option>
+      </xsl:for-each>
+      <!-- Add the value if not defined in the codelist to not lose it
+         -->
+      <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
+        <option value="{$valueToEdit}" selected="selected">
+          <xsl:value-of select="$valueToEdit"/>
+        </option>
+      </xsl:if>
+    </select>
+  </xsl:template>
+
+
   <xsl:template name="render-form-field-helper">
     <xsl:param name="elementRef" as="xs:string"/>
     <xsl:param name="relatedElement" as="xs:string" required="no" select="''"/>
@@ -935,7 +989,8 @@
     <xsl:param name="dataType" as="xs:string" required="no" select="'text'"/>
     <xsl:param name="listOfValues" as="node()"/>
     <xsl:param name="tooltip" as="xs:string" required="no" select="''"/>
-    
+    <xsl:param name="multilingualField" as="xs:boolean" required="no" select="false()"/>
+
     <!-- 
     The helper config to pass to the directive in JSON format
     -->
@@ -950,7 +1005,8 @@
       then $relatedElement else ''}"
       data-related-attr="{if ($listOfValues/@relAtt) 
       then $relatedElementRef else ''}"
-      data-tooltip="{$tooltip}">
+      data-tooltip="{$tooltip}"
+      data-multilingual-field="{$multilingualField}">
     </div>
   </xsl:template>
 
@@ -994,6 +1050,7 @@
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
       <a class="btn btn-default"
+         title="{$i18n/addA} {$name}"
          data-gn-click-and-spin="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})">
         <i class="fa fa-plus gn-add"/>
       </a>

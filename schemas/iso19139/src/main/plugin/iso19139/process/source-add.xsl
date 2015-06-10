@@ -35,9 +35,7 @@ Stylesheet used to update metadata adding a reference to a source record.
             <gmd:DQ_DataQuality>
               <gmd:lineage>
                 <gmd:LI_Lineage>
-                  <gmd:source uuidref="{$sourceUuid}">
-                    <gmd:LI_Source/>
-                  </gmd:source>
+                  <gmd:source uuidref="{$sourceUuid}"/>
                 </gmd:LI_Lineage>
               </gmd:lineage>
             </gmd:DQ_DataQuality>
@@ -56,9 +54,7 @@ Stylesheet used to update metadata adding a reference to a source record.
       <xsl:apply-templates select="*[name() != 'gmd:lineage']" />
       <gmd:lineage>
         <gmd:LI_Lineage>
-          <gmd:source uuidref="{$sourceUuid}">
-            <gmd:LI_Source/>
-          </gmd:source>
+          <gmd:source uuidref="{$sourceUuid}"/>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </xsl:copy>
@@ -71,9 +67,7 @@ Stylesheet used to update metadata adding a reference to a source record.
 
       <!-- Only one parent identifier allowed
       - overwriting existing one. -->
-      <gmd:source uuidref="{$sourceUuid}">
-        <gmd:LI_Source/>
-      </gmd:source>
+      <gmd:source uuidref="{$sourceUuid}"/>
     </xsl:copy>
   </xsl:template>
 

@@ -1,6 +1,6 @@
 <ul class="list-group">
   <li gn-layermanager-item="layer" ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
-      class="list-group-item" data-ng-class="{'active': layer.showInfo}">
+      class="list-group-item" data-ng-class="{'active': layer.showInfo, 'gn-layer-outofrange': !((layer.getMaxResolution() >= map.getView().getResolution()) && (layer.getMinResolution() <= map.getView().getResolution()))}">
   </li>
 </ul>
 <ul class="list-group">

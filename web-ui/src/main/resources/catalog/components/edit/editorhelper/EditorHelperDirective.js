@@ -1,11 +1,11 @@
 (function() {
-  goog.provide('gn_editor_helper_directive');
+  goog.provide('gn_editor_helper');
 
-  var module = angular.module('gn_editor_helper_directive', []);
+  var module = angular.module('gn_editor_helper', []);
 
   /**
    * @ngdoc directive
-   * @name gn_editor_helper_directive.directive:gnEditorHelper
+   * @name gn_editor_helper.directive:gnEditorHelper
    * @restrict A
    *
    * @description
@@ -27,7 +27,8 @@
           type: '@',
           relatedElement: '@',
           relatedAttr: '@',
-          tooltip: '@'
+          tooltip: '@',
+          multilingualField: '@'
         },
         templateUrl: '../../catalog/components/edit/editorhelper/partials/' +
             'editorhelper.html',

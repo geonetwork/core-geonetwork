@@ -192,6 +192,11 @@
 			<error sheet="error-xml.xsl"/>
 		</service>
 
+		<service name="map.import">
+			<class name=".services.mef.ImportWebMap" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="mef.export">

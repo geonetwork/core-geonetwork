@@ -33,20 +33,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.nio.PathHttpEntity;
 import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.annotation.CheckReturnValue;
 
@@ -667,8 +665,7 @@ public class GeoServerRest {
 		if (method.equals(METHOD_PUT)) {
 			m = new HttpPut(url);
 			if (file != null) {
-                ((HttpPut) m).setEntity(new InputStreamEntity(IO.newInputStream(file), Files.size(file),
-                        ContentType.create(contentType, Constants.ENCODING)));
+                ((HttpPut) m).setEntity(new PathHttpEntity(file, ContentType.create(contentType, Constants.ENCODING)));
 			}
 
 			if (postData != null) {

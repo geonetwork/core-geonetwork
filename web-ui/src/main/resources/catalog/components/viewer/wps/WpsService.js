@@ -18,6 +18,20 @@
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_viewer.service:gnWpsService
+   * @requires $http
+   * @requires gnOwsCapabilities
+   * @requires gnUrlUtils
+   * @requires gnGlobalSettings
+   * @requires $q
+   *
+   * @description
+   * The `gnWpsService` service provides methods to call WPS request and
+   * manage WPS responses.
+   */
   module.service('gnWpsService', [
     '$http',
     'gnOwsCapabilities',
@@ -30,6 +44,18 @@
         return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
       };
 
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#describeProcess
+       *
+       * @description
+       * Call a WPS describeProcess request and parse the XML response, to
+       * returns it as an object.
+       *
+       * @param {string} uri of the wps service
+       * @param {string} processId of the process
+       */
       this.describeProcess = function(uri, processId) {
         url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: 'WPS',
@@ -66,6 +92,20 @@
         }
       };
 
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#execute
+       *
+       * @description
+       * Call a WPS execute request and manage response. The request is called
+       * by POST with an OGX XML content built from parameters.
+       *
+       * @param {string} uri of the wps service
+       * @param {string} processId of the process
+       * @param {Object} inputs of the process
+       * @param {Object} output of the process
+       */
       this.execute = function(uri, processId, inputs, output) {
         var defer = $q.defer();
 

@@ -24,7 +24,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_owscontext_directive.directive:gnOwsContext
+   * @name gn_viewer.directive:gnOwsContext
    *
    * @description
    * Panel to load or export an OWS Context
@@ -34,12 +34,14 @@
     'gnOwsContextService',
     '$translate',
     '$rootScope',
-    function(gnViewerSettings, gnOwsContextService, $translate, $rootScope) {
+    '$http',
+    function(gnViewerSettings, gnOwsContextService, $translate, $rootScope, $http) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
             'partials/owscontext.html',
         scope: {
+          user: '=',
           map: '='
         },
         link: function(scope, element, attrs) {
@@ -54,7 +56,20 @@
             var base64 = base64EncArr(strToUTF8Arr(str));
             $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
-
+          scope.saveInCatalog = function($event) {
+              args = {};
+              var xml = gnOwsContextService.writeContext(scope.map);
+              var str = new XMLSerializer().serializeToString(xml);
+              args.map_string = str;
+              args.map_title = "sample title";
+              args.map_abstract = "sample abstract";
+              $http.post('map.import', $.param(args), {
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+              }).then(
+                  function(data) {},
+                  function(data) {}
+              );
+          };
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(

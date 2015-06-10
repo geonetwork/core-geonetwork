@@ -7,7 +7,7 @@
 
   /**
    * @ngdoc overview
-   * @name gn_onlinesrc_directive
+   * @name gn_onlinesrc
    *
    * @description
    * Provide directives for online resources
@@ -191,9 +191,17 @@
 
                 $timeout(function() {
                   if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                    // FIXME : only first extent is took into account
+                    var extent = scope.gnCurrentEdit.extent[0],
+                        proj = ol.proj.get(gnMap.getMapConfig().projection),
+                        projectedExtent =
+                        ol.extent.containsExtent(
+                        proj.getWorldExtent(),
+                        extent) ?
+                        gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
+                        proj.getExtent();
                     scope.map.getView().fitExtent(
-                        gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
-                        'EPSG:4326', gnMap.getMapConfig().projection),
+                        projectedExtent,
                         scope.map.getSize());
                   }
                 });
@@ -411,9 +419,9 @@
 
               var resetForm = function() {
                 if (scope.params) {
-                  scope.params.desc = scope.mdLangs ? {} : '';
+                  scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = scope.mdLangs ? {} : '';
+                  scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
                 }
                 scope.clear(scope.queue);
@@ -468,6 +476,7 @@
                     }
                     scope.params.desc = desc.join('|');
                   }
+
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {
                         resetForm();

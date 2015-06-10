@@ -7,22 +7,28 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jeeves.component.ProfileManager;
+import javax.annotation.Nonnull;
 
+import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-
-import javax.annotation.Nonnull;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.referencing.CRS;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -432,4 +438,56 @@ public final class XslUtil
     public static boolean allowScripting() {
         return allowScripting.get() == null || allowScripting.get();
     }
+
+	public static String reprojectCoords(Object minx, Object miny, Object maxx,
+			Object maxy, Object fromEpsg) {
+		String ret = "";
+		try {
+			Double minxf = new Double((String) minx);
+			Double minyf = new Double((String) miny);
+			Double maxxf = new Double((String) maxx);
+			Double maxyf = new Double((String) maxy);
+			CoordinateReferenceSystem fromCrs = CRS.decode((String) fromEpsg);
+			CoordinateReferenceSystem toCrs = CRS.decode("EPSG:4326");
+
+			ReferencedEnvelope env = new ReferencedEnvelope(minxf, maxxf, minyf, maxyf, fromCrs);
+			ReferencedEnvelope reprojected = env.transform(toCrs, true);
+
+			ret = reprojected.getMinX() + "," + reprojected.getMinY() + "," + reprojected.getMaxX() + "," + reprojected.getMaxY();
+
+			Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
+
+			boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
+			Element elemminx, elemmaxx, elemminy, elemmaxy;
+			if (forceXY) {
+				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+			} else {
+				elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinY()));
+				elemmaxx = new Element("eastBoundLongitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxY()));
+				elemminy = new Element("southBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
+				elemmaxy = new Element("northBoundLatitude", ISO19139Namespaces.GMD)
+						.addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMaxX()));
+			}
+			elemRet.addContent(elemminx);
+			elemRet.addContent(elemmaxx);
+			elemRet.addContent(elemminy);
+			elemRet.addContent(elemmaxy);
+
+			ret = Xml.getString(elemRet);
+
+		} catch (Throwable e) {
+		}
+
+		return ret;
+	}
 }

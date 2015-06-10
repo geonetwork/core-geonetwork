@@ -257,7 +257,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
         if (execute.getRawStatusCode() != 200) {
-            throw new IllegalArgumentException("Request did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
+            throw new IllegalArgumentException("Request " + adjustedUrl + " did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
         }
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
@@ -273,12 +273,13 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @PathVariable final String lang,
             @PathVariable final String type,
             @RequestParam(required = false) final String id,
+            @RequestParam(value = "uuid", required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
         FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
 
-        String resolvedId = resolveId(id);
+        String resolvedId = resolveId(id, uuid);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, true, FormatterWidth._100);
         byte[] bytes = formatterCache.getPublished(key);
 
@@ -306,7 +307,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     public void exec(
             @PathVariable final String lang,
             @PathVariable final String type,
-            @RequestParam final String id,
+            @RequestParam(value = "id", required = false) final String id,
+            @RequestParam(value = "uuid", required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
@@ -314,7 +316,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             final NativeWebRequest request) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
-        String resolvedId = resolveId(id);
+        String resolvedId = resolveId(id, uuid);
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 

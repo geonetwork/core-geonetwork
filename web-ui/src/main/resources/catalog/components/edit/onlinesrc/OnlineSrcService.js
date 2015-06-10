@@ -19,7 +19,6 @@
    * The `gnOnlinesrc` service provides all tools required to manage
    * online resources like method to link or remove all kind of resources.
    */
-
   module.factory('gnOnlinesrc', [
     'gnBatchProcessing',
     'gnHttp',

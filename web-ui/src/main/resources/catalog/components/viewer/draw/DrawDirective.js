@@ -1,16 +1,20 @@
 (function() {
-  goog.provide('gn_draw_directive');
+  goog.provide('gn_draw');
 
-  var module = angular.module('gn_draw_directive', [
+  var module = angular.module('gn_draw', [
   ]);
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnWmsImport
+   * @name gn_viewer.directive:gnDraw
    *
    * @description
-   * Panel to load WMS capabilities service and pick layers.
-   * The server list is given in global properties.
+   * Panel that provides tools to draw and create annotations:
+   * <ul>
+   *   <li>point</li>
+   *   <li>linestring</li>
+   *   <li>polygon</li>
+   *   <li>text</li>
    */
   module.directive('gnDraw', [
     'ngeoDecorateInteraction',
@@ -317,9 +321,16 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnStyleForm
+   *
+   * @description
+   * Form to edit features style. The form content depends on gnStyleType
+   * attribute
+   */
   module.directive('gnStyleForm', [
-    'ngeoDecorateInteraction',
-    function(ngeoDecorateInteraction) {
+    function() {
       return {
         restrict: 'A',
         replace: false,

@@ -4,6 +4,20 @@
   var module = angular.module('gn_wps_directive', [
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnWpsProcessForm
+   * @restrict AE
+   *
+   * @description
+   * The `gnWpsProcessForm` build up a HTML form from the describe process
+   * response object (after call the describe process request).
+   *
+   * TODO: Add batch mode using md.privileges.batch
+   * and md.privileges.batch.update services.
+   *
+   * TODO: User group only privilege
+   */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
     function(gnWpsService) {
