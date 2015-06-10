@@ -714,7 +714,6 @@
             <packagingExcludes>
               xml/schemas/**,
               catalog/lib/style/bootstrap/docs/**,
-              catalog/lib/style/bootstrap/dist/**,
               catalog/lib/style/bootstrap/fonts/**,
               catalog/lib/style/bootstrap/grunt/**,
               catalog/lib/style/bootstrap/test-infra/**,
