@@ -9,10 +9,22 @@
 
     <div ng-switch-when="loaded">
       <form>
-        <h5>{{::title}}</h5>
-        <div ng-repeat="input in inputs" class="form-group" ng-class="{'gn-required': input.required}">
-          <label for="{{::input.name}}">{{::input.title}}</label>
-          <input type="{{::input.type}}" id="{{::input.name}}" class="form-control input-sm" ng-model="input.value"></input>
+        <h5>{{::processDescription.title.value}}</h5>
+        <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
+          <label for="{{::input.identifier.value}}">{{::input.title.value}}</label>
+          <div ng-if="::input.literalData">
+            <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
+          </div>
+          <div ng-if="::input.boundingBoxData">
+            <gn-bbox-input id="{{::input.identifier.value}}"
+                data-crs="input._default.crs"
+                data-value="input.value"
+                data-map="map"
+                />
+          </div>
+          <div ng-if="input.invalid">
+            <p class="text-danger">{{input.invalid}}</p>
+          </div>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-default" data-ng-click="submit()" >
@@ -20,9 +32,23 @@
           </button>
         </div>
       </form>
+      <div ng-if="exception">
+          <h4>{{exception.msg|translate}}</h4>
+          <div ng-if="exception.owsExceptionReport">
+            <div ng-repeat="exception in exception.owsExceptionReport.exception">
+              <div ng-repeat="(key, value) in exception">
+                {{key}}: {{value}}
+              </div>
+            </div>
+          </div>
+          <div ng-if="exception.httpResponse">
+            <div><span translate>wpsErrorCodeReturned</span> {{exception.httpResponse.status}} - {{exception.httpResponse.statusText}}</div>
+            <div>{{exception.httpResponse.data}}</div>
+          </div>
+      </div>
     </div>
 
-    <div ng-switch-when="error">
+    <div ng-switch-when="load-error">
       <h4>{{exception.msg|translate}}</h4>
       <div ng-if="exception.owsExceptionReport">
         <div ng-repeat="exception in exception.owsExceptionReport.exception">
