@@ -273,7 +273,7 @@
 
                 // Save the feature style
                 var st = feature.getStyle();
-                if(angular.isFunction(st)) {
+                if (angular.isFunction(st)) {
                   st = st(feature)[0];
                 }
 
@@ -286,7 +286,7 @@
                     width: st.getStroke().getWidth()
                   }
                 };
-                if(st.getText()) {
+                if (st.getText()) {
                   styleObj.text = {
                     text: st.getText().getText(),
                     font: st.getText().getFont(),
@@ -297,7 +297,7 @@
                     fill: {
                       color: st.getText().getFill().getColor()
                     }
-                  }
+                  };
                 }
                 clone.set('_style', styleObj);
                 features.push(clone);

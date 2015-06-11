@@ -6,7 +6,7 @@
   ]);
 
   module.provider('gnOwsCapabilities', function() {
-    this.$get = ['$http', 'gnUrlUtils', 'gnGlobalSettings', '$q', 
+    this.$get = ['$http', 'gnUrlUtils', 'gnGlobalSettings', '$q',
       function($http, gnUrlUtils, gnGlobalSettings, $q) {
 
         var displayFileContent = function(data) {
@@ -212,7 +212,7 @@
               return;
             }
           },
-          
+
 
           getLayerInfoFromWfsCap: function(name, capObj, uuid) {
             var needles = [];
@@ -221,11 +221,12 @@
             for (var i = 0, len = layers.length; i < len; i++) {
               //check layername
               if (name == layers[i].name.localPart ||
-                  name == layers[i].name.prefix + ":" + layers[i].name.localPart
-                  || name == layers[i].Name) {
+                  name == layers[i].name.prefix + ':' +
+                  layers[i].name.localPart ||
+                  name == layers[i].Name) {
                 return layers[i];
-              }  
-              
+              }
+
               //check title
               if (name == layers[i].title || name == layers[i].Title) {
                 return layers[i];

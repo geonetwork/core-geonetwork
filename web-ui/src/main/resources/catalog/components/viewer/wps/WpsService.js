@@ -1,8 +1,11 @@
 (function() {
   goog.provide('gn_wps_service');
 
-  goog.require('WPS_1_0_0');
+
+
+
   goog.require('OWS_1_1_0');
+  goog.require('WPS_1_0_0');
   goog.require('XLink_1_0');
 
   var module = angular.module('gn_wps_service', []);

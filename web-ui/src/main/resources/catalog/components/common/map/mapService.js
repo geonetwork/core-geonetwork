@@ -36,9 +36,11 @@
       'gnSearchManagerService',
       'Metadata',
       'gnWfsService',
+      'gnGlobalSettings',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
-          gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService) {
+          gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
+          gnGlobalSettings) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -384,7 +386,7 @@
               return;
             }
 
-            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+            var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
             var kmlSource = new ol.source.KML({
               projection: map.getView().getProjection(),
               url: proxyUrl
@@ -463,7 +465,7 @@
             var unregisterEventKey = olLayer.getSource().on('tileloaderror',
                 function(tileEvent, target) {
                   var res = map.getView().getResolution();
-                  if(layer.getMaxResolution() <= res &&
+                  if (layer.getMaxResolution() <= res &&
                       layer.getMinResolution() >= res) {
                     return;
                   }
@@ -512,7 +514,7 @@
               // so a WMS 1.1.x will always failed on this
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
-/*
+              /*
               if (layer.CRS) {
                 var mapProjection = map.getView().getProjection().getCode();
                 for (var i = 0; i < layer.CRS.length; i++) {
@@ -529,7 +531,7 @@
                 errors.push($translate('layerNotAvailableInMapProj'));
                 console.warn($translate('layerNotAvailableInMapProj'));
               }
-*/
+              */
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
@@ -608,22 +610,23 @@
               // so a WMS 1.1.x will always failed on this
               // https://github.com/openlayers/ol3/blob/master/src/
               // ol/format/wmscapabilitiesformat.js
-//              if (layer.CRS) {
-//                var mapProjection = map.getView().getProjection().getCode();
-//                for (var i = 0; i < layer.CRS.length; i++) {
-//                  if (layer.CRS[i] === mapProjection) {
-//                    isLayerAvailableInMapProjection = true;
-//                    break;
-//                  }
-//                }
-//              } else {
-//                errors.push($translate('layerCRSNotFound'));
-//                console.warn($translate('layerCRSNotFound'));
-//              }
-//              if (!isLayerAvailableInMapProjection) {
-//                errors.push($translate('layerNotAvailableInMapProj'));
-//                console.warn($translate('layerNotAvailableInMapProj'));
-//              }
+              //              if (layer.CRS) {
+              //                var mapProjection = map.getView().
+              //                             getProjection().getCode();
+              //                for (var i = 0; i < layer.CRS.length; i++) {
+              //                  if (layer.CRS[i] === mapProjection) {
+              //                    isLayerAvailableInMapProjection = true;
+              //                    break;
+              //                  }
+              //                }
+              //              } else {
+              //                errors.push($translate('layerCRSNotFound'));
+              //                console.warn($translate('layerCRSNotFound'));
+              //              }
+              //              if (!isLayerAvailableInMapProjection) {
+              //                errors.push($translate('layerNotAvailableInMapProj'));
+              //                console.warn($translate('layerNotAvailableInMapProj'));
+              //              }
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
@@ -655,60 +658,64 @@
 
               var vectorFormat = new ol.format.GML(
                   {srsName_: getCapLayer.defaultSRS});
-              
-              if(getCapLayer.outputFormats) {
-                $.each(getCapLayer.outputFormats.format, function (f, output) {
-                   if(output.indexOf("json") > 0 || output.indexOf("JSON") > 0) {
-                     vectorFormat = ol.format.JSONFeature(
-                         {srsName_: getCapLayer.defaultSRS});
-                   }
-                });
+
+              if (getCapLayer.outputFormats) {
+                $.each(getCapLayer.outputFormats.format,
+                    function(f, output) {
+                      if (output.indexOf('json') > 0 ||
+                         output.indexOf('JSON') > 0) {
+                        vectorFormat = ol.format.JSONFeature(
+                           {srsName_: getCapLayer.defaultSRS});
+                      }
+                    });
               }
-              
+
               var vectorSource = new ol.source.ServerVector({
-                  format: vectorFormat,
+                format: vectorFormat,
                 loader: function(extent, resolution, projection) {
-                  if(this.loadingLayer) {
+                  if (this.loadingLayer) {
                     return;
                   }
-                  
+
                   this.loadingLayer = true;
-                  
-                  var parts = url.split('?'); 
-  
-                  var proxyUrl = '../../proxy?url=' + encodeURIComponent(gnUrlUtils.append(parts[0],
+
+                  var parts = url.split('?');
+
+                  var proxyUrl = gnGlobalSettings.proxyUrl +
+                      encodeURIComponent(gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue({
                         service: 'WFS',
                         request: 'GetFeature',
                         version: '1.1.0',
-                        maxFeatures: 10, //random picked number, starting with 10 for tests
-                        typename: getCapLayer.name.prefix + ":" 
-                                    + getCapLayer.name.localPart})));
-                  
-                    $.ajax({
-                        url: proxyUrl
-                    })
+                        //maxFeatures: 10,
+                        typename: getCapLayer.name.prefix + ':' +
+                                   getCapLayer.name.localPart})));
+
+                  $.ajax({
+                    url: proxyUrl
+                  })
                     .done(function(response) {
-                        vectorSource.addFeatures(vectorSource.readFeatures(response.firstElementChild));
-                    })
+                        vectorSource.addFeatures(vectorSource.
+                            readFeatures(response.firstElementChild));
+                      })
                     .then(function() {
-                      this.loadingLayer = false;
-                    });
+                        this.loadingLayer = false;
+                      });
                 },
                 strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
-                    maxZoom: 19
+                  maxZoom: 19
                 })),
                 projection: 'EPSG:3857'
-            });
-              
+              });
+
               var layer = new ol.layer.Vector({
                 source: vectorSource
-                });
+              });
               layer.set('errors', errors);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
-              layer.set("label", getCapLayer.name.prefix + ":" 
-                  + getCapLayer.name.localPart);
+              layer.set('label', getCapLayer.name.prefix + ':' +
+                  getCapLayer.name.localPart);
               return layer;
             }
 
@@ -964,7 +971,8 @@
 
             gnWmsQueue.add(url, name);
             gnWfsService.getCapabilities(url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(name, capObj, md.getUuid()),
+              var capL = gnOwsCapabilities.
+                  getLayerInfoFromWfsCap(name, capObj, md.getUuid()),
                   olL;
               if (!capL) {
                 // If layer not found in the GetCapabilities
@@ -995,7 +1003,7 @@
                 defer.reject(o);
               } else {
                 olL = $this.addWfsToMapFromCap(map, capL, url);
-                
+
 
                 // attach the md object to the layer
                 if (md) {

@@ -1,6 +1,6 @@
 goog.provide('Filter_1_1_0');
 
-var Filter_1_1_0_Module_Factory = function () {
+var Filter_1_1_0_Module_Factory = function() {
   var Filter_1_1_0 = {
     n: 'Filter_1_1_0',
     dens: 'http:\/\/www.opengis.net\/ogc',
@@ -513,7 +513,8 @@ var Filter_1_1_0_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'ComparisonOperatorType',
-      vs: ['LessThan', 'GreaterThan', 'LessThanEqualTo', 'GreaterThanEqualTo', 'EqualTo', 'NotEqualTo', 'Like', 'Between', 'NullCheck']
+      vs: ['LessThan', 'GreaterThan', 'LessThanEqualTo', 'GreaterThanEqualTo',
+        'EqualTo', 'NotEqualTo', 'Like', 'Between', 'NullCheck']
     }, {
       t: 'enum',
       ln: 'SortOrderType',
@@ -521,7 +522,8 @@ var Filter_1_1_0_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'SpatialOperatorNameType',
-      vs: ['BBOX', 'Equals', 'Disjoint', 'Intersects', 'Touches', 'Crosses', 'Within', 'Contains', 'Overlaps', 'Beyond', 'DWithin']
+      vs: ['BBOX', 'Equals', 'Disjoint', 'Intersects', 'Touches', 'Crosses',
+        'Within', 'Contains', 'Overlaps', 'Beyond', 'DWithin']
     }],
     eis: [{
       en: 'Sub',

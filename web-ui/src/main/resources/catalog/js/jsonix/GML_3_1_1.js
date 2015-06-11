@@ -1,6 +1,6 @@
 goog.provide('GML_3_1_1');
 
-var GML_3_1_1_Module_Factory = function () {
+var GML_3_1_1_Module_Factory = function() {
   var GML_3_1_1 = {
     n: 'GML_3_1_1',
     dens: 'http:\/\/www.opengis.net\/gml',
@@ -7591,11 +7591,16 @@ var GML_3_1_1_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'AesheticCriteriaType',
-      vs: ['MIN_CROSSINGS', 'MIN_AREA', 'MIN_BENDS', 'MAX_BENDS', 'UNIFORM_BENDS', 'MIN_SLOPES', 'MIN_EDGE_LENGTH', 'MAX_EDGE_LENGTH', 'UNIFORM_EDGE_LENGTH', 'MAX_ANGULAR_RESOLUTION', 'MIN_ASPECT_RATIO', 'MAX_SYMMETRIES']
+      vs: ['MIN_CROSSINGS', 'MIN_AREA', 'MIN_BENDS', 'MAX_BENDS',
+        'UNIFORM_BENDS', 'MIN_SLOPES', 'MIN_EDGE_LENGTH',
+        'MAX_EDGE_LENGTH', 'UNIFORM_EDGE_LENGTH', 'MAX_ANGULAR_RESOLUTION',
+        'MIN_ASPECT_RATIO', 'MAX_SYMMETRIES']
     }, {
       t: 'enum',
       ln: 'SurfaceInterpolationType',
-      vs: ['none', 'planar', 'spherical', 'elliptical', 'conic', 'tin', 'parametricCurve', 'polynomialSpline', 'rationalSpline', 'triangulatedSpline']
+      vs: ['none', 'planar', 'spherical', 'elliptical', 'conic', 'tin',
+        'parametricCurve', 'polynomialSpline', 'rationalSpline',
+        'triangulatedSpline']
     }, {
       t: 'enum',
       ln: 'SuccessionType',
@@ -7623,7 +7628,11 @@ var GML_3_1_1_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'CurveInterpolationType',
-      vs: ['linear', 'geodesic', 'circularArc3Points', 'circularArc2PointWithBulge', 'circularArcCenterPointWithRadius', 'elliptical', 'clothoid', 'conic', 'polynomialSpline', 'cubicSpline', 'rationalSpline']
+      vs: ['linear', 'geodesic', 'circularArc3Points',
+              'circularArc2PointWithBulge',
+              'circularArcCenterPointWithRadius', 'elliptical',
+              'clothoid', 'conic',
+              'polynomialSpline', 'cubicSpline', 'rationalSpline']
     }, {
       t: 'enum',
       ln: 'KnotTypesType',
@@ -7631,7 +7640,8 @@ var GML_3_1_1_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'SequenceRuleNames',
-      vs: ['Linear', 'Boustrophedonic', 'Cantor-diagonal', 'Spiral', 'Morton', 'Hilbert']
+      vs: ['Linear', 'Boustrophedonic', 'Cantor-diagonal',
+           'Spiral', 'Morton', 'Hilbert']
     }, {
       t: 'enum',
       ln: 'TimeIndeterminateValueType',
@@ -7651,7 +7661,8 @@ var GML_3_1_1_Module_Factory = function () {
     }, {
       t: 'enum',
       ln: 'CompassPointEnumeration',
-      vs: ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+      vs: ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE',
+        'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
     }],
     eis: [{
       en: 'semiMinorAxis',

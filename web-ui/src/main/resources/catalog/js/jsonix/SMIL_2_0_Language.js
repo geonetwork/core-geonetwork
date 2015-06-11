@@ -1,6 +1,6 @@
 goog.provide('SMIL_2_0_Language');
 
-var SMIL_2_0_Language_Module_Factory = function () {
+var SMIL_2_0_Language_Module_Factory = function() {
   var SMIL_2_0_Language = {
     n: 'SMIL_2_0_Language',
     dens: 'http:\/\/www.w3.org\/2001\/SMIL20\/Language',
@@ -676,7 +676,8 @@ if (typeof define === 'function' && define.amd) {
 else {
   var SMIL_2_0_Language_Module = SMIL_2_0_Language_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports.SMIL_2_0_Language = SMIL_2_0_Language_Module.SMIL_2_0_Language;
+    module.exports.SMIL_2_0_Language =
+        SMIL_2_0_Language_Module.SMIL_2_0_Language;
   }
   else {
     var SMIL_2_0_Language = SMIL_2_0_Language_Module.SMIL_2_0_Language;

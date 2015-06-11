@@ -1,12 +1,18 @@
 (function() {
   goog.provide('gn_owscontext_service');
 
-  goog.require('XLink_1_0');
-  goog.require('OWS_1_0_0');
+
+
+
+
+
+
   goog.require('Filter_1_0_0');
   goog.require('GML_2_1_2');
-  goog.require('SLD_1_0_0');
   goog.require('OWC_0_3_1');
+  goog.require('OWS_1_0_0');
+  goog.require('SLD_1_0_0');
+  goog.require('XLink_1_0');
 
   var module = angular.module('gn_owscontext_service', []);
 
