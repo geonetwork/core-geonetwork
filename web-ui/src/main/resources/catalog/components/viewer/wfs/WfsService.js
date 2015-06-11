@@ -1,6 +1,7 @@
 (function() {
   goog.provide('gn_wfs_service');
 
+  goog.require('XLink_1_0');
   goog.require('OWS_1_0_0');
   goog.require('WFS_1_1_0');
   goog.require('SMIL_2_0');
