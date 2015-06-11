@@ -1,3 +1,5 @@
+goog.provide('XLink_1_0');
+
 var XLink_1_0_Module_Factory = function () {
   var XLink_1_0 = {
     n: 'XLink_1_0',

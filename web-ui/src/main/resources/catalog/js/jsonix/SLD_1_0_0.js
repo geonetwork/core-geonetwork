@@ -1,3 +1,5 @@
+goog.provide('SLD_1_0_0');
+
 var SLD_1_0_0_Module_Factory = function () {
   var SLD_1_0_0 = {
     n: 'SLD_1_0_0',

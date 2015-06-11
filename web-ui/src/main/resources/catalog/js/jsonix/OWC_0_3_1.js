@@ -1,3 +1,5 @@
+goog.provide('OWC_0_3_1');
+
 var OWC_0_3_1_Module_Factory = function () {
   var OWC_0_3_1 = {
     n: 'OWC_0_3_1',
