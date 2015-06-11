@@ -705,6 +705,10 @@
                 source: vectorSource
                 });
               layer.set('errors', errors);
+              ngeoDecorateLayer(layer);
+              layer.displayInLayerManager = true;
+              layer.set("label", getCapLayer.name.prefix + ":" 
+                  + getCapLayer.name.localPart);
               return layer;
             }
 
