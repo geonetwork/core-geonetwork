@@ -345,10 +345,17 @@ public class Handlers {
 
         def half = (int) Math.round((groups.size()) / 2)
 
-        def output = '<div class="row">'
-        output += commonHandlers.func.textColEl(general.toString() + handlers.processElements(groups.take(half - 1)), 6)
-        output += commonHandlers.func.textColEl(handlers.processElements(groups.drop(half - 1)), 6)
-        output += '</div>'
+        def output = commonHandlers.func.isPDFOutput() ? '<table><tr>' : '<div class="row">'
+        if (commonHandlers.func.isPDFOutput()) {
+            output += '<td>' + general.toString() + handlers.processElements(groups.take(half - 1)) + '</td>'
+            output += '<td>' + handlers.processElements(groups.drop(half - 1)) + '</td>'
+        } else {
+            output = '<div class="row">'
+            output += commonHandlers.func.textColEl(general.toString() + handlers.processElements(groups.take(half - 1)), 6)
+            output += commonHandlers.func.textColEl(handlers.processElements(groups.drop(half - 1)), 6)
+        }
+
+        output += commonHandlers.func.isPDFOutput() ? '</tr></table>' : '</div>'
 
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
