@@ -49,10 +49,13 @@
 
     <!-- Visibility check box & Layer title-->
     <label>
-      <i class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
+      <i ng-if="!groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
+      <i ng-if="groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'" title="{{'layerVisible'|translate}}" ></i>
+
       <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
-      <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}"
+      <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
              type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}" data-ng-change="switchGroupCombo(groupCombo)"/>
+
       {{member.get('label')}}
     </label>
 
