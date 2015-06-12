@@ -20,7 +20,10 @@
 
     <service name="rdf.search">
       <documentation> Search the catalogue and return results in RDF/DCAT format. </documentation>
-      <class name=".services.main.XmlSearch"/>
+      <class name=".services.main.XmlSearch">
+        <!-- rdf.xsl requires the full metadata, returned only if fast=false in the searcher -->
+        <param name="fast" value="false" />
+      </class>
       <output sheet="../xslt/services/dcat/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
