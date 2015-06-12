@@ -70,7 +70,7 @@
         </div>
 
         <sxt-links-btn></sxt-links-btn>
-        <div class="gn-md-relations">
+        <div class="gn-md-relations" ng-if="md.type == 'series'">
           <div gn-related="md" types="parent|children"
                template="../../catalog/views/sextant/templates/related.html"></div>
          </div>
