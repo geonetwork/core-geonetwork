@@ -135,7 +135,7 @@
         extent: projectionExtent,
         title: 'Sextant',
         source: new ol.source.WMTS({
-          url: 'http://visi-sextant.ifremer.fr:8080/' +
+          url: 'http://sextant.ifremer.fr/' +
               'geowebcache/service/wmts?',
           layer: 'sextant',
           matrixSet: 'EPSG:3857',
