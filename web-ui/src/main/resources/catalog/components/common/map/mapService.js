@@ -464,11 +464,6 @@
 
             var unregisterEventKey = olLayer.getSource().on('tileloaderror',
                 function(tileEvent, target) {
-                  var res = map.getView().getResolution();
-                  if (layer.getMaxResolution() <= res &&
-                      layer.getMinResolution() >= res) {
-                    return;
-                  }
                   var msg = $translate('layerTileLoadError', {
                     url: tileEvent.tile && tileEvent.tile.getKey ?
                         tileEvent.tile.getKey() : '- no tile URL found-',
