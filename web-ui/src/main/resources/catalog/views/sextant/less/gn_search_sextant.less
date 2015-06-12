@@ -1126,8 +1126,12 @@ ul.gn-resultview {
     max-width: 100%;
   }
 }
-[gn-metadata-display].sxt-scroll .panel-body {
-  height: auto;
+[gn-metadata-display].sxt-scroll {
+  > .panel, .panel-body {
+    height: auto;
+  }
+  right: 0;
+  left: 0;
 }
 
 .gn-img-modal .modal-dialog{
