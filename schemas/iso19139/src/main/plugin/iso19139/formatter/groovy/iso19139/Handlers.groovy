@@ -372,9 +372,10 @@ public class Handlers {
             def mdId = env.getMetadataId();
             def xpath = f.getXPathFrom(el);
 
+            def gnUrl = env.getLocalizedUrl();
 
             if (xpath != null) {
-                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
+                def image = "<img src=\"${gnUrl}region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
                         "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
                 handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
             }
@@ -388,6 +389,7 @@ public class Handlers {
                 def replacements = bbox(thumbnail, el)
                 replacements['label'] = f.nodeLabel(el)
                 replacements['pdfOutput'] = env.formatType == FormatType.pdf
+                replacements['gnUrl'] = env.getLocalizedUrl();
 
                 handlers.fileResult("html/bbox.html", replacements)
             }
