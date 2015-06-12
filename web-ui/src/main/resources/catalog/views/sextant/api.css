@@ -13167,6 +13167,9 @@ yx-axis
 .gn .sxt-center-panel .panel-heading .gn-sort-by .pull-right .btn {
   height: 2.8em;
 }
+.gn .gn-search-page [class*=col-md] {
+  transition: none;
+}
 .gn [data-ng-search-form] .gn-top-search {
   text-align: center;
   background: #f5f5f5;
