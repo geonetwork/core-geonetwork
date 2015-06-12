@@ -1053,19 +1053,16 @@
 
             if (layer.get('metadataUrl')) {
 
-              var mdUrl = gnUrlUtils.urlResolve(layer.get('metadataUrl'));
-              if (mdUrl.host == gnSearchLocation.host()) {
-                return gnSearchManagerService.gnSearch({
-                  uuid: layer.get('metadataUuid'),
-                  fast: 'index',
-                  _content_type: 'json'
-                }).then(function(data) {
-                  if (data.metadata.length == 1) {
-                    layer.set('md', new Metadata(data.metadata[0]));
-                  }
-                  return layer;
-                });
-              }
+              return gnSearchManagerService.gnSearch({
+                uuid: layer.get('metadataUuid'),
+                fast: 'index',
+                _content_type: 'json'
+              }).then(function(data) {
+                if (data.metadata.length == 1) {
+                  layer.set('md', new Metadata(data.metadata[0]));
+                }
+                return layer;
+              });
             }
             return defer.promise;
           }
