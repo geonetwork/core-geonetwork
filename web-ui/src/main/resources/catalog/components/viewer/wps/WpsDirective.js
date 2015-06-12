@@ -43,6 +43,8 @@
         link: function(scope, element, attrs) {
 
           scope.status = 'loading';
+          var defaults = scope.defaults || {};
+
           gnWpsService.describeProcess(scope.uri, scope.processId)
           .then(
             function(data) {
@@ -57,8 +59,8 @@
                   if (input.literalData.defaultValue != undefined) {
                     value = input.literalData.defaultValue;
                   }
-                  if (scope.defaults[input.identifier.value]) {
-                    value = scope.defaults[input.identifier.value];
+                  if (defaults[input.identifier.value]) {
+                    value = defaults[input.identifier.value];
                   }
                   switch(input.literalData.dataType.value) {
                   case 'float':
