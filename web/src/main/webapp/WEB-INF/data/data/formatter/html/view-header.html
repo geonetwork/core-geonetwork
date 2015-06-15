@@ -36,7 +36,7 @@
             </ul>
         </li>
     </ul>
-    <div class="entry overview">
+    <div class="entry overview" data-fmt-if="!isPDF">
         <h3 class="view-header">
             <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
                 <i class="fa fa-arrow-circle-down"></i>
@@ -68,6 +68,9 @@
 
     {{content}}
     <div class="entry associated">
+        <span data-fmt-if="isPDF">
+            <div fmt-include="html/links.html" fmt-include-replace="true"/>
+        </span>
         <div fmt-include="html/associated.html" fmt-include-replace="true"/>
     </div>
 </div>

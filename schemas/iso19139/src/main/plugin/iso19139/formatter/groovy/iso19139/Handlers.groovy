@@ -1,6 +1,5 @@
 package iso19139
 
-import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.MapConfig
 
@@ -394,7 +393,7 @@ public class Handlers {
                     el.parent().parent().'gmd:geographicElement'.'gmd:EX_BoundingPolygon'.text().isEmpty()) {
                 def replacements = bbox(thumbnail, el)
                 replacements['label'] = f.nodeLabel(el)
-                replacements['pdfOutput'] = env.formatType == FormatType.pdf
+                replacements['pdfOutput'] = commonHandlers.func.isPDFOutput()
 
                 handlers.fileResult("html/bbox.html", replacements)
             }

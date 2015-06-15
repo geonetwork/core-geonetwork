@@ -83,4 +83,48 @@
     max-width: 300px;
     max-height: 300px;
   }
+  .thumbnail.extent > img {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .extent {
+    display: inline-block;
+    position: relative;
+    margin: 2em 0 0 90px;
+  }
+  .coord {
+    display: table;
+    @coord-half-width: 75px;
+    @coord-half-height: 1.25em;
+    position: absolute;
+    width: (@coord-half-width * 2);
+    &-north { top: -@coord-half-height; }
+    &-south { bottom: -@coord-half-height; }
+    &-west { left: -@coord-half-width; }
+    &-east { left: -@coord-half-width; }
+    &-north, &-south {
+      left: 50%;
+      margin-left: -@coord-half-width;
+    }
+    &east, &-west {
+      top: 50%;
+      margin-top: -@coord-half-height;
+    }
+    span.value {
+      display: table-cell;
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 6px 12px;
+      border-right-width: 0;
+    }
+    span.input-group-addon {
+      display: table-cell;
+      background-color: #eeeeee;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      width: 1%;
+    }
+  }
+
 }
