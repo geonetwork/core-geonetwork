@@ -22,6 +22,8 @@
   <!-- Load labels. -->
   <xsl:variable name="schema"
                 select="'iso19139'"/>
+  <xsl:variable name="baseUrl"
+                select="/root/url"/>
   <xsl:variable name="label"
                 select="/root/schemas/iso19139"/>
   <xsl:variable name="schemaStrings"
@@ -158,8 +160,8 @@
         <link rel="stylesheet" type="text/css"
               href="{/root/url}../../apps/sextant/css/schema/medsea.css"/>
         <div class="tpl-emodnet">
-          <div class="ui-layout-content">
-            <a class="file-link" title="Export HTML" href="{/root/url}metadata.formatter.html?uuid={$identifier}&amp;xsl=medsea">&#160;</a>
+          <div class="ui-layout-content mdshow-tabpanel">
+            <a class="file-link" title="Export HTML" href="{/root/url}metadata.formatter.html?uuid={$identifier}&amp;xsl=medsea"></a>
             <a class="file-xml" title="Export XML" href="{/root/url}xml.metadata.get?uuid={$identifier}">&#160;</a>
 
              <xsl:for-each
@@ -295,7 +297,7 @@
         <td><xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $numberFormat)"/></td>
         <td>
           <img class="gn-img-extent"
-                 src="{/root/url}region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
+                 src="{$baseUrl}region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
         </td>
         <td><xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $numberFormat)"/></td>
       </tr>
