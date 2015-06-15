@@ -1,6 +1,5 @@
 package iso19139
 
-import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.MapConfig
 

@@ -32,10 +32,11 @@
   module.directive('gnOwsContext', [
     'gnViewerSettings',
     'gnOwsContextService',
+    'gnConfig',
     '$translate',
     '$rootScope',
     '$http',
-    function(gnViewerSettings, gnOwsContextService, 
+    function(gnViewerSettings, gnOwsContextService, gnConfig,
         $translate, $rootScope, $http) {
       return {
         restrict: 'A',
@@ -57,18 +58,32 @@
             var base64 = base64EncArr(strToUTF8Arr(str));
             $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
+
+          scope.isSaveMapInCatalogAllowed =
+              gnConfig['map.isSaveMapInCatalogAllowed'];
+          scope.mapUuid = null;
+          scope.mapProps = {
+            map_title: '',
+            map_abstract: ''
+          };
           scope.saveInCatalog = function($event) {
-            args = {};
+            scope.mapUuid = null;
             var xml = gnOwsContextService.writeContext(scope.map);
-            var str = new XMLSerializer().serializeToString(xml);
-            args.map_string = str;
-            args.map_title = 'sample title';
-            args.map_abstract = 'sample abstract';
-            $http.post('map.import', $.param(args), {
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).then(
-                function(data) {},
-                function(data) {}
+            scope.mapProps.map_string =
+                new XMLSerializer().serializeToString(xml);
+            scope.mapProps.map_filename = $translate('mapFileName') +
+                '-z' + scope.map.getView().getZoom() +
+                '-c' + scope.map.getView().getCenter().join('-') + '.ows';
+            return $http.post('map.import?_content_type=json',
+                $.param(scope.mapProps), {
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(
+                function(response) {
+                  scope.mapUuid = response.data[0];
+                },
+                function(data) {
+                  console.warn(data);
+                }
             );
           };
           scope.reset = function() {
