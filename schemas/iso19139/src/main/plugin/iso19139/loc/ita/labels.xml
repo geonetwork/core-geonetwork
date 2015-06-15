@@ -2492,6 +2492,10 @@ e di trasformazione.</label>
 		<label>Tipo di accoppiamento</label>
 		<description>Tipo di accoppiamentog</description>
 	</element>
+	<element name="srv:SV_CouplingType">
+		<label>Tipo di accoppiamento</label>
+		<description>Tipo di accoppiamentog</description>
+	</element>
 	<element name="srv:extent">
 		<label>Estensione</label>
 		<description>Geographic/Temporal Extent of Service</description>

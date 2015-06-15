@@ -176,6 +176,59 @@
             for (var i = 0, len = layers.length; i < len; i++) {
               //check layername
               if (name == layers[i].Name) {
+                layers[i].nameToUse = name;
+                return layers[i];
+              }
+
+              //check dataset identifer match
+              if (uuid != null) {
+                if (angular.isArray(layers[i].Identifier)) {
+                  angular.forEach(layers[i].Identifier, function(id) {
+                    if (id == uuid) {
+                      needles.push(layers[i]);
+                    }
+                  });
+                }
+              }
+
+              //check uuid from metadata url
+              if (uuid != null) {
+                if (angular.isArray(layers[i].MetadataURL)) {
+                  angular.forEach(layers[i].MetadataURL, function(mdu) {
+                    if (mdu && mdu.OnlineResource &&
+                        mdu.OnlineResource.indexOf(uuid) > 0) {
+                      needles.push(layers[i]);
+                    }
+                  });
+                }
+              }
+            }
+
+            //FIXME: allow multiple, remove duplicates
+            if (needles.length > 0) {
+              return needles[0];
+            }
+            else {
+              return;
+            }
+          },
+
+
+          getLayerInfoFromWfsCap: function(name, capObj, uuid) {
+            var needles = [];
+            var layers = capObj.featureTypeList.featureType;
+
+            for (var i = 0, len = layers.length; i < len; i++) {
+              //check layername
+              if (name == layers[i].name.localPart ||
+                  name == layers[i].name.prefix + ':' +
+                  layers[i].name.localPart ||
+                  name == layers[i].Name) {
+                return layers[i];
+              }
+
+              //check title
+              if (name == layers[i].title || name == layers[i].Title) {
                 return layers[i];
               }
 

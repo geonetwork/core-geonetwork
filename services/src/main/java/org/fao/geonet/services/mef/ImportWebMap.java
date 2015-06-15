@@ -21,6 +21,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
@@ -55,6 +56,12 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         String groupId = Util.getParam(params, "group_id", null);
         String mapAbstract = Util.getParam(params, "map_abstract", "");
         String title = Util.getParam(params, "map_title", "");
+        String mapFileName = Util.getParam(params, "map_filename", "map-context.ows");
+        if (mapFileName.contains("..")) {
+            throw new BadParameterEx(
+                    "Invalid character '..' found in resource name.",
+                    mapFileName);
+        }
         String topic = Util.getParam(params, "topic", "");
 
         
@@ -106,15 +113,15 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         if (StringUtils.isEmpty(mapUrl)) {
             Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
             Files.createDirectories(dataDir);
-            Path outFile = dataDir.resolve("map-context.xml");
+            Path outFile = dataDir.resolve(mapFileName);
             Files.deleteIfExists(outFile);
             FileUtils.writeStringToFile(outFile.toFile(), Xml.getString(wmcDoc));
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
-            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-1.0-http--download");
-            onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, "map-context.xml"));
-            onlineSrcParams.put("name", "map-context.xml");
+            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
+            onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, mapFileName));
+            onlineSrcParams.put("name", mapFileName);
             onlineSrcParams.put("desc", title);
             Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);
             dm.updateMetadata(context, id.get(0), mdWithOLRes, false, true, true, context.getLanguage(), null, true);

@@ -10,13 +10,12 @@
 
       <!--KMZ upload-->
       <div class="fu">
-        <input type="button" class="btn btn-info">
+        <button type="button" class="btn btn-info">
           <span class="fa fa-upload"></span>
           {{'UploadKMZfile'|translate}}
-        </input>
+        </button>
         <input class="form-control input-sm ng-pristine ng-valid" type="file"
-               accept="application/vnd.google-earth.kmz" id="file-input"
-                data-ng-model="kmzFile" data-ng-change="uploadKMZ()">
+               accept="application/vnd.google-earth.kmz" id="kmz-file-input">
       </div>
       <div class="list-group" id="file-list">
           <a href="" class="list-group-item" data-ng-repeat="e in kmzEntries" data-ng-click="onEntryClick(e, $event)">

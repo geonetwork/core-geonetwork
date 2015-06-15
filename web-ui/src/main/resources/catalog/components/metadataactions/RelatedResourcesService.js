@@ -1,7 +1,10 @@
 (function() {
   goog.provide('gn_relatedresources_service');
 
-  var module = angular.module('gn_relatedresources_service', []);
+  goog.require('gn_wfs_service');
+
+  var module = angular.module('gn_relatedresources_service',
+      ['gn_wfs_service']);
 
   /**
    * Standarizes the way to handle resources. Given a type of resource, you get
@@ -23,8 +26,11 @@
         'gnSearchSettings',
         'ngeoDecorateLayer',
         'gnSearchLocation',
+        'gnOwsContextService',
+        'gnWfsService',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, 
-            ngeoDecorateLayer, gnSearchLocation) {
+            ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
+                 gnWfsService) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -35,12 +41,12 @@
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
-                gnMap.addWmsFromScratch(
-                   gnSearchSettings.viewerMap, link.url, name, false, md);
+                gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
+                                  link.url, name, false, md);
               });
             } else if (link.name && !angular.isArray(link.name)) {
-              gnMap.addWmsFromScratch(
-                 gnSearchSettings.viewerMap, link.url, link.name, false, md);
+              gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
+                 link.url, link.name, false, md);
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             }
@@ -51,30 +57,21 @@
 
           var addWFSToMap = function(link, md) {
 
+
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
-                gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                   function(capObj) {
-                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                     name, capObj, uuid);
-                     gnMap.addWfsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   });
+                gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
+                       link.url, name, false, md);
               });
-              gnSearchLocation.setMap();
             } else if (link.name && !angular.isArray(link.name)) {
-              gnOwsCapabilities.getWMSCapabilities(link.url).then(
-                  function(capObj) {
-                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj, uuid);
-                    gnMap.addWfsToMapFromCap(
-                        gnSearchSettings.viewerMap, layerInfo, capObj);
-                  });
-              gnSearchLocation.setMap();
+              gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
+                 link.url, link.name, false, md);
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WFS');
             }
+
+            gnSearchLocation.setMap();
           };
 
 
@@ -107,8 +104,15 @@
           };
 
           var addKMLToMap = function(record, md) {
-            gnMap.addKmlToMap(
-               record.name, record.url, gnSearchSettings.viewerMap);
+            gnMap.addKmlToMap(record.name, record.url,
+               gnSearchSettings.viewerMap);
+            gnSearchLocation.setMap();
+          };
+
+          var addMapToMap = function(record, md) {
+            gnOwsContextService.loadContextFromUrl(record.url,
+               gnSearchSettings.viewerMap, true);
+
             gnSearchLocation.setMap();
           };
 
@@ -141,6 +145,11 @@
               iconClass: 'fa-link',
               label: 'webserviceLink',
               action: addWFSToMap
+            },
+            'MAP' : {
+              iconClass: 'fa-globe',
+              label: 'mapLink',
+              action: addMapToMap
             },
             'DB' : {
               iconClass: 'fa-database',
@@ -225,6 +234,8 @@
                 return 'WMTS';
               } else if (protocolOrType.match(/wfs/i)) {
                 return 'WFS';
+              } else if (protocolOrType.match(/ows-c/i)) {
+                return 'MAP';
               } else if (protocolOrType.match(/db:/i)) {
                 return 'DB';
               } else if (protocolOrType.match(/file:/i)) {

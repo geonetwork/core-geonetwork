@@ -4,6 +4,25 @@
   var module = angular.module('gn_draw', [
   ]);
 
+  function readAsText(f, callback) {
+    try {
+      var reader = new FileReader();
+      reader.readAsText(f);
+      reader.onload = function(e) {
+        if (e.target && e.target.result) {
+          callback(e.target.result);
+        } else {
+          console.error('File could not be loaded');
+        }
+      };
+      reader.onerror = function(e) {
+        console.error('File could not be read');
+      };
+    } catch (e) {
+      console.error('File could not be read');
+    }
+  }
+
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnDraw
@@ -240,9 +259,10 @@
           */
           scope.save = function($event) {
             var exportElement = document.getElementById('export-geom');
-            if ('download' in exportElement && !exportElement.href) {
+            if ('download' in exportElement) {
               var vectorSource = scope.vector.getSource();
               var features = [];
+
               vectorSource.forEachFeature(function(feature) {
                 var clone = feature.clone();
                 clone.setId(feature.getId());
@@ -250,8 +270,39 @@
                 // (view usually has spherical mercator)
                 clone.getGeometry().transform(
                     map.getView().getProjection(), 'EPSG:4326');
+
+                // Save the feature style
+                var st = feature.getStyle();
+                if (angular.isFunction(st)) {
+                  st = st(feature)[0];
+                }
+
+                var styleObj = {
+                  fill: {
+                    color: st.getFill().getColor()
+                  },
+                  stroke: {
+                    color: st.getStroke().getColor(),
+                    width: st.getStroke().getWidth()
+                  }
+                };
+                if (st.getText()) {
+                  styleObj.text = {
+                    text: st.getText().getText(),
+                    font: st.getText().getFont(),
+                    stroke: {
+                      color: st.getText().getStroke().getColor(),
+                      width: st.getText().getStroke().getWidth()
+                    },
+                    fill: {
+                      color: st.getText().getFill().getColor()
+                    }
+                  };
+                }
+                clone.set('_style', styleObj);
                 features.push(clone);
               });
+
               var string = new ol.format.GeoJSON().writeFeatures(features);
               //requires /lib/base64.js
               var base64 = base64EncArr(strToUTF8Arr(string));
@@ -259,6 +310,52 @@
                   'data:application/vnd.geo+json;base64,' + base64;
             }
           };
+
+          var fileInput = element.find('input[type="file"]')[0];
+          element.find('.import').click(function() {
+            fileInput.click();
+          });
+
+          angular.element(fileInput).bind('change', function(changeEvent) {
+            if (fileInput.files.length > 0) {
+              readAsText(fileInput.files[0], function(text) {
+                var features = new ol.format.GeoJSON().readFeatures(text, {
+                  dataProjection: 'EPSG:4326',
+                  featureProjection: map.getView().getProjection()
+                });
+
+                // Set each feature its style
+                angular.forEach(features, function(f, i) {
+                  var st = f.get('_style');
+                  var style = new ol.style.Style({
+                    fill: new ol.style.Fill({
+                      color: st.fill.color
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: st.stroke.color,
+                      width: st.stroke.width
+                    }),
+                    text: st.text ? new ol.style.Text({
+                      font: st.text.font,
+                      text: st.text.text,
+                      fill: new ol.style.Fill({
+                        color: st.text.fill.color
+                      }),
+                      stroke: new ol.style.Stroke({
+                        color: st.text.stroke.color,
+                        width: st.text.stroke.width
+                      })
+                    }) : undefined
+                  });
+                  f.setStyle(style);
+                });
+                source.addFeatures(features);
+                $('#features-file-input')[0].value = '';
+                scope.$digest();
+              });
+            }
+          });
+
 
           var deleteF = new ol.interaction.Select();
           deleteF.getFeatures().on('add',

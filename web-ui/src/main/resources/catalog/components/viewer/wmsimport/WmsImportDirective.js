@@ -250,7 +250,7 @@
           var requestFileSystem = window.webkitRequestFileSystem ||
               window.mozRequestFileSystem || window.requestFileSystem;
           var unzipProgress = document.createElement('progress');
-          var fileInput = document.getElementById('file-input');
+          var fileInput = element.find('input[type="file"]')[0];
 
           var model = (function() {
             var URL = window.webkitURL || window.mozURL || window.URL;
@@ -304,14 +304,15 @@
             });
           };
 
-          scope.uploadKMZ = function() {
+          angular.element(fileInput).bind('change', function(changeEvent) {
             if (fileInput.files.length > 0) {
               model.getEntries(fileInput.files[0], function(entries) {
                 scope.kmzEntries = entries;
                 scope.$apply();
               });
             }
-          };
+            $('#kmz-file-input')[0].value = '';
+          });
         }
       };
     }]);

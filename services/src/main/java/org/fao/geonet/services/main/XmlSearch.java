@@ -45,6 +45,7 @@ import java.nio.file.Path;
 public class XmlSearch implements Service
 {
 	private ServiceConfig _config;
+	private String _searchFast; //true, false, index
 
 	//--------------------------------------------------------------------------
 	//---
@@ -55,6 +56,7 @@ public class XmlSearch implements Service
 	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
+		_searchFast = config.getValue(Geonet.SearchResult.FAST, "true");
 	}
 
 	/**
@@ -103,8 +105,8 @@ public class XmlSearch implements Service
 			if (!"0".equals(summaryOnly)) {
 				return searcher.getSummary();
 			} else {
-				
-				elData.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
+
+				elData.addContent(new Element(Geonet.SearchResult.FAST).setText(_searchFast));
 				elData.addContent(new Element("from").setText("1"));
 				// FIXME ? from and to parameter could be used but if not
 				// set, the service return the whole range of results

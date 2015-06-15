@@ -15,7 +15,7 @@
             </td>
             <td class="col-md-10">
                 <div fmt-repeat="link in link.links">
-                    <a fmt-if="isPDF" href="{{link.href | escapeXmlAttrs}}" target="_blank" title="{{link.tip}}" class="{{link.cls}}">{{link.text | escapeXmlContent}}</a>
+                    <a fmt-if="isPDF" href="{{link.href | escapeXmlAttrs}}" target="_blank" title="{{link.tip | escapeXmlAttrs}}" class="{{link.cls}}">{{link.text | escapeXmlContent}}</a>
                     <a fmt-if="!isPDF" href="{{link.href}}" target="_blank" title="{{link.tip}}" class="{{link.cls}}">{{link.text | escapeXmlContent}}</a>
                 </div>
             </td>
