@@ -453,6 +453,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                                 success: function (fp, o) {
                                     self.editor.init(self.metadataId);
                                     self.hide();
+                                },
+                                failure: function(form, action) {
+                                  self.editor.init(self.metadataId);
+                                  self.hide();
                                 }
                             });
                             
@@ -620,6 +624,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 name: 'type',
                 value: 'large',
                 hidden: true
+            }, {
+              name: '_content_type',
+              value: 'json',
+              hidden: true
             }, {
                 name: 'scalingFactor',
                 value: '1000',
