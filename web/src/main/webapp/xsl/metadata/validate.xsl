@@ -57,9 +57,7 @@
 
 
     <xsl:apply-templates mode="validation-report"
-      select="following-sibling::*[(name(.)='svrl:failed-assert' or name(.)='svrl:successful-report')
-				and count(following-sibling::svrl:active-pattern) = $preceding-ap]"
-      >
+                         select="descendant::*[(name(.)='svrl:failed-assert' or name(.)='svrl:successful-report')]">
       <xsl:with-param name="title" select="@name"/>
     </xsl:apply-templates>
   </xsl:template>
