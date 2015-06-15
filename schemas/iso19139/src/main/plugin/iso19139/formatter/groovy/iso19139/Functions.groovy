@@ -1,14 +1,12 @@
 package iso19139
 
-import com.google.common.xml.XmlEscapers
-
 public class Functions {
     static final def CHAR_PATTERN = /\W/
 
     def handlers;
     def f
     def env
-    def commonHandlers
+    common.Handlers commonHandlers
 
     def clean = { text ->
         if (text == null) {
@@ -39,15 +37,13 @@ public class Functions {
      * @return
      */
     def isoTextEl(node, text) {
-        return commonHandlers.func.textEl(f.nodeLabel(node), XmlEscapers.xmlContentEscaper().escape(text))
+        return commonHandlers.func.textEl(f.nodeLabel(node), text)
     }
     /**
      * A shortcut for: commonHandlers.func.textEl(node), text))
      * @return
      */
     def isoUrlEl(node, href, text) {
-        return commonHandlers.func.urlEl(f.nodeLabel(node),
-                XmlEscapers.xmlAttributeEscaper().escape(href),
-                XmlEscapers.xmlContentEscaper().escape(text))
+        return commonHandlers.func.urlEl(f.nodeLabel(node), href, text)
     }
 }
