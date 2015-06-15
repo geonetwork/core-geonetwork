@@ -1,145 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:wmc="http://www.opengis.net/context"
+                xmlns:wmc11="http://www.opengeospatial.net/context"
+                xmlns:ows-context="http://www.opengis.net/ows-context"
+                xmlns:ows="http://www.opengis.net/ows"
+                xmlns:gts="http://www.isotc211.org/2005/gts"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:saxon="http://saxon.sf.net/"
+                xmlns:math="http://exslt.org/math"
+                exclude-result-prefixes="#all">
 
-<xsl:stylesheet version="1.0" 	xmlns    ="http://www.isotc211.org/2005/gmd"
-								xmlns:wmc="http://www.opengis.net/context"
-								xmlns:wmc11="http://www.opengeospatial.net/context"                              								
-								xmlns:gco="http://www.isotc211.org/2005/gco"
-								xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-								xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:template match="*" mode="RespParty">
 
-	<!-- ============================================================================= -->
+    <xsl:for-each select="wmc:ContactPersonPrimary/wmc:ContactPerson|
+                          wmc11:ContactPersonPrimary/wmc11:ContactPerson|
+                          ows:ServiceContact/ows:IndividualName">
+      <gmd:individualName>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:individualName>
+    </xsl:for-each>
 
-	<xsl:template match="*" mode="RespParty">
+    <xsl:for-each select="wmc:ContactPersonPrimary/wmc:ContactOrganization|
+                          wmc11:ContactPersonPrimary/wmc11:ContactOrganization|
+                          ../ows:ProviderName">">
+      <gmd:organisationName>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:organisationName>
+    </xsl:for-each>
 
-		<xsl:for-each select="wmc:ContactPersonPrimary/wmc:ContactPerson
-			|wmc11:ContactPersonPrimary/wmc11:ContactPerson">
-			<individualName>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</individualName>
-		</xsl:for-each>
+    <xsl:for-each select="wmc:ContactPosition|
+                          wmc11:ContactPosition|
+                          ows:ServiceContact/ows:PositionName">
+      <gmd:positionName>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:positionName>
+    </xsl:for-each>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <gmd:contactInfo>
+      <gmd:CI_Contact>
+        <xsl:apply-templates select="." mode="Contact"/>
+      </gmd:CI_Contact>
+    </gmd:contactInfo>
 
-		<xsl:for-each select="wmc:ContactPersonPrimary/wmc:ContactOrganization
-			|wmc11:ContactPersonPrimary/wmc11:ContactOrganization">
-			<organisationName>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</organisationName>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="wmc:ContactPosition|wmc11:ContactPosition">
-			<positionName>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</positionName>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-			<contactInfo>
-				<CI_Contact>
-					<xsl:apply-templates select="." mode="Contact"/>
-				</CI_Contact>
-			</contactInfo>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<role>
-			<CI_RoleCode codeList="./resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact" />
-		</role>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
-	<xsl:template match="*" mode="Contact">
-
-		<phone>
-			<CI_Telephone>
-				<xsl:for-each select="wmc:ContactVoiceTelephone|wmc11:ContactVoiceTelephone">
-					<voice>
-						<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-					</voice>
-				</xsl:for-each>
-	
-				<xsl:for-each select="wmc:ContactFacsimileTelephone|wmc11:ContactFacsimileTelephone">
-					<facsimile>
-						<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-					</facsimile>
-				</xsl:for-each>
-			</CI_Telephone>
-		</phone>
-	
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="wmc:ContactAddress|wmc11:ContactAddress">
-			<address>
-				<CI_Address>
-					<xsl:apply-templates select="." mode="Address"/>
-				</CI_Address>
-			</address>
-		</xsl:for-each>
-
-		<!--cntOnLineRes-->
-		<!--cntHours -->
-		<!--cntInstr -->
-
-	</xsl:template>
+    <gmd:role>
+      <gmd:CI_RoleCode 
+        codeList="./resources/codeList.xml#CI_RoleCode" 
+        codeListValue="{if (ows:ServiceContact/ows:Role) then ows:ServiceContact/ows:Role else 'pointOfContact'}"/>
+    </gmd:role>
+  </xsl:template>
 
 
-	<!-- ============================================================================= -->
 
-	<xsl:template match="*" mode="Address">
 
-		<xsl:for-each select="wmc:Address|wmc11:Address">
-			<deliveryPoint>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</deliveryPoint>
-		</xsl:for-each>
+  <xsl:template match="*" mode="Contact">
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <gmd:phone>
+      <gmd:CI_Telephone>
+        <xsl:for-each select="wmc:ContactVoiceTelephone|
+                              wmc11:ContactVoiceTelephone|
+                              ows:ContactInfo/ows:Phone">
+          <gmd:voice>
+            <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+          </gmd:voice>
+        </xsl:for-each>
+      </gmd:CI_Telephone>
+    </gmd:phone>
 
-		<xsl:for-each select="wmc:City|wmc11:City">
-			<city>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</city>
-		</xsl:for-each>
+    <xsl:for-each select="wmc:ContactAddress|wmc11:ContactAddress|ows:ContactInfo/ows:Address">
+      <gmd:address>
+        <gmd:CI_Address>
+          <xsl:apply-templates select="." mode="Address"/>
+        </gmd:CI_Address>
+      </gmd:address>
+    </xsl:for-each>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </xsl:template>
 
-		<xsl:for-each select="wmc:StateOrProvince|wmc11:StateOrProvince">
-			<administrativeArea>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</administrativeArea>
-		</xsl:for-each>
+  <xsl:template match="*" mode="Address">
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <xsl:for-each select="*:Address">
+      <gmd:deliveryPoint>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:deliveryPoint>
+    </xsl:for-each>
 
-		<xsl:for-each select="wmc:PostCode|wmc11:PostCode">
-			<postalCode>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</postalCode>
-		</xsl:for-each>
+    <xsl:for-each select="*:City">
+      <gmd:city>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:city>
+    </xsl:for-each>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <xsl:for-each select="*:StateOrProvince">
+      <gmd:administrativeArea>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:administrativeArea>
+    </xsl:for-each>
 
-		<xsl:for-each select="wmc:Country|wmc11:Country">
-			<country>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</country>
-		</xsl:for-each>
+    <xsl:for-each select="*:PostCode">
+      <gmd:postalCode>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:postalCode>
+    </xsl:for-each>
 
-		<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <xsl:for-each select="*:Country">
+      <gmd:country>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:country>
+    </xsl:for-each>
 
-		<xsl:for-each select="wmc:eMailAdd|wmc11:eMailAdd">
-			<electronicMailAddress>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</electronicMailAddress>
-		</xsl:for-each>
+    <xsl:for-each select="*:eMailAdd|ows:electronMailAddress">
+      <gmd:electronicMailAddress>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:electronicMailAddress>
+    </xsl:for-each>
 
-	</xsl:template>
-
-	<!-- ============================================================================= -->
-
+  </xsl:template>
 </xsl:stylesheet>

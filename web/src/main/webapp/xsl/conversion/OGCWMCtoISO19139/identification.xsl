@@ -1,137 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:wmc="http://www.opengis.net/context"
+                xmlns:wmc11="http://www.opengeospatial.net/context"
+                xmlns:ows-context="http://www.opengis.net/ows-context"
+                xmlns:ows="http://www.opengis.net/ows"
+                xmlns:gts="http://www.isotc211.org/2005/gts"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:saxon="http://saxon.sf.net/"
+                xmlns:math="http://exslt.org/math"
+                exclude-result-prefixes="#all">
+  
+  <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 
-<xsl:stylesheet version="1.0" xmlns ="http://www.isotc211.org/2005/gmd"
-							  xmlns:wmc="http://www.opengis.net/context"
-							  xmlns:wmc11="http://www.opengeospatial.net/context"							  
-							  xmlns:gco="http://www.isotc211.org/2005/gco"
-							  xmlns:gts="http://www.isotc211.org/2005/gts"
-							  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-							  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-							  xmlns:xlink="http://www.w3.org/1999/xlink"
-							  xmlns:math="http://exslt.org/math"
-							  extension-element-prefixes="math">
+  <xsl:template match="*" mode="DataIdentification">
 
-	<!-- ============================================================================= -->
+    <gmd:citation>
+      <gmd:CI_Citation>
+        <gmd:title>
+          <gco:CharacterString><xsl:value-of select="if ($title) then $title else wmc:General/wmc:Title|
+                                                     wmc11:General/wmc11:Title|
+                                                     ows-context:General/ows:Title"/></gco:CharacterString>
+        </gmd:title>
+        <!-- date is mandatory -->
+        <gmd:date>
+          <gmd:CI_Date>
+            <gmd:date>
+              <gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
+            </gmd:date>
+            <gmd:dateType>
+              <gmd:CI_DateTypeCode codeListValue="publication"
+                                   codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" />
+            </gmd:dateType>
+          </gmd:CI_Date>
+        </gmd:date>
+        
+        <gmd:presentationForm>
+          <gmd:CI_PresentationFormCode codeListValue="mapDigital"
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
+          />
+        </gmd:presentationForm>
+      </gmd:CI_Citation>
+    </gmd:citation>
 
-	<xsl:template match="*" mode="DataIdentification">
-		<xsl:param name="topic"/>
-		
-		<citation>
-			<CI_Citation>
-				<title>
-					<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Title
-						|/wmc11:ViewContext/wmc11:General/wmc11:Title"/></gco:CharacterString>
-				</title>
-			</CI_Citation>
-		</citation>
+    <gmd:abstract>
+      <gco:CharacterString><xsl:value-of select="if ($abstract) then $abstract else wmc:General/wmc:Abstract|
+                                                 wmc11:General/wmc11:Abstract|
+                                                 ows-context:General/ows:Abstract"/></gco:CharacterString>
+    </gmd:abstract>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <gmd:status>
+      <gmd:MD_ProgressCode codeList="./resources/codeList.xml#MD_ProgressCode" codeListValue="completed" />
+    </gmd:status>
 
-		<abstract>
-			<gco:CharacterString><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:Abstract
-				|/wmc11:ViewContext/wmc11:General/wmc11:Abstract"/></gco:CharacterString>
-		</abstract>
+    <xsl:for-each select="wmc:General/wmc:ContactInformation|
+                          wmc11:General/wmc11:ContactInformation|
+                          ows-context:General/ows:ServiceProvider">
+      <gmd:pointOfContact>
+        <gmd:CI_ResponsibleParty>
+          <xsl:apply-templates select="." mode="RespParty"/>
+        </gmd:CI_ResponsibleParty>
+      </gmd:pointOfContact>
+    </xsl:for-each>
+    
+    <xsl:if test="$currentuser_name != ''">
+       <gmd:pointOfContact>
+         <gmd:CI_ResponsibleParty>
+           <gmd:individualName>
+             <gco:CharacterString>
+               <xsl:value-of select="$currentuser_name" />
+             </gco:CharacterString>
+           </gmd:individualName>
+           <gmd:organisationName>
+             <gco:CharacterString>
+               <xsl:value-of select="$currentuser_org" />
+             </gco:CharacterString>
+           </gmd:organisationName>
+           <gmd:contactInfo>
+             <gmd:CI_Contact>
+               <!--<gmd:phone>
+                 <gmd:CI_Telephone>
+                   <gmd:voice>
+                     <gco:CharacterString>
+                       <xsl:value-of select="$currentuser_phone" />
+                     </gco:CharacterString>
+                   </gmd:voice>
+                 </gmd:CI_Telephone>
+               </gmd:phone>-->
+               <gmd:address>
+                 <gmd:CI_Address>
+                   <gmd:electronicMailAddress>
+                     <gco:CharacterString>
+                       <xsl:value-of select="$currentuser_mail" />
+                     </gco:CharacterString>
+                   </gmd:electronicMailAddress>
+                 </gmd:CI_Address>
+               </gmd:address>
+             </gmd:CI_Contact>
+           </gmd:contactInfo>
+           <gmd:role>
+             <gmd:CI_RoleCode
+                     codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                     codeListValue="author" />
+           </gmd:role>
+         </gmd:CI_ResponsibleParty>
+       </gmd:pointOfContact>
+      </xsl:if>
 
-		<!--idPurp-->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- TODO: add graphic overview -->
+    
+    <xsl:for-each select="wmc:General/wmc:KeywordList|
+                          wmc11:General/wmc11:KeywordList|
+                          ows-context:General/ows:Keywords">
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <xsl:apply-templates select="." mode="Keywords"/>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+    </xsl:for-each>
+    
+    <gmd:language>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{$lang}"/>
+    </gmd:language>
 
-		<status>
-			<MD_ProgressCode codeList="./resources/codeList.xml#MD_ProgressCode" codeListValue="completed" />
-		</status>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <gmd:topicCategory>
+      <gmd:MD_TopicCategoryCode><xsl:value-of select="$topic"/></gmd:MD_TopicCategoryCode>
+    </gmd:topicCategory>
 
-		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:ContactInformation
-			|/wmc11:ViewContext/wmc11:General/wmc11:ContactInformation">
-			<pointOfContact>
-				<CI_ResponsibleParty>
-					<xsl:apply-templates select="." mode="RespParty"/>
-				</CI_ResponsibleParty>
-			</pointOfContact>
-		</xsl:for-each>
-
-		<!-- resMaint -->
-		<!-- graphOver -->
-		<!-- dsFormat-->
-		
-		<xsl:for-each select="/wmc:ViewContext/wmc:General/wmc:KeywordList
-			|/wmc11:ViewContext/wmc11:General/wmc11:KeywordList">
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
-				</MD_Keywords>
-			</descriptiveKeywords>
-		</xsl:for-each>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<topicCategory>
-			<MD_TopicCategoryCode><xsl:value-of select="$topic"/></MD_TopicCategoryCode>
-		</topicCategory>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<xsl:choose>
-			<xsl:when test="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@SRS='EPSG:4326'
-				or /wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@SRS='EPSG:4326'">
-				<extent>
-				<EX_Extent>
-					<geographicElement>
-						<EX_GeographicBoundingBox>
-							<westBoundLongitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@minx
-									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@minx"/></gco:Decimal>
-							</westBoundLongitude>
-							<eastBoundLongitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxx
-									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@maxx"/></gco:Decimal>
-							</eastBoundLongitude>
-							<southBoundLatitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@miny
-									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@miny"/></gco:Decimal>
-							</southBoundLatitude>
-							<northBoundLatitude>
-								<gco:Decimal><xsl:value-of select="/wmc:ViewContext/wmc:General/wmc:BoundingBox/@maxy
-									|/wmc11:ViewContext/wmc11:General/wmc11:BoundingBox/@maxy"/></gco:Decimal>
-							</northBoundLatitude>
-						</EX_GeographicBoundingBox>
-					</geographicElement>
-				</EX_Extent>
-			</extent>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- TODO support other SRS as EX_BoundingPolygon  -->
-			</xsl:otherwise>
-		</xsl:choose>
-		
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-
-	</xsl:template>
+  </xsl:template>
 
 
 
-	<!-- ============================================================================= -->
-	<!-- === Keywords === -->
-	<!-- ============================================================================= -->
+  <xsl:template match="*" mode="Keywords">
+    <xsl:for-each select=".//*:Keyword">
+      <gmd:keyword>
+        <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+      </gmd:keyword>
+    </xsl:for-each>
 
-	<xsl:template match="*" mode="Keywords">
+    <gmd:type>
+      <gmd:MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+    </gmd:type>
 
-		<xsl:for-each select="Keyword">
-			<keyword>
-				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-			</keyword>
-		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<type>
-			<MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
-		</type>
-
-	</xsl:template>
-
-	<!-- ============================================================================= -->
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -153,16 +153,21 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 		if (Log.isDebugEnabled(Geonet.LDAP)) {
 			Log.debug(Geonet.LDAP, "  Assigning profile " + profileName);
 		}
-		Profile profile = Profile.valueOf(profileName);
-		if (profile != null) {
-			userDetails.getUser().setProfile(profile);
-			if (profileList != null) {
-				profileList.add(profile);
-			}
-		} else {
-			Log.error(Geonet.LDAP, "  Profile " + profileName
-					+ " does not exist.");
-		}
+        try {
+            Profile profile = Profile.valueOf(profileName);
+            if (profile != null) {
+                userDetails.getUser().setProfile(profile);
+                if (profileList != null) {
+                    profileList.add(profile);
+                }
+            } else {
+                Log.error(Geonet.LDAP, "  Profile " + profileName
+                        + " does not exist.");
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.LDAP, "  Profile " + profileName
+                    + " is not a valid profile. " + e.getMessage());
+        }
 	}
 
 	@Override
