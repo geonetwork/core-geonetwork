@@ -492,7 +492,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                             '&id=' + ids.join(',') +
                             '&multiple=' + (ids.length > 1 ? true : false) +
                             transfo+
-                            '&lang=eng,fre';;
+                            '&lang=' + this.lang.join(',');
         
         // Call transformation service
         Ext.Ajax.request({
@@ -596,7 +596,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     initKeywordStore: function () {
         var self = this;
-        
+
         
         // Define which field to use as identifier.
         // As far as the keyword label is stored in the metadata
@@ -670,8 +670,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             this.selectedKeywordStore.on('add', cb, this);
             this.selectedKeywordStore.on('remove', cb, this);
         }
-        
-        
+
         this.loadingKeywordStore = new Ext.data.Store({
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
@@ -814,6 +813,7 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
                     mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,
                     imagePath: cfg.imagePath,
+                    lang: jsonConfig.mdLang || ['fre'],
                     maxKeywords: jsonConfig.maxKeywords,
                     searchOnLoad: jsonConfig.searchOnLoad == 'true',
                     transformations: jsonConfig.transformations,

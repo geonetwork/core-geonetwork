@@ -1359,8 +1359,8 @@
     </xsl:call-template>
     
   </xsl:template>
-  
-  
+
+
   <xsl:template name="snippet-editor">
     <xsl:param name="elementRef"/>
     <xsl:param name="widgetMode" select="''"/>
@@ -1379,6 +1379,7 @@
       config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
       }', maxKeywords: {$maxKeywords}, searchOnLoad: '{$searchOnLoad}', keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
+      }], mdLang: ['{$metadata/gmd:language/gmd:LanguageCode/@codeListValue}'{if ($metadata//gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue) then concat(',&quot;', string-join($metadata//gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue, '&quot;,&quot;'), '&quot;') else ''
       }], transformation: '{$transformation
       }', identificationMode: '{$identificationMode}', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
     
