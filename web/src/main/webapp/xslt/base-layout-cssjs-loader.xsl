@@ -101,24 +101,6 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <!-- Load JS libs required for 3D maps when enabled
-    Those scripts are not bundle by Wro4j to avoid to increase size
-    of the bundle when 3D mode is not anabled.
-    -->
-    <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
-      <xsl:choose>
-        <xsl:when test="/root/request/debug">
-          <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
-          <script src="{$uiResourcesPath}lib/ol3cesium/ol3cesium.js"></script>
-        </xsl:when>
-        <xsl:otherwise>
-          <script src="{/root/gui/url}/static/libcesium.js"></script>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-
-
 
     <xsl:choose>
         <xsl:when test="/root/request/debug">
@@ -135,6 +117,26 @@
     </xsl:choose>
 
 
+    <!-- Load JS libs required for 3D maps when enabled
+    Those scripts are not bundle by Wro4j to avoid to increase size
+    of the bundle when 3D mode is not anabled.
+    -->
+    <xsl:if test="$is3DModeAllowed">
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';</script>
+
+
+      <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
+      <script src="{$uiResourcesPath}lib/ol3cesium/ol3cesium.js"></script>
+      <!--
+      Wro4j combining the 2 lib in one JS does not work.
+      <xsl:choose>
+        <xsl:when test="/root/request/debug">
+        </xsl:when>
+        <xsl:otherwise>
+          <script src="{/root/gui/url}/static/libcesium.js"></script>
+        </xsl:otherwise>
+      </xsl:choose>-->
+    </xsl:if>
 
 
 
