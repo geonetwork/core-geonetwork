@@ -30,6 +30,9 @@ INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('map/is3DModeAllowed', 'false', 2, 9593, 'n');
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('map/isSaveMapInCatalogAllowed', 'false', 2, 9594, 'n');
+
 UPDATE Settings SET value='3.0.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
