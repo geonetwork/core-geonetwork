@@ -170,9 +170,9 @@
              scope.elementRefBackup = scope.elementRef;
              scope.invalidKeywordMatch = false;
              scope.selected = [];
-             scope.initialKeywords = scope.keywords ?
-               scope.keywords.split('|') : [];
-             /* from GN scope.initialKeywords = [];
+             //scope.initialKeywords = scope.keywords ?
+             //  scope.keywords.split('|') : [];
+             scope.initialKeywords = [];
              if (scope.keywords) {
                var buffer = '';
                for (var i = 0; i < scope.keywords.length; i++) {
@@ -192,7 +192,7 @@
                  scope.initialKeywords.push(buffer);
                }
              }
-	     */
+
              scope.transformationLists =
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
