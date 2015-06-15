@@ -1188,12 +1188,6 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
 
-    <!--TEMP TO REMOVE-->
-    <repository>
-      <id>oss.sonatype.org-orgmapfish-1015</id>
-      <name>Temp repository to test mapfish print 2.1.1</name>
-      <url>https://oss.sonatype.org/content/repositories/orgmapfish-1015/</url>
-    </repository>
   </repositories>
 
 
