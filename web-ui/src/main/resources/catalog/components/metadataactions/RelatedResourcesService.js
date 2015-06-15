@@ -26,9 +26,11 @@
         'gnSearchSettings',
         'ngeoDecorateLayer',
         'gnSearchLocation',
+        'gnOwsContextService',
         'gnWfsService',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, 
-            ngeoDecorateLayer, gnSearchLocation, gnWfsService) {
+            ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
+                 gnWfsService) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -107,6 +109,13 @@
             gnSearchLocation.setMap();
           };
 
+          var addMapToMap = function(record, md) {
+            gnOwsContextService.loadContextFromUrl(record.url,
+               gnSearchSettings.viewerMap, true);
+
+            gnSearchLocation.setMap();
+          };
+
           var openMd = function(record, md) {
             return window.location.hash = '#/metadata/' +
                 (record.uuid || record['geonet:info'].uuid);
@@ -136,6 +145,11 @@
               iconClass: 'fa-link',
               label: 'webserviceLink',
               action: addWFSToMap
+            },
+            'MAP' : {
+              iconClass: 'fa-globe',
+              label: 'mapLink',
+              action: addMapToMap
             },
             'DB' : {
               iconClass: 'fa-database',
@@ -220,6 +234,8 @@
                 return 'WMTS';
               } else if (protocolOrType.match(/wfs/i)) {
                 return 'WFS';
+              } else if (protocolOrType.match(/ows-c/i)) {
+                return 'MAP';
               } else if (protocolOrType.match(/db:/i)) {
                 return 'DB';
               } else if (protocolOrType.match(/file:/i)) {

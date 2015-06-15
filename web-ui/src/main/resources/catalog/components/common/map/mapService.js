@@ -1141,7 +1141,6 @@
             map.addLayer(this.createOlWMTSFromCap(map,
                 getCapLayer, capabilities));
           },
-
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
