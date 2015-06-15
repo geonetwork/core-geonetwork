@@ -306,7 +306,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdRelationDelete: serviceUrl + 'xml.relation.delete',
             mdRelation: serviceUrl + 'xml.relation',
             mdGetThumbnail: serviceUrl + 'metadata.thumbnail',
-            mdSetThumbnail: serviceUrl + 'metadata.thumbnail.set.new',
+            mdSetThumbnail: serviceUrl + 'md.thumbnail.upload',
             mdUnsetThumbnail: serviceUrl + 'metadata.thumbnail.unset.new',
             mdImport: serviceUrl + 'metadata.xmlinsert.form',
             mdStatus: serviceUrl + 'metadata.status.form',
