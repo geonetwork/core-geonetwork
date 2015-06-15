@@ -4440,6 +4440,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
         <label>Type de couplage</label>
         <description>Type de couplage</description>
     </element>
+    <element name="srv:SV_CouplingType">
+        <label>Type de couplage</label>
+        <description>Type de couplage</description>
+    </element>
     <element name="srv:extent">
         <label>Extension</label>
         <description>Extension géographique/temporelle du service</description>

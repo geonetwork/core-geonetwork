@@ -2702,6 +2702,10 @@
 		<label>Coupling Type</label>
 		<description>Type of Coupling</description>
 	</element>
+	<element name="srv:SV_CouplingType">
+		<label>Coupling Type</label>
+		<description>Type of Coupling</description>
+	</element>
 	<element name="srv:extent">
 		<label>Extent</label>
 		<description>Geographic/Temporal Extent of Service</description>
