@@ -76,8 +76,12 @@
                     '{{' + fieldName + '}}',
                     value.replace(/\&/g, '&amp;amp;')
                          .replace(/\"/g, '&quot;'));
-                updated = true;
+              } else {
+                xmlSnippet = xmlSnippet.replace(
+                    '{{' + fieldName + '}}',
+                    '');
               }
+              updated = true;
             });
 
             // Usually when a template field is link to a
