@@ -74,7 +74,7 @@
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
 
-        <xsl:if test="$angularApp = 'gn_search'">
+        <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_editor'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <!-- Jsonix resources (OWS Context) -->
           <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
