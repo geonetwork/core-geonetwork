@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import java.io.File;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +36,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 /**
