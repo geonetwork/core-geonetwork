@@ -318,7 +318,8 @@
       data-label="{$labelConfig/label}"
       data-element-name="{name(gco:Date|gco:DateTime)}"
       data-element-ref="{concat('_X', gn:element/@ref)}"
-      data-required="{$isRequired}">
+      data-required="{$isRequired}"
+      data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
     </div>
   </xsl:template>
 
