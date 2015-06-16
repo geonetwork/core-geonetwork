@@ -106,7 +106,11 @@
                     f.layer = layer.get('label');
                   });
                   fo.getFeatures().extend(features);
-                  overlay.setPosition(coordinate);
+                  if (features.length>0) {
+                    overlay.setPosition(coordinate);
+                  } else {
+                    overlay.setPosition();
+                  }
                 }
                 scope.pending = Math.max(0, scope.pending - 1);
               }).error(function() {
