@@ -14,7 +14,14 @@
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*|@*" priority="1000"/>
+  <xsl:template mode="mode-iso19139"
+                match="gn:*|@gn:*|@*"
+                priority="1000"/>
+
+  <!-- Ignore group element. -->
+  <xsl:template mode="mode-iso19139"
+                match="gml:*[starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT')]"
+                priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
