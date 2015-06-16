@@ -23,18 +23,20 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Constants;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.jdom.Element;
-
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.Constants;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.jdom.Element;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
@@ -44,7 +46,6 @@ import java.nio.file.Path;
 public class EditFile extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-
         String xslid = Util.getParam(params, Params.ID);
         String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
         String schema = Util.getParam(params, Params.SCHEMA, null);
@@ -54,6 +55,13 @@ public class EditFile extends AbstractFormatService implements Service {
         }
 
         Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
+
+        // Check that the requested file is actually nested into formatDir
+        String absformatDir = formatDir.toAbsolutePath().toString();
+        String absFile = formatDir.resolve(file).toAbsolutePath().toString();
+        if (! absFile.startsWith(absformatDir)) {
+            throw new BadParameterEx("fname", absFile);
+        }
 
         Element result = new Element("data");
 
