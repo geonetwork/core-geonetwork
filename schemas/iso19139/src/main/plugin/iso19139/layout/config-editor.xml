@@ -182,6 +182,7 @@
       <name>gmd:dataSetURI</name>
       <name>gmd:postalCode</name>
       <name>gmd:city</name>
+      <name>gmd:language</name>
       <name>gmd:administrativeArea</name>
       <name>gmd:voice</name>
       <name>gmd:facsimile</name>
