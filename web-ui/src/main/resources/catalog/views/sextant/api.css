@@ -189,6 +189,9 @@ yx-axis
 */
   /* Pagination */
 }
+.gn button {
+  text-shadow: none;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
@@ -10253,6 +10256,7 @@ yx-axis
   width: 2.2em;
   padding: 4px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+  height: 2em;
 }
 .gn [sxt-main-viewer] .sxt-panel-toggle.active,
 .gn [sxt-main-viewer] .main-tools button.active,
@@ -10302,10 +10306,12 @@ yx-axis
   border-radius: 0;
   margin-top: -6px;
 }
-.gn [sxt-main-viewer] [gn-baselayerswitcher] {
+.gn [sxt-main-viewer] [gn-baselayerswitcher],
+.gn [sxt-main-viewer] [gn-terrain-switcher] {
   margin: 1em 0;
 }
-.gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle {
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle {
   margin: 0 -15px;
   background: transparent;
   border: 1px solid #ddd;
@@ -10313,10 +10319,12 @@ yx-axis
   border-width: 1px 0;
   padding: .5em;
 }
-.gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle .baselayer-title {
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle .baselayer-title,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle .baselayer-title {
   color: #4ba2d9;
 }
-.gn [sxt-main-viewer] [gn-baselayerswitcher] .btn {
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .btn,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .btn {
   border-radius: 0;
 }
 .gn [sxt-main-viewer] .panel-tools-container {
@@ -10343,7 +10351,8 @@ yx-axis
 .gn [sxt-main-viewer] .panel-tools.force-hide {
   display: none;
 }
-.gn [sxt-main-viewer] [gn-mapprint] button {
+.gn [sxt-main-viewer] [gn-mapprint] button,
+.gn [sxt-main-viewer] [gn-ows-context] button {
   width: 100%;
 }
 .gn [sxt-main-viewer] .sx-toolbar {
@@ -10974,6 +10983,7 @@ yx-axis
   display: inline-block;
   position: relative;
   margin: 2em 0 0 90px;
+  border: 1px solid #ccc;
 }
 .gn .gn-metadata-view .coord {
   position: absolute;
@@ -13560,7 +13570,7 @@ yx-axis
 .gn ul.gn-resultview li.gn-grid .md-abstract {
   float: left;
   color: #808080;
-  width: calc(66% - 1em);
+  width: calc(65% - 1em);
   margin-bottom: .3em;
   font-size: 12px;
 }
@@ -13774,7 +13784,7 @@ yx-axis
   right: 1.1em;
   top: 1.5em;
   bottom: 0;
-  z-index: 100;
+  z-index: 1100;
 }
 .gn [gn-metadata-display] .overview .gn-metadata-display {
   margin: 2em 0 0 -2em;

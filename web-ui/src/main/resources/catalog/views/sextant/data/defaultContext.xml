@@ -46,13 +46,15 @@
             <ows-context:StyleList/>
         </ows-context:Layer>
 <!--
-        <ows-context:Layer queryable="false" name="{type=wmts,name=emodnet:mean_multicolour}" hidden="true" opacity="1" group="Background layers">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Emodnet MNT</ows:Title>
-            <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://c6.geosrv.eu/wmts?Service=WMTS&amp;request=getcapabilities"/>
-            </ows-context:Server>
-            <ows-context:StyleList/>
-        </ows-context:Layer>
+        <ows-context:Layer name="{type=wmts,name=emodnet:mean_multicolour}"
+                           group="Background layers"
+                           hidden="true" opacity="1">
+          <ows:Title xmlns:ows="http://www.opengis.net/ows">Emodnet MNT</ows:Title>
+          <ows-context:Server service="urn:ogc:serviceType:WMS">
+            <ows-context:OnlineResource
+                    xlink:href="http://ows.emodnet-bathymetry.eu/wmts?"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"/>
+          </ows-context:Server>
 -->
     </ows-context:ResourceList>
 </ows-context:OWSContext>

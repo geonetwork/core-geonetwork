@@ -36,7 +36,7 @@
       <ows:Title xmlns:ows="http://www.opengis.net/ows">Emodnet MNT</ows:Title>
       <ows-context:Server service="urn:ogc:serviceType:WMS">
         <ows-context:OnlineResource
-                xlink:href="http://ows.emodnet-bathymetry.eu/gwc/service/wmts?"
+                xlink:href="http://ows.emodnet-bathymetry.eu/wmts?"
                 xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </ows-context:Server>
     </ows-context:Layer>
@@ -59,7 +59,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </ows-context:Server>
     </ows-context:Layer>
-    <ows-context:Layer name="CPERM_1069 LIOCDEP Abondance"
+    <ows-context:Layer name="CPERM_1069 LIOCDEP"
                        group="/Especes/Arthropoda/Malacostraca/Decapoda"
                        groupcombo="species" hidden="true" opacity="1">
       <ows:Title xmlns:ows="http://www.opengis.net/ows">Liocarcinus depurator

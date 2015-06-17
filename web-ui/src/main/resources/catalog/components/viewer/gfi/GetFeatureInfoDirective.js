@@ -26,7 +26,8 @@
       return {
         restrict: 'A',
         scope: {
-          map: '='
+          map: '=',
+          dismiss: '@'
         },
         templateUrl: gfiTemplateURL,
         link: function(scope, element, attrs) {
@@ -54,7 +55,19 @@
             overlay.setPosition(undefined);
           };
 
+          var dismiss = false;
+          map.on('click', function(e) {
+            if (scope.dismiss && $(scope.dismiss).length>0) {
+              dismiss = true;
+            }
+          });
           map.on('singleclick', function(e) {
+
+            if (dismiss) {
+              dismiss = false;
+              return;
+            }
+
 
             for (var i = 0; i < map.getInteractions().getArray().length; i++) {
               var interaction = map.getInteractions().getArray()[i];
@@ -106,7 +119,11 @@
                     f.layer = layer.get('label');
                   });
                   fo.getFeatures().extend(features);
-                  overlay.setPosition(coordinate);
+                  if (features.length>0) {
+                    overlay.setPosition(coordinate);
+                  } else {
+                    overlay.setPosition();
+                  }
                 }
                 scope.pending = Math.max(0, scope.pending - 1);
               }).error(function() {
