@@ -78,7 +78,8 @@
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
         <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
-        <facet name="status" indexKey="_status" label="status"/>
+        <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
+        <facet name="status" indexKey="cl_status" label="status"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="thesaurus-external.parameter.NVS.P01"
@@ -110,6 +111,7 @@
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="orgName" max="15"/>
             <item facet="metadataPOC" max="15"/>
+            <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
@@ -127,7 +129,7 @@
           <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="category" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
-          <item facet="status" max="10" sortBy="value"
+          <item facet="mdStatus" max="10" sortBy="value"
                 translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
           <item facet="isValid" max="3" sortBy="value"/>
           <item facet="groupOwner" max="199" sortBy="value"

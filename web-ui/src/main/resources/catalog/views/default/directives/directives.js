@@ -62,7 +62,7 @@
           });
           
           scope.isWorkflowEnabled = function(md) {
-            var st = md.status;
+            var st = md.mdStatus;
             var res = st && 
                   //Status is unknown
                   (!isNaN(st) && st != '0');
@@ -75,9 +75,7 @@
                 }
               });
             }
-            
             return res;
-
           };
         }
       };

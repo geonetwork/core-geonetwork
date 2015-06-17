@@ -128,7 +128,8 @@
       <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
       <field name="credit" tagName="credit"/>
-      <field name="cl_status_text" tagName="status_text" multilingualSortField="true"/>
+      <field name="cl_status" tagName="status"/>
+      <field name="cl_status_text" tagName="status_text"/>
       <field name="updateFrequency" tagName="updateFrequency"/>
       <field name="lineage" tagName="lineage"/>
       <field name="responsibleParty" tagName="responsibleParty"/>
@@ -156,6 +157,7 @@
       <field name="standardName" tagName="standardName"/>
       <field name="sextantTheme" tagName="sextantTheme"/>
       <field name="_logo" tagName="logo"/>
+      <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
     </dumpFields>
