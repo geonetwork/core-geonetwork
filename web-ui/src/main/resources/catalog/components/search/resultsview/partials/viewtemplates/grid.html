@@ -49,6 +49,11 @@
           <img class="gn-img-thumbnail"
                data-ng-src="{{md.getThumbnails().list[0].url}}"
                data-ng-if="md.getThumbnails().list[0].url"/>
+
+          <!-- Display the first metadata status (apply to ISO19139 record) -->
+          <div data-ng-if="md.status_text.length > 0"
+               title="{{md.status_text[0]}}"
+               class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}</div>
         </div>
         
         <div style="float:left; display:block; width: calc(100% - 162px)">

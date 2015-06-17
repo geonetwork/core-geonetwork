@@ -507,6 +507,7 @@
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'status', 'status_text',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       this.linksCache = [];
