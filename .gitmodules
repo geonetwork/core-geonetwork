@@ -10,3 +10,6 @@
 [submodule "web-ui/src/main/resources/catalog/lib/style/font-awesome"]
 	path = web-ui/src/main/resources/catalog/lib/style/font-awesome
 	url = https://github.com/FortAwesome/Font-Awesome.git
+[submodule "schemas/iso19115-3"]
+	path = schemas/iso19115-3
+	url = https://github.com/camptocamp/iso19115-3.git
