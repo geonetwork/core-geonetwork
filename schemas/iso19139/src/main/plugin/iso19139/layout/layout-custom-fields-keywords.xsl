@@ -115,7 +115,7 @@
         <xsl:variable name="thesaurusInternalKey"
           select="if ($thesaurusIdentifier)
           then $thesaurusIdentifier
-          else thesaurusConfig/key"/>
+          else $thesaurusConfig/key"/>
         <xsl:variable name="thesaurusKey"
                       select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
