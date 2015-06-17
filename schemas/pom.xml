@@ -24,6 +24,7 @@
     <module>csw-record</module>
     <module>dublin-core</module>
     <module>iso19110</module>
+    <module>iso19115-3</module>
     <module>iso19139</module>
     <module>iso19139.sextant</module>
     <module>iso19139.myocean</module>

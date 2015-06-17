@@ -508,6 +508,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19115-3</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19110</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -587,6 +592,10 @@
                 -->
                 <resource>
                   <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19115-3/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>
