@@ -14,7 +14,7 @@
 	<!-- ================================================================= -->
 
 	<xsl:template match="/root">
-		<xsl:apply-templates select="gmd:MD_Metadata"/>
+		<xsl:apply-templates select="*:MD_Metadata"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
