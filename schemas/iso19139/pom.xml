@@ -34,6 +34,31 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>${groupId}</groupId>
+        <artifactId>transifex</artifactId>
+        <version>${version}</version>
+        <executions>
+          <execution>
+            <id>get-translations</id>
+            <goals>
+              <goal>get-translations</goal>
+              <goal>update-transifex</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <files>
+            <file>
+              <id>iso19193-schema-labels</id>
+              <name>Iso19139 Labels</name>
+              <formatClass>SchemaPluginLabelsFormat</formatClass>
+              <path>src/main/plugin/iso19139/loc</path>
+            </file>
+          </files>
+
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
