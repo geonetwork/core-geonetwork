@@ -414,6 +414,7 @@
       <xsl:param name="schema"/>
       <xsl:param name="langId" />
       <xsl:param name="edit" select="false()"/>
+      <xsl:param name="class" select="''"/>
       <xsl:param name="validator" />
           <xsl:choose>
               <xsl:when test="not(gco:*)">
@@ -423,6 +424,7 @@
                           <xsl:with-param name="schema" select="$schema" />
                           <xsl:with-param name="langId" select="$langId" />
                           <xsl:with-param name="validator" select="$validator" />
+                          <xsl:with-param name="class" select="$class"/>
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
@@ -433,6 +435,7 @@
                             <xsl:with-param name="schema" select="$schema" />
                             <xsl:with-param name="langId" select="$langId" />
                             <xsl:with-param name="validator" select="$validator" />
+                            <xsl:with-param name="class" select="$class"/>
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:otherwise>
@@ -470,6 +473,7 @@
             <xsl:with-param name="edit" select="$edit"/>
             <xsl:with-param name="langId" select="$langId" />
             <xsl:with-param name="validator" select="$validator"/>
+            <xsl:with-param name="class" select="$class"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
