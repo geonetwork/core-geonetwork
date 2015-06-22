@@ -1091,13 +1091,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             // matched with GUI language in order to edit by default
             // element
             // in GUI language. If none, default language is selected.
+            var updateInput;
             for (i = 0; i < input.options.length; i ++) {
                 if (input.options[i].getAttribute("code").toLowerCase() === this.lang) {
                     input.options[i].selected = true;
                     i = input.options.length;
+                    updateInput = input;
                 }
             }
-            // FIXME this.enableLocalInput(input, false);
+            if (updateInput) {
+                enableLocalInput(updateInput, false);
+            }
         }, this);
         
         // --- display validator events when needed.
