@@ -701,6 +701,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var Filter_1_1_0_Module = Filter_1_1_0_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, deps: string[], tis: *[], eis: *[]}|Filter_1_1_0}
+     */
     module.exports.Filter_1_1_0 = Filter_1_1_0_Module.Filter_1_1_0;
   }
   else {

@@ -463,6 +463,10 @@ if (typeof define === 'function' && define.amd) {
 }
 else {
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, tis: *[], eis: *[]}|Filter_1_0_0}
+     */
     module.exports.Filter_1_0_0 = Filter_1_0_0_Module_Factory().Filter_1_0_0;
   }
   else {
