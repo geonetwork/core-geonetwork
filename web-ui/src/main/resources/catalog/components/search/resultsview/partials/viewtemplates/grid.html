@@ -29,6 +29,12 @@
                 <span class="fa gn-icon-{{cat}}"></span>
             </i>
           </a>
+          <a data-ng-repeat="t in md.inspiretheme"
+             data-ng-href="#/search?inspiretheme={{t}}">
+            <i class="fa" title="{{t | translate}}">
+              <span class="fa iti-{{getInspireIcon(t)}}"></span>
+            </i>
+          </a>
           <a data-ng-repeat="t in md.topicCat"
              data-ng-href="#/search?topicCat={{t}}">
             <i class="fa" title="{{t | translate}}">

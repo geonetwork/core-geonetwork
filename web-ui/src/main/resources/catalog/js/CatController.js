@@ -33,10 +33,10 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location',
+    'gnGlobalSettings', '$location', 'gnUtilityService',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location) {
+            gnGlobalSettings, $location, gnUtilityService) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -55,6 +55,7 @@
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
 
+      $scope.getInspireIcon = gnUtilityService.getInspireIcon;
 
       $scope.pages = {
         home: 'home',

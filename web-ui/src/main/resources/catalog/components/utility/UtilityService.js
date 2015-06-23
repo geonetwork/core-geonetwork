@@ -196,6 +196,52 @@
       return (arrData);
     };
 
+    /**
+     * Return the INSPIRE theme acronym
+     * @param {string} englishLabel
+     * @return {string} the acronym or the label if not found
+     */
+    var getInspireIcon = function(englishLabel) {
+      var map = {
+        'Atmospheric conditions': 'ac',
+        'Addresses': 'ad',
+        'Agricultural and aquaculture facilities': 'af',
+        'Area management/restriction/regulation zones and reporting units':
+            'am',
+        'Administrative units': 'au',
+        'Bio-geographical regions': 'br',
+        'Buildings': 'bu',
+        'Cadastral parcels': 'cp',
+        'Environmental monitoring facilities': 'ef',
+        'Orthoimagery': 'oi',
+        'Elevation': 'el',
+        'Energy resources': 'er',
+        'Geology': 'ge',
+        'Geographical grid systems': 'gg',
+        'Geographical names': 'gn',
+        'Habitats and biotopes': 'hb',
+        'Human health and safety': 'hh',
+        'Hydrography': 'hy',
+        'Land cover': 'lc',
+        'Land use': 'lu',
+        'Meteorological geographical features': 'mf',
+        'Mineral resources': 'mr',
+        'Natural risk zones': 'nz',
+        'Oceanographic geographical features': 'of',
+        'Orthoimaginary': 'oi',
+        'Population distribution – demography': 'pd',
+        'Production and industrial facilities': 'pf',
+        'Protected sites': 'ps',
+        'Coordinate reference systems': 'rs',
+        'Species distribution': 'sd',
+        'Soil': 'so',
+        'Sea regions': 'sr',
+        'Statistical units': 'su',
+        'Transport networks': 'tn',
+        'Utility and governmental services': 'us'
+      };
+      return map[englishLabel] || englishLabel;
+    };
     return {
       scrollTo: scrollTo,
       isInView: isInView,
@@ -203,7 +249,8 @@
       parseBoolean: parseBoolean,
       toCsv: toCsv,
       CSVToArray: CSVToArray,
-      getUrlParameter: getUrlParameter
+      getUrlParameter: getUrlParameter,
+      getInspireIcon: getInspireIcon
     };
   };
 

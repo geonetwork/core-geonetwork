@@ -113,6 +113,17 @@
 
         <table class="table table-striped">
           <tbody>
+          <tr data-ng-if="mdView.current.record.inspiretheme.length > 0 ||
+                          mdView.current.record.inspiretheme.length > 0">
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <div data-ng-repeat="cat in mdView.current.record.inspiretheme"
+                     class="iti-box full {{getInspireIcon(cat)}} {{getInspireIcon(cat)}}-en">
+                  <div class="icon"><span class="iti-{{getInspireIcon(cat)}}"></span></div>
+                  <p class="label"></p>
+                </div>
+              </td>
+            </tr>
             <tr data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
               <th data-translate="">listOfCategories</th>
