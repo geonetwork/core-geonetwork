@@ -236,7 +236,7 @@ span.gn-facet-label:first-letter {
 
 [ngeo-map] {
   width: 100%;
-  height: 200px;
+  height: 250px;
 }
 
 .collapse-text-toggle {
@@ -371,27 +371,18 @@ span.gn-facet-label:first-letter {
 
   [gn-map-field],
   [data-gn-map-field] {
-    border: 1px solid @btn-default-border;
-    border-radius: 3px;
-    position: relative;
-    [gn-draw-bbox-btn],
-    .btn-group-vertical,
-    .dropdown{
-      position: absolute;
+    .gn-draw-btn,
+    .btn-group-vertical {
       top: 4px;
+      position: absolute;
       z-index: 10;
+    }
+    .btn-group-vertical {
       right: 4px;
     }
-    [gn-draw-bbox-btn] {
+
+    .gn-draw-btn {
       left: 4px;
-    }
-    .dropdown {
-      left: 4px;
-      top: initial;
-      bottom: 4px;
-      .dropdown-menu {
-        font-size: 90%;
-      }
     }
   }
 }

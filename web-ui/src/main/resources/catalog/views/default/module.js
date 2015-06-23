@@ -71,6 +71,7 @@
       var searchMap = gnSearchSettings.searchMap;
 
 
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.gnWmsQueue = gnWmsQueue;
@@ -217,7 +218,10 @@
         from: 1,
         to: 30,
         viewerMap: viewerMap,
-        searchMap: searchMap
+        searchMap: searchMap,
+        mapfieldOption: {
+          relations: ['within']
+        }
       }, gnSearchSettings.sortbyDefault);
 
 
