@@ -263,7 +263,6 @@
     getValidation: 'md.validate@json',
     mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
-    mdGetPDF: 'pdf',
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',

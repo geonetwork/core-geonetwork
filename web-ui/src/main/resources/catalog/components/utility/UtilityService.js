@@ -254,7 +254,6 @@
     };
   };
 
-
   module.factory('gnUtilityService', gnUtilityService);
 
   module.filter('gnFromNow', function() {
