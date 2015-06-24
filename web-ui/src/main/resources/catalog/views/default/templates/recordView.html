@@ -113,13 +113,14 @@
 
         <table class="table table-striped">
           <tbody>
-          <tr data-ng-if="mdView.current.record.inspiretheme.length > 0 ||
-                          mdView.current.record.inspiretheme.length > 0">
+          <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
+                          mdView.current.record.inspirethemewithac.length > 0">
               <th data-translate="">inspireThemes</th>
               <td>
-                <div data-ng-repeat="cat in mdView.current.record.inspiretheme"
-                     class="iti-box full {{getInspireIcon(cat)}} {{getInspireIcon(cat)}}-en">
-                  <div class="icon"><span class="iti-{{getInspireIcon(cat)}}"></span></div>
+                <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                     class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                     title="{{cat.split('|')[1]}}">
+                  <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
                   <p class="label"></p>
                 </div>
               </td>

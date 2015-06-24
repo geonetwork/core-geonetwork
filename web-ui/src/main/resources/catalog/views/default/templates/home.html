@@ -80,12 +80,12 @@
                 <span class="badge">{{facet['@count']}}</span>
               </a>
             </div>-->
-            <div data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemes']"
+            <div data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesWithAc'] track by $index"
                  class="col-xs-6 col-sm-4 col-lg-3"
                  data-ng-show="browse === 'inspire'">
-              <a class="thumbnail gn-icon-bg" data-ng-href="#/search?inspiretheme={{facet['@name']}}">
-                <i class="fa fa-3x gn-icon iti-{{getInspireIcon(facet['@name'])}}"></i><br/>
-                <span class="gn-icon-label">{{facet['@name']}}</span>
+              <a class="thumbnail gn-icon-bg" data-ng-href="#/search?inspiretheme={{facet['@name'].split('|')[1]}}">
+                <i class="fa fa-3x gn-icon iti-{{facet['@name'].split('|')[0]}}"></i><br/>
+                <span class="gn-icon-label">{{facet['@name'].split('|')[1]}}</span>
                 <span class="badge">{{facet['@count']}}</span>
               </a>
             </div>

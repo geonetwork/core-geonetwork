@@ -59,6 +59,7 @@
         <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
         <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
+        <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
@@ -85,6 +86,7 @@
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+            <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="keyword" max="15"/>
             <item facet="orgName" max="25"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>

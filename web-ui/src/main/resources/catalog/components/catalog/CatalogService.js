@@ -505,7 +505,7 @@
       $.extend(true, this, k);
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspireTheme',
+        'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
