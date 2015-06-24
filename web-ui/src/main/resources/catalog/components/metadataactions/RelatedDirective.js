@@ -65,7 +65,7 @@
                 // Do not display add to map action when map
                 // viewer is disabled.
                 if (mainType === 'WMS' &&
-                  gnGlobalSettings.isMapViewerEnabled === false) {
+                   gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
                 return angular.isFunction(
