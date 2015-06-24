@@ -93,7 +93,7 @@
   "View": "View",
   "Other": "Other",
   "export": "Export",
-  "exportXML": "Export (XML ISO19139)",
+  "exportXML": "Export (XML)",
   "exportcheXML": "Export (XML)",
   "exportGM03": "Export (GM03)",
   "exportRDF": "Export (RDF)",
