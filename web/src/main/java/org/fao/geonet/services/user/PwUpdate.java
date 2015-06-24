@@ -20,14 +20,12 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.services.user;
 
 import javax.servlet.ServletContext;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -43,36 +41,51 @@ import org.jdom.Element;
  * Update the password of logged user.
  */
 public class PwUpdate extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    private static final int MIN_PW_LEN = 6;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String password    = Util.getParam(params, Params.PASSWORD);
-		ServletContext servletContext = context.getServlet().getServletContext();
-		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String password = Util.getParam(params, Params.PASSWORD);
+        ServletContext servletContext = context.getServlet().getServletContext();
+        String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        validateNewPassword(newPassword);
 
-		UserSession session = context.getUserSession();
-		String      currentUserId  = session.getUserId();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		if (currentUserId == null) throw new UserNotFoundEx(null);
+        UserSession session = context.getUserSession();
+        String currentUserId = session.getUserId();
 
-		int iUserId = Integer.parseInt(currentUserId);
-		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
+        if (currentUserId == null) {
+            throw new UserNotFoundEx(null);
+        }
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
+        int iUserId = Integer.parseInt(currentUserId);
+        PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
+
+        return new Element(Jeeves.Elem.RESPONSE);
+    }
+
+    private void validateNewPassword(String newpw) {
+
+        if (newpw.trim().length() < MIN_PW_LEN) {
+            throw new IllegalArgumentException("New password is too short.");
+        }
+
+    }
+
 }
+
