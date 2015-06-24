@@ -16,17 +16,18 @@ public class TranslationResolver {
     final String keyElem;
     /**
      * The xpath relative to the owner of the key text that selects the translation value.
-     * The options here are restricted to attribute selectors and child name selectors.  For example:
+     * The options here are restricted to attribute selectors, parent selector and child name selectors.  For example:
      *
      * <code>label/@text</code>
      *
-     * is allowed
+     * as is <code>../label/@text</code>
      *
-     * but <code>../label/@text</code> is not allowed
+     * but <code>..//label/@text</code> is not allowed
      *
      *
      */
     final String valueXPath;
+    public boolean includeTextInKey = true;
 
     public TranslationResolver(String name, String keyElem, String valueXPath) {
         this.name = name;

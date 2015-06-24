@@ -19,7 +19,6 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -34,35 +33,148 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>${groupId}</groupId>
-        <artifactId>transifex</artifactId>
-        <version>${version}</version>
-        <executions>
-          <execution>
-            <id>get-translations</id>
-            <goals>
-              <goal>get-translations</goal>
-              <goal>update-transifex</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <files>
-            <file>
-              <id>iso19193-schema-labels</id>
-              <name>Iso19139 Labels</name>
-              <formatClass>SchemaPluginLabelsFormat</formatClass>
-              <path>src/main/plugin/iso19139/loc</path>
-            </file>
-          </files>
-
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
   <profiles>
+    <profile>
+      <id>transifex</id>
+      <activation>
+        <property>
+          <name>transifex-username</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>${groupId}</groupId>
+            <artifactId>transifex</artifactId>
+            <version>${version}</version>
+            <executions>
+              <execution>
+                <id>get-translations</id>
+                <goals>
+                  <goal>get-translations</goal>
+                  <goal>update-transifex</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <files>
+                <file>
+                  <id>iso19193-label-xml</id>
+                  <name>Iso19139 Label.xml</name>
+                  <format-class>SchemaPluginLabelsFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>label.xml</category>
+                  </categories>
+                  <file-name>labels.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-codelists-xml</id>
+                  <name>Iso19139 Codelists.xml</name>
+                  <format-class>SchemaPluginCodelistFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>codelists.xml</category>
+                  </categories>
+                  <file-name>codelists.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-criteria-type-xml</id>
+                  <name>Iso19139 Criteria-type.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>criteria-type</category>
+                  </categories>
+                  <file-name>criteria-type.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-geonetwork-xml</id>
+                  <name>Iso19139 Schematron-geonetwork.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-geonetwork</category>
+                  </categories>
+                  <file-name>schematron-geonetwork.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-inspire-xml</id>
+                  <name>Iso19139 Schematron-inspire.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-inspire</category>
+                  </categories>
+                  <file-name>schematron-inspire.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-inspire-strict-xml</id>
+                  <name>Iso19139 Schematron-inspire-strict.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-inspire-strict</category>
+                  </categories>
+                  <file-name>schematron-inspire-strict.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-iso-xml</id>
+                  <name>Iso19139 Schematron-iso.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-iso</category>
+                  </categories>
+                  <file-name>schematron-iso.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-strings-xml</id>
+                  <name>Iso19139 Strings.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>strings</category>
+                  </categories>
+                  <file-name>strings.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193formatterstrings</id>
+                  <name>iso19193 Formatter Strings</name>
+                  <format-class>JsonFormat</format-class>
+                  <path>src/main/plugin/iso19139/formatter/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>formatter</category>
+                  </categories>
+                  <file-name>strings.json</file-name>
+                </file>
+              </files>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>run-static-analysis</id>
       <activation>

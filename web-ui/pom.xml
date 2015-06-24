@@ -180,5 +180,79 @@
                 </plugins>
             </build>
         </profile>
+      <profile>
+        <id>transifex</id>
+        <activation>
+          <property>
+            <name>transifex-username</name>
+          </property>
+        </activation>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>${groupId}</groupId>
+              <artifactId>transifex</artifactId>
+              <version>${version}</version>
+              <executions>
+                <execution>
+                  <id>get-translations</id>
+                  <goals>
+                    <goal>get-translations</goal>
+                    <goal>update-transifex</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <files>
+                  <file>
+                    <id>core</id>
+                    <name>Angular UI Core Strings</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>core</category>
+                    </categories>
+                    <file-name>core.json</file-name>
+                  </file>
+                  <file>
+                    <id>admin</id>
+                    <name>Angular UI Admin Strings</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>admin</category>
+                    </categories>
+                    <file-name>admin.json</file-name>
+                  </file>
+                  <file>
+                    <id>editor</id>
+                    <name>Angular UI Editor Strings</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>editor</category>
+                    </categories>
+                    <file-name>editor.json</file-name>
+                  </file>
+                  <file>
+                    <id>search</id>
+                    <name>Angular UI Search</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>search</category>
+                    </categories>
+                    <file-name>search.json</file-name>
+                  </file>
+                </files>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
     </profiles>
 </project>

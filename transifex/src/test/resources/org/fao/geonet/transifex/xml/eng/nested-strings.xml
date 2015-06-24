@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <schematron.title>Geonetwork Rules</schematron.title>
+    <M500>[Language] - Metadata language is not</M500>
+    <alert.M500>
+        <!-- A Comment -->
+        <div>divData</div>
+    </alert.M500>
+</strings>

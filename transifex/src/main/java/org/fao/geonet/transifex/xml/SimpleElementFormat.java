@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Jesse on 6/18/2015.
  */
-public class SchemaPluginLabelsFormat implements TranslationFormat {
+public class SimpleElementFormat implements TranslationFormat {
     XmlFormat format = new XmlFormat();
     private TranslationFileConfig stdConfig;
 
@@ -24,15 +24,9 @@ public class SchemaPluginLabelsFormat implements TranslationFormat {
     public TranslationFormat configure(TranslationFileConfig stdConfig, Map<String, String> properties) {
         this.stdConfig = stdConfig;
         format.configure(stdConfig, properties);
-        TranslationResolver labelResolver = new TranslationResolver("Label", "element", "label");
-        TranslationResolver descriptionResolver = new TranslationResolver("Description", "element", "description");
-        TranslationResolver helpResolver = new TranslationResolver("Help", "element", "help");
-        TranslationResolver conditionResolver = new TranslationResolver("Condition", "element", "_condition");
-
+        TranslationResolver labelResolver = new TranslationResolver("String", "*", "copy-of");
+        labelResolver.includeTextInKey = false;
         format.getResolvers().add(labelResolver);
-        format.getResolvers().add(descriptionResolver);
-        format.getResolvers().add(helpResolver);
-        format.getResolvers().add(conditionResolver);
         return this;
     }
 

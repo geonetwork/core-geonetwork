@@ -44,6 +44,85 @@
 
   <profiles>
     <profile>
+      <id>transifex</id>
+      <activation>
+        <property>
+          <name>transifex-username</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>${groupId}</groupId>
+            <artifactId>transifex</artifactId>
+            <version>${version}</version>
+            <executions>
+              <execution>
+                <id>get-translations</id>
+                <goals>
+                  <goal>get-translations</goal>
+                  <goal>update-transifex</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <project>test-project-64</project>
+              <files>
+                <file>
+                  <id>iso19110-label-xml</id>
+                  <name>Iso19110 Label.xml</name>
+                  <format-class>SchemaPluginLabelsFormat</format-class>
+                  <path>src/main/plugin/iso19110/loc</path>
+                  <categories>
+                    <category>iso19110</category>
+                    <category>schema_plugin</category>
+                    <category>label.xml</category>
+                  </categories>
+                  <file-name>labels.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19110-codelists-xml</id>
+                  <name>Iso19110 Codelists.xml</name>
+                  <format-class>SchemaPluginCodelistFormat</format-class>
+                  <path>src/main/plugin/iso19110/loc</path>
+                  <categories>
+                    <category>iso19110</category>
+                    <category>schema_plugin</category>
+                    <category>codelists.xml</category>
+                  </categories>
+                  <file-name>codelists.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19110-strings-xml</id>
+                  <name>Iso19110 Strings.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19110/loc</path>
+                  <categories>
+                    <category>iso19110</category>
+                    <category>schema_plugin</category>
+                    <category>strings</category>
+                  </categories>
+                  <file-name>strings.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19110formatterstrings</id>
+                  <name>iso19110 Formatter Strings</name>
+                  <format-class>JsonFormat</format-class>
+                  <path>src/main/plugin/iso19110/formatter/loc</path>
+                  <categories>
+                    <category>iso19110</category>
+                    <category>schema_plugin</category>
+                    <category>formatter</category>
+                  </categories>
+                  <file-name>strings.json</file-name>
+                </file>
+              </files>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>run-static-analysis</id>
       <activation>
         <property>

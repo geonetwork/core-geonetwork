@@ -75,6 +75,7 @@ public class UpdateTransifexMojo extends AbstractTransifexMojo {
                 String reasonPhrase = response.getStatusLine().getReasonPhrase();
                 String error = new String(ByteStreams.toByteArray(response.getEntity().getContent()), Constants.CHARSET);
                 getLog().error("Error updating resource: " + error);
+                getLog().error("Post Data: \n" + data.toString(2));
                 throw new MojoExecutionException("Error updating transifex resource: (" + statusCode + ") " + reasonPhrase);
             }
         }
@@ -85,19 +86,18 @@ public class UpdateTransifexMojo extends AbstractTransifexMojo {
         updateTransifexMojo.files = Lists.newArrayList();
 
         TranslationFileConfig translationFileConfig = new TranslationFileConfig();
-        translationFileConfig.path = "C:\\GitHub\\geonetwork\\geocat_trunk\\schemas\\iso19139\\src\\main\\plugin\\iso19139\\loc";
-        translationFileConfig.formatClass = "SchemaPluginLabelsFormat";
-        translationFileConfig.id = "test-labelsxml";
-        translationFileConfig.name = "Test Labels XML file";
-        translationFileConfig.layout = Layout.DIR;
-        translationFileConfig.categories = Sets.newHashSet("iso19139", "schema", "labels.xml", "loc");
-        translationFileConfig.fileName = "labels.xml";
+        translationFileConfig.path = "C:\\GitHub\\geonetwork\\geocat_trunk\\schemas\\csw-record\\src\\main\\plugin\\csw-record\\loc";
+        translationFileConfig.fileName = "strings.xml";
+        translationFileConfig.formatClass = "SimpleElementFormat";
+        translationFileConfig.id = "test-codelistsxml";
+        translationFileConfig.name = "Test codelists XML file";
+        translationFileConfig.layout = Layout.PREFIX;
+        translationFileConfig.categories = Sets.newHashSet("iso19139", "schema", "codelists.xml", "loc");
         updateTransifexMojo.files.add(translationFileConfig);
 
-        updateTransifexMojo.project = "core-geonetwork";
+        updateTransifexMojo.project = "test-project-64";
         updateTransifexMojo.password = "8GrHwnQztT3NSDjR";
         updateTransifexMojo.username = "jeichar";
-        updateTransifexMojo.sourceLangCode = "en";
         updateTransifexMojo.url = "https://www.transifex.com/api/2/project/";
 
         Logger.getRootLogger().addAppender(new ConsoleAppender());

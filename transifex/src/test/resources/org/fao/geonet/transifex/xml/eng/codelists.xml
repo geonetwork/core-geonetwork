@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codelists>
+  <codelist name="gmd:CI_DateTypeCode">
+    <entry>
+      <code>creation</code>
+      <label>Creation</label>
+      <description>Date identifies when the resource was brought into existence</description>
+    </entry>
+    <entry>
+      <code>publication</code>
+      <label>Publication</label>
+      <description>Date identifies when the resource was issued</description>
+    </entry>
+    <entry>
+      <code>revision</code>
+      <label>Revision</label>
+    </entry>
+  </codelist>
+</codelists>

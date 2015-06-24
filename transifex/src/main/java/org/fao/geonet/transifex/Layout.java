@@ -18,7 +18,7 @@ public enum Layout {
         @Override
         public Path getFile(String path, String filename, String lang) {
             String stem = filename;
-            if (filename.startsWith("en-" + filename)) {
+            if (filename.startsWith("en-")) {
                 stem = filename.substring(3);
             }
             return Paths.get(path + "/" + lang + "-" + stem);
@@ -30,8 +30,10 @@ public enum Layout {
      * The path for this layout should be the path to the directory that contains all the language directories.
      */
     DIR {
+        private transient LangMap langMap = new LangMap();
         @Override
         public Path getFile(String path, String filename, String lang) {
+            lang = langMap.getThreeChar(lang);
             return Paths.get(path + "/" + lang + "/" + filename);
         }
     };

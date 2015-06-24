@@ -1,5 +1,6 @@
 package org.fao.geonet.transifex;
 
+import com.google.common.base.Strings;
 import net.sf.json.JSONObject;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -43,8 +44,6 @@ public abstract class AbstractTransifexMojo extends AbstractMojo {
      */
     @Parameter(property = "project", defaultValue = "core-geonetwork")
     protected String project;
-    @Parameter(property = "source_language_code", defaultValue = "en")
-    protected String sourceLangCode;
     /**
      * the username to use for accessing the transifex API.  Should not be in API it should be put on the commandline
      * -Dtransifex-username=my-username
@@ -74,15 +73,35 @@ public abstract class AbstractTransifexMojo extends AbstractMojo {
 
     public CloseableHttpResponse post(String url, JSONObject data) throws IOException {
         HttpPost post = new HttpPost(cleanUrl(url));
-        post.setEntity(new StringEntity(data.toString(), ContentType.create("application/json")));
+        post.setEntity(getStringEntity(data));
         return exec(post);
     }
+
     public CloseableHttpResponse put(String url, JSONObject data) throws IOException {
         HttpPut put = new HttpPut(cleanUrl(url));
-        put.setEntity(new StringEntity(data.toString(), ContentType.create("application/json")));
+        put.setEntity(getStringEntity(data));
         return exec(put);
     }
 
+    private StringEntity getStringEntity(JSONObject data) {
+        String asString = data.toString();
+        StringBuilder finalString = new StringBuilder();
+        final int length = asString.length();
+        for (int offset = 0; offset < length; ) {
+            final int codepoint = asString.codePointAt(offset);
+
+            if (codepoint > 127) {
+                String str = Integer.toHexString(codepoint).toUpperCase();
+
+                finalString.append("\\u").append(Strings.padStart(str, 4, '0'));
+            } else {
+                finalString.append((char) codepoint);
+            }
+
+            offset += Character.charCount(codepoint);
+        }
+        return new StringEntity(finalString.toString(), ContentType.create("application/json"));
+    }
     private String cleanUrl(String url) {
         return url.replaceAll("/+", "/").replace(":/","://");
     }

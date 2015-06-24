@@ -11,8 +11,12 @@ import org.fao.geonet.transifex.TranslationFileConfig;
 import org.fao.geonet.transifex.TranslationFormat;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
+import org.jdom.Comment;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Text;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,7 +62,8 @@ import java.util.regex.Pattern;
  */
 public class XmlFormat implements TranslationFormat {
     private static final Pattern ELEMENT_NAME_EXTRACTOR = Pattern.compile("([^\\[]+)(\\[(.+)\\])?");
-    private static final Pattern ELEMENT_ATT_EXTRACTOR = Pattern.compile("([^=,]+)=\"([^\"]+)\"");
+    private static final Pattern ELEMENT_ATT_EXTRACTOR = Pattern.compile("( and )?([^=,]+)='([^']+)'");
+    public static final String TEXT_EL_PREFIX = "node()[text()='";
     List<TranslationResolver> resolvers = Lists.newArrayList();
     private TranslationFileConfig stdConfig;
 
@@ -79,23 +84,48 @@ public class XmlFormat implements TranslationFormat {
                 @SuppressWarnings("unchecked")
                 List<Element> nodes = (List<Element>) Xml.selectNodes(element, resolver.keyElem);
                 for (Element node : nodes) {
-                    String key = createId(node);
-                    String value = Xml.selectString(node, resolver.valueXPath);
+                    String key = createId(node, resolver.includeTextInKey);
+                    String value;
+                    if (resolver.valueXPath.equals("copy-of")) {
+                        StringBuilder valueBuilder = new StringBuilder();
+                        for (Object o : node.getContent()) {
+                            if (o instanceof Element) {
+                                Element elem = (Element) o;
+                                valueBuilder.append(Xml.getString(elem));
+                            } else if (o instanceof Text) {
+                                Text text = (Text) o;
+                                valueBuilder.append(text.getText());
+                            }  else if (o instanceof Comment) {
+                                Comment comment = (Comment) o;
+                                valueBuilder.append("<!--").append(comment.getText()).append("-->");
+                            } else {
+                                valueBuilder.append(o.toString());
+                            }
+                        }
+                        value = valueBuilder.toString();
+                    } else {
+                        value = Xml.selectString(node, resolver.valueXPath);
+                    }
                     if (value != null && !value.trim().isEmpty()) {
                         translations.put(key, value);
                     }
                 }
-                String resourceId = stdConfig.id + "-" + resolver.name.toLowerCase();
-                String transifexName = stdConfig.name + " " + resolver.name + "s";
-                files.add(new TransifexReadyFile(resourceId, transifexName, translations.toString(2), stdConfig.categories));
+                if (translations.size() > 0) {
+                    String resourceId = stdConfig.id + "-" + resolver.name.toLowerCase();
+                    String transifexName = stdConfig.name + " " + resolver.name + "s";
+                    files.add(new TransifexReadyFile(resourceId, transifexName, translations.toString(2), stdConfig.categories));
+                }
             }
         }
         return files;
     }
 
     @VisibleForTesting
-    String createId(Element node) {
-        StringBuilder id = new StringBuilder(node.getTextTrim());
+    String createId(Element node, boolean includeTextInKey) {
+        StringBuilder id = new StringBuilder();
+        if (includeTextInKey && !node.getTextTrim().isEmpty()) {
+            id.append("node()[text()='").append(node.getTextTrim()).append("']");
+        }
 
         while (node != null) {
             if (id.length() > 0) {
@@ -109,9 +139,9 @@ public class XmlFormat implements TranslationFormat {
                     continue;
                 }
                 if (atts.length() > 1) {
-                    atts.append(",");
+                    atts.append(" and ");
                 }
-                atts.append(attribute.getName()).append("=\"").append(attribute.getValue()).append("\"");
+                atts.append(attribute.getName()).append("='").append(attribute.getValue()).append("'");
             }
             if (atts.length() > 1) {
                 atts.append(']');
@@ -124,7 +154,7 @@ public class XmlFormat implements TranslationFormat {
     }
 
     @Override
-    public String toGeonetwork(List<TransifexReadyFile> fromTransifex) {
+    public String toGeonetwork(List<TransifexReadyFile> fromTransifex) throws IOException, JDOMException {
         Element root = null;
         for (TransifexReadyFile transifexReadyFile : fromTransifex) {
             String typeId = transifexReadyFile.resourceId.substring(transifexReadyFile.resourceId.lastIndexOf("-") + 1);
@@ -163,19 +193,20 @@ public class XmlFormat implements TranslationFormat {
         if (elMatcher.groupCount() == 3 && elMatcher.group(3) != null) {
             Matcher attMatcher = ELEMENT_ATT_EXTRACTOR.matcher(elMatcher.group(3));
             while(attMatcher.find()) {
-                element.setAttribute(attMatcher.group(1), attMatcher.group(2));
+                element.setAttribute(attMatcher.group(2), attMatcher.group(3));
             }
         }
         return element;
     }
 
-    private void addElements(Element element, String[] sections, int startSectionIdx, TranslationResolver type, String value) {
+    private void addElements(Element element, String[] sections, int startSectionIdx, TranslationResolver type, String value) throws
+            IOException, JDOMException {
         BestMatch bestMatch = findBestMatch(element, sections, startSectionIdx);
         Element keyEl = addElement(bestMatch.element, sections, bestMatch.startIndex, null);
         addElement(keyEl, type.valueXPath.split("/"), 0, value);
     }
 
-    private BestMatch findBestMatch(final Element element, final String[] sections, final int startSectionIdx) {
+    BestMatch findBestMatch(final Element element, final String[] sections, final int startSectionIdx) {
         int i = startSectionIdx;
         Element bestMatch = element;
         while(i < sections.length) {
@@ -203,8 +234,8 @@ public class XmlFormat implements TranslationFormat {
             if (elMatcher.groupCount() == 3 && elMatcher.group(3) != null) {
                 Matcher attMatcher = ELEMENT_ATT_EXTRACTOR.matcher(elMatcher.group(3));
                 while(attMatcher.find()) {
-                    String key = attMatcher.group(1);
-                    String value = attMatcher.group(2);
+                    String key = attMatcher.group(2);
+                    String value = attMatcher.group(3);
 
                     if (child.getAttribute(key) != null && child.getAttributeValue(key).equals(value)) {
                         matchedAttributes++;
@@ -221,22 +252,35 @@ public class XmlFormat implements TranslationFormat {
         return null;
     }
 
-    private Element addElement(Element element, String[] sections, int startSectionIdx, String value) {
+    private Element addElement(Element element, String[] sections, int startSectionIdx, String value) throws IOException, JDOMException {
         Element leaf = element;
         for (int i = startSectionIdx; i < sections.length; i++) {
-            if (sections[i].startsWith("@")) {
+            if (sections[i].equals("copy-of")) {
+                // continue
+            } else if (sections[i].equals("..")) {
+                leaf = leaf.getParentElement();
+            } else if (sections[i].startsWith("@")) {
                 if (i != sections.length - 1) {
                     throw new AssertionError(Joiner.on('/').join(sections) + " should only have an attribute as the last element in path");
                 }
-                break;
+            } else {
+                if (sections[i].equals(".")) {
+                    // do nothing
+                } else if (sections[i].startsWith(TEXT_EL_PREFIX)) {
+                    String text = sections[i].substring(TEXT_EL_PREFIX.length(), sections[i].length() - 2);
+                    leaf.setText(text);
+                } else {
+                    Element next = createElement(sections[i]);
+                    leaf.addContent(next);
+                    leaf = next;
+                }
             }
-            Element next = createElement(sections[i]);
-            leaf.addContent(next);
-            leaf = next;
         }
         if (value != null) {
             String lastSegment = sections[sections.length - 1];
-            if (lastSegment.startsWith("@")) {
+            if (lastSegment.equals("copy-of")) {
+                leaf.addContent(Xml.loadString("<x>" + value + "</x>", false).cloneContent());
+            } else if (lastSegment.startsWith("@")) {
                 leaf.setAttribute(lastSegment.substring(1), value);
             } else {
                 leaf.setText(value);
@@ -255,7 +299,7 @@ public class XmlFormat implements TranslationFormat {
         return resolvers;
     }
 
-    private class BestMatch {
+    private static final class BestMatch {
         final int startIndex;
         final Element element;
 

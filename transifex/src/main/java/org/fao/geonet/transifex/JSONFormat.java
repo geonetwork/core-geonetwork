@@ -1,16 +1,15 @@
 package org.fao.geonet.transifex;
 
 import com.google.common.collect.Lists;
+import net.sf.json.JSONObject;
 import org.fao.geonet.Constants;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A file in the json key-value properties format.
@@ -18,20 +17,21 @@ import java.util.Set;
  * @author Jesse on 6/18/2015.
  */
 public class JsonFormat implements TranslationFormat {
-    private Set<String> categories;
+
+    private TranslationFileConfig stdConfig;
 
     @Override
     public TranslationFormat configure(TranslationFileConfig stdConfig, Map<String, String> properties) {
-        this.categories = stdConfig.categories;
+        this.stdConfig = stdConfig;
         return this;
     }
 
     @Override
     public List<TransifexReadyFile> toTransifex(String translationFile) throws IOException {
-        Path path = Paths.get(translationFile);
+        Path path = stdConfig.layout.getFile(stdConfig.path, stdConfig.fileName, "en");
         String data = new String(Files.readAllBytes(path), Constants.CHARSET);
-        TransifexReadyFile readyFile = new TransifexReadyFile(path.getFileName().toString(), path.getFileName().toString(),
-                data, categories);
+        TransifexReadyFile readyFile = new TransifexReadyFile(stdConfig.id, stdConfig.name,
+                JSONObject.fromObject(data).toString(), stdConfig.categories);
         return Lists.newArrayList(readyFile);
     }
 

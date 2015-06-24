@@ -3,11 +3,13 @@ package org.fao.geonet.transifex;
 import com.google.common.collect.Maps;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.fao.geonet.Constants;
+import org.fao.geonet.transifex.xml.LeafElementFormat;
+import org.fao.geonet.transifex.xml.SchemaPluginCodelistFormat;
 import org.fao.geonet.transifex.xml.SchemaPluginLabelsFormat;
+import org.fao.geonet.transifex.xml.SimpleElementFormat;
 import org.fao.geonet.transifex.xml.XmlFormat;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -23,6 +25,9 @@ public class TranslationFileConfig {
     private static final Map<String, Class<? extends TranslationFormat>> FORMATS = Maps.newHashMap();
     static {
         FORMATS.put(SchemaPluginLabelsFormat.class.getSimpleName(), SchemaPluginLabelsFormat.class);
+        FORMATS.put(SchemaPluginCodelistFormat.class.getSimpleName(), SchemaPluginCodelistFormat.class);
+        FORMATS.put(LeafElementFormat.class.getSimpleName(), LeafElementFormat.class);
+        FORMATS.put(SimpleElementFormat.class.getSimpleName(), SimpleElementFormat.class);
         FORMATS.put(JsonFormat.class.getSimpleName(), JsonFormat.class);
         FORMATS.put(XmlFormat.class.getSimpleName(), XmlFormat.class);
     }
@@ -42,6 +47,9 @@ public class TranslationFileConfig {
      *     <li>JsonNFormat</li>
      *     <li>XmlFormat</li>
      *     <li>SchemaPluginLabelsFormat</li>
+     *     <li>SchemaPluginCodelistFormat</li>
+     *     <li>SimpleElementFormat</li>
+     *     <li>LeafElementFormat</li>
      * </ul>
      */
     @Parameter(property = "format-class", defaultValue = "JSONFormat")
@@ -102,7 +110,7 @@ public class TranslationFileConfig {
         return format.toTransifex(path);
     }
 
-    public void writeTranslations(String lang, List<TransifexReadyFile> fromTransifex) throws IOException {
+    public void writeTranslations(String lang, List<TransifexReadyFile> fromTransifex) throws Exception {
         String geonetworkFormattedData = format.toGeonetwork(fromTransifex);
         Path file = layout.getFile(path, fileName, lang);
         Files.createDirectories(file.getParent());

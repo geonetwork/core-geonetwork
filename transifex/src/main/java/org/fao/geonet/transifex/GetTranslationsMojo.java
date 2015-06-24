@@ -57,7 +57,7 @@ public class GetTranslationsMojo extends AbstractTransifexMojo {
                         }
                     }
                     if (!fromTransifex.isEmpty()) {
-                        file.writeTranslations(langMap.getThreeChar(twoCharLang), fromTransifex);
+                        file.writeTranslations(twoCharLang, fromTransifex);
                     }
                 }
 
@@ -118,19 +118,18 @@ public class GetTranslationsMojo extends AbstractTransifexMojo {
         getTransifexMojo.files = Lists.newArrayList();
 
         TranslationFileConfig translationFileConfig = new TranslationFileConfig();
-        translationFileConfig.path = "C:\\GitHub\\geonetwork\\geocat_trunk\\schemas\\iso19139\\src\\main\\plugin\\iso19139\\loc";
-        translationFileConfig.fileName = "labels.xml";
-        translationFileConfig.formatClass = "SchemaPluginLabelsFormat";
-        translationFileConfig.id = "test-labelsxml";
-        translationFileConfig.name = "Test Labels XML file";
-        translationFileConfig.layout = Layout.DIR;
-        translationFileConfig.categories = Sets.newHashSet("iso19139", "schema", "labels.xml", "loc");
+        translationFileConfig.path = "C:\\GitHub\\geonetwork\\geocat_trunk\\web-ui\\src\\main\\resources\\catalog\\locales";
+        translationFileConfig.fileName = "en-core.json";
+        translationFileConfig.formatClass = "JsonFormat";
+        translationFileConfig.id = "test-codelistsxml";
+        translationFileConfig.name = "Test codelists XML file";
+        translationFileConfig.layout = Layout.PREFIX;
+        translationFileConfig.categories = Sets.newHashSet("iso19139", "schema", "codelists.xml", "loc");
         getTransifexMojo.files.add(translationFileConfig);
 
-        getTransifexMojo.project = "core-geonetwork";
+        getTransifexMojo.project = "test-project-64";
         getTransifexMojo.password = "8GrHwnQztT3NSDjR";
         getTransifexMojo.username = "jeichar";
-        getTransifexMojo.sourceLangCode = "en";
         getTransifexMojo.url = "https://www.transifex.com/api/2/project/";
 
         Logger.getRootLogger().addAppender(new ConsoleAppender());
