@@ -39,6 +39,10 @@ import org.springframework.context.ApplicationContext;
  * Update the password of logged user.
  */
 public class PwUpdate extends NotInReadOnlyModeService {
+
+	private static final int MIN_PW_LEN = 6;
+
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -58,15 +62,24 @@ public class PwUpdate extends NotInReadOnlyModeService {
 		String password    = Util.getParam(params, Params.PASSWORD);
 		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
 
+		validateNewPassword(newPassword);
+
 		UserSession session = context.getUserSession();
 		String      currentUserId  = session.getUserId();
 
 		if (currentUserId == null) throw new UserNotFoundEx(null);
 
 		int iUserId = Integer.parseInt(currentUserId);
-        ApplicationContext appContext = context.getApplicationContext();
+		ApplicationContext appContext = context.getApplicationContext();
 		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, appContext);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
+	
+	private void validateNewPassword(String newpw) {
+
+		if (newpw.trim().length() < MIN_PW_LEN) {
+			throw new IllegalArgumentException("New password is too short.");
+		}
+	}	
 }
