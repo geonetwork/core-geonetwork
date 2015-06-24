@@ -36,7 +36,6 @@
               </execution>
             </executions>
             <configuration>
-              <project>test-project-64</project>
               <files>
                 <file>
                   <id>csw-record-label-xml</id>

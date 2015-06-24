@@ -96,8 +96,6 @@ public class UpdateTransifexMojo extends AbstractTransifexMojo {
         updateTransifexMojo.files.add(translationFileConfig);
 
         updateTransifexMojo.project = "test-project-64";
-        updateTransifexMojo.password = "8GrHwnQztT3NSDjR";
-        updateTransifexMojo.username = "jeichar";
         updateTransifexMojo.url = "https://www.transifex.com/api/2/project/";
 
         Logger.getRootLogger().addAppender(new ConsoleAppender());

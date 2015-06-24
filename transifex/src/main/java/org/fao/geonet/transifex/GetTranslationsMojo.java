@@ -128,8 +128,6 @@ public class GetTranslationsMojo extends AbstractTransifexMojo {
         getTransifexMojo.files.add(translationFileConfig);
 
         getTransifexMojo.project = "test-project-64";
-        getTransifexMojo.password = "8GrHwnQztT3NSDjR";
-        getTransifexMojo.username = "jeichar";
         getTransifexMojo.url = "https://www.transifex.com/api/2/project/";
 
         Logger.getRootLogger().addAppender(new ConsoleAppender());

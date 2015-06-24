@@ -61,7 +61,6 @@
               </execution>
             </executions>
             <configuration>
-              <project>test-project-64</project>
               <files>
                 <file>
                   <id>dublin-core-label-xml</id>
