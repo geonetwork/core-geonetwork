@@ -5,4 +5,4 @@ This plugin also uploads the english files for translation and downloads the tra
 
 Typically the plugin won't execute because it isn't configured with a with a username or password.  In order to execute it
  
-mvn install -Dtransifex-username=<username> -Dtransifex-password=<password> 
+    mvn install -Dtransifex-username=<username> -Dtransifex-password=<password> 
