@@ -51,7 +51,7 @@
     "day": "Day",
     "deleteRecordConfirm": "Do you really want to remove '{{title}}'?",
     "deleteSelectedRecordConfirm": "Do you really want to remove the {{selectedCount}} selected record(s) ?",
-    "denominators": "Scale denominators",
+    "denominators": "Scale",
     "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
     "dut": "Nederlands",
     "east": "East",

@@ -507,3 +507,21 @@ i.fa-times.delete:hover {
     color: @brand-danger;
   }
 }
+
+// Language specific layout
+html[lang=eng] {
+  .gn-scale,
+  [data-facet=denominators] span.gn-facet-label {
+    :before {
+      content: "1/";
+    }
+  }
+}
+html[lang=fre] {
+  .gn-scale,
+  [data-facet=denominators] span.gn-facet-label {
+    :before {
+      content: "1:";
+    }
+  }
+}
