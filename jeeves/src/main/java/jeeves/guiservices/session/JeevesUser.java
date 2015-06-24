@@ -205,6 +205,81 @@ public class JeevesUser implements UserDetails {
 	}
 
     @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (this.username != null ? this.username.hashCode() : 0);
+        hash = 97 * hash + (this.email != null ? this.email.hashCode() : 0);
+        hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 97 * hash + (this.surname != null ? this.surname.hashCode() : 0);
+        hash = 97 * hash + (this.profile != null ? this.profile.hashCode() : 0);
+        hash = 97 * hash + (this.address != null ? this.address.hashCode() : 0);
+        hash = 97 * hash + (this.city != null ? this.city.hashCode() : 0);
+        hash = 97 * hash + (this.state != null ? this.state.hashCode() : 0);
+        hash = 97 * hash + (this.zip != null ? this.zip.hashCode() : 0);
+        hash = 97 * hash + (this.country != null ? this.country.hashCode() : 0);
+        hash = 97 * hash + (this.organisation != null ? this.organisation.hashCode() : 0);
+        hash = 97 * hash + (this.password != null ? this.password.hashCode() : 0);
+        hash = 97 * hash + (this.kind != null ? this.kind.hashCode() : 0);
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final JeevesUser other = (JeevesUser) obj;
+        if ((this.username == null) ? (other.username != null) : !this.username.equals(other.username)) {
+            return false;
+        }
+        if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
+            return false;
+        }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if ((this.surname == null) ? (other.surname != null) : !this.surname.equals(other.surname)) {
+            return false;
+        }
+        if ((this.profile == null) ? (other.profile != null) : !this.profile.equals(other.profile)) {
+            return false;
+        }
+        if ((this.address == null) ? (other.address != null) : !this.address.equals(other.address)) {
+            return false;
+        }
+        if ((this.city == null) ? (other.city != null) : !this.city.equals(other.city)) {
+            return false;
+        }
+        if ((this.state == null) ? (other.state != null) : !this.state.equals(other.state)) {
+            return false;
+        }
+        if ((this.zip == null) ? (other.zip != null) : !this.zip.equals(other.zip)) {
+            return false;
+        }
+        if ((this.country == null) ? (other.country != null) : !this.country.equals(other.country)) {
+            return false;
+        }
+        if ((this.organisation == null) ? (other.organisation != null) : !this.organisation.equals(other.organisation)) {
+            return false;
+        }
+        if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
+            return false;
+        }
+        if ((this.kind == null) ? (other.kind != null) : !this.kind.equals(other.kind)) {
+            return false;
+        }
+        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "[" +
                 (id!=null? id:"") +
