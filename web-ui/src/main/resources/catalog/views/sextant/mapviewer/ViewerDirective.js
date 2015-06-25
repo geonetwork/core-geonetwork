@@ -248,15 +248,18 @@
           var content = element.find('ul').css('display', 'none');
           var button = element.find('.dropdown-toggle');
 
-          var fixedHeight = (attrs['fixedHeight'] != 'false')  ? 'popover-dropdown' : '' ;
-          button.popover({
-            animation: false,
-            container: 'body',
-            placement: attrs['placement'] || 'right',
-            content: ' ',
-            template: '<div class="popover ' + fixedHeight + '">' +
-              '<div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-          });
+          $timeout(function() {
+            var className = (attrs['fixedHeight'] != 'false')  ?
+                'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
+            button.popover({
+              animation: false,
+              container: 'body',
+              placement: attrs['placement'] || 'right',
+              content: ' ',
+              template: '<div class="popover ' + className + '">' +
+                '<div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+            });
+          }, 1);
 
           button.on('shown.bs.popover', function() {
             var $tip = button.data('bs.popover').$tip;
