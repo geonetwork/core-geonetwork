@@ -13,5 +13,9 @@
     <label>System code</label>
     <description>Code. i.e. EPSG code.</description>
     <_condition>Use obligation/condition from referencing object</_condition>
+    <helper>
+      <option value="CH">Switzerland</option>
+      <option value="DE">Germany</option>
+    </helper>
   </element>
 </labels>

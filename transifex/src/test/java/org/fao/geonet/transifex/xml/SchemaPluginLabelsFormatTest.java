@@ -34,7 +34,7 @@ public class SchemaPluginLabelsFormatTest extends AbstractXmlFormatTest {
         Path path = Paths.get(SchemaPluginLabelsFormatTest.class.getResource("eng/labels.xml").toURI()).getParent().getParent();
         List<TransifexReadyFile> files = format.toTransifex(path.toString());
 
-        assertEquals(4, files.size());
+        assertEquals(5, files.size());
 
         Map<String, TransifexReadyFile> filesMap = toMap(files);
 
@@ -54,6 +54,9 @@ public class SchemaPluginLabelsFormatTest extends AbstractXmlFormatTest {
 
         assertTranslations(filesMap, "id-condition",
                 "labels/element[name='code']", "Use obligation/condition from referencing object");
+        assertTranslations(filesMap, "id-helper",
+                "labels/element[name='code']/helper/option[value='CH']", "Switzerland",
+                "labels/element[name='code']/helper/option[value='DE']", "Germany");
 
 
     }
@@ -78,6 +81,7 @@ public class SchemaPluginLabelsFormatTest extends AbstractXmlFormatTest {
         assertEquals(3, Xml.selectNodes(loadedXml, "element/description").size());
         assertEquals(1, Xml.selectNodes(loadedXml, "element/help").size());
         assertEquals(1, Xml.selectNodes(loadedXml, "element/_condition").size());
+        assertEquals(2, Xml.selectNodes(loadedXml, "element/helper/option").size());
 
         assertEquals(2, Xml.selectNodes(loadedXml, "element[@name='code']").size());
 
@@ -102,6 +106,9 @@ public class SchemaPluginLabelsFormatTest extends AbstractXmlFormatTest {
         assertNull(scopeCode.getChild("help"));
         assertEquals("Scope code", scopeCode.getChildText("label"));
         assertEquals("Class of information to which the referencing entity applies", scopeCode.getChildText("description"));
+        assertEquals(2, Xml.selectNodes(codeNoContext, "helper/option").size());
+        assertEquals("Switzerland", Xml.selectString(codeNoContext, "helper/option[@value='CH']"));
+        assertEquals("Germany", Xml.selectString(codeNoContext, "helper/option[@value='DE']"));
 
     }
 }

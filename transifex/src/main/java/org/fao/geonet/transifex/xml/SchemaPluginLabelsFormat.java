@@ -28,11 +28,14 @@ public class SchemaPluginLabelsFormat implements TranslationFormat {
         TranslationResolver descriptionResolver = new TranslationResolver("Description", "element", "description");
         TranslationResolver helpResolver = new TranslationResolver("Help", "element", "help");
         TranslationResolver conditionResolver = new TranslationResolver("Condition", "element", "_condition");
+        TranslationResolver helperResolver = new TranslationResolver("Helper", "element/helper/option", ".");
+        helperResolver.includeTextInKey = false;
 
         format.getResolvers().add(labelResolver);
         format.getResolvers().add(descriptionResolver);
         format.getResolvers().add(helpResolver);
         format.getResolvers().add(conditionResolver);
+        format.getResolvers().add(helperResolver);
         return this;
     }
 
