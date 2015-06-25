@@ -292,6 +292,10 @@
               });
           if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
 
+          if(gnSearchLocation.isMdView()) {
+            angular.element($('[gn-metadata-display]')).scope().dismiss();
+            $location.path('/map');
+          }
           $scope.addLayerPopover('map');
           $scope.mainTabs.map.titleInfo += 1;
 
@@ -307,6 +311,10 @@
             link: link,
             md: md
           });
+          if(gnSearchLocation.isMdView()) {
+            angular.element($('[gn-metadata-display]')).scope().dismiss();
+            $location.path('/panier');
+          }
           $scope.addLayerPopover('panier');
         },
 
