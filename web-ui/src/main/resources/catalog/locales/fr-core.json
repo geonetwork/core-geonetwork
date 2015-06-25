@@ -50,7 +50,7 @@
     "day": "Jour",
     "deleteRecordConfirm": "Voulez-vous vraiment supprimer '{{title}}' ?",
     "deleteSelectedRecordConfirm": "Voulez-vous vraiment supprimer les {{selectedCount}} fiches sélectionnée(s) ?",
-    "denominators": "Niveau d'échelle (dénominateur)",
+    "denominators": "Niveau d'échelle",
     "docNotFound": "<strong>Attention !</strong> La page <a href='{{page}}'>{{page}}</a> n'a pas été trouvée dans le guide utilisateur.",
     "dut": "Néerlandais",
     "east": "Est",

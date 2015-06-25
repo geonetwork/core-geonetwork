@@ -6,7 +6,7 @@
     "dataset-link": "Dataset",
     "datasets-link": "Datasets",
     "fcat-link": "Feature Catalogus",
-    "hassource-link": "Heeft Bron",
+    "hassource-link": "Heeft een bron",
     "hierarchy": "Hiërarchie",
     "links": "Links",
     "noUuidInLink": "Geen UUID in link",
@@ -19,5 +19,6 @@
     "sibling-link": "Nakomelingen",
     "source-link": "Bronnen",
     "testString": "Deze Regel is hier om te testen. Niet verwijderen",
-    "xml": "XML"
+    "xml": "XML",
+    "uncategorizedKeywords": "Zonder categorie"
 }

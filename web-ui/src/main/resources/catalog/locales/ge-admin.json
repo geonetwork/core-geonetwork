@@ -484,6 +484,8 @@
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
     "map/is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer need to be enabled also. If you don't want to enable the 3D mode for all users, adding <a href='catalog.search?with3d'>?with3d</a> in the URL will also load 3D mode.",
     "map/is3DModeAllowed": "Allow 3D mode (beta)",
+    "map/isSaveMapInCatalogAllowed": "Allow users to save maps as metadata record",
+    "map/isSaveMapInCatalogAllowed-help": "From the map viewer, user can set the map title and abstract and save the map directly with the OWS context in the catalog as a metadata record.",
     "mapserverConfiguration": "URL configuration",
     "mapserverDescription": "Beschreibung",
     "mapserverName": "Name",
