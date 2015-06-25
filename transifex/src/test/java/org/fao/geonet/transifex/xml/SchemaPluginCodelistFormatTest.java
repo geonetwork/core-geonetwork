@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -41,7 +42,7 @@ public class SchemaPluginCodelistFormatTest extends AbstractXmlFormatTest {
         assertTranslations(filesMap, "id",
                 "gmd:CI_DateTypeCode/creation/label", "Creation",
                 "gmd:CI_DateTypeCode/publication/label", "Publication",
-                "gmd:CI_DateTypeCode/revision/label", "Revision",
+                "gmd:CI_DateTypeCode/revision[hideInEditMode=true]/label", "Revision",
                 "gmd:CI_DateTypeCode/creation/description", "Date identifies when the resource was brought into existence",
                 "gmd:CI_DateTypeCode/publication/description", "Date identifies when the resource was issued");
     }
@@ -76,12 +77,15 @@ public class SchemaPluginCodelistFormatTest extends AbstractXmlFormatTest {
 
         assertEquals("Creation", creation.getChildText("label"));
         assertEquals("Date identifies when the resource was brought into existence", creation.getChildText("description"));
+        assertNull(publication.getAttribute(SchemaPluginCodelistFormat.HIDE_IN_EDIT_MODE));
 
         assertEquals("Publication", publication.getChildText("label"));
         assertEquals("Date identifies when the resource was issued", publication.getChildText("description"));
+        assertNull(publication.getAttribute(SchemaPluginCodelistFormat.HIDE_IN_EDIT_MODE));
 
         assertEquals("Revision", revision.getChildText("label"));
         assertEquals(0, revision.getChildren("description").size());
+        assertEquals("true", revision.getAttributeValue(SchemaPluginCodelistFormat.HIDE_IN_EDIT_MODE));
 
     }
 }

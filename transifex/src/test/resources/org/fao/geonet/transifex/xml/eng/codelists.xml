@@ -11,7 +11,7 @@
       <label>Publication</label>
       <description>Date identifies when the resource was issued</description>
     </entry>
-    <entry>
+    <entry hideInEditMode="true">
       <code>revision</code>
       <label>Revision</label>
     </entry>
