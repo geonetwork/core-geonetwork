@@ -158,7 +158,7 @@
                   <file-name>strings.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19139formatterstrings</id>
+                  <id>iso19193formatterstrings</id>
                   <name>iso19139 Formatter Strings</name>
                   <format-class>JsonFormat</format-class>
                   <path>src/main/plugin/iso19139/formatter/loc</path>
