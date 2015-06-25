@@ -62,7 +62,7 @@
             <configuration>
               <files>
                 <file>
-                  <id>iso19193-label-xml</id>
+                  <id>iso19139-label-xml</id>
                   <name>Iso19139 Label.xml</name>
                   <format-class>SchemaPluginLabelsFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -74,7 +74,7 @@
                   <file-name>labels.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-codelists-xml</id>
+                  <id>iso19139-codelists-xml</id>
                   <name>Iso19139 Codelists.xml</name>
                   <format-class>SchemaPluginCodelistFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -86,7 +86,7 @@
                   <file-name>codelists.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-criteria-type-xml</id>
+                  <id>iso19139-criteria-type-xml</id>
                   <name>Iso19139 Criteria-type.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -98,7 +98,7 @@
                   <file-name>criteria-type.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-schematron-geonetwork-xml</id>
+                  <id>iso19139-schematron-geonetwork-xml</id>
                   <name>Iso19139 Schematron-geonetwork.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -110,7 +110,7 @@
                   <file-name>schematron-geonetwork.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-schematron-inspire-xml</id>
+                  <id>iso19139-schematron-inspire-xml</id>
                   <name>Iso19139 Schematron-inspire.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -122,7 +122,7 @@
                   <file-name>schematron-inspire.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-schematron-inspire-strict-xml</id>
+                  <id>iso19139-schematron-inspire-strict-xml</id>
                   <name>Iso19139 Schematron-inspire-strict.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -134,7 +134,7 @@
                   <file-name>schematron-inspire-strict.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-schematron-iso-xml</id>
+                  <id>iso19139-schematron-iso-xml</id>
                   <name>Iso19139 Schematron-iso.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -146,7 +146,7 @@
                   <file-name>schematron-iso.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193-strings-xml</id>
+                  <id>iso19139-strings-xml</id>
                   <name>Iso19139 Strings.xml</name>
                   <format-class>SimpleElementFormat</format-class>
                   <path>src/main/plugin/iso19139/loc</path>
@@ -158,8 +158,8 @@
                   <file-name>strings.xml</file-name>
                 </file>
                 <file>
-                  <id>iso19193formatterstrings</id>
-                  <name>iso19193 Formatter Strings</name>
+                  <id>iso19139formatterstrings</id>
+                  <name>iso19139 Formatter Strings</name>
                   <format-class>JsonFormat</format-class>
                   <path>src/main/plugin/iso19139/formatter/loc</path>
                   <categories>
