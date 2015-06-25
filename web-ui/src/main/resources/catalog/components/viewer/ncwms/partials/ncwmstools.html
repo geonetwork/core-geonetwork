@@ -32,6 +32,18 @@
       </div>
     </div>
 
+    <!--Times inputs-->
+    <div class="form-group" ng-if="elevations.length > 0">
+      <label class="col-sm-4" translate>time</label>
+      <div class="col-sm-8">
+        <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+             gn-bootstrap-datepicker="ncTime.value" date-available="layer.ncInfo.datesWithData">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input class="form-control input-sm" type="text">
+        </div>
+      </div>
+    </div>
+
     <!--Elevations combo-->
     <div class="form-group">
       <label class="col-sm-4" for="ncwmselevation">Elévation</label>
