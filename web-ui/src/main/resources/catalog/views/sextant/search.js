@@ -222,17 +222,21 @@
 
       var feedLayerWithDownloads = function(layer, linkGroup) {
         var md = layer.get('md');
-        var downloads = md && md.getLinksByType(linkGroup,
-            'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-            'WFS', 'WCS', 'COPYFILE');
+        var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
 
-        layer.set('downloads', downloads);
+        // Tells if onlinesrc are spread in different transferOptions
+        if(!transferOpts) {
+          var downloads = md && md.getLinksByType(linkGroup,
+              'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+              'WFS', 'WCS', 'COPYFILE');
 
-        var process = md && md.getLinksByType(linkGroup,
-            'OGC:WPS');
+          layer.set('downloads', downloads);
 
-        layer.set('processes', process);
+          var process = md && md.getLinksByType(linkGroup,
+              'OGC:WPS');
 
+          layer.set('processes', process);
+        }
       };
 
       $scope.$on('layerAddedFromContext', function(e,l) {
@@ -488,10 +492,20 @@
       }
 
       scope.links = md.getLinksByType('LINK');
-      scope.downloads = md.getGroupedLinksByTypes('#FILE',
-          '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
-      scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
-          'OGC:WMS', 'OGC:OWS-C');
+
+      var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
+      if(transferOpts) {
+        scope.downloads = md.getLinksByType('#FILE',
+            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+        scope.layers = md.getLinksByType('OGC:WMTS',
+            'OGC:WMS', 'OGC:OWS-C');
+      }
+      else {
+        scope.downloads = md.getGroupedLinksByTypes('#FILE',
+            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+        scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
+            'OGC:WMS', 'OGC:OWS-C');
+      }
     }
   }]);
 
