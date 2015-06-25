@@ -264,6 +264,10 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
+          if(gnSearchSettings.viewerUrl) {
+            window.open(gnSearchSettings.viewerUrl, '_blank');
+            return;
+          }
           if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
               link.name, link.url)) {
             return;
