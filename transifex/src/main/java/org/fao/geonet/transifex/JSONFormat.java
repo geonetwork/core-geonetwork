@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Jesse on 6/18/2015.
  */
-public class JsonFormat implements TranslationFormat {
+public class JSONFormat implements TranslationFormat {
 
     private TranslationFileConfig stdConfig;
 

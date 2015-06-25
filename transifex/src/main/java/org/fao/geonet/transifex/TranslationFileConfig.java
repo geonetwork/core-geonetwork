@@ -1,5 +1,6 @@
 package org.fao.geonet.transifex;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.fao.geonet.Constants;
@@ -24,12 +25,12 @@ import java.util.Set;
 public class TranslationFileConfig {
     private static final Map<String, Class<? extends TranslationFormat>> FORMATS = Maps.newHashMap();
     static {
-        FORMATS.put(SchemaPluginLabelsFormat.class.getSimpleName(), SchemaPluginLabelsFormat.class);
-        FORMATS.put(SchemaPluginCodelistFormat.class.getSimpleName(), SchemaPluginCodelistFormat.class);
-        FORMATS.put(LeafElementFormat.class.getSimpleName(), LeafElementFormat.class);
-        FORMATS.put(SimpleElementFormat.class.getSimpleName(), SimpleElementFormat.class);
-        FORMATS.put(JsonFormat.class.getSimpleName(), JsonFormat.class);
-        FORMATS.put(XmlFormat.class.getSimpleName(), XmlFormat.class);
+        FORMATS.put(SchemaPluginLabelsFormat.class.getSimpleName().toLowerCase(), SchemaPluginLabelsFormat.class);
+        FORMATS.put(SchemaPluginCodelistFormat.class.getSimpleName().toLowerCase(), SchemaPluginCodelistFormat.class);
+        FORMATS.put(LeafElementFormat.class.getSimpleName().toLowerCase(), LeafElementFormat.class);
+        FORMATS.put(SimpleElementFormat.class.getSimpleName().toLowerCase(), SimpleElementFormat.class);
+        FORMATS.put(JSONFormat.class.getSimpleName().toLowerCase(), JSONFormat.class);
+        FORMATS.put(XmlFormat.class.getSimpleName().toLowerCase(), XmlFormat.class);
     }
     /**
      * Id of the format.  Will be used in id uploaded to transifex.
@@ -44,7 +45,7 @@ public class TranslationFileConfig {
     /**
      * The format strategy class. Options:
      * <ul>
-     *     <li>JsonNFormat</li>
+     *     <li>JSONFormat</li>
      *     <li>XmlFormat</li>
      *     <li>SchemaPluginLabelsFormat</li>
      *     <li>SchemaPluginCodelistFormat</li>
@@ -95,15 +96,19 @@ public class TranslationFileConfig {
             name = id;
         }
 
-        Class<? extends TranslationFormat> lookedUpClass = FORMATS.get(formatClass);
-        Assert.notNull(lookedUpClass, formatClass + " is not one of: " + FORMATS.keySet());
-        format = lookedUpClass.newInstance();
+        format = getFormatInstance(this.formatClass);
 
         format.configure(this, parameters);
 
         if (layout == null) {
             layout = format.getDefaultLayout();
         }
+    }
+    @VisibleForTesting
+    static TranslationFormat getFormatInstance(String formatClass) throws InstantiationException, IllegalAccessException {
+        Class<? extends TranslationFormat> lookedUpClass = FORMATS.get(formatClass.toLowerCase());
+        Assert.notNull(lookedUpClass, formatClass.toLowerCase() + " is not one of: " + FORMATS.keySet());
+        return lookedUpClass.newInstance();
     }
 
     public List<TransifexReadyFile> getTransifexFiles() throws Exception {
