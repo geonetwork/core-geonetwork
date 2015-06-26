@@ -164,7 +164,8 @@ public class GeonetHttpRequestFactoryTest {
 
         assertTrue(httpRequestBase instanceof HttpGet);
         assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(80, httpRequestBase.getURI().getPort());
+        //Expects -1 instead of 80, this sentinal value will remove the :80 from the URI.
+        assertEquals(-1, httpRequestBase.getURI().getPort());
         assertEquals("http", httpRequestBase.getURI().getScheme());
         assertEquals("/path", httpRequestBase.getURI().getPath());
         assertEquals("queryString", httpRequestBase.getURI().getQuery());
@@ -180,7 +181,8 @@ public class GeonetHttpRequestFactoryTest {
 
         assertTrue(httpRequestBase instanceof HttpGet);
         assertEquals("host", httpRequestBase.getURI().getHost());
-        assertEquals(443, httpRequestBase.getURI().getPort());
+        //Expects -1 instead of 80, this sentinal value will remove the :443 from the URI.
+        assertEquals(-1, httpRequestBase.getURI().getPort());
         assertEquals("https", httpRequestBase.getURI().getScheme());
         assertEquals("/path", httpRequestBase.getURI().getPath());
         assertEquals("queryString", httpRequestBase.getURI().getQuery());
