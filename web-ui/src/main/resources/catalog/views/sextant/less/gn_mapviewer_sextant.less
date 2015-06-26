@@ -697,44 +697,4 @@
   }
 }
 
-
-.popover {
-  height: auto;
-  border-radius: 2px;
-  font-size: 12px;
-  &.popover-dropdown .popover-content {
-    display: table-cell;
-    vertical-align: middle;
-    height: 19em;
-    li {
-      padding: 8px 10px;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-      &:first-child { border-top: none; }
-      &:last-child { border-bottom: none; }
-      input[type="range"] {
-        display: block;
-        width: 100px;
-        margin-left: 10px
-      }
-    }
-  }
-  &.popover-dropdown-2 .popover-content {
-    height: 8em;
-  }
-  &.popover-dropdown-3 .popover-content {
-    height: 10.5em;
-  }
-  &.popover-dropdown-4 .popover-content {
-    height: 13em;
-  }
-  &.popover-dropdown-5 .popover-content {
-    height: 15.5em;
-  }
-  .dropdown-menu {
-    position: static;
-    box-shadow: none;
-    padding: 0 0 1em;
-  }
-}
+@import 'gn_popover.less';
