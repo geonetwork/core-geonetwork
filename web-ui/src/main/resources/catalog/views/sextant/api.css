@@ -192,6 +192,9 @@ yx-axis
 .gn button {
   text-shadow: none;
 }
+.gn ul {
+  font-size: 1em;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
@@ -10645,6 +10648,9 @@ yx-axis
   max-height: calc(700px);
   overflow-x: hidden;
   overflow-y: auto;
+}
+.gn [sxt-main-viewer] .layers .sxt-layertree ul {
+  font-size: 12px;
 }
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
   height: 350px;
