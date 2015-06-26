@@ -102,10 +102,7 @@ public class GeonetHttpRequestFactory {
      * @return the XmlRequest.
      */
     public final XmlRequest createXmlRequest(URL url) {
-        int port = url.getPort();
-        if (-1 == port) {
-            port = url.getDefaultPort();
-        }
+        final int port = url.getPort();
         final XmlRequest request = createXmlRequest(url.getHost(), port,
                 url.getProtocol());
 
