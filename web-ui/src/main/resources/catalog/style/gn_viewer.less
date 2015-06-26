@@ -110,6 +110,9 @@
         transition: opacity @transition-params;
       }
     }
+    .gn-layer-outofrange > label {
+      color: #999;
+    }
     .gn-searchlayer {
       label {
         font-size: 90%;
@@ -247,23 +250,6 @@
     }
     label {
       padding-top: .3em;
-    }
-  }
-
-  .panel-carousel-window {
-    overflow-x: hidden;
-  }
-  .panel-carousel-container {
-    width: 400%;
-    position: relative;
-    left: 0;
-    transition: left @transition-params;
-    display: flex;
-  }
-  .panel-carousel {
-    flex: 1;
-    .alert {
-      font-size: @font-size-small;
     }
   }
 

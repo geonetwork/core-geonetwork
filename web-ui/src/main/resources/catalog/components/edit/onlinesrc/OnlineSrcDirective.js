@@ -7,7 +7,7 @@
 
   /**
    * @ngdoc overview
-   * @name gn_onlinesrc_directive
+   * @name gn_onlinesrc
    *
    * @description
    * Provide directives for online resources
@@ -191,9 +191,17 @@
 
                 $timeout(function() {
                   if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                    // FIXME : only first extent is took into account
+                    var extent = scope.gnCurrentEdit.extent[0],
+                        proj = ol.proj.get(gnMap.getMapConfig().projection),
+                        projectedExtent =
+                        ol.extent.containsExtent(
+                        proj.getWorldExtent(),
+                        extent) ?
+                        gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
+                        proj.getExtent();
                     scope.map.getView().fitExtent(
-                        gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
-                        'EPSG:4326', gnMap.getMapConfig().projection),
+                        projectedExtent,
                         scope.map.getSize());
                   }
                 });
@@ -262,7 +270,8 @@
               scope.thumbnailUploadOptions = {
                 autoUpload: false,
                 url: 'md.thumbnail.upload',
-                //maxNumberOfFiles: 1,
+                maxNumberOfFiles: 1,
+                dropZone: $('#gn-upload-thumbnail'),
                 //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
                 done: uploadThumbnailDone,
                 fail: uploadThumbnailError
@@ -410,9 +419,9 @@
 
               var resetForm = function() {
                 if (scope.params) {
-                  scope.params.desc = scope.mdLangs ? {} : '';
+                  scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
-                  scope.params.name = scope.mdLangs ? {} : '';
+                  scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
                 }
                 scope.clear(scope.queue);
@@ -438,6 +447,7 @@
               scope.onlinesrcUploadOptions = {
                 autoUpload: false,
                 url: 'resource.upload.and.link',
+                dropZone: $('#gn-upload-onlinesrc'),
                 // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                 done: uploadOnlinesrcDone,
                 fail: uploadOnlineSrcError
@@ -466,6 +476,7 @@
                     }
                     scope.params.desc = desc.join('|');
                   }
+
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {
                         resetForm();
@@ -580,7 +591,7 @@
                     $(scope.popupid).modal('show');
 
                     // parameters of the online resource form
-                    scope.srcParams = {};
+                    scope.srcParams = {selectedLayers: []};
 
                     var searchParams = {
                       type: scope.mode
@@ -606,6 +617,7 @@
                     gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
+                          scope.srcParams.selectedLayers = [];
                           scope.layers.push(capabilities.Layer[0]);
                           angular.forEach(scope.layers[0].Layer, function(l) {
                             scope.layers.push(l);
@@ -626,22 +638,33 @@
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
                       var links = [];
-                      links = links.concat(md.getLinksByType('OGC:WMS'));
-                      links = links.concat(md.getLinksByType('wms'));
 
+                      scope.srcParams.selectedLayers = [];
                       if (scope.mode == 'service') {
+                        links = links.concat(md.getLinksByType('OGC:WMS'));
+                        links = links.concat(md.getLinksByType('wms'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
                         if (angular.isArray(links) && links.length == 1) {
                           scope.loadWMSCapabilities(links[0].url);
+                          scope.srcParams.url = links[0].url;
                         } else {
+                          scope.srcParams.url = '';
                           scope.alertMsg =
                               $translate('linkToServiceWithoutURLError');
                         }
                       }
                       else {
-                        scope.layers = links;
+                        // TODO: Check the appropriate WMS service
+                        // or list URLs if many
+                        links = links.concat(
+                            gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
+                        links = links.concat(
+                            gnCurrentEdit.metadata.getLinksByType('wms'));
+                        var serviceUrl = links[0].url;
+                        scope.loadWMSCapabilities(serviceUrl);
+                        scope.srcParams.url = serviceUrl;
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       }

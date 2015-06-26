@@ -6,7 +6,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_searchlayerformap_directive.directive:gnSearchLayerForMap
+   * @name gn_viewer.directive:gnSearchLayerForMap
    *
    * @description
    * Panel to search for WMS layer describe in the catalog

@@ -645,7 +645,16 @@
             </resource>-->
           </webResources>
             <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
-          <packagingExcludes>xml/schemas/**</packagingExcludes>
+            <packagingExcludes>
+              xml/schemas/**,
+              catalog/lib/style/bootstrap/docs/**,
+              catalog/lib/style/bootstrap/fonts/**,
+              catalog/lib/style/bootstrap/grunt/**,
+              catalog/lib/style/bootstrap/test-infra/**,
+              catalog/lib/style/font-awesome/css/**,
+              catalog/lib/style/font-awesome/src/**,
+              catalog/lib/style/font-awesome/scss/**
+            </packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>

@@ -1,6 +1,19 @@
 (function() {
   goog.provide('gn_owscontext_service');
 
+
+
+
+
+
+
+  goog.require('Filter_1_0_0');
+  goog.require('GML_2_1_2');
+  goog.require('OWC_0_3_1');
+  goog.require('OWS_1_0_0');
+  goog.require('SLD_1_0_0');
+  goog.require('XLink_1_0');
+
   var module = angular.module('gn_owscontext_service', []);
 
   // OWC Client
@@ -17,6 +30,19 @@
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_viewer.service:gnOwsContextService
+   * @requires gnMap
+   * @requires gnOwsCapabilities
+   * @requires gnEditor
+   * @requires gnViewerSettings
+   *
+   * @description
+   * The `gnOwsContextService` service provides tools to load and store OWS
+   * Context.
+   */
   module.service('gnOwsContextService', [
     'gnMap',
     'gnOwsCapabilities',
@@ -30,7 +56,13 @@
              $translate, $q, $filter) {
 
       /**
+       * @ngdoc method
+       * @name gnOwsContextService#loadContext
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
        * Loads a context, ie. creates layers and centers the map
+       *
        * @param {Object} context object
        */
       this.loadContext = function(text, map) {
@@ -135,6 +167,11 @@
       };
 
       /**
+       * @ngdoc method
+       * @name gnOwsContextService#loadContextFromUrl
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
        * Loads a context from an URL.
        * @param {string} url URL to context
        * @param {ol.map} map map
@@ -150,9 +187,14 @@
       };
 
       /**
+       * @ngdoc method
+       * @name gnOwsContextService#writeContext
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
        * Creates a javascript object based on map context then marshals it
        *    into XML
-       * @param {Object} context object
+       * @param {ol.Map} context object
        */
       this.writeContext = function(map) {
 
@@ -265,7 +307,14 @@
       };
 
       /**
+       * @ngdoc method
+       * @name gnOwsContextService#writeContext
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
        * Saves the map context to local storage
+       *
+       * @param {ol.Map} map object
        */
       this.saveToLocalStorage = function(map) {
         if (map.getSize()[0] == 0 || map.getSize()[1] == 0) {
@@ -278,7 +327,13 @@
       };
 
       /**
+       * @ngdoc method
+       * @name gnOwsContextService#createLayer
+       * @methodOf gn_viewer.service:gnOwsContextService
+       *
+       * @description
        * Create a WMS ol.Layer from context object
+       *
        * @param {Object} layer layer
        * @param {ol.map} map map
        * @param {numeric} bgIdx if it is a background layer, index in the

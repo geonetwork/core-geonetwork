@@ -24,7 +24,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_owscontext_directive.directive:gnOwsContext
+   * @name gn_viewer.directive:gnOwsContext
    *
    * @description
    * Panel to load or export an OWS Context
@@ -32,14 +32,18 @@
   module.directive('gnOwsContext', [
     'gnViewerSettings',
     'gnOwsContextService',
+    'gnConfig',
     '$translate',
     '$rootScope',
-    function(gnViewerSettings, gnOwsContextService, $translate, $rootScope) {
+    '$http',
+    function(gnViewerSettings, gnOwsContextService, gnConfig,
+        $translate, $rootScope, $http) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
             'partials/owscontext.html',
         scope: {
+          user: '=',
           map: '='
         },
         link: function(scope, element, attrs) {
@@ -55,6 +59,33 @@
             $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
 
+          scope.isSaveMapInCatalogAllowed =
+              gnConfig['map.isSaveMapInCatalogAllowed'];
+          scope.mapUuid = null;
+          scope.mapProps = {
+            map_title: '',
+            map_abstract: ''
+          };
+          scope.saveInCatalog = function($event) {
+            scope.mapUuid = null;
+            var xml = gnOwsContextService.writeContext(scope.map);
+            scope.mapProps.map_string =
+                new XMLSerializer().serializeToString(xml);
+            scope.mapProps.map_filename = $translate('mapFileName') +
+                '-z' + scope.map.getView().getZoom() +
+                '-c' + scope.map.getView().getCenter().join('-') + '.ows';
+            return $http.post('map.import?_content_type=json',
+                $.param(scope.mapProps), {
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(
+                function(response) {
+                  scope.mapUuid = response.data[0];
+                },
+                function(data) {
+                  console.warn(data);
+                }
+            );
+          };
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(
@@ -69,13 +100,13 @@
 
           //TODO: don't trigger if we load same file twice
           angular.element(fileInput).bind('change', function(changeEvent) {
-            scope.$apply(function() {
-              if (fileInput.files.length > 0) {
-                readAsText(fileInput.files[0], function(text) {
-                  gnOwsContextService.loadContext(text, scope.map);
-                });
-              }
-            });
+            if (fileInput.files.length > 0) {
+              readAsText(fileInput.files[0], function(text) {
+                gnOwsContextService.loadContext(text, scope.map);
+                scope.$digest();
+              });
+            }
+            $('#owc-file-input')[0].value = '';
           });
 
           // load context from url or from storage

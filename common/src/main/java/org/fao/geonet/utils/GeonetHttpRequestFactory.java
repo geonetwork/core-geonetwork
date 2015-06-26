@@ -13,7 +13,11 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
@@ -98,7 +102,10 @@ public class GeonetHttpRequestFactory {
      * @return the XmlRequest.
      */
     public final XmlRequest createXmlRequest(URL url) {
-        final int port = url.getPort() == -1 ? url.getDefaultPort() : url.getPort();
+        int port = url.getPort();
+        if (-1 == port) {
+            port = url.getDefaultPort();
+        }
         final XmlRequest request = createXmlRequest(url.getHost(), port,
                 url.getProtocol());
 
@@ -153,6 +160,7 @@ public class GeonetHttpRequestFactory {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         configurator.apply(clientBuilder);
         CloseableHttpClient httpClient = clientBuilder.build();
+
         if (r.isPreemptiveBasicAuth() || r.getHttpClientContext() != null) {
             return new AdaptingResponse(httpClient, httpClient.execute(request, r.getHttpClientContext()));
         } else {

@@ -1941,8 +1941,7 @@
 			<option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)
 			</option>
 			<option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
-			<option value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)
-			</option>
+			<option value="OGC:WMC">OGC-WMC Web Map Context</option>
 			<option value="OGC:WMS">OGC-WMS Web Map Service</option>
 			<option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)
 			</option>
@@ -2700,6 +2699,10 @@
 		<description>Identifier of resource to which the operation applies</description>
 	</element>
 	<element name="srv:couplingType">
+		<label>Coupling Type</label>
+		<description>Type of Coupling</description>
+	</element>
+	<element name="srv:SV_CouplingType">
 		<label>Coupling Type</label>
 		<description>Type of Coupling</description>
 	</element>

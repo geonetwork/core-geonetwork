@@ -169,14 +169,22 @@ public class UserSession
 			return userDetails.getProfile();
 		}
 	}
-	public String getEmailAddr() {
-		User userDetails = getPrincipal();
-		if (userDetails == null) {
-			return null;   
-		} else {
-			return userDetails.getEmail();
-		}
-	}
+    public String getEmailAddr() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getEmail();
+        }
+    }
+    public String getOrganisation() {
+        User userDetails = getPrincipal();
+        if (userDetails == null) {
+            return null;
+        } else {
+            return userDetails.getOrganisation();
+        }
+    }
 
 	public int getUserIdAsInt()  { 
 		String id = getUserId();

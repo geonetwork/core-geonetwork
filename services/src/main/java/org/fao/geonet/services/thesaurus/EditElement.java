@@ -127,9 +127,8 @@ public class EditElement implements Service {
 			KeywordsSearcher searcherBNR = new KeywordsSearcher(context, thesaurusMan);
 			
 			for (int i = 0; i <= reqType.size() - 1; i++) {
-				searcherBNR.searchForRelated(uri, ref, reqType.get(i), lang);
-			
-				searcherBNR.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+				searcherBNR.searchForRelated(uri, ref, reqType.get(i), KeywordSort.defaultLabelSorter(SortDirection.DESC), lang);
+
 				String type;
 				
 				if (reqType.get(i) == KeywordRelation.BROADER) {

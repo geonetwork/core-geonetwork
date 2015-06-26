@@ -80,7 +80,7 @@ public class Summary {
         params.put("formats", formats != null ? formats : "");
         params.put("keywords", keywords != null ? keywords : "");
         params.put("isHTML", env.getFormatType() == FormatType.html);
-        params.put("isPDF", env.getFormatType() == FormatType.pdf);
+        params.put("isPDF", env.getFormatType() == FormatType.pdf || env.getFormatType() == FormatType.testpdf);
 
         return handlers.fileResult("html/view-header.html", params);
     }

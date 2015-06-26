@@ -566,6 +566,17 @@
         }
       };
 
+      $scope.downloadReplacementConfig = function($event) {
+        var content = 'data:text/json;charset=utf-8,' +
+                      encodeURIComponent(
+            JSON.stringify(
+                          $scope.replacer.replacements));
+        $($event.target).parent('a')
+            .attr('download', 'config.json')
+            .attr('href', content);
+        $event.stopPropagation();
+      };
+
       $scope.$watch('replacer.group', function(newValue, oldValue) {
 
         // Ignore empty value: in initial setup and

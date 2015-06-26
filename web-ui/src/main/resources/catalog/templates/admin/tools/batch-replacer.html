@@ -69,11 +69,18 @@
     </div>
 
     <div class="btn-toolbar">
-      <button type="button" class="btn btn-primary pull-right"
+      <button type="button" class="btn btn-default pull-right"
               data-ng-click="loadReplacementConfig()">
         <i class="fa fa-cog"></i>&nbsp;
         <span data-translate="">batchreplacer-loadReplacementConfig</span>
       </button>
+      <a type="button"
+         class="btn btn-default pull-right"
+         data-ng-disabled="replacer.replacements.length == 0"
+         data-ng-click="downloadReplacementConfig($event)">
+        <i class="fa fa-save"></i>&nbsp;
+        <span data-translate="">batchreplacer-downloadReplacementConfig</span>
+      </a>
     </div>
   </fieldset>
 

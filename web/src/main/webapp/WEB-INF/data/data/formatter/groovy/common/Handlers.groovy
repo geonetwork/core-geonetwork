@@ -3,6 +3,7 @@ import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
 import org.fao.geonet.kernel.GeonetworkDataDirectory
+import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink
 import org.fao.geonet.services.metadata.format.groovy.util.Direction
@@ -94,19 +95,26 @@ public class Handlers {
         }
     }
 
+
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
             def minimize = ''
             if (env.param("debug").toBool()) {
                 minimize = '?minimize=false'
             }
+            String cssLinks = """
+    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
+    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>""";
+
+            if (func.isPDFOutput()) {
+                cssLinks = """<link rel="stylesheet" href="../../static/gn_metadata_pdf.css$minimize"/>"""
+            }
             return """
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
-    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>
+    $cssLinks
     <script src="../../static/lib.js$minimize"></script>
     <script src="../../static/gn_formatter_lib.js$minimize"></script>
 </head>
@@ -118,12 +126,15 @@ public class Handlers {
     }
 
     def htmlOrXmlEnd = {
-        def required = """
+        def required = "";
+        if (!func.isPDFOutput()) {
+            required = """
 <script type="text/javascript">
 //<![CDATA[
     gnFormatter.formatterOnComplete();
 //]]>
 </script>"""
+        }
         if (func.isHtmlOutput()) {
             return required + '</body></html>'
         } else {

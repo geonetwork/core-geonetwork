@@ -70,6 +70,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEvent;
@@ -96,7 +97,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +119,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Lazy
 public class Format extends AbstractFormatService implements ApplicationListener {
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
-    public static final Set<String> FIELDS_TO_LOAD = Collections.singleton(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
@@ -190,6 +189,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
      * @param width the approximate size of the element that the formatter output will be embedded in compared to the full device
      *              width.  Allowed options are the enum values: {@link org.fao.geonet.services.metadata.format.FormatterWidth}
      *              The default is _100 (100% of the screen)
+     * @param mdPath (optional) the xpath to the metadata node if it's not the root node of the XML
      */
     @RequestMapping(value = "/{lang}/xml.format.{type}")
     @ResponseBody
@@ -201,6 +201,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @RequestParam(value = "url", required = false) final String url,
             @RequestParam(value = "schema") final String schema,
             @RequestParam(value = "width", defaultValue = "_100") final FormatterWidth width,
+            @RequestParam(value = "mdpath", required = false) final String mdPath,
             final NativeWebRequest request) throws Exception {
 
         if (url == null && metadata == null) {
@@ -216,6 +217,12 @@ public class Format extends AbstractFormatService implements ApplicationListener
             metadata = getXmlFromUrl(context, lang, url, request);
         }
         Element metadataEl = Xml.loadString(metadata, false);
+
+        if(mdPath != null) {
+            final List<Namespace> namespaces = context.getBean(SchemaManager.class).getSchema(schema).getNamespaces();
+            metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
+            metadataEl.detach();
+        }
         Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
         metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
 
@@ -250,7 +257,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         final ClientHttpResponse execute = requestFactory.execute(getXmlRequest);
         if (execute.getRawStatusCode() != 200) {
-            throw new IllegalArgumentException("Request did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
+            throw new IllegalArgumentException("Request " + adjustedUrl + " did not succeed.  Response Status: " + execute.getStatusCode() + ", status text: " + execute.getStatusText());
         }
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
@@ -266,12 +273,13 @@ public class Format extends AbstractFormatService implements ApplicationListener
             @PathVariable final String lang,
             @PathVariable final String type,
             @RequestParam(required = false) final String id,
+            @RequestParam(value = "uuid", required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
         FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
 
-        String resolvedId = resolveId(id);
+        String resolvedId = resolveId(id, uuid);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, true, FormatterWidth._100);
         byte[] bytes = formatterCache.getPublished(key);
 
@@ -299,7 +307,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
     public void exec(
             @PathVariable final String lang,
             @PathVariable final String type,
-            @RequestParam final String id,
+            @RequestParam(value = "id", required = false) final String id,
+            @RequestParam(value = "uuid", required = false) final String uuid,
             @RequestParam(value = "xsl", required = false) final String xslid,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
@@ -307,7 +316,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
             final NativeWebRequest request) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
-        String resolvedId = resolveId(id);
+        String resolvedId = resolveId(id, uuid);
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 

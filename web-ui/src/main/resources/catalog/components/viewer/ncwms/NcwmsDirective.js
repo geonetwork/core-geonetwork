@@ -6,10 +6,13 @@
 
   /**
    * @ngdoc directive
-   * @name gn_ncwms_directive.directive:gnMainViewer
-   * @deprecated Use gnRegionPicker instead
+   * @name gn_viewer.directive:gnNcwmsTransect
    *
    * @description
+   * If we detects in the capabilities that the layer comes from NCWMS, then
+   * we add some properties to it and we display in the layermanager item
+   * a additional list of tools for this specific layer.
+   * The directive `gnNcwmsTransect` provides the form for all NCWMS parameters.
    */
   module.directive('gnNcwmsTransect', [
     'gnHttp',

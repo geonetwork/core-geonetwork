@@ -4,6 +4,14 @@
   var module = angular.module('gn_legendpanel_directive', [
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnLegendPanel
+   *
+   * @description
+   * This directive `gnLegendPanel` is a panel containing all legends of all
+   * active layers in the map.
+   */
   module.directive('gnLegendPanel', [
     '$filter',
     'gnLayerFilters',
@@ -25,6 +33,14 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnLayerorderPanel
+   *
+   * @description
+   * This directive `gnLayerorderPanel` is a panel which offers tools to change
+   * active layers order in the map.
+   */
   module.directive('gnLayerorderPanel', [
     '$filter',
     'gnLayerFilters',
@@ -60,6 +76,14 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnLayersourcesPanel
+   *
+   * @description
+   * This directive `gnLayersourcesPanel` is a panel that displays a list of
+   * all layers and their sources.
+   */
   module.directive('gnLayersourcesPanel', [
     '$filter',
     'gnLayerFilters',

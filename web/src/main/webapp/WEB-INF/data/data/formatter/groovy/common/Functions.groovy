@@ -1,15 +1,20 @@
 package common
 
 import org.fao.geonet.services.metadata.format.FormatType
+import org.fao.geonet.services.metadata.format.groovy.Environment
 
 public class Functions {
     org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    def f
-    def env
+    def org.fao.geonet.services.metadata.format.groovy.Functions f
+    def Environment env
 
     def isHtmlOutput = {
         env.formatType == FormatType.html || env.formatType == FormatType.pdf ||
                 env.formatType == FormatType.testpdf
+    }
+
+    def isPDFOutput = {
+        env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf
     }
 
     /**

@@ -6,13 +6,12 @@
           data-ng-click="select(layer)"
           title="{{layer.abstract}}"
           class="
-            {{(layerSelected.Name == layer.Name) ? 'success ' : ''}}
-            {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}"
-          data-ng-class="{'success': selection.indexOf(layer) >= 0}">
+            {{isSelected(layer.Name) ? 'success ' : ''}}
+            {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}">
         <td class="add col-first">
           <div class="icon-zoom-in"></div>
         </td>
-        <td>{{layer.Title}}</td>
+        <td>{{layer.Title}} ({{layer.Name}})</td>
       </tr>
     </tbody>
   </table>

@@ -22,6 +22,17 @@
       '(\-?[\\d\\.\']+)[\\s,]+(\-?[\\d\\.\']+)');
 
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_viewer.service:gnGetCoordinate
+   *
+   * @description
+   * The `gnGetCoordinate` parses the coordinates given in the localisation
+   * input. It detects the format (lat/lon degree meter projection etc..)
+   * and try to guess the coordinates projection to return the map extent
+   * of the localisation.
+   */
   module.value('gnGetCoordinate', function(extent, query) {
     var position;
     var valid = false;

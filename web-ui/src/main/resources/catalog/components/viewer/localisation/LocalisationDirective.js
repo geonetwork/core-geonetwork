@@ -6,14 +6,17 @@
 
   /**
    * @ngdoc directive
-   * @name gn_localisation.directive:gnLocalisationInput
+   * @name gn_viewer.directive:gnLocalisationInput
    *
    * @description
    * Panel to load WMS capabilities service and pick layers.
    * The server list is given in global properties.
    */
-  module.directive('gnLocalisationInput', ['$timeout', 'gnGlobalSettings',
-    function($timeout, gnGlobalSettings) {
+  module.directive('gnLocalisationInput', [
+    '$timeout',
+    'gnGlobalSettings',
+    'gnViewerSettings',
+    function($timeout, gnGlobalSettings, gnViewerSettings) {
       return {
         restrict: 'A',
         require: 'gnLocalisationInput',
@@ -109,16 +112,7 @@
           scope.collapsed = true;
 
           /** default localisation */
-          scope.localisations = [{
-            name: 'United States',
-            extent: [-13884991, 2870341, -7455066, 6338219]
-          }, {
-            name: 'France',
-            extent: [-817059, 4675034, 1719426, 7050085]
-          },{
-            name: 'Brest',
-            extent: [-510281, 6164880, -490464, 6183435]
-          }];
+          scope.localisations = gnViewerSettings.localisations;
 
           /** Clear input and search results */
           scope.clearInput = function() {

@@ -1,4 +1,19 @@
 <div class="context">
+
+  <a class="btn btn-default btn-block"
+     data-ng-click="reset($event)"
+     title="{{'resetContext'|translate}}">
+    <i class="fa fa-eraser"></i>&nbsp;
+    <span data-translate="">resetContext</span>
+  </a>
+
+  <button type="button"
+          class="btn btn-default btn-block import"
+          title="{{'uploadContext'|translate}}">
+    <i class="fa fa-upload"></i>&nbsp;
+    <span data-translate="">uploadContext</span>
+  </button>
+
   <a class="btn btn-default btn-block"
      data-ng-click="save($event)"
      title="{{'downloadContext'|translate}}"
@@ -6,24 +21,46 @@
     <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">downloadContext</span>
   </a>
+  <fieldset data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()">
+    <legend data-translate="">saveMapInCatalog</legend>
+    <form>
+      <div class="form-group">
+        <label for="mapTitle"
+               data-translate="">mapTitle</label>
+        <input type="text"
+               class="form-control"
+               name="mapTitle"
+               data-ng-model="mapProps.map_title"
+               data-ng-required=""
+               id="mapTitle">
+      </div>
+      <div class="form-group">
+        <label for="mapAbstract"
+               data-translate="">mapAbstract</label>
+        <textarea class="form-control"
+                  name="mapAbstract"
+                  data-ng-model="mapProps.map_abstract"
+                  id="mapAbstract"></textarea>
+      </div>
+      <a class="btn btn-default btn-block"
+         data-gn-click-and-spin="saveInCatalog($event)"
+         title="{{'saveInCatalog'|translate}}">
+        <i class="fa fa-save"></i>&nbsp;
+        <span data-translate="">saveMapInCatalogAction</span>
+      </a>
+    </form>
+
+    <p data-ng-if="mapUuid != null"
+       data-translate=""
+       data-translate-values="{uuid: '{{mapUuid}}'}">mapSavedInCatalog</p>
+  </fieldset>
+
   <!--
   TODO: KML Export ?
   <a class="btn btn-default">
     <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">kmlContext</span>
   </a>-->
-  <button type="button"
-          class="btn btn-default btn-block import"
-          title="{{'uploadContext'|translate}}">
-    <i class="fa fa-upload"></i>&nbsp;
-    <span data-translate="">uploadContext</span>
-  </button>
-  <a class="btn btn-default btn-block"
-     data-ng-click="reset($event)"
-     title="{{'resetContext'|translate}}">
-    <i class="fa fa-eraser"></i>&nbsp;
-    <span data-translate="">resetContext</span>
-  </a>
 </div>
 
 <input class="hidden" type="file"

@@ -57,7 +57,7 @@
           </button>
           <button type="button" class="btn btn-danger"
             data-ng-click="deleteThesaurus()">
-            <i class="fa fa-trash-o"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
+            <i class="fa fa-times"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
           </button>
         </div>
 
@@ -146,7 +146,7 @@
               <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>
             <a href=""
-              class="fa fa-trash-o text-danger pull-right" data-ng-hide="isExternal()"
+              class="fa fa-times text-danger pull-right" data-ng-hide="isExternal()"
               data-ng-click="deleteKeyword(k)"/>
           </li>
         </ul>
@@ -205,7 +205,7 @@
             <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
-                  class="fa fa-trash-o" data-ng-click="clear(file)"/>
+                  class="fa fa-times" data-ng-click="clear(file)"/>
               </li>
             </ul>
 

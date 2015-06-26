@@ -121,7 +121,7 @@ public class AbstractHttpRequest {
 
     public void setUrl(URL url) {
         host = url.getHost();
-        port = (url.getPort() == -1) ? url.getDefaultPort() : url.getPort();
+        port = url.getPort();
         protocol = url.getProtocol();
         address = url.getPath();
         query = url.getQuery();
@@ -285,7 +285,7 @@ public class AbstractHttpRequest {
             }
         }
 
-        if (host == null || port < 0 || protocol == null) {
+        if (host == null || protocol == null) {
             throw new IllegalStateException(String.format(getClass().getSimpleName()+" is not ready to be executed: \n\tprotocol: '%s' " +
                                             "\n\tuserinfo: '%s'\n\thost: '%s' \n\tport: '%s' \n\taddress: '%s'\n\tquery '%s'" +
                                             "\n\tfragment: '%s'", protocol, userInfo, host, port, address, query, fragment));

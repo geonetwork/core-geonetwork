@@ -659,6 +659,10 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('map/isMapViewerEnabled', 'true', 2, 9592, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('map/is3DModeAllowed', 'false', 2, 9593, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('map/isSaveMapInCatalogAllowed', 'true', 2, 9594, 'n');
 
   
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES 

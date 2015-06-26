@@ -11,6 +11,7 @@
     proxyUrl: '../../proxy?url=',
     locale: {},
     isMapViewerEnabled: false,
+    is3DModeAllowed: false,
     modelOptions: {
       updateOn: 'default blur',
       debounce: {
@@ -115,7 +116,7 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          url = $scope.url + 'info?_content_type=json&type=site&type=auth';
+          var url = $scope.url + 'info?_content_type=json&type=site&type=auth';
           return $http.get(url).
               success(function(data, status) {
                 $scope.info = data;
@@ -186,7 +187,7 @@
 
         // Retrieve user information if catalog is online
         var userLogin = catInfo.then(function(value) {
-          url = $scope.url + 'info?_content_type=json&type=me';
+          var url = $scope.url + 'info?_content_type=json&type=me';
           return $http.get(url).
               success(function(data, status) {
                 $scope.user = data.me;
@@ -205,7 +206,7 @@
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
-          url = 'qi?_content_type=json&summaryOnly=true';
+          var url = 'qi?_content_type=json&summaryOnly=true';
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;

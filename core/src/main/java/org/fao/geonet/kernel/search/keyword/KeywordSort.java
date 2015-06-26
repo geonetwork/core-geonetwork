@@ -23,6 +23,10 @@ public final class KeywordSort {
             public int compare(final KeywordBean kw1, final KeywordBean kw2) {
                 return direction.multiplier * normalizeDesc(kw1.getDefaultValue()).compareTo(normalizeDesc(kw2.getDefaultValue()));
             }
+            @Override
+            public String toString() {
+                return "Sort by Value " + direction;
+            }
         };
     }
     /**
@@ -37,6 +41,10 @@ public final class KeywordSort {
             public int compare(final KeywordBean kw1, final KeywordBean kw2) {
                 return direction.multiplier * normalizeDesc(kw1.getDefaultDefinition()).compareToIgnoreCase(
                         normalizeDesc(kw2.getDefaultDefinition()));
+            }
+            @Override
+            public String toString() {
+                return "Sort by Definition " + direction;
             }
         };
     }
@@ -59,7 +67,13 @@ public final class KeywordSort {
                 }
                 return defaultSorter.compare(kw1, kw2);
             }
+
+            @Override
+            public String toString() {
+                return "Prioritize: " + normSearchTerm + ", other order: " + direction;
+            }
         };
+
     }
 
     private static int calcSim(String val, String normSearchTerm) {

@@ -492,21 +492,52 @@ div[gn-transfer-ownership] .panel-body {
 [gn-share] {
 
   @media (min-width: @screen-md) {
-    min-width: 800px;
+    min-width: 600px;
   }
   .gn-searchgroup-input {
     padding-left: 0;
+    max-width: 400px;
   }
   .gn-share-grid {
-    th, td {
+    table {
+      width: auto;
+    }
+    thead, tbody {
+      display: block;
+    }
+    tbody {
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    td,th {
       text-align: center;
+      width: 7em;
+      &:first-child {
+        width: 15em;
+        text-align: left;
+      }
+      td {
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
     }
-    th:first-child, td:first-child  {
-      text-align: left;
-    }
-    td {
-      padding-top: 2px;
-      padding-bottom: 2px;
-    }
+
   }
+}
+
+.gn-popup-title {
+  span {
+    display: inline-block;
+    max-width: 660px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.gn-required > label:after {
+  content: " *";
+  color: #a94442;
+  font-weight: normal;
 }

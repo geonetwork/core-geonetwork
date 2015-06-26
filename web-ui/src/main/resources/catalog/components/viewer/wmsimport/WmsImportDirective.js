@@ -1,12 +1,12 @@
 (function() {
-  goog.provide('gn_wmsimport_directive');
+  goog.provide('gn_wmsimport');
 
-  var module = angular.module('gn_wmsimport_directive', [
+  var module = angular.module('gn_wmsimport', [
   ]);
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnWmsImport
+   * @name gn_viewer.directive:gnWmsImport
    *
    * @description
    * Panel to load WMS capabilities service and pick layers.
@@ -125,6 +125,15 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnKmlImport
+   *
+   * @description
+   * Panel to load KML and KMZ files. You could load them with file input or
+   * drag & drop them in the map.
+   */
+
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
     'gnAlertService',
@@ -241,7 +250,7 @@
           var requestFileSystem = window.webkitRequestFileSystem ||
               window.mozRequestFileSystem || window.requestFileSystem;
           var unzipProgress = document.createElement('progress');
-          var fileInput = document.getElementById('file-input');
+          var fileInput = element.find('input[type="file"]')[0];
 
           var model = (function() {
             var URL = window.webkitURL || window.mozURL || window.URL;
@@ -295,21 +304,22 @@
             });
           };
 
-          scope.uploadKMZ = function() {
+          angular.element(fileInput).bind('change', function(changeEvent) {
             if (fileInput.files.length > 0) {
               model.getEntries(fileInput.files[0], function(entries) {
                 scope.kmzEntries = entries;
                 scope.$apply();
               });
             }
-          };
+            $('#kmz-file-input')[0].value = '';
+          });
         }
       };
     }]);
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnCapTreeCol
+   * @name gn_wmsimport.directive:gnCapTreeCol
    *
    * @description
    * Directive to manage a collection of nested layers from
@@ -332,7 +342,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnCapTreeElt
+   * @name gn_wmsimport.directive:gnCapTreeElt
    *
    * @description
    * Directive to manage recursively nested layers from a capabilities

@@ -467,7 +467,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 if (cssGroups.contains(groupId)) {
                     throw new IllegalArgumentException("There are at least two css file with the name: " + name + ".  Each css file " +
-                                                       "must have unique names");
+                                                       "must have unique names. Check " + file.getPath() + ".");
                 }
 
                 cssGroups.add(groupId);
