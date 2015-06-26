@@ -193,7 +193,7 @@ yx-axis
   text-shadow: none;
 }
 .gn ul {
-  font-size: 1em;
+  font-size: initial;
 }
 @font-face {
   font-family: 'FontAwesome';
@@ -13861,6 +13861,12 @@ yx-axis
 }
 .gn [gn-metadata-display] section.links .gn-md-links .btn {
   margin-left: 4px;
+}
+.gn [gn-metadata-display] section.links [gn-related] {
+  display: inline-block;
+}
+.gn [gn-metadata-display] section.links [gn-related] .btn-group {
+  vertical-align: initial;
 }
 .gn [gn-metadata-display] section.links h3 {
   padding-bottom: .5em;
