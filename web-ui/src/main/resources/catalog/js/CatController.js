@@ -35,11 +35,12 @@
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location) {
+             gnSearchManagerService, gnConfigService, gnConfig,
+             gnGlobalSettings, $location) {
       $scope.version = '0.0.1';
       // TODO : add language
-      var tokens = location.href.split('/');
+      var url = gnGlobalSettings.gnUrl || location.href;
+      var tokens = url.split('/');
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
@@ -75,8 +76,8 @@
        * An ordered list of profiles
        */
       $scope.profiles = ['RegisteredUser', 'Editor',
-                         'Reviewer', 'UserAdmin',
-                         'Administrator'];
+        'Reviewer', 'UserAdmin',
+        'Administrator'];
       $scope.info = {};
       $scope.user = {};
       $scope.authenticated = false;
@@ -110,6 +111,10 @@
         timeout: -1
       };
 
+      $scope.isCasEnabled = function() {
+        return $scope.info.auth[0] == 'true';
+      };
+
       $scope.loadCatalogInfo = function() {
         var promiseStart = $q.when('start');
 
@@ -129,10 +134,10 @@
               }).
               error(function(data, status, headers, config) {
                 $rootScope.$broadcast('StatusUpdated',
-                   {
-                     title: $translate('somethingWrong'),
-                     msg: $translate('msgNoCatalogInfo'),
-                     type: 'danger'});
+                    {
+                      title: $translate('somethingWrong'),
+                      msg: $translate('msgNoCatalogInfo'),
+                      type: 'danger'});
               });
         });
 
@@ -181,12 +186,85 @@
             allowedProfiles.splice(0, profileIndex);
             return allowedProfiles.indexOf(this.profile) !== -1;
           };
-        }
-        );
+        });
 
+        var isSearch = !!gnGlobalSettings.gnUrl ||
+            $('[ng-app]').attr('ng-app').indexOf('gn_search') == 0;
+        var casDefer = $q.defer();
+        // After we get all infos, we get user (depending on if cas is enabled
+        // or not
+        catInfo.then(function() {
+
+          if($scope.isCasEnabled() && isSearch ) {
+            var onCasCheck = function() {
+
+              var intervalID;
+              var loginAttempts = 0;
+
+              intervalID = setInterval(function (){
+                loginAttempts += 1;
+                if(loginAttempts > (25)) {
+                  clearInterval (intervalID);
+                  casDefer.reject();
+                }
+                else  {
+                  var innerDoc = undefined;
+                  var loginEvent = undefined;
+                  try {
+
+                    var iframe = document.getElementById('casLoginFrame');
+                    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                    // Test if the CAS login form is in the iframe
+                    if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                      clearInterval (intervalID);
+                      loginEvent = false;
+                    }
+
+                    // Test if the auth have been made
+                    var connectedDiv = innerDoc.getElementsByTagName('info');
+                    if(connectedDiv) {
+                      clearInterval (intervalID);
+                      loginEvent = true;
+                    }
+
+                    // If we find bad credentials, we reload the iframe
+                    var badCred = innerDoc.getElementsByTagName("h1");
+                    if(badCred && badCred.length==1 && badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
+                      innerDoc.location.reload(true);
+                      clearInterval (intervalID);
+                    }
+                  }
+                  catch(err) {
+                    loginAttempts+=25;
+                    casDefer.reject();
+                  }
+                  if(loginEvent == true) {
+                    casDefer.resolve();
+                  }
+                  else if (loginEvent == false) {
+                    casDefer.reject();
+                  }
+                }
+              }, 200);
+            };
+
+            var casLoginFrame = document.createElement('iframe');
+            casLoginFrame.id = 'casLoginFrame';
+            casLoginFrame.onload = onCasCheck;
+            casLoginFrame.setAttribute('src',(gnGlobalSettings.gnUrl ?
+                gnGlobalSettings.gnUrl : '') + 'info?casLogin');
+            casLoginFrame.setAttribute('style','display:none');
+            document.body.appendChild(casLoginFrame);
+
+          }
+          else {
+            casDefer.resolve();
+          }
+        });
 
         // Retrieve user information if catalog is online
-        var userLogin = catInfo.then(function(value) {
+        var userLogin = casDefer.promise.finally(function(value) {
           var url = $scope.url + 'info?_content_type=json&type=me';
           return $http.get(url).
               success(function(data, status) {
@@ -198,7 +276,7 @@
               error(function(data, status, headers, config) {
                 // TODO : translate
                 $rootScope.$broadcast('StatusUpdated',
-                   {msg: $translate('msgNoUserInfo')}
+                    {msg: $translate('msgNoUserInfo')}
                 );
               });
         });
