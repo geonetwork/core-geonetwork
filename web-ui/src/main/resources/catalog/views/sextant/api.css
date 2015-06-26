@@ -10958,6 +10958,7 @@ yx-axis
 .gn .popover .dropdown-menu {
   position: static;
   box-shadow: none;
+  border: none;
   padding: 0 0 1em;
 }
 .gn .panel-body .gn-metadata-view {
@@ -14041,5 +14042,6 @@ yx-axis
 .popover .dropdown-menu {
   position: static;
   box-shadow: none;
+  border: none;
   padding: 0 0 1em;
 }
