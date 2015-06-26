@@ -173,7 +173,7 @@
       //Check if a added layer is NcWMS
       viewerMap.getLayers().on('add', function(e) {
         var layer = e.element;
-        if (layer.get('isNcwms') == true) {
+        if (layer.get('advanced') == true) {
           gnNcWms.feedOlLayer(layer);
         }
       });

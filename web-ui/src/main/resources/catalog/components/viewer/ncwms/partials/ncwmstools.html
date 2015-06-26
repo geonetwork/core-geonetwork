@@ -33,7 +33,7 @@
     </div>
 
     <!--Times inputs-->
-    <div class="form-group" ng-if="elevations.length > 0">
+    <div class="form-group" ng-if="layer.get('time')">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
@@ -45,7 +45,7 @@
     </div>
 
     <!--Elevations combo-->
-    <div class="form-group">
+    <div class="form-group" ng-if="elevations.length > 0">
       <label class="col-sm-4" for="ncwmselevation">Elévation</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
@@ -55,7 +55,7 @@
     </div>
 
     <!--Styles combo-->
-    <div class="form-group">
+    <div class="form-group" data-ng-if="styles.length > 1">
       <label class="col-sm-4" for="ncwmsstyles">Styles</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
@@ -67,7 +67,7 @@
       <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
         <span class="fa fa-history"></span> Temps
       </button>
-      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
+      <button ng-if="elevations.length > 0" class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
         <span class="fa fa-crop"></span> Profil
       </button>
       <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
@@ -76,7 +76,7 @@
     </div>
 
     <!--Times input only visible if time series button is enabled-->
-    <div class="form-group" data-ng-show="activeTool=='time'">
+    <div class="form-group" data-ng-if="layer.get('time')" data-ng-show="activeTool=='time'">
       <label class="col-sm-4">Dates</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"

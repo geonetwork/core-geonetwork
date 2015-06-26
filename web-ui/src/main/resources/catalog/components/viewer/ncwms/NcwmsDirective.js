@@ -160,7 +160,7 @@
             scope.colorscalerange = [scope.colorRange.min,
               scope.colorRange.max];
             scope.timeSeries = {};
-            scope.elevations = ncInfo.zaxis.values;
+            scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
             scope.styles = gnNcWms.parseStyles(ncInfo);
 
             if (angular.isUndefined(scope.params.LOGSCALE)) {
