@@ -609,7 +609,7 @@
           <section name="referenceDate">
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
               gmd:date"/>
-            <action type="add" name="revisionDate" or="date"
+            <action type="add" name="referenceDate" or="date"
                     in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
               <template>
                 <snippet>
