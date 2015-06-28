@@ -143,7 +143,7 @@
             }
           };
 
-          $timeout(function () {
+          $timeout(function() {
             init();
           });
         }

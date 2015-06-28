@@ -7,7 +7,7 @@
     '$cookies', '$rootScope',
     function($cookies, $rootScope) {
       $rootScope.showCookieWarning =
-        window.localStorage.getItem('cookiesAccepted') !== 'true';
+          window.localStorage.getItem('cookiesAccepted') !== 'true';
       $rootScope.close = function($event) {
         $rootScope.showCookieWarning = false;
         window.localStorage.setItem('cookiesAccepted', true);
