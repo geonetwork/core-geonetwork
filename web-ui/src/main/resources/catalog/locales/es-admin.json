@@ -484,6 +484,8 @@
     "map/isMapViewerEnabled-help": "Si se deselecciona, el visor mapa se deshabilitará y no se usará.",
     "map/is3DModeAllowed-help": "Si se habilita, el usuario puede cambiar el mapa a modo 3D. El visor se necesita habilitar también. Si no quieres habilitar el modo 3D para todos los usuarios, añadiendo <a href='catalog.search?with3d'>?with3d</a> en una URL también carga el modo 3D.",
     "map/is3DModeAllowed": "Permitir modo 3D (beta)",
+    "map/isSaveMapInCatalogAllowed": "Permitir a los usuarios guardar mapas como entradas de metadatos",
+    "map/isSaveMapInCatalogAllowed-help": "Desde el visor del mapa, un usuario puede definir el título y el resumen y guardar el mapa directamente como un contexto OWS en el catálogo.",
     "mapserverConfiguration": "Configuración de URL",
     "mapserverDescription": "Descripción",
     "mapserverName": "Nombre",
