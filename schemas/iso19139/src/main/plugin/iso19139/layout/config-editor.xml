@@ -607,160 +607,27 @@
 
 
           <section name="referenceDate">
-
-            <field name="creationDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"
-              del=".">
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
+              gmd:date"/>
+            <action type="add" name="revisionDate" or="date"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
               <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
+                      <gmd:date>
+                        <gco:Date></gco:Date>
+                      </gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="creation"/>
+                                codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                                codeListValue="revision"/>
                       </gmd:dateType>
                     </gmd:CI_Date>
                   </gmd:date>
                 </snippet>
               </template>
-            </field>
-
-            <field name="creationDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-              <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
-                <snippet>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="creation"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </snippet>
-              </template>
-            </field>
-
-            <field name="publicationDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
-              <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
-                <snippet>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="publication"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </snippet>
-              </template>
-            </field>
-            <field name="publicationDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-              <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
-                <snippet>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="publication"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </snippet>
-              </template>
-            </field>
-
-            <field name="revisionDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
-              <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
-                <snippet>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="revision"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </snippet>
-              </template>
-            </field>
-            <field name="revisionDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-              <template>
-                <values>
-                  <key label="date"
-                       xpath="gmd:CI_Date/gmd:date/*"
-                       use="gn-date-picker"
-                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
-                </values>
-                <snippet>
-                  <gmd:date>
-                    <gmd:CI_Date>
-                      <gmd:date>{{date}}</gmd:date>
-                      <gmd:dateType>
-                        <gmd:CI_DateTypeCode
-                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                          codeListValue="revision"/>
-                      </gmd:dateType>
-                    </gmd:CI_Date>
-                  </gmd:date>
-                </snippet>
-              </template>
-            </field>
+            </action>
           </section>
 
 
