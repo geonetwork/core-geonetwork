@@ -22,6 +22,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
         importMetadata.getMefFilesToLoad().clear();
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        System.gc();
         importMetadata.invoke();
 
         Path path = MEFExporter.doExport(context, "da165110-88fd-11da-a88f-000d939bc5d8", MEFLib.Format.FULL, false, false, false);
