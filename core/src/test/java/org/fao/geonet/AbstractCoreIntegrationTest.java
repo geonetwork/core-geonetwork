@@ -78,14 +78,13 @@ import static org.junit.Assert.assertTrue;
 
     @Before
     public final void setup() throws Exception {
-        System.gc();
         testFixture.setup(this);
     }
 
     @After
     public final void tearDown() throws Exception {
         testFixture.tearDown();
-        System.gc();
+        Xml.clearTransformerFactoryStylesheetCache();
     }
 
     protected void assertDataDirInMemoryFS(ServiceContext context) {
