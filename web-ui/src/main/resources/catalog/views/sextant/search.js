@@ -78,11 +78,12 @@
     'gnMetadataActions',
     '$translate',
     '$q',
+    'gnUrlUtils',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate, $q) {
+        $translate, $q, gnUrlUtils) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -340,6 +341,17 @@
         panier: [],
         hiddenParams: gnSearchSettings.hiddenParams
       });
+
+      /**
+       * API, get the url params to get layers or OWC
+       */
+      if(sxtSettings) {
+        var params = gnUrlUtils.parseKeyValue(window.location.search.
+            replace(/^\?/, ''));
+        gnViewerSettings.owsContext = decodeURIComponent(params.owscontext);
+        gnViewerSettings.wmsUrl = params.wmsurl;
+        gnViewerSettings.layerName = params.layername;
+      }
     }]);
 
   module.controller('gnsSextantSearch', [
