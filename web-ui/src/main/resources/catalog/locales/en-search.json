@@ -264,6 +264,7 @@
   "gray":"gray",
   "Results":"Results",
   "Legend":"Legend",
+  "isValid": "Validation status",
   "Attribution":"Attribution",
   "layerDelete":"Delete",
   "layerMetadata":"Metadata",

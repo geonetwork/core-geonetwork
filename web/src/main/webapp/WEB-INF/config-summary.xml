@@ -71,7 +71,7 @@
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
-        <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
+        <facet name="isValid" indexKey="_valid" label="isValid" localized="true"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
         <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
         <facet name="status" indexKey="cl_status" label="status"/>
