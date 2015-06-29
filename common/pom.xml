@@ -122,6 +122,11 @@
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>cachingxslt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 
