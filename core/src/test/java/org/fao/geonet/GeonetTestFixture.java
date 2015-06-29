@@ -12,6 +12,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.LuceneSearcherPresentTest;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
@@ -76,7 +77,6 @@ public class GeonetTestFixture {
         if (currentFs != null) {
             FILE_SYSTEM_POOL.release(currentFs);
         }
-        TransformerFactoryFactory.tearDown();
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
