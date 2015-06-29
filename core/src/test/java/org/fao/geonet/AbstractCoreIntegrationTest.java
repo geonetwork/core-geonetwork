@@ -83,6 +83,7 @@ import static org.junit.Assert.assertTrue;
         if(this instanceof LuceneSearcherPresentTest ||
                 this instanceof MEFExporterIntegrationTest) {
             Xml.clearTransformerFactoryStylesheetCache();
+            System.gc();
         }
         testFixture.setup(this);
     }
