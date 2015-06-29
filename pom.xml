@@ -1135,7 +1135,7 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
-      <module>cachingxslt</module>
+    <module>cachingxslt</module>
     <module>common</module>
     <module>sde</module>
     <module>domain</module>
