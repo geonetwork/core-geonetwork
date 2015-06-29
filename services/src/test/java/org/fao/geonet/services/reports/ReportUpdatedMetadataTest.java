@@ -1,7 +1,17 @@
 package org.fao.geonet.services.reports;
 
+import static org.fao.geonet.domain.Pair.read;
+import static org.junit.Assert.assertEquals;
+
+import java.net.URL;
+import java.util.Calendar;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -10,16 +20,9 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.net.URL;
-import java.util.Calendar;
-import java.util.UUID;
-import javax.annotation.Nonnull;
-
-import static org.fao.geonet.domain.Pair.read;
-import static org.junit.Assert.assertEquals;
 
 public class ReportUpdatedMetadataTest extends AbstractCoreIntegrationTest {
 
@@ -28,6 +31,7 @@ public class ReportUpdatedMetadataTest extends AbstractCoreIntegrationTest {
 
     final ReportUpdatedMetadata metadata = new ReportUpdatedMetadata();
 
+    @Ignore
     @Test
     public void testExecNoData() throws Exception {
         ServiceContext context = createServiceContext();
@@ -47,6 +51,8 @@ public class ReportUpdatedMetadataTest extends AbstractCoreIntegrationTest {
                 read("groups", "42")), context);
         // there was a bug where certain queries would cause an exception.  We are just checking that no exception occurs
     }
+
+    @Ignore
     @Test
     public void testExec() throws Exception {
 
