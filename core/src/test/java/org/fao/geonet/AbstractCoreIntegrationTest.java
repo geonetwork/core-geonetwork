@@ -16,6 +16,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEFExporterIntegrationTest;
 import org.fao.geonet.kernel.search.LuceneSearcherPresentTest;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
@@ -79,7 +80,8 @@ import static org.junit.Assert.assertTrue;
 
     @Before
     public final void setup() throws Exception {
-        if(this instanceof LuceneSearcherPresentTest) {
+        if(this instanceof LuceneSearcherPresentTest ||
+                this instanceof MEFExporterIntegrationTest) {
             Xml.clearTransformerFactoryStylesheetCache();
         }
         testFixture.setup(this);
@@ -88,7 +90,8 @@ import static org.junit.Assert.assertTrue;
     @After
     public final void tearDown() throws Exception {
         testFixture.tearDown();
-        if(this instanceof LuceneSearcherPresentTest) {
+        if(this instanceof LuceneSearcherPresentTest ||
+                this instanceof MEFExporterIntegrationTest) {
             Xml.clearTransformerFactoryStylesheetCache();
         }
     }
