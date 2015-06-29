@@ -1,5 +1,7 @@
 package org.fao.geonet.utils;
 
+import de.fzi.dbs.xml.transform.CachingTransformerFactory;
+
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import java.util.Properties;
@@ -41,10 +43,17 @@ public class TransformerFactoryFactory {
         return factory;
     }
 
-	private static void debug  (String message) { Log.debug  (Log.TRANSFORMER_FACTORY, message); }
+	private static void debug  (String message) { Log.debug(Log.TRANSFORMER_FACTORY, message); }
 
     // used for JUnit testing into Eclipse (which selects an incompatible TransformerFactory)
     public static void setTransformerFactory(TransformerFactory _factory) {
         factory = _factory;
+    }
+
+    public static void tearDown() {
+        if(factory instanceof CachingTransformerFactory)
+        {
+            ((CachingTransformerFactory)factory).clearCache();
+        }
     }
 }

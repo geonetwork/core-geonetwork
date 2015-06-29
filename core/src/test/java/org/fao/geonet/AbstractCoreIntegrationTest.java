@@ -84,6 +84,7 @@ import static org.junit.Assert.assertTrue;
     @After
     public final void tearDown() throws Exception {
         testFixture.tearDown();
+        Xml.clearTransformerFactoryStylesheetCache();
     }
 
     protected void assertDataDirInMemoryFS(ServiceContext context) {

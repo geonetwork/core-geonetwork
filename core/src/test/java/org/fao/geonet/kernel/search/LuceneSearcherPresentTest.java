@@ -58,7 +58,6 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
             searchManager.releaseIndexReader(indexAndTaxonomy);
         }
 
-
         final String mdId = importMetadata.getMetadataIds().get(0);
         dataManager.unsetOperation(serviceContext, mdId, "" + ReservedGroup.all.getId(), ReservedOperation.editing);
         dataManager.indexMetadata(mdId, true);
