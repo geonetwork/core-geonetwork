@@ -1090,9 +1090,22 @@
                                       else parent::node()"></xsl:variable>
     <!-- Look for the helper -->
     <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, $node, /root/gui)"/>
-    
-    
-    
+
+    <!-- For multilingual -->
+    <xsl:variable name="tmpFreeText">
+      <xsl:for-each select="$node">
+      <xsl:call-template name="PT_FreeText_Tree" />
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:variable name="ptFreeTextTree" select="exslt:node-set($tmpFreeText)" />
+
+    <xsl:variable name="relatedIds">
+    <xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[string(@locale)]">
+      <xsl:value-of select="geonet:element/@ref" /><xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    </xsl:variable>
+
     <!-- Display the helper list if found -->
     <xsl:if test="normalize-space($helper)!=''">
       
@@ -1116,7 +1129,22 @@
             select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString/geonet:element/@ref"/>
           <xsl:variable name="relatedElementIsEmpty" select="normalize-space($relatedElement)=''"/>
           <!--<xsl:value-of select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value===&quot;&quot;) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/>-->
-          
+
+          <!-- For multilingual -->
+          <xsl:variable name="tmpFreeTextRelatedElement">
+            <xsl:for-each select="../following-sibling::node()[name()=$relatedElementName]">
+              <xsl:call-template name="PT_FreeText_Tree" />
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:variable name="ptFreeTextTreeRelatedElement" select="exslt:node-set($tmpFreeTextRelatedElement)" />
+
+          <xsl:variable name="relatedIdsRelatedElement">
+            <xsl:for-each select="$ptFreeTextTreeRelatedElement//gmd:LocalisedCharacterString[string(@locale)]">
+              <xsl:value-of select="geonet:element/@ref" /><xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+          </xsl:variable>
+
           <xsl:choose>
             <!-- Layout with radio button -->
             <xsl:when test="contains($mode, 'radio')">
@@ -1126,7 +1154,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of
-                select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+                select="concat('GeoNetwork.util.SuggestionTools.updateSuggestion(this.options[this.selectedIndex].title,&quot;', $relatedElementRef, '&quot;,&quot;', $relatedIdsRelatedElement,'&quot;);')"
               />
             </xsl:otherwise>
           </xsl:choose>
@@ -1154,9 +1182,9 @@
           </xsl:choose>
         </xsl:if>
       </xsl:variable>
-      
-      
-      
+
+
+
 
       <div class="helper helper-{$mode}">
       <xsl:choose>
@@ -1224,7 +1252,7 @@
         <xsl:otherwise>
           <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
           <select id="s_{$refId}" name="s_{$refId}" size="1" 
-            onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
+            onchange="GeoNetwork.util.SuggestionTools.updateSuggestion(this.value, '{$refId}', '{$relatedIds}'); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
             class="md" >
             <option/>
             <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
@@ -2080,8 +2108,8 @@
             If yes, hide the input text which will be updated when clicking the radio
             or the other option. -->
             <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, parent::node(), /root/gui)"/>
-            
-            
+
+
             <input class="md {$class}" type="{$input_type}" value="{text()}">
               <xsl:if test="$isXLinked">
                 <xsl:attribute name="disabled">disabled</xsl:attribute>

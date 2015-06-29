@@ -96,6 +96,7 @@
             "GeoNetwork/data/SubTemplateTypeStore.js",
             "GeoNetwork/util/HelpTools.js",
             "GeoNetwork/util/LinkTools.js",
+            "GeoNetwork/util/SuggestionTools.js",
             "GeoNetwork/data/GroupStore.js",
             "GeoNetwork/data/UserStore.js",
             "GeoNetwork/data/StatusStore.js",
