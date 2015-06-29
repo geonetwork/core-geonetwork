@@ -29,7 +29,7 @@ public class FreeFileHandlesHealthCheck implements HealthCheckFactory {
                         long free = unixMXBean.getMaxFileDescriptorCount() - unixMXBean.getOpenFileDescriptorCount();
                         double fivePercent = Math.max(2.0, ((double) unixMXBean.getMaxFileDescriptorCount()) * 0.01);
                         if (free < fivePercent) {
-                            Result.unhealthy("There are insufficient free file handles. Connections free:" + free);
+                            return Result.unhealthy("There are insufficient free file handles. Connections free:" + free);
                         }
                     }
                     return Result.healthy();
