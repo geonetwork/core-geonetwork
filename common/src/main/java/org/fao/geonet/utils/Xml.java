@@ -23,6 +23,7 @@
 
 package org.fao.geonet.utils;
 
+import de.fzi.dbs.xml.transform.CachingTransformerFactory;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
@@ -620,14 +621,10 @@ public final class Xml
      */
 	public static void clearTransformerFactoryStylesheetCache() {
 		TransformerFactory transFact = TransformerFactory.newInstance();
-		try {
-			Class<?> class1 = transFact.getClass();
-            Method cacheMethod = class1.getDeclaredMethod("clearCache");
-			cacheMethod.invoke(transFact, new Object[0]);
-		} catch (Exception e) {
-			Log.error(Log.ENGINE, "Failed to find/invoke clearCache method - continuing ("+e.getMessage()+")");
-		}
-
+        if(transFact instanceof CachingTransformerFactory)
+        {
+            ((CachingTransformerFactory)transFact).clearCache();
+        }
 	}
 
    // --------------------------------------------------------------------------
