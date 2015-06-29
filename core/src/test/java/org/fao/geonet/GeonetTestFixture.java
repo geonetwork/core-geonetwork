@@ -76,6 +76,7 @@ public class GeonetTestFixture {
         if (currentFs != null) {
             FILE_SYSTEM_POOL.release(currentFs);
         }
+        TransformerFactoryFactory.tearDown();
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
