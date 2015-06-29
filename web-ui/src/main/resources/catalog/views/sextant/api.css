@@ -10642,6 +10642,12 @@ yx-axis
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layers-tabset {
   display: block;
 }
+.gn [sxt-main-viewer] [data-gnv-layer-indicator] {
+  margin-left: 1em;
+}
+.gn [sxt-main-viewer] [data-gnv-layer-indicator] .badge {
+  background-color: #4BA2D9;
+}
 .gn [sxt-main-viewer] .layers .sxt-layertree {
   min-height: 350px;
   height: auto;
@@ -13993,6 +13999,22 @@ yx-axis
 }
 .gn .sxt-panier .col-md-5 {
   float: right;
+}
+.gn .sxt-panier .clearfix:after,
+.gn .sxt-panier .container:after,
+.gn .sxt-panier .container-fluid:after,
+.gn .sxt-panier .row:after,
+.gn .sxt-panier .form-horizontal .form-group:after,
+.gn .sxt-panier .btn-toolbar:after,
+.gn .sxt-panier .btn-group-vertical > .btn-group:after,
+.gn .sxt-panier .nav:after,
+.gn .sxt-panier .navbar:after,
+.gn .sxt-panier .navbar-header:after,
+.gn .sxt-panier .navbar-collapse:after,
+.gn .sxt-panier .pager:after,
+.gn .sxt-panier .panel-body:after,
+.gn .sxt-panier .modal-footer:after {
+  display: table !important;
 }
 .gn .modal-content {
   border-radius: 2px;
