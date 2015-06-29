@@ -77,6 +77,10 @@
       <Bug pattern="IS2_INCONSISTENT_SYNC"/>
     </Match>
     <Match>
+        <Class name="org.fao.geonet.resources.ResourceFilter" />
+        <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+    <Match>
       <Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
       <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
       <Method name="getFragmentHarvesterParams"/>
