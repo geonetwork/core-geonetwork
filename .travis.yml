@@ -3,4 +3,4 @@ jdk:
   - openjdk7
 before_install:
   - export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M"
-script: travis_retry mvn test -X --fail-at-end
+script: travis_retry mvn test --fail-at-end
