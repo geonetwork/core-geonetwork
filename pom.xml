@@ -1135,6 +1135,7 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
+    <module>transifex</module>
     <module>common</module>
     <module>cachingxslt</module>
     <module>sde</module>

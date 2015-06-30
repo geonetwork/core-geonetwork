@@ -1,0 +1,21 @@
+<labels  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../../labels.xsd">
+  <element name="gmd:MD_ScopeCode">
+    <label>Scope code</label>
+    <description>Class of information to which the referencing entity applies</description>
+  </element>
+  <element name="code" id="207.0" context="gmd:MD_Identifier">
+    <label>Code</label>
+    <description>Alphanumeric value identifying an instance in the namespace</description>
+    <help>alphanumeric value identifying an instance in the namespace</help>
+  </element>
+  <element name="code">
+    <label>System code</label>
+    <description>Code. i.e. EPSG code.</description>
+    <_condition>Use obligation/condition from referencing object</_condition>
+    <helper>
+      <option value="CH">Switzerland</option>
+      <option value="DE">Germany</option>
+    </helper>
+  </element>
+</labels>
