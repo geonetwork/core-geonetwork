@@ -107,12 +107,25 @@ public abstract class AbstractTransifexMojo extends AbstractMojo {
     }
 
     private CloseableHttpResponse exec(HttpRequestBase request) throws IOException {
-        request.addHeader("Accept", "application/json, text/*, text/html, text/html;level=1, */*");
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        CloseableHttpClient client = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
-        getLog().info("Executing: " + request);
-        return client.execute(request);
+        RuntimeException throwable = null;
+        for (int i = 0; i < 5; i++) {
+            try {
+                request.addHeader("Accept", "application/json, text/*, text/html, text/html;level=1, */*");
+                BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                CloseableHttpClient client = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
+                getLog().info("Executing: " + request);
+                return client.execute(request);
+            } catch (RuntimeException e) {
+                throwable = e;
+               // try again
+            } catch (Throwable t) {
+                throwable = new RuntimeException(t);
+               // try again
+            }
+        }
+
+        throw throwable;
     }
 
     public void init() throws IOException, MojoExecutionException {

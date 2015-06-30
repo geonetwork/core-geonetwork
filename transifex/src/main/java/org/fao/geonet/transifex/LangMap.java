@@ -142,6 +142,7 @@ public class LangMap {
         map.put("pi", "pli");
         map.put("pl", "pol");
         map.put("pt", "por");
+        map.put("pt_BR", "bra");
         map.put("ps", "pus");
         map.put("qu", "que");
         map.put("rm", "roh");

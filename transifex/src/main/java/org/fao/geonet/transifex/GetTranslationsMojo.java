@@ -95,7 +95,8 @@ public class GetTranslationsMojo extends AbstractTransifexMojo {
         if (hasTranslatedStrings) {
             try (CloseableHttpResponse response = get(getResourceUrl(transifexReadyFile.resourceId) + "/translation/" + language + "/")) {
                 byte[] rawData = ByteStreams.toByteArray(response.getEntity().getContent());
-                return JSONObject.fromObject(new String(rawData, Constants.CHARSET)).getString("content");
+                String content = JSONObject.fromObject(new String(rawData, Constants.CHARSET)).getString("content");
+                return JSONObject.fromObject(content).toString(4).replace("<\\/", "</");
             }
         }
         return null;
