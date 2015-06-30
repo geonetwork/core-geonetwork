@@ -338,6 +338,8 @@
                 <forkCount>4</forkCount>
                 <excludes>
                     <exclude>**/*PerformanceTest.java</exclude>
+                    <exclude>**/*LuceneSearcherPresentTest.java</exclude>
+                    <exclude>**/*MEFExporterIntegrationTest.java</exclude>
                 </excludes>
             </configuration>
         </plugin>
