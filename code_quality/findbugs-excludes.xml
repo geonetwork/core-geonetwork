@@ -73,7 +73,10 @@
       <Method name="harvest" />
     </Match>
     <Match>
-      <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+	  <Or>
+	    <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+	    <Class name="org.fao.geonet.resources.ResourceFilter"/>
+	  </Or>
       <Bug pattern="IS2_INCONSISTENT_SYNC"/>
     </Match>
     <Match>
@@ -187,7 +190,6 @@
         </Or>
         <Bug pattern="DMI_EMPTY_DB_PASSWORD" />
     </Match>
-
 
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
 	<Match>
