@@ -45,12 +45,14 @@
                      scope.types : ''), {cache: true})
                             .success(function(data, status, headers, config) {
                        if (data && data != 'null' && data.relation) {
-                         if (!angular.isArray(data.relation))
+                         if (!angular.isArray(data.relation)) {
                            scope.relations = [
                              data.relation
                            ];
-                         for (var i = 0; i < data.relation.length; i++) {
-                           scope.relations.push(data.relation[i]);
+                         } else {
+                           for (var i = 0; i < data.relation.length; i++) {
+                             scope.relations.push(data.relation[i]);
+                           }
                          }
                        }
                      });
