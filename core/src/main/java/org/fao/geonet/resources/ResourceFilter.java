@@ -10,20 +10,13 @@ import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static org.fao.geonet.resources.Resources.loadResource;
 
