@@ -10957,6 +10957,7 @@ yx-axis
   height: 19em;
 }
 .gn .popover.popover-dropdown .popover-content li {
+  font-size: 12px;
   padding: 8px 10px;
   border-left: none;
   border-right: none;
@@ -14066,6 +14067,7 @@ yx-axis
   height: 19em;
 }
 .popover.popover-dropdown .popover-content li {
+  font-size: 12px;
   padding: 8px 10px;
   border-left: none;
   border-right: none;

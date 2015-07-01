@@ -253,7 +253,7 @@
                 'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
             button.popover({
               animation: false,
-              container: 'body',
+              container: '.gn',
               placement: attrs['placement'] || 'right',
               content: ' ',
               template: '<div class="popover ' + className + '">' +
