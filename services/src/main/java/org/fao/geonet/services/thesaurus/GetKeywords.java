@@ -156,7 +156,9 @@ public class GetKeywords {
 				responseXml.addContent((new Element("mode")).addContent(mode));
 			}
 		}
-		final Set<String> acceptContentType = Sets.newHashSet(webRequest.getHeaderValues("Accept"));
+        String[] acceptHeader = webRequest.getHeaderValues("Accept");
+		final Set<String> acceptContentType = Sets.newHashSet(
+                acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
 
 		byte[] response;
 		String contentType;
