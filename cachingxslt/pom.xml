@@ -13,7 +13,7 @@
 	<!-- =========================================================== -->
 	<!-- Module Description -->
 	<!-- =========================================================== -->
-	<groupId>org.geonetwork-opensource</groupId>
+	<groupId>{project.groupid}</groupId>
 	<artifactId>cachingxslt</artifactId>
 	<packaging>jar</packaging>
 	<name>Caching xslt module</name>
@@ -37,6 +37,11 @@
 		<dependency>
 			<groupId>net.sf.saxon</groupId>
 			<artifactId>saxon</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>{project.groupid}</groupId>
+			<artifactId>common</artifactId>
+			<version>{project.version}</version>
 		</dependency>
 	</dependencies>
 
