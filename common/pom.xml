@@ -13,7 +13,7 @@
 	<!-- =========================================================== -->
 	<!-- Module Description -->
 	<!-- =========================================================== -->
-	<groupId>${project.groupId}</groupId>
+	<groupId>org.geonetwork-opensource</groupId>
 	<artifactId>common</artifactId>
 	<packaging>jar</packaging>
 	<name>common utils</name>
