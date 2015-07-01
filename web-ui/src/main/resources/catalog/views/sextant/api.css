@@ -4,6 +4,7 @@
   position: relative;
   font-size: 14px;
   font-family: Roboto, sans-serif;
+  letter-spacing: normal;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -194,8 +195,29 @@ yx-axis
 .gn button {
   text-shadow: none;
 }
-.gn ul {
-  font-size: initial;
+.gn .gn-search-page p,
+.gn .gn-metadata-view p {
+  padding: initial;
+  font-size: 14px;
+}
+.gn .gn-search-page ul,
+.gn .gn-metadata-view ul,
+.gn .gn-search-page ul li,
+.gn .gn-metadata-view ul li {
+  font-size: 14px;
+}
+.gn .gn-search-page ul li,
+.gn .gn-metadata-view ul li,
+.gn .gn-search-page ul li li,
+.gn .gn-metadata-view ul li li {
+  padding: initial;
+}
+.gn .gn-metadata-view p {
+  font-size: 12px;
+}
+.gn .gn-metadata-view ul,
+.gn .gn-metadata-view ul li {
+  font-size: 12px;
 }
 @font-face {
   font-family: 'FontAwesome';
@@ -13556,7 +13578,9 @@ yx-axis
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-title span {
   font-size: 18px;
-  margin: .9em .4em 0;
+  display: table-cell;
+  padding: 0 .5em;
+  vertical-align: middle;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-title h4 {
   font-size: 14px;
