@@ -105,6 +105,7 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         return _entityManager.createQuery(cbQuery).getResultList();
     }
 
+
     @Override
     public Metadata findOneOldestByChangeDate() {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();

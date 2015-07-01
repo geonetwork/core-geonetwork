@@ -37,6 +37,7 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -71,6 +72,7 @@ public class Transfer extends NotInReadOnlyModeService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager   dm = gc.getBean(DataManager.class);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         //--- transfer privileges (if case)
 
@@ -85,41 +87,47 @@ public class Transfer extends NotInReadOnlyModeService {
 
         Set<Integer> metadata = new HashSet<Integer>();
 
-        for (String priv : sourcePriv)
-        {
-            StringTokenizer st = new StringTokenizer(priv, "|");
+        if (sourcePriv.size() > 0) {
+            for (String priv : sourcePriv) {
+                StringTokenizer st = new StringTokenizer(priv, "|");
 
-            int opId = Integer.parseInt(st.nextToken());
-            int mdId = Integer.parseInt(st.nextToken());
+                int opId = Integer.parseInt(st.nextToken());
+                int mdId = Integer.parseInt(st.nextToken());
 
-            // 2 cases could happen, 1) only the owner change
-            // in that case sourceGrp = targetGrp and operations
-            // allowed does not need to be modified.
-            if (sourceGrp != targetGrp) {
-                // 2) the sourceGrp != targetGrp and in that
-                // case, all operations need to be transfered to
-                // the new group if not already defined.
-                dm.unsetOperation(context, mdId, sourceGrp, opId);
+                // 2 cases could happen, 1) only the owner change
+                // in that case sourceGrp = targetGrp and operations
+                // allowed does not need to be modified.
+                if (sourceGrp != targetGrp) {
+                    // 2) the sourceGrp != targetGrp and in that
+                    // case, all operations need to be transfered to
+                    // the new group if not already defined.
+                    dm.unsetOperation(context, mdId, sourceGrp, opId);
 
-                if (!targetPriv.contains(priv)) {
-                    OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-                    OperationAllowedId id = new OperationAllowedId()
-                            .setGroupId(targetGrp)
-                            .setMetadataId(mdId)
-                            .setOperationId(opId);
-                    OperationAllowed operationAllowed = new OperationAllowed(id );
-                    repository.save(operationAllowed);
+                    if (!targetPriv.contains(priv)) {
+                        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+                        OperationAllowedId id = new OperationAllowedId()
+                                .setGroupId(targetGrp)
+                                .setMetadataId(mdId)
+                                .setOperationId(opId);
+                        OperationAllowed operationAllowed = new OperationAllowed(id);
+                        repository.save(operationAllowed);
+                    }
                 }
-            }
 
-            // Collect all metadata ids
-            metadata.add(mdId);
-            privCount++;
+                // Collect all metadata ids
+                metadata.add(mdId);
+                privCount++;
+            }
         }
+        // If no privileges defined for the target group
+        // assign the new owner and ownerGroup for the source
+        // user records.
+        final List<Integer> sourceUserRecords =
+                metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(sourceUsr));
+        metadata.addAll(sourceUserRecords);
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
             final Metadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
             metadataRepository.save(metadata1);
