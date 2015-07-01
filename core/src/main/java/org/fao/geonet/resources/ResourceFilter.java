@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -44,7 +45,7 @@ public class ResourceFilter implements Filter {
     private FilterConfig config;
     private ServletContext servletContext;
     private volatile Pair<byte[], Long> defaultImage;
-    private Map<String, Pair<byte[], Long>> faviconMap = Maps.newConcurrentMap();
+    private ConcurrentMap<String, Pair<byte[], Long>> faviconMap = Maps.newConcurrentMap();
 
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
@@ -143,7 +144,12 @@ public class ResourceFilter implements Filter {
         }
 
         private synchronized void AddFavIcon(String nodeId, Pair<byte[], Long> favicon) {
-            faviconMap.put(nodeId, favicon);
+            if (faviconMap.containsKey(nodeId)) {
+                faviconMap.replace(nodeId, favicon);
+            }
+            else {
+                faviconMap.putIfAbsent(nodeId, favicon);
+            }
         }
     }
     public synchronized void destroy() {
