@@ -15,6 +15,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
     @Autowired
     private DataManager dataManager;
 
-    @Test
+    @Ignore
     public void testBuildPrivilegesMetadataInfo() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
