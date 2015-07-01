@@ -13790,6 +13790,12 @@ yx-axis
   height: calc(100% - 4.1em);
   overflow-y: auto;
 }
+.gn [sxt-main-viewer] .sxt-layertree ul li {
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .sxt-layertree label {
+  white-space: normal;
+}
 .gn [sxt-main-viewer] .layers-tools {
   position: absolute;
   bottom: 0px;
@@ -14018,6 +14024,7 @@ yx-axis
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
   border: none;
   border-radius: 0;
+  padding: 1em;
 }
 .gn .sxt-panier .sxt-panier-remove {
   float: right;
