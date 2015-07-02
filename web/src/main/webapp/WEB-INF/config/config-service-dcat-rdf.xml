@@ -28,5 +28,11 @@
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
 
+    <service name="rdf.metadata.public.get">
+      <documentation> Return all public metadata in RDF/DCAT format.</documentation>
+      <class name="org.fao.geonet.services.rdf.GetPublicMetadataAsRdf">
+      </class>
+      <output file="true" contentType="application/rdf+xml; charset=UTF-8"/>
+    </service>
   </services>
 </geonet>
