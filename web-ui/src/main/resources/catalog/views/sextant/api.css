@@ -14056,6 +14056,9 @@ yx-axis
 .gn .popover {
   height: auto;
 }
+.gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
+  width: 15em;
+}
 .popover {
   height: auto;
   border-radius: 2px;
