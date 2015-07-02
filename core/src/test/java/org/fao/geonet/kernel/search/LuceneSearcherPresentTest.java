@@ -19,6 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -92,5 +93,9 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
         }
     }
 
+    @Test
+    public void testDummy() {
+
+    }
 
 }
