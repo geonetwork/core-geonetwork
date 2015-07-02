@@ -33,8 +33,9 @@
                    * Fit map view to map projection max extent
                    */
                   scope.maxExtent = function() {
-                    scope.map.getView().fitExtent(scope.map.getView().
-                            getProjection().getExtent(), scope.map.getSize());
+                    scope.map.getView().fitExtent(
+                      scope.map.getView().getProjection().getExtent(),
+                      scope.map.getSize());
                   };
 
                   /**
@@ -66,7 +67,7 @@
         '$parse',
         'gnSearchSettings',
         'gnMap',
-        function(ngeoDecorateInteraction, $parse, gnSearchSettings, gnMap) {
+        function(ngeoDecorateInteraction, $parse, gnSearchSettings) {
           return {
             restrict: 'A',
             scope: true,
@@ -105,7 +106,9 @@
                 // Write the extent as 4326 WKT polygon
                 var lonlatFeat, writer, wkt;
                 lonlatFeat = feature.clone();
-                lonlatFeat.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+                lonlatFeat.getGeometry().transform(
+                  scope.map.getView().getProjection().getCode()
+                  , 'EPSG:4326');
                 writer = new ol.format.WKT();
                 wkt = writer.writeFeature(lonlatFeat);
                 bboxSet(parent, wkt);
@@ -118,7 +121,7 @@
                 updateField(new ol.geom.Polygon(coords));
               }
 
-              scope.interaction.on('boxend', function(mapBrowserEvent) {
+              scope.interaction.on('boxend', function() {
                 scope.$apply(function() {
                   updateField(scope.interaction.getGeometry());
                 });
