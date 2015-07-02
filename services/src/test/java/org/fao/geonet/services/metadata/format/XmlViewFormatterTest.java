@@ -53,7 +53,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, _100, new ServletWebRequest(request, response));
         final String view = response.getContentAsString();
-        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+//        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         final Element xmlEl = Xml.loadString(xml, false);
         final List text = Lists.newArrayList(Xml.selectNodes(xmlEl, "*//node()/text()"));
