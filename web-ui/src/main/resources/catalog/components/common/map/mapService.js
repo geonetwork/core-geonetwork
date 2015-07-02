@@ -445,6 +445,7 @@
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
+              advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
               cextent: options.extent
@@ -502,7 +503,6 @@
 
             var legend, attribution, metadata, errors = [];
             if (getCapLayer) {
-              var layer = getCapLayer;
 
               var isLayerAvailableInMapProjection = false;
               // OL3 only parse CRS from WMS 1.3 (and not SRS in WMS 1.1.x)
@@ -529,49 +529,64 @@
               */
 
               // TODO: parse better legend & attribution
-              if (angular.isArray(layer.Style) && layer.Style.length > 0) {
-                var url = layer.Style[layer.Style.length - 1]
+              if (angular.isArray(getCapLayer.Style) &&
+                  getCapLayer.Style.length > 0) {
+                var url = getCapLayer.Style[getCapLayer.Style.length - 1]
                   .LegendURL[0];
                 if (url) {
                   legend = url.OnlineResource;
                 }
               }
-              if (angular.isDefined(layer.Attribution)) {
-                if (angular.isArray(layer.Attribution)) {
+              if (angular.isDefined(getCapLayer.Attribution)) {
+                if (angular.isArray(getCapLayer.Attribution)) {
 
                 } else {
-                  attribution = layer.Attribution.Title;
+                  attribution = getCapLayer.Attribution.Title;
                 }
               }
-              if (angular.isArray(layer.MetadataURL)) {
-                metadata = layer.MetadataURL[0].OnlineResource;
-              }
-              var isNcwms = false;
-              if (angular.isArray(layer.Dimension)) {
-                for (var i = 0; i < layer.Dimension.length; i++) {
-                  if (layer.Dimension[i].name == 'elevation') {
-                    isNcwms = true;
-                    break;
-                  }
-                }
+              if (angular.isArray(getCapLayer.MetadataURL)) {
+                metadata = getCapLayer.MetadataURL[0].OnlineResource;
               }
 
               var layer = this.createOlWMS(map, {
-                LAYERS: layer.Name
+                LAYERS: getCapLayer.Name
               }, {
-                url: layer.url,
-                label: layer.Title,
+                url: getCapLayer.url,
+                label: getCapLayer.Title,
                 attribution: attribution,
                 legend: legend,
-                group: layer.group,
+                group: getCapLayer.group,
                 metadata: metadata,
-                isNcwms: isNcwms,
-                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer),
+                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
+                    getCapLayer),
                 minResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(), layer.MinScaleDenominator),
+                    map.getView().getProjection(),
+                    getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(), layer.MaxScaleDenominator)
+                    map.getView().getProjection(),
+                    getCapLayer.MaxScaleDenominator)
               });
+
+              if (angular.isArray(getCapLayer.Dimension)) {
+                for (var i = 0; i < getCapLayer.Dimension.length; i++) {
+                  if (getCapLayer.Dimension[i].name == 'elevation') {
+                    layer.set('elevation',
+                        getCapLayer.Dimension[i].values.split(','));
+                  }
+                  if (getCapLayer.Dimension[i].name == 'time') {
+                    layer.set('time',
+                        getCapLayer.Dimension[i].values.split(','));
+                  }
+                }
+              }
+              if (angular.isArray(getCapLayer.Style) &&
+                  getCapLayer.Style.length > 1) {
+                layer.set('style', getCapLayer.Style)
+              }
+
+              layer.set('advanced', !!(layer.get('elevation') ||
+                  layer.get('time') || layer.get('style')));
+
               layer.set('errors', errors);
               return layer;
             }

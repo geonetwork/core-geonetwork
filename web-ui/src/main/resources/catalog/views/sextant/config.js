@@ -306,6 +306,12 @@
         proj: '4326'
       };
 
+      searchSettings.tabOverflow = {
+        search: false,
+        panier: false,
+        map: false
+      };
+
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
@@ -320,6 +326,16 @@
           viewerSettings.layerFilter = sxtSettings.layerFilter;
         }
 
+        if(angular.isUndefined(searchSettings.tabOverflow.search)) {
+          delete searchSettings.mainTabs.search;
+        }
+        if(angular.isUndefined(searchSettings.tabOverflow.map) ||
+            searchSettings.viewerUrl) {
+          delete searchSettings.mainTabs.map;
+        }
+        if(angular.isUndefined(searchSettings.tabOverflow.panier)) {
+          delete searchSettings.mainTabs.panier;
+        }
       }
 
       searchSettings.hiddenParams = {};
@@ -336,5 +352,7 @@
           _groupPublished: searchSettings.configWhat.replace(/,/, ' or ')
         })
       }
+
+
     }]);
 })();

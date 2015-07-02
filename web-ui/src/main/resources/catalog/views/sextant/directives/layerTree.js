@@ -113,6 +113,10 @@
             if(debounce > 0) {
               return;
             }
+
+            // Remove active popovers
+            $('.popover-dropdown').remove();
+
             debounce++;
             $timeout(function() {
               scope.layerTree = {
@@ -229,10 +233,6 @@
           scope.setNCWMS = controller.setNCWMS;
 
           scope.remove = function() {
-            var tip = scope.member.$tip;
-            if (tip) {
-              tip.detach();
-            }
             scope.map.removeLayer(scope.member);
           };
 

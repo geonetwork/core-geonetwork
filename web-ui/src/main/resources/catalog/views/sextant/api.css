@@ -1,7 +1,10 @@
 .gn {
+  display: table;
+  width: 100%;
   position: relative;
   font-size: 14px;
   font-family: Roboto, sans-serif;
+  letter-spacing: normal;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -191,6 +194,30 @@ yx-axis
 }
 .gn button {
   text-shadow: none;
+}
+.gn .gn-search-page p,
+.gn .gn-metadata-view p {
+  padding: initial;
+  font-size: 14px;
+}
+.gn .gn-search-page ul,
+.gn .gn-metadata-view ul,
+.gn .gn-search-page ul li,
+.gn .gn-metadata-view ul li {
+  font-size: 14px;
+}
+.gn .gn-search-page ul li,
+.gn .gn-metadata-view ul li,
+.gn .gn-search-page ul li li,
+.gn .gn-metadata-view ul li li {
+  padding: initial;
+}
+.gn .gn-metadata-view p {
+  font-size: 12px;
+}
+.gn .gn-metadata-view ul,
+.gn .gn-metadata-view ul li {
+  font-size: 12px;
 }
 @font-face {
   font-family: 'FontAwesome';
@@ -10639,12 +10666,21 @@ yx-axis
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layers-tabset {
   display: block;
 }
+.gn [sxt-main-viewer] [data-gnv-layer-indicator] {
+  margin-left: 1em;
+}
+.gn [sxt-main-viewer] [data-gnv-layer-indicator] .badge {
+  background-color: #4BA2D9;
+}
 .gn [sxt-main-viewer] .layers .sxt-layertree {
   min-height: 350px;
   height: auto;
   max-height: calc(700px);
   overflow-x: hidden;
   overflow-y: auto;
+}
+.gn [sxt-main-viewer] .layers .sxt-layertree ul {
+  font-size: 12px;
 }
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
   height: 350px;
@@ -10917,10 +10953,11 @@ yx-axis
 }
 .gn .popover.popover-dropdown .popover-content {
   display: table-cell;
-  height: 190px;
   vertical-align: middle;
+  height: 19em;
 }
 .gn .popover.popover-dropdown .popover-content li {
+  font-size: 12px;
   padding: 8px 10px;
   border-left: none;
   border-right: none;
@@ -10937,9 +10974,22 @@ yx-axis
   width: 100px;
   margin-left: 10px;
 }
+.gn .popover.popover-dropdown-2 .popover-content {
+  height: 8em;
+}
+.gn .popover.popover-dropdown-3 .popover-content {
+  height: 10.5em;
+}
+.gn .popover.popover-dropdown-4 .popover-content {
+  height: 13em;
+}
+.gn .popover.popover-dropdown-5 .popover-content {
+  height: 15.5em;
+}
 .gn .popover .dropdown-menu {
   position: static;
   box-shadow: none;
+  border: none;
   padding: 0 0 1em;
 }
 .gn .panel-body .gn-metadata-view {
@@ -13529,7 +13579,9 @@ yx-axis
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-title span {
   font-size: 18px;
-  margin: .9em .4em 0;
+  display: table-cell;
+  padding: 0 .5em;
+  vertical-align: middle;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-title h4 {
   font-size: 14px;
@@ -13739,6 +13791,12 @@ yx-axis
   height: calc(100% - 4.1em);
   overflow-y: auto;
 }
+.gn [sxt-main-viewer] .sxt-layertree ul li {
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .sxt-layertree label {
+  white-space: normal;
+}
 .gn [sxt-main-viewer] .layers-tools {
   position: absolute;
   bottom: 0px;
@@ -13843,6 +13901,12 @@ yx-axis
 }
 .gn [gn-metadata-display] section.links .gn-md-links .btn {
   margin-left: 4px;
+}
+.gn [gn-metadata-display] section.links [gn-related] {
+  display: inline-block;
+}
+.gn [gn-metadata-display] section.links [gn-related] .btn-group {
+  vertical-align: initial;
 }
 .gn [gn-metadata-display] section.links h3 {
   padding-bottom: .5em;
@@ -13961,6 +14025,7 @@ yx-axis
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
   border: none;
   border-radius: 0;
+  padding: 1em;
 }
 .gn .sxt-panier .sxt-panier-remove {
   float: right;
@@ -13969,9 +14034,74 @@ yx-axis
 .gn .sxt-panier .col-md-5 {
   float: right;
 }
+.gn .sxt-panier .clearfix:after,
+.gn .sxt-panier .container:after,
+.gn .sxt-panier .container-fluid:after,
+.gn .sxt-panier .row:after,
+.gn .sxt-panier .form-horizontal .form-group:after,
+.gn .sxt-panier .btn-toolbar:after,
+.gn .sxt-panier .btn-group-vertical > .btn-group:after,
+.gn .sxt-panier .nav:after,
+.gn .sxt-panier .navbar:after,
+.gn .sxt-panier .navbar-header:after,
+.gn .sxt-panier .navbar-collapse:after,
+.gn .sxt-panier .pager:after,
+.gn .sxt-panier .panel-body:after,
+.gn .sxt-panier .modal-footer:after {
+  display: table !important;
+}
 .gn .modal-content {
   border-radius: 2px;
 }
 .gn .popover {
   height: auto;
+}
+.gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
+  width: 15em;
+}
+.popover {
+  height: auto;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.popover.popover-dropdown .popover-content {
+  display: table-cell;
+  vertical-align: middle;
+  height: 19em;
+}
+.popover.popover-dropdown .popover-content li {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+.popover.popover-dropdown .popover-content li:first-child {
+  border-top: none;
+}
+.popover.popover-dropdown .popover-content li:last-child {
+  border-bottom: none;
+}
+.popover.popover-dropdown .popover-content li input[type="range"] {
+  display: block;
+  width: 100px;
+  margin-left: 10px;
+}
+.popover.popover-dropdown-2 .popover-content {
+  height: 8em;
+}
+.popover.popover-dropdown-3 .popover-content {
+  height: 10.5em;
+}
+.popover.popover-dropdown-4 .popover-content {
+  height: 13em;
+}
+.popover.popover-dropdown-5 .popover-content {
+  height: 15.5em;
+}
+.popover .dropdown-menu {
+  position: static;
+  box-shadow: none;
+  border: none;
+  padding: 0 0 1em;
 }

@@ -291,5 +291,6 @@
     "wpsDescribeProcessFailed": "Oops ! Erreur lors de la récupération de la description du processus.",
     "wpsExecute": "Lancer",
     "wpsExecuteFailed": "Erreur lors du traitement",
-    "wpsErrorCodeReturned": "Le serveur a retourné le code "
+    "wpsErrorCodeReturned": "Le serveur a retourné le code ",
+    "time" : "Temps"
 }

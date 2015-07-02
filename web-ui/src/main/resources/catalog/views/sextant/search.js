@@ -78,11 +78,12 @@
     'gnMetadataActions',
     '$translate',
     '$q',
+    'gnUrlUtils',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate, $q) {
+        $translate, $q, gnUrlUtils) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -106,7 +107,7 @@
       };
 
       //
-      if(gnSearchSettings.tabOverflow && gnSearchSettings.tabOverflow.search) {
+      if(gnSearchSettings.tabOverflow.search) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
             $scope.inMdView = true;
@@ -173,7 +174,7 @@
       //Check if a added layer is NcWMS
       viewerMap.getLayers().on('add', function(e) {
         var layer = e.element;
-        if (layer.get('isNcwms') == true) {
+        if (layer.get('advanced') == true) {
           gnNcWms.feedOlLayer(layer);
         }
       });
@@ -222,17 +223,21 @@
 
       var feedLayerWithDownloads = function(layer, linkGroup) {
         var md = layer.get('md');
-        var downloads = md && md.getLinksByType(linkGroup,
-            'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
-            'WFS', 'WCS', 'COPYFILE');
+        var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
 
-        layer.set('downloads', downloads);
+        // Tells if onlinesrc are spread in different transferOptions
+        if(!transferOpts) {
+          var downloads = md && md.getLinksByType(linkGroup,
+              'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
+              'WFS', 'WCS', 'COPYFILE');
 
-        var process = md && md.getLinksByType(linkGroup,
-            'OGC:WPS');
+          layer.set('downloads', downloads);
 
-        layer.set('processes', process);
+          var process = md && md.getLinksByType(linkGroup,
+              'OGC:WPS');
 
+          layer.set('processes', process);
+        }
       };
 
       $scope.$on('layerAddedFromContext', function(e,l) {
@@ -264,6 +269,10 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function(link, md) {
 
+          if(gnSearchSettings.viewerUrl) {
+            window.open(gnSearchSettings.viewerUrl, '_blank');
+            return;
+          }
           if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
               link.name, link.url)) {
             return;
@@ -288,6 +297,10 @@
               });
           if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
 
+          if(gnSearchLocation.isMdView()) {
+            angular.element($('[gn-metadata-display]')).scope().dismiss();
+            $location.path('/map');
+          }
           $scope.addLayerPopover('map');
           $scope.mainTabs.map.titleInfo += 1;
 
@@ -303,6 +316,10 @@
             link: link,
             md: md
           });
+          if(gnSearchLocation.isMdView()) {
+            angular.element($('[gn-metadata-display]')).scope().dismiss();
+            $location.path('/panier');
+          }
           $scope.addLayerPopover('panier');
         },
 
@@ -324,6 +341,17 @@
         panier: [],
         hiddenParams: gnSearchSettings.hiddenParams
       });
+
+      /**
+       * API, get the url params to get layers or OWC
+       */
+      if(sxtSettings) {
+        var params = gnUrlUtils.parseKeyValue(window.location.search.
+            replace(/^\?/, ''));
+        gnViewerSettings.owsContext = decodeURIComponent(params.owscontext);
+        gnViewerSettings.wmsUrl = params.wmsurl;
+        gnViewerSettings.layerName = params.layername;
+      }
     }]);
 
   module.controller('gnsSextantSearch', [
@@ -476,10 +504,20 @@
       }
 
       scope.links = md.getLinksByType('LINK');
-      scope.downloads = md.getGroupedLinksByTypes('#FILE',
-          '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
-      scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
-          'OGC:WMS', 'OGC:OWS-C');
+
+      var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
+      if(transferOpts) {
+        scope.downloads = md.getLinksByType('#FILE',
+            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+        scope.layers = md.getLinksByType('OGC:WMTS',
+            'OGC:WMS', 'OGC:OWS-C');
+      }
+      else {
+        scope.downloads = md.getGroupedLinksByTypes('#FILE',
+            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+        scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
+            'OGC:WMS', 'OGC:OWS-C');
+      }
     }
   }]);
 

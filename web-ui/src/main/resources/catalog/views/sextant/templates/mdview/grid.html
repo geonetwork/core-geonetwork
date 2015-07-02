@@ -16,7 +16,7 @@
         <div class="row gn-md-title">
 
           <!--Icon for types - usually only one-->
-          <span class="pull-left fa" data-ng-class="md.icon.cls"
+          <span class="fa" data-ng-class="md.icon.cls"
                 title="{{md.icon.title | translate}}"></span>
 
           <h4 title="{{md.title || md.defaultTitle}}">
@@ -42,7 +42,7 @@
 
             <p data-ng-if="md.getCredits()" class="gn-md-source" title="{{::md.getCredits()}}">
               <!--<h5 data-translate="">contacts</h5>-->
-              Source: {{::md.getCredits() | characters : 70}}
+              Source: {{::md.getCredits() | characters : 50}}
             </p>
 
           </div>

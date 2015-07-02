@@ -747,7 +747,9 @@ ul.gn-resultview {
       height: 3.8em;
       span {
         font-size: 18px;
-        margin: .9em .4em 0;
+        display: table-cell;
+        padding: 0 .5em;
+        vertical-align: middle;
       }
       h4 {
         font-size: @sxt-fontsize-big;
@@ -983,6 +985,12 @@ ul.gn-resultview {
     max-height: ~"calc(100% - 4.1em)";
     height: ~"calc(100% - 4.1em)";
     overflow-y: auto;
+    ul li {
+      font-size: 12px;
+    }
+    label {
+      white-space: normal;
+    }
   }
 
   .layers-tools {
@@ -1085,6 +1093,12 @@ ul.gn-resultview {
       width: auto;
       .btn {
         margin-left: 4px;
+      }
+    }
+    [gn-related] {
+      display: inline-block;
+      .btn-group {
+        vertical-align: initial;
       }
     }
     h3 {
@@ -1215,6 +1229,7 @@ ul.gn-resultview {
     box-shadow: @sxt-shadow;
     border: none;
     border-radius: 0;
+    padding: 1em;
   }
   .sxt-panier-remove {
     float: right;
@@ -1222,6 +1237,9 @@ ul.gn-resultview {
   }
   .col-md-5 {
     float: right;
+  }
+  .clearfix:after {
+    display: table !important;
   }
 }
 
