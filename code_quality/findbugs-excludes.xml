@@ -199,16 +199,6 @@
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
 	
-<!-- TODO: Check excluded Healthcheck LogConfig bugs -->
-	<Match>
-		<Class name="org.fao.geonet.monitor.service.LogConfig"/>
-		<Bug pattern="NP_NULL_ON_SOME_PATH_EXCEPTION"/>
-		<Method name="getLog"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.monitor.service.LogConfig"/>
-		<Bug pattern="SS_SHOULD_BE_STATIC"/>
-	</Match>
 	<!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
 	<Match>
 		<Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>

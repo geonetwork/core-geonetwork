@@ -13,9 +13,12 @@ import java.util.List;
  */
 public class FullViewFormatterServiceTest extends AbstractFullViewFormatterTest {
 
+    @Test
+    public void testDummy(){}
+
     @Ignore
     @DirtiesContext
-    public void ignoreTestServiceMdFormatting() throws Exception {
+    public void testServiceMdFormatting() throws Exception {
         super.testPrintFormat();
     }
 
