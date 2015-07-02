@@ -520,7 +520,7 @@
                     <xsl:variable name="keyIndex" select="position()"/>
                     <input class="form-control"
                            type="{if (@use) then @use else 'text'}"
-                           value="{$keyValues/field[$keyIndex]/value/text()}"
+                           value="{if ($keyValues) then $keyValues/field[$keyIndex]/value/text() else ''}"
                            id="{$id}_{@label}"
                            data-gn-field-tooltip="{$schema}|{@tooltip}">
                       <xsl:if test="$helper">
