@@ -37,7 +37,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         Files.deleteIfExists(file);
 
         this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
-                file.getFileName().toString(), file, null, true);
+                file.getFileName().toString(), file, "", true);
         writableThesaurus.initRepository();
     }
     
