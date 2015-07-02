@@ -105,7 +105,11 @@ public class Dimension {
     public Set<String> getLocales() {
         try {
             ConfigurableApplicationContext context = ApplicationContextHolder.get();
-            return context.getBean("languages", Set.class);
+            if (context != null) {
+                return context.getBean("languages", Set.class);
+            } else {
+                return this.context.getBean("languages", Set.class);
+            }
         } catch (NoSuchBeanDefinitionException e) {
             return this.context.getBean("languages", Set.class);
         }
