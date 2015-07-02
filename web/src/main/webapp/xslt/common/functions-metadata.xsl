@@ -129,10 +129,10 @@
         <xsl:for-each select="$codelists">
           <xsl:if test="@displayIf">
             <xsl:variable name="match">
-              <xsl:call-template name="evaluate-iso19139">
+              <saxon:call-template name="{concat('evaluate-', $schema)}">
                 <xsl:with-param name="base" select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
                 <xsl:with-param name="in" select="concat('/', @displayIf)"/>
-              </xsl:call-template>
+              </saxon:call-template>
             </xsl:variable>
             <xsl:if test="$match != ''">
               <xsl:copy-of select="."/>
