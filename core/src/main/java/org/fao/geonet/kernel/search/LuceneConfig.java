@@ -258,7 +258,7 @@ public class LuceneConfig {
 			String cI = elem.getChildText("commitInterval");
 			if (cI != null) {
 			    try {
-			        commitInterval = Long.(cI);
+			        commitInterval = Long.parseLong(cI);
 			    } catch (NumberFormatException e) {
 			        Log.warning(Geonet.SEARCH_ENGINE,
 			                "Invalid long value for commitInterval. Using default value.");
