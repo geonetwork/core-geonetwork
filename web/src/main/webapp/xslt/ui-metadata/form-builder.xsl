@@ -486,7 +486,7 @@
                   <xsl:when test="starts-with(@use, 'gn-')">
                     <input class="form-control"
                            type="hidden"
-                           value=""
+                           value="{value}"
                            id="{$id}_{@label}"/>
 
                     <div data-gn-field-tooltip="{$schema}|{@tooltip}"
@@ -517,9 +517,11 @@
                     </div>
                   </xsl:when>
                   <xsl:otherwise>
+                    <xsl:variable name="keyIndex" select="position()"/>
                     <input class="form-control"
                            type="{if (@use) then @use else 'text'}"
-                           value="" id="{$id}_{@label}"
+                           value="{if ($keyValues) then $keyValues/field[$keyIndex]/value/text() else ''}"
+                           id="{$id}_{@label}"
                            data-gn-field-tooltip="{$schema}|{@tooltip}">
                       <xsl:if test="$helper">
                         <!-- hide the form field if helper is available, the
@@ -552,7 +554,8 @@
               <xsl:if test="not($isExisting)">
                 <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
               </xsl:if>
-              <textarea class="form-control gn-debug" name="{$id}"
+              <textarea class="form-control gn-debug"
+                        name="{$id}"
                         data-gn-template-field="{$id}"
                         data-keys="{string-join($template/values/key/@label, '$$$')}"
                         data-values="{if ($keyValues and count($keyValues/*) > 0)

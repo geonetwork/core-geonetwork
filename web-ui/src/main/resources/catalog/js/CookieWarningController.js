@@ -3,18 +3,14 @@
 
   var module = angular.module('cookie_warning_controller', ['ngCookies']);
 
-  module.controller('CookieWarningController', ['$cookieStore', '$scope',
-    '$rootScope', '$cookies',
-    function($cookieStore, $cookies, $rootScope, $scope) {
-      $rootScope.showCookieWarning = true;
-
-      if ($cookieStore.get('cookiesAccepted')) {
-        $rootScope.showCookieWarning = false;
-      }
-
+  module.controller('CookieWarningController', [
+    '$cookies', '$rootScope',
+    function($cookies, $rootScope) {
+      $rootScope.showCookieWarning =
+          window.localStorage.getItem('cookiesAccepted') !== 'true';
       $rootScope.close = function($event) {
         $rootScope.showCookieWarning = false;
-        $cookieStore.put('cookiesAccepted', true);
+        window.localStorage.setItem('cookiesAccepted', true);
         angular.element('.cookie-warning').hide();
       };
 
@@ -25,7 +21,6 @@
             delete $cookies[key];
           }
         });
-
         window.history.back();
       };
     }]);

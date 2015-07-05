@@ -679,6 +679,8 @@
     "status": "Status",
     "stylerurl": "Styler URL",
     "system": "System settings",
+    "system/ui": "User interface configuration",
+    "system/ui/defaultView": "Choose the user interface to use",
     "system/autodetect": "Language detection",
     "system/autodetect/enable": "Enable auto-detecting search request language",
     "system/autodetect/enable-help": "If set, the search language is automatically detected. Note that this doesn't work very well for short search terms.",

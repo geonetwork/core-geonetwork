@@ -186,6 +186,10 @@ if (typeof define === 'function' && define.amd) {
 }
 else {
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, dans: string, tis: *[], eis: *[]}|XLink_1_0}
+     */
     module.exports.XLink_1_0 = XLink_1_0_Module_Factory().XLink_1_0;
   }
   else {

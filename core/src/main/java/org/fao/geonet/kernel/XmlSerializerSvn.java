@@ -120,13 +120,7 @@ public class XmlSerializerSvn extends XmlSerializer {
 		// old XML comes from the database
 		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 
-		if (svnMan == null) { // do nothing
-			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
-		} else {
-			// set subversion manager to record history on this metadata when commit
-			// takes place
-			svnMan.setHistory(id, context);
-		}
+		svnMan.setHistory(id, context);
 
 	}
 

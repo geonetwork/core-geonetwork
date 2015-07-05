@@ -467,3 +467,61 @@ i.fa-times.delete {
 i.fa-times.delete:hover {
     color:  #a94442;
 }
+
+
+.gn-search-page {
+  .gn-status {
+    border: 3px solid darken(@brand-info, 5%);
+    position: absolute;
+    top: 55px;
+    left: 2px;
+    border-radius: 15px;
+    padding: 2px;
+    -ms-transform: rotate(-30deg);
+    -webkit-transform: rotate(-30deg);
+    transform: rotate(-30deg);
+    color: @brand-info;
+    font-weight: bold;
+    font-size: 80%;
+    background-color: rgba(255, 255, 255 , 0.7);
+  }
+  .gn-status-mdview {
+    font-size: 120%;
+    position: relative;
+    float: right;
+    top: -52px;
+    margin-right: -20px;
+  }
+  /* Decide here which status should be displayed
+  or not and with which colors */
+  .gn-status-completed {
+    border-color: darken(@brand-success, 5%);
+    color: @brand-success;
+  }
+  .gn-status-historicalArchive {
+    border-color: darken(@brand-warning, 5%);
+    color: @brand-warning;
+  }
+  .gn-status-obsolete {
+    border-color: darken(@brand-danger, 5%);
+    color: @brand-danger;
+  }
+}
+
+// Language specific layout
+html[lang=eng] {
+  .gn-scale,
+  [data-facet=denominators] span.gn-facet-label {
+    :before {
+      content: "1/";
+    }
+  }
+}
+html[lang=fre] {
+  .gn-scale,
+  [data-facet=denominators] span.gn-facet-label {
+    :before {
+      content: "1:";
+    }
+  }
+}

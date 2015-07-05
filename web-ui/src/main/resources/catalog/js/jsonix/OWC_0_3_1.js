@@ -449,6 +449,10 @@ if (typeof define === 'function' && define.amd) {
 }
 else {
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, tis: *[], eis: *[]}|OWC_0_3_1}
+     */
     module.exports.OWC_0_3_1 = OWC_0_3_1_Module_Factory().OWC_0_3_1;
   }
   else {

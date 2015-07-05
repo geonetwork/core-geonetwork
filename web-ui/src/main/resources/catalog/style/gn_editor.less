@@ -186,6 +186,12 @@ form.gn-editor {
     > input[type=time] {
       width: 40%;
     }
+    > input[type=date].gn-notime {
+      width: 100%;
+    }
+    > input[type=time].hidden {
+      width: 0%;
+    }
     .gn-indeterminate-position {
       display: table-cell;
       > select {
@@ -253,7 +259,8 @@ form.gn-editor {
   .gn-field {
       border-radius: 3px;
       margin: 0px;
-      //padding: 5px;
+      padding-top: 4px;
+      padding-bottom: 4px;
   }
   .field-bg {
       background-color: #f7f7f7;

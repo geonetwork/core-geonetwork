@@ -98,15 +98,15 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         assertEquals(1, _serviceManager.getNumberOfCalls());
         final Element loadedMetadataKeepXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesNotEdit, xpath, GCO, GMD);
-        assertEquals(1, _serviceManager.getNumberOfCalls());
+        assertEquals(2, _serviceManager.getNumberOfCalls());
 
         final Element loadedMetadataNoXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, false);
         assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesEdit, xpath, GCO, GMD);
-        assertEquals(1, _serviceManager.getNumberOfCalls());
+        assertEquals(3, _serviceManager.getNumberOfCalls());
 
         final Element loadedMetadataKeepXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesEdit, xpath, GCO, GMD);
-        assertEquals(1, _serviceManager.getNumberOfCalls());
+        assertEquals(4, _serviceManager.getNumberOfCalls());
 
         Processor.clearCache();
         final String keyword2 = "Other Word";
@@ -114,7 +114,7 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
 
         final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
-        assertEquals(2, _serviceManager.getNumberOfCalls());
+        assertEquals(5, _serviceManager.getNumberOfCalls());
 
 
     }

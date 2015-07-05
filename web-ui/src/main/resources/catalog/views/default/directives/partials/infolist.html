@@ -22,6 +22,12 @@
 		<a data-ng-href="#/search?_cat={{md.type}}"  title="{{md.type | translate}}">
           <i class="fa gn-icon gn-icon-{{md.type}}"></i>
         </a>
+        <a data-ng-repeat="t in ::md.inspirethemewithac track by $index"
+           data-ng-href="#/search?inspiretheme={{t.split('|')[1]}}">
+          <i class="fa" title="{{t | translate}}">
+            <span class="fa iti-{{t.split('|')[0]}}"></span>
+          </i>
+        </a>
         <a data-ng-repeat="cat in ::md.category"
            data-ng-href="#/search?_cat={{cat}}"  title="{{cat | translate}}">
           <i class="fa gn-icon gn-icon-{{cat}}"></i>

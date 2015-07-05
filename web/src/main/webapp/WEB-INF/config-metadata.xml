@@ -3,7 +3,8 @@
 <geonet>
     <services package="org.fao.geonet">
 
-        <service name="pdf">
+        <service name="pdf" deprecated="true">
+            <documentation>Use formatter and PDF output instead.</documentation>
             <class name=".services.metadata.Show" />
             <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
                 <call name="siteURL" class=".guiservices.util.GetSiteURL" />

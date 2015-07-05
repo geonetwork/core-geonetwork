@@ -3,7 +3,6 @@
   goog.provide('gn_map_field_directive');
 
   angular.module('gn_map_field_directive', [])
-
       .directive('gnMapField', [
         'gnMap',
         function(gnMap) {
@@ -47,7 +46,7 @@
                   });
 
                   /**
-                   * Set active relation (include, exclude, etc..). Run search
+                   * Set active relation (intersect, within, etc..). Run search
                    * when changed.
                    */
                   scope.setRelation = function(rel) {
@@ -64,9 +63,11 @@
       .directive('gnDrawBboxBtn', [
         'ngeoDecorateInteraction',
         '$parse',
+        '$translate',
         'gnSearchSettings',
         'gnMap',
-        function(ngeoDecorateInteraction, $parse, gnSearchSettings, gnMap) {
+        function(ngeoDecorateInteraction, $parse, $translate,
+                 gnSearchSettings) {
           return {
             restrict: 'A',
             scope: true,
@@ -105,7 +106,9 @@
                 // Write the extent as 4326 WKT polygon
                 var lonlatFeat, writer, wkt;
                 lonlatFeat = feature.clone();
-                lonlatFeat.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+                lonlatFeat.getGeometry().transform(
+                    scope.map.getView().getProjection().getCode(),
+                    'EPSG:4326');
                 writer = new ol.format.WKT();
                 wkt = writer.writeFeature(lonlatFeat);
                 bboxSet(parent, wkt);
@@ -117,20 +120,37 @@
               if (coords) {
                 updateField(new ol.geom.Polygon(coords));
               }
-
-              scope.interaction.on('boxend', function(mapBrowserEvent) {
+              scope.getButtonTitle = function() {
+                if (scope.interaction.active) {
+                  return $translate('clickToRemoveSpatialFilter');
+                } else {
+                  return $translate('drawAnExtentToFilter');
+                }
+              };
+              scope.interaction.on('boxend', function() {
                 scope.$apply(function() {
                   updateField(scope.interaction.getGeometry());
+                  scope.triggerSearch();
                 });
               });
 
+              function resetSpatialFilter() {
+                feature.setGeometry(null);
+                bboxSet(parent, '');
+                scope.map.render();
+              }
               // Remove the bbox when the interaction is not active
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
-                  feature.setGeometry(null);
-                  bboxSet(parent, '');
-                  scope.map.render();
+                  resetSpatialFilter();
+                  scope.triggerSearch();
                 }
+              });
+
+              // When search form is reset, remove the geom
+              scope.$on('beforeSearchReset', function() {
+                resetSpatialFilter();
+                scope.interaction.active = false;
               });
             }
           };

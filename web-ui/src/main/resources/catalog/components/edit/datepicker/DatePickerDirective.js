@@ -26,7 +26,8 @@
              id: '@',
              tagName: '@',
              indeterminatePosition: '@',
-             required: '@'
+             required: '@',
+             hideTime: '@'
            },
            templateUrl: '../../catalog/components/edit/datepicker/partials/' +
            'datepicker.html',
@@ -37,6 +38,7 @@
              // support year or month only mode in this case)
              scope.dateTypeSupported = Modernizr.inputtypes.date;
              scope.isValidDate = true;
+             scope.hideTime = scope.hideTime == 'true';
              var namespaces = {
                iso19139: {
                  gco: gnNamespaces.gco,

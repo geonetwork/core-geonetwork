@@ -29,6 +29,12 @@
                 <span class="fa gn-icon-{{cat}}"></span>
             </i>
           </a>
+          <a data-ng-repeat="t in md.inspirethemewithac"
+             data-ng-href="#/search?inspiretheme={{t.split('|')[1]}}">
+            <i class="fa" title="{{t.split('|')[1]}}">
+              <span class="fa iti-{{t.split('|')[0]}}"></span>
+            </i>
+          </a>
           <a data-ng-repeat="t in md.topicCat"
              data-ng-href="#/search?topicCat={{t}}">
             <i class="fa" title="{{t | translate}}">
@@ -49,6 +55,11 @@
           <img class="gn-img-thumbnail"
                data-ng-src="{{md.getThumbnails().list[0].url}}"
                data-ng-if="md.getThumbnails().list[0].url"/>
+
+          <!-- Display the first metadata status (apply to ISO19139 record) -->
+          <div data-ng-if="md.status_text.length > 0"
+               title="{{md.status_text[0]}}"
+               class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}</div>
         </div>
         
         <div style="float:left; display:block; width: calc(100% - 162px)">
@@ -131,6 +142,7 @@
           </div>
 
           <div class="btn-group"
+               data-ng-if="isMapViewerEnabled"
                data-ng-class="layers.length > 0 ? '' : 'invisible'">
             <button type="button"
                     class="btn btn-default dropdown-toggle"
@@ -162,6 +174,7 @@
           </div>
 
           <div class="btn-group"
+               data-ng-if="isMapViewerEnabled"
                data-ng-class="maps.length > 0 ? '' : 'invisible'">
             <button type="button"
                     class="btn btn-default dropdown-toggle"

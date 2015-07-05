@@ -39,8 +39,8 @@
      * is displayed to the end user and the creation codelist value
      * is in the XML template for the field.
      */
-  module.directive('gnTemplateField', ['$http', '$rootScope',
-    function($http, $rootScope) {
+  module.directive('gnTemplateField', ['$http', '$rootScope', '$timeout',
+    function($http, $rootScope, $timeout) {
 
       return {
         restrict: 'A',
@@ -58,10 +58,9 @@
           var fields = scope.keys && scope.keys.split(separator);
           var values = scope.values && scope.values.split(separator);
 
-
           // Replace all occurence of {{fieldname}} by its value
           var generateSnippet = function() {
-            var xmlSnippet = xmlSnippetTemplate, updated = false;
+            var xmlSnippet = xmlSnippetTemplate, isOneFieldDefined = false;
 
             angular.forEach(fields, function(fieldName) {
               var field = $('#' + scope.id + '_' + fieldName);
@@ -71,43 +70,40 @@
               } else {
                 value = field.val() || '';
               }
+
               if (value !== '') {
                 xmlSnippet = xmlSnippet.replace(
                     '{{' + fieldName + '}}',
                     value.replace(/\&/g, '&amp;amp;')
                          .replace(/\"/g, '&quot;'));
+
+                // If one value is defined the field
+                // is defined
+                isOneFieldDefined = true;
               } else {
                 xmlSnippet = xmlSnippet.replace(
                     '{{' + fieldName + '}}',
                     '');
               }
-              updated = true;
             });
 
             // Usually when a template field is link to a
             // gnTemplateFieldAddButton directive, the keys
             // is empty.
-            if (scope.keys === undefined) {
-              updated = true;
+            if (scope.keys === undefined || scope.keys === '') {
+              isOneFieldDefined = true;
             }
 
-            // Reset the snippet if no match were found TODO
-            // which means that no value is defined
-            element[0].innerHTML = '';
-            if (updated) {
+            // Reset the snippet if no match were found
+            // which means that no fields have values
+            if (isOneFieldDefined) {
               element[0].innerHTML = xmlSnippet;
+            } else {
+              element[0].innerHTML = '';
             }
           };
 
           var init = function() {
-            // Register change event on each fields to be
-            // replaced in the XML snippet.
-            angular.forEach(fields, function(value) {
-              $('#' + scope.id + '_' + value).change(function() {
-                generateSnippet();
-              });
-            });
-
             // Initialize all values
             angular.forEach(values, function(value, key) {
               var selector = '#' + scope.id + '_' + fields[key];
@@ -117,6 +113,15 @@
                 $(selector).val(value);
               }
             });
+
+            // Register change event on each fields to be
+            // replaced in the XML snippet.
+            angular.forEach(fields, function(value) {
+              $('#' + scope.id + '_' + value).change(function() {
+                generateSnippet();
+              });
+            });
+
 
             // If template element is not existing in the metadata
             var unsetCheckbox = $('#gn-template-unset-' + scope.notSetCheck);
@@ -138,7 +143,9 @@
             }
           };
 
-          init();
+          $timeout(function() {
+            init();
+          });
         }
       };
     }]);

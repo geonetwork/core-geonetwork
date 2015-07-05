@@ -9,13 +9,13 @@
         <input class="form-control"
                data-ng-show="groups.length > 1"
                data-ng-model="groupSearch.$" autofocus=""
-          placeholder="{{'filter' | translate}}"/>
+               placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="groupSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="g in pageItems()"
-            data-ng-class="g.id === groupSelected.id ? 'active' : ''" data-ng-click="selectGroup(g)"
-            > {{g.label[lang]}} </a>
+             data-ng-repeat="g in pageItems()"
+             data-ng-class="g.id === groupSelected.id ? 'active' : ''"
+             data-ng-click="selectGroup(g)"> {{g.label[lang]}} </a>
           <span data-gn-pagination-list=""
               data-items="groups | filter:groupSearch | orderBy:'name'"
               data-cache="groups"/>
@@ -36,24 +36,26 @@
 
 
   <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
-    <div class="panel panel-default" data-ng-search-form="">
+    <div class="panel panel-default">
       <div class="panel-heading"
         title="{{searchResults.count > 0 ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
-        <strong>{{groupSelected.name}}</strong>
+        <span><strong>{{groupSelected.name}}</strong></span>
         <div class="btn-toolbar"
                 data-ng-show="user.isAdministratorOrMore()">
           <button type="button" class="btn btn-primary pull-right"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')" id="gn-btn-group-save">
-            <i class="fa fa-save"></i> <span data-translate="">saveGroup</span>
+            <i class="fa fa-save"></i>&nbsp;
+            <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
             data-ng-disabled="searchResults.count > 0"
             data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
-            <i class="fa fa-times"></i> <span data-translate="">deleteGroup</span>
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">deleteGroup</span>
           </button>
         </div>
       </div>
@@ -138,7 +140,7 @@
         </div>
 
 
-        <div data-ng-show="searchResults.count != 0">
+        <div data-ng-search-form="" data-ng-show="searchResults.count != 0">
           <h3>
             <ng-pluralize count="searchResults.count"
                           when="{'0': ('noRecordFound' | translate),
