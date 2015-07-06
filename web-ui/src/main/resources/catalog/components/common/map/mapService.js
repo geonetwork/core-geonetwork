@@ -696,13 +696,13 @@
                         var extent = ol.extent.createEmpty();
                         var features = vectorSource.getFeatures();
                         for (var i = 0; i < features.length; ++i) {
-                            var feature = features[i];
-                            var geometry = feature.getGeometry();
-                            if (!goog.isNull(geometry)) {
-                                  ol.extent.extend(extent, geometry.getExtent());
-                            }
+                          var feature = features[i];
+                          var geometry = feature.getGeometry();
+                          if (!goog.isNull(geometry)) {
+                            ol.extent.extend(extent, geometry.getExtent());
+                          }
                         }
-                        
+
                         map.getView().fitExtent(extent, map.getSize());
 
                       })
