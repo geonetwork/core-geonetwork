@@ -36,9 +36,18 @@
         </a></li>
 
         <!--WPS-->
-        <li class="list-group-item" data-ng-if="process"><a href="" data-ng-click="showWPS(process)">
+        <li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process)">
           <!--<i class="fa fa-gear"></i>&nbsp;--><span translate="">WPS</span>
         </a></li>
+        <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
+          <div class="btn-link dropdown-toggle" data-toggle="dropdown">
+            WPS&nbsp;
+            <span class="caret"></span>
+          </div>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p)">{{p.name}}</a></li>
+          </ul>
+        </li>
 
         <!--Remove layer-->
         <li class="list-group-item"><a href="" data-ng-click="remove()">

@@ -345,7 +345,7 @@
       /**
        * API, get the url params to get layers or OWC
        */
-      if(sxtSettings) {
+      if(typeof sxtSettings != 'undefined') {
         var params = gnUrlUtils.parseKeyValue(window.location.search.
             replace(/^\?/, ''));
         gnViewerSettings.owsContext = decodeURIComponent(params.owscontext);
