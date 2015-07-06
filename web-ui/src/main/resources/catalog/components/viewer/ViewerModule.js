@@ -129,7 +129,7 @@
         var pixel = map.getEventPixel(e.originalEvent);
         var coordinate = map.getEventCoordinate(e.originalEvent);
         map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-          if (!layer) { return; }
+          if (!layer || !layer.get('getinfo')) { return; }
           $timeout.cancel(hidetimer);
           if (f != feature) {
             f = feature;

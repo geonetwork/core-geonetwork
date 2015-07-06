@@ -32,7 +32,7 @@
                    * Fit map view to map projection max extent
                    */
                   scope.maxExtent = function() {
-                    scope.map.getView().fitExtent(scope.map.getView().
+                    scope.map.getView().fit(scope.map.getView().
                             getProjection().getExtent(), scope.map.getSize());
                   };
 
@@ -93,11 +93,12 @@
 
               // Create overlay to persist the bbox
               var feature = new ol.Feature();
-              var featureOverlay = new ol.FeatureOverlay({
+              var featureOverlay = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                map: scope.map,
                 style: gnSearchSettings.olStyles.drawBbox
               });
-              featureOverlay.setMap(scope.map);
-              featureOverlay.addFeature(feature);
+              featureOverlay.getSource().addFeature(feature);
 
               /**
                * Update extent scope value with the WKT polygon
