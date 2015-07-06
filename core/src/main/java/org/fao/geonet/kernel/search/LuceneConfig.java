@@ -87,7 +87,7 @@ public class LuceneConfig {
 				this.type = DEFAULT_TYPE;
 
 			try {
-				int p = Integer.valueOf(precisionStep);
+				int p = Integer.parseInt(precisionStep);
 				this.precisionStep = p;
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -234,7 +234,7 @@ public class LuceneConfig {
 				RAMBufferSizeMB = DEFAULT_RAMBUFFERSIZEMB;
 			} else {
 				try {
-					RAMBufferSizeMB = Double.valueOf(rb);
+					RAMBufferSizeMB = Double.parseDouble(rb);
 				} catch (NumberFormatException e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Invalid double value for RAM buffer size. Using default value.");
@@ -247,7 +247,7 @@ public class LuceneConfig {
 				MergeFactor = DEFAULT_MERGEFACTOR;
 			} else {
 				try {
-					MergeFactor = Integer.valueOf(mf);
+					MergeFactor = Integer.parseInt(mf);
 				} catch (NumberFormatException e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Invalid integer value for merge factor. Using default value.");
@@ -258,7 +258,7 @@ public class LuceneConfig {
 			String cI = elem.getChildText("commitInterval");
 			if (cI != null) {
 			    try {
-			        commitInterval = Long.valueOf(cI);
+			        commitInterval = Long.parseLong(cI);
 			    } catch (NumberFormatException e) {
 			        Log.warning(Geonet.SEARCH_ENGINE,
 			                "Invalid long value for commitInterval. Using default value.");
@@ -276,7 +276,7 @@ public class LuceneConfig {
 			String maxStaleNS = elem.getChildText("nrtManagerReopenThreadMaxStaleSec");
 			if (maxStaleNS != null) {
 			    try {
-			        nrtManagerReopenThreadMaxStaleSec = Double.valueOf(maxStaleNS);
+			        nrtManagerReopenThreadMaxStaleSec = Double.parseDouble(maxStaleNS);
 			    } catch (NumberFormatException e) {
 			        Log.warning(Geonet.SEARCH_ENGINE,
 			                "Invalid Double value for nrtManagerReopenThreadMaxStaleSec. Using default value.");
@@ -285,7 +285,7 @@ public class LuceneConfig {
 			String minStaleNS = elem.getChildText("nrtManagerReopenThreadMinStaleSec");
 			if (minStaleNS != null) {
 			    try {
-			        nrtManagerReopenThreadMinStaleSec = Double.valueOf(minStaleNS);
+			        nrtManagerReopenThreadMinStaleSec = Double.parseDouble(minStaleNS);
 			    } catch (NumberFormatException e) {
 			        Log.warning(Geonet.SEARCH_ENGINE,
 			                "Invalid Double value for nrtManagerReopenThreadMinStaleSec. Using default value.");
