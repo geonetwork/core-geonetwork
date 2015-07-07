@@ -270,7 +270,10 @@
         addMdLayerToMap: function(link, md) {
 
           if(gnSearchSettings.viewerUrl) {
-            window.open(gnSearchSettings.viewerUrl, '_blank');
+            var url = gnSearchSettings.viewerUrl;
+            url = url.replace('${wmsurl}', link.url);
+            url = url.replace('${layername}', link.name);
+            window.open(url, '_blank');
             return;
           }
           if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
