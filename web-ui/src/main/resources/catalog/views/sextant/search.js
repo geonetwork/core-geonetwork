@@ -348,7 +348,8 @@
       if(typeof sxtSettings != 'undefined') {
         var params = gnUrlUtils.parseKeyValue(window.location.search.
             replace(/^\?/, ''));
-        gnViewerSettings.owsContext = decodeURIComponent(params.owscontext);
+        gnViewerSettings.owsContext = params.owscontext &&
+            decodeURIComponent(params.owscontext);
         gnViewerSettings.wmsUrl = params.wmsurl;
         gnViewerSettings.layerName = params.layername;
       }
