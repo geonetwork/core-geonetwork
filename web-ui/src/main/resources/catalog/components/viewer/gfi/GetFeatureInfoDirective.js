@@ -91,7 +91,7 @@
                   ['longitude', 'latitude',
                     'time', 'value'].forEach(function(v) {
                     var node = doc.getElementsByTagName(v);
-                    if (node) {
+                    if (node && node.length > 0) {
                       props[v] = ol.xml.getAllTextContent(node[0], true);
                     }
                   });
