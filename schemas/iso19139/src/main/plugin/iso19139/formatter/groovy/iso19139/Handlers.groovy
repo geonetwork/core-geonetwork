@@ -102,17 +102,16 @@ public class Handlers {
         }
     }
     def isoBooleanEl = {isofunc.isoTextEl(it, parseBool(it.'*'.text()).toString())}
-    def dateEl = {isofunc.isoTextEl(it, it.text());}
+    def dateEl = {isofunc.isoTextEl(it, isofunc.dateText(it));}
     def extentTypeCodeEl = {
         isofunc.isoTextEl(it, parseBool(it.text()) ? 'include' : 'excluded')
     }
     def ciDateEl = {
-        if(!it.'gmd:date'.'gco:Date'.text().isEmpty()) {
+        if(matchers.isDateEl(it.'gmd:date')) {
             def dateType = f.codelistValueLabel(it.'gmd:dateType'.'gmd:CI_DateTypeCode')
-            commonHandlers.func.textEl(dateType, it.'gmd:date'.'gco:Date'.text());
+            commonHandlers.func.textEl(dateType, isofunc.dateText(it.'gmd:date'));
         }
     }
-
     def localeEls = { els ->
         def locales = []
         els.each {

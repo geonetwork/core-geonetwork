@@ -48,7 +48,9 @@
          var formatter = $routeParams.formatter;
          var mdId = $routeParams.mdId;
 
-         $http.get('md.format.xml?xsl=' + formatter + '&id=' + mdId).
+         var idParam = isNaN(parseInt(mdId)) ? 'uuid=' + mdId : 'id=' + mdId;
+
+         $http.get('md.format.xml?xsl=' + formatter + '&' + idParam).
          success(function(data) {
            $scope.loading = undefined;
            $scope.metadata = $sce.trustAsHtml(data);

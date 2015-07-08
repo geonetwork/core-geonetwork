@@ -85,10 +85,10 @@ public class ListBundleFiles extends AbstractFormatService implements Service {
             }
         }
     }
-	private final static String[] extensions = {"properties", "xml", "xsl", "css", ".js"};
+	private final static String[] extensions = {"properties", "xml", "xsl", "css", "js"};
 
     private boolean isEditibleFileType(Path f) {
-		Path fileName = f.getFileName();
+		String fileName = f.getFileName().toString();
 		for (String ext : extensions) {
 			if(fileName.endsWith("."+ext)) return true;
 		}

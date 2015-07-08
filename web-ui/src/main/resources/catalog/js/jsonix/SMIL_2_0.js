@@ -242,6 +242,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var SMIL_2_0_Module = SMIL_2_0_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, deps: string[], tis: *[], eis: *[]}|SMIL_2_0}
+     */
     module.exports.SMIL_2_0 = SMIL_2_0_Module.SMIL_2_0;
   }
   else {

@@ -70,11 +70,11 @@ public class ResumptionTokenCache extends Thread {
 
 		Date now = getUTCTime();
 
-		for (String key : map.keySet() ) {
-			if ( map.get(key).getExpirDate().getSeconds() < (now.getTime()/1000)  ) {
-				map.remove(key);
+		for (Map.Entry entry : map.entrySet() ) {
+			if ( ((GeonetworkResumptionToken)entry.getValue()).getExpirDate().getSeconds() < (now.getTime()/1000)  ) {
+				map.remove(entry.getKey());
                 if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                    Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::expunge removing:"+key);
+                    Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::expunge removing:"+entry.getKey());
 			}
 		}
 	}
@@ -85,13 +85,13 @@ public class ResumptionTokenCache extends Thread {
 
 		
 		long oldest=Long.MAX_VALUE;
-		String oldkey="";
+		Object oldkey="";
 		
-		for (String key : map.keySet() ) {
+		for (Map.Entry entry : map.entrySet() ) {
 			
-			if ( map.get(key).getExpirDate().getSeconds() < oldest   ) {
-				oldkey = key;
-				oldest = map.get(key).getExpirDate().getSeconds();
+			if ( ((GeonetworkResumptionToken)entry.getValue()).getExpirDate().getSeconds() < oldest   ) {
+				oldkey = entry.getKey();
+				oldest = ((GeonetworkResumptionToken)entry.getValue()).getExpirDate().getSeconds();
 			}
 		}
 		

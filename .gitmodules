@@ -1,6 +1,7 @@
 [submodule "geoserver"]
 	path = geoserver
 	url = https://github.com/geonetwork/core-geoserver.git
+	ignore = dirty
 [submodule "e2e-tests/chromedriver"]
 	path = e2e-tests/chromedriver
 	url = https://github.com/geonetwork/chromedriver.git

@@ -9310,6 +9310,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var GML_3_1_1_Module = GML_3_1_1_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, dans: string, deps: string[], tis: *[], eis: *[]}|GML_3_1_1}
+     */
     module.exports.GML_3_1_1 = GML_3_1_1_Module.GML_3_1_1;
   }
   else {

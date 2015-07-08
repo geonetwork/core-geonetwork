@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" 
-  version="2.0" exclude-result-prefixes="exslt">
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                version="2.0" exclude-result-prefixes="#all">
 
   <xsl:import href="process-utility.xsl"/>
 
@@ -30,7 +32,7 @@
   <xsl:variable name="replaceMode"
     select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-    select="concat($gurl, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
+    select="concat($gurl, 'keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
 
 
 
@@ -207,11 +209,9 @@
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
       <xsl:variable name="keyword" select="document(concat($serviceUrl, encode-for-uri($word)))"/>
-      <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
-
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
-      <xsl:for-each select="$knode/response/descKeys/keyword">
+      <xsl:for-each select="$keyword/response/descKeys/keyword">
         <xsl:if test="geo">
           <xsl:choose>
             <xsl:when test="$srv">

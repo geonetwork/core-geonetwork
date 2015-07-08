@@ -37,7 +37,7 @@ public class LinkType {
     /**
      * Raw HTML for the icon.
      */
-    public String iconHtml;
+    public String iconHtml = "";
     public LinkType(){}
     public LinkType(@Nonnull String name, @Nullable Direction relationDirection,
                     @Nullable String icon, @Nullable String iconClasses) {

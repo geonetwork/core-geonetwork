@@ -1,28 +1,63 @@
 <div ngeo-map="map">
   <div class="btn-group-vertical">
-    <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
+    <!--<button class="btn btn-default"
+            data-ng-click="gnMap.zoom(map, 1)">
       <i class="fa fa-plus"></i>
     </button>
-    <button class="btn btn-default" data-ng-click="maxExtent()">
-      <i class="fa fa-arrows-alt"></i>
-    </button>
-    <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
+    <button class="btn btn-default"
+            data-ng-click="gnMap.zoom(map, -1)">
       <i class="fa fa-minus"></i>
+    </button>-->
+    <button data-ng-click="location.setMap()"
+            data-ng-if="isMapViewerEnabled"
+            title="{{'openLargeMap' | translate}}"
+            class="btn btn-default">
+      <i class="fa fa-globe"></i>
     </button>
   </div>
-  <button class="btn btn-default" gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
-          gn-draw-bbox-extent="{{gnDrawBboxExtent}}" gi-btn data-ng-model="interaction.active">
-    <i class="fa fa-pencil"></i>
-  </button>
-  <div class="dropdown" ng-if="relations && currentExtent">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-      <span translate="" data-ng-if="!searchObj.params.relation">intersectWith</span>
-      <span translate="" data-ng-if="searchObj.params.relation">{{searchObj.params.relation}}</span>
+
+  <div class="btn-group gn-draw-btn" data-ng-if="relations">
+    <button class="btn btn-default" gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
+            gn-draw-bbox-extent="{{gnDrawBboxExtent}}"
+            gi-btn
+            title="{{getButtonTitle()}}"
+            data-ng-class="{active: interaction.active}"
+            data-ng-model="interaction.active">
+      <i class="fa fa-pencil fa-fw" data-ng-hide="interaction.active"></i>
+      <i class="fa fa-eraser fa-fw" data-ng-show="interaction.active"></i>
+    </button>
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            title="{{'chooseSpatialFilterType' | translate}}"
+            data-toggle="dropdown" aria-expanded="false">
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-      <li role="presentation"><a role="menuitem" ng-click="setRelation()" href="" translate>intersectWith</a></li>
-      <li data-ng-repeat="r in relations" role="presentation"><a role="menuitem" ng-click="setRelation(r)" href="">{{r}}</a></li>
+    <ul class="dropdown-menu" role="menu">
+      <li role="presentation"
+          data-ng-class="{disabled : !searchObj.params.relation}">
+        <a role="menuitem"
+           ng-click="setRelation()"
+           href=""
+           translate="">intersectWith
+        </a>
+      </li>
+      <li data-ng-repeat="r in relations"
+          role="presentation"
+          data-ng-class="{disabled : searchObj.params.relation == r}">
+        <a role="menuitem"
+           ng-click="setRelation(r)"
+           href="">{{r | translate}}
+        </a>
+      </li>
     </ul>
   </div>
+
+  <button data-ng-if="!relations"
+          class="btn btn-default gn-draw-btn"
+          gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
+          gn-draw-bbox-extent="{{gnDrawBboxExtent}}"
+          gi-btn
+          data-ng-model="interaction.active">
+    <i class="fa fa-pencil"></i>
+  </button>
 </div>

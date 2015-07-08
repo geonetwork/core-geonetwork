@@ -484,6 +484,8 @@
     "map/isMapViewerEnabled-help": "Si non sélectionné, la carte sur l'application de recherche sera désactivée.",
     "map/is3DModeAllowed-help": "Si activé, l'utilisateur peut passer la carte d'un mode 2D à un mode 3D. La carte doit également être activée. Si vous ne souhaitez pas activer le mode 3D pour tout le monde, ajouter <a href='catalog.search?with3d'>?with3d</a> dans l'URL pour l'activer.",
     "map/is3DModeAllowed": "Autoriser le mode 3D (beta)",
+    "map/isSaveMapInCatalogAllowed": "Autoriser la sauvegarde des cartes du visualiseur en tant que fiche de métadonnées",
+    "map/isSaveMapInCatalogAllowed-help": "A partir du visualiseur, l'éditeur peut définir le titre et le résumé de la carte et la sauvegarder dans le catalogue avec la configuration de la carte associée (ie. OWS context). Il est ainsi possible de réaliser un catalogue de carte dynamique.",
     "mapserverConfiguration": "Configuration des URLs",
     "mapserverDescription": "Description",
     "mapserverName": "Nom",

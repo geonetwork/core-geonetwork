@@ -59,6 +59,7 @@
         <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
         <facet name="category" indexKey="_cat" label="categories" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
+        <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
@@ -70,9 +71,10 @@
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
-        <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
+        <facet name="isValid" indexKey="_valid" label="isValid" localized="true"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
-        <facet name="status" indexKey="_status" label="status"/>
+        <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
+        <facet name="status" indexKey="cl_status" label="status"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
@@ -84,11 +86,13 @@
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+            <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="keyword" max="15"/>
             <item facet="orgName" max="25"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
             <item facet="serviceType"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <!--<item facet="metadataPOC" max="15"/>-->
@@ -102,7 +106,7 @@
           <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="category" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
-          <item facet="status" max="10" sortBy="value"
+          <item facet="mdStatus" max="10" sortBy="value"
                 translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
           <item facet="isValid" max="3" sortBy="value"/>
           <item facet="groupOwner" max="199" sortBy="value"

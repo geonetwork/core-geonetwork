@@ -979,6 +979,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var OWS_1_1_0_Module = OWS_1_1_0_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, dans: string, deps: string[], tis: *[], eis: *[]}|OWS_1_1_0}
+     */
     module.exports.OWS_1_1_0 = OWS_1_1_0_Module.OWS_1_1_0;
   }
   else {

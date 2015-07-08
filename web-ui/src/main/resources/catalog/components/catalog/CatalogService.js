@@ -263,7 +263,6 @@
     getValidation: 'md.validate@json',
     mdSelect: 'metadata.select?_content_type=json', // TODO: CHANGE
 
-    mdGetPDF: 'pdf',
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',
@@ -506,7 +505,8 @@
       $.extend(true, this, k);
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox',
+        'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
+        'status', 'status_text',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       this.linksCache = [];

@@ -23,10 +23,19 @@
         $http({
           method: 'GET',
           url: langUrl
-        }).success(function(data, status, header, config) {
+        }).success(function(data) {
           deferredInst.resolve(data);
-        }).error(function(data, status, header, config) {
-          deferredInst.reject(options.key);
+        }).error(function() {
+          // Load english locale file if not available
+          $http({
+            method: 'GET',
+            url: options.prefix +
+                'en-' + value + options.suffix
+          }).success(function(data) {
+            deferredInst.resolve(data);
+          }).error(function() {
+            deferredInst.reject(options.key);
+          });
         });
       });
 

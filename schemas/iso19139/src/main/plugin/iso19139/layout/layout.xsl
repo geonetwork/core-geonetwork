@@ -12,9 +12,17 @@
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
+  <xsl:include href="layout-custom-fields-date.xsl"/>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*|@*" priority="1000"/>
+  <xsl:template mode="mode-iso19139"
+                match="gn:*|@gn:*|@*"
+                priority="1000"/>
+
+  <!-- Ignore group element. -->
+  <xsl:template mode="mode-iso19139"
+                match="gml:*[starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT')]"
+                priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
@@ -283,7 +291,7 @@
 
   </xsl:template>
 
-
+<!--
   <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:Date|gco:DateTime]">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -311,9 +319,10 @@
       data-label="{$labelConfig/label}"
       data-element-name="{name(gco:Date|gco:DateTime)}"
       data-element-ref="{concat('_X', gn:element/@ref)}"
-      data-required="{$isRequired}">
+      data-required="{$isRequired}"
+      data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <!-- Match codelist values.

@@ -14,7 +14,7 @@
 	<!-- ================================================================= -->
 
 	<xsl:template match="/root">
-		<xsl:apply-templates select="gmd:MD_Metadata"/>
+		<xsl:apply-templates select="*:MD_Metadata"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
@@ -163,9 +163,9 @@
 			<xsl:apply-templates select="@*[name(.)!='codeList']"/>
 		</gmd:LanguageCode>
 	</xsl:template>
-	
-	
-	<xsl:template match="gmd:*[@codeListValue]">
+
+
+  <xsl:template match="gmd:*[@codeListValue]">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="codeList">

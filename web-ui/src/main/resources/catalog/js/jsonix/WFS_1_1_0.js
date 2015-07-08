@@ -855,6 +855,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var WFS_1_1_0_Module = WFS_1_1_0_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, deps: string[], tis: *[], eis: *[]}|WFS_1_1_0}
+     */
     module.exports.WFS_1_1_0 = WFS_1_1_0_Module.WFS_1_1_0;
   }
   else {

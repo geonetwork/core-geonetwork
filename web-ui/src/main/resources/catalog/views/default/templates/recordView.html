@@ -31,7 +31,7 @@
 
 
     <div class="btn-group pull-right">
-      <button type="button" class="btn btn-link dropdown-toggle"
+      <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
               aria-expanded="false">
         <i class="fa fa-eye"></i>&nbsp;
@@ -80,10 +80,11 @@
         <h1>
           <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+
         </h1>
 
         <div class="pull-right">
-          <i class="fa fa-calendar"></i>
+          <i class="fa fa-calendar"></i>&nbsp;
           <span data-translate="">updatedOn</span>
           <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
                 data-from-now=""></span>
@@ -91,6 +92,12 @@
         <div style="clear:both"></div>
 
         <div class="well" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
+
+        <!-- Display the first metadata status (apply to ISO19139 record) -->
+        <div data-ng-if="mdView.current.record.status_text.length > 0"
+             title="{{mdView.current.record.status_text[0]}}"
+             class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
+          {{mdView.current.record.status_text[0]}}</div>
 
         <div data-gn-related="mdView.current.record"
              data-types="online"
@@ -106,6 +113,18 @@
 
         <table class="table table-striped">
           <tbody>
+          <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
+                          mdView.current.record.inspirethemewithac.length > 0">
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                     class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                     title="{{cat.split('|')[1]}}">
+                  <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
+                  <p class="label"></p>
+                </div>
+              </td>
+            </tr>
             <tr data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
               <th data-translate="">listOfCategories</th>
@@ -183,9 +202,13 @@
               <th data-translate="">credit</th>
               <td>{{mdView.current.record.credit}}</td>
             </tr>
-            <tr data-ng-if="mdView.current.record.status_text">
+            <tr data-ng-if="mdView.current.record.status_text.length > 0">
               <th data-translate="">resourceStatus</th>
-              <td>{{mdView.current.record.status_text}}</td>
+              <td>
+                <ul>
+                  <li data-ng-repeat="s in mdView.current.record.status_text">{{s}}</li>
+                </ul>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -215,7 +238,8 @@
               <th data-translate="">scale</th>
               <td>
                 <ul>
-                  <li data-ng-repeat="d in mdView.current.record.denominator">1/{{d}}</li>
+                  <li data-ng-repeat="d in mdView.current.record.denominator"
+                      class="gn-scale">{{d}}</li>
                 </ul>
               </td>
             </tr>
@@ -299,12 +323,12 @@
       </div>
 
       <div class="col-md-4 gn-md-side">
-
         <section data-ng-if="mdView.current.record.overviews.length > 0">
           <h4>
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
           </h4>
+
           <p data-ng-repeat="img in mdView.current.record.overviews">
           <img data-gn-img-modal="md"
                class="gn-img-thumbnail img-thumbnail"

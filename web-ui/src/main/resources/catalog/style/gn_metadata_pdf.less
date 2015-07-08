@@ -31,11 +31,18 @@
     line-height: 1.428571429;
   }
   dt {
+    clear: left;
+    float: left;
     width: 160px;
     font-style: italic;
-    font-size: 15px;
+    font-size: 13px;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   dd {
+    display: block;
     margin-left: 180px;
     padding-left: 10px;
     border-left: 1px solid #999999;

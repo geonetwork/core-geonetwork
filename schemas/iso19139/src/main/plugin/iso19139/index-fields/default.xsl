@@ -254,10 +254,19 @@
                               <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
                             </xsl:call-template>
                           </xsl:variable>
-                          
+
+                          <xsl:variable name="inspireThemeAcronym">
+                            <xsl:call-template name="getInspireThemeAcronym">
+                              <xsl:with-param name="keyword" select="string(.)"/>
+                            </xsl:call-template>
+                          </xsl:variable>
+
                           <!-- Add the inspire field if it's one of the 34 themes -->
                           <xsl:if test="normalize-space($inspireannex)!=''">
                             <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
+                            <Field name="inspirethemewithac"
+                                   string="{concat($inspireThemeAcronym, '|', string(.))}"
+                                   store="true" index="true"/>
                 <xsl:variable name="englishInspireTheme">
                   <xsl:call-template name="translateInspireThemeToEnglish">
                     <xsl:with-param name="keyword" select="string(.)"/>
@@ -826,7 +835,14 @@
     <xsl:value-of select="$inspireThemes/skos:prefLabel[
           @xml:lang='en' and
           ../skos:prefLabel = $keyword]/text()"/>
-	</xsl:template>	
+	</xsl:template>
+
+  <xsl:template name="getInspireThemeAcronym">
+    <xsl:param name="keyword"/>
+
+    <xsl:value-of select="$inspire-theme/skos:altLabel[
+          ../skos:prefLabel = $keyword]/text()"/>
+  </xsl:template>
 
 	<xsl:template name="determineInspireAnnex">
 		<xsl:param name="keyword"/>

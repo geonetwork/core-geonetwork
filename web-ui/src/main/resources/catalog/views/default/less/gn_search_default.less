@@ -70,6 +70,8 @@
   }
 }
 .gn-search-page {
+  clear: both;
+  padding-bottom:40px;
   .gn-md-view {
     padding: 0 20px;
   }
@@ -335,26 +337,17 @@ ul.gn-resultview {
   }
 }
 
-[ngeo-map] {
-  height: 89.9vh;
-  &.gn-search-map {
-    height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    right: 0;
-    bottom: 0;
-    position: fixed !important;
-    z-index: 99;
-    width: 200px !important;
-    heigth: 200px !important;
-    margin: 5px;
-    .btn {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      z-index: 10;
-    }
-  }
+[data-gn-map-field] > [ngeo-map] {
+  //height: 89.9vh;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  right: 0;
+  bottom: 0;
+  position: fixed !important;
+  z-index: 99;
+  width: 250px !important;
+  heigth: 250px !important;
+  margin: 5px;
 }
 .gn-row-main {}
 
@@ -474,9 +467,6 @@ ul.gn-resultview {
   margin-bottom:0px;
   border-radius: 0px;
 }
-.gn-search-page {
-  padding-bottom:50px;
-}
 
 .cookie-warning {
   .alert;
@@ -496,6 +486,14 @@ html, body {
   border:none;
 }
 
+/* Facet / this is a hack to hide a facet
+ not to be displayed because used to get complex
+ field for rendering properly INSPIRE theme icons
+ only. It may be more relevant to have this at the
+ facetsConfigService ? */
+[data-facet=inspireThemesWithAc] {
+  display: none;
+}
 
 /* Extra small devices (phones, less than 768px) */
 /* No media query since this is the default in Bootstrap */

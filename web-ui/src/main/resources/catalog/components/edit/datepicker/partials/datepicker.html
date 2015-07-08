@@ -24,8 +24,10 @@
              data-ng-show="mode === 'month'"/>
       <input type="date" class="form-control"
              data-ng-model="date"
+             data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
              data-ng-show="mode === ''"/>
       <input type="time" class="form-control"
+             data-ng-class="hideTime == 'true' ? 'hidden' : ''"
              data-ng-model="time"
              data-ng-show="mode === ''"/>
       <div class="input-group-btn">

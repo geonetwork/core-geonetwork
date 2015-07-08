@@ -6,6 +6,9 @@
 // import the css files as less files so they are included in the final output of wro4j
 @import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
 @import (less) "../lib/style/datetimepicker.css";
+@import (less) "inspire/iti.css";
+// Import this CSS to have INSPIRE themes translations
+//@import (less) "inspire/iti-i18n.css";
 
 @import "gn.less";
 @import "gn_viewer.less";
@@ -236,7 +239,7 @@ span.gn-facet-label:first-letter {
 
 [ngeo-map] {
   width: 100%;
-  height: 200px;
+  height: 250px;
 }
 
 .collapse-text-toggle {
@@ -338,7 +341,8 @@ span.gn-facet-label:first-letter {
 
 /* Add space between button when pulled right */
 .gn-md-edit-btn.pull-right,
-.gn-md-delete-btn.pull-right {
+.gn-md-delete-btn.pull-right,
+.gn-md-actions-btn.pull-right {
   margin-right: 5px;
 }
 
@@ -371,27 +375,18 @@ span.gn-facet-label:first-letter {
 
   [gn-map-field],
   [data-gn-map-field] {
-    border: 1px solid @btn-default-border;
-    border-radius: 3px;
-    position: relative;
-    [gn-draw-bbox-btn],
-    .btn-group-vertical,
-    .dropdown{
-      position: absolute;
+    .gn-draw-btn,
+    .btn-group-vertical {
       top: 4px;
+      position: absolute;
       z-index: 10;
+    }
+    .btn-group-vertical {
       right: 4px;
     }
-    [gn-draw-bbox-btn] {
+
+    .gn-draw-btn {
       left: 4px;
-    }
-    .dropdown {
-      left: 4px;
-      top: initial;
-      bottom: 4px;
-      .dropdown-menu {
-        font-size: 90%;
-      }
     }
   }
 }

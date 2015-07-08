@@ -283,7 +283,51 @@
 
     <!-- /Rules for direct links (for RDF at least) -->
 
-    
+ 
+
+    <!-- Sitemap URLs -->
+    <rule>
+        <note>
+            sitemap with format and page number
+        </note>
+        <from>^/sitemap/(.*)/([0-9]+)/(.*)$</from>
+        <to type="forward">/srv/$3/portal.sitemap?doc=$2&amp;format=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            sitemap with page number
+        </note>
+        <from>^/sitemap/([0-9]+)/(.*)$</from>
+        <to type="forward">/srv/$2/portal.sitemap?doc=$1</to>
+    </rule>
+
+
+    <rule>
+        <note>
+            sitemap with format
+        </note>
+        <from>^/sitemap/(.*)/(.*)$</from>
+        <to type="forward">/srv/$2/portal.sitemap?format=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            sitemap
+        </note>
+        <from>^/sitemap/(.*)$</from>
+        <to type="forward">/srv/$1/portal.sitemap</to>
+    </rule>
+
+    <rule>
+        <note>
+            sitemap
+        </note>
+        <from>^/sitemap$</from>
+        <to type="forward">/srv/eng/portal.sitemap</to>
+    </rule>
+    <!-- Sitemap URLs -->
+
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
