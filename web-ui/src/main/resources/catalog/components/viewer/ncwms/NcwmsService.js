@@ -168,10 +168,15 @@
              */
       this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
         var p = {
-                  FORMAT: 'image/png',
-                  CRS: proj.getCode(),
-                  LAYER: layer.getSource().getParams().LAYERS
+          FORMAT: 'image/png',
+          CRS: proj.getCode(),
+          LAYER: layer.getSource().getParams().LAYERS
         };
+        var time = layer.getSource().getParams().TIME;
+        if(time) {
+          p.TIME = time;
+        }
+
         if (service == 'profile') {
           p.REQUEST = 'GetVerticalProfile';
           p.POINT = gnMap.getTextFromCoordinates(geom);
@@ -227,6 +232,10 @@
           layers: layer.getSource().getParams().LAYERS,
           bbox: extent
         };
+        var time = layer.getSource().getParams().TIME;
+        if(time) {
+          p.TIME = time;
+        }
 
         var url = gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
