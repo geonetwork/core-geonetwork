@@ -165,7 +165,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
                         + " does not exist.");
             }
         } catch (Exception e) {
-            Log.error(Geonet.LDAP, "  Profile " + profileName
+            Log.warning(Geonet.LDAP, "  Profile " + profileName
                     + " is not a valid profile. " + e.getMessage());
         }
 	}
