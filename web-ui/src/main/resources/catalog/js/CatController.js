@@ -279,6 +279,7 @@
                 );
               });
         });
+        $scope.userLoginPromise = userLogin;
 
 
         // Retrieve main search information
