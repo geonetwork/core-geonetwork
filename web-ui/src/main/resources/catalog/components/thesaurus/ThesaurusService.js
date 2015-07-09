@@ -48,7 +48,7 @@
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
             var getKeywordsSearchUrl = function(filter, 
                 thesaurus, max, typeSearch) {
-              return gnUrlUtils.append('keywords@json',
+              return gnUrlUtils.append('keywords',
                   gnUrlUtils.toKeyValue({
                     pNewSearch: 'true',
                     pTypeSearch: typeSearch || 1,
