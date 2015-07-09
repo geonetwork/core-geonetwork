@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -77,6 +79,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -225,7 +229,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         // Convert from GetCapabilities to ISO19119
         List<String> uuids = addMetadata (xml);
         dataMan.flush();
-
+        
+        List<String> ids = Lists.transform(uuids, new Function<String, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull String uuid) {
+                try {
+                    return dataMan.getMetadataId(uuid);
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+        
+        dataMan.batchIndexInThreadPool(context, ids);
+        
         result.totalMetadata = result.addedMetadata + result.layer + result.updatedMetadata;
     
       //-----------------------------------------------------------------------
@@ -374,10 +392,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
              metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
          } else {
              result.updatedMetadata++;
-             //TODO can be improved even more checking the update date
              String id = dataMan.getMetadataId(uuid);
              metadata.setId(Integer.valueOf(id));
-             dataMan.updateMetadata(context, id, md, true, false, false, 
+             dataMan.updateMetadata(context, id, md, false, false, false, 
                      context.getLanguage(), dataMan.extractDateModified(schema, md), false);
          }
          
@@ -385,10 +402,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
          uuids.add(uuid);
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-
-         dataMan.flush();
-
-         dataMan.indexMetadata(id, true);
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
@@ -700,10 +713,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
             } else {
                 result.updatedMetadata++;
-                //TODO can be improved even more checking the update date
                 String id = dataMan.getMetadataId(reg.uuid);
                 metadata.setId(Integer.valueOf(id));
-                dataMan.updateMetadata(context, id, xml, true, false, false, 
+                dataMan.updateMetadata(context, id, xml, false, false, false, 
                         context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
             }
            
@@ -715,10 +727,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-
-            dataMan.flush();
-
-            dataMan.indexMetadata(reg.id, true);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
