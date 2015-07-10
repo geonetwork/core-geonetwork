@@ -4,6 +4,7 @@
   position: relative;
   font-size: 14px;
   font-family: Roboto, sans-serif;
+  color: black;
   letter-spacing: normal;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
@@ -211,6 +212,10 @@ yx-axis
 .gn .gn-search-page ul li li,
 .gn .gn-metadata-view ul li li {
   padding: initial;
+}
+.gn .gn-search-page label,
+.gn .gn-metadata-view label {
+  white-space: normal;
 }
 .gn .gn-metadata-view p {
   font-size: 12px;
@@ -8495,7 +8500,7 @@ yx-axis
 .gn .ng-cloak {
   display: none !important;
 }
-.gn [gn-img-modal],
+.gn-img-modal],
 .gn [data-gn-img-modal] {
   cursor: pointer;
 }
@@ -9040,8 +9045,8 @@ yx-axis
 .gn .gn-main-viewer .panel-tools .btn-group {
   display: flex;
 }
-.gn [gn-main-viewer] .panel-tools .btn-group button,
-.gn .gn-main-viewer .panel-tools .btn-group button {
+.gn [gn-main-viewer] .panel-tools .btn-group .btn,
+.gn .gn-main-viewer .panel-tools .btn-group .btn {
   flex: 1;
 }
 .gn [gn-main-viewer] .panel-tools .flux,
@@ -10942,6 +10947,7 @@ yx-axis
   box-shadow: none;
 }
 .gn [sxt-main-viewer] .layerTree > ul {
+  font-size: 12px;
   padding-left: 0;
   margin-left: 0;
 }
@@ -10953,6 +10959,7 @@ yx-axis
   margin-bottom: 0;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item {
+  font-size: 12px;
   border: none;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item label {
@@ -11004,6 +11011,29 @@ yx-axis
 }
 .gn [sxt-main-viewer] .fu input:hover {
   cursor: pointer;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel {
+  border: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading {
+  height: 2em;
+  line-height: 2em;
+  border-bottom: 1px solid #4ba2d9;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading > button {
+  display: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-body {
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel label {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel button[type="submit"] {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: auto;
 }
 .gn .popover {
   height: auto;
@@ -13693,6 +13723,7 @@ yx-axis
 }
 .gn ul.gn-resultview li.gn-grid .md-abstract p {
   margin-bottom: 0;
+  color: #808080;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-source {
   clear: left;
@@ -14014,15 +14045,15 @@ yx-axis
 .gn [gn-metadata-display].sxt-scroll .panel-body {
   height: auto;
 }
-.gn .gn-img-modal .modal-dialog {
+.gn-img-modal .modal-dialog {
   background: white;
   padding-bottom: 3em;
   text-align: center;
 }
-.gn .gn-img-modal .modal-dialog img {
+.gn-img-modal .modal-dialog img {
   max-height: 700px;
 }
-.gn .gn-img-modal .modal-dialog .gn-btn-modal-img {
+.gn-img-modal .modal-dialog .gn-btn-modal-img {
   position: absolute;
   top: auto;
   bottom: .3em;
