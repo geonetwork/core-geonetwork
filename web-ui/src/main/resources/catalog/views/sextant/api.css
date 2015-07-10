@@ -196,21 +196,22 @@ yx-axis
 .gn button {
   text-shadow: none;
 }
+.gn .layers {
+  width: 100% !important;
+}
 .gn .gn-search-page p,
 .gn .gn-metadata-view p {
   padding: initial;
   font-size: 14px;
 }
 .gn .gn-search-page ul,
-.gn .gn-metadata-view ul,
+.gn .gn-metadata-view ul {
+  font-size: 14px;
+  margin: 0;
+}
 .gn .gn-search-page ul li,
 .gn .gn-metadata-view ul li {
   font-size: 14px;
-}
-.gn .gn-search-page ul li,
-.gn .gn-metadata-view ul li,
-.gn .gn-search-page ul li li,
-.gn .gn-metadata-view ul li li {
   padding: initial;
 }
 .gn .gn-search-page label,
