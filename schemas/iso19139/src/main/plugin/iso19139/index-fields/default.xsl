@@ -391,7 +391,7 @@
 				</xsl:for-each>
 
         <xsl:for-each select="gmd:distance/gco:Distance">
-          <Field name="resolution" string="{concat(string(.), @uom)}" store="true" index="true"/>
+          <Field name="resolution" string="{concat(string(.), ' ', @uom)}" store="true" index="true"/>
         </xsl:for-each>
 			</xsl:for-each>
 

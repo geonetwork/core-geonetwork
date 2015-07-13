@@ -61,6 +61,7 @@
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
+        <facet name="resolution" indexKey="resolution" label="resolutions"/>
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
@@ -90,11 +91,12 @@
             <item facet="keyword" max="15"/>
             <item facet="orgName" max="25"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-            <item facet="format" max="15" sortBy="value"/>
+            <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
             <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
             <item facet="serviceType"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+            <item facet="resolution" sortBy="numValue" sortOrder="desc"/>
             <!--<item facet="metadataPOC" max="15"/>-->
         </summaryType>
         <summaryType name="subtemplates">

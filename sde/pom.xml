@@ -12,7 +12,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geonetwork-opensource</groupId>
   <artifactId>dummy-api</artifactId>
   <packaging>jar</packaging>
   <name>ArcSDE module (dummy-api)</name>

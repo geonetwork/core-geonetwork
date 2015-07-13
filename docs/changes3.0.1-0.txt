@@ -1,0 +1,302 @@
+================================================================================
+===
+=== GeoNetwork 3.0.1: List of changes
+===
+================================================================================
+- search: fix ncwms getFeature info
+- Remove @json from keyword service as it returns json natively
+- JSLint.
+- Scroll to top when opening a record.
+- Increase session timeout in production mode.
+- Merge pull request #1100 from grootstebozewolf/ResumptionTokenCacheEntrySet
+- Merge pull request #1101 from grootstebozewolf/FreeFileHanlesHealthCheckReturn
+- Merge pull request #1099 from grootstebozewolf/LuceneConfigRemovedBoxingUnboxing
+- Typo
+- Replaced valueOf with parseXXX to save 8 bytes of memory.
+- Refactored itteration over keys to itteration over items.
+- Added return to unhealthy result.
+- search: fix map on mozilla - close #1076
+- Template field may not have any values. Default to '' to avoid XSL errors.
+- Get codelist should depends on schema for conditional codelist.
+- Merge pull request #1096 from grootstebozewolf/excludedTests
+- Enabled travis container
+- Removed -X
+- Added testDummy to avoid No runnable methods exception.
+- Merge branch '3.0.x' of https://github.com/geonetwork/core-geonetwork into LocalXLink3.0.x
+- Ignore tests for now.
+- Fix test in GetKeywordByIdTest
+- Fix Findbugs issues in LogConfig
+- Fix XmlViewFormatterTest
+- Support DateTime in CI_Date and improve date formatting
+- Merge branch '3.0.x' of https://github.com/geonetwork/core-geonetwork into 3.0.x
+- Fixes for LocalXLinksInMetadataIntegrationTest and DimensionTest
+- Merge pull request #1094 from grootstebozewolf/ThesaurusTest3.0.x
+-  Add dummy test method in MEFExporterIntegrationTest, otherwise the test fails with java.lang.Exception: No runnable methods due to no test methods in the class caused by @Ignore annotation in previous commit
+- Cross merged ThesaurusTest and added ignore = dirty for geoserver submodule
+- Add dummy test method, otherwise the test fails with java.lang.Exception: No runnable methods due to no test methods in the class caused by @Ignore annotation in previous commit
+- Fix ThesaurusTest
+- Fix Findbugs issue
+- Merge branch '3.0.x' of https://github.com/geonetwork/core-geonetwork into 3.0.x
+- Fix CswHarvesterIntegrationTest
+- Center on vector layer
+- Merge pull request #1093 from grootstebozewolf/CachedTransformerStrategy
+- Update pom.xml
+- Update pom.xml
+- Ammended pom
+- Removed invoke with try catch, replaced with strategy pattern.
+- Fixing duplicated resources on RelatedDirective
+- Merge pull request #1091 from grootstebozewolf/defaultPort3.0.x
+- Ammended defaultPort, cross merge from develop to 3.0.x branch.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- RSS link does not work on multinode mode #1090.
+- Merge branch '3.0.x' of https://github.com/geonetwork/core-geonetwork into 3.0.x
+- Update GeoServer to revision using 3.0.1-SNAPSHOT version in pom.xml
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- GetKeyword return NPE if no Accept header set #1089.
+- Transfert ownership / No changes if no privileges set #1088.
+- Merge pull request #1087 from grootstebozewolf/favIconSynchronized
+- Optimized the imports.
+- Added a replace and putIfAbsent from the concurrentMap.
+- Extracted faviconMap.put in a synchronized method.
+- Merge pull request #1086 from grootstebozewolf/RemoveRedundantNullCheck3.0.x
+- Merge pull request #1084 from grootstebozewolf/deadStoreManager3.0.x
+- Merge pull request #1083 from grootstebozewolf/ExcludeCoreTests3.0.x
+- Removed Redundant Null Check on 3.0.x
+- Removed dead Store Manager on 3.0.x branch
+- Changed on 3.0.x branch instead of develop and added @Ignore instead of putting it in the pom.xml
+- ISO19139 / Add missing section in simple view.
+- isValid indexKey typo in config-summary.xml? - GN v3.0.0 #1072.
+- Update translation from transifex.
+- JSLint.
+- Cookie / On firefox the cookie warning is always displayed #1041. Use local storage to store status of cookie acceptance. Angular 1.3 does not provide a way to set expire and that was the reason why the cookie was removed on browser close probably.
+- Admin / Group / Fix panel header toolbar layout due to ng-search-form CSS.
+- ISO19139 / INSPIRE view / Update label.
+- Editor / Improve template field mechanism (#1032).
+- ISO19139 / Group date type and date on one line.
+- ISO19139 / Codelist URL points to 404 #1060.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- LDAP / Default profile is not taken into account #1058.
+- Better method of formatting pdf.
+- Improve formatting of pdf output
+- Region getMap fails on world extent #1040 - compute intersection between CRS domain of validity and the geometry.
+- Add full view for iso19110
+- Scale rendering / Use CSS to prepend '1/' or '1:' before scale denominator - updated in facets and record view.
+- Flag pdf service as deprecated - use formatter instead.
+- Home page / Add browse by ISO topic and/or INSPIRE theme #1054 - Add support for multilingual content.
+- JSLint.
+- Avoid JS error when saving harvester.
+- Revert "Fix: in some browsers, you need not a string but a real boolean"
+- JS error related to missing gnWfsServiceProvider #1043.
+- Use the formatter with PDF output format instead of FOP based PDF. PDF on search is still created using FOP.
+- Export label may not be displayed only for ISO19139.
+- Properly add actions relative to maps when map viewer is disabled.
+- Home page / Add browse by ISO topic and/or INSPIRE theme #1054.
+- Add missing translation.
+- JSLint on jsonix files #1050. Added missing doc block to make JSLint happy.
+- Angular app / Load english locale if file not available #1053.
+- Editor / Compute extent from keyword does not work #1052.
+- Search form / Add spatial filter #1051
+- ISO19139 / Make root match more fuzzy in case user wants to migrate from ISO19139 to ISO19115-1 or from ISO19139 profiles.
+- Editor / Add some padding between fields.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- ISO19139 / Add processing to migrate to ISO19115-3 - depends on the iso19115-3 plugin.
+- ISO19139 / gmd:language is not multilingual (when used as CharacterString).
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into 3.0.x
+- Make PDF Export more robust when images are missing
+- more escapes to improve the PDF export in Formatter Service
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Harvester config / Config fails to save when xsl filter contains & #1045. Make response build more robust.
+- ISO19139 / Fix keyword editing when no thesaurus code is defined by thesaurus and the match is found by title.
+- Merge pull request #1016 from josegar74/fix1009_30x
+- Display metadata status using a badge #1044.
+- JS error related to missing gnWfsServiceProvider #1043 - add the missing dependency even if that is probably not really required for the editor app.
+- Editor configuration / Calendar / Add config for no time control #1042.
+- ISO19139 / Temporal extent / Do not display GROUP_ELEMENT.
+- ISO19139 / Improve flat mode.
+- Drop geocat.ch UI which is not maintained here.
+- Fix metadata status updater based on wrong record field.
+- Add standard name to search response.
+- Merge pull request #1039 from pmauduit/fix-listbundlefiles
+- EditFile - Organizing imports
+- formatters - fixing directory traversal / file disclosure vuln
+- services - fixing programming error in ListBundleFiles
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Fix SQL script.
+- fix another case where the pdf can fail to be generated because of an incorrectly encoded &
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- ExtJS Editor / Validation report does not report schematron errors #1038.
+- mapfish-print - bump version 2.1.1
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- ExtJS Editor / Thumbnail upload does not work #1037.
+- make contact columns 50% in pdf export
+- more tweaks for pdf
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Map viewer / Add save map in catalog form #1036.
+- more pdf fixes
+- another tweak to pdf export
+- Fix pdf export when abstract contains illegal xml characters
+- #1033 Saving a metadata with a template field sometimes saves the value defined in the template, like {{organisationName}}, #1032 Saving empty values in the metadata editor fields defined in templates restores previous value
+- Fix cesium init in non debug mode.
+- map: fix KMZ upload
+- #1034 rdf.search doesn't return the metadata records
+- Merge remote-tracking branch 'upstream/3.0.x' into 3.0.x
+- map: remove mapService useless code
+- search: remove host matching test when we retrieve a metadata from the WMS getCapabilities metadataUrl
+- restrict size of thumbnail image in metadata overview in pdf export
+- only show full graphic image in pdf export
+- Fix Formatter PDF export so that it matches better with the normal html output (stylewise)
+- Updates from transifex.
+- JS-Lint fixes and using gnGlobalSettings.proxyUrl as proxy url
+- Adding WFS layers to LayerManager
+- Very basic support for WFS layers. Don't appear on "Manage Layers" yet and need the name of the layer on the metadata.
+- Merge branch 'wfs' of github.com:fgravin/core-geonetwork into 3.0.x
+- map: fix issues on fileinput save/load inputs
+- map: load annotation restore styles
+- map: add a new button to load a GEOJSON as annotations
+- search: remove global variable
+- map : fix getLayerInfoFromCap for WMTS
+- Bootstrap dist is required.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Add some more log when something goes wrong loading XML from URL in formatters.
+- map context - show save in catalog btn only if user is editor
+- map: fix GFI if an attributes is null
+- map context - early UI wiring
+- map context - Associate context with the MD if no map_url provided
+- Record view / Relation not displayed and not updated #1029
+- map: show layers as unavailable in layermanger if there are not in scale range
+- web map import - some fixes XSL transfo + service
+- Fix tests.
+- move jsonix files into wro4j process
+- Map import / Renaming properties.
+- Renaming file to WMC-OR-OWSC.
+- Add OWS-Context to ISO19139 support.
+- Merge pull request #1026 from pmauduit/wmc-md-import
+- WMC to MD - Taking into account @fxprunayre's feedback :
+- Fixed add source dataset - avoid XSD error on the record after processing.
+- ImportWmc - porting back the service to Spring MVC
+- LDAP / Do not drop user who are metadata owner (restore old behavior) and avoid to simply print FK stack trace in the log.
+- LDAP / When profile does not exist do not stop authentication. Assign default profile to user.
+- WMC import
+- Startup error on Windows #976.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Admin / Local thesaurus upload fails #1025.
+- Excluding useless files in bootstrap and font-awesome (#879)
+- JSLint.
+- Batch processing / Merge the 2 batch replacer process #1023 - save configuration button.
+- Admin / Report / Fix download on FF.
+- Add missing translation.
+- ISO19115-3 / Add capability to get vertical ref system from EPSG db.
+- Editor / Add tooltip to add action sometimes lost after the fieldset.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Add color indicator to validation report toggle.
+- Add translation for some more subtemplates (used in ISO19115-3).
+- Fixing previous commit: if there is no md, don't fail
+- RelatedResourcesServices: now using the add$LayerFromScratch. Added the metadata reference on the service.
+- Enable 3D viewer with URL parameter to not enable it for all users.
+- jslint
+- Add the capability to configure which tab to open depending on record #1018.
+- Merge pull request #1012 from fxprunayre/improvement/map/3dmode
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/map/3dmode
+- Update js code documentation, focused on viewer components
+- map: improve layout
+- Record view / Better layout for file or db protocol links #1021 - translations.
+- Avoid JS error on null geometry.
+- Record view / Better layout for file or db protocol links #1021.
+- Fix call to open formatter using UUID.
+- Editor - Create Thumbnail option shows empty map #904.
+- Update assembly plugin version.
+- add jsonix WFS 1.1.0 support
+- Metadata view / More than one bbox is not supported #852 - take care of points.
+- JSlint.
+- Metadata view / More than one bbox is not supported #852.
+- Editor / Multilingual field with helper is not properly rendered #842.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Admin / Sort template #878 - mark service has deprecated.
+- Put back right geoserver submodule
+- search: add spinner on privileges saving - close #978
+- editor: fix reset in add onlinesrc panel - close #1001
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/map/3dmode
+- 3D mode is disabled by default.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Editor / Aggregates / Add tooltip to dropdown #1004.
+- Merge pull request #1017 from jesseeichar/sbb-demo
+- Merge pull request #999 from fxprunayre/improvement/formatter/check-id-or-uuid
+- ISO19139 / Fix validation issue on LI_Source.
+- Cleaning - CSS and JS removed in 8a9c3aefd95b9daddf03cb98a7aa274398ed1681.
+- Fix workflow:
+- #1009 Paginated sitemap
+- Map viewer / Add a layer using tabs instead of sliding panel.
+- Map viewer / Add 3D mode - lib olcesium #1005.
+- Map viewer / Add 3D mode #1005.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Map viewer / Avoid error on legendUrl.
+- Add tostring for LocalServiceRequest and update the log message in ServiceContext execute.
+- Set min/max resolutions in layer from capabilities
+- Change the HttpEntity used in GeoServer Publisher to allow repeatable requests.  This makes the system more robust in the face of intermittance network errors.
+- Editor / Online resource / Desc not added #1000.
+- Editor / Date control require more space than time input.
+- Editor / Codelist / Extract template to create codelist HTML select.
+- Harvester admin / Change icon to trash for deleting records (as user could easily restore them).
+- ECAS support. See instructions on config-security-ecas.xml
+- editor: Fix drag&drop
+- Formatter / Id or uuid parameter ? #997.
+- Formatter / Id or uuid parameter ? #997.
+- Editor / Error when 2 thesaurus having the same name. #998
+- Removing duplicated definition of LDAPUtils
+- Add some translations
+- Add organisation in info?type=me service response
+- search: make localisations a setting
+- Set the correct name of the thumbnail when thumbnail is uploaded.
+- Don't cache local xlinks
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Editor / Link dataset & services #993.
+- privileges panel: add option to display user profile for each group display-profile='true'
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Editor / INSPIRE / Suggestion adding conformity should add info in metadata language #992.
+- privileges: put new settings in gnShareConstants instead of from directive attributes
+- Merge pull request #990 from fgravin/xpathXmlFormat
+- JSLint.
+- Editor / Add action with dropdown can't use a adddirective #991
+- Editor / Add action with dropdown can't use a adddirective #991
+- privileges: can add some options to the privileges panel operations filtered in the grid, and all checkbox display ex: oper-filter='0,1,2,5' disable-all-col='true'
+- Scroll only body of privileges table
+- formatter: add optional mdpath parameter in xml.format.* service if the metadata is not the root element of the xml
+- Merge pull request #980 from arnaud-morvan/wps
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Editor / Conditional helpers are not picked up properly if more than 2 choices #988.
+- Editor / Helper / For not existing node (eg. in a template mode), use the default helper.
+- Add additional metrics gauges
+- Additional fixes required to harvest from cartographie.aires-marines.fr Geosource using CSW Harvester.
+- INSPIRE theme Services d'utilité publique et services publics not properly indexed #987. Error in english version of the theme name.
+- Add index.html and index.csv to MEF export to make export of large number of MD easier to consume.
+- Add more precise error message that helps fixing the error.
+- Merge pull request #985 from fxprunayre/fix/formatter-xml-content-changed
+- Delete icons #930.
+- Formatter / Restore XML structure for XSLT formatter.
+- Add formatter path to information panel. This helps checking the value which might be customized.
+- SQL migration / Add optional scenario for Oracle db with a TODO. Thanks Arnaud De Groof for the hint.
+- Add more relevant warning message.
+- Add missing . between filename and extension.
+- Fix a few minor issues with keyword lastModified calculations.
+- Add last modified in GetKeywords Service
+- Migrate GetKeywords to spring MVC
+- Add WPS client module
+- Add jsonix support for WPS 1.0.0
+- fixed bug caused by last commit.
+- This is a fix for: If a keyword has , in it then the keyword editor breaks.
+- Another change to get better sorted results when doing searches. Slower but better result
+- Change keyword search for sorting:
+- Editor board / Add privileges panel link.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Harvester admin / Add missing space.
+- Fix - retrieve all privileges to non-logged in users on lucenesearch - close #974
+- ISO19115-3 / Update to latest (and probably last) namespace change.
+- The geosource installation instance has an odd configuration where if the URI in http client has the port number the request fails...  In the current implementation a port number was always set.  However it should typically be ok to not explicitly set the port number and so this change allows a port number of -1 (the flag for no-set) is permitted.
+- Merge pull request #977 from pvgenuchten/installer-img
+- installer imagery updated
+- Sitemap error #973.
+- Add missing translation. Add missing space.
+- Update SQL migration script path for 3.0.1.
+- Fix the javascript in the association tab of full viewer so that one can drill down into the associations
+- Update to 3.0.1-SNAPSHOT version number.
+- Update GeoServer submodule.

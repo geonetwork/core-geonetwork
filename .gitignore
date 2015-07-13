@@ -2,6 +2,7 @@
 .checkstyle
 *.iml
 rebel.xml
+e2e-tests/images/
 harvesters/harvester_*.log
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
@@ -12,6 +13,7 @@ web/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19*
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
+web/src/main/webapp/WEB-INF/data/wro4j*.db
 web/logs/
 web/jcs_caching/
 web/*.db
@@ -47,6 +49,8 @@ datadir/
 *.factorypath
 web/src/main/webapp/WEB-INF/data/removed/
 web/.springBeans
+*/.fbExcludeFilterFile
+*/*/.fbExcludeFilterFile
 web/images/
 *.launch
 idea/
