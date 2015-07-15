@@ -85,7 +85,6 @@
   <xsl:template name="replaceField">
     <xsl:param name="fieldId"/>
 
-    <!-- TODO: Add option to remove an empty element after replacement -->
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:choose>
