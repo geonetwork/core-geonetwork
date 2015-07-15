@@ -49,7 +49,11 @@
               // Parameters to be send when the subtemplate
               // snippet is retrieved before insertion
               // into the metadata records.
-              variables: '@'
+              variables: '@',
+              // An optional transformation applies to the subtemplate
+              // This may be used when using an ISO19139 contact directory
+              // in an ISO19115-3 records.
+              transformation: '@'
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -162,14 +166,23 @@
                       } else {
                         params.process = '';
                       }
+
+                      if (angular.isString(scope.transformation) &&
+                          scope.transformation !== '') {
+                        params.transformation = scope.transformation;
+                      }
+
                       gnHttp.callService(
                           'subtemplate', params).success(function(xml) {
                        if (usingXlink) {
+                         var urlParams = '';
+                         angular.forEach(params, function(p, key) {
+                           urlParams += key + '=' + p + '&'
+                         });
                          snippets.push(gnEditorXMLService.
                                   buildXMLForXlink(scope.elementName,
                                       url +
-                                      '?uuid=' + uuid +
-                                      '&process=' + params.process));
+                                      '?' + urlParams));
                        } else {
                          snippets.push(gnEditorXMLService.
                                   buildXML(scope.elementName, xml));
