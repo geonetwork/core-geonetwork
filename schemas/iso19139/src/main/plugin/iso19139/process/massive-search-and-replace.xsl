@@ -12,7 +12,6 @@
   <!-- Example of replacements parameter:
 
      <replacements>
-      <caseInsensitive>i</caseInsensitive>
       <replacement>
         <field>id.contact.individualName</field>
         <searchValue>John Doe</searchValue>
@@ -86,6 +85,7 @@
   <xsl:template name="replaceField">
     <xsl:param name="fieldId"/>
 
+    <!-- TODO: Add option to remove an empty element after replacement -->
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:choose>

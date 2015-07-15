@@ -3,39 +3,12 @@
   xmlns:saxon="http://saxon.sf.net/"
   extension-element-prefixes="saxon"
   version="2.0">
-  
-  
+
   <!-- Register here the list of process for the schema-->
-  <xsl:include href="process/keywords-comma-exploder.xsl"/>
-  <xsl:include href="process/scale-denominator-formatter.xsl"/>
-  <xsl:include href="process/add-extent-from-geokeywords.xsl"/>
-  <xsl:include href="process/add-info-from-wms.xsl"/>
-  <xsl:include href="process/add-service-info-from-wxs.xsl"/>
-  <xsl:include href="process/linked-data-checker.xsl"/>
-  <xsl:include href="process/related-metadata-checker.xsl"/>
-  <xsl:include href="process/add-resource-id.xsl"/>
-  <!--<xsl:include href="process/vacuum.xsl"/>-->
-<!--  Disabled by default because related to INSPIRE only
-  <xsl:include href="process/inspire-add-conformity.xsl"/>
-  <xsl:include href="process/inspire-add-dq-toporeport.xsl"/>
-  <xsl:include href="process/inspire-themes-and-topiccategory.xsl"/>
--->
+  <xsl:include href="process/vacuum.xsl"/>
   
   <xsl:variable name="processes">
-    <p>keywords-comma-exploder</p>
-    <p>scale-denominator-formatter</p>
-    <p>add-extent-from-geokeywords</p>
-    <p>add-info-from-wms</p>
-    <p>add-service-info-from-wxs</p>
-    <p>linked-data-checker</p>
-    <p>related-metadata-checker</p>
-    <p>add-resource-id</p>
-    <!--<p>vacuum</p>-->
-<!--  Disabled by default because related to INSPIRE only
-    <p>inspire-add-conformity</p>
-    <p>inspire-add-dq-toporeport</p>
-    <p>inspire-themes-and-topiccategory</p>
--->
+    <p>vacuum</p>
   </xsl:variable>
   
   <xsl:param name="action" select="'list'"/>
