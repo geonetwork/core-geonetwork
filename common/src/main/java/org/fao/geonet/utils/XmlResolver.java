@@ -157,7 +157,11 @@ public class XmlResolver extends XMLCatalogResolver {
         if (baseURI != null && systemId != null) {
             try {
                 Path basePath = IO.toPath(new URI(baseURI));
-                final Path resolved = basePath.getParent().resolve(systemId);
+                Path parent = basePath.getParent();
+                if(parent == null)  {
+                    throw new RuntimeException(basePath.toUri() + " does not have parent");
+                }
+                final Path resolved = parent.resolve(systemId);
                 if (Files.isRegularFile(resolved)) {
                     try {
                         final String uri = resolved.normalize().toUri().toASCIIString();
