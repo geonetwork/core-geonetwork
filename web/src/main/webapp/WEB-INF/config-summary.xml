@@ -67,6 +67,7 @@
         <facet name="inspireTheme_fr" indexKey="inspireTheme_fr" label="inspireThemes_fr"/>
         <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
+        <facet name="resolution" indexKey="resolution" label="resolutions"/>
         <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
             label="spatialRepresentationTypes"/>
         <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
@@ -117,10 +118,10 @@
             <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
             <item facet="serviceType"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-          <item facet="format" max="15" sortBy="value"/>
+            <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
           <item facet="publishedForGroup" max="199" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-
+            <!--<item facet="metadataPOC" max="15"/>-->
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>

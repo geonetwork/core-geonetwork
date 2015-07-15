@@ -203,9 +203,31 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
 
                 // --- save metadata and return status
                 if ((changesEl.size() > 0) && (!params.getChildText("test").equalsIgnoreCase("true"))) {
-                    // Clean geonet:changes elements
                     Path filePath3 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-clean-changes.xsl");
-                    processedMetadata = Xml.transform(processedMetadata, filePath3);
+
+                    // Remove empty elements or vacuum record
+                    if (!StringUtils.isEmpty(params.getChildText("vacuum-mode"))) {
+                        String mode = params.getChildText("vacuum-mode");
+                        // Search and replace, then vacuum record
+                        if ("record".equals(mode)) {
+                            processedMetadata = Xml.transform(processedMetadata, filePath3);
+
+                            Path vacuumXsltPath = schemaMan.getSchemaDir(schema).resolve("process/vacuum.xsl");
+                            if (vacuumXsltPath.toFile().exists()) {
+                                processedMetadata = Xml.transform(processedMetadata, vacuumXsltPath);
+                            }
+                        } else {
+                            // Clean geonet:changes elements and remove
+                            // elements having an empty new value.
+                            Map<String, Object> params = new HashMap<>(1);
+                            params.put("removeEmptyElement", "true");
+                            processedMetadata = Xml.transform(processedMetadata, filePath3, params);
+                        }
+                    } else {
+                        // Clean geonet:changes elements
+                        processedMetadata = Xml.transform(processedMetadata, filePath3);
+                    }
+
 
                     dataMan.updateMetadata(context, id, processedMetadata,
                             false, true, true,

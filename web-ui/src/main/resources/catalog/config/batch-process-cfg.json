@@ -24,6 +24,10 @@
     "type": "fixed-params",
     "params": []
   }, {
+    "key": "vacuum",
+    "type": "fixed-params",
+    "params": []
+  }, {
     "key": "massive-content-update",
     "type": "template",
     "template": "../../catalog/templates/admin/tools/batch-replacer.html",
@@ -204,6 +208,9 @@
     "type": "template",
     "template": "../../catalog/templates/admin/tools/batch-replacer.html",
     "reportTemplate": "../../catalog/templates/admin/tools/batch-replacer-report.html",
+    "params": [
+      {"name": "removeEmptyElement", "value": "", "type": "checkbox"}
+    ],
     "config": {
       "iso19139": {
         "elements": [

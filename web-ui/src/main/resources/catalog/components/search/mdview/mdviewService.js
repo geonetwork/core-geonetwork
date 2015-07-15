@@ -21,9 +21,10 @@
     'gnSearchManagerService',
     'gnSearchSettings',
     'gnUrlUtils',
+    'gnUtilityService',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils) {
+             gnUrlUtils, gnUtilityService) {
 
       // Keep where the metadataview come from to get back on close
       $rootScope.$on('$locationChangeStart', function(o, v) {
@@ -55,6 +56,7 @@
 
         // Set the route
         this.setLocationUuid(md.getUuid());
+        gnUtilityService.scrollTo();
       };
 
       /**

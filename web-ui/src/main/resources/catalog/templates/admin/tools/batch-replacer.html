@@ -1,28 +1,28 @@
 <div id="batchForm">
-	<fieldset class="form-horizontal">
-		<div class="form-group">
-			<label data-translate="" class="col-lg-4 control-label">batchreplacer-package</label>
-			<div class="col-lg-8">
-				<select class="form-control" id="gn-batchReplacerGroup"
-					data-ng-model="replacer.group">
-					<option></option>
+  <fieldset class="form-horizontal">
+    <div class="form-group">
+      <label data-translate="" class="col-lg-4 control-label">batchreplacer-package</label>
+      <div class="col-lg-8">
+        <select class="form-control" id="gn-batchReplacerGroup"
+          data-ng-model="replacer.group">
+          <option></option>
           <option data-ng-repeat="(group, elements) in selectedProcess.config"
                   value="{{group}}"
             >{{'batchreplacer-section-'+group | translate}}</option>
-				</select>
-			</div>
-		</div>
-		<div class="form-group">
-			<label data-translate="" class="col-lg-4 control-label">batchreplacer-element</label>
-			<div class="col-lg-8">
-				<select class="form-control" id="gn-batchReplacerElement"
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label data-translate="" class="col-lg-4 control-label">batchreplacer-element</label>
+      <div class="col-lg-8">
+        <select class="form-control" id="gn-batchReplacerElement"
                 data-ng-disabled="!replacer.elements"
-					      data-ng-model="replacer.element">
+                data-ng-model="replacer.element">
           <option data-ng-repeat="el in replacer.elements" value="{{el}}"
             >{{'batchreplacer-el-'+ el | translate}}</option>
-				</select>
-			</div>
-		</div>
+        </select>
+      </div>
+    </div>
 
 
     <div class="form-group">
@@ -48,7 +48,7 @@
 
     <div class="btn-toolbar">
       <button type="button" class="btn btn-primary pull-right"
-              data-ng-disabled="!replacer.searchval || !replacer.replaceval"
+              data-ng-disabled="!replacer.searchval"
               data-ng-click="addReplacement()">
         <i class="fa fa-plus"></i>&nbsp;
         <span data-translate="">batchreplacer-addReplacement</span>
@@ -122,10 +122,19 @@
           </tr>
         </table>
 
-        <input type="checkbox" id="caseinsensitive"  name="caseinsensitive" value="i" />
-        <label for="caseinsensitive" data-translate="">batchreplacer-case-insensitive</label>
+        <p data-ng-show="selectedProcess.key === 'massive-content-update'">
+          <input type="checkbox" id="caseinsensitive"  name="caseinsensitive" value="i" />
+          <label for="caseinsensitive" data-translate="">batchreplacer-case-insensitive</label>
+        </p>
+        <p data-ng-show="selectedProcess.key === 'massive-search-and-replace'">
+          <label for="vacuum-mode" data-translate="">batchreplacer-vacuum-mode</label>
+          <select class="form-control" id="vacuum-mode" name="vacuum-mode">
+            <option value="" data-translate="">vacuum-none</option>
+            <option value="element" data-translate="">vacuum-element</option>
+            <option value="record" data-translate="">vacuum-record</option>
+          </select>
+        </p>
     </div>
-
     <div class="row">&nbsp;</div>
 
     <div class="btn-toolbar">
@@ -144,5 +153,5 @@
 
     </div>
 
-	</fieldset>
+  </fieldset>
 </div>
