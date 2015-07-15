@@ -14041,6 +14041,8 @@ yx-axis
 .gn [gn-metadata-display].sxt-scroll {
   right: 0;
   left: 0;
+  position: relative;
+  margin-top: -4em;
 }
 .gn [gn-metadata-display].sxt-scroll > .panel,
 .gn [gn-metadata-display].sxt-scroll .panel-body {
