@@ -99,7 +99,7 @@ http://localhost:8080/geonetwork/srv/eng/metadata.batch.processing?process=sexta
 						</gmd:keyword>
 					</xsl:for-each>
 					<gmd:type>
-						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
 							codeListValue="theme"/>
 					</gmd:type>
 					<gmd:thesaurusName>
@@ -113,7 +113,7 @@ http://localhost:8080/geonetwork/srv/eng/metadata.batch.processing?process=sexta
 										<gco:Date>2013-08-20</gco:Date>
 									</gmd:date>
 									<gmd:dateType>
-										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
 											codeListValue="publication"/>
 									</gmd:dateType>
 								</gmd:CI_Date>

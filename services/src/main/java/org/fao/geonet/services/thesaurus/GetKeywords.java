@@ -131,7 +131,7 @@ public class GetKeywords {
 			}
 
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.ASC));
 			} else {
 				builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
 			}

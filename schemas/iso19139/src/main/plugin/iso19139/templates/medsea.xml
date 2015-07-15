@@ -426,7 +426,7 @@
                     <gco:Date>2009-09-22</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
                                          codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
@@ -804,7 +804,7 @@
       </gmd:attributeDescription>
       <gmd:contentType>
         <gmd:MD_CoverageContentTypeCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CoverageContentTypeCode"
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CoverageContentTypeCode"
                 codeListValue="physicalMeasurement"/>
       </gmd:contentType>
       <gmd:dimension>

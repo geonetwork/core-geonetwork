@@ -289,7 +289,7 @@ Mapping between :
 														<gco:Date><xsl:value-of select="inspire_common:Specification/inspire_common:DateOfLastRevision"/></gco:Date>
 													</date>
 													<dateType>
-														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
 													</dateType>
 												</CI_Date>
 											</date>

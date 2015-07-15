@@ -433,7 +433,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
           '<div class="button" id="edit' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}' + this.sep + '{abstract}"></div>',
         '</tpl>',
         '</tpl>',
-        '<tpl if="type !== \'onlinesrc\'">',
+        '<tpl if="type !== \'onlinesrc\' && type !== \'children\'">',
           '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
         '</tpl>',
         '</tpl>',
