@@ -11,12 +11,12 @@
 	</gmd:language>
 	<gmd:characterSet>
 		<gmd:MD_CharacterSetCode codeListValue="utf8"
-			codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+			codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
 		/>
 	</gmd:characterSet>
 	<gmd:hierarchyLevel>
 		<gmd:MD_ScopeCode
-			codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+			codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
 			codeListValue="dataset"/>
 	</gmd:hierarchyLevel>
 	<gmd:contact>
@@ -40,7 +40,7 @@
 			</gmd:contactInfo>
 			<gmd:role>
 				<gmd:CI_RoleCode codeListValue="pointOfContact"
-					codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+					codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
 				/>
 			</gmd:role>
 		</gmd:CI_ResponsibleParty>
@@ -79,14 +79,14 @@
 							</gmd:date>
 							<gmd:dateType>
 								<gmd:CI_DateTypeCode
-									codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+									codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
 									codeListValue="publication"/>
 							</gmd:dateType>
 						</gmd:CI_Date>
 					</gmd:date>
 					<gmd:presentationForm>
 						<gmd:CI_PresentationFormCode codeListValue="mapDigital"
-							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
+							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
 						/>
 					</gmd:presentationForm>
 				</gmd:CI_Citation>
@@ -119,7 +119,7 @@
 					</gmd:contactInfo>
 					<gmd:role>
 						<gmd:CI_RoleCode codeListValue="pointOfContact"
-							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
 						/>
 					</gmd:role>
 				</gmd:CI_ResponsibleParty>
@@ -131,7 +131,7 @@
 					</gmd:keyword>
 					<gmd:type>
 						<gmd:MD_KeywordTypeCode codeListValue="place"
-							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+							codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
 						/>
 					</gmd:type>
 				</gmd:MD_Keywords>

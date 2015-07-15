@@ -517,7 +517,7 @@ public class KeywordBean {
 
             Element ciDateDatetypeEl = new Element("dateType", Namespaces.GMD);
             Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", Namespaces.GMD);
-            ciDateDatetypeCodeEl.setAttribute("codeList","http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
+            ciDateDatetypeCodeEl.setAttribute("codeList","http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
             ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
 
             ciDateDatetypeEl.addContent(ciDateDatetypeCodeEl);
