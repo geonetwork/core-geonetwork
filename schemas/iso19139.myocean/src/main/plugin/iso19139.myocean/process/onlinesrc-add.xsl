@@ -100,7 +100,7 @@ attached it to the metadata for data.
                                                             </gmd:description>
                                                             <gmd:function>
                                                                 <gmd:CI_OnLineFunctionCode
-                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnL
                                                                 ineFunctionCode" codeListValue=""/>
                                                             </gmd:function>
                                                         </gmd:CI_OnlineResource>
@@ -144,7 +144,7 @@ attached it to the metadata for data.
                                                             </gmd:description>
                                                             <gmd:function>
                                                                 <gmd:CI_OnLineFunctionCode
-                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnL
                                                                 ineFunctionCode" codeListValue=""/>
                                                             </gmd:function>
                                                         </gmd:CI_OnlineResource>
@@ -179,7 +179,7 @@ attached it to the metadata for data.
                                                                 </gmd:description>
                                                                 <gmd:function>
                                                                     <gmd:CI_OnLineFunctionCode
-                                                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnL
                                                                     ineFunctionCode" codeListValue=""/>
                                                                 </gmd:function>
                                                                 

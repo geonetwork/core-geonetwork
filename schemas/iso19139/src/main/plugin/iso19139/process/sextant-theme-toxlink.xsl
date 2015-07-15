@@ -11,7 +11,7 @@ is logged in that case.
 			<gco:CharacterString>/Milieu physique/Habitats physiques</gco:CharacterString>
 		</gmd:keyword>
 		<gmd:type>
-			<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+			<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
 		</gmd:type>
 		<gmd:thesaurusName>
 			<gmd:CI_Citation>
@@ -24,7 +24,7 @@ is logged in that case.
 						<gco:Date>2013-08-20</gco:Date>
 						</gmd:date>
 						<gmd:dateType>
-							<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+							<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
 						</gmd:dateType>
 					</gmd:CI_Date>
 				</gmd:date>

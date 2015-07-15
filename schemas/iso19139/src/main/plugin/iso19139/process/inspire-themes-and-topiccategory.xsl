@@ -295,7 +295,7 @@
                             </xsl:for-each-group>
                             
                             <gmd:type>
-                                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
                             </gmd:type>
                             <xsl:choose>
                                 <xsl:when test="$existingInspireThemes/gmd:MD_Keywords/gmd:thesaurusName">
@@ -313,7 +313,7 @@
                                                         <gco:Date><xsl:value-of select="$inspire-th//skos:ConceptScheme/dcterms:issued"/></gco:Date>
                                                     </gmd:date>
                                                     <gmd:dateType>
-                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
                                                     </gmd:dateType>
                                                 </gmd:CI_Date>
                                             </gmd:date>
