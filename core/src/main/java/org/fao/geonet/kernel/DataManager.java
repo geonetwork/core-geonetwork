@@ -2167,13 +2167,16 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
         String uuid = getMetadataUuid(metadataId);
-        boolean isMetadata = getMetadataRepository().findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA;
-
-        deleteMetadataFromDB(context, metadataId);
-
-        // Notifies the metadata change to metatada notifier service
-        if (isMetadata) {
-            context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
+        Metadata findOne = getMetadataRepository().findOne(metadataId);
+        if(findOne != null) {
+            boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
+    
+            deleteMetadataFromDB(context, metadataId);
+    
+            // Notifies the metadata change to metatada notifier service
+            if (isMetadata) {
+                context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
+            }
         }
 
         //--- update search criteria
