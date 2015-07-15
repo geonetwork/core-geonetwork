@@ -136,9 +136,13 @@
           // to render other layout
 
           // TODO: formatter should be defined per schema
+          // schema: {
+          // iso19139: 'md.format.xml?xsl=full_view&&id='
+          // }
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
             defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
+            defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
             list: [{
             //  label: 'inspire',
             //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
@@ -149,11 +153,6 @@
               label: 'full',
               url: 'md.format.xml?xsl=full_view&uuid='
             }]
-            // TODO: maybe formatter config should depends
-            // on the metadata schema.
-            // schema: {
-            // iso19139: 'md.format.xml?xsl=full_view&&id='
-            // }
           };
 
           // Set the default template to use

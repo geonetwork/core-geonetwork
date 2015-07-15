@@ -31,7 +31,7 @@
 
 
     <div class="btn-group pull-right">
-      <button type="button" class="btn btn-link dropdown-toggle"
+      <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
               aria-expanded="false">
         <i class="fa fa-eye"></i>&nbsp;
@@ -113,6 +113,18 @@
 
         <table class="table table-striped">
           <tbody>
+          <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
+                          mdView.current.record.inspirethemewithac.length > 0">
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                     class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                     title="{{cat.split('|')[1]}}">
+                  <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
+                  <p class="label"></p>
+                </div>
+              </td>
+            </tr>
             <tr data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
               <th data-translate="">listOfCategories</th>
@@ -226,7 +238,8 @@
               <th data-translate="">scale</th>
               <td>
                 <ul>
-                  <li data-ng-repeat="d in mdView.current.record.denominator">1/{{d}}</li>
+                  <li data-ng-repeat="d in mdView.current.record.denominator"
+                      class="gn-scale">{{d}}</li>
                 </ul>
               </td>
             </tr>

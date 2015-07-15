@@ -992,6 +992,10 @@ if (typeof define === 'function' && define.amd) {
 else {
   var WPS_1_0_0_Module = WPS_1_0_0_Module_Factory();
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, deps: string[], tis: *[], eis: *[]}|WPS_1_0_0}
+     */
     module.exports.WPS_1_0_0 = WPS_1_0_0_Module.WPS_1_0_0;
   }
   else {

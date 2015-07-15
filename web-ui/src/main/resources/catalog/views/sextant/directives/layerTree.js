@@ -245,10 +245,7 @@
             if(angular.isArray(d)) {
               scope.download = d[0];
             }
-            var p =  scope.member.get('processes');
-            if(angular.isArray(p)) {
-              scope.process = p[0];
-            }
+            scope.process =  scope.member.get('processes');
 
           }
 

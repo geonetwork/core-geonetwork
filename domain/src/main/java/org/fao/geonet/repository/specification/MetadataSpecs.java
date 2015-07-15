@@ -1,13 +1,6 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataHarvestInfo_;
-import org.fao.geonet.domain.MetadataSourceInfo_;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
@@ -36,6 +29,17 @@ public final class MetadataSpecs {
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<String> schemaIdPath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
                 return cb.equal(schemaIdPath, cb.literal(schemaId));
+            }
+        };
+    }
+
+
+    public static Specification<Metadata> hasOwner(final int owner) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> ownerPath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+                return cb.equal(ownerPath, cb.literal(owner));
             }
         };
     }

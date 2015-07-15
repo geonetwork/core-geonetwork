@@ -96,7 +96,7 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
 
 
         bean.registerRequest(true, HOST, PORT, PROTOCOL, cswServerRequest);
-        bean.registerRequest(true, null, 80, PROTOCOL, cswServerRequest);
+        bean.registerRequest(true, null, -1, PROTOCOL, cswServerRequest);
     }
 
     protected void customizeParams(Element params) {

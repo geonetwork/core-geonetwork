@@ -628,7 +628,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }, this.KeywordRecord),
             fields: ["value", "thesaurus", "uri"],
             sortInfo: {
-                field: "thesaurus"
+                field: "value"
             },
             listeners: {
                 exception: function (misc) {

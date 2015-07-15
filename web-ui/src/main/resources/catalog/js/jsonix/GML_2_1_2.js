@@ -527,6 +527,10 @@ if (typeof define === 'function' && define.amd) {
 }
 else {
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, dans: string, tis: *[], eis: *[]}|GML_2_1_2}
+     */
     module.exports.GML_2_1_2 = GML_2_1_2_Module_Factory().GML_2_1_2;
   }
   else {

@@ -4,6 +4,7 @@
   position: relative;
   font-size: 14px;
   font-family: Roboto, sans-serif;
+  color: black;
   letter-spacing: normal;
   /*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
@@ -195,22 +196,27 @@ yx-axis
 .gn button {
   text-shadow: none;
 }
+.gn .layers {
+  width: 100% !important;
+}
 .gn .gn-search-page p,
 .gn .gn-metadata-view p {
   padding: initial;
   font-size: 14px;
 }
 .gn .gn-search-page ul,
-.gn .gn-metadata-view ul,
+.gn .gn-metadata-view ul {
+  font-size: 14px;
+  margin: 0;
+}
 .gn .gn-search-page ul li,
 .gn .gn-metadata-view ul li {
   font-size: 14px;
-}
-.gn .gn-search-page ul li,
-.gn .gn-metadata-view ul li,
-.gn .gn-search-page ul li li,
-.gn .gn-metadata-view ul li li {
   padding: initial;
+}
+.gn .gn-search-page label,
+.gn .gn-metadata-view label {
+  white-space: normal;
 }
 .gn .gn-metadata-view p {
   font-size: 12px;
@@ -8806,6 +8812,52 @@ yx-axis
 .gn i.fa-times.delete:hover {
   color: #a94442;
 }
+.gn .gn-search-page {
+  /* Decide here which status should be displayed
+  or not and with which colors */
+}
+.gn .gn-search-page .gn-status {
+  border: 3px solid #46b8da;
+  position: absolute;
+  top: 55px;
+  left: 2px;
+  border-radius: 15px;
+  padding: 2px;
+  -ms-transform: rotate(-30deg);
+  -webkit-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+  color: #5bc0de;
+  font-weight: bold;
+  font-size: 80%;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.gn .gn-search-page .gn-status-mdview {
+  font-size: 120%;
+  position: relative;
+  float: right;
+  top: -52px;
+  margin-right: -20px;
+}
+.gn .gn-search-page .gn-status-completed {
+  border-color: #4cae4c;
+  color: #5cb85c;
+}
+.gn .gn-search-page .gn-status-historicalArchive {
+  border-color: #eea236;
+  color: #f0ad4e;
+}
+.gn .gn-search-page .gn-status-obsolete {
+  border-color: #d43f3a;
+  color: #d9534f;
+}
+.gn html[lang=eng] .gn-scale :before,
+.gn html[lang=eng] [data-facet=denominators] span.gn-facet-label :before {
+  content: "1/";
+}
+.gn html[lang=fre] .gn-scale :before,
+.gn html[lang=fre] [data-facet=denominators] span.gn-facet-label :before {
+  content: "1:";
+}
 .gn [gn-main-viewer],
 .gn .gn-main-viewer {
   position: relative;
@@ -8822,6 +8874,7 @@ yx-axis
 .gn [gn-main-viewer] [ngeo-map],
 .gn .gn-main-viewer [ngeo-map] {
   width: 100%;
+  height: 89.9vh;
 }
 .gn [gn-main-viewer] [ngeo-map].gn-gfi-loading:hover,
 .gn .gn-main-viewer [ngeo-map].gn-gfi-loading:hover {
@@ -8993,8 +9046,8 @@ yx-axis
 .gn .gn-main-viewer .panel-tools .btn-group {
   display: flex;
 }
-.gn [gn-main-viewer] .panel-tools .btn-group button,
-.gn .gn-main-viewer .panel-tools .btn-group button {
+.gn [gn-main-viewer] .panel-tools .btn-group .btn,
+.gn .gn-main-viewer .panel-tools .btn-group .btn {
   flex: 1;
 }
 .gn [gn-main-viewer] .panel-tools .flux,
@@ -9771,7 +9824,7 @@ yx-axis
 }
 .gn [ngeo-map] {
   width: 100%;
-  height: 200px;
+  height: 250px;
 }
 .gn .collapse-text-toggle {
   color: grey;
@@ -10022,7 +10075,8 @@ yx-axis
   background-color: #ffffff;
 }
 .gn .gn-md-edit-btn.pull-right,
-.gn .gn-md-delete-btn.pull-right {
+.gn .gn-md-delete-btn.pull-right,
+.gn .gn-md-actions-btn.pull-right {
   margin-right: 5px;
 }
 .gn [data-ng-search-form] .whidden,
@@ -10062,15 +10116,21 @@ yx-axis
 .gn .gn-search-page .panel-heading [hitsperpage-combo] {
   vertical-align: middle;
 }
-.gn [data-ng-search-form] [gn-map-field],
-.gn [ng-search-form] [gn-map-field],
-.gn .gn-search-page [gn-map-field],
-.gn [data-ng-search-form] [data-gn-map-field],
-.gn [ng-search-form] [data-gn-map-field],
-.gn .gn-search-page [data-gn-map-field] {
-  border: 1px solid #cccccc;
-  border-radius: 3px;
-  position: relative;
+.gn [data-ng-search-form] [gn-map-field] .gn-draw-btn,
+.gn [ng-search-form] [gn-map-field] .gn-draw-btn,
+.gn .gn-search-page [gn-map-field] .gn-draw-btn,
+.gn [data-ng-search-form] [data-gn-map-field] .gn-draw-btn,
+.gn [ng-search-form] [data-gn-map-field] .gn-draw-btn,
+.gn .gn-search-page [data-gn-map-field] .gn-draw-btn,
+.gn [data-ng-search-form] [gn-map-field] .btn-group-vertical,
+.gn [ng-search-form] [gn-map-field] .btn-group-vertical,
+.gn .gn-search-page [gn-map-field] .btn-group-vertical,
+.gn [data-ng-search-form] [data-gn-map-field] .btn-group-vertical,
+.gn [ng-search-form] [data-gn-map-field] .btn-group-vertical,
+.gn .gn-search-page [data-gn-map-field] .btn-group-vertical {
+  top: 54px;
+  position: absolute;
+  z-index: 10;
 }
 .gn [data-ng-search-form] [gn-map-field] .btn-group-vertical,
 .gn [ng-search-form] [gn-map-field] .btn-group-vertical,
@@ -10078,10 +10138,15 @@ yx-axis
 .gn [data-ng-search-form] [data-gn-map-field] .btn-group-vertical,
 .gn [ng-search-form] [data-gn-map-field] .btn-group-vertical,
 .gn .gn-search-page [data-gn-map-field] .btn-group-vertical {
-  position: absolute;
-  top: 4px;
-  z-index: 10;
   right: 4px;
+}
+.gn [data-ng-search-form] [gn-map-field] .gn-draw-btn,
+.gn [ng-search-form] [gn-map-field] .gn-draw-btn,
+.gn .gn-search-page [gn-map-field] .gn-draw-btn,
+.gn [data-ng-search-form] [data-gn-map-field] .gn-draw-btn,
+.gn [ng-search-form] [data-gn-map-field] .gn-draw-btn,
+.gn .gn-search-page [data-gn-map-field] .gn-draw-btn {
+  left: 4px;
 }
 .gn .dropdown-submenu {
   position: relative;
@@ -10883,6 +10948,7 @@ yx-axis
   box-shadow: none;
 }
 .gn [sxt-main-viewer] .layerTree > ul {
+  font-size: 12px;
   padding-left: 0;
   margin-left: 0;
 }
@@ -10894,6 +10960,7 @@ yx-axis
   margin-bottom: 0;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item {
+  font-size: 12px;
   border: none;
 }
 .gn [sxt-main-viewer] .layerTree .list-group-item label {
@@ -10946,6 +11013,29 @@ yx-axis
 .gn [sxt-main-viewer] .fu input:hover {
   cursor: pointer;
 }
+.gn [sxt-main-viewer] .sxt-wps-panel .panel {
+  border: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading {
+  height: 2em;
+  line-height: 2em;
+  border-bottom: 1px solid #4ba2d9;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading > button {
+  display: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-body {
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel label {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel button[type="submit"] {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: auto;
+}
 .gn .popover {
   height: auto;
   border-radius: 2px;
@@ -10986,11 +11076,14 @@ yx-axis
 .gn .popover.popover-dropdown-5 .popover-content {
   height: 15.5em;
 }
-.gn .popover .dropdown-menu {
+.gn .popover .popover-content > .dropdown-menu {
   position: static;
   box-shadow: none;
   border: none;
   padding: 0 0 1em;
+}
+.gn .popover .btn-group .dropdown-menu {
+  margin-top: 0;
 }
 .gn .panel-body .gn-metadata-view {
   width: 100%;
@@ -13631,6 +13724,7 @@ yx-axis
 }
 .gn ul.gn-resultview li.gn-grid .md-abstract p {
   margin-bottom: 0;
+  color: #808080;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-source {
   clear: left;
@@ -14099,9 +14193,12 @@ yx-axis
 .popover.popover-dropdown-5 .popover-content {
   height: 15.5em;
 }
-.popover .dropdown-menu {
+.popover .popover-content > .dropdown-menu {
   position: static;
   box-shadow: none;
   border: none;
   padding: 0 0 1em;
+}
+.popover .btn-group .dropdown-menu {
+  margin-top: 0;
 }

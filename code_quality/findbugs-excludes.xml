@@ -198,5 +198,66 @@
 		</Or>
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
-
+	
+	<!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
+	<Match>
+		<Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>
+		<Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
+		<Or>
+		  <Method name="exec"/>
+		  <Method name="valueOf"/>
+		</Or>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.log.List"/>
+		<Bug pattern="SS_SHOULD_BE_STATIC"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.log.ListLogFilesResponse$LogFileResponse"/>
+		<Bug pattern="URF_UNREAD_FIELD"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.logo.Set"/>
+		<Bug pattern="REC_CATCH_EXCEPTION"/>
+		<Method name="exec"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.metadata.format.ImageReplacedElementFactory"/>
+		<Bug pattern="DC_DOUBLECHECK"/>
+		<Method name="getSupportedExts"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink"/>
+		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+		<Method name="equals"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.metadata.format.groovy.util.LinkType"/>
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.region.GetMap"/>
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+		<Or>
+			<Method name="computeGeomInDomainOfValidity"/>
+			<Method name="next"/>
+		</Or>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.region.ListRegionsResponse"/>
+		<Bug pattern="URF_UNREAD_FIELD"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.region.ListRegionsResponse$CategoryResponse"/>
+		<Bug pattern="URF_UNREAD_FIELD"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.region.ListRegionsResponse$RegionResponse"/>
+		<Bug pattern="URF_UNREAD_FIELD"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.thesaurus.GetKeywords"/>
+		<Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+		<Method name="parseBuilder"/>
+	</Match>
 </FindBugsFilter>

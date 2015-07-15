@@ -135,10 +135,13 @@
 	</field>-->
 	
 	<!--
-		This is not supported because gmd:date is an OR element with Date or DateTime choice.
-		<field name="gmd:date">
+		Add a gco:date element by default to a gmd:date element
+		even if gmd:date is a choice element having gco:Date
+		or gco:DateTime. The Angular editor is taking care of
+		adding the proper tag name based on the user input. -->
+  <field name="gmd:date">
 		<suggest name="gco:Date"/>
-	</field>-->
+	</field>
 	
 	<!-- Control substitute of gco:CharacterString -->
 	<!-- Only propose gco:CharacterString and expand it when gmd:keyword is created. For this,

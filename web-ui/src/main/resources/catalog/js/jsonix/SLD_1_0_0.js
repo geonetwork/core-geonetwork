@@ -934,6 +934,10 @@ if (typeof define === 'function' && define.amd) {
 }
 else {
   if (typeof module !== 'undefined' && module.exports) {
+    /**
+     *
+     * @type {{n: string, dens: string, dans: string, tis: *[], eis: *[]}|SLD_1_0_0}
+     */
     module.exports.SLD_1_0_0 = SLD_1_0_0_Module_Factory().SLD_1_0_0;
   }
   else {

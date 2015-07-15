@@ -12,6 +12,7 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -31,8 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LogConfig {
     private FileAppender fileAppender = null;
     
-    private final String fileAppenderName = "fileAppender";
-    private final int maxLines = 20000;
+    private static final String fileAppenderName = "fileAppender";
+    private static final int maxLines = 20000;
 
     @PostConstruct
     public void init() throws Exception {
@@ -107,9 +108,9 @@ public class LogConfig {
                     zos.write(bytes, 0, read);
                 }
             } finally {
-                in.close();
-                zos.flush();
-                zos.close(); 
+                IOUtils.closeQuietly(in);
+                if (zos != null) zos.flush();
+                IOUtils.closeQuietly(zos);
             }
         } else {
             throw new RuntimeException("No log file found for download. Check logger configuration.");

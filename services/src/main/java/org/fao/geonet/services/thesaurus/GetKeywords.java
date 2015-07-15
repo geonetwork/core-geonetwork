@@ -42,6 +42,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +54,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,10 +78,10 @@ public class GetKeywords {
 			@RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
 			@RequestParam(value = "pMode", defaultValue = "true") String mode,
 			@RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
-			@RequestParam(value = XmlParams.maxResults, required = false) String maxResults,
+			@RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
 			@RequestParam(value = XmlParams.offset, required = false) String offset,
 			@RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
-			@RequestParam(value = XmlParams.pThesauri) java.util.List<String> thesauri,
+			@RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
 			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
 			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
 			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
@@ -93,10 +96,10 @@ public class GetKeywords {
 			@RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
 			@RequestParam(value = "pMode", defaultValue = "true") String mode,
 			@RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
-			@RequestParam(value = XmlParams.maxResults, required = false) String maxResults,
+			@RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
 			@RequestParam(value = XmlParams.offset, required = false) String offset,
 			@RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
-			@RequestParam(value = XmlParams.pThesauri) java.util.List<String> thesauri,
+			@RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
 			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
 			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
 			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
@@ -153,7 +156,9 @@ public class GetKeywords {
 				responseXml.addContent((new Element("mode")).addContent(mode));
 			}
 		}
-		final Set<String> acceptContentType = Sets.newHashSet(webRequest.getHeaderValues("Accept"));
+        String[] acceptHeader = webRequest.getHeaderValues("Accept");
+		final Set<String> acceptContentType = Sets.newHashSet(
+                acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
 
 		byte[] response;
 		String contentType;
@@ -163,6 +168,7 @@ public class GetKeywords {
 		} else if (acceptContentType.isEmpty() ||
 			acceptsType(acceptContentType, "xml") ||
 			acceptContentType.contains("*/*")||
+			acceptContentType.contains("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2")||
 			acceptContentType.contains("text/plain")) {
 			response = Xml.getString(responseXml).getBytes(Constants.CHARSET);
 			contentType = "application/xml";
@@ -221,11 +227,20 @@ public class GetKeywords {
 			parsedParams.thesauriDomainName(thesauriDomainName);
 		}
 
-		for (String thesaurusName : thesauri) {
-			if (!thesaurusName.trim().isEmpty()) {
-				parsedParams.addThesaurus(thesaurusName.trim());
-			}
-		}
+        if (thesauri == null) {
+            ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
+            Map<String, Thesaurus> listOfThesaurus = thesaurusMan.getThesauriMap();
+            for (String t : listOfThesaurus.keySet()) {
+                parsedParams.addThesaurus(listOfThesaurus.get(t).getKey());
+            }
+        } else {
+            for (String thesaurusName : thesauri) {
+                if (!thesaurusName.trim().isEmpty()) {
+                    parsedParams.addThesaurus(thesaurusName.trim());
+                }
+            }
+        }
 
 		boolean addedLang = false;
 		for (String targetLang : targetLangs) {

@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="btn-group">
-      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
+      <button class="btn btn-default btn-sm" data-ng-if="layer.get('time')" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
         <span class="fa fa-history"></span> Temps
       </button>
       <button ng-if="elevations.length > 0" class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">

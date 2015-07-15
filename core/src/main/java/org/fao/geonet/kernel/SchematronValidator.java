@@ -69,8 +69,7 @@ public class SchematronValidator {
                                                            final MetadataSchema metadataSchema) {
         List<ApplicableSchematron> applicableSchematron = Lists.newArrayList();
         SchematronRepository schematronRepository = ApplicationContextHolder.get().getBean(SchematronRepository.class);
-        SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
-
+        
         final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
 
         //Loop through all xsl files

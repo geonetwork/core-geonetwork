@@ -92,7 +92,7 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         final java.util.List<?> charStrings = Xml.selectNodes(keywordXml, "*//gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList
                 (ISO19139Namespaces.GCO,
                 ISO19139Namespaces.GMD));
-        assertEquals(0, charStrings.size());
+        assertEquals(2, charStrings.size());
     }
 
     @Test

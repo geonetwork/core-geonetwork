@@ -270,7 +270,10 @@
         addMdLayerToMap: function(link, md) {
 
           if(gnSearchSettings.viewerUrl) {
-            window.open(gnSearchSettings.viewerUrl, '_blank');
+            var url = gnSearchSettings.viewerUrl;
+            url = url.replace('${wmsurl}', link.url);
+            url = url.replace('${layername}', link.name);
+            window.open(url, '_blank');
             return;
           }
           if(gnMap.isLayerInMap($scope.searchObj.viewerMap,
@@ -345,10 +348,11 @@
       /**
        * API, get the url params to get layers or OWC
        */
-      if(sxtSettings) {
+      if(typeof sxtSettings != 'undefined') {
         var params = gnUrlUtils.parseKeyValue(window.location.search.
             replace(/^\?/, ''));
-        gnViewerSettings.owsContext = decodeURIComponent(params.owscontext);
+        gnViewerSettings.owsContext = params.owscontext &&
+            decodeURIComponent(params.owscontext);
         gnViewerSettings.wmsUrl = params.wmsurl;
         gnViewerSettings.layerName = params.layername;
       }

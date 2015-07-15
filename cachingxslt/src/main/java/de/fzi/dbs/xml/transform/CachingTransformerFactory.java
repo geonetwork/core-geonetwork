@@ -2,6 +2,7 @@ package de.fzi.dbs.xml.transform;
 
 import net.sf.saxon.TransformerFactoryImpl;
 import org.apache.log4j.Logger;
+import org.fao.geonet.utils.CachedTransformer;
 
 import java.io.File;
 import java.net.URI;
@@ -21,7 +22,7 @@ import javax.xml.transform.stream.StreamSource;
  * so that consequent calls to local stylesheets require stylesheet reparsing
  * only if stylesheet was changed.
  */
-public class CachingTransformerFactory extends TransformerFactoryImpl {
+public class CachingTransformerFactory extends TransformerFactoryImpl implements CachedTransformer {
     /**
      * Map to hold templates cache.
      */

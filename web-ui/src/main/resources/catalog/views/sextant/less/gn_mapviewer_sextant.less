@@ -634,6 +634,7 @@
       box-shadow: none;
     }
     > ul {
+      font-size: @sxt-fontsize;
       padding-left: 0;
       margin-left: 0;
       .list-group {
@@ -645,6 +646,7 @@
       }
     }
     .list-group-item {
+      font-size: @sxt-fontsize;
       border: none;
       label {
         padding: 2px 0 2px 12px;
@@ -703,6 +705,32 @@
     }
     input:hover {
       cursor: pointer;
+    }
+  }
+
+  .sxt-wps-panel {
+    .panel {
+      border: none;
+    }
+    .panel-heading {
+      height: 2em;
+      line-height: 2em;
+      border-bottom: 1px solid @sxt-base-color;
+      > button {
+        display: none;
+      }
+    }
+    .panel-body {
+      font-size: @sxt-fontsize;
+    }
+    label {
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+    button[type="submit"] {
+      padding-left: 5px;
+      padding-right: 5px;
+      width: auto;
     }
   }
 }

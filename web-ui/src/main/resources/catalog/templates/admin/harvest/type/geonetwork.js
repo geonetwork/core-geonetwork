@@ -74,7 +74,9 @@ var gnHarvestergeonetwork = {
       + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
       + '    <icon>' + h.site.icon + '</icon>'
       + '    <mefFormatFull>' + h.site.mefFormatFull + '</mefFormatFull>'
-      + '    <xslfilter>' + h.site.xslfilter.replace(/&/g, '&amp;') + '</xslfilter>'
+      + '    <xslfilter>'
+      + (h.site.xslfilter[0] ? h.site.xslfilter.replace(/&/g, '&amp;') : '')
+      + '</xslfilter>'
       + '    <account>'
       + '      <use>' + h.site.account.use + '</use>'
       + '      <username>' + h.site.account.username + '</username>'

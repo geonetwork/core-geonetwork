@@ -16,12 +16,14 @@
     'gnHttp',
     'gnMetadataManager',
     'gnAlertService',
+    'gnSearchSettings',
     'gnPopup',
     '$translate',
     '$q',
     '$http',
     function($rootScope, $timeout, $location, gnHttp,
-             gnMetadataManager, gnAlertService, gnPopup,
+             gnMetadataManager, gnAlertService, gnSearchSettings,
+             gnPopup,
              $translate, $q, $http) {
 
       var windowName = 'geonetwork';
@@ -91,8 +93,8 @@
           }
         }
         else if (angular.isString(params)) {
-          url = gnHttp.getService('mdGetPDF');
-          url += '?uuid=' + params;
+          // TODO: May depend on schema
+          url = gnSearchSettings.formatter.defaultPdfUrl + params;
         }
         if (url) {
           location.replace(url);

@@ -41,9 +41,10 @@ public class LDAPUser extends InetOrgPerson implements UserDetails {
 	private User _user;
 
 	public LDAPUser(String username) {
-		this._userName = username;
-		this._user = new User();
-		_user.setUsername(username);
+        this._userName = username;
+        this._user = new User();
+        _user.setProfile(Profile.RegisteredUser);
+        _user.setUsername(username);
 
 		// FIXME Should we here populate the LDAP user with LDAP attributes
 		// instead of in the GNLDAPUserDetailsMapper ?
