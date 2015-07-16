@@ -153,11 +153,22 @@
 }
 
 @media (max-width: @screen-sm-max) {
+  .gn-resultview {
+    clear: both;
+  }
+  #sxt-tabswitcher,
+  .sxt-searchform-content {
+    display: none;
+  }
   .row .sxt-left-panel {
     float: none;
     width: 100%;
+    .sxt-reset-btn {
+      bottom: -2.6em;
+    }
   }
   .row .sxt-center-panel {
+    margin-top: 3em;
     float: none;
     width: 100%;
   }
