@@ -159,6 +159,12 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
+        var useExtEditor = false;
+        if ($scope.activeTpl['geonet:info'].schema !== 'iso19115-3' &&
+            $scope.activeTpl.standardName.indexOf('MedSea Checkpoint') === -1) {
+          useExtEditor = true;
+        }
+
         return gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
@@ -166,8 +172,7 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             null,
-            ($scope.activeTpl.standardName &&
-              $scope.activeTpl.standardName.match(/medsea/i)) === null
+            useExtEditor
         );
       };
 
