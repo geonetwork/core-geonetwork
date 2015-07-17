@@ -13116,11 +13116,22 @@ yx-axis
   width: 100%;
 }
 @media (max-width: 991px) {
+  .gn .gn-resultview {
+    clear: both;
+  }
+  .gn #sxt-tabswitcher,
+  .gn .sxt-searchform-content {
+    display: none;
+  }
   .gn .row .sxt-left-panel {
     float: none;
     width: 100%;
   }
+  .gn .row .sxt-left-panel .sxt-reset-btn {
+    bottom: -2.6em;
+  }
   .gn .row .sxt-center-panel {
+    margin-top: 3em;
     float: none;
     width: 100%;
   }
@@ -14041,6 +14052,8 @@ yx-axis
 .gn [gn-metadata-display].sxt-scroll {
   right: 0;
   left: 0;
+  position: relative;
+  margin-top: -4em;
 }
 .gn [gn-metadata-display].sxt-scroll > .panel,
 .gn [gn-metadata-display].sxt-scroll .panel-body {
