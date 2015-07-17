@@ -30,12 +30,17 @@
 
       <!-- Open Ext or Angular editor based on standard name -->
       <a class="btn btn-link"
-         data-ng-if="md.standardName.indexOf('MedSea') >= 0"
+         data-ng-if="md.standardName.indexOf('ISO 19115-3 - MedSea Checkpoint') >= 0"
+         ng-href="#/metadata/{{md['geonet:info'].id}}/tab/characteristics">
+        <i class="fa fa-pencil"></i>
+      </a>
+      <a class="btn btn-link"
+         data-ng-if="md.standardName.indexOf('ISO 19115-3 - SEXTANT') >= 0"
          ng-href="#/metadata/{{md['geonet:info'].id}}">
         <i class="fa fa-pencil"></i>
       </a>
       <a class="btn btn-link"
-         data-ng-if="!md.standardName || md.standardName.indexOf('MedSea') < 0"
+         data-ng-if="!md.standardName || (md.standardName.indexOf('ISO 19115-3 - MedSea Checkpoint') == -1 && md.standardName.indexOf('ISO 19115-3 - SEXTANT') == -1)"
          ng-href="../../apps/sextant/?edit={{md['geonet:info'].id}}" target="_blank">
         <i class="fa fa-pencil"></i>
       </a>
