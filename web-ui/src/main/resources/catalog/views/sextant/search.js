@@ -110,7 +110,7 @@
       };
 
       //
-      if(gnSearchSettings.tabOverflow.search) {
+      if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
             $scope.inMdView = true;
