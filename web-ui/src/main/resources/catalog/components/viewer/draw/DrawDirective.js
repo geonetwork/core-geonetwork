@@ -103,51 +103,15 @@
               }
             },
             text: {
-              font: '14px Calibri,sans-serif',
               fill: {
                 color: '#000'
               },
               stroke: {
                 color: '#fff',
-                width: 3
+                width: 14
               }
             }
 
-          };
-
-
-          var textFeatStyleFn = function(feature) {
-            var f;
-            if (feature instanceof ol.Feature) {
-              f = feature;
-            }
-            else {
-              f = this;
-            }
-            var text = f.get('name');
-            if (!txtStyleCache[text]) {
-              txtStyleCache[text] = [new ol.style.Style({
-                fill: new ol.style.Fill({
-                  color: textStyleCfg.fill.color
-                }),
-                stroke: new ol.style.Stroke({
-                  color: textStyleCfg.stroke.color,
-                  width: textStyleCfg.stroke.width
-                }),
-                text: new ol.style.Text({
-                  font: scope.featureStyleCfg.text.font,
-                  text: text,
-                  fill: new ol.style.Fill({
-                    color: scope.featureStyleCfg.text.fill.color
-                  }),
-                  stroke: new ol.style.Stroke({
-                    color: scope.featureStyleCfg.text.stroke.color,
-                    width: scope.featureStyleCfg.text.stroke.width
-                  })
-                })
-              })];
-            }
-            return txtStyleCache[text];
           };
 
           var drawTextStyleFn = function(feature, resolution) {
@@ -239,7 +203,26 @@
           }));
           drawText.on('drawend', function(evt) {
             evt.feature.set('name', scope.text);
-            evt.feature.setStyle(textFeatStyleFn);
+            evt.feature.setStyle(new ol.style.Style({
+              fill: new ol.style.Fill({
+                color: textStyleCfg.fill.color
+              }),
+              stroke: new ol.style.Stroke({
+                color: textStyleCfg.stroke.color,
+                width: textStyleCfg.stroke.width
+              }),
+              text: new ol.style.Text({
+                font: scope.featureStyleCfg.text.font,
+                text: scope.text,
+                fill: new ol.style.Fill({
+                  color: scope.featureStyleCfg.text.fill.color
+                }),
+                stroke: new ol.style.Stroke({
+                  color: scope.featureStyleCfg.text.stroke.color,
+                  width: scope.featureStyleCfg.text.stroke.width
+                })
+              })
+            }));
             onDrawend();
           });
           ngeoDecorateInteraction(drawText, map);
@@ -438,6 +421,11 @@
           getType: '&gnStyleType'
         },
         link: function(scope, element, attrs) {
+
+          scope.$watch('style.text.stroke.width', function(n) {
+            scope.style.text.font = n + 'px Calibri,sans-serif';
+          });
+
           scope.colors = {
             red: '#FF0000',
             orange: '#FFA500',
