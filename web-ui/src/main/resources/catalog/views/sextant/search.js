@@ -79,11 +79,12 @@
     '$translate',
     '$q',
     'gnUrlUtils',
+    'gnGlobalSettings',
     function($scope, $location, $window, suggestService,
              $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
         $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-        $translate, $q, gnUrlUtils) {
+        $translate, $q, gnUrlUtils, gnGlobalSettings) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -93,6 +94,8 @@
 
       var localStorage = $window.localStorage || {};
 
+
+      $scope.gnUrl = gnGlobalSettings.gnUrl || '';
 
       // Manage routing
       if (!$location.path()) {
@@ -107,7 +110,7 @@
       };
 
       //
-      if(gnSearchSettings.tabOverflow.search) {
+      if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
             $scope.inMdView = true;

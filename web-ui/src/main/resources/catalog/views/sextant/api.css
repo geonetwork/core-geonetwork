@@ -8501,7 +8501,7 @@ yx-axis
 .gn .ng-cloak {
   display: none !important;
 }
-.gn-img-modal],
+.gn [gn-img-modal],
 .gn [data-gn-img-modal] {
   cursor: pointer;
 }
@@ -11324,7 +11324,7 @@ yx-axis
   display: inline;
   padding-left: 0;
 }
-.gn .overview .gn-metadata-display ul.md-value-list:before {
+.gn .overview .gn-metadata-display ul.md-value-list:not(.nocolon):before {
   content: ': ';
 }
 .gn .overview .gn-metadata-display ul.md-value-list li {
@@ -14052,22 +14052,20 @@ yx-axis
 .gn [gn-metadata-display].sxt-scroll {
   right: 0;
   left: 0;
-  position: relative;
-  margin-top: -4em;
 }
 .gn [gn-metadata-display].sxt-scroll > .panel,
 .gn [gn-metadata-display].sxt-scroll .panel-body {
   height: auto;
 }
-.gn-img-modal .modal-dialog {
+.gn .gn-img-modal .modal-dialog {
   background: white;
   padding-bottom: 3em;
   text-align: center;
 }
-.gn-img-modal .modal-dialog img {
+.gn .gn-img-modal .modal-dialog img {
   max-height: 700px;
 }
-.gn-img-modal .modal-dialog .gn-btn-modal-img {
+.gn .gn-img-modal .modal-dialog .gn-btn-modal-img {
   position: absolute;
   top: auto;
   bottom: .3em;
@@ -14165,6 +14163,10 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
+}
+.portlet-borderless-container [gn-metadata-display].sxt-scroll {
+  position: relative;
+  margin-top: -4em;
 }
 .popover {
   height: auto;

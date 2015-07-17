@@ -1,6 +1,8 @@
 <div><dt fmt-translate="" translate="">Contacts</dt>
   <dd>
-    <p>{{contacts}}</p>
+    <ul class="md-value-list nocolon">
+      <li fmt-repeat="c in contacts">{{c}}</li>
+    </ul>
   </dd>
 
   <dt fmt-translate="" translate="">orgs</dt>
