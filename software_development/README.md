@@ -46,7 +46,7 @@ using:
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
 * **Java** - Developing with GeoNetwork requires `Java Development Kit (JDK) <http://www.oracle.com/technetwork/java/javase/downloads/>`_ 1.6 or greater (scroll down to find 1.6) OR the `OpenJDK (version 7 or higher only) <http://openjdk.java.net/install/>`_ for Linux users.
-* **Maven** - GeoNetwork uses `Maven <http://maven.apache.org/>`_ to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
+* **Maven** - GeoNetwork uses `Maven <http://maven.apache.org/>`_ to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check). *When building 3.0.x and up you should use Maven 3*
 * **Git** - GeoNetwork source code is stored and versioned in a Git repository on Github. Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
 * **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
@@ -56,7 +56,7 @@ The following tools are required to be installed to setup a development environm
    cd /path/to/closure-library-parent-dir
    git clone http://code.google.com/p/closure-library/
    cd closure-library
-   wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+   wget http://dl.google.com/closure-compiler/compiler-latest.zip
    unzip compiler-latest.zip
  
 # Check out source code
@@ -154,6 +154,8 @@ For instance, you might like to use following options :
     $ mvn install -o
 
 Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
+
+*Note 2:* There's ongoing work to fix failing tests, so for now (current `develop <https://github.com/geonetwork/core-geonetwork/commit/ba44ebab86119b34bf1d052f54bc3bb1aa9e0913>`_ and 3.0.x branch) you should execute maven with `-DskipTests`
 
 ### Run embedded jetty server
 
