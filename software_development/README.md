@@ -244,7 +244,7 @@ In order to import the source code, follow instructions below :
 * In new dialog Select **Maven**> **Existing Maven Projects**
 * Press Next
 
-![Import existing projects into Eclipse](eclipse-import-existing-projects.png)
+![Import existing projects into Eclipse](../eclipse-import-existing-projects.png)
 
 * In **Select root directory** field enter where your code is:
  * example: C:\dev\geonetwork\trunk
