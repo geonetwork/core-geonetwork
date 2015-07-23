@@ -153,6 +153,8 @@
             if (exclude.indexOf(k) !== -1) return;
             if (properties[k]) {
               props[k] = properties[k].toString();
+            } else {
+              props[k] = '';
             }
           });
           return props;

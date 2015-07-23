@@ -18,7 +18,7 @@
       <table class="table table-condensed table-hover table-stripped" ng-repeat="result in group">
         <tr ng-if="$first">
           <th ng-repeat="(attr, value) in result.getProperties() | attributes">
-            {{attr | lowercase}}
+            {{attr}}
             <!-- <span ng-bind-html="value | linky:'_blank'"></span> -->
           </th>
         </tr>
