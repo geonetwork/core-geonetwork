@@ -252,6 +252,7 @@
   "help":"Help",
   "textFillColor":"Fill color",
   "textStrokeColor":"Stroke color",
+  "textStrokeWidth": "Stroke width",
   "textWidth":"Size",
   "textFont":"Font",
   "drawFillColor":"Fill color",
