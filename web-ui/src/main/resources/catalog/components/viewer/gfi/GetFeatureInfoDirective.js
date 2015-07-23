@@ -58,7 +58,8 @@
 
             for (var i = 0; i < map.getInteractions().getArray().length; i++) {
               var interaction = map.getInteractions().getArray()[i];
-              if (interaction instanceof ol.interaction.Draw &&
+              if ((interaction instanceof ol.interaction.Draw ||
+                  interaction instanceof ol.interaction.Select) &&
                   interaction.getActive()) {
                 return;
               }
