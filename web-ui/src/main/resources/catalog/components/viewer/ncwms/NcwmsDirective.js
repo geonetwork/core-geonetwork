@@ -210,9 +210,11 @@
             }
           });
 
-
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
+
+            scope.layer.set('legend',
+                gnNcWms.updateLengendUrl(scope.layer.get('legend')));
           };
 
           element.bind('$destroy', function(e) {

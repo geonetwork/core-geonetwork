@@ -243,6 +243,25 @@
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
         return $http.get(proxyUrl);
       };
+
+      /**
+       * Update the `legend` property of the layer depending on
+       * layers parameters.
+       *
+       * @param {string} legendUrl
+       * @returns {string}
+       */
+      this.updateLengendUrl = function(legendUrl) {
+        var legendUrl = scope.layer.get('legend');
+        var parts = legendUrl.split('?');
+
+        var p = parts.length > 1 ?
+            gnUrlUtils.parseKeyValue(parts[1]) : {};
+        angular.extend(p, scope.params);
+
+        var sP = gnUrlUtils.toKeyValue(p);
+        return gnUrlUtils.append(parts[0], sP);
+      }
     }
   ]);
 })();
