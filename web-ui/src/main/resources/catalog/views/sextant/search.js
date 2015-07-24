@@ -334,8 +334,24 @@
             $scope.resultviewFns.addMdLayerToPanier(layer, md);
           });
         }
-
       };
+
+      // Manage layer url parameters
+      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
+        var loadLayerPromise =
+            gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
+                gnViewerSettings.layerName, true).
+
+                then(function(layer) {
+                  layer.set('group', gnViewerSettings.layerGroup);
+                  viewerMap.addLayer(layer);
+                  if(waitingLayers) waitingLayers.push(layer);
+                  $scope.addLayerPopover('map');
+                  $scope.mainTabs.map.titleInfo += 1;
+                });
+        if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+      }
+
 
       // Manage tabs height for api
       $scope.tabOverflow = gnSearchSettings.tabOverflow;
