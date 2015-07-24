@@ -94,6 +94,8 @@
                     INFO_FORMAT: layer.ncInfo ? 'text/xml' :
                         'application/vnd.ogc.gml'
                   });
+              uri += '&FEATURE_COUNT=2147483647';
+
               var coordinate = e.coordinate;
               var proxyUrl = '../../proxy?url=' + encodeURIComponent(uri);
               scope.pending += 1;
