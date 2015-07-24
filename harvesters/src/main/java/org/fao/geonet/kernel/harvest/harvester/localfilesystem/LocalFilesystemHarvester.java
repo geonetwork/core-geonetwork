@@ -77,7 +77,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         
         settingMan.add( "id:"+siteId, "icon", lp.icon);
 		settingMan.add( "id:"+siteId, "recurse", lp.recurse);
-		settingMan.add( "id:"+siteId, "directory", lp.directoryname);
+        settingMan.add( "id:"+siteId, "directory", lp.directoryname);
+        settingMan.add( "id:"+siteId, "recordType", lp.recordType);
 		settingMan.add( "id:"+siteId, "nodelete", lp.nodelete);
         settingMan.add( "id:"+siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
 	}
@@ -218,7 +219,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         metadata.getDataInfo().
                 setSchemaId(schema).
                 setRoot(xml.getQualifiedName()).
-                setType(MetadataType.METADATA).
+                setType(MetadataType.lookup(params.recordType)).
                 setCreateDate(new ISODate(createDate)).
                 setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().

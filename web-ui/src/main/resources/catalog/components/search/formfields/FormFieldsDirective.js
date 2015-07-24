@@ -604,5 +604,39 @@
               }
             }
           };
-        }]);
+        }])
+
+  /**
+   * @ngdoc directive
+   * @name gn_formfields.directive:recordtypesCombo
+   * @restrict A
+   *
+   * @description
+   * Provide a select input for all types of record
+   *  - template
+   *  - metadata
+   *  - subtemplate
+   */
+  .directive('recordtypesCombo', ['$http', function($http) {
+    return {
+
+      restrict: 'A',
+      templateUrl: '../../catalog/components/search/formfields/' +
+          'partials/recordTypesCombo.html',
+      scope: {
+        template: '=recordtypesCombo'
+      },
+
+      link: function (scope, element, attrs) {
+        scope.recordTypes = [
+          {key: 'METADATA', value: 'n'},
+          {key: 'TEMPLATE', value: 'y'},
+          {key: 'SUB_TEMPLATE', value: 's'}
+        ];
+
+      }
+    }
+  }]);
+
+
 })();
