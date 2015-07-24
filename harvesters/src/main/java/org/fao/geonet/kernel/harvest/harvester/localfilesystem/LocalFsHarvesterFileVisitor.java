@@ -24,6 +24,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -126,7 +127,29 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                         return FileVisitResult.CONTINUE; // skip this one
                     }
 
-                    String uuid = dataMan.extractUUID(schema, xml);
+                    String uuid = null;
+                    try {
+                        uuid = dataMan.extractUUID(schema, xml);
+                    } catch (Exception e) {
+                        log.warning("Failed to extract metadata UUID for file " + filePath
+                                +
+                                ". Error is: " + e.getMessage());
+
+                        // Extract UUID from uuid attribute in subtemplates
+                        String uuidAttribute = xml.getAttributeValue("uuid");
+                        if (uuidAttribute != null) {
+                            log.warning("Using uuid attribute " + uuidAttribute +
+                                    " for file " + filePath +
+                                    ".");
+                            uuid = uuidAttribute;
+                        } else {
+                            // Assigning a new UUID
+                            uuid = UUID.randomUUID().toString();
+                            log.warning("Using random uuid " + uuid +
+                                    " for file " + filePath +
+                                    ".");
+                        }
+                    }
                     if (uuid == null || uuid.equals("")) {
                         result.badFormat++;
                     } else {
