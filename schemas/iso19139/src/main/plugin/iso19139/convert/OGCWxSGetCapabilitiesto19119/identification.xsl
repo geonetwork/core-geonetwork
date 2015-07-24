@@ -199,7 +199,7 @@
 						</keyword>
 					</xsl:for-each>
 					<type>
-						<MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+						<MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
 					</type>
 					<thesaurusName>
 						<CI_Citation>
@@ -215,7 +215,7 @@
 										<gco:Date>2010-04-22</gco:Date>
 									</date>
 									<dateType>
-										<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+										<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
 									</dateType>
 								</CI_Date>
 							</date>
@@ -240,13 +240,13 @@
 							or . = 'restricted'
 							">
 							<accessConstraints>
-								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
 									codeListValue="{.}"/>
 							</accessConstraints>
 						</xsl:when>
 						<xsl:when test="lower-case(.) = 'none'">
 							<accessConstraints>
-								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
 									codeListValue="otherRestrictions"/>
 							</accessConstraints>
 							<otherConstraints>
@@ -255,7 +255,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<accessConstraints>
-								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
 									codeListValue="otherRestrictions"/>
 							</accessConstraints>
 							<otherConstraints>

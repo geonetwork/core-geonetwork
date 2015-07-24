@@ -3,6 +3,7 @@
   <services package="org.fao.geonet">
     <service name="subtemplate">
       <class name=".services.subtemplate.Get"/>
+      <output sheet="../xslt/services/subtemplate/convert.xsl"/>
     </service>
   </services>
 </geonet>

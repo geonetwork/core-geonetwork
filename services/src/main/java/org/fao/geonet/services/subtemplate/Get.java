@@ -79,7 +79,7 @@ public class Get implements Service {
     public Element exec(Element params, ServiceContext context)
             throws Exception {
         String uuid = Util.getParam(params, Params.UUID);
-        
+
         // Retrieve template
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Metadata metadata = metadataRepository.findOneByUuid(uuid);

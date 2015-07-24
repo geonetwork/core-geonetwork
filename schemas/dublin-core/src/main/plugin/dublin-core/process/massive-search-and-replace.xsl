@@ -11,7 +11,6 @@
   <!-- Example of replacements parameter:
 
      <replacements>
-      <caseInsensitive>i</caseInsensitive>
       <replacement>
         <field>id.contact.individualName</field>
         <searchValue>John Doe</searchValue>

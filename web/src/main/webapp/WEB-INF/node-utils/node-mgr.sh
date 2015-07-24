@@ -84,8 +84,8 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM poolSize $gnpoolsize \
         -IN $WEB_FILE -XSL register-node.xsl \
         -OUT $WEB_FILE_OUT
-mv $wEB_FILE $WEB_FILE.bak
-mv $wEB_FILE_OUT $WEB_FILE
+mv $WEB_FILE $WEB_FILE.bak
+mv $WEB_FILE_OUT $WEB_FILE
 
 echo "Setting db connection and SPRING configuration ..."
 java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xalan.xslt.Process \
