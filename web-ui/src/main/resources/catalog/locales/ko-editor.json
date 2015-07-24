@@ -162,7 +162,6 @@
     "to-iso19139-keyword-with-anchor-help": "일반적으로 하이퍼링크를 가지는 키워드는 해당 키워드의 식별을 유용하게 합니다. gmx:Anchor 엘리먼트는 각각의 키워드에 사용됩니다.",
     "toggleAttributes": "자세한 내용",
     "toggleTooltips": "툴팁",
-    "typeOfRecord": "레코드 유형",
     "unknownType": "기타",
     "unpublish": "게시 취소",
     "unpublishSuccess": "게시 취소 성공",
