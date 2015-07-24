@@ -265,6 +265,8 @@ public class Aligner extends BaseAligner
             if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
                 try {
+                    Path parent = file.getParent();
+                    Path parent2 = parent.getParent();
                     String metadataSchema = dataMan.autodetectSchema(metadata, null);
                     // If local node doesn't know metadata
                     // schema try to load next xml file.
@@ -272,13 +274,22 @@ public class Aligner extends BaseAligner
                         continue;
                     }
 
-                    String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
+                    String currFile = "Found metadata file " + parent2.relativize(file);
                     mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                 } catch (NoSchemaMatchesException e) {
                     // Important folder name to identify metadata should be ../../
-                    lastUnknownMetadataFolderName =  file.getParent().getParent().relativize(file.getParent());
+                    Path parent = file.getParent();
+                    if(parent != null) {
+                        Path parent2 = parent.getParent();
+                        if(parent2 != null) {
+                            lastUnknownMetadataFolderName =  parent2.relativize(parent);
+                        }
+                    }
                     log.debug("No schema match for " + lastUnknownMetadataFolderName + file.getFileName() + ".");
+                } catch (NullPointerException e) {
+                    log.error("Check the schema directory");
+                    log.error(e);
                 }
             }
         }
@@ -370,7 +381,9 @@ public class Aligner extends BaseAligner
                             }
                         }
                     }
-                    id[index] = addMetadata(ri, md[index], info, localRating);
+                    if(info != null) {
+                        id[index] = addMetadata(ri, md[index], info, localRating);
+                    }   
                 }
 
                 //--------------------------------------------------------------------
@@ -847,7 +860,10 @@ public class Aligner extends BaseAligner
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
             for (Path file : paths) {
-                if (!existsFile(file.getFileName().toString(), infoFiles)) {
+                if (file != null && 
+                        file.getFileName() != null &&
+                        infoFiles != null && 
+                        !existsFile(file.getFileName().toString(), infoFiles)) {
                     if (log.isDebugEnabled()) {
                         log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
                     }

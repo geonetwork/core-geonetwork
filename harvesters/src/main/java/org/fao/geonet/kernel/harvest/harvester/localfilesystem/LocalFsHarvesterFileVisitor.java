@@ -73,7 +73,10 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
 
         try {
-            if (file.getFileName().toString().endsWith(".xml")) {
+            if (file != null &&
+                    file.getFileName() != null && 
+                    file.getFileName().toString() != null && 
+                    file.getFileName().toString().endsWith(".xml")) {
                 result.totalMetadata++;
                 Element xml;
                 Path filePath = file.toAbsolutePath().normalize();
