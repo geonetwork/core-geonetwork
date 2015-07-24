@@ -358,6 +358,7 @@
             decodeURIComponent(params.owscontext);
         gnViewerSettings.wmsUrl = params.wmsurl;
         gnViewerSettings.layerName = params.layername;
+        gnViewerSettings.layerGroup = params.layergroup;
       }
     }]);
 
