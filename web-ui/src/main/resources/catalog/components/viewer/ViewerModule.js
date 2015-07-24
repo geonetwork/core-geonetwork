@@ -96,22 +96,20 @@
     '$scope',
     '$timeout',
     'gnViewerSettings',
-    'gnOwsCapabilities',
     'gnMap',
-    function($scope, $timeout, gnViewerSettings, gnOwsCapabilities, gnMap) {
+    function($scope, $timeout, gnViewerSettings, gnMap) {
 
       var map = $scope.searchObj.viewerMap;
 
       if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        gnOwsCapabilities.getWMSCapabilities(gnViewerSettings.wmsUrl).
-            then(function(capObj) {
-              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                  gnViewerSettings.layerName, capObj);
-              var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap,
-                  layerInfo);
+        gnMap.addWmsFromScratch(map, gnViewerSettings.wmsUrl,
+            gnViewerSettings.layerName, true).
+
+            then(function(layer) {
+              layer.set('group', gnViewerSettings.layerGroup);
+              map.addLayer(layer);
             });
       }
-
 
       // Display pop up on feature over
       var div = document.createElement('div');
@@ -121,8 +119,6 @@
         positioning: 'bottom-left'
       });
       map.addOverlay(overlay);
-
-
 
       //TODO move it into a directive
       var hidetimer;
