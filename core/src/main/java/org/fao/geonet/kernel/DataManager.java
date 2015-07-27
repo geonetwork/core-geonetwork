@@ -2778,6 +2778,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                         new ISODate(),
                         String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.",
                                 groupName, Params.Status.DRAFT));
+
+                // Sextant specific - allow editing only from author, disabled for groupOwner
+                unsetOperation(context, newId, groupOwner, ReservedOperation.editing);
             }
         }
     }

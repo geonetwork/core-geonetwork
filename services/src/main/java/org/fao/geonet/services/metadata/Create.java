@@ -125,7 +125,7 @@ public class Create extends NotInReadOnlyModeService {
 
 
         dm.activateWorkflowIfConfigured(context, newId, groupOwner);
-        
+
 		
         try {
           copyDataDir(context, id, newId, Params.Access.PUBLIC);
