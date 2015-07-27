@@ -225,9 +225,12 @@ cat.app = function() {
 
         if (metadataId) {
           var recordStandard = record && record.get('standardName');
+          var recordSchema = record && record.get('schema');
 
           // Open Angular metadata editor for MedSea records.
-          if (recordStandard && recordStandard.indexOf('MedSea') !== -1) {
+          if (recordStandard &&
+            recordStandard.indexOf('MedSea') !== -1
+          ) {
             var url = 'catalog.edit#/';
             if (create) {
               url += 'create/from/' + metadataId +
@@ -237,9 +240,21 @@ cat.app = function() {
             }
             window.open(
               catalogue.services.rootUrl + url)
+          } else if (recordStandard &&
+            recordSchema === 'iso19139' &&
+            recordStandard.indexOf('EMODNET - HYDROGRAPHY') !== -1
+          ) {
+            var url = 'catalog.edit#/';
+            if (create) {
+              url += 'create/from/' + metadataId +
+                '/in/' + group;
+            } else {
+              url += 'metadata/' + metadataId;
+            }
+            window.open(
+              catalogue.services.rootUrl + url)
           } else {
             this.editorWindow.show();
-            var recordSchema = record && record.get('schema');
             this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
           }
         }
