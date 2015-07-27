@@ -28,7 +28,7 @@ public class FreeConnectionsHealthCheck implements HealthCheckFactory {
                     int free = stats.maxActive - stats.numActive;
                     double fivePercent = Math.max(2.0, ((double) stats.maxActive) * 0.01);
                     if (free < fivePercent) {
-                        Result.unhealthy("There are insufficient free connections on database" + Geonet.Res.MAIN_DB
+                        return Result.unhealthy("There are insufficient free connections on database" + Geonet.Res.MAIN_DB
                                 + ".  Connections free:" + free);
                     }
                     return Result.healthy();

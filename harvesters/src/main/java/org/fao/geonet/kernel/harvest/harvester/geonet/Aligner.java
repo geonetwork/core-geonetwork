@@ -155,8 +155,6 @@ public class Aligner extends BaseAligner
         localGroups= new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
-        dataMan.flush();
-
         Pair<String, Map<String, Object>> filter =
                 HarvesterUtil.parseXSLFilter(params.xslfilter, log);
         processName = filter.one();
@@ -166,20 +164,23 @@ public class Aligner extends BaseAligner
         //--- remove old metadata
 
         for (String uuid : localUuids.getUUIDs()) {
-            //FIXME can we do it on one step?
             if (cancelMonitor.get()) {
                 return this.result;
             }
 
-            if (!exists(records, uuid)) {
-                String id = localUuids.getID(uuid);
-
-                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                dataMan.deleteMetadata(context, id);
-
-                dataMan.flush();
-
-                result.locallyRemoved++;
+            try{
+                if (!exists(records, uuid)) {
+                    String id = localUuids.getID(uuid);
+    
+                    if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
+                    dataMan.deleteMetadata(context, id);
+    
+                    result.locallyRemoved++;
+                }
+            }catch (Throwable t) {
+                log.error("Couldn't remove metadata with uuid " + uuid);
+                log.error(t);
+                result.unchangedMetadata++;
             }
         }
         //-----------------------------------------------------------------------
@@ -194,30 +195,37 @@ public class Aligner extends BaseAligner
             if (cancelMonitor.get()) {
                 return this.result;
             }
+            
+            try{
 
-            result.totalMetadata++;
-
-            // Mef full format provides ISO19139 records in both the profile
-            // and ISO19139 so we could be able to import them as far as
-            // ISO19139 schema is installed by default.
-            if (!dataMan.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
-                if(log.isDebugEnabled())
-                    log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
-                             +", schema:"+ ri.schema);
-                result.unknownSchema++;
-            } else {
-                String id = dataMan.getMetadataId(ri.uuid);
-
-                // look up value of localrating/enable
-                GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                SettingManager settingManager = gc.getBean(SettingManager.class);
-                boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
-                
-                if (id == null) {
-                    addMetadata(ri, localRating);
+                result.totalMetadata++;
+    
+                // Mef full format provides ISO19139 records in both the profile
+                // and ISO19139 so we could be able to import them as far as
+                // ISO19139 schema is installed by default.
+                if (!dataMan.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
+                    if(log.isDebugEnabled())
+                        log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
+                                 +", schema:"+ ri.schema);
+                    result.unknownSchema++;
                 } else {
-                    updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                    String id = dataMan.getMetadataId(ri.uuid);
+    
+                    // look up value of localrating/enable
+                    GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                    SettingManager settingManager = gc.getBean(SettingManager.class);
+                    boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
+                    
+                    if (id == null) {
+                        addMetadata(ri, localRating);
+                    } else {
+                        updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                    }
                 }
+            }catch(Throwable t) {
+                log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
+                log.error(t);
+                result.unchangedMetadata++;
             }
         }
 
@@ -257,6 +265,8 @@ public class Aligner extends BaseAligner
             if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
                 try {
+                    Path parent = file.getParent();
+                    Path parent2 = parent.getParent();
                     String metadataSchema = dataMan.autodetectSchema(metadata, null);
                     // If local node doesn't know metadata
                     // schema try to load next xml file.
@@ -264,13 +274,22 @@ public class Aligner extends BaseAligner
                         continue;
                     }
 
-                    String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
+                    String currFile = "Found metadata file " + parent2.relativize(file);
                     mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                 } catch (NoSchemaMatchesException e) {
                     // Important folder name to identify metadata should be ../../
-                    lastUnknownMetadataFolderName =  file.getParent().getParent().relativize(file.getParent());
+                    Path parent = file.getParent();
+                    if(parent != null) {
+                        Path parent2 = parent.getParent();
+                        if(parent2 != null) {
+                            lastUnknownMetadataFolderName =  parent2.relativize(parent);
+                        }
+                    }
                     log.debug("No schema match for " + lastUnknownMetadataFolderName + file.getFileName() + ".");
+                } catch (NullPointerException e) {
+                    log.error("Check the schema directory");
+                    log.error(e);
                 }
             }
         }
@@ -362,7 +381,9 @@ public class Aligner extends BaseAligner
                             }
                         }
                     }
-                    id[index] = addMetadata(ri, md[index], info, localRating);
+                    if(info != null) {
+                        id[index] = addMetadata(ri, md[index], info, localRating);
+                    }   
                 }
 
                 //--------------------------------------------------------------------
@@ -839,7 +860,10 @@ public class Aligner extends BaseAligner
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
             for (Path file : paths) {
-                if (!existsFile(file.getFileName().toString(), infoFiles)) {
+                if (file != null && 
+                        file.getFileName() != null &&
+                        infoFiles != null && 
+                        !existsFile(file.getFileName().toString(), infoFiles)) {
                     if (log.isDebugEnabled()) {
                         log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
                     }

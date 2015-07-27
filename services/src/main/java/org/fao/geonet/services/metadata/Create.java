@@ -31,8 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
@@ -119,29 +118,14 @@ public class Create extends NotInReadOnlyModeService {
 		}
         
 		//--- query the data manager
-
+        SettingManager settingManager = gc.getBean(SettingManager.class);
         String newId = dm.createMetadata(context, id, groupOwner,
-                gc.getBean(SettingManager.class).getSiteId(), context.getUserSession().getUserIdAsInt(),
-												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
+                settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
+                (child.equals("n") ? null : uuid), isTemplate, haveAllRights);
 
 
-		// Sextant / Enable workflow by default for records created in MYOCEAN groups
-        final Group group = context.getBean(GroupRepository.class)
-                .findOne(Integer.valueOf(Integer.valueOf(groupOwner)));
-        String groupName = "";
-        if (group != null) {
-            groupName = group.getName();
-        }
-
-        if (groupName.equals("MYOCEAN-CORE-PRODUCTS")||groupName.equals("SEADATANET")||groupName.equals("EMODNET_Chemistry")) {
-            // TODO : trigger another indexing
-            dm.setStatus(context, Integer.valueOf(newId),
-                    Integer.valueOf(Params.Status.DRAFT),
-                    new ISODate(), "Workflow enabled");  // TODO: i18n
-            dm.unsetOperation(context, newId, groupOwner, ReservedOperation.editing);
-		}
-        // Sextant - end / Enable workflow by default for records created in MYOCEAN groups
-
+        dm.activateWorkflowIfConfigured(context, newId, groupOwner);
+        
 		
         try {
           copyDataDir(context, id, newId, Params.Access.PUBLIC);
