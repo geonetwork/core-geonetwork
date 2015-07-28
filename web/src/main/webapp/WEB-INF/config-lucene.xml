@@ -152,6 +152,7 @@
       <field name="_op0" tagName="publishedForGroup"/>
       <field name="_groupOwner" tagName="groupOwner"/>
       <field name="_logo" tagName="logo"/>
+      <field name="crs" tagName="crs"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>

@@ -762,7 +762,7 @@
 				<xsl:variable name="crs" select="concat(string(gmd:codeSpace/gco:CharacterString),'::',string(gmd:code/gco:CharacterString))"/>
 
 				<xsl:if test="$crs != '::'">
-					<Field name="crs" string="{$crs}" store="false" index="true"/>
+					<Field name="crs" string="{$crs}" store="true" index="true"/>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:for-each>
