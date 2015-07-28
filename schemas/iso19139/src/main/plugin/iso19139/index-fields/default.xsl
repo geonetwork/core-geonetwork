@@ -133,7 +133,7 @@
 				</xsl:for-each>
 
                 <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString">
-                	<Field name="identifier" string="{string(.)}" store="false" index="true"/>
+                	<Field name="identifier" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
 	
