@@ -391,7 +391,11 @@
 				</xsl:for-each>
 
         <xsl:for-each select="gmd:distance/gco:Distance">
-          <Field name="resolution" string="{concat(string(.), ' ', @uom)}" store="true" index="true"/>
+          <!-- Units may be encoded as
+          http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/uom/ML_gmxUom.xml#m
+          in such case retrieve the unit acronym only. -->
+          <xsl:variable name="unit" select="if (contains(@uom, '#')) then substring-after(@uom, '#') else @uom"/>
+          <Field name="resolution" string="{concat(string(.), ' ', $unit)}" store="true" index="true"/>
         </xsl:for-each>
 			</xsl:for-each>
 
