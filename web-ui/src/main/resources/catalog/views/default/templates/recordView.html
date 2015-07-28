@@ -164,6 +164,16 @@
                 </ul>
               </td>
             </tr>
+            <tr data-ng-if="mdView.current.record.identifier">
+              <th data-translate="">identifier</th>
+              <td>
+                <ul>
+                  <li data-ng-repeat="i in mdView.current.record.identifier">
+                    {{i}}
+                  </li>
+                </ul>
+              </td>
+            </tr>
             <tr data-ng-if="mdView.current.record.classification_text">
               <th data-translate="">classification</th>
               <td>{{mdView.current.record.classification_text}}</td>
