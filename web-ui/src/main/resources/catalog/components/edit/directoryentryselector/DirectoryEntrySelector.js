@@ -177,7 +177,7 @@
                        if (usingXlink) {
                          var urlParams = '';
                          angular.forEach(params, function(p, key) {
-                           urlParams += key + '=' + p + '&'
+                           urlParams += key + '=' + p + '&';
                          });
                          snippets.push(gnEditorXMLService.
                                   buildXMLForXlink(scope.elementName,

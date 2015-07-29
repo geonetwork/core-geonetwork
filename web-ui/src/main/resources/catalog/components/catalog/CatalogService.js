@@ -615,7 +615,7 @@
        * Return an object containing metadata contacts
        * as an array and resource contacts as array
        *
-       * @returns {{metadata: Array, resource: Array}}
+       * @return {{metadata: Array, resource: Array}}
        */
       getAllContacts: function() {
         if (angular.isUndefined(this.allContacts)) {
