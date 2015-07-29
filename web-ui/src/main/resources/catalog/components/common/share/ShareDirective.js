@@ -88,7 +88,9 @@
           };
 
           scope.save = function() {
-            return gnShareService.savePrivileges(scope.id, scope.groups).then(
+            return gnShareService.savePrivileges(scope.id,
+                                                 scope.groups,
+                                                 scope.user).then(
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {

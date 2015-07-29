@@ -179,7 +179,7 @@
          *
          * @return {HttpPromise} Future object.
          */
-        savePrivileges: function(metadataId, groups) {
+        savePrivileges: function(metadataId, groups, user) {
           var defer = $q.defer();
           var params = {};
           var url;
@@ -192,11 +192,18 @@
             url = 'md.privileges.batch.update?_content_type=json';
           }
           angular.forEach(groups, function(g) {
-            angular.forEach(g.privileges, function(p, key) {
-              if (p.value === true) {
-                params['_' + g.id + '_' + key] = 'on';
-              }
-            });
+            var allowed = (
+                $.inArray(g.id, gnShareConstants.internalGroups) !== -1 &&
+                user.isReviewerOrMore()) ||
+                ($.inArray(g.id, gnShareConstants.internalGroups) === -1);
+
+            if (allowed) {
+              angular.forEach(g.privileges, function(p, key) {
+                if (p.value === true) {
+                  params['_' + g.id + '_' + key] = 'on';
+                }
+              });
+            }
           });
           //TODO: fix service that crash with _content_type parameter
           $http.get(url, {params: params})
