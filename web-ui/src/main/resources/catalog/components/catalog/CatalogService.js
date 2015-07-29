@@ -506,7 +506,7 @@
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
-        'status', 'status_text', 'crs', 'identifier',
+        'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       this.linksCache = [];
@@ -611,9 +611,42 @@
         }
         return images;
       },
+      /**
+       * Return an object containing metadata contacts
+       * as an array and resource contacts as array
+       *
+       * @returns {{metadata: Array, resource: Array}}
+       */
+      getAllContacts: function() {
+        if (angular.isUndefined(this.allContacts)) {
+          this.allContacts = {metadata: [], resource: []};
+          for (var i = 0; i < this.responsibleParty.length; i++) {
+            var s = this.responsibleParty[i].split('|');
+            var contact = {
+              role: s[0] || '',
+              org: s[2] || '',
+              logo: s[3] || '',
+              email: s[4] || '',
+              name: s[5] || '',
+              position: s[6] || '',
+              address: s[7] || '',
+              phone: s[8] || ''
+            };
+            if (s[1] === 'resource') {
+              this.allContacts.resource.push(contact);
+            } else if (s[1] === 'metadata') {
+              this.allContacts.metadata.push(contact);
+            }
+          }
+        }
+        return this.allContacts;
+      },
+      /**
+       * Deprecated. Use getAllContacts instead
+       */
       getContacts: function() {
+        var ret = {};
         if (angular.isArray(this.responsibleParty)) {
-          var ret = {};
           for (var i = 0; i < this.responsibleParty.length; i++) {
             var s = this.responsibleParty[i].split('|');
             if (s[1] === 'resource') {
