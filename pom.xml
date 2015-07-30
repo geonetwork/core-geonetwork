@@ -1153,10 +1153,45 @@
 
   <profiles>
     <profile>
+      <id>git-submodule-init</id>
+      <activation>
+        <file>
+          <missing>geoserver/pom.xml</missing>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+         <!-- This section is to get git submodules working with the maven release plugin -->
+         <plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>exec-maven-plugin</artifactId>
+           <inherited>false</inherited> <!-- only execute these in the parent -->
+           <executions>
+             <execution>
+               <id>git submodule update</id>
+               <phase>initialize</phase>
+               <configuration>
+                 <executable>git</executable>
+                 <arguments>
+                   <argument>submodule</argument>
+                   <argument>update</argument>
+                   <argument>--init</argument>
+                 </arguments>
+               </configuration>
+               <goals>
+                 <goal>exec</goal>
+               </goals>
+             </execution>
+           </executions>
+         </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>all</id>
       <activation>
         <file>
-          <exists>pom.xml</exists>
+          <exists>geoserver/pom.xml</exists>
         </file>
       </activation>
       <modules>
@@ -1182,6 +1217,7 @@
         <module>jmeter</module>
       </modules>
     </profile>
+
   </profiles>
 
   <distributionManagement>
