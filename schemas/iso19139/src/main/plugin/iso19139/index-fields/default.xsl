@@ -368,6 +368,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
+
+      <!-- Add an extra value to the status codelist to indicate all
+      non obsolete records -->
+      <xsl:variable name="isNotObsolete" select="count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'obsolete']) = 0"/>
+      <xsl:if test="$isNotObsolete">
+        <Field name="cl_status" string="notobsolete" store="true" index="true"/>
+      </xsl:if>
+
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">

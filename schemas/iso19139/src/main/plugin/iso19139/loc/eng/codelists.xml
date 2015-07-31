@@ -1345,6 +1345,11 @@
 			<description>Data is currently in the process of being created</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry hideInEditMode="true">
+      <code>notobsolete</code>
+      <label>Not obsolete</label>
+      <description></description>
+    </entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_RestrictionCode">
