@@ -49,6 +49,11 @@
   -->
   <xsl:variable name="indexAllKeywordDetails" select="true()"/>
 
+  <!-- For record not having status obsolete, flag them as non
+  obsolete records. Some catalog like to restrict to non obsolete
+  records only the default search. -->
+  <xsl:variable name="flagNonObseleteRecords" select="false()"/>
+
 
   <!-- The main metadata language -->
 	    <xsl:variable name="isoLangId">
@@ -371,9 +376,11 @@
 
       <!-- Add an extra value to the status codelist to indicate all
       non obsolete records -->
-      <xsl:variable name="isNotObsolete" select="count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'obsolete']) = 0"/>
-      <xsl:if test="$isNotObsolete">
-        <Field name="cl_status" string="notobsolete" store="true" index="true"/>
+      <xsl:if test="$flagNonObseleteRecords">
+        <xsl:variable name="isNotObsolete" select="count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'obsolete']) = 0"/>
+        <xsl:if test="$isNotObsolete">
+          <Field name="cl_status" string="notobsolete" store="true" index="true"/>
+        </xsl:if>
       </xsl:if>
 
 
