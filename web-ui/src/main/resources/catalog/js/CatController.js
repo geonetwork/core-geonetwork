@@ -2,9 +2,10 @@
   goog.provide('gn_cat_controller');
 
   goog.require('gn_search_manager');
+  goog.require('gn_session_service');
 
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager']);
+      ['gn_search_manager', 'gn_session_service']);
 
 
   module.constant('gnGlobalSettings', {
@@ -33,13 +34,14 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location', 'gnUtilityService',
+    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
+      $scope.service = tokens[6].split('?')[0];
       $scope.lang = tokens[5];
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
@@ -189,7 +191,7 @@
           var url = $scope.url + 'info?_content_type=json&type=me';
           return $http.get(url).
               success(function(data, status) {
-                $scope.user = data.me;
+                angular.extend($scope.user, data.me);
                 angular.extend($scope.user, userFn);
 
                 $scope.authenticated = data.me['@authenticated'] !== 'false';
@@ -235,11 +237,10 @@
         }
       });
 
-
+      gnSessionService.scheduleCheck($scope.user);
+      $scope.session = gnSessionService.getSession();
 
       $scope.loadCatalogInfo();
-
-
     }]);
 
 })();
