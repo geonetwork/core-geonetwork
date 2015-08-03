@@ -28,7 +28,7 @@
         alertWhen: 60,
         // Add message next to user name when (time in seconds)
         alertInTitleWhen: 60 * 3,
-        checkInterval: 5000
+        checkInterval: 10000
       };
       function getSession() {
         return session;
@@ -45,6 +45,11 @@
         return session.remainingTime;
       };
       function check(user) {
+        // User is not yet authenticated
+        if ($cookies.sessionExpiry === $cookies.serverTime) {
+          return;
+        }
+
         getRemainingTime();
 
         if (user.isConnected &&

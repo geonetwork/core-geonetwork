@@ -2,6 +2,7 @@
   goog.provide('gn_draw');
 
   var module = angular.module('gn_draw', [
+      'color.picker'
   ]);
 
   function readAsText(f, callback) {

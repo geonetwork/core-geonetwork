@@ -67,7 +67,7 @@
     </filter>
     <filter-mapping>
       <filter-name>SessionTimeoutCookieFilter</filter-name>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>/srv/*</url-pattern>
     </filter-mapping>
 
     <!-- url rewrite filter -->
