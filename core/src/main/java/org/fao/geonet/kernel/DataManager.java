@@ -163,6 +163,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -2167,13 +2169,16 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
         String uuid = getMetadataUuid(metadataId);
-        boolean isMetadata = getMetadataRepository().findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA;
-
-        deleteMetadataFromDB(context, metadataId);
-
-        // Notifies the metadata change to metatada notifier service
-        if (isMetadata) {
-            context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
+        Metadata findOne = getMetadataRepository().findOne(metadataId);
+        if(findOne != null) {
+            boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
+    
+            deleteMetadataFromDB(context, metadataId);
+    
+            // Notifies the metadata change to metatada notifier service
+            if (isMetadata) {
+                context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
+            }
         }
 
         //--- update search criteria
@@ -2741,6 +2746,40 @@ public class DataManager implements ApplicationEventPublisherAware {
         metatatStatus.setId(mdStatusId);
 
         return getApplicationContext().getBean(MetadataStatusRepository.class).save(metatatStatus);
+    }
+
+    /**
+     * If groupOwner match regular expression defined
+     * in setting metadata/workflow/draftWhenInGroup,
+     * then set status to draft to enable workflow.
+     *
+     * @param context
+     * @param newId
+     * @param groupOwner
+     * @throws Exception
+     */
+    public void activateWorkflowIfConfigured(ServiceContext context, String newId, String groupOwner) throws Exception {
+        String groupMatchingRegex =
+                getApplicationContext().getBean(SettingManager.class).
+                    getValue("metadata/workflow/draftWhenInGroup");
+        if (!StringUtils.isEmpty(groupMatchingRegex)) {
+            final Group group = getApplicationContext().getBean(GroupRepository.class)
+                    .findOne(Integer.valueOf(Integer.valueOf(groupOwner)));
+            String groupName = "";
+            if (group != null) {
+                groupName = group.getName();
+            }
+
+            final Pattern pattern = Pattern.compile(groupMatchingRegex);
+            final Matcher matcher = pattern.matcher(groupName);
+            if (matcher.find()) {
+                setStatus(context, Integer.valueOf(newId),
+                        Integer.valueOf(Params.Status.DRAFT),
+                        new ISODate(),
+                        String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.",
+                                groupName, Params.Status.DRAFT));
+            }
+        }
     }
 
     //--------------------------------------------------------------------------

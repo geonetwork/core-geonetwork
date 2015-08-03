@@ -62,7 +62,22 @@
             $http.get(proxyUrl, {
               cache: true
             }).then(function(response) {
-              var xfsCap = unmarshaller.unmarshalString(response.data).value;
+              //First cleanup not supported INSPIRE extensions:
+              var xml = $.parseXML(response.data);
+              if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
+                var cleanup = function(i, el) {
+                  if (el.tagName.endsWith('ExtendedCapabilities')) {
+                    el.parentNode.removeChild(el);
+                  } else {
+                    $.each(el.children, cleanup);
+                  }
+                };
+
+                $.each(xml.childNodes[0].children, cleanup);
+              }
+
+              //Now process the capabilities
+              var xfsCap = unmarshaller.unmarshalDocument(xml).value;
               if (xfsCap.exception != undefined) {
                 defer.reject({msg: 'wfsGetCapabilitiesFailed',
                   owsExceptionReport: xfsCap});

@@ -216,8 +216,8 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     }
     
     function getStatus(v, record){
-        if (record.status) {
-            return record.status[0].value;
+        if (record.mdStatus) {
+            return record.mdStatus[0].value;
         } else {
             return '';
         }

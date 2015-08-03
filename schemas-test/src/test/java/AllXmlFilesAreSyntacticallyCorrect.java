@@ -31,7 +31,11 @@ public class AllXmlFilesAreSyntacticallyCorrect {
         }
         final List<String> badXmlFiles = Lists.newArrayList();
 
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(tmp.resolve("schemas"))) {
+        if(tmp == null) {
+            throw new RuntimeException("Check schemas data directory!");
+        }
+        Path resolve = tmp.resolve("schemas");
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(resolve)) {
             for (Path path : paths) {
                 Path pluginDir = path.resolve("src/main/plugin");
                 if (Files.exists(pluginDir)) {

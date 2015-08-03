@@ -23,8 +23,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', '$translate', '$filter',
-    function(gnShareService, gnShareConstants, $translate, $filter) {
+    'gnShareService', 'gnShareConstants', 'gnConfig', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, gnConfig, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -36,7 +36,7 @@
           batch: '@gnShareBatch'
         },
         link: function(scope) {
-
+          scope.onlyUserGroup = gnConfig['system.metadataprivs.usergrouponly'];
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
 
@@ -88,7 +88,9 @@
           };
 
           scope.save = function() {
-            return gnShareService.savePrivileges(scope.id, scope.groups).then(
+            return gnShareService.savePrivileges(scope.id,
+                                                 scope.groups,
+                                                 scope.user).then(
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {

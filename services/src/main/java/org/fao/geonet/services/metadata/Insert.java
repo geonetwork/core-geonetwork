@@ -143,6 +143,8 @@ public class Insert extends NotInReadOnlyModeService {
         // Set template
 		dm.setTemplate(iId, metadataType, null);
 
+        dm.activateWorkflowIfConfigured(context, id.get(0), group);
+
 
         // Import category
         final String category = Util.getParam(params, Params.CATEGORY, "");

@@ -189,7 +189,7 @@ public final class IO {
 
         if (Files.exists(from)) {
             final Path parent = actualTo.getParent();
-            if (!Files.exists(parent)) {
+            if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
             Files.move(from, actualTo);
@@ -251,7 +251,7 @@ public final class IO {
     public static void touch(Path file, FileTime timestamp) throws IOException{
         if (!Files.exists(file)) {
             Path parent = file.getParent();
-            if (!Files.exists(parent)) {
+            if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
             Files.createFile(file);

@@ -88,7 +88,12 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
                 }
             } catch (URISyntaxException | IllegalArgumentException e) {
                 final Path basePath = IO.toPath(new URI(base));
-                resolvedResource = basePath.getParent().resolve(href);
+                Path parent = basePath.getParent();
+                if(parent == null) {
+                    throw new RuntimeException(basePath.getFileName() + 
+                            " does not have parent");
+                }
+                resolvedResource = parent.resolve(href);
 
                 if (Files.isRegularFile(resolvedResource)) {
                     return toPathInputSource(resolvedResource);

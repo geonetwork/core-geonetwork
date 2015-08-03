@@ -372,7 +372,7 @@ public class SchemaLoader
 		if (elemLinkName != null) {
 			String elemLinkType = hmElements.get(elemLinkName);
 			if (elemLinkType != null) return elemLinkType; // found concrete type!
-			else recurseOnSubstitutionLinks(elemLinkName); // keep trying
+			else return recurseOnSubstitutionLinks(elemLinkName); // keep trying
 		}
 		return null; // Cannot find a type so return null
 	}
