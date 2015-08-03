@@ -3,11 +3,13 @@
 
   goog.require('gn_category');
   goog.require('gn_importxsl');
+  goog.require('gn_formfields_directive');
 
   var module = angular.module('gn_import_controller', [
     'gn_importxsl',
     'gn_category',
-    'blueimp.fileupload'
+    'blueimp.fileupload',
+    'gn_formfields_directive'
   ]);
 
   /**
@@ -24,13 +26,6 @@
       $scope.file_type = 'single';
       $scope.uuidAction = 'nothing';
       $scope.importing = false;
-      $scope.recordTypes = [
-        {key: 'METADATA', value: 'n'},
-        {key: 'TEMPLATE', value: 'y'},
-        {key: 'SUB_TEMPLATE', value: 's'}
-      ];
-
-      $scope.template = $scope.recordTypes[0].value;
 
       /** Upload management */
       $scope.action = 'xml.mef.import.ui';

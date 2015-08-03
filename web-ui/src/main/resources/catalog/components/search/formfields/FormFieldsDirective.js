@@ -608,7 +608,7 @@
 
   /**
    * @ngdoc directive
-   * @name gn_formfields.directive:recordtypesCombo
+   * @name gn_formfields.directive:gnRecordtypesCombo
    * @restrict A
    *
    * @description
@@ -617,14 +617,14 @@
    *  - metadata
    *  - subtemplate
    */
-  .directive('recordtypesCombo', ['$http', function($http) {
+  .directive('gnRecordtypesCombo', ['$http', function($http) {
     return {
 
       restrict: 'A',
       templateUrl: '../../catalog/components/search/formfields/' +
           'partials/recordTypesCombo.html',
       scope: {
-        template: '=recordtypesCombo'
+        template: '=gnRecordtypesCombo'
       },
 
       link: function (scope, element, attrs) {
