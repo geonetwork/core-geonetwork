@@ -32,6 +32,9 @@
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/tabs.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/tinycolor.js"/>
+
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/ngeo/ngeo.js"/>
