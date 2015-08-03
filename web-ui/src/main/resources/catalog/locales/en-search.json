@@ -7,7 +7,7 @@
   "topiccat": "Topic(s)",
   "cantons": "Canton(s)",
   "contact": "Contact",
-  "identifier": "Identifier",
+  "identifier": "Resource identifier",
   "drawAnExtentToFilter": "Draw an extent to apply spatial filter.",
   "clickToRemoveSpatialFilter": "Draw a new extent on the map or click to remove spatial filter.",
   "chooseSpatialFilterType": "Choose the type of spatial search (eg. intersect, within).",

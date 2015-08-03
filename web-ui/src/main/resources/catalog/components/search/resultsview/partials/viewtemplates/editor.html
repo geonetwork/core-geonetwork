@@ -18,7 +18,7 @@
     <td>
       <a class="btn btn-link"
          data-ng-href=""
-         data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+         data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
          title="{{'privileges' | translate}}">
         <i class="fa text-muted"

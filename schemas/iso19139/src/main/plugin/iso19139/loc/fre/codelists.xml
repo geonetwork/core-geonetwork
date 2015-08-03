@@ -1275,6 +1275,11 @@
 			<description>Ressource en cours de création</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry hideInEditMode="true">
+      <code>notobsolete</code>
+      <label>Non obsolète</label>
+      <description></description>
+    </entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_RestrictionCode">

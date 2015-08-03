@@ -158,6 +158,7 @@
       <field name="standardName" tagName="standardName"/>
       <field name="sextantTheme" tagName="sextantTheme"/>
       <field name="_logo" tagName="logo"/>
+      <field name="crs" tagName="crs"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>

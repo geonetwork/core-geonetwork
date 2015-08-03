@@ -616,30 +616,30 @@
               var layer = getCapLayer;
 
               var isLayerAvailableInMapProjection = false;
-              
+
               if (layer.CRS) {
                 var mapProjection = map.getView().
-                             getProjection().getCode();
+                    getProjection().getCode();
                 for (var i = 0; i < layer.CRS.length; i++) {
                   if (layer.CRS[i] === mapProjection) {
                     isLayerAvailableInMapProjection = true;
                     break;
                   }
                 }
-              } else if (layer.otherSRS){
+              } else if (layer.otherSRS) {
                 var mapProjection = map.getView().
-                                getProjection().getCode();
+                    getProjection().getCode();
                 for (var i = 0; i < layer.otherSRS.length; i++) {
                   if (layer.otherSRS[i] === mapProjection) {
-                   isLayerAvailableInMapProjection = true;
-                   break;
+                    isLayerAvailableInMapProjection = true;
+                    break;
                   }
                 }
               } else {
                 errors.push($translate('layerCRSNotFound'));
                 console.warn($translate('layerCRSNotFound'));
               }
-              
+
               if (!isLayerAvailableInMapProjection) {
                 errors.push($translate('layerNotAvailableInMapProj'));
                 console.warn($translate('layerNotAvailableInMapProj'));
@@ -686,7 +686,7 @@
                       }
                     });
               }
-              
+
               //TODO different strategy depending on the format
 
               var vectorSource = new ol.source.ServerVector({
@@ -737,22 +737,22 @@
                 strategy: ol.loadingstrategy.bbox,
                 projection: map.getView().getProjection().getCode()
               });
-              
+
               var extent = null;
-              
+
               //Add spatial extent
-              if(layer.wgs84BoundingBox && layer.wgs84BoundingBox[0]) {
+              if (layer.wgs84BoundingBox && layer.wgs84BoundingBox[0]) {
                 extent = ol.extent.boundingExtent(
-                    [layer.wgs84BoundingBox[0].lowerCorner, 
+                    [layer.wgs84BoundingBox[0].lowerCorner,
                      layer.wgs84BoundingBox[0].upperCorner]);
-                
+
                 extent = ol.proj.transformExtent(
-                          extent,
-                          'EPSG:4326', 
-                          map.getView().getProjection().getCode());
+                    extent,
+                    'EPSG:4326',
+                    map.getView().getProjection().getCode());
               }
-              
-              if(extent) {
+
+              if (extent) {
                 map.getView().fitExtent(extent, map.getSize());
               }
 
