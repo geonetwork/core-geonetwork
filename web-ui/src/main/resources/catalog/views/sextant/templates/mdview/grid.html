@@ -65,6 +65,8 @@
               <li><a ng-href="" data-ng-click="mdService.duplicate(md)"><i class="fa fa-copy"></i><span translate>duplicate</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.createChild(md)"><i class="fa fa-sitemap"></i><span translate>createChild</span></a></li>
               <li><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i><span translate>privileges</span></a></li>
+              <li><a href="" data-ng-if="md.isWorkflowEnabled()"  data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
+              <li><a href="" data-ng-if="!md.isWorkflowEnabled()" data-ng-click="mdService.startWorkflow(md, getCatScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">enableWorkflow</span></a></li>
             </ul>
           </div>
         </div>
