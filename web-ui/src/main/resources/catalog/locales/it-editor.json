@@ -162,7 +162,6 @@
     "to-iso19139-keyword-with-anchor-help": "Useful for having an hyperlink on the keyword which usually is the keyword identifier. A gmx:Anchor element is used for each keywords.",
     "toggleAttributes": "More details",
     "toggleTooltips": "Tooltips",
-    "typeOfRecord": "Type of record",
     "unknownType": "Others",
     "unpublish": "Annullare la pubblicazione",
     "unpublishSuccess": "Successful unpublication",
