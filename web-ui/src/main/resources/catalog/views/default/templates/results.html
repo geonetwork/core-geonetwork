@@ -21,10 +21,12 @@
     </div>
   </div>
 
+
   <div class="row">
     <div class="col-md-3 gn-search-facet">
       <div data-ng-show="searchResults.records.length > 0"
            data-gn-facet-list="searchResults.facet"
+           data-params="searchObj.params"
            data-facet-config="facetsSummaryType"
            data-current-facets="currentFacets">
       </div>
