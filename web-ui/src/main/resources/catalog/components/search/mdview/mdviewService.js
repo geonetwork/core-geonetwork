@@ -144,7 +144,7 @@
         var loadFormatter = function() {
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
-            gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
+            gnMdFormatter.load(uuid,
                 selector, $this.getCurrentMdScope());
           }
         };
@@ -183,33 +183,62 @@
     '$sce',
     'gnAlertService',
     'gnSearchSettings',
+    '$q',
+    'gnMetadataManager',
     function($rootScope, $http, $compile, $sce, gnAlertService,
-             gnSearchSettings) {
+             gnSearchSettings, $q, gnMetadataManager) {
 
-      this.load = function(url, selector, scope) {
-        $rootScope.$broadcast('mdLoadingStart');
-        $http.get(url).then(function(response) {
-          $rootScope.$broadcast('mdLoadingEnd');
+      var fUrl = gnSearchSettings.formatter.defaultUrl;
 
-          var newscope = scope ? scope.$new() :
-              angular.element($(selector)).scope().$new();
+      this.getFormatterUrl = function(scope, uuid) {
+        var url;
+        var promiseMd;
+        if(scope && scope.md) {
+          var deferMd = $q.defer();
+          deferMd.resolve(scope.md);
+          promiseMd = deferMd.promise;
+        }
+        else {
+          promiseMd = gnMetadataManager.getMdObjByUuid(uuid);
+        }
 
-          newscope.fragment =
-              $compile(angular.element(response.data))(newscope);
-
-          var el = document.createElement('div');
-          el.setAttribute('gn-metadata-display', '');
-          if(gnSearchSettings.tabOverflow &&
-              gnSearchSettings.tabOverflow.search) {
-            el.setAttribute('class', 'sxt-scroll');
+        return promiseMd.then(function(md) {
+          if(angular.isString(fUrl)) {
+            url = fUrl + md.getUuid();
           }
-          $(selector).append(el);
-          $compile(el)(newscope);
-        }, function() {
-          $rootScope.$broadcast('mdLoadingEnd');
-          gnAlertService.addAlert({
-            msg: 'Erreur de chargement de la métadonnée.',
-            type: 'danger'
+          else if (angular.isFunction(fUrl)) {
+            url = fUrl(md);
+          }
+          return url;
+        });
+      };
+
+      this.load = function(uuid, selector, scope) {
+        $rootScope.$broadcast('mdLoadingStart');
+        this.getFormatterUrl(scope, uuid).then(function(url) {
+          $http.get(url).then(function(response) {
+            $rootScope.$broadcast('mdLoadingEnd');
+
+            var newscope = scope ? scope.$new() :
+                angular.element($(selector)).scope().$new();
+
+            newscope.fragment =
+                $compile(angular.element(response.data))(newscope);
+
+            var el = document.createElement('div');
+            el.setAttribute('gn-metadata-display', '');
+            if(gnSearchSettings.tabOverflow &&
+                gnSearchSettings.tabOverflow.search) {
+              el.setAttribute('class', 'sxt-scroll');
+            }
+            $(selector).append(el);
+            $compile(el)(newscope);
+          }, function() {
+            $rootScope.$broadcast('mdLoadingEnd');
+            gnAlertService.addAlert({
+              msg: 'Erreur de chargement de la métadonnée.',
+              type: 'danger'
+            });
           });
         });
       };

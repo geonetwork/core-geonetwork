@@ -207,7 +207,16 @@
           'templates/mdview/grid.html';
 
       searchSettings.formatter = {
-        defaultUrl: 'md.format.xml?xsl=sxt_view&uuid=',
+        defaultUrl: function(md) {
+          var url;
+          if(md.getSchema() == 'iso19139.sdn-product') {
+            url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+          }
+          else {
+            url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+          }
+          return url;
+        },
         list: [
           {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
         ]
