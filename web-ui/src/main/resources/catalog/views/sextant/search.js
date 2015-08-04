@@ -318,6 +318,10 @@
         },
 
         addMdLayerToPanier: function(link, md) {
+          if(link.protocol == 'WWW:DOWNLOAD-1.0-link--download') {           //'WWW:DOWNLOAD-1.0-link--download') {
+            window.open(link.url);
+            return;
+          }
           $scope.searchObj.panier.push({
             link: link,
             md: md
