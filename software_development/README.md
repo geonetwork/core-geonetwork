@@ -5,9 +5,8 @@
 
 GeoNetwork is a Java application that runs as a servlet so the Java Runtime
 Environment (JRE) must be installed in order to run it.
-You can get the JRE from http://www.oracle.com/technetwork/java/javase/downloads and
-you have to download the Java 7 Standard Edition (SE).
-GeoNetwork won’t run with Java 1.4, 1.5, 1.6.
+You can get the JRE from http://openjdk.java.net/ or http://www.oracle.com/technetwork/java/javase/downloads and
+you have to download Java 7 or 8. GeoNetwork won’t run with Java 1.4, 1.5, 1.6.
 
 
 Being written in Java, GeoNetwork can run on any
@@ -21,12 +20,14 @@ It provides load balancing, fault tolerance and other production features. If yo
 work for an organisation, it is probable that you already use Tomcat.
 The tested version is 7.x or 8.x.
 
+
 Regarding storage, you need a Database Management System (DBMS) like Oracle,
 MySQL, Postgresql etc. GeoNetwork comes with an embedded DBMS (H2) which is
 used by default during installation. This DBMS can be used for small or desktop
 installations of no more than a few thousand metadata records with one or
 two users. If you have heavier demands then you should use a professional, stand
 alone DBMS.
+
 
 GeoNetwork does not require a powerful machine. Good performance can be
 obtained even with 1GB of RAM. The suggested amount is 2GB. For hard disk
@@ -45,25 +46,57 @@ using:
 
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
-* **Java** - Developing with GeoNetwork requires `Java Development Kit (JDK) <http://www.oracle.com/technetwork/java/javase/downloads/>`_ 1.6 or greater (scroll down to find 1.6) OR the `OpenJDK (version 7 or higher only) <http://openjdk.java.net/install/>`_ for Linux users.
-* **Maven** - GeoNetwork uses `Maven <http://maven.apache.org/>`_ to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
-* **Git** - GeoNetwork source code is stored and versioned in a Git repository on Github. Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
-* **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
-* **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
-* **Python and closure** - To build Javascript:
-   
-   sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
-   cd /path/to/closure-library-parent-dir
-   git clone http://code.google.com/p/closure-library/
-   cd closure-library
-   wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
-   unzip compiler-latest.zip
- 
-# Check out source code
+* **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.7 or greater.
+* **Maven** - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
+* **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
+* **Ant** - GeoNetwork uses [Ant](http://ant.apache.org/) to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
+* **Sphinx** - To create the GeoNetwork documentation in a nice format [Sphinx](http://sphinx.pocoo.org/)  is used.
+* (Optional) **Python and closure** - See [web-ui module documentation](/web-ui/)
+_
+
+# The quick way
+
+Get GeoNetwork running - the short path:
+
+```
+git clone --recursive https://github.com/geonetwork/core-geonetwork.git
+cd core-geonetwork
+mvn clean install -DskipTests
+cd web
+mvn jetty:run
+```
+Open your browser and check http://localhost:8080/geonetwork
+
+
+# How-to build ?
+## Check out source code
 
 If you just want to quickly get the code the fastest way is to download the zip bundle: https://github.com/geonetwork/core-geonetwork/zipball/master
+or to clone the repository and build:
 
-However, it is recommended that if you want to contribute back to Geonetwork you create a Github account, fork the Geonetwork repository and work on your fork.  This is a huge benefit because you can push your changes to your repository as much as you want and when a feature is complete you can make a 'Pull Request'.  Pull requests are the recommended method of contributing back to Geonetwork because Github has code review tools and merges are much easier than trying to apply a patch attached to a ticket.
+```
+git clone --recursive https://github.com/geonetwork/core-geonetwork.git
+cd core-geonetwork
+mvn clean install -DskipTests
+```
+
+### Submodules
+
+GeoNetwork use submodules. To properly init them use the ``--recursive`` option when cloning the
+repository or run the following:
+
+```
+cd core-geonetwork
+git submodule init
+git submodule update
+```
+
+Then build the application.
+
+
+### Pull requests and branches
+
+However, it is recommended that if you want to contribute back to Geonetwork you create a Github account, fork the Geonetwork repository and work on your fork. This is a huge benefit because you can push your changes to your repository as much as you want and when a feature is complete you can make a 'Pull Request'.  Pull requests are the recommended method of contributing back to Geonetwork because Github has code review tools and merges are much easier than trying to apply a patch attached to a ticket.
 
 The Geonetwork Repository is at: https://github.com/geonetwork/core-geonetwork.
 
@@ -105,14 +138,14 @@ Geonetwork uses git submodules in order to keep track of externals dependencies.
 
      $ git submodule update --init
 
-## Build GeoNetwork
+### Build GeoNetwork
 
 Once you checked out the code from Github repository, go inside the GeoNetwork’s root folder and execute the maven build command::
 
-  $ mvn clean install -Dclosure.path=/path/to/closure-library
+  $ mvn clean install
 
 
-If the build is succesful you'll get an output like::
+If the build is successful you'll get an output like::
         
         [INFO] 
         [INFO] ------------------------------------------------------------------------
@@ -143,7 +176,7 @@ If the build is succesful you'll get an output like::
 
 and your local maven repository should contain the GeoNetwork artifacts created (``$HOME/.m2/repository/org/geonetwork-opensource``).
 
-*Note:* Many Maven build options are available. Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
+*Note:* Many Maven build options are available. Please refer to the maven documentation for any other options, [Maven: The Complete Reference](http://www.sonatype.com/books/mvnref-book/reference/public-book.html).
 
 For instance, you might like to use following options :
 
@@ -153,16 +186,15 @@ For instance, you might like to use following options :
     -- Offline use
     $ mvn install -o
 
-Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
 
 ### Run embedded jetty server
 
-Maven comes with built-in support for Jetty via a `plug-in <http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin>`_.
+Maven comes with built-in support for Jetty via a [plug-in](http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin).
 
 To run GeoNetwork with embedded jetty server you have to change directory to the root of the **web** module,
 and then execute the following maven command::
 
-    $ mvn jetty:run
+    $ mvn jetty:run -Penv-dev
 
 After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
 
@@ -176,17 +208,13 @@ see documentation generated by the Javadoc tool, go to:
   Javadoc <../../../javadoc/geonetwork/index.html>`
 
 
-### User, developer and widget API documentation
+### Build documentation
 
 *Note:* Building the GeoNetwork documentation requires the following be installed:
 
-        * `Sphinx <http://sphinx.pocoo.org/>`_, version 0.6 or greater (sphinx-doc on ubuntu/debian)
-        * `TeX Live <http://www.tug.org/texlive>`_ (texlive-full on ubuntu/debian)
-        * make utility
-
-    apt-get install texlive-full
+        * [Sphinx](http://sphinx.pocoo.org/) version 0.6 or greater (sphinx-doc on ubuntu/debian)
+     
     easy_install Sphinx
-    easy_install JSTools
 
 
 In order to build the documentation::
@@ -214,14 +242,14 @@ Make sure you update version number and other relevant properties in the
 ``installer/build.xml`` file
 
 
-### Packaging GeoNetwork using Maven
+## Packaging GeoNetwork using Maven
 
 Using Maven, you have the ability to package GeoNetwork in two different ways :
 
 * WAR files (geonetwork.war, geoserver.war)
 * Binary ZIP package (with Jetty embedded)
 
-The `Assembly Plugin <http://maven.apache.org/plugins/maven-assembly-plugin/>`_
+The [Assembly Plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
 is used to create the packages using ::
 
     $ mvn package assembly:assembly
@@ -229,12 +257,12 @@ is used to create the packages using ::
 The Assembly Plugin configuration is in the release module (See bin.xml and zip-war.xml).
 
 
-## Eclipse setup
+# Eclipse setup
 
-The easiest way to develop geoNetwork within eclipse is with the `m2e plugin <http://eclipse.org/m2e/>`_,
+The easiest way to develop geoNetwork within eclipse is with the [m2e plugin](http://eclipse.org/m2e/),
 which comes by default on many eclipse installations.
 
-### Import source code
+## Import source code
 
 In order to import the source code, follow instructions below :
 
@@ -250,7 +278,7 @@ In order to import the source code, follow instructions below :
 
 It will take some minutes while the m2e plugin downloads all the maven dependencies.
 
-### Debugging into eclipse
+## Debugging into eclipse
 
 * JRebel Plugin :
 
@@ -296,7 +324,7 @@ Create a new Tomcat Server (6) on eclipse and add the geonetwork-main project as
  * `How do I configure Tomcat to support remote debugging? <http://wiki.apache.org/tomcat/FAQ/Developing#Q1>`
  * `How do I remotely debug Tomcat using Eclipse? <http://wiki.apache.org/tomcat/FAQ/Developing#Q2>`
 
-### Code Quality Tools in Eclipse
+## Code Quality Tools in Eclipse
 
 In order to see the same code quality warnings in eclipse as maven will detect, Find Bugs and Checkstyle need to be installed
 in your eclipse install and configured as follows::
@@ -338,7 +366,7 @@ in your eclipse install and configured as follows::
  * Right click on project in **Projects View** select **Find Bugs > Find Bugs**
    * FindBugs violations will show up as warnings
 
-### Code Quality Tools and Maven
+## Code Quality Tools and Maven
 
 During the build process FindBugs and Checkstyle are ran.  If a violation is found then the build will fail.  Usually the easiest
 way of resolving violations are to use eclipse and run check style or find bugs on the class or project with the failure.  Usually
@@ -373,7 +401,7 @@ and look at the existing examples in the file.
 The Maven build will fail if any violations are detected so it is important to run FindBugs on each project and fix or exclude
 each violation that is reported.
 
-### FindBugs Annotations (JSR 305)
+## FindBugs Annotations (JSR 305)
 
 In order to get the maximum benefit from the Findbugs (and eclipse) analysis the javax.annotation annotations can be used
 to add metadata to methods, fields and parameters.  The most commonly used annotations are @CheckForNull and @Nonnull.  These
