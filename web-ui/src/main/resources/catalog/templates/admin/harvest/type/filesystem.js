@@ -15,6 +15,7 @@ var gnHarvesterfilesystem = {
                 "recurse" : true,
                 "nodelete" : true,
                 "checkFileLastModifiedForUpdate" : true,
+                "recordType" : 'n',
                 "icon" : "blank.png"
             },
             "content" : {
@@ -52,6 +53,7 @@ var gnHarvesterfilesystem = {
                 + '    <nodelete>' + h.site.nodelete + '</nodelete>'
                 + '    <checkFileLastModifiedForUpdate>' + h.site.checkFileLastModifiedForUpdate + '</checkFileLastModifiedForUpdate>'
                 + '    <directory>' + h.site.directory + '</directory>'
+                + '    <recordType>' + h.site.recordType + '</recordType>'
                 + '    <icon>' + h.site.icon + '</icon>'
                 + '  </site>' 
                 + '  <options>' 

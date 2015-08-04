@@ -124,12 +124,8 @@
                  class="col-sm-5 control-label"
                  data-translate="">typeOfRecord</label>
           <div class="col-sm-7">
-            <select
-                    class="form-control"
-                    id="gn-typeOfRecord"
-                    required=""
-                    data-ng-model="template"
-                    data-ng-options="t.value as (t.key | translate) for t in recordTypes"></select>
+            <div id="gn-typeOfRecord" gn-recordtypes-combo="template"></div>
+
             <input type="text" class="hidden" name="template" data-ng-model="template">
           </div>
         </div>
