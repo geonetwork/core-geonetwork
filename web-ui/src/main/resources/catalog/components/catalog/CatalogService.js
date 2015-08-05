@@ -193,8 +193,8 @@
          * @description
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
-         * @param {string} uuid
-         * @returns {HttpPromise}
+         * @param {string} uuid of the metadata
+         * @return {HttpPromise} of the $http get
          */
         getMdObjByUuid: function(uuid) {
           return $http.get('q?_uuid=' + uuid + '' +
