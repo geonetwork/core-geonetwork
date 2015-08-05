@@ -2,7 +2,7 @@
   goog.provide('gn_draw');
 
   var module = angular.module('gn_draw', [
-      'color.picker'
+    'color.picker'
   ]);
 
   function readAsText(f, callback) {
@@ -219,10 +219,11 @@
                 fill: new ol.style.Fill({
                   color: scope.featureStyleCfg.text.fill.color
                 }),
-                stroke: scope.featureStyleCfg.text.stroke.width > 0 ? new ol.style.Stroke({
-                  color: scope.featureStyleCfg.text.stroke.color,
-                  width: scope.featureStyleCfg.text.stroke.width
-                }) : undefined
+                stroke: scope.featureStyleCfg.text.stroke.width > 0 ?
+                    new ol.style.Stroke({
+                      color: scope.featureStyleCfg.text.stroke.color,
+                      width: scope.featureStyleCfg.text.stroke.width
+                    }) : undefined
               })
             }));
             onDrawend();

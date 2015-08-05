@@ -170,7 +170,7 @@
                           proj.getWorldExtent(),
                           bbox.extent) ?
                           ol.proj.transformExtent(bbox.extent,
-                                  bbox.crs || 'EPSG:4326', proj) :
+                      bbox.crs || 'EPSG:4326', proj) :
                           proj.getExtent();
                   break;
                 }

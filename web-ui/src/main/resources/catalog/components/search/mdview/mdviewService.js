@@ -68,7 +68,7 @@
         gnSearchLocation.setUuid(uuid);
       };
 
-      // Sextant specific
+      // The service needs to keep a reference to the metadata item scope
       var currentMdScope;
       this.setCurrentMdScope = function(scope) {
         currentMdScope = scope;
@@ -76,7 +76,6 @@
       this.getCurrentMdScope = function() {
         return currentMdScope;
       };
-      // end Sextant specific
 
       /**
        * Called when you want to pass from mdview uuid url back to search.
@@ -188,12 +187,11 @@
     function($rootScope, $http, $compile, $sce, gnAlertService,
              gnSearchSettings, $q, gnMetadataManager) {
 
-      var fUrl = gnSearchSettings.formatter.defaultUrl;
 
-      this.getFormatterUrl = function(scope, uuid) {
+      this.getFormatterUrl = function(fUrl, scope, uuid) {
         var url;
         var promiseMd;
-        if(scope && scope.md) {
+        if (scope && scope.md) {
           var deferMd = $q.defer();
           deferMd.resolve(scope.md);
           promiseMd = deferMd.promise;
@@ -209,13 +207,22 @@
           else if (angular.isFunction(fUrl)) {
             url = fUrl(md);
           }
+
+          // Attach the md to the grid element scope
+          if (!scope.md) {
+            scope.$parent.md = md;
+          }
           return url;
         });
       };
 
       this.load = function(uuid, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
-        this.getFormatterUrl(scope, uuid).then(function(url) {
+        var newscope = scope ? scope.$new() :
+            angular.element($(selector)).scope().$new();
+
+        this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
+            newscope, uuid).then(function(url) {
           $http.get(url).then(function(response) {
             $rootScope.$broadcast('mdLoadingEnd');
 
