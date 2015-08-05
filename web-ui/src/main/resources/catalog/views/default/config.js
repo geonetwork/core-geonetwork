@@ -152,6 +152,11 @@
             //}, {
               label: 'full',
               url: 'md.format.xml?xsl=full_view&uuid='
+              /*
+              // You can use a function to choose formatter
+              url : function(md) {
+                return 'md.format.xml?xsl=full_view&uuid=' + md.getUuid();
+              }*/
             }]
           };
 

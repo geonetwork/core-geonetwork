@@ -25,6 +25,7 @@
           element.on('click', function(e) {
             e.preventDefault();
             gnMdView.setLocationUuid(scope.md.getUuid());
+            gnMdView.setCurrentMdScope(scope.$parent);
             scope.$apply();
           });
         }

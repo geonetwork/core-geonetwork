@@ -13,10 +13,10 @@
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate',
-    'gnMdView', 'gnMdViewObj',
+    'gnMdView', 'gnMdViewObj', 'gnMdFormatter',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, gnMdView,
-             gnMdViewObj) {
+             gnMdViewObj, gnMdFormatter) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -45,21 +45,23 @@
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
-          $http.get(f.url + $scope.mdView.current.record.getUuid()).then(
-              function(response) {
-                var snippet = response.data.replace(
-                    '<?xml version="1.0" encoding="UTF-8"?>', '');
+          gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
+            $http.get(url).then(
+                function(response) {
+                  var snippet = response.data.replace(
+                      '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-                $('#gn-metadata-display').find('*').remove();
+                  $('#gn-metadata-display').find('*').remove();
 
-                $scope.compileScope.$destroy();
+                  $scope.compileScope.$destroy();
 
-                // Compile against a new scope
-                $scope.compileScope = $scope.$new();
-                var content = $compile(snippet)($scope.compileScope);
+                  // Compile against a new scope
+                  $scope.compileScope = $scope.$new();
+                  var content = $compile(snippet)($scope.compileScope);
 
-                $('#gn-metadata-display').append(content);
-              });
+                  $('#gn-metadata-display').append(content);
+                });
+          });
         }
       };
 
