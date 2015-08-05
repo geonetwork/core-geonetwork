@@ -57,7 +57,7 @@
 
           var dismiss = false;
           map.on('click', function(e) {
-            if (scope.dismiss && $(scope.dismiss).length>0) {
+            if (scope.dismiss && $(scope.dismiss).length > 0) {
               dismiss = true;
             }
           });
@@ -122,7 +122,7 @@
                     f.layer = layer.get('label');
                   });
                   fo.getFeatures().extend(features);
-                  if (features.length>0) {
+                  if (features.length > 0) {
                     overlay.setPosition(coordinate);
                   } else {
                     overlay.setPosition();

@@ -122,9 +122,9 @@
         }
 
         var finalParams = angular.copy(params);
-        if(hiddenParams) {
-          for(var p in hiddenParams) {
-            if(!finalParams.hasOwnProperty(p)) {
+        if (hiddenParams) {
+          for (var p in hiddenParams) {
+            if (!finalParams.hasOwnProperty(p)) {
               finalParams[p] = hiddenParams[p];
             }
           }
@@ -154,12 +154,12 @@
                 paging.resultsCount = $scope.searchResults.count;
                 paging.to = Math.min(
                     data.count,
-                        paging.currentPage * paging.hitsPerPage
-                );
+                    paging.currentPage * paging.hitsPerPage
+                    );
                 paging.pages = Math.ceil(
-                        $scope.searchResults.count /
+                    $scope.searchResults.count /
                         paging.hitsPerPage, 0
-                );
+                    );
                 paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
               }
             });
@@ -227,7 +227,7 @@
     this.resetSearch = function(searchParams) {
 
       // Only if it is a real reset
-      if(!searchParams) {
+      if (!searchParams) {
         $scope.$broadcast('beforeSearchReset');
       }
 

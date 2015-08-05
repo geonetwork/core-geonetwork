@@ -176,16 +176,16 @@
             isTemplate, isChild, tab, useExtEditor) {
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild).success(function(data) {
-              // Sextant / use ExtJS editor for all but not MedSea
-              if (useExtEditor) {
-                window.location.replace('../../apps/sextant/?edit=' + data.id);
-              } else {
-                var path = '/metadata/' + data.id;
-                if (tab) {
-                  path += '/tab/' + tab;
-                }
-                $location.path(path);
+            // Sextant / use ExtJS editor for all but not MedSea
+            if (useExtEditor) {
+              window.location.replace('../../apps/sextant/?edit=' + data.id);
+            } else {
+              var path = '/metadata/' + data.id;
+              if (tab) {
+                path += '/tab/' + tab;
               }
+              $location.path(path);
+            }
           });
           // TODO : handle creation error
         },
@@ -199,14 +199,14 @@
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
          * @param {string} uuid
-         * @returns {HttpPromise}
+         * @return {HttpPromise}
          */
         getMdObjByUuid: function(uuid) {
           return $http.get('q?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false').
               then(function(resp) {
-            return new Metadata(resp.data.metadata);
-          });
+                return new Metadata(resp.data.metadata);
+              });
         }
       };
     }
@@ -599,9 +599,9 @@
       },
       getLinkGroup: function(layer) {
         var links = this.getLinksByType('OGC');
-        for(var i=0;i<links.length;++i) {
+        for (var i = 0; i < links.length; ++i) {
           var link = links[i];
-          if(link.name == layer.getSource().getParams().LAYERS) {
+          if (link.name == layer.getSource().getParams().LAYERS) {
             return link.group;
           }
         }
@@ -643,7 +643,7 @@
       getGroupedLinksByTypes: function() {
         var types = Array.prototype.splice.call(arguments, 0);
         var groupLink = {}, res = [];
-        for(var i=0; i<types.length;i++) {
+        for (var i = 0; i < types.length; i++) {
           var type = types[i];
           angular.forEach(this.link, function(link) {
             var linkInfo = formatLink(link);
@@ -727,16 +727,16 @@
         return ret;
       },
       getCredits: function() {
-        if(this.credits) return this.credits;
-        if(this.credit) {
+        if (this.credits) return this.credits;
+        if (this.credit) {
           this.credits = angular.isArray(this.credit) ? this.credit.join(', ') :
               this.credit;
-          return this.credits
+          return this.credits;
         }
       },
       isUsingAngularEditor: function() {
         return this.standardName.indexOf('MedSea') >= 0 ||
-          (this['geonet:info'].schema === 'iso19139' && this.standardName.indexOf('EMODNET - HYDRO') >= 0);
+            (this['geonet:info'].schema === 'iso19139' && this.standardName.indexOf('EMODNET - HYDRO') >= 0);
       },
       getBoxAsPolygon: function(i) {
         // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))

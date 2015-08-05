@@ -47,40 +47,40 @@
 
           gnWpsService.describeProcess(scope.uri, scope.processId)
           .then(
-            function(data) {
-              scope.processDescription = data.processDescription[0];
-              angular.forEach(scope.processDescription.dataInputs.input, function(input) {
-                if (input.literalData) {
-                  // Input type
-                  input.type = inputTypes[input.literalData.dataType.value];
+              function(data) {
+                scope.processDescription = data.processDescription[0];
+                angular.forEach(scope.processDescription.dataInputs.input, function(input) {
+                  if (input.literalData) {
+                    // Input type
+                    input.type = inputTypes[input.literalData.dataType.value];
 
-                  // Default value
-                  var value = undefined;
-                  if (input.literalData.defaultValue != undefined) {
-                    value = input.literalData.defaultValue;
+                    // Default value
+                    var value = undefined;
+                    if (input.literalData.defaultValue != undefined) {
+                      value = input.literalData.defaultValue;
+                    }
+                    if (defaults[input.identifier.value]) {
+                      value = defaults[input.identifier.value];
+                    }
+                    switch (input.literalData.dataType.value) {
+                      case 'float':
+                        value = parseFloat(value); break;
+                      case 'string':
+                        value = value || ''; break;
+                    }
+                    input.value = value;
                   }
-                  if (defaults[input.identifier.value]) {
-                    value = defaults[input.identifier.value];
+                  if (input.boundingBoxData) {
+                    input.value = '';
                   }
-                  switch(input.literalData.dataType.value) {
-                  case 'float':
-                    value = parseFloat(value); break;
-                  case 'string':
-                    value = value || ''; break;
-                  }
-                  input.value = value;
-                }
-                if (input.boundingBoxData) {
-                  input.value = '';
-                }
-              });
-              scope.status = 'loaded';
-            },
-            function(data) {
-              scope.exception = data;
-              scope.status = 'error';
-            }
-          );
+                });
+                scope.status = 'loaded';
+              },
+              function(data) {
+                scope.exception = data;
+                scope.status = 'error';
+              }
+              );
 
           scope.close = function() {
             element.remove();
@@ -95,7 +95,7 @@
             angular.forEach(scope.processDescription.dataInputs.input, function(input) {
               input.invalid = undefined;
               if (input.minOccurs > 0 && (input.value === null || input.value === '')) {
-                input.invalid = input.title.value+' is mandatory';
+                input.invalid = input.title.value + ' is mandatory';
                 invalid = true;
               }
             });
@@ -120,10 +120,10 @@
                 function(data) {
                   scope.exception = data;
                 }
-            ).finally(
+            ).finally (
                 function() {
-              scope.running = false;
-            });
+                  scope.running = false;
+                });
           };
         }
       };

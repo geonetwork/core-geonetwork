@@ -182,7 +182,7 @@
                 var schemaCustomConfig = {
                   // Example : open ISO19139 record having
                   // standardName containing medsea in advanced mode
-                  'iso19139': function (md) {
+                  'iso19139': function(md) {
                     if (md.standardName && md.standardName.match(/medsea/i)) {
                       return 'characteristics';
                     } else if (md.standardName && md.standardName.match(/emodnet - hydrography/i)) {

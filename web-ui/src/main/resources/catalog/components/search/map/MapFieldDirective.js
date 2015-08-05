@@ -33,8 +33,8 @@
                    */
                   scope.maxExtent = function() {
                     scope.map.getView().fitExtent(
-                      scope.map.getView().getProjection().getExtent(),
-                      scope.map.getSize());
+                        scope.map.getView().getProjection().getExtent(),
+                        scope.map.getSize());
                   };
 
                   /**

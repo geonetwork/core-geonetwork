@@ -581,7 +581,7 @@
               }
               if (angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 1) {
-                layer.set('style', getCapLayer.Style)
+                layer.set('style', getCapLayer.Style);
               }
 
               layer.set('advanced', !!(layer.get('elevation') ||
@@ -913,7 +913,7 @@
                   finishCreation();
                 }
                 else {
-                  $this.feedLayerMd(olL).finally(finishCreation);
+                  $this.feedLayerMd(olL).finally (finishCreation);
                 }
               }
 

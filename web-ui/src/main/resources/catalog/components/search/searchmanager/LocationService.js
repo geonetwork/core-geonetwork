@@ -103,7 +103,7 @@
           var tab = $location.path().
               match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
 
-          if(angular.isDefined(tabs[tab])) {
+          if (angular.isDefined(tabs[tab])) {
             tabs[tab].active = true;
           }
         };

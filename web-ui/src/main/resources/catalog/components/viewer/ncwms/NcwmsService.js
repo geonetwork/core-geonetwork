@@ -173,7 +173,7 @@
           LAYER: layer.getSource().getParams().LAYERS
         };
         var time = layer.getSource().getParams().TIME;
-        if(time) {
+        if (time) {
           p.TIME = time;
         }
 
@@ -233,7 +233,7 @@
           bbox: extent
         };
         var time = layer.getSource().getParams().TIME;
-        if(time) {
+        if (time) {
           p.TIME = time;
         }
 
@@ -249,7 +249,7 @@
        * layers parameters.
        *
        * @param {string} legendUrl
-       * @returns {string}
+       * @return {string}
        */
       this.updateLengendUrl = function(legendUrl) {
         var legendUrl = scope.layer.get('legend');
@@ -261,7 +261,7 @@
 
         var sP = gnUrlUtils.toKeyValue(p);
         return gnUrlUtils.append(parts[0], sP);
-      }
+      };
     }
   ]);
 })();

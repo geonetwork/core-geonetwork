@@ -4,9 +4,9 @@
   var module = angular.module('gn_wmsimport', [
   ]);
 
-   var kmlimportTemplateURL = '../../catalog/components/viewer/wmsimport/' +
-            'partials/kmlimport.html';
-   module.value('kmlimportTemplateURL', kmlimportTemplateURL);
+  var kmlimportTemplateURL = '../../catalog/components/viewer/wmsimport/' +
+      'partials/kmlimport.html';
+  module.value('kmlimportTemplateURL', kmlimportTemplateURL);
 
   /**
    * @ngdoc directive

@@ -184,8 +184,9 @@
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
+    'sxtService',
     function($rootScope, $http, $compile, $sce, gnAlertService,
-             gnSearchSettings, $q, gnMetadataManager) {
+             gnSearchSettings, $q, gnMetadataManager, sxtService) {
 
 
       this.getFormatterUrl = function(fUrl, scope, uuid) {
@@ -201,7 +202,7 @@
         }
 
         return promiseMd.then(function(md) {
-          if(angular.isString(fUrl)) {
+          if (angular.isString(fUrl)) {
             url = fUrl + md.getUuid();
           }
           else if (angular.isFunction(fUrl)) {
@@ -211,6 +212,7 @@
           // Attach the md to the grid element scope
           if (!scope.md) {
             scope.$parent.md = md;
+            sxtService.feedMd(scope.$parent);
           }
           return url;
         });
@@ -234,7 +236,7 @@
 
             var el = document.createElement('div');
             el.setAttribute('gn-metadata-display', '');
-            if(gnSearchSettings.tabOverflow &&
+            if (gnSearchSettings.tabOverflow &&
                 gnSearchSettings.tabOverflow.search) {
               el.setAttribute('class', 'sxt-scroll');
             }

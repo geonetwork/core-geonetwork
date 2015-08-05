@@ -196,19 +196,19 @@
         // or not
         catInfo.then(function() {
 
-          if($scope.isCasEnabled() && isSearch ) {
+          if ($scope.isCasEnabled() && isSearch) {
             var onCasCheck = function() {
 
               var intervalID;
               var loginAttempts = 0;
 
-              intervalID = setInterval(function (){
+              intervalID = setInterval(function() {
                 loginAttempts += 1;
-                if(loginAttempts > (25)) {
-                  clearInterval (intervalID);
+                if (loginAttempts > (25)) {
+                  clearInterval(intervalID);
                   casDefer.reject();
                 }
-                else  {
+                else {
                   var innerDoc = undefined;
                   var loginEvent = undefined;
                   try {
@@ -217,30 +217,30 @@
                     innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 
                     // Test if the CAS login form is in the iframe
-                    if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
-                      clearInterval (intervalID);
+                    if (innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                      clearInterval(intervalID);
                       loginEvent = false;
                     }
 
                     // Test if the auth have been made
                     var connectedDiv = innerDoc.getElementsByTagName('info');
-                    if(connectedDiv) {
-                      clearInterval (intervalID);
+                    if (connectedDiv) {
+                      clearInterval(intervalID);
                       loginEvent = true;
                     }
 
                     // If we find bad credentials, we reload the iframe
-                    var badCred = innerDoc.getElementsByTagName("h1");
-                    if(badCred && badCred.length==1 && badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
+                    var badCred = innerDoc.getElementsByTagName('h1');
+                    if (badCred && badCred.length == 1 && badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
                       innerDoc.location.reload(true);
-                      clearInterval (intervalID);
+                      clearInterval(intervalID);
                     }
                   }
-                  catch(err) {
-                    loginAttempts+=25;
+                  catch (err) {
+                    loginAttempts += 25;
                     casDefer.reject();
                   }
-                  if(loginEvent == true) {
+                  if (loginEvent == true) {
                     casDefer.resolve();
                   }
                   else if (loginEvent == false) {
@@ -253,9 +253,9 @@
             var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
-            casLoginFrame.setAttribute('src',(gnGlobalSettings.gnUrl ?
+            casLoginFrame.setAttribute('src', (gnGlobalSettings.gnUrl ?
                 gnGlobalSettings.gnUrl : '') + 'info?casLogin');
-            casLoginFrame.setAttribute('style','display:none');
+            casLoginFrame.setAttribute('style', 'display:none');
             document.body.appendChild(casLoginFrame);
 
           }

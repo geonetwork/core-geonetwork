@@ -158,7 +158,7 @@
                             facets = $filter('orderBy')(facets, 'name');
                             facets = $filter('filter')(facets, function(i) {
                               // Specific Sextant
-                              if(gnSearchSettings.configWhat) {
+                              if (gnSearchSettings.configWhat) {
                                 var catalog =
                                     gnSearchSettings.configWhat.split(',');
                                 return catalog.indexOf(i['@name']) >= 0;
@@ -168,7 +168,7 @@
                             });
                           }
                           // Specific Sextant
-                          else if(scope.facetConfig.key == 'orgName' &&
+                          else if (scope.facetConfig.key == 'orgName' &&
                               gnSearchSettings.configWho) {
                             facets = $filter('filter')(facets, function(i) {
                               var catalog =

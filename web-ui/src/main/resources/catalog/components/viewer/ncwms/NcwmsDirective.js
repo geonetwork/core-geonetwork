@@ -202,7 +202,7 @@
 
           scope.ncTime = {};
           scope.$watch('ncTime.value', function(time) {
-            if(time) {
+            if (time) {
               scope.params.TIME =
                   moment(time, 'DD-MM-YYYY').format(
                       'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
