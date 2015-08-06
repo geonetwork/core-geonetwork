@@ -1588,7 +1588,8 @@ public class SearchManager {
         Classifier classifier = dimension.getClassifier();
 
         for (CategoryPath categoryPath: classifier.classify(value)) {
-            if (!dimension.isLocalized() || dimension.getLocales().contains(locale)) {
+            result.add(new FacetField(dimension.getName(), categoryPath.components));
+            if (dimension.isLocalized() && dimension.getLocales().contains(locale)) {
                 result.add(new FacetField(dimension.getName(locale), categoryPath.components));
             }
         }
