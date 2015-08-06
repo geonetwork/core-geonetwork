@@ -52,9 +52,6 @@
             .success(function(data) {
                 scope.groups = data !== 'null' ? data : null;
               });
-          scope.setIcon = function(i) {
-            scope.harvester.site.icon = i;
-          };
         }
       };
     }]);
@@ -215,4 +212,31 @@
            }
          };
        }]);
+
+  module.directive('gnLogoPicker',
+      ['$http', '$translate', '$rootScope',
+        function($http, $translate, $rootScope) {
+
+          return {
+            restrict: 'A',
+            replace: false,
+            scope: {
+              logo: '=gnLogoPicker'
+            },
+            templateUrl: '../../catalog/components/admin/harvester/partials/' +
+                'logopicker.html',
+
+            link: function(scope, element, attrs) {
+              $http.get('admin.harvester.info?type=icons&_content_type=json',
+                  {cache: true})
+                  .success(function(data) {
+                    scope.icons = data[0];
+                  });
+
+              scope.setIcon = function(icon) {
+                scope.logo = icon;
+              }
+            }
+          };
+        }]);
 })();
