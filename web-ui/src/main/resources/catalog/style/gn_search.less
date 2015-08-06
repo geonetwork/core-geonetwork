@@ -22,20 +22,58 @@
 
 
 .gn-facet {
+  .list-group {
+    border-left: 1px dotted @gray-lighter;
+    margin-left: .5em;
+    padding-left: .1em;
+    margin-bottom: 0;
+  }
   .list-group-item {
-    border-width: 0;
-    border-radius: 0;
-    padding: .35em 0px;
-    border-top: 1px dotted lightgrey;
+    padding: 0.1em;
+    //max-height: 22px;
+    color: @gray;
+    border: none;
+    label {
+      margin-bottom: 0px;
+      //width: 90%; /* hack */
+      cursor: pointer;
+    }
+    label.gn-facet-active {
+      color: @gray-darker
+    }
+  }
+  .gn-facet-count, .list-group-item > span.fa {
+    color: @gray-light;
+  }
+  .gn-facet-collapseall {
+    color: @gray-darker;
+    cursor: pointer;
+    position: absolute;
+    float: left;
+    top: 9px;
+    left: 0px;
+  }
+  .gn-facet-toggle {
+    cursor: pointer;
+  }
+  .gn-facet-moreorless {
+    list-style: none;
+    padding-left: 0.5em;
+    button {
+      width: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
   }
   .list-group-item:hover {
-    color: #428bca;
+    color: @brand-primary;
   }
   h4 {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-    border-bottom: 2px black solid;
+    margin-bottom: 0px;
+    border-bottom: 2px @gray-lighter solid;
   }
 }
 .gn-facet-breadcrumb {

@@ -1,7 +1,6 @@
 <div class="gn-facet" data-ng-show="facetResults[facet].length > 1">
   <h5 data-gn-collapse="{{collapsed}}">
-    <span class="fa fa-arrow-circle-o-right"
-          data-ng-class="{'fa-rotate-90': !collapsed}"></span>
+    <i class="fa" data-ng-class="collapsed ? 'fa-angle-left' : ''"></i>
     {{facet | translate}}
   </h5>
   <div class="list-group"

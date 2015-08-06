@@ -1,0 +1,23 @@
+<div class="gn-facet-list">
+  <div data-ng-repeat="f in dimension"
+       class="gn-facet"
+       data-ng-show="f.category">
+    <a class="gn-facet-collapseall"
+       data-ng-if="$index === 0"
+       data-ng-click="collapseAll()"
+       title="{{'collapseAllFacet' | translate}}">
+      <i class="fa fa-fw fa-angle-double-left"></i>
+    </a>
+
+    <h4 data-gn-collapse="{{collapsed}}">
+      <i class="fa fa-fw" data-ng-class="collapsed ? 'fa-angle-left' : ''"></i>
+      {{f['@label'] | translate}}
+    </h4>
+    <div data-gn-facet-dimension-category="f.category"
+         data-category-key="f['@label']"
+         data-params="params"
+         data-facet-config="facetConfig"
+         data-ng-class="{'collapse': collapsed}">
+    </div>
+  </div>
+</div>

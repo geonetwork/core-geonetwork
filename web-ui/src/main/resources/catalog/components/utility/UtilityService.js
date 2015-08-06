@@ -3,6 +3,49 @@
 
   var module = angular.module('gn_utility_service', []);
 
+  module.factory('RecursionHelper', ['$compile', function($compile) {
+    return {
+      /**
+       * Manually compiles the element, fixing the recursion loop.
+       * @param {Object} element
+       * @param {Function} [link] A post-link function, or an object
+       * with function(s) registered via pre and post properties.
+       * @return {Object} An object containing the linking functions.
+       */
+      compile: function(element, link) {
+        // Normalize the link parameter
+        if (angular.isFunction(link)) {
+          link = { post: link };
+        }
+
+        // Break the recursion loop by removing the contents
+        var contents = element.contents().remove();
+        var compiledContents;
+        return {
+          pre: (link && link.pre) ? link.pre : null,
+          /**
+           * Compiles and re-adds the contents
+           */
+          post: function(scope, element) {
+            // Compile the contents
+            if (!compiledContents) {
+              compiledContents = $compile(contents);
+            }
+            // Re-add the compiled contents to the element
+            compiledContents(scope, function(clone) {
+              element.append(clone);
+            });
+
+            // Call the post-linking function, if any
+            if (link && link.post) {
+              link.post.apply(null, arguments);
+            }
+          }
+        };
+      }
+    };
+  }]);
+
   var gnUtilityService = function() {
     /**
        * Scroll page to element.
@@ -196,11 +239,46 @@
       return (arrData);
     };
 
+    /**
+     * If object property is not an array, make it an array
+     * @param {Object} object
+     * @param {String} key
+     * @param {String|Object} value
+     * @param {String} propertyName
+     */
+    var formatObjectPropertyAsArray = function(object,
+        key, value,
+        propertyName) {
+      if (key === propertyName && !$.isArray(object[key])) {
+        object[key] = [value];
+      }
+    };
+
+    /**
+     * Traverse an object tree
+     *
+     * @param {Object} o The object
+     * @param {Function} func  The function to apply to all object properties
+     * @param {String|Object|Array} args  The argument to pass to the function.
+     * @return {Object} the object (optionnaly affected by the function)
+     */
+    function traverse(o, func, args) {
+      for (var i in o) {
+        func.apply(this, [o, i, o[i], args]);
+        if (o[i] !== null && typeof(o[i]) == 'object') {
+          //going on step down in the object tree!!
+          traverse(o[i], func, args);
+        }
+      }
+      return o;
+    };
     return {
       scrollTo: scrollTo,
       isInView: isInView,
       serialize: serialize,
       parseBoolean: parseBoolean,
+      traverse: traverse,
+      formatObjectPropertyAsArray: formatObjectPropertyAsArray,
       toCsv: toCsv,
       CSVToArray: CSVToArray,
       getUrlParameter: getUrlParameter

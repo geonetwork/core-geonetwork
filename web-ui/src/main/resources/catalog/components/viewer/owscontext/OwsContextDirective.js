@@ -58,10 +58,10 @@
             var base64 = base64EncArr(strToUTF8Arr(str));
 
             var el = $($event.target);
-            if(!el.is('a')) {
+            if (!el.is('a')) {
               el = el.parent();
             }
-            if(el.is('a')) {
+            if (el.is('a')) {
               el.attr('href', 'data:text/xml;base64,' + base64);
 
             }

@@ -25,7 +25,7 @@
           var initialMaxItems = 5;
 
           // Facet is collapsed if not in current search criteria
-          function isFacetsCollapse (facetKey) {
+          function isFacetsCollapse(facetKey) {
             return !(scope.params && angular.isDefined(scope.params[facetKey]));
           };
 

@@ -81,7 +81,7 @@
 
 
           /** Facets configuration */
-          searchSettings.facetsSummaryType = 'hits';
+          searchSettings.facetsSummaryType = 'details';
 
           /*
              * Hits per page combo values configuration. The first one is the

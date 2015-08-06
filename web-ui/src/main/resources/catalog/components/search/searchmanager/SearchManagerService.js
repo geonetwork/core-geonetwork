@@ -4,12 +4,12 @@
   var module = angular.module('gn_search_manager_service', []);
 
   module.factory('gnSearchManagerService', [
+    'gnUtilityService',
     '$q',
     '$rootScope',
     '$http',
     'gnHttp',
-    function($q, $rootScope, $http, gnHttp) {
-
+    function(gnUtilityService, $q, $rootScope, $http, gnHttp) {
       /**
        * Utility to format a search response. JSON response
        * when containing one element will not make an array.
@@ -18,7 +18,7 @@
        */
       var format = function(data) {
         // Retrieve facet and add name as property and remove @count
-        var facets = {}, results = -1,
+        var facets = {}, dimension = [], results = -1,
             listOfArrayFields = ['image', 'link',
               'format', 'keyword', 'otherConstr',
               'Constraints', 'SecurityConstraints'];
@@ -31,7 +31,12 @@
 
         // Cleaning facets
         for (var facet in data.summary) {
-          if (facet != '@count' && facet != '@type') {
+          if (facet == 'dimension') {
+            dimension = gnUtilityService.traverse(
+                data.summary.dimension,
+                gnUtilityService.formatObjectPropertyAsArray,
+                'category');
+          } else if (facet != '@count' && facet != '@type') {
             facets[facet] = data.summary[facet];
             facets[facet].name = facet;
           } else if (facet == '@count') {
@@ -72,6 +77,7 @@
 
         return {
           facet: facets,
+          dimension: dimension,
           count: results,
           metadata: records
         };
