@@ -26,7 +26,8 @@
     '$location',
     '$timeout',
     'gnUrlUtils',
-    function($http, $location, $timeout, gnUrlUtils) {
+    'Metadata',
+    function($http, $location, $timeout, gnUrlUtils, Metadata) {
       return {
         //TODO: rewrite calls with gnHttp
 
@@ -182,6 +183,25 @@
             $location.path(path);
           });
           // TODO : handle creation error
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjByUuid
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog. Trigger a search and
+         * return a promise.
+         * @param {string} uuid of the metadata
+         * @return {HttpPromise} of the $http get
+         */
+        getMdObjByUuid: function(uuid) {
+          return $http.get('q?_uuid=' + uuid + '' +
+              '&fast=index&_content_type=json&buildSummary=false').
+              then(function(resp) {
+            return new Metadata(resp.data.metadata);
+          });
         }
       };
     }
@@ -549,6 +569,9 @@
       },
       getOwnerId: function() {
         return this['geonet:info'].ownerId;
+      },
+      getSchema: function() {
+        return this['geonet:info'].schema;
       },
       publish: function() {
         this['geonet:info'].isPublishedToAll = this.isPublished() ?

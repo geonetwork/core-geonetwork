@@ -23,9 +23,11 @@
 
 package org.fao.geonet.services.group;
 
+import com.google.common.io.ByteStreams;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
@@ -37,7 +39,9 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -64,6 +68,7 @@ public class Update extends NotInReadOnlyModeService {
         final String name = Util.getParam(params, Params.NAME);
         final String description = Util.getParam(params, Params.DESCRIPTION, "");
         final boolean deleteLogo = Util.getParam(params, "deleteLogo", false);
+        final String copyLogo = Util.getParam(params, "copyLogo", null);
         final String email = params.getChildText(Params.EMAIL);
         String website = params.getChildText("website");
         if (website != null && website.length() > 0 && !website.startsWith("http://")) {
@@ -73,7 +78,9 @@ public class Update extends NotInReadOnlyModeService {
         // Logo management ported/adapted from GeoNovum GeoNetwork app.
         // Original devs: Heikki Doeleman and Thijs Brentjens
         String logoFile = params.getChildText("logofile");
-        final String logoUUID = copyLogoFromRequest(context, logoFile);
+        final String logoUUID = copyLogo == null ? copyLogoFromRequest(context, logoFile) :
+                copyLogoFromHarvesters(context, copyLogo);
+
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
         final Element elRes = new Element(Jeeves.Elem.RESPONSE);
@@ -138,6 +145,22 @@ public class Update extends NotInReadOnlyModeService {
             Files.copy(input, output);
         }
 
+        return logoUUID;
+    }
+
+    private String copyLogoFromHarvesters(ServiceContext context, String logoFile) throws IOException {
+        String logoUUID = null;
+
+        Path harvestLogo = Resources.locateHarvesterLogosDir(context).resolve(logoFile);
+        String extension = FilenameUtils.getExtension(harvestLogo.getFileName().toString());
+        logoUUID = UUID.randomUUID().toString();
+
+        Path newLogo = Resources.locateLogosDir(context).resolve(logoUUID + "." +  extension);
+
+        try (InputStream in = IO.newInputStream(harvestLogo)) {
+            ImageIO.read(in); // check it parses
+        }
+        Files.copy(harvestLogo, newLogo);
         return logoUUID;
     }
 

@@ -272,6 +272,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         Set<String> extraDumpFields = Sets.newHashSet();
         if (inFastMode) {
             String[] fields = Util.getParam(request, Geonet.SearchResult.EXTRA_DUMP_FIELDS, "").split(",");
+            for (String field : fields) {
+                if (!field.trim().isEmpty()) {
+                    extraDumpFields.add(field);
+                }
+            }
             extraDumpFields.addAll(Arrays.asList(fields));
         }
 
