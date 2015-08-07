@@ -322,6 +322,7 @@
                 application/vnd.ogc.gml,
                 application/vnd.ogc.sld+xml,
                 application/vnd.google-earth.kml+xml,
+                application/vnd.google-earth.kmz,
                 application/json
             </param-value>
         </init-param>
