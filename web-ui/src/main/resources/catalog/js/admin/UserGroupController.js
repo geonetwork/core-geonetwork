@@ -411,12 +411,16 @@
 
       $scope.saveGroup = function(formId, logoUploadDivId) {
         var uploadScope = angular.element(logoUploadDivId).scope();
-        if (uploadScope.queue.length > 0) {
+        if (uploadScope && uploadScope.queue.length > 0) {
           uploadScope.submit();
         } else {
-          var deleteLogo = $scope.groupSelected.logo === null ?
+          var deleteLogo = $scope.groupSelected.logo === null &&
+              !$scope.groupSelected.logoFromHarvest ?
               '&deleteLogo=true' : '';
-          $http.get('admin.group.update?' + $(formId).serialize() + deleteLogo)
+          var addLogo = $scope.groupSelected.logoFromHarvest ?
+              '&copyLogo=' + $scope.groupSelected.logoFromHarvest : '';
+          $http.get('admin.group.update?' + $(formId).serialize() +
+              deleteLogo + addLogo)
           .success(uploadImportMdDone)
           .error(uploadImportMdError);
         }

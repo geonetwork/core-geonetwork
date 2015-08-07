@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 					 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 					 xmlns:dc = "http://purl.org/dc/elements/1.1/"
 					 xmlns:java="java:org.fao.geonet.util.XslUtil"
@@ -86,8 +86,21 @@
                 <!-- not tokenized title for sorting -->
                 <Field name="_title" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
-	
-			
+
+
+      <xsl:for-each select="/simpledc/descendant::*
+                        [name(.) = 'dct:references' or
+                              name(.) = 'dc:relation']
+                        [starts-with(., 'http') or
+                              contains(. , 'resources.get') or
+                              contains(., 'file.disclaimer')]">
+        <xsl:variable name="name" select="tokenize(., '/')[last()]"/>
+        <!-- Index link where last token after the last / is the link name. -->
+        <Field name="link"
+               string="{concat($name, '|', $name, '|', ., '|WWW-LINK|WWW:LINK|0')}"
+               store="true"
+               index="false"/>
+      </xsl:for-each>
 			
 			<Field name="westBL"  string="{$west}" store="false" index="true"/>
 			<Field name="eastBL"  string="{$east}" store="false" index="true"/>

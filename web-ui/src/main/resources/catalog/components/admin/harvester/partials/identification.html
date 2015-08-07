@@ -35,24 +35,8 @@
                       class="fa fa-pencil fa-fw"></i></span>
               <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
           </div>
-          <div class="input-group-btn"
+          <div class="input-group-btn" gn-logo-picker="harvester.site.icon"
                data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
-
-              <button type="button" class="btn btn-default dropdown-toggle fa fa-picture"
-                      data-toggle="dropdown">
-          <span data-translate="">
-            <img class="gn-logo harvester-logo" src="../../images/harvesting/{{harvester.site.icon}}"
-                 alt="{{'harvesterLogoHelo' | translate}}"/>
-          </span>
-                  <span class="caret"/>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                  <li data-ng-repeat="i in icons">
-                      <a data-ng-click="setIcon(i)" title="">
-                          <img class="gn-logo harvester-logo" src="../../images/harvesting/{{i}}"/>
-                      </a>
-                  </li>
-              </ul>
           </div>
       </div>
       <p class="help-block" data-translate="">harvesterNameHelp</p>

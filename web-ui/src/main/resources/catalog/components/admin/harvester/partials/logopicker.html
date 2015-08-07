@@ -1,0 +1,16 @@
+<button type="button" class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown">
+          <span data-ng-if="logo">
+            <img class="gn-logo harvester-logo" src="../../images/harvesting/{{logo}}"
+                 alt="{{'harvesterLogoHelo' | translate}}"/>
+          </span>
+  &nbsp;
+  <span class="caret"/>
+</button>
+<ul class="dropdown-menu" role="menu">
+  <li data-ng-repeat="i in icons">
+    <a data-ng-click="setIcon(i)" title="">
+      <img class="gn-logo harvester-logo" src="../../images/harvesting/{{i}}"/>
+    </a>
+  </li>
+</ul>

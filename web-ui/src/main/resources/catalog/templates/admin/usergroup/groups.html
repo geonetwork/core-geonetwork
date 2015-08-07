@@ -94,41 +94,57 @@
 
               <!-- Upload panel -->
               <div class="form-group">
-                  <label for="group-logo-upload" class="control-label" data-translate="">groupLogo</label>
+                <label for="group-logo-upload" class="control-label" data-translate="">groupLogo</label>
 
-                  <div id="group-logo-upload">
+                <!--Display saved logo-->
+                <div data-ng-show="groupSelected.logo">
+                  <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
+                       style="max-width:128px; max-height:128px">
+                  <a href="" data-ng-click="deleteGroupLogo()"
+                     class="text-danger">
+                    <i data-ng-show="groupSelected.logo"
+                       class="fa fa-times delete"></i>
+                  </a>
+                </div>
 
-                      <div class="panel panel-default">
-                          <div class="panel-body">
-                              <div class="col-md-4">
-                                  <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
-                                       style="max-width:128px; max-height:128px"></img>
-                                <a href="" data-ng-click="deleteGroupLogo()"
-                                   class="text-danger">
-                                  <i data-ng-show="groupSelected.logo"
-                                     class="fa fa-times delete"></i>
-                                </a>
-                              </div>
-                              <div class="col-md-8">
-                                  <span class="btn btn-success btn-block fileinput-button">
-                                      <i class="fa fa-plus fa-white"></i>
-                                      <span data-translate="">chooseOrDropResource</span>
-                                      <input type="file" id="group-logo" name="logofile" multiple="false"></input>
-                                  </span>
-                              </div>
-                              <ul style="list-style: none">
-                                  <li data-ng-repeat="file in queue">
-                                      <div class="preview" data-file-upload-preview="file"></div>
-                                      {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                                      <i class="fa fa-times" data-ng-click="clear(file)"></i>
-                                  </li>
-                              </ul>
-                          </div>
-                      </div>
+                <div data-ng-show="!groupSelected.logo">
+
+                  <!--Display logo picker from harvester logos-->
+                  <div class="row" data-ng-show="queue.length == 0">
+                    <div class="col-md-5" translate>selectExistingLogo</div>
+                    <div class="col-md-3">
+                      <a href="" data-ng-click="groupSelected.logoFromHarvest = undefined"
+                         class="text-danger pull-right">
+                        <i data-ng-show="groupSelected.logoFromHarvest"
+                           class="fa fa-times delete"></i>
+                      </a>
+                      <div class="" gn-logo-picker="groupSelected.logoFromHarvest"></div>
+                    </div>
                   </div>
 
-              </div>
+                  <!--Display logo upload input-->
+                  <div class="row" data-ng-show="!groupSelected.logoFromHarvest" id="group-logo-upload">
+                    <div class="col-md-5" translate>upload</div>
+                    <div class="col-md-7 panel panel-default" >
+                      <div class="panel-body">
 
+                        <span class="btn btn-success btn-block fileinput-button">
+                            <i class="fa fa-plus fa-white"></i>
+                            <span data-translate="">chooseOrDropResource</span>
+                            <input type="file" id="group-logo" name="logofile" multiple="false">
+                        </span>
+                        <ul style="list-style: none">
+                          <li data-ng-repeat="file in queue">
+                            <div class="preview" data-file-upload-preview="file"></div>
+                            {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                            <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
           </fieldset>
         </form>
