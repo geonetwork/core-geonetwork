@@ -15,15 +15,13 @@
     <h5 class="sxt-layer">{{key}}</h5>
 
     <div class="table-scroller">
-      <table class="table table-condensed table-hover table-stripped" ng-repeat="result in group">
-        <tr ng-if="$first">
-          <th ng-repeat="(attr, value) in result.getProperties() | attributes">
+      <table class="table table-condensed table-hover table-stripped">
+        <tr ng-repeat="result in group">
+          <th ng-repeat="(attr, value) in result.getProperties() | attributes" ng-if="$parent.$first">
             {{attr}}
             <!-- <span ng-bind-html="value | linky:'_blank'"></span> -->
           </th>
-        </tr>
-        <tr>
-          <td ng-repeat="(attr, value) in result.getProperties() | attributes">
+          <td ng-repeat="(attr, value) in result.getProperties() | attributes" ng-if="!$parent.$first">
             <!-- <b>{{attr | lowercase}}</b>: -->
             <span ng-bind-html="value | linky:'_blank'" title="{{value}}"></span>
           </td>
