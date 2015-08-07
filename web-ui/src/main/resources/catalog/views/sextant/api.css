@@ -202,6 +202,12 @@ yx-axis
 */
   /* Pagination */
 }
+.gn > div:first-of-type {
+  height: auto;
+}
+.gn > div:only-child {
+  height: 100%;
+}
 .gn button {
   text-shadow: none;
 }
@@ -226,6 +232,18 @@ yx-axis
 .gn .gn-search-page label,
 .gn .gn-metadata-view label {
   white-space: normal;
+}
+.gn h1,
+.gn h2,
+.gn h3,
+.gn h4,
+.gn h5,
+.gn h6 {
+  letter-spacing: normal;
+  text-shadow: none;
+}
+.gn ul {
+  list-style-image: none;
 }
 .gn .gn-metadata-view p {
   font-size: 12px;

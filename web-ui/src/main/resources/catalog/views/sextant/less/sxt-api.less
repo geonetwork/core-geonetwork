@@ -6,6 +6,12 @@
   font-family: Roboto, sans-serif;
   color: black;
   letter-spacing: normal;
+  & > div:first-of-type {
+    height: auto;
+  }
+  & > div:only-child {
+    height: 100%;
+  }
   button {
     text-shadow: none;
   }
@@ -28,6 +34,13 @@
     label {
       white-space: normal;
     }
+  }
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: normal;
+    text-shadow: none;
+  }
+  ul {
+    list-style-image: none;
   }
   .gn-metadata-view {
     p {
