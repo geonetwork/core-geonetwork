@@ -78,6 +78,7 @@
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
@@ -236,9 +237,16 @@
         searchMap: searchMap,
         mapfieldOption: {
           relations: ['within']
+        },
+        defaultParams: {
+          'facet.q': '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details'
+        },
+        params: {
+          'facet.q': '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details'
         }
       }, gnSearchSettings.sortbyDefault);
-
 
     }]);
 })();

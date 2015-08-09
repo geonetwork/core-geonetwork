@@ -54,6 +54,7 @@
         max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
 -->
+
     <facets>
         <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
         <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
@@ -80,10 +81,69 @@
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup" />
-    </facets>
+        <!--
+        Example configuration for hierarchical facet based on
+        the GeoNetwork region thesaurus or GEMET.
 
-    <summaryTypes>
-        <summaryType name="hits">
+        Do not forget to add classifier configuration on config-summary.xml
+
+        <facet name="region" label="regions"
+               indexKey="keyword"
+               classifier="regionKeywordClassifier"/>
+        <facet name="gemetKeyword" label="gemetKeywords"
+               indexKey="keyword"
+               classifier="gemetKeywordClassifier"/>
+
+        Then add facet in one summaryType having format="DIMENSION" attribute.
+             -->
+        <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
+               label="maintenanceAndUpdateFrequencies"/>
+      </facets>
+
+      <summaryTypes>
+        <summaryType name="details" format="DIMENSION">
+          <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+          <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+          <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+          <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
+          <item facet="keyword" max="15"/>
+          <item facet="orgName" max="25"/>
+          <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+          <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
+          <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+          <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
+          <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
+          <item facet="serviceType"/>
+          <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+          <item facet="resolution" sortBy="numValue" sortOrder="desc"/>
+          <!--
+          <item facet="region"
+                translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
+          <item facet="gemetKeyword"
+                translator="term:http://geonetwork-opensource.org/gemet"/>
+          -->
+      </summaryType>
+
+      <summaryType name="manager" format="DIMENSION">
+        <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+        <item facet="category" max="99" sortBy="value"
+              translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+        <item facet="mdStatus" max="10" sortBy="value"
+              translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
+        <item facet="isValid" max="3" sortBy="value"/>
+        <item facet="groupOwner" max="199" sortBy="value"
+              translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        <item facet="publishedForGroup" max="199" sortBy="value"
+              translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+        <item facet="standard" max="15" sortBy="value"/>
+        <item facet="isHarvested" max="2" sortBy="value"/>
+        <item facet="metadataType" max="3" sortBy="value"/>
+      </summaryType>
+
+      <!-- (deprecated) old-style configuration supporting only
+      flat facet. It's recommended to use format="DIMENSION" for facet.
+      See above. -->
+      <summaryType name="hits">
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
@@ -93,6 +153,7 @@
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+            <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
             <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
             <item facet="serviceType"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
@@ -103,21 +164,6 @@
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-        </summaryType>
-        <summaryType name="manager">
-          <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-          <item facet="category" max="99" sortBy="value"
-                translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
-          <item facet="mdStatus" max="10" sortBy="value"
-                translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
-          <item facet="isValid" max="3" sortBy="value"/>
-          <item facet="groupOwner" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-          <item facet="publishedForGroup" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-          <item facet="standard" max="15" sortBy="value"/>
-          <item facet="isHarvested" max="2" sortBy="value"/>
-          <item facet="metadataType" max="3" sortBy="value"/>
         </summaryType>
         <summaryType name="titles">
             <item facet="title" sortOrder="desc" max="100"/>

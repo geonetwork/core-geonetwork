@@ -721,13 +721,12 @@
       restrict: 'A',
       scope: true,
       link: function(scope, element, attrs) {
-        scope.collapsed = attrs['gnCollapse'] == 'true';
         var next = element.next();
         element.on('click', function(e) {
           scope.$apply(function() {
             scope.collapsed = !scope.collapsed;
+            next.slideToggle();
           });
-          next.collapse('toggle');
         });
       }
     };
