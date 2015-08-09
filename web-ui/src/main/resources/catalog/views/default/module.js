@@ -79,7 +79,9 @@
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.location = gnSearchLocation;
-
+      $scope.toggleMap = function () {
+        $(searchMap.getTargetElement()).toggle();
+      };
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',

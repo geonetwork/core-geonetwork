@@ -212,6 +212,7 @@
   "Zoom":"Zoom",
   "ZoomOut":"Zoom out",
   "ZoomIn":"Zoom in",
+  "toggleMiniMap": "Hide/show map",
   "Localisation":"Localisation",
   "ThemeLayers":"Thematic Layers",
   "AddALayer":"Add a Layer",

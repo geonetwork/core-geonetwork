@@ -55,6 +55,11 @@
        data-gn-map-field-geom="searchObj.params.geometry"
        data-gn-map-field-opt="searchObj.mapfieldOption"
        class="gn-search-map">
-    <button data-ng-click="location.setMap()" class="btn btn-default"><i class="fa fa-globe"></i></button>
   </div>
+
+  <button data-ng-click="toggleMap()"
+          title="{{'toggleMiniMap' | translate}}"
+          class="gn-minimap-toggle btn btn-link">
+    <i class="fa fa-angle-double-right"></i>
+  </button>
 </div>
