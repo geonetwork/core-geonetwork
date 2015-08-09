@@ -1588,8 +1588,12 @@ public class SearchManager {
         Classifier classifier = dimension.getClassifier();
 
         for (CategoryPath categoryPath: classifier.classify(value)) {
-            result.add(new FacetField(dimension.getName(), categoryPath.components));
-            if (dimension.isLocalized() && dimension.getLocales().contains(locale)) {
+            // Related to https://github.com/geonetwork/core-geonetwork/pull/1133/files
+            // Temporary fix for indexing - facet on multilingual field will not work.
+            // Need more work.
+            //result.add(new FacetField(dimension.getName(), categoryPath.components));
+            //if (dimension.isLocalized() && dimension.getLocales().contains(locale)) {
+            if (!dimension.isLocalized() || dimension.getLocales().contains(locale)) {
                 result.add(new FacetField(dimension.getName(locale), categoryPath.components));
             }
         }
