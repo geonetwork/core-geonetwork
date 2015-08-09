@@ -1,6 +1,5 @@
 <form class="form-horizontal"
       role="form">
-
   <!--ANY full text search input-->
   <div class="row gn-top-search">
     <div class="col-md-12">
@@ -37,9 +36,8 @@
                 <i class="fa fa-search"></i>
                 &nbsp;&nbsp;
               </button>
-
               <button type="button"
-                      data-ng-click="resetSearch();"
+                      data-ng-click="resetSearch(searchObj.defaultParams);"
                       title="{{'ClearTitle' | translate}}"
                       class="btn btn-link btn-lg">
                 <i class="fa fa-times"></i>
