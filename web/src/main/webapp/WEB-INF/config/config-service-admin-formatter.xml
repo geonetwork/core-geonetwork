@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <geonet>
   <services package="org.fao.geonet">
-    <service name="md.formatter.register">
-      <documentation><![CDATA[
-        Upload a formatter package.
-        
-        Parameters:
-        * fname: ZIP file to load
-        ]]></documentation>
-      <class name=".services.metadata.format.Register">
-        <param name="user_xsl_dir" value="user_xsl" />
-      </class>
-    </service>
-
     <service name="md.formatter.remove">
       <documentation><![CDATA[
         Remove a formatter.
