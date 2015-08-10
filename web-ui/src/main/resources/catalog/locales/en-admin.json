@@ -576,6 +576,7 @@
     "qi": "Internal search",
     "quicklinks": "Quick links",
     "rdf.search": "RDF",
+    "recordWithNoTitle": "- Record with no title / wrongly indexed -",
     "rebuildIndex": "Rebuild index",
     "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
     "recordsAuthor": "Metadata records authors",
