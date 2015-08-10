@@ -210,7 +210,7 @@
             match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
 
         if (gnSearchLocation.isSearch() && (!angular.isArray(
-            searchMap.getSize()) || searchMap.getSize().indexOf(0) >= 0)) {
+            searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
           setTimeout(function() {
             searchMap.updateSize();
 
