@@ -164,7 +164,7 @@
     }
     .btn-group {
       display: flex;
-      button {
+      .btn {
         flex: 1;
       }
     }
@@ -437,6 +437,24 @@
   [gn-localisation-input] {
     .dropdown-menu {
       padding-bottom: 0;
+    }
+  }
+  .gn-draw-styleform {
+    > div > input {
+      margin: 15px 0;
+      width: 80%;
+    }
+    label {
+      font-weight: normal;
+      font-size: 13px;
+    }
+    form {
+      input[type='text'] {
+        width: 146px;
+      }
+      .form-group {
+        margin-bottom: 8px;
+      }
     }
   }
 }

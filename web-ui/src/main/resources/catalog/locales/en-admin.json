@@ -576,6 +576,7 @@
     "qi": "Internal search",
     "quicklinks": "Quick links",
     "rdf.search": "RDF",
+    "recordWithNoTitle": "- Record with no title / wrongly indexed -",
     "rebuildIndex": "Rebuild index",
     "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
     "recordsAuthor": "Metadata records authors",
@@ -867,6 +868,9 @@
     "system/z3950/enable-help": "If set, during startup GeoNetwork will start the Z39.50 server component. This component uses the ISO23950 protocol.",
     "system/z3950/port": "Port",
     "system/z3950/port-help": "Change the Z39.50 listening port. Please note: restart GeoNetwork to make this change active.",
+    "metadata/workflow": "Metadata workflow",
+    "metadata/workflow/draftWhenInGroup": "Enable workflow for record created in the following groups",
+    "metadata/workflow/draftWhenInGroup-help": "Regular expression for matching groups where record needs to be set with draft status automatically. eg. MYOCEAN-.* to match all groups starting with MYOCEAN-, GROUP1|GROUP2 to match GROUP1 or GROUP2.",
     "systemInformation": "System information",
     "criticalSystemStatus": "Critical System Checks",
     "warningSystemStatus": "Non-critical System Checks",
@@ -1044,5 +1048,6 @@
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
-	"logActivity" : "Activity"
+	  "logActivity" : "Activity",
+    "selectExistingLogo": "Select from existing logos"
 }

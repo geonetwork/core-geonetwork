@@ -91,6 +91,11 @@
           <img class="img-circle"
                data-ng-src="http://gravatar.com/avatar/{{user.email | md5}}?s=18"/>
           {{user.name}} {{user.surname}} ({{user.profile | translate}})
+          <span class="alert alert-danger ng-hide" data-ng-show="session.remainingTime > 0 &&
+                              session.remainingTime < session.alertInTitleWhen"
+                  data-translate="" data-translate-values="{remainingTime: '{{session.remainingTime}}'}">
+            sessionWillExpireIn
+          </span>
         </a>
       </li>
       <li data-ng-show="authenticated">
@@ -100,7 +105,7 @@
           {{'signout' | translate}}
         </a>
       </li>
-      <li data-ng-show="!authenticated">
+      <li data-ng-show="!authenticated && service !== 'catalog.signin'">
         <a href="{{pages.signin}}"
            title="{{'signIn'|translate}}"
            data-ng-keypress="$event">

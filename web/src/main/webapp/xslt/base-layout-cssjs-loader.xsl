@@ -62,6 +62,8 @@
         <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
+        <script src="{$uiResourcesPath}lib/tinycolor.js"></script>
 
         <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
@@ -165,6 +167,7 @@
           <xsl:if test="$wmsUrl and $layerName">
             gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
             gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+            gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
           </xsl:if>
           gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
           gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;

@@ -26,7 +26,8 @@
     '$location',
     '$timeout',
     'gnUrlUtils',
-    function($http, $location, $timeout, gnUrlUtils) {
+    'Metadata',
+    function($http, $location, $timeout, gnUrlUtils, Metadata) {
       return {
         //TODO: rewrite calls with gnHttp
 
@@ -182,6 +183,25 @@
             $location.path(path);
           });
           // TODO : handle creation error
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjByUuid
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog. Trigger a search and
+         * return a promise.
+         * @param {string} uuid of the metadata
+         * @return {HttpPromise} of the $http get
+         */
+        getMdObjByUuid: function(uuid) {
+          return $http.get('q?_uuid=' + uuid + '' +
+              '&fast=index&_content_type=json&buildSummary=false').
+              then(function(resp) {
+            return new Metadata(resp.data.metadata);
+          });
         }
       };
     }
@@ -506,7 +526,7 @@
       var listOfArrayFields = ['topicCat', 'category',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
-        'status', 'status_text',
+        'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
       this.linksCache = [];
@@ -549,6 +569,9 @@
       },
       getOwnerId: function() {
         return this['geonet:info'].ownerId;
+      },
+      getSchema: function() {
+        return this['geonet:info'].schema;
       },
       publish: function() {
         this['geonet:info'].isPublishedToAll = this.isPublished() ?
@@ -611,9 +634,42 @@
         }
         return images;
       },
+      /**
+       * Return an object containing metadata contacts
+       * as an array and resource contacts as array
+       *
+       * @return {{metadata: Array, resource: Array}}
+       */
+      getAllContacts: function() {
+        if (angular.isUndefined(this.allContacts)) {
+          this.allContacts = {metadata: [], resource: []};
+          for (var i = 0; i < this.responsibleParty.length; i++) {
+            var s = this.responsibleParty[i].split('|');
+            var contact = {
+              role: s[0] || '',
+              org: s[2] || '',
+              logo: s[3] || '',
+              email: s[4] || '',
+              name: s[5] || '',
+              position: s[6] || '',
+              address: s[7] || '',
+              phone: s[8] || ''
+            };
+            if (s[1] === 'resource') {
+              this.allContacts.resource.push(contact);
+            } else if (s[1] === 'metadata') {
+              this.allContacts.metadata.push(contact);
+            }
+          }
+        }
+        return this.allContacts;
+      },
+      /**
+       * Deprecated. Use getAllContacts instead
+       */
       getContacts: function() {
+        var ret = {};
         if (angular.isArray(this.responsibleParty)) {
-          var ret = {};
           for (var i = 0; i < this.responsibleParty.length; i++) {
             var s = this.responsibleParty[i].split('|');
             if (s[1] === 'resource') {
@@ -660,6 +716,22 @@
         } else {
           return '';
         }
+      },
+      isWorkflowEnabled: function() {
+        var st = this.mdStatus;
+        var res = st &&
+            //Status is unknown
+            (!isNaN(st) && st != '0');
+
+        //What if it is an array: gmd:MD_ProgressCode
+        if (!res && Array.isArray(st)) {
+          angular.forEach(st, function(s) {
+            if (!isNaN(s) && s != '0') {
+              res = true;
+            }
+          });
+        }
+        return res;
       }
     };
     return Metadata;

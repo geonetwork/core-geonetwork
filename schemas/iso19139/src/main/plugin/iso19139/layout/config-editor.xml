@@ -115,6 +115,7 @@
     <name>gmd:portrayalCatalogueInfo</name>
     <name>gmd:portrayalCatalogueCitation</name>
     <name>gmd:thesaurusName</name>
+    <name>gmd:resourceConstraints</name>
     <name>gmd:spatialRepresentationInfo</name>
     <name>gmd:pointOfContact</name>
     <name>gmd:contact</name>

@@ -81,7 +81,7 @@
 
 
           /** Facets configuration */
-          searchSettings.facetsSummaryType = 'hits';
+          searchSettings.facetsSummaryType = 'details';
 
           /*
              * Hits per page combo values configuration. The first one is the
@@ -152,6 +152,11 @@
             //}, {
               label: 'full',
               url: 'md.format.xml?xsl=full_view&uuid='
+              /*
+              // You can use a function to choose formatter
+              url : function(md) {
+                return 'md.format.xml?xsl=full_view&uuid=' + md.getUuid();
+              }*/
             }]
           };
 

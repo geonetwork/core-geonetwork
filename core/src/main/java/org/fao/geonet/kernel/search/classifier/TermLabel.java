@@ -31,7 +31,11 @@ public class TermLabel extends AbstractTerm {
 
     private boolean hasUriFor(String value) {
         Thesaurus thesaurus = getThesaurus();
-        return thesaurus.hasKeywordWithLabel(value, langCode);
+        if (thesaurus == null) {
+            return false;
+        } else {
+            return thesaurus.hasKeywordWithLabel(value, langCode);
+        }
     }
 
     private String getUriFor(String value) {

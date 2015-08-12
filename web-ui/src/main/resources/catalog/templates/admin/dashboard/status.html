@@ -78,7 +78,7 @@
                       <div class="dropdown">
                           <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true"
                              role="button" aria-expanded="false">
-                              {{md.title || md.defaultTitle}}
+                              {{md.title || md.defaultTitle || ('recordWithNoTitle' | translate)}}
                           </a>
 
                           <a class="pull-right" target="_blank"

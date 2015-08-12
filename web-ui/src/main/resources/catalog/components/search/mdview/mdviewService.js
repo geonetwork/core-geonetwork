@@ -68,6 +68,15 @@
         gnSearchLocation.setUuid(uuid);
       };
 
+      // The service needs to keep a reference to the metadata item scope
+      var currentMdScope;
+      this.setCurrentMdScope = function(scope) {
+        currentMdScope = scope;
+      };
+      this.getCurrentMdScope = function() {
+        return currentMdScope;
+      };
+
       /**
        * Called when you want to pass from mdview uuid url back to search.
        * It change path back to search and inject the last parameters saved
@@ -111,6 +120,7 @@
               // get a new search to pick the md
               gnSearchManagerService.gnSearch({
                 uuid: uuid,
+                _isTemplate: 'y or n',
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
@@ -130,11 +140,12 @@
       };
 
       this.initFormatter = function(selector) {
+        var $this = this;
         var loadFormatter = function() {
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
-            gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
-                selector);
+            gnMdFormatter.load(uuid,
+                selector, $this.getCurrentMdScope());
           }
         };
         loadFormatter();
@@ -171,23 +182,67 @@
     '$compile',
     '$sce',
     'gnAlertService',
-    function($rootScope, $http, $compile, $sce, gnAlertService) {
+    'gnSearchSettings',
+    '$q',
+    'gnMetadataManager',
+    function($rootScope, $http, $compile, $sce, gnAlertService,
+             gnSearchSettings, $q, gnMetadataManager) {
 
-      this.load = function(url, selector) {
+
+      this.getFormatterUrl = function(fUrl, scope, uuid) {
+        var url;
+        var promiseMd;
+        if (scope && scope.md) {
+          var deferMd = $q.defer();
+          deferMd.resolve(scope.md);
+          promiseMd = deferMd.promise;
+        }
+        else {
+          promiseMd = gnMetadataManager.getMdObjByUuid(uuid);
+        }
+
+        return promiseMd.then(function(md) {
+          if (angular.isString(fUrl)) {
+            url = fUrl + md.getUuid();
+          }
+          else if (angular.isFunction(fUrl)) {
+            url = fUrl(md);
+          }
+
+          // Attach the md to the grid element scope
+          if (!scope.md) {
+            scope.$parent.md = md;
+          }
+          return url;
+        });
+      };
+
+      this.load = function(uuid, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
-        $http.get(url).then(function(response) {
-          $rootScope.$broadcast('mdLoadingEnd');
-          var scope = angular.element($(selector)).scope();
-          scope.fragment = $sce.trustAsHtml(response.data);
-          var el = document.createElement('div');
-          el.setAttribute('gn-metadata-display', '');
-          $(selector).append(el);
-          $compile(el)(scope);
-        }, function() {
-          $rootScope.$broadcast('mdLoadingEnd');
-          gnAlertService.addAlert({
-            msg: 'Erreur de chargement de la métadonnée.',
-            type: 'danger'
+        var newscope = scope ? scope.$new() :
+            angular.element($(selector)).scope().$new();
+
+        this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
+            newscope, uuid).then(function(url) {
+          $http.get(url).then(function(response) {
+            $rootScope.$broadcast('mdLoadingEnd');
+
+            var newscope = scope ? scope.$new() :
+                angular.element($(selector)).scope().$new();
+
+            newscope.fragment =
+                $compile(angular.element(response.data))(newscope);
+
+            var el = document.createElement('div');
+            el.setAttribute('gn-metadata-display', '');
+            $(selector).append(el);
+            $compile(el)(newscope);
+          }, function() {
+            $rootScope.$broadcast('mdLoadingEnd');
+            gnAlertService.addAlert({
+              msg: 'Erreur de chargement de la métadonnée.',
+              type: 'danger'
+            });
           });
         });
       };

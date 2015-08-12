@@ -250,14 +250,8 @@ public class Geonetwork implements ApplicationHandler {
                     // to have access to the GN context in spring-managed objects
                     ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
                     cc.setSrvctx(context);
-
-                    if (!z3950Enable) {
-                        logger.info("     Server is Disabled.");
-                    } else {
-                        logger.info("     Server is Enabled.");
-
-                        Server.init(z3950port, appContext);
-                    }
+                    Server.init(z3950port, appContext);
+                    
                 } catch (Exception e) {
                     logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
                                  "harvesting) may not work. Error is:" + e.getMessage());

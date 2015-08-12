@@ -25,7 +25,7 @@
       </a>
     </li>-->
     <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+           data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
       <i class="fa fa-key"></i>&nbsp;
       <span data-translate="">privileges</span>
@@ -48,14 +48,14 @@
     based on current status. -->
     <li><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
-                              isWorkflowEnabled(md)"
+                              md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">updateStatus</span>
     </a></li>
     <li><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
-                                !isWorkflowEnabled(md)"
+                                !md.isWorkflowEnabled()"
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">enableWorkflow</span>

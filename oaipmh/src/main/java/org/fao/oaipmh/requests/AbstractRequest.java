@@ -23,6 +23,7 @@
 
 package org.fao.oaipmh.requests;
 
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -111,7 +112,11 @@ public abstract class AbstractRequest {
         }
 
         //--- validate the result
-        Xml.validate(response);
+        try {
+            Xml.validate(response);
+        } catch (XSDValidationErrorEx e) {
+            response.addContent(new Element ("error").setText(e.getMessage()));
+        }
 
         //--- raises an exception if the case
         OaiPmhException.unmarshal(response);

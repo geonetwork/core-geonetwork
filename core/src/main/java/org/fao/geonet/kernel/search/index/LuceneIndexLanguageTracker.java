@@ -2,14 +2,9 @@ package org.fao.geonet.kernel.search.index;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
-import org.apache.lucene.index.ConcurrentMergeScheduler;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TrackingIndexWriter;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.ApplicationContextHolder;
@@ -22,12 +17,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -270,6 +260,8 @@ public class LuceneIndexLanguageTracker {
             docAfterFacetBuild = taxonomyIndexTracker.addDocument(info.document, info.taxonomy);
             // Index the document returned after the facets are built by the taxonomy writer
             if (docAfterFacetBuild == null) {
+                // Drop FacetField from the document in that case
+                removeFacetFields(info.document);
                 trackingWriters.get(language).addDocument(info.document);
             } else {
                 trackingWriters.get(language).addDocument(docAfterFacetBuild);
@@ -277,6 +269,23 @@ public class LuceneIndexLanguageTracker {
         } finally {
             lock.unlock();
         }
+    }
+
+    /**
+     * Remove all facet fields from the provided document
+     * @param doc
+     * @return
+     */
+    Document removeFacetFields(Document doc) {
+        List<IndexableField> listOfFields = doc.getFields();
+        Iterator<IndexableField> iterator = listOfFields.iterator();
+        while(iterator.hasNext()) {
+            IndexableField field = iterator.next();
+            if (field instanceof FacetField) {
+                iterator.remove();
+            }
+        }
+        return doc;
     }
 
     public void open(String language) throws IOException {

@@ -1,7 +1,11 @@
 (function() {
   goog.provide('gn_import_controller');
 
+
+
+
   goog.require('gn_category');
+  goog.require('gn_formfields_directive');
   goog.require('gn_importxsl');
   goog.require('gn_formfields_directive');
 

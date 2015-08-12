@@ -6,6 +6,8 @@
 // import the css files as less files so they are included in the final output of wro4j
 @import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
 @import (less) "../lib/style/datetimepicker.css";
+@import (less) "../lib/angular.ext/colorpicker/angularjs-color-picker.min.css";
+
 @import (less) "inspire/iti.css";
 // Import this CSS to have INSPIRE themes translations
 //@import (less) "inspire/iti-i18n.css";
@@ -20,20 +22,58 @@
 
 
 .gn-facet {
+  .list-group {
+    border-left: 1px dotted @gray-lighter;
+    margin-left: .5em;
+    padding-left: .1em;
+    margin-bottom: 0;
+  }
   .list-group-item {
-    border-width: 0;
-    border-radius: 0;
-    padding: .35em 0px;
-    border-top: 1px dotted lightgrey;
+    padding: 0.1em;
+    //max-height: 22px;
+    color: @gray;
+    border: none;
+    label {
+      margin-bottom: 0px;
+      //width: 90%; /* hack */
+      cursor: pointer;
+    }
+    label.gn-facet-active {
+      color: @gray-darker
+    }
+  }
+  .gn-facet-count, .list-group-item > span.fa {
+    color: @gray-light;
+  }
+  .gn-facet-collapseall {
+    color: @gray-darker;
+    cursor: pointer;
+    position: absolute;
+    float: left;
+    top: 9px;
+    left: 0px;
+  }
+  .gn-facet-toggle {
+    cursor: pointer;
+  }
+  .gn-facet-moreorless {
+    list-style: none;
+    padding-left: 0.5em;
+    button {
+      width: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
   }
   .list-group-item:hover {
-    color: #428bca;
+    color: @brand-primary;
   }
   h4 {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-    border-bottom: 2px black solid;
+    margin-bottom: 0px;
+    border-bottom: 2px @gray-lighter solid;
   }
 }
 .gn-facet-breadcrumb {
@@ -179,6 +219,9 @@ span.gn-facet-label:first-letter {
   padding-right: 15px;
 }
 
+[gn-collapse], [data-gn-collapse] {
+  cursor: pointer;
+}
 .gn-searchform {
   .backtonormal {
     margin-bottom: -20px;
@@ -186,9 +229,6 @@ span.gn-facet-label:first-letter {
   font-size: 90%;
   label {
     font-weight: normal;
-  }
-  [gn-collapse] {
-    cursor: pointer;
   }
   input[type='text'], select {
     .input-sm;
@@ -241,6 +281,7 @@ span.gn-facet-label:first-letter {
   width: 100%;
   height: 250px;
 }
+
 
 .collapse-text-toggle {
   color: grey;
@@ -308,7 +349,7 @@ span.gn-facet-label:first-letter {
     //right: 0px;
     //margin: 2px;
     //z-index: 10;
-    float: right;
+    //float: right;
   }
   .invisible {
     display: none;

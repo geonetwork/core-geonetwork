@@ -142,26 +142,36 @@
           getLayerExtentFromGetCap: function(map, getCapLayer) {
             var extent = null;
             var layer = getCapLayer;
-            var srsCode = map.getView().getProjection().getCode();
+            var proj = map.getView().getProjection();
 
             //var ext = layer.BoundingBox[0].extent;
             //var olExtent = [ext[1],ext[0],ext[3],ext[2]];
             // TODO fix using layer.BoundingBox[0].extent
             // when sextant fix his capabilities
             if (angular.isArray(layer.EX_GeographicBoundingBox)) {
-              extent = ol.proj.transformExtent(
-                  layer.EX_GeographicBoundingBox,
-                  'EPSG:4326',
-                  srsCode);
+              extent =
+                  ol.extent.containsExtent(
+                      proj.getWorldExtent(),
+                      layer.EX_GeographicBoundingBox) ?
+                      ol.proj.transformExtent(layer.EX_GeographicBoundingBox,
+                          'EPSG:4326', proj) :
+                      proj.getExtent();
+
             } else if (angular.isArray(layer.BoundingBox)) {
               for (var i = 0; i < layer.BoundingBox.length; i++) {
                 var bbox = layer.BoundingBox[i];
                 // Use the bbox with the code matching the map projection
                 // or the first one.
-                if (bbox.crs === srsCode || layer.BoundingBox.length === 1) {
-                  extent = ol.proj.transformExtent(bbox.extent,
-                      bbox.crs || 'EPSG:4326',
-                      srsCode);
+                if (bbox.crs === proj.getCode() ||
+                    layer.BoundingBox.length === 1) {
+
+                  extent =
+                      ol.extent.containsExtent(
+                          proj.getWorldExtent(),
+                          bbox.extent) ?
+                          ol.proj.transformExtent(bbox.extent,
+                      bbox.crs || 'EPSG:4326', proj) :
+                          proj.getExtent();
                   break;
                 }
               }

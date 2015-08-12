@@ -175,8 +175,15 @@ public class Info implements Service
 		Collections.sort(list);
 		Element result = new Element("icons");
 
-		for (Path icon : list)
-			result.addContent(new Element("icon").setText(icon.getFileName().toString()));
+		for (Path icon : list) {
+		    if(icon != null) {
+		        Path fileName = icon.getFileName();
+                if(fileName != null) {
+    			result.addContent(new Element("icon").
+    			        setText(fileName.toString()));
+    		    }
+		    }
+		}
 
 		return result;
 	}
@@ -190,12 +197,13 @@ public class Info implements Service
             if (icon == null || !Files.isRegularFile(icon))
                 return false;
 
-            String name = icon.getFileName().toString();
-
-            for (String ext : iconExt)
-                if (name.endsWith(ext))
-                    return true;
-
+            if(icon != null && icon.getFileName() != null) {
+                String name = icon.getFileName().toString();
+    
+                for (String ext : iconExt)
+                    if (name.endsWith(ext))
+                        return true;
+            }
             return false;
         }
     };
@@ -263,7 +271,7 @@ public class Info implements Service
             for (Path sheet : sheets) {
 
                     String id = sheet.toString();
-                    if (id.endsWith(".xsl")) {
+                    if (id != null && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
 
                         Element res = new Element(Jeeves.Elem.RECORD);

@@ -78,8 +78,11 @@
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
       $scope.location = gnSearchLocation;
-
+      $scope.toggleMap = function () {
+        $(searchMap.getTargetElement()).toggle();
+      };
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
@@ -207,7 +210,7 @@
             match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
 
         if (gnSearchLocation.isSearch() && (!angular.isArray(
-            searchMap.getSize()) || searchMap.getSize().indexOf(0) >= 0)) {
+            searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
           setTimeout(function() {
             searchMap.updateSize();
 
@@ -234,9 +237,16 @@
         searchMap: searchMap,
         mapfieldOption: {
           relations: ['within']
+        },
+        defaultParams: {
+          'facet.q': '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details'
+        },
+        params: {
+          'facet.q': '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details'
         }
       }, gnSearchSettings.sortbyDefault);
-
 
     }]);
 })();

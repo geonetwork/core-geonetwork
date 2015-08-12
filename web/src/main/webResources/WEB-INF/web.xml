@@ -60,7 +60,16 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
+    <filter>
+      <filter-name>SessionTimeoutCookieFilter</filter-name>
+      <filter-class>org.geonetwork.http.SessionTimeoutCookieFilter</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>SessionTimeoutCookieFilter</filter-name>
+      <url-pattern>/srv/*</url-pattern>
+    </filter-mapping>
+
     <!-- url rewrite filter -->
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -313,6 +322,7 @@
                 application/vnd.ogc.gml,
                 application/vnd.ogc.sld+xml,
                 application/vnd.google-earth.kml+xml,
+                application/vnd.google-earth.kmz,
                 application/json
             </param-value>
         </init-param>
