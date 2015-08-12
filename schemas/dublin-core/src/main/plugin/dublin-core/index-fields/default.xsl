@@ -40,11 +40,13 @@
 
 			<xsl:for-each select="/simpledc/dc:date">
 			  <Field name="createDate" string="{string(.)}" store="true" index="true"/>
+        <Field name="createDateYear" string="{substring(., 0, 5)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			
 			<xsl:for-each select="/simpledc/dct:modified">
 				<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+        <!--<Field name="createDateYear" string="{substring(., 0, 5)}" store="true" index="true"/>-->
 			</xsl:for-each>
 	
 			<xsl:for-each select="/simpledc/dc:format">
@@ -105,8 +107,6 @@
             <xsl:variable name="east" select="substring-before($e, ',')"/>
             <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
             <xsl:variable name="west" select="if (contains($w, '. ')) then substring-before($w, '. ') else $w"/>
-            <xsl:message>##<xsl:value-of select="$west"/> </xsl:message>
-            <xsl:message>##<xsl:value-of select="$w"/> </xsl:message>
             <xsl:variable name="p" select="substring-after($coverage,'(')"/>
             <xsl:variable name="place" select="substring-before($p,')')"/>
 
