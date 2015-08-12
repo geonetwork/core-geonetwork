@@ -120,6 +120,7 @@
               // get a new search to pick the md
               gnSearchManagerService.gnSearch({
                 uuid: uuid,
+                _isTemplate: 'y or n',
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
