@@ -36,11 +36,7 @@ import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
@@ -67,6 +63,7 @@ import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.config.LogUtils;
 import org.fao.geonet.services.metadata.format.Format;
@@ -384,6 +381,16 @@ public class Geonetwork implements ApplicationHandler {
         _applicationContext.getBean(ThumbnailMaker.class).init(context);
 
         logger.info("Site ID is : " + settingMan.getSiteId());
+
+        // Add local site to the source table
+        SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
+        if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
+            final Source source = sourceRepository.save(
+                    new Source()
+                            .setLocal(true)
+                            .setName(settingMan.getSiteName())
+                            .setUuid(settingMan.getSiteId()));
+        }
 
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
