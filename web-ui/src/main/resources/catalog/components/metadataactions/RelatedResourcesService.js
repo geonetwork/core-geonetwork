@@ -258,13 +258,14 @@
 
             if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
-                    resource['@type'] === 'children')) {
+                 resource['@type'] === 'children')) {
               return 'MDFAMILY';
             } else if (resource['@type'] &&
                (resource['@type'] === 'sibling')) {
               return 'MDSIBLING';
             } else if (resource['@type'] &&
-               (resource['@type'] === 'sources')) {
+               (resource['@type'] === 'sources' ||
+                resource['@type'] === 'hassource')) {
               return 'MDSOURCE';
             } else if (resource['@type'] &&
                (resource['@type'] === 'associated' ||
