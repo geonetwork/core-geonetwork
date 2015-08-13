@@ -185,6 +185,19 @@ public class GetRelated implements Service, RelatedMetadata {
         _config = config;
     }
 
+    /**
+     *
+     * @param lang
+     * @param id
+     * @param uuid
+     * @param type List of comma or "|" separated types
+     * @param from
+     * @param to
+     * @param fast
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/{lang}/xml.relation")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                        @RequestParam (required = false) Integer id,
@@ -306,7 +319,7 @@ public class GetRelated implements Service, RelatedMetadata {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
-        List<String> listOfTypes = new ArrayList<String>(Arrays.asList(type.split(",")));
+        List<String> listOfTypes = new ArrayList<String>(Arrays.asList(type.split(",|\\|")));
         if (listOfTypes != null && listOfTypes.size() == 1 && "".equals(listOfTypes.get(0))) {
             listOfTypes.clear();
         }
