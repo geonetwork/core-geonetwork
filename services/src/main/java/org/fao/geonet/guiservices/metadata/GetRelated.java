@@ -71,6 +71,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -305,8 +306,10 @@ public class GetRelated implements Service, RelatedMetadata {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
-        List<String> listOfTypes = Arrays.asList(type.split(","));
-        
+        List<String> listOfTypes = new ArrayList<String>(Arrays.asList(type.split(",")));
+        if (listOfTypes != null && listOfTypes.size() == 1 && "".equals(listOfTypes.get(0))) {
+            listOfTypes.clear();
+        }
         // Get the cached version (use by classic GUI)
         Element md = Show.getCached(context.getUserSession(), id);
         if (md == null) {
