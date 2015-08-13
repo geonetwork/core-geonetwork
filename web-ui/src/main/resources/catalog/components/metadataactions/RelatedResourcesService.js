@@ -232,7 +232,9 @@
 
           this.getType = function(resource) {
             var protocolOrType = resource.protocol + resource.serviceType;
-            if (angular.isString(protocolOrType)) {
+            // Cas for links
+            if (angular.isString(protocolOrType) &&
+                angular.isUndefined(resource['geonet:info'])) {
               if (protocolOrType.match(/wms/i)) {
                 return 'WMS';
               } else if (protocolOrType.match(/wmts/i)) {
@@ -256,6 +258,7 @@
               }
             }
 
+            // Metadata records
             if (resource['@type'] &&
                 (resource['@type'] === 'parent' ||
                  resource['@type'] === 'children')) {
