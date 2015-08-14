@@ -144,7 +144,7 @@ public class Download {
 					String  name  = group.getName();
 					String  email = group.getEmail();
 
-					if (email.trim().length() != 0)
+					if (email != null && email.trim().length() != 0)
 					{
 					    // TODO i18n
 						String subject = "File " + fname + " has been downloaded";
