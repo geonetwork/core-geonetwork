@@ -735,11 +735,17 @@
         }
       },
       isUsingAngularEditor: function() {
-        return this.standardName.indexOf('MedSea') >= 0 ||
-            (this['geonet:info'].schema === 'iso19139' && this.standardName.indexOf('EMODNET - HYDRO') >= 0);
+        if (angular.isUndefined(this.standardName)) {
+          return false;
+        } else {
+          return this.standardName.indexOf('MedSea') >= 0 ||
+            (this['geonet:info'].schema === 'iso19139' &&
+            this.standardName.indexOf('EMODNET - HYDRO') >= 0);
+        }
       },
       getBoxAsPolygon: function(i) {
-        // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
+        // Polygon((4.6810%2045.9170,5.0670%2045.9170,
+        // 5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
         var bboxes = [];
         if (this.geoBox[i]) {
           var coords = this.geoBox[i].split('|');
