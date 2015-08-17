@@ -211,8 +211,9 @@
           var url;
           if(md.getSchema() == 'iso19139.sdn-product') {
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
-          }
-          else {
+          } else if(md.getSchema() == 'iso19115-3') {
+            url = 'md.format.xml?xsl=xsl-view&view=medsea&uuid=' + md.getUuid();
+          } else {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
           }
           return url;
