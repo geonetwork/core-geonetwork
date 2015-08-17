@@ -18,7 +18,6 @@
   <!-- Starting point -->
   <xsl:template match="/">
     <div class="container gn-metadata-view">
-      <!--<xsl:message>#Render tab: <xsl:value-of select="$tab"/></xsl:message>-->
       <article id="gn-metadata-view-{$metadataId}">
         <header>
           <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
@@ -104,7 +103,11 @@
     </div>
   </xsl:template>
 
-
+  <xsl:template mode="render-view" match="section[not(@name) and not(@xpath)]">
+    <div id="gn-section-{generate-id()}">
+      <xsl:apply-templates mode="render-view" select="*|@*"/>
+    </div>
+  </xsl:template>
 
   <!-- Render fields. -->
   <xsl:template mode="render-view" match="field[@xpath]">
