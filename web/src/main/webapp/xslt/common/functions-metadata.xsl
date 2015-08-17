@@ -7,6 +7,28 @@
   <!-- Provides XSL function related to metadata management like
   retrieving labels, helper, -->
 
+
+  <!--
+      Return the original node with its context when a node
+       is retrieved using the evaluate template (which cause the
+       element to lost its context. Only works on an enumerated
+       metadocument (ie. in editing mode).
+    -->
+  <xsl:function name="gn-fn-metadata:getOriginalNode" as="node()">
+    <xsl:param name="metadata" as="node()"/>
+    <xsl:param name="evaluatedNode" as="node()"/>
+
+    <xsl:variable name="nodeRef" select="$evaluatedNode/*/gn:element/@ref"/>
+    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
+
+    <!--<xsl:message>#getOriginalNode ==================</xsl:message>
+    <xsl:message><xsl:value-of select="$evaluatedNode/*/gn:element/@ref"/></xsl:message>
+    <xsl:message>Match with ref: <xsl:value-of select="$node/gn:element/@ref"/></xsl:message>
+    <xsl:message><xsl:copy-of select="$node"/></xsl:message>-->
+
+    <xsl:sequence select="if ($node) then $node else $evaluatedNode"/>
+  </xsl:function>
+
   <!-- 
     Return the label of an element looking in <schema>/loc/<lang>/labels.xml
   -->
