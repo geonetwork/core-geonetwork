@@ -97,7 +97,10 @@
 
       $scope.userLoginPromise.finally(function() {
         $scope.searching++;
-        angular.extend($scope.searchObj.params, defaultParams);
+        $scope.searchObj.params = angular.extend({},
+          $scope.searchObj.defaultParams || defaultParams,
+          $scope.searchObj.params,
+          defaultParams);
 
         // Set default pagination if not set
         if ((!keepPagination &&
@@ -138,6 +141,7 @@
               }
               $scope.searchResults.count = data.count;
               $scope.searchResults.facet = data.facet;
+              $scope.searchResults.dimension = data.dimension;
 
               // compute page number for pagination
               if ($scope.searchResults.records.length > 0 &&

@@ -24,5 +24,7 @@
     "stereoMate-link": "Stereo mate",
     "crossReference-link": "Cross Reference",
     "partOfSeamlessDatabase-link": "Part of Seamless Database",
-    "isDescriptionOf-link": "Description"
+    "isDescriptionOf-link": "Description",
+    "inclusive" : "Inclusive",
+    "exclusive" : "Exclusive"
 }

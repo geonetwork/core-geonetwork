@@ -71,9 +71,12 @@
 
       <div class="row">
         <div class="col-md-3 gn-search-facet">
+
+          <!-- Hierachical facet mode -->
           <div data-ng-show="searchResults.records.length > 0"
-               data-gn-facet-list="searchResults.facet"
-               data-facet-config="facetsSummaryType"
+               data-gn-facet-dimension-list="searchResults.dimension"
+               data-params="searchObj.params"
+               data-facet-type="facetsSummaryType"
                data-current-facets="currentFacets">
           </div>
         </div>

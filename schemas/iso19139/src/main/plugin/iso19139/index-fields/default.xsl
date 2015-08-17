@@ -382,14 +382,14 @@
         <xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
         <xsl:variable name="email" select="../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
         <xsl:variable name="phone" select="../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
-        <xsl:variable name="individualName" select="../../gmd:individualName/*/text()"/>
-        <xsl:variable name="positionName" select="../../gmd:positionName/*/text()"/>
+        <xsl:variable name="individualName" select="../../gmd:individualName/gco:CharacterString/text()"/>
+        <xsl:variable name="positionName" select="../../gmd:positionName/gco:CharacterString/text()"/>
         <xsl:variable name="address" select="string-join(../../gmd:contactInfo/*/gmd:address/*/(
                                           gmd:deliveryPoint|gmd:postalCode|gmd:city|
-                                          gmd:administrativeArea|gmd:country)/*/text(), ', ')"/>
+                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
         <Field name="responsibleParty"
-               string="{concat($roleTranslation, '|resource|', ., '|', $logo, '|', $email, '|', $individualName, '|', $positionName, '|', $address, '|', $phone)}"
+               string="{concat($roleTranslation, '|resource|', ., '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
                store="true" index="false"/>
 			</xsl:for-each>
 
@@ -821,14 +821,14 @@
 			<xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
 			<xsl:variable name="email" select="../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
 			<xsl:variable name="phone" select="../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
-			<xsl:variable name="individualName" select="../../gmd:individualName/*/text()"/>
-			<xsl:variable name="positionName" select="../../gmd:positionName/*/text()"/>
+			<xsl:variable name="individualName" select="../../gmd:individualName/gco:CharacterString/text()"/>
+			<xsl:variable name="positionName" select="../../gmd:positionName/gco:CharacterString/text()"/>
 			<xsl:variable name="address" select="string-join(../../gmd:contactInfo/*/gmd:address/*/(
                                           gmd:deliveryPoint|gmd:postalCode|gmd:city|
-                                          gmd:administrativeArea|gmd:country)/*/text(), ', ')"/>
+                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
 			<Field name="responsibleParty"
-             string="{concat($roleTranslation, '|metadata|', ., '|', $logo, '|', $email, '|', $individualName, '|', $positionName, '|', $address, '|', $phone)}"
+             string="{concat($roleTranslation, '|metadata|', ., '|', $logo, '|', string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
              store="true" index="false"/>
 		</xsl:for-each>
 

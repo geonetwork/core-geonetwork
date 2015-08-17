@@ -307,11 +307,20 @@
               <th data-translate="">lineage</th>
               <td>
                 <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
-
-
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <td>
                 <div data-gn-related="mdView.current.record"
                      data-types="source"
                      data-title="{{'sourceDatasets' | translate}}">
+                </div>
+
+
+                <div data-gn-related="mdView.current.record"
+                     data-types="hassource"
+                     data-title="{{'isSourceOfDatasets' | translate}}">
                 </div>
               </td>
             </tr>
@@ -320,7 +329,7 @@
 
 
         <div data-gn-related="mdView.current.record"
-             data-types="fcat"
+             data-types="fcat|hasfeaturecat"
              data-title="{{'featureCatalog' | translate}}">
         </div>
         <div data-gn-related="mdView.current.record"

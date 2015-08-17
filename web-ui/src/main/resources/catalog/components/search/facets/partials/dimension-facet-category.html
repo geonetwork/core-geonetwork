@@ -1,0 +1,32 @@
+<ul class="list-group">
+  <li data-ng-repeat="c in category"
+      data-ng-init="path = buildPath(c); isSelected = isOnDrillDownPath(c)"
+      data-ng-if="$index < maxItems"
+      class="list-group-item">
+    <span data-ng-click="toggleNode($event)"
+          class="fa fa-fw gn-facet-toggle"
+          data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'invisible'" ></span>
+    <label title="{{c['@label'] || c['@value']}}"
+            data-ng-class="{'gn-facet-active': isSelected}">
+      <input type="checkbox"
+             data-ng-checked="isInFilter(c)"
+             data-ng-click="filter(c, $event)"/>
+      {{(c['@label'] || c['@value']) | characters:30}}&nbsp;
+      <span class="gn-facet-count">({{c['@count']}})</span>
+    </label>
+   <div data-gn-facet-dimension-category="c.category"
+        data-category-key="categoryKey"
+        data-facet-config="facetConfig"
+        data-path="path"
+        data-params="params"
+        data-ng-class="isSelected ? '' : 'hidden'"></div>
+  </li>
+  <li class="gn-facet-moreorless"
+      data-ng-if="category.length - initialMaxItems > 0">
+    <button data-ng-click="toggleAll()"
+            class="btn btn-link">
+      {{category.length - initialMaxItems}}&nbsp;
+      {{(category.length >= maxItems) ? ('more' | translate) : ('less' | translate)}}
+    </button>
+  </li>
+</ul>

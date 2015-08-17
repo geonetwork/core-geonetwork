@@ -44,6 +44,7 @@ import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.facet.FacetField;
+import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.AtomicReaderContext;
@@ -1268,7 +1269,9 @@ public class SearchManager {
             documents.addContent(defaultLang);
         }
         catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Indexing stylesheet contains errors : " + e.getMessage() + "\n\t Marking the metadata as _indexingError=1 in index");
+            Log.error(Geonet.INDEX_ENGINE,
+                    String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
+                            e.getMessage()));
             Element xmlDoc = new Element("Document");
             SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
             SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
@@ -1588,7 +1591,8 @@ public class SearchManager {
         Classifier classifier = dimension.getClassifier();
 
         for (CategoryPath categoryPath: classifier.classify(value)) {
-            if (!dimension.isLocalized() || dimension.getLocales().contains(locale)) {
+            result.add(new FacetField(dimension.getName(), categoryPath.components));
+            if (dimension.isLocalized() && dimension.getLocales().contains(locale)) {
                 result.add(new FacetField(dimension.getName(locale), categoryPath.components));
             }
         }

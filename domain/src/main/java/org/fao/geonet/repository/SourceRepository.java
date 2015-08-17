@@ -21,4 +21,14 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
     public
     @Nullable
     Source findOneByName(@Nonnull String name);
+
+    /**
+     * Find the source with the provided UUID.
+     *
+     * @param uuid the UUID of the source to lookup
+     * @return the source with the provided name or <code>null</code>.
+     */
+    public
+    @Nullable
+    Source findOneByUuid(@Nonnull String uuid);
 }

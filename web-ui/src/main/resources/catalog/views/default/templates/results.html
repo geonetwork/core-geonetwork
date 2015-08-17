@@ -23,16 +23,28 @@
 
   <div class="row">
     <div class="col-md-3 gn-search-facet">
+
+      <!-- Hierachical facet mode -->
       <div data-ng-show="searchResults.records.length > 0"
-           data-gn-facet-list="searchResults.facet"
-           data-facet-config="facetsSummaryType"
+           data-gn-facet-dimension-list="searchResults.dimension"
+           data-params="searchObj.params"
+           data-facet-type="facetsSummaryType"
            data-current-facets="currentFacets">
       </div>
+
+      <!-- Flat facet mode (deprecated)
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-facet-list="searchResults.facet"
+           data-params="searchObj.params"
+           data-facet-config="facetsSummaryType"
+           data-current-facets="currentFacets">
+      </div>-->
     </div>
     <div class="col-md-9">
+      <!-- Flat facet mode (deprecated)
       <div class="gn-results-heading">
         <div data-gn-facet-breadcrumb="currentFacets"></div>
-      </div>
+      </div>-->
       <span class="loading fa fa-spinner fa-spin"
             data-ng-show="searching"></span>
 
@@ -55,6 +67,11 @@
        data-gn-map-field-geom="searchObj.params.geometry"
        data-gn-map-field-opt="searchObj.mapfieldOption"
        class="gn-search-map">
-    <button data-ng-click="location.setMap()" class="btn btn-default"><i class="fa fa-globe"></i></button>
   </div>
+
+  <button data-ng-click="toggleMap()"
+          title="{{'toggleMiniMap' | translate}}"
+          class="gn-minimap-toggle btn btn-link">
+    <i class="fa fa-angle-double-right"></i>
+  </button>
 </div>

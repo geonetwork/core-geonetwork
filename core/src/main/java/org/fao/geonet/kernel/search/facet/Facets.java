@@ -66,12 +66,11 @@ public class Facets {
                     result.setMultiValued(dimensionName, true);
                     result.setHierarchical(dimensionName, true);
                 }
-            } else {
-                String dimensionName = dimension.getName();
-                result.setIndexFieldName(dimensionName, dimension.getFacetFieldName(null));
-                result.setMultiValued(dimensionName, true);
-                result.setHierarchical(dimensionName, true);
             }
+            String dimensionName = dimension.getName();
+            result.setIndexFieldName(dimensionName, dimension.getFacetFieldName(null));
+            result.setMultiValued(dimensionName, true);
+            result.setHierarchical(dimensionName, true);
         }
 
         return result;
