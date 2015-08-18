@@ -124,7 +124,7 @@ public class Group extends Localized {
      *
      * @return the email address.
      */
-    @Column(length = 32)
+    @Column(length = 128)
     public String getEmail() {
         return _email;
     }
