@@ -52,6 +52,10 @@
           var map = scope.map;
           var source = new ol.source.Vector();
 
+          scope.drawObj = {
+            adding: false
+          };
+
           var txtStyleCache = {};
           var featureStyle = new ol.style.Style({
             fill: new ol.style.Fill({
