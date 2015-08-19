@@ -8,8 +8,10 @@
          data-ng-show="user.isReviewerOrMore()"
          title="{{('isTemplate' + md.isTemplate) | translate}}"></i>
       <a href=""
+         data-ng-show="md.isTemplate != 's'"
            data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
            title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+      <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
       <br/>
       <span title="{{'metadataAuthor' | translate}}">
         {{md.getOwnername()}}
@@ -28,7 +30,7 @@
     <td>
       <!-- TODO: subtemplate link for editing is different -->
       <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md)"
+         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
          data-ng-href="#/metadata/{{md['geonet:info'].id}}"
          title="{{'edit' | translate}}">
         <i class="fa fa-pencil"></i>
@@ -36,7 +38,7 @@
     </td>
     <td>
       <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md)"
+         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
          data-gn-click-and-spin="deleteRecord(md)"
          data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
          title="{{'delete' | translate}}">
@@ -45,6 +47,7 @@
     </td>
     <td>
       <a class="btn btn-link"
+         data-ng-show="md.isTemplate != 's'"
          data-ng-href="#/create?from={{md['geonet:info'].id}}"
          title="{{'duplicate' | translate}}">
         <i class="fa fa-copy text-muted"></i>
@@ -52,7 +55,7 @@
     </td>
     <td>
       <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md)"
+         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
          data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
          title="{{'createChild' | translate}}">
         <i class="fa fa-sitemap text-muted"></i>

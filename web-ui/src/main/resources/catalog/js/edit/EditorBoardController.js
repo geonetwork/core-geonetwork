@@ -32,7 +32,7 @@
           sortBy: 'changeDate',
           // TODO manage subtemplate from this UI
           //_isTemplate: 'y or n or s',
-          _isTemplate: 'y or n',
+          _isTemplate: 'y or n or s',
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
