@@ -52,10 +52,6 @@
           var map = scope.map;
           var source = new ol.source.Vector();
 
-          scope.drawObj = {
-            adding: false
-          };
-
           var txtStyleCache = {};
           var featureStyle = new ol.style.Style({
             fill: new ol.style.Fill({
@@ -237,10 +233,35 @@
           scope.drawText = drawText;
           map.addInteraction(drawText);
 
-          var select = new ol.interaction.Select();
+          var select = new ol.interaction.Select({
+            style: ol.style.defaultStyleFunction
+          });
           var modify = new ol.interaction.Modify({
             features: select.getFeatures()
           });
+
+          scope.interactions = [{
+            interaction: drawPoint,
+            label: 'Point'
+          }, {
+            interaction: drawLine,
+            label: 'Linestring'
+          }, {
+            interaction: drawPolygon,
+            label: 'Polygon'
+          }, {
+            interaction: drawText,
+            label: 'Text'
+          }];
+
+          scope.getActiveDrawLabel = function() {
+            for(var i=0;i<scope.interactions.length;i++) {
+              if(scope.interactions[i].interaction.active) {
+                return scope.interactions[i].label
+              }
+            }
+            return 'add';
+          };
 
           /*
           function saves the currently drawn geometries as geoJSON
