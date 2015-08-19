@@ -399,6 +399,7 @@ public class Importer {
                             dataInfo.setRating(Integer.valueOf(finalRating));
                         }
                         dataInfo.setType(isTemplate);
+
                         metadata.getHarvestInfo().setHarvested(false);
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
@@ -427,6 +428,7 @@ public class Importer {
 
                 Files.createDirectories(pubDir);
                 Files.createDirectories(priDir);
+
 
                 dm.indexMetadata(metadataIdMap.get(index), true);
             }
@@ -544,9 +546,13 @@ public class Importer {
         int userid = context.getUserSession().getUserIdAsInt();
         String docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        id.add(index,
-                dm.insertMetadata(context, schema, md.get(index), uuid,
-                userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate));
+
+        String metadataId = dm.insertMetadata(context, schema, md.get(index), uuid,
+                userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
+
+        dm.activateWorkflowIfConfigured(context, metadataId, groupId);
+
+        id.add(index, metadataId);
 
 	}
 
