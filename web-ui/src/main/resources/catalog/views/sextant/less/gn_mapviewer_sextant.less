@@ -53,8 +53,8 @@
   .sxt-panel-toggle,
   .main-tools button,
   .control-tools button {
-    background: @sxt-base-color !important;
-    color: white !important;
+    background: @sxt-base-color;
+    color: white;
     border: none;
     border-radius: 2px;
     width: @sxt-btn-size;
@@ -736,6 +736,10 @@
   .gn-draw-styleform {
     div.btn-group {
       flex: 1;
+      button {
+        background: @sxt-base-color;
+        color: white;
+      }
     }
   }
 }
