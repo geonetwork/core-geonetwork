@@ -53,8 +53,8 @@
   .sxt-panel-toggle,
   .main-tools button,
   .control-tools button {
-    background: @sxt-base-color;
-    color: white;
+    background: @sxt-base-color !important;
+    color: white !important;
     border: none;
     border-radius: 2px;
     width: @sxt-btn-size;
@@ -359,7 +359,7 @@
   }
   .tools {
     button[sxt-layer-tools-toggle] {
-      background: @sxt-base-color-dark;
+      background-color: @sxt-base-color-dark;
       color: #fff;
       padding: 2px 0 1px;
       float: left;
@@ -731,6 +731,11 @@
       padding-left: 5px;
       padding-right: 5px;
       width: auto;
+    }
+  }
+  .gn-draw-styleform {
+    div.btn-group {
+      flex: 1;
     }
   }
 }
