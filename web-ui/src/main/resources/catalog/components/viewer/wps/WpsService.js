@@ -161,7 +161,7 @@
                     },
                     data: {
                       boundingBoxData: {
-                        crs: "EPSG:4326",
+                        crs: 'EPSG:4326',
                         dimensions: 2,
                         lowerCorner: [bbox[0], bbox[1]],
                         upperCorner: [bbox[2], bbox[3]]

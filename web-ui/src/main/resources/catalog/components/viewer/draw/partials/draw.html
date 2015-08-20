@@ -1,14 +1,17 @@
 <div gi-btn-group>
-  <div class="btn-group flux" >
-    <button gi-btn="active" class="btn btn-default" ng-model="drawPoint.active" data-translate="">Point</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawLine.active" data-translate="">Linestring</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawPolygon.active" data-translate="">Polygon</button>
-    <button gi-btn="active" class="btn btn-default" ng-model="drawText.active" data-translate="">Text</button>
-  </div>
-  <input class="form-control" ng-show="drawText.active" ng-model="text" title="{{'tipDrawText'|translate}}">
-  <div gn-style-form="featureStyleCfg" gn-style-type="getActiveDrawType()"></div>
 
   <div class="btn-group flux" >
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-plus"></i>&nbsp;
+        <span>{{getActiveDrawLabel() | translate}}</span>&nbsp;
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li data-ng-repeat="int in interactions"><a gi-btn="active"  ng-model="int.interaction.active" href="" data-translate="">{{int.label}}</a></li>
+      </ul>
+    </div>
+
     <button gi-btn="active" class="btn btn-default"
             data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
             ng-model="modifying">
@@ -22,10 +25,15 @@
     </button>
   </div>
 
+  <input class="form-control" ng-show="drawText.active" ng-model="text" title="{{'tipDrawText'|translate}}">
+  <div gn-style-form="featureStyleCfg" gn-style-type="getActiveDrawType()"></div>
+
+<!--
   <div class="alert alert-warning" role="alert">
     <span class="fa fa-info-circle"></span>
     {{'drawInstruction'|translate}}</span>
   </div>
+-->
 
   <div class="btn-group flux" >
     <a class="btn btn-default" data-ng-click="save()" id="export-geom" download="export.json"
