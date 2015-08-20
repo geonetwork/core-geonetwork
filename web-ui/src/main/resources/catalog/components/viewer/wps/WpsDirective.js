@@ -108,6 +108,8 @@
                   o[v.identifier.value] = v.value;
                   return o;
                 }, {});
+
+            scope.running = true;
             gnWpsService.execute(
                 scope.uri,
                 scope.processId,
@@ -122,7 +124,10 @@
                 function(data) {
                   scope.exception = data;
                 }
-            );
+            ).finally (
+                function() {
+                  scope.running = false;
+                });
           };
         }
       };

@@ -734,8 +734,10 @@
                 var g = dragboxInteraction.getGeometry().clone();
                 var geom = g.clone()
               .transform(scope.map.getView().getProjection(), scope.crs);
-                scope.extent = geom.getExtent();
-                scope.value = valueFromExtent(scope.extent);
+                var extent = geom.getExtent();
+                scope.extent = extent.map(function(coord) {
+                  return Math.round(coord * 10000) / 10000;
+                });                scope.value = valueFromExtent(scope.extent);
                 scope.updateMap();
               });
               scope.dragboxInteraction = dragboxInteraction;
