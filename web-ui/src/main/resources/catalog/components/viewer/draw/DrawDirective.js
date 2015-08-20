@@ -59,10 +59,10 @@
            * it will have priority on select layer style function).
            *
            * @param {ol.Feature} feature
-           * @returns {*[]} styles array
+           * @return {*[]} styles array
            */
           var drawVectorStyleFn = function(feature) {
-            if(feature.get('_style')) {
+            if (feature.get('_style')) {
               return [feature.get('_style')];
             }
           };
@@ -73,19 +73,19 @@
            * will also display the vertexes (expect for text).
            *
            * @param {ol.Feature} feature
-           * @returns {*[]} styles array
+           * @return {*[]} styles array
            */
           var selectVectorStyleFn = function(feature) {
-            if(feature.get('_style')) {
+            if (feature.get('_style')) {
               var fStyle = feature.get('_style');
 
               // If text, just display text
-              if(feature.get('name')) {
+              if (feature.get('name')) {
                 return [fStyle];
               }
-              var selectStyle =   new ol.style.Style({
+              var selectStyle = new ol.style.Style({
                 image: new ol.style.Circle(
-                        feature.getGeometry().getType() == 'Point' ? {
+                    feature.getGeometry().getType() == 'Point' ? {
                       radius: fStyle.getImage().getRadius() + 5,
                       fill: new ol.style.Fill({
                         color: fStyle.getImage().getFill().getColor()
@@ -101,10 +101,10 @@
                 geometry: function(feature) {
                   var coordinates;
                   var geom = feature.getGeometry();
-                  if(geom.getType() == 'Polygon') {
+                  if (geom.getType() == 'Polygon') {
                     coordinates = geom.getCoordinates()[0];
                   }
-                  else if(geom.getType() == 'LineString') {
+                  else if (geom.getType() == 'LineString') {
                     coordinates = geom.getCoordinates();
                   }
                   else {
@@ -133,7 +133,7 @@
 
           /**
            * Style fn just use for the text overlay before it's drawn.
-           * @returns {*[]} the style corresponding to text style form
+           * @return {*[]} the style corresponding to text style form
            */
           var drawTextStyleFn = function() {
             var style = scope.featureStyleCfg;
@@ -171,9 +171,9 @@
            * Create a `ol.style.Style` object from style config mapped with
            * style form.
            *
-           * @param feature to know if it's text or not
-           * @param styleCfg the style config object
-           * @returns {ol.style.Style} the ol style
+           * @param {ol.Feature} feature to know if it's text or not
+           * @param {object} styleCfg the style config object
+           * @return {ol.style.Style} the ol style
            */
           var createStyleFromConfig = function(feature, styleCfg) {
             var styleObjCfg = {
@@ -187,7 +187,7 @@
             };
 
             // It is a Text feature
-            if(feature.get('name')) {
+            if (feature.get('name')) {
               styleObjCfg.text = new ol.style.Text({
                 font: styleCfg.text.font,
                 text: feature.get('name'),
@@ -215,8 +215,8 @@
           /**
            * Serialize an `ol.style.Style` to a JSON object.
            * Used to store the style as feature property in the GeoJSON.
-           * @param feature
-           * @returns {Object} serialized style
+           * @param {ol.Feature} feature
+           * @return {Object} serialized style
            */
           getStyleObjFromFeature = function(feature) {
             var st = feature.get('_style');
@@ -248,7 +248,7 @@
                     exec(st.getText().getFont())[0])
               };
             }
-            else if(feature.getGeometry().getType() == 'Point') {
+            else if (feature.getGeometry().getType() == 'Point') {
               styleObj.image = {
                 radius: st.getImage().getRadius(),
                 fill: {
@@ -266,7 +266,7 @@
            * This is done not to save style into the feature so the modify
            * layer style Fn is not overloaded.
            *
-           * @param evt ol3 event draw end
+           * @param {object} evt ol3 event draw end
            */
           var onDrawend = function(evt) {
             var f = evt.feature;
@@ -345,14 +345,14 @@
           var unregisterSelectFn;
           select.getFeatures().on('change:length', function(evt) {
             scope.editedFeature = select.getFeatures().item(0);
-            if(scope.editedFeature) {
+            if (scope.editedFeature) {
               angular.extend(scope.featureStyleCfg,
                   getStyleObjFromFeature(scope.editedFeature));
               unregisterSelectFn = scope.$watch('featureStyleCfg',
                   function(sCfg) {
-                scope.editedFeature.set('_style',
-                createStyleFromConfig(scope.editedFeature, sCfg));
-              }, true);
+                    scope.editedFeature.set('_style',
+                        createStyleFromConfig(scope.editedFeature, sCfg));
+                  }, true);
             }
             else {
               unregisterSelectFn && unregisterSelectFn();
@@ -362,9 +362,9 @@
 
 
           scope.getActiveDrawLabel = function() {
-            for(var i=0;i<scope.interactions.length;i++) {
-              if(scope.interactions[i].interaction.active) {
-                return scope.interactions[i].label
+            for (var i = 0; i < scope.interactions.length; i++) {
+              if (scope.interactions[i].interaction.active) {
+                return scope.interactions[i].label;
               }
             }
             return 'add';
@@ -479,10 +479,11 @@
 
           scope.getActiveDrawType = function() {
             if (scope.editedFeature) {
-              if(scope.editedFeature.get('name')) {
+              if (scope.editedFeature.get('name')) {
                 return 'text';
               }
-              return scope.editedFeature.getGeometry().getType().toLocaleLowerCase();
+              return scope.editedFeature.getGeometry().getType().
+                  toLocaleLowerCase();
             }
             if (scope.drawPoint.active) return 'point';
             else if (scope.drawLine.active) return 'line';
