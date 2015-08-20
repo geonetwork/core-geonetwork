@@ -431,7 +431,8 @@
 
             var source = new ol.source.TileWMS({
               params: layerParams,
-              url: options.url
+              url: options.url,
+              gutter: 15
             });
 
             var olLayer = new ol.layer.Tile({
