@@ -49,7 +49,7 @@
     <li><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
                               md.isWorkflowEnabled()"
-           data-ng-click="mdService.openUpdateStatusPanel(md, getCatScope())">
+           data-ng-click="mdService.openUpdateStatusPanel(getScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">updateStatus</span>
     </a></li>

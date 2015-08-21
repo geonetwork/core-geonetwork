@@ -153,11 +153,10 @@
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(md, scope) {
+      this.openUpdateStatusPanel = function(scope) {
         openModal({
           title: 'updateStatus',
-          content: '<div data-gn-metadata-status-updater="' +
-              md.getId() + '"></div>'
+          content: '<div data-gn-metadata-status-updater="md"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
@@ -167,6 +166,7 @@
             '&changeMessage=Enable workflow' +
             '&status=1').then(
             function(data) {
+              gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
                 msg: $translate('metadataStatusUpdatedWithNoErrors'),
