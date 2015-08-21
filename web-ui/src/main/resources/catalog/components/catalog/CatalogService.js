@@ -200,8 +200,8 @@
           return $http.get('q?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false').
               then(function(resp) {
-            return new Metadata(resp.data.metadata);
-          });
+                return new Metadata(resp.data.metadata);
+              });
         }
       };
     }

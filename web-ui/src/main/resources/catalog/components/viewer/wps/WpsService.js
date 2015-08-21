@@ -161,7 +161,6 @@
                     },
                     data: {
                       boundingBoxData: {
-                        crs: "EPSG:4326",
                         dimensions: 2,
                         lowerCorner: [bbox[0], bbox[1]],
                         upperCorner: [bbox[2], bbox[3]]
@@ -218,6 +217,8 @@
               setResponseForm({outputIndex: outputIndex});
 
               var body = marshaller.marshalString(request);
+              body = body.replace(/dimensions/,
+                  'xmlns:ows="http://www.opengis.net/ows/1.1" ows:dimensions');
 
               $http.post(url, body, {
                 headers: {'Content-Type': 'application/xml'}

@@ -14,6 +14,7 @@
 		<directory><xsl:value-of select="directory/value" /></directory>
 		<recurse><xsl:value-of select="recurse/value" /></recurse>
 		<nodelete><xsl:value-of select="nodelete/value" /></nodelete>
+		<recordType><xsl:value-of select="recordType/value" /></recordType>
 		<checkFileLastModifiedForUpdate><xsl:value-of select="checkFileLastModifiedForUpdate/value" /></checkFileLastModifiedForUpdate>
 		<icon><xsl:value-of select="icon/value" /></icon>
 	</xsl:template>

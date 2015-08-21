@@ -156,7 +156,7 @@
         if (!f) {
           hidetimer = $timeout(function() {
             $(div).hide();
-          }, 200);
+          }, 200, false);
         }
       });
       $(div).on('mouseover', function() {
