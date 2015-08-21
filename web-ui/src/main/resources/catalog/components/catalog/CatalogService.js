@@ -202,6 +202,26 @@
               then(function(resp) {
                 return new Metadata(resp.data.metadata);
               });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#updateMdObj
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Update the metadata object 
+         *
+         * @param [object} md
+         * @returns {HttpPromise} of the $http get
+         */
+        updateMdObj: function(md) {
+          return this.getMdObjByUuid(md.getUuid()).then(
+              function(md_) {
+                angular.extend(md, md_);
+                return md;
+              }
+          );
         }
       };
     }

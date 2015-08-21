@@ -60,6 +60,10 @@
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
           });
+
+          scope.getScope = function() {
+            return scope;
+          }
         }
       };
     }
