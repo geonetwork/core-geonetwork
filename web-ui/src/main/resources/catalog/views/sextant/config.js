@@ -212,7 +212,14 @@
           if(md.getSchema() == 'iso19139.sdn-product') {
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
-            url = 'md.format.xml?xsl=xsl-view&view=medsea&uuid=' + md.getUuid();
+            var view =
+              md.standardName === 'ISO 19115-3 - MedSea Checkpoint' ? 'medsea' :
+                (md.standardName ===
+                  'ISO 19115-3 - MedSea Targeted Product' ?
+                  'medsea-targeted-product' : 'default'
+                );
+            url = 'md.format.xml?xsl=xsl-view&view=' + view +
+                    '&uuid=' + md.getUuid();
           } else {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
           }
