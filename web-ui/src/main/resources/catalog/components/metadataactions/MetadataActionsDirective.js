@@ -6,7 +6,7 @@
   var module = angular.module('gn_mdactions_directive', []);
 
   module.directive('gnMetadataStatusUpdater', ['$translate', '$http',
-      'gnMetadataManager',
+    'gnMetadataManager',
     function($translate, $http, gnMetadataManager) {
 
       return {

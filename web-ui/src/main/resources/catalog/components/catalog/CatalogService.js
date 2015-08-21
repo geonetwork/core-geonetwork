@@ -210,10 +210,10 @@
          * @methodOf gnMetadataManager
          *
          * @description
-         * Update the metadata object 
+         * Update the metadata object
          *
-         * @param [object} md
-         * @returns {HttpPromise} of the $http get
+         * @param [object } md
+         * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
           return this.getMdObjByUuid(md.getUuid()).then(
