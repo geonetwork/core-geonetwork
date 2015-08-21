@@ -212,7 +212,7 @@
          * @description
          * Update the metadata object
          *
-         * @param [object } md
+         * @param {object } md to reload
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
