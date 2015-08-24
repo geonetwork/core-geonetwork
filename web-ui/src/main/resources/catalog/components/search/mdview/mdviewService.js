@@ -27,11 +27,13 @@
              gnUrlUtils, gnUtilityService) {
 
       // Keep where the metadataview come from to get back on close
-      $rootScope.$on('$locationChangeStart', function(o, v) {
+      var initFromConfig = function() {
         if (!gnSearchLocation.isMdView()) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
-      });
+      }
+      $rootScope.$on('$locationChangeStart', initFromConfig);
+      initFromConfig();
 
       this.feedMd = function(index, md, records) {
         gnMdViewObj.records = records || gnMdViewObj.records;
