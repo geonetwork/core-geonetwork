@@ -16,12 +16,14 @@
 
     <div class="table-scroller">
       <table class="table table-condensed table-hover table-stripped">
-        <tr ng-repeat="result in group">
-          <th ng-repeat="(attr, value) in result.getProperties() | attributes" ng-if="$parent.$first">
+        <tr>
+          <th ng-repeat="(attr, value) in group[0].getProperties() | attributes" >
             {{attr}}
             <!-- <span ng-bind-html="value | linky:'_blank'"></span> -->
           </th>
-          <td ng-repeat="(attr, value) in result.getProperties() | attributes" ng-if="!$parent.$first">
+        </tr>
+        <tr ng-repeat="result in group">
+          <td ng-repeat="(attr, value) in result.getProperties() | attributes">
             <!-- <b>{{attr | lowercase}}</b>: -->
             <span ng-bind-html="value | linky:'_blank'" title="{{value}}"></span>
           </td>
