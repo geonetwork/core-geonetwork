@@ -31,8 +31,7 @@
     </div>
 
     <ul class="list-group">
-      <li ng-repeat="elt in panier" class="list-group-item" sxt-panier-elt="formObj" sxt-panier-elt-md="elt.md"
-          sxt-panier-elt-link="elt.link">
+      <li ng-repeat="elt in panier" class="list-group-item" sxt-panier-elt="elt" sxt-panier-elt-form="formObj">
       </li>
     </ul>
 
@@ -91,16 +90,17 @@
                 <a class="btn btn-link" data-toggle="collapse" data-target="#w{{elt.md.getUuid()}}" aria-expanded="false">
                   <i class="fa fa-angle-double-down"></i>
                 </a>
+                <!--legalConstraints - securityConstraints - resourceConstraints-->
                 <div class="well collapse" id="w{{elt.md.getUuid()}}">
                   <h5>Limites d'utilisation :</h5>
-                  <small>{{md.Constraints[1]}}</small>
+                  <small>{{elt.md.legalConstraints[2]}}</small>
                   <h5>Contraintes d'accès :</h5>
-                  <small>{{md.Constraints[0]}}</small>
+                  <small>{{elt.md.Constraints[0]}}</small>
                   <h5>Contraintes d'utilisation :</h5>
-                  <small>copyright</small>
+                  <small>Copyright</small>
                   <h5>Autres contraintes :</h5>
-                  <small>{{md.Constraints[2]}}</small>
-                  <small>{{md.Constraints[3]}}</small>
+                  <small>{{elt.md.legalConstraints[0]}}</small><br>
+                  <small>{{elt.md.legalConstraints[1]}}</small>
                 </div>
               </li>
             </ul>
