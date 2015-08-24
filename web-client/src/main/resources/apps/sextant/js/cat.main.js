@@ -144,7 +144,15 @@ cat.app = function() {
         //var style = urlParameters.style || 'sextant';
         var url = Ext.get(Ext.query('input[id*=configmdviewerurl]')[0]).getValue();
         var style = OpenLayers.Util.getParameters(url).style || 'sextant';
-        
+
+
+        // Add view parameter for MedSea which is based on iso19115-3 plugin
+        var recordStandard = record && record.get('standardName');
+        if (recordStandard === 'ISO 19115-3 - MedSea Targeted Product') {
+          style = 'xsl-view&view=medsea-targeted-product';
+        } else if (recordStandard === 'ISO 19115-3 - MedSea Checkpoint') {
+          style = 'xsl-view&view=medsea';
+        }
         var win = new cat.view.ViewWindow({
             layout:'fit',
             serviceUrl: style == 'sextant' ? this.services.mdView + '?uuid=' + encodeURI(uuid) : null,
