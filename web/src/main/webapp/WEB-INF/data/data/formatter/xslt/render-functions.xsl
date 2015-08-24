@@ -78,7 +78,7 @@
                     select="util:getSettingValue('region/getmap/mapproj')"/>
 
       <img class="gn-img-extent"
-           src="region.getmap.png?mapsrs={if ($mapproj != '')
+           src="{$baseUrl}region.getmap.png?mapsrs={if ($mapproj != '')
                                          then $mapproj
                                          else 'EPSG:3857'}&amp;width={
                                          if ($width != '')
