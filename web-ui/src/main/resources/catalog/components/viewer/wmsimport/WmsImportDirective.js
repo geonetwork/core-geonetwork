@@ -41,7 +41,9 @@
          */
           this.addLayer = function(getCapLayer) {
             if ($scope.format == 'wms') {
-              return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              var layer =  gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              gnMap.feedLayerMd(layer);
+              return layer;
             }
             else if ($scope.format == 'wmts') {
               return gnMap.addWmtsToMapFromCap($scope.map, getCapLayer,
