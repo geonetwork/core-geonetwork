@@ -142,7 +142,7 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            layer.set('cextent', ol.proj.transform([
+            layer.set('cextent', ol.proj.transformExtent([
               parseFloat(ncInfo.bbox[0]),
               parseFloat(ncInfo.bbox[1]),
               parseFloat(ncInfo.bbox[2]),
@@ -214,7 +214,8 @@
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
-                gnNcWms.updateLengendUrl(scope.layer.get('legend')));
+                gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+                    scope.params));
           };
 
           element.bind('$destroy', function(e) {

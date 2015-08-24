@@ -19,8 +19,8 @@
         templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panier.html',
         controller: ['$scope', function($scope) {
-          this.del = function(md) {
-            $scope.panier.splice($scope.panier.indexOf(md), 1);
+          this.del = function(element) {
+            $scope.panier.splice($scope.panier.indexOf(element), 1);
           };
         }],
         link: function(scope, element, attrs, controller) {
@@ -105,9 +105,8 @@
         require: '^sxtPanier',
         replace: true,
         scope: {
-          formObj: '=sxtPanierElt',
-          md: '=sxtPanierEltMd',
-          link: '=sxtPanierEltLink'
+          element: '=sxtPanierElt',
+          formObj: '=sxtPanierEltForm'
         },
         templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panierelement.html',
@@ -122,26 +121,27 @@
               var rendered = false;
 
               /** object that contains the form values */
-              var aCrs = scope.md.crs && scope.md.crs.split('::');
+              var crs = angular.isArray(scope.element.md.crs) ?
+                  scope.element.md.crs[0] : scope.element.md.crs;
+              crs = crs && crs.split('::')[crs.split('::').length-1];
 
               // To pass the extent into an object for scope issues
               scope.prop = {};
 
               scope.form = {
-                id: scope.md.getUuid(),
+                id: scope.element.md.getUuid(),
                 input: {
-                  format: angular.isArray(scope.md.format) ?
-                      scope.md.format[0] : gnPanierSettings.defaults.format,
-                  epsg: scope.md.crs ? scope.md.crs.split('::')
-                      [scope.md.crs.split('::').length-1] :
-                      gnPanierSettings.defaults.proj,
-                  protocol: scope.link.protocol,
-                  linkage: scope.link.url
+                  format: angular.isArray(scope.element.md.format) ?
+                      scope.element.md.format[0] :
+                      gnPanierSettings.defaults.format,
+                  epsg: crs || gnPanierSettings.defaults.proj,
+                  protocol: scope.element.link.protocol,
+                  linkage: scope.element.link.url
                 },
                 output: {
                   format: gnPanierSettings.defaults.format,
                   epsg: gnPanierSettings.defaults.proj,
-                  name: scope.link.name
+                  name: scope.element.link.name
                 }
               };
 
@@ -160,7 +160,7 @@
               });
 
               // Set initial extent to draw the BBOX
-              var extents = gnMap.getBboxFromMd(scope.md);
+              var extents = gnMap.getBboxFromMd(scope.element.md);
               var extent = extents.length > 0 && extents[0];
               if (extent) {
 
@@ -197,8 +197,8 @@
 
               scope.formObj.layers.push(scope.form);
 
-              scope.del = function(md, form) {
-                controller.del(md);
+              scope.del = function(element, form) {
+                controller.del(element);
                 scope.formObj.layers.splice(
                     scope.formObj.layers.indexOf(form), 1);
               };

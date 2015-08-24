@@ -131,7 +131,7 @@
               scope.interaction.on('boxend', function() {
                 scope.$apply(function() {
                   updateField(scope.interaction.getGeometry());
-                  scope.triggerSearch();
+                  //scope.triggerSearch();
                 });
               });
 

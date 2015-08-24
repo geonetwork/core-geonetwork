@@ -1,5 +1,5 @@
 <li class="list-group-item clearfix">
-  <button type="button" class="btn btn-default sxt-panier-remove" ng-click="del(md, form)">
+  <button type="button" class="btn btn-default sxt-panier-remove" ng-click="del(element, form)">
     <i class="fa fa-trash-o"></i>
   </button>
 
@@ -8,8 +8,8 @@
        gn-map-field-geom="prop.extent" gn-map-field-extent="extentCoords"></div>
 
   <div class="col-md-6">
-    <h4>{{md.title || md.defaultTitle}}</h4>
-
+    <h4>{{::(element.md.title || element.md.defaultTitle)}}</h4>
+    <em>{{::(element.link.desc  || element.link.name)}}</em>
     <!--Panier Form-->
     <div class="form-group">
       <label for="projectionPF" class="control-label" translate>Projection</label>&nbsp;:&nbsp;
