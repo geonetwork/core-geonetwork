@@ -435,6 +435,9 @@
         scope: false,
         link: function(scope) {
           sxtService.feedMd(scope);
+          scope.getScope = function() {
+            return scope;
+          }
         }
       };
     }]);
