@@ -6,7 +6,7 @@
 
   module.run(['gnShareConstants', function(gnShareConstants) {
 
-    gnShareConstants.columnOrder= ['0', '5', '1', '2', '7'];
+    gnShareConstants.columnOrder= ['0', '5', '1', '7', '2'];
     gnShareConstants.disableAllCol = true;
     gnShareConstants.displayProfile = true;
 
