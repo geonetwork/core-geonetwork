@@ -404,3 +404,117 @@ div.help ul li {
   list-style-type : circle !important;
   margin-left : 10px !important;
 }
+
+
+/* CSS from v6 required by formatter */
+.gn-metadata-view input[readonly] {
+    background: #fff;
+}
+.gn-metadata-view .extent {
+    display: inline-block;
+    position: relative;
+    margin: 2em 0 0;
+}
+.gn-metadata-view .coord {
+    position: absolute;
+    width: 150px;
+}
+.gn-metadata-view .coord-north {
+    top: -1.25em;
+}
+.gn-metadata-view .coord-south {
+    bottom: -1.25em;
+}
+.gn-metadata-view .coord-east {
+    right: -75px;
+}
+.gn-metadata-view .coord-west {
+    left: -75px;
+}
+.gn-metadata-view .coord-north,
+.gn-metadata-view .coord-south {
+    left: 50%;
+    margin-left: -75px;
+}
+.gn-metadata-view .coord-east,
+.gn-metadata-view .coord-west {
+    top: 50%;
+    margin-top: -1.25em;
+}
+.gn-metadata-view h1 {
+    margin-bottom: 20px;
+}
+.gn-metadata-view h3 {
+    color: #3071a9;
+    position: relative;
+    border-bottom: 2px dotted lightgrey;
+}
+.gn-metadata-view h3 button {
+    position: absolute;
+    right: -0.5em;
+    width: 2em;
+    height: 2em;
+    line-height: 1em;
+    top: -0.35em;
+    border-radius: 1em;
+    color: rgba(0, 0, 0, 0.6);
+}
+@media (min-width: 768px) {
+    .gn-metadata-view h3 button {
+        left: -1em;
+        right: auto;
+    }
+}
+.gn-metadata-view h3 i {
+    display: inline-block;
+    width: 14px;
+    transition: transform .4s;
+    transform: rotate(0deg);
+}
+.gn-metadata-view h3 .closed i {
+    transform: rotate(90deg);
+}
+.gn-metadata-view dl {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+}
+.gn-metadata-view dl h2,
+.gn-metadata-view dl h3,
+.gn-metadata-view dl h4,
+.gn-metadata-view dl h5,
+.gn-metadata-view dl h6 {
+    margin-top: 0;
+    padding-top: 1em;
+}
+.gn-metadata-view .dl-horizontal .dl-horizontal dt {
+    font-weight: normal;
+    font-style: italic;
+    color: #555555;
+    clear: none;
+}
+.gn-metadata-view .target:before,
+.gn-metadata-view .target:after {
+    content: " ";
+    display: table;
+}
+.gn-metadata-view .target:after {
+    clear: both;
+}
+.gn-metadata-view .target:before,
+.gn-metadata-view .target:after {
+    content: " ";
+    display: table;
+}
+.gn-metadata-view .target:after {
+    clear: both;
+}
+.gn-metadata-view .entry {
+    border-left: 2px solid #eeeeee;
+    padding-left: 1em;
+}
+.gn-metadata-view .entry .entry {
+    margin-left: 1em;
+}
+.gn-metadata-view .img-thumbnail {
+    margin-bottom: 1em;
+}
