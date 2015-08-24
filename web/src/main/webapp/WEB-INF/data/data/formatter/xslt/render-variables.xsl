@@ -16,7 +16,8 @@
                 select="/root/undefined"/>
   <xsl:variable name="language"
                 select="/root/lang/text()"/>
-
+  <xsl:variable name="baseUrl"
+                select="/root/url"/>
 
   <!-- Date formating -->
   <xsl:variable name="dateFormats">
