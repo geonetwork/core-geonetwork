@@ -251,13 +251,12 @@
        * @param {string} legendUrl
        * @return {string}
        */
-      this.updateLengendUrl = function(legendUrl) {
-        var legendUrl = scope.layer.get('legend');
+      this.updateLengendUrl = function(legendUrl, params) {
         var parts = legendUrl.split('?');
 
         var p = parts.length > 1 ?
             gnUrlUtils.parseKeyValue(parts[1]) : {};
-        angular.extend(p, scope.params);
+        angular.extend(p, params);
 
         var sP = gnUrlUtils.toKeyValue(p);
         return gnUrlUtils.append(parts[0], sP);
