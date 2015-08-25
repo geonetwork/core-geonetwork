@@ -443,6 +443,7 @@
               source: source,
               legend: options.legend,
               attribution: options.attribution,
+              attributionUrl: options.attributionUrl,
               label: options.label,
               group: options.group,
               isNcwms: options.isNcwms,
@@ -502,7 +503,7 @@
            */
           createOlWMSFromCap: function(map, getCapLayer) {
 
-            var legend, attribution, metadata, errors = [];
+            var legend, attribution, attributionUrl, metadata, errors = [];
             if (getCapLayer) {
 
               var isLayerAvailableInMapProjection = false;
@@ -543,6 +544,9 @@
 
                 } else {
                   attribution = getCapLayer.Attribution.Title;
+                  if (getCapLayer.Attribution.OnlineResource) {
+                    attributionUrl = getCapLayer.Attribution.OnlineResource;
+                  }
                 }
               }
               if (angular.isArray(getCapLayer.MetadataURL)) {
@@ -555,6 +559,7 @@
                 url: getCapLayer.url,
                 label: getCapLayer.Title,
                 attribution: attribution,
+                attributionUrl: attributionUrl,
                 legend: legend,
                 group: getCapLayer.group,
                 metadata: metadata,
