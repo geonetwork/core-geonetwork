@@ -94,10 +94,19 @@
         value: '4326',
         label: 'Geographique - Datum WGS84'
       }],
-      formats: [{
-        value: 'ESRI Shapefile',
-        label: 'ESRI Shapefile'
-      }],
+      formats: {
+        vector:[{
+          value: 'ESRI Shapefile',
+          label: 'ESRI Shapefile'
+        }, {
+          value: 'GeoJSON',
+          label: 'GeoJSON'
+        }],
+        raster:[{
+          value: 'GeoTiff',
+          label: 'GeoTiff'
+        }]
+      },
       defaults: {
         format: 'ESRI Shapefile',
         proj: '4326'

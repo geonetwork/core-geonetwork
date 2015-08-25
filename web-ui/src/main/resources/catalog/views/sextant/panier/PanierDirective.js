@@ -125,22 +125,28 @@
                   scope.element.md.crs[0] : scope.element.md.crs;
               crs = crs && crs.split('::')[crs.split('::').length-1];
 
+              var dataType = scope.element.md.spatialRepresentationType_text ==
+                  'Vecteur' ? 'vector' : 'raster';
+
               // To pass the extent into an object for scope issues
               scope.prop = {};
+              scope.formats = scope.settings.formats[dataType];
 
               scope.form = {
                 id: scope.element.md.getUuid(),
                 input: {
                   format: angular.isArray(scope.element.md.format) ?
                       scope.element.md.format[0] :
-                      gnPanierSettings.defaults.format,
-                  epsg: crs || gnPanierSettings.defaults.proj,
+                      scope.formats[0].value,
+                  epsg: crs || gnPanierSettings.projs[0].value,
                   protocol: scope.element.link.protocol,
                   linkage: scope.element.link.url
                 },
                 output: {
-                  format: gnPanierSettings.defaults.format,
-                  epsg: gnPanierSettings.defaults.proj,
+                  format: angular.isArray(scope.element.md.format) ?
+                      scope.element.md.format[0] :
+                      scope.formats[0].value,
+                  epsg: crs || gnPanierSettings.projs[0].value,
                   name: scope.element.link.name
                 }
               };
