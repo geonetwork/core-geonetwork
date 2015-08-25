@@ -224,7 +224,7 @@
       this.load = function(uuid, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
         var newscope = scope ? scope.$new() :
-            angular.element($(selector)).scope().$new();
+            angular.element($('#sxt-controller')).scope().$new();
 
         this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
             newscope, uuid).then(function(url) {
@@ -232,7 +232,7 @@
             $rootScope.$broadcast('mdLoadingEnd');
 
             var newscope = scope ? scope.$new() :
-                angular.element($(selector)).scope().$new();
+                angular.element($('#sxt-controller')).scope().$new();
 
             newscope.fragment =
                 $compile(angular.element(response.data))(newscope);
