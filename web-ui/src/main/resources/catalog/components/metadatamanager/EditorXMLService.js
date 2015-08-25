@@ -35,22 +35,12 @@
           "xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/1.0' " +
           "xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>" +
           '    <mcc:MD_Identifier>' +
-          '      <mcc:authority>' +
-          '       <cit:CI_Citation>' +
-          '         <cit:title>' +
-          '  <gco:CharacterString>{{authority}}</gco:CharacterString>' +
-          '         </cit:title>' +
-          '       </cit:CI_Citation>' +
-          '     </mcc:authority>' +
           '     <mcc:code>' +
-          '       <gco:CharacterString>{{code}}</gco:CharacterString>' +
+          '       <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/{{code}}</gco:CharacterString>' +
           '     </mcc:code>' +
-          '     <mcc:codeSpace>' +
-          '  <gco:CharacterString>{{description}}</gco:CharacterString>' +
-          '     </mcc:codeSpace>' +
-          '     <mcc:version>' +
-          '       <gco:CharacterString>{{version}}</gco:CharacterString>' +
-          '     </mcc:version>' +
+          '     <mcc:description>' +
+          '       <gco:CharacterString>{{description}}</gco:CharacterString>' +
+          '     </mcc:description>' +
           '   </mcc:MD_Identifier>' +
           ' </mrs:referenceSystemIdentifier>'
     }});
