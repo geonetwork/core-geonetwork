@@ -160,10 +160,13 @@
       }
     };
 
+    $scope.printing = false;
+
     $scope.submit = function() {
       if (!$scope.printActive) {
         return;
       }
+      $scope.printing = true;
       // http://mapfish.org/doc/print/protocol.html#print-pdf
       var view = $scope.map.getView();
       var proj = view.getProjection();
@@ -230,6 +233,7 @@
       var http = $http.post($scope.config.createURL + '?url=' +
           encodeURIComponent('../../pdf'), spec);
       http.success(function(data) {
+        $scope.printing = false;
         $scope.downloadUrl(data.getURL);
         //After standard print, download the pdf Legends
         //if there are any
@@ -238,6 +242,7 @@
         }
       });
       http.error(function() {
+        $scope.printing = false;
       });
     };
 
