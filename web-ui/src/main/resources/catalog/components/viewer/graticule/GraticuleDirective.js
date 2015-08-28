@@ -31,32 +31,32 @@
 
     var segmentSegmentIntersection =
         function(x11, y11, x12, y12, x21, y21, x22, y22) {
-          var x11_21 = x11 - x21;
-          var y11_21 = y11 - y21;
-          var x12_11 = x12 - x11;
-          var y12_11 = y12 - y11;
-          var x22_21 = x22 - x21;
-          var y22_21 = y22 - y21;
-          var d = (y22_21 * x12_11) - (x22_21 * y12_11);
-          var n1 = (x22_21 * y11_21) - (y22_21 * x11_21);
-          var n2 = (x12_11 * y11_21) - (y12_11 * x11_21);
-          if (d === 0) {
-            // parallel
-            if (n1 === 0 && n2 === 0) {
-              // coincident
-              return [Infinity];
-            }
-          } else {
-            var along1 = n1 / d;
-            var along2 = n2 / d;
-            if (along1 >= 0 && along1 <= 1 && along2 >= 0 && along2 <= 1) {
-              var x = x11 + (along1 * x12_11);
-              var y = y11 + (along1 * y12_11);
-              return [x, y];
-            }
-          }
-          return [];
-        };
+      var x11_21 = x11 - x21;
+      var y11_21 = y11 - y21;
+      var x12_11 = x12 - x11;
+      var y12_11 = y12 - y11;
+      var x22_21 = x22 - x21;
+      var y22_21 = y22 - y21;
+      var d = (y22_21 * x12_11) - (x22_21 * y12_11);
+      var n1 = (x22_21 * y11_21) - (y22_21 * x11_21);
+      var n2 = (x12_11 * y11_21) - (y12_11 * x11_21);
+      if (d === 0) {
+        // parallel
+        if (n1 === 0 && n2 === 0) {
+          // coincident
+          return [Infinity];
+        }
+      } else {
+        var along1 = n1 / d;
+        var along2 = n2 / d;
+        if (along1 >= 0 && along1 <= 1 && along2 >= 0 && along2 <= 1) {
+          var x = x11 + (along1 * x12_11);
+          var y = y11 + (along1 * y12_11);
+          return [x, y];
+        }
+      }
+      return [];
+    };
 
     var lineStringSegmentIntersection = function(
         flatCoordinates, offset, end, stride,

@@ -31,7 +31,7 @@
         if (!gnSearchLocation.isMdView()) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
-      }
+      };
       $rootScope.$on('$locationChangeStart', initFromConfig);
       initFromConfig();
 

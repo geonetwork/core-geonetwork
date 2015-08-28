@@ -45,7 +45,7 @@
          */
           this.addLayer = function(getCapLayer) {
             if ($scope.format == 'wms') {
-              var layer =  gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              var layer = gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
               gnMap.feedLayerMd(layer);
               return layer;
             }
@@ -291,7 +291,7 @@
               var source = new ol.source.Vector();
               $.ajax(blobURL).then(function(response) {
                 var format = new ol.format.KML();
-                var features = format.readFeatures(response,{
+                var features = format.readFeatures(response, {
                   featureProjection: 'EPSG:3857'
                 });
                 source.addFeatures(features);
