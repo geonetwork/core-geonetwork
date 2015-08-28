@@ -120,3 +120,24 @@ layouts:
               align: right
               fontEncoding: Cp1252
               fontSize: 8
+    lastPage:
+      items:
+         - !columns
+          condition: legends
+          absoluteX: 51
+          absoluteY: 808
+          width: 511
+          items:
+            - !legends
+              inline: false
+              defaultScale: 0.5
+              maxHeight: 400
+              maxWidth: 250
+              iconMaxHeight: 0
+              iconMaxWidth: 0
+              horizontalAlignment: left
+              columnMargin: 10
+              classIndentation: 3
+              classSpace: 5
+              backgroundColor: white
+              layerFontSize: 9
