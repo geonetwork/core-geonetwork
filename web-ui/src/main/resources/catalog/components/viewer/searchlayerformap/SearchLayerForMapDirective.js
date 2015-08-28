@@ -63,7 +63,7 @@
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
-              scope.map.getView().fitExtent(extent, scope.map.getSize());
+              scope.map.getView().fit(extent, scope.map.getSize());
             }
           };
           scope.getMetadata = function(md) {
