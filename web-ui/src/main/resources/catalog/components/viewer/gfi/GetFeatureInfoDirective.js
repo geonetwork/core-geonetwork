@@ -38,7 +38,9 @@
 
           var format = new ol.format.WMSGetFeatureInfo();
           var fo = new ol.layer.Vector({
-            source: new ol.source.Vector(),
+            source: new ol.source.Vector({
+              useSpatialIndex: false
+            }),
             map: map
           });
 
@@ -52,7 +54,7 @@
           map.addOverlay(overlay);
 
           scope.close = function() {
-            fo.getFeatures().clear();
+            fo.getSource().clear();
             scope.pending = 0;
             overlay.setPosition(undefined);
           };
@@ -123,7 +125,7 @@
                   features.forEach(function(f) {
                     f.layer = layer.get('label');
                   });
-                  fo.getFeatures().extend(features);
+                  fo.getSource().getFeaturesCollection().extend(features);
                   if (features.length > 0) {
                     overlay.setPosition(coordinate);
                   } else {
