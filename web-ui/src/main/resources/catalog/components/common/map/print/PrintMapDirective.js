@@ -11,7 +11,6 @@
 
     var options = {
       printConfigUrl: '../../pdf/info.json?url=..%2F..%2Fpdf',
-      legend: false,
       graticule: false
     };
 
@@ -182,7 +181,7 @@
       var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
 
-      angular.forEach(layers, function(layer) {
+      angular.forEach(layers.getArray(), function(layer) {
         if (layer.getVisible()) {
           var attribution = layer.attribution;
           if (attribution !== undefined &&
@@ -295,20 +294,12 @@
         }
       }
 
-      if (options.legend && layerConfig.hasLegend) {
-        encLegend = gnPrint.encoders.legends['ga_urllegend'].call(this,
-            layer, layerConfig);
+      encLegend = gnPrint.encoders.legends['base'].call(
+        this, layer, layerConfig
+      );
 
-        if (encLegend.classes &&
-            encLegend.classes[0] &&
-            encLegend.classes[0].icon) {
-          var legStr = encLegend.classes[0].icon;
-          if (legStr.indexOf(pdfLegendString,
-              legStr.length - pdfLegendString.length) !== -1) {
-            pdfLegendsToDownload.push(legStr);
-            encLegend = undefined;
-          }
-        }
+      if (encLegend && encLegend.classes[0] && !encLegend.classes[0].icon) {
+        encLegend = undefined;
       }
       return {layer: encLayer, legend: encLegend};
     };
