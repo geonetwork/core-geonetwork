@@ -8996,7 +8996,7 @@ yx-axis
 .gn .gn-search-page .gn-status {
   border: 3px solid #46b8da;
   position: absolute;
-  top: 55px;
+  top: 95px;
   left: 2px;
   border-radius: 15px;
   padding: 2px;
@@ -9712,12 +9712,22 @@ yx-axis
   font-weight: normal;
   font-size: 13px;
 }
+.gn [gn-main-viewer] .gn-draw-styleform form,
+.gn .gn-main-viewer .gn-draw-styleform form {
+  margin-top: 10px;
+  padding-bottom: 100px;
+}
 .gn [gn-main-viewer] .gn-draw-styleform form input[type='text'],
 .gn .gn-main-viewer .gn-draw-styleform form input[type='text'] {
   width: 146px;
 }
+.gn [gn-main-viewer] .gn-draw-styleform form input[type='number'],
+.gn .gn-main-viewer .gn-draw-styleform form input[type='number'] {
+  width: 55px;
+}
 .gn [gn-main-viewer] .gn-draw-styleform form .form-group,
 .gn .gn-main-viewer .gn-draw-styleform form .form-group {
+  margin-top: 2px;
   margin-bottom: 8px;
 }
 .gn [gn-popup] {
@@ -9791,11 +9801,47 @@ yx-axis
   width: 400px;
   height: 300px;
 }
+.gn .gn-facet .list-group {
+  border-left: 1px dotted #eeeeee;
+  margin-left: .5em;
+  padding-left: .1em;
+  margin-bottom: 0;
+}
 .gn .gn-facet .list-group-item {
-  border-width: 0;
-  border-radius: 0;
-  padding: .35em 0px;
-  border-top: 1px dotted lightgrey;
+  padding: 0.1em;
+  color: #555555;
+  border: none;
+}
+.gn .gn-facet .list-group-item label {
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+.gn .gn-facet .list-group-item label.gn-facet-active {
+  color: #222222;
+}
+.gn .gn-facet .gn-facet-count,
+.gn .gn-facet .list-group-item > span.fa {
+  color: #999999;
+}
+.gn .gn-facet .gn-facet-collapseall {
+  color: #222222;
+  cursor: pointer;
+  position: absolute;
+  float: left;
+  top: 9px;
+  left: 0px;
+}
+.gn .gn-facet .gn-facet-toggle {
+  cursor: pointer;
+}
+.gn .gn-facet .gn-facet-moreorless {
+  list-style: none;
+  padding-left: 0.5em;
+}
+.gn .gn-facet .gn-facet-moreorless button {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 .gn .gn-facet .list-group-item:hover {
   color: #428bca;
@@ -9804,7 +9850,8 @@ yx-axis
   font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
-  border-bottom: 2px black solid;
+  margin-bottom: 0px;
+  border-bottom: 2px #eeeeee solid;
 }
 .gn .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -9943,6 +9990,10 @@ yx-axis
   padding-left: 15px;
   padding-right: 15px;
 }
+.gn [gn-collapse],
+.gn [data-gn-collapse] {
+  cursor: pointer;
+}
 .gn .gn-searchform {
   font-size: 90%;
 }
@@ -9951,9 +10002,6 @@ yx-axis
 }
 .gn .gn-searchform label {
   font-weight: normal;
-}
-.gn .gn-searchform [gn-collapse] {
-  cursor: pointer;
 }
 .gn .gn-searchform input[type='text'],
 .gn .gn-searchform select {
@@ -10074,9 +10122,6 @@ yx-axis
   background: #f6fcfd;
   cursor: pointer;
   background-color: #428bca;
-}
-.gn .gn-resultview .gn-md-edit-btn {
-  float: right;
 }
 .gn .gn-resultview .invisible {
   display: none;
@@ -10649,6 +10694,10 @@ yx-axis
 .gn [sxt-main-viewer] [gn-ows-context] button {
   width: 100%;
 }
+.gn [sxt-main-viewer] [gn-mapprint] button.disabled,
+.gn [sxt-main-viewer] [gn-ows-context] button.disabled {
+  color: #888;
+}
 .gn [sxt-main-viewer] .sx-toolbar {
   position: absolute;
   top: 1em;
@@ -10867,7 +10916,7 @@ yx-axis
   color: white;
 }
 .gn [sxt-main-viewer] .tools button[sxt-layer-tools-toggle] {
-  background: #2f6383;
+  background-color: #2f6383;
   color: #fff;
   padding: 2px 0 1px;
   float: left;
@@ -10884,6 +10933,7 @@ yx-axis
   overflow-y: auto;
   display: none;
   clear: both;
+  font-size: 12px;
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset > .nav-tabs {
   display: none;
@@ -10925,7 +10975,25 @@ yx-axis
         border-top: 1px solid #d3d3d3;
       }*/
 }
-.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layersources-panel] div {
+.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layerorder-panel] .list-group-item {
+  display: table-row;
+  margin-bottom: .3em;
+}
+.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layerorder-panel] .gn-order-buttons {
+  display: table-cell;
+  width: 1.2em;
+  float: left;
+  padding: .3em 0;
+}
+.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layerorder-panel] .gn-order-buttons a {
+  display: inline-block;
+}
+.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layerorder-panel] label {
+  padding: .3em 0;
+  display: table-cell;
+  vertical-align: middle;
+}
+.gn [sxt-main-viewer] .sxt-layers-tabset [gn-layersources-panel] li div {
   margin-left: 1em;
   color: #808080;
   font-size: 12px;
@@ -11237,6 +11305,13 @@ yx-axis
   padding-left: 5px;
   padding-right: 5px;
   width: auto;
+}
+.gn [sxt-main-viewer] .gn-draw-styleform div.btn-group {
+  flex: 1;
+}
+.gn [sxt-main-viewer] .gn-draw-styleform div.btn-group button {
+  background: #4ba2d9;
+  color: white;
 }
 .gn .popover {
   height: auto;
@@ -14356,6 +14431,9 @@ yx-axis
 .gn .sxt-panier .panel-body:after,
 .gn .sxt-panier .modal-footer:after {
   display: table !important;
+}
+.gn .sxt-panier [gn-map-field] .gn-draw-btn {
+  top: 10px;
 }
 .gn .modal-content {
   border-radius: 2px;
