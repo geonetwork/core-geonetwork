@@ -37,10 +37,12 @@
           mapElement.find('.ol-overlaycontainer-stopevent').append(element);
 
           var format = new ol.format.WMSGetFeatureInfo();
-          var fo = new ol.FeatureOverlay();
-          fo.setMap(map);
+          var fo = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            map: map
+          });
 
-          scope.results = fo.getFeatures().getArray();
+          scope.results = fo.getSource().getFeatures();
           scope.pending = 0;
           var overlay = new ol.Overlay({
             positioning: 'center-center',
@@ -78,7 +80,7 @@
               }
             }
 
-            fo.getFeatures().clear();
+            fo.getSource().clear();
             var layers = map.getLayers().getArray().filter(function(layer) {
               return layer.getSource() instanceof ol.source.ImageWMS ||
                   layer.getSource() instanceof ol.source.TileWMS;

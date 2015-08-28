@@ -66,6 +66,8 @@
                     params: {
                       _isTemplate: 's',
                       any: '',
+                      from: 1,
+                      to: 200,
                       _root: 'gmd:CI_ResponsibleParty',
                       sortBy: 'title',
                       sortOrder: 'reverse',

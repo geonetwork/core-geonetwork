@@ -733,7 +733,7 @@
                           }
                         }
 
-                        map.getView().fitExtent(extent, map.getSize());
+                        map.getView().fit(extent, map.getSize());
 
                       })
                     .then(function() {
@@ -1243,7 +1243,7 @@
            */
           zoomLayerToExtent: function(layer, map) {
             if (layer.get('cextent')) {
-              map.getView().fitExtent(layer.get('cextent'), map.getSize());
+              map.getView().fit(layer.get('cextent'), map.getSize());
             }
           },
 

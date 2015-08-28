@@ -200,7 +200,7 @@
                         extent) ?
                         gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
                         proj.getExtent();
-                    scope.map.getView().fitExtent(
+                    scope.map.getView().fit(
                         projectedExtent,
                         scope.map.getSize());
                   }

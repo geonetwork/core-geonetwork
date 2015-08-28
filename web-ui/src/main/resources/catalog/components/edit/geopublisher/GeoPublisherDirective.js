@@ -70,7 +70,7 @@
                 // TODO : Zoom to all extent if more than one defined
                 if (angular.isArray(gnCurrentEdit.extent) &&
                     gnCurrentEdit.extent.length > 0) {
-                  map.getView().fitExtent(
+                  map.getView().fit(
                       gnMap.reprojExtent(gnCurrentEdit.extent[0],
                       'EPSG:4326', gnMap.getMapConfig().projection),
                       map.getSize());
