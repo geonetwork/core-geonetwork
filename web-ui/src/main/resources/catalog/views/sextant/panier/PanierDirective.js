@@ -121,9 +121,23 @@
               var rendered = false;
 
               /** object that contains the form values */
-              var crs = angular.isArray(scope.element.md.crs) ?
+              var inputCrs, crs = angular.isArray(scope.element.md.crs) ?
                   scope.element.md.crs[0] : scope.element.md.crs;
               crs = crs && crs.split('::')[crs.split('::').length-1];
+
+              if(crs) {
+                for(var i=0;i<gnPanierSettings.projs.length;i++) {
+                  var p = gnPanierSettings.projs[i];
+                  if(p.value == crs) {
+                    inputCrs = crs;
+                    break;
+                  }
+                }
+              }
+              if(!inputCrs) {
+                inputCrs = gnPanierSettings.projs[0].value;
+              }
+
 
               var dataType = scope.element.md.spatialRepresentationType_text ==
                   'Vecteur' ? 'vector' : 'raster';
@@ -138,7 +152,7 @@
                   format: angular.isArray(scope.element.md.format) ?
                       scope.element.md.format[0] :
                       scope.formats[0].value,
-                  epsg: crs || gnPanierSettings.projs[0].value,
+                  epsg: inputCrs,
                   protocol: scope.element.link.protocol,
                   linkage: scope.element.link.url
                 },
@@ -146,7 +160,7 @@
                   format: angular.isArray(scope.element.md.format) ?
                       scope.element.md.format[0] :
                       scope.formats[0].value,
-                  epsg: crs || gnPanierSettings.projs[0].value,
+                  epsg: inputCrs,
                   name: scope.element.link.name
                 }
               };
@@ -172,11 +186,15 @@
 
                 // Fixed feature overlay to show extent of the md
                 var feature = new ol.Feature();
-                var featureOverlay = new ol.FeatureOverlay({
-                  style: gnSearchSettings.olStyles.mdExtent
+                var featureOverlay = new ol.layer.Vector({
+                  source: new ol.source.Vector({
+                    useSpatialIndex: false
+                  }),
+                  style: gnSearchSettings.olStyles.mdExtent,
+                  map: scope.map
                 });
-                featureOverlay.setMap(scope.map);
-                featureOverlay.addFeature(feature);
+
+                featureOverlay.getSource().addFeature(feature);
 
                 var proj = scope.map.getView().getProjection();
                 extent = ol.extent.containsExtent(proj.getWorldExtent(),
@@ -193,7 +211,7 @@
               scope.$on('renderPanierMap', function() {
                 scope.map.updateSize();
                 if (feature && !rendered) {
-                  scope.map.getView().fitExtent(
+                  scope.map.getView().fit(
                       feature.getGeometry().getExtent(), scope.map.getSize());
                 }
                 rendered = true;

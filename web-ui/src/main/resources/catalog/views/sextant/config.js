@@ -308,14 +308,13 @@
         label: 'Mercator - Datum WGS84'
       }];
 
-      // Deprecated
       gnPanierSettings.formats = {
         vector:[{
           value: 'ESRI Shapefile',
-          label: 'ESRI Shapefile'
+          label: 'Shapefile'
         },{
           value: 'MapInfo File TAB',
-          label: 'MapInfo File TAB'
+          label: 'MapInfo'
         },{
           value: 'GML',
           label: 'GML'
@@ -336,11 +335,6 @@
           value: 'Jpeg2000',
           label: 'Jpeg2000'
         }]
-      };
-
-      gnPanierSettings.defaults = {
-        format: 'ESRI Shapefile',
-        proj: '4326'
       };
 
       searchSettings.tabOverflow = {
