@@ -268,6 +268,9 @@
       });
 
       gnPanierSettings.projs = [{
+        value: '4326',
+        label: 'Geographique - Datum WGS84'
+      },{
         value: '27571',
         label: 'Lambert Zone I - Datum NTF'
       },{
@@ -291,9 +294,6 @@
       },{
         value: '27564',
         label: 'Lambert Corse - Datum NTF'
-      },{
-        value: '4326',
-        label: 'Geographique - Datum WGS84'
       },{
         value: '32600',
         label: 'UTM - Datum WGS84'
