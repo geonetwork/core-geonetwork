@@ -313,7 +313,7 @@
           value: 'ESRI Shapefile',
           label: 'Shapefile'
         },{
-          value: 'MapInfo File TAB',
+          value: 'MapInfo File',
           label: 'MapInfo'
         },{
           value: 'GML',
@@ -326,7 +326,7 @@
           label: 'GeoJSON'
         }],
         raster:[{
-          value: 'GeoTiff',
+          value: 'GTiff',
           label: 'GeoTiff'
         },{
           value: 'ECW',
