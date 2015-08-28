@@ -14435,6 +14435,17 @@ yx-axis
 .gn .sxt-panier [gn-map-field] .gn-draw-btn {
   top: 10px;
 }
+.gn .sxt-panier em {
+  display: block;
+  margin-bottom: 40px;
+}
+.gn .sxt-panier .panier-element .form-group {
+  margin-left: 20px;
+  margin-bottom: 0;
+}
+.gn .sxt-panier .panier-element .form-group label {
+  min-width: 90px;
+}
 .gn .modal-content {
   border-radius: 2px;
 }
@@ -14443,6 +14454,20 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
+}
+.gn h4 {
+  display: block;
+}
+.gn table {
+  font-size: 12px;
+  border: none;
+}
+.gn table td,
+.gn table th {
+  border: none;
+}
+.gn table th {
+  background-color: transparent;
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
