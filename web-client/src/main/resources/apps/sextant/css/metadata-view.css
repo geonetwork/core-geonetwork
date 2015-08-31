@@ -406,14 +406,36 @@ div.help ul li {
 }
 
 
+
 /* CSS from v6 required by formatter */
-.gn-metadata-view input[readonly] {
-    background: #fff;
+.gn-metadata-view {
+    background-color: #e4eef7 !important;
+    background-image: url("../../sextant/images/schema/emodnet/background.gif") !important;
+    background-repeat: repeat-x !important;
+    background-attachment: fixed !important;
+}
+.gn-metadata-view dl dt, .gn-metadata-view dl dd {
+    /*line-height: 2.428571;*/
+    height: 20px;
+}
+.gn-metadata-view dl dt {
+    float: left;
+    width: 300px;
+    clear: left;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.gn-metadata-view dl dd {
+    margin-left: 320px;
+    border-left: 1px solid #1b75bc;
+    padding-left: 1em;
 }
 .gn-metadata-view .extent {
     display: inline-block;
     position: relative;
-    margin: 2em 0 0;
+    margin: 2em 0 0 8em;
 }
 .gn-metadata-view .coord {
     position: absolute;
@@ -445,9 +467,17 @@ div.help ul li {
     margin-bottom: 20px;
 }
 .gn-metadata-view h3 {
-    color: #3071a9;
-    position: relative;
-    border-bottom: 2px dotted lightgrey;
+    /*color: #3071a9;*/
+    /*position: relative;*/
+    /*border-bottom: 2px dotted lightgrey;*/
+    font-weight: bold;
+    font-size: 17.6px;
+    color: #1b75bc;
+    text-transform: uppercase;
+    width: 33%;
+    padding-top: 8px;
+    padding-left: 4px;
+    padding-bottom: 4px;
 }
 .gn-metadata-view h3 button {
     position: absolute;
@@ -476,7 +506,6 @@ div.help ul li {
 }
 .gn-metadata-view dl {
     margin-bottom: 0;
-    padding-bottom: 10px;
 }
 .gn-metadata-view dl h2,
 .gn-metadata-view dl h3,
@@ -514,6 +543,9 @@ div.help ul li {
 }
 .gn-metadata-view .entry .entry {
     margin-left: 1em;
+}
+.gn-metadata-view address {
+    padding-bottom: 8px;
 }
 .gn-metadata-view .img-thumbnail {
     margin-bottom: 1em;
