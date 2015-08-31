@@ -413,10 +413,12 @@ div.help ul li {
     background-image: url("../../sextant/images/schema/emodnet/background.gif") !important;
     background-repeat: repeat-x !important;
     background-attachment: fixed !important;
+    padding: 10px;
 }
 .gn-metadata-view dl dt, .gn-metadata-view dl dd {
     /*line-height: 2.428571;*/
-    height: 20px;
+    min-height: 20px;
+    font-style: normal !important;
 }
 .gn-metadata-view dl dt {
     float: left;
@@ -465,6 +467,7 @@ div.help ul li {
 }
 .gn-metadata-view h1 {
     margin-bottom: 20px;
+    display: none;
 }
 .gn-metadata-view h3 {
     /*color: #3071a9;*/
@@ -478,6 +481,10 @@ div.help ul li {
     padding-top: 8px;
     padding-left: 4px;
     padding-bottom: 4px;
+}
+
+.gn-metadata-view h3 * h3 {
+    font-size: 14px;
 }
 .gn-metadata-view h3 button {
     position: absolute;

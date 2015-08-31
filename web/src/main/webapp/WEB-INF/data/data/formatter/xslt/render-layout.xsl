@@ -13,6 +13,7 @@
   <!-- Those templates should be overriden in the schema plugin - start -->
   <xsl:template mode="getMetadataTitle" match="undefined"/>
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
+  <xsl:template mode="getMetadataHeader" match="undefined"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
@@ -23,6 +24,8 @@
           <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
           <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
           <!-- TODO : Add thumbnail to header -->
+
+          <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
