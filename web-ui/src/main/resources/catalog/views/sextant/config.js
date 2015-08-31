@@ -130,7 +130,9 @@
         resolutions[z] = size / Math.pow(2, z);
         matrixIds[z] = 'EPSG:3857:' + z;
       }
-      var searchLayer = new ol.layer.Tile({
+
+      // Sextant WMTS
+      /*var searchLayer = new ol.layer.Tile({
         opacity: 0.7,
         extent: projectionExtent,
         title: 'Sextant',
@@ -148,11 +150,13 @@
           }),
           style: 'default'
         })
-      });
+      });*/
 
       var searchMap = new ol.Map({
         layers: [
-          searchLayer
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
         ],
         controls: [],
         view: new ol.View({
@@ -264,6 +268,9 @@
       });
 
       gnPanierSettings.projs = [{
+        value: '4326',
+        label: 'Geographique - Datum WGS84'
+      },{
         value: '27571',
         label: 'Lambert Zone I - Datum NTF'
       },{
@@ -288,9 +295,6 @@
         value: '27564',
         label: 'Lambert Corse - Datum NTF'
       },{
-        value: '4326',
-        label: 'Geographique - Datum WGS84'
-      },{
         value: '32600',
         label: 'UTM - Datum WGS84'
       },{
@@ -304,23 +308,33 @@
         label: 'Mercator - Datum WGS84'
       }];
 
-      gnPanierSettings.formats = [{
-        value: 'ESRI Shapefile',
-        label: 'ESRI Shapefile'
-      },{
-        value: 'MapInfo File TAB',
-        label: 'MapInfo File TAB'
-      },{
-        value: 'GML',
-        label: 'GML'
-      },{
-        value: 'KML',
-        label: 'KML'
-      }];
-
-      gnPanierSettings.defaults = {
-        format: 'ESRI Shapefile',
-        proj: '4326'
+      gnPanierSettings.formats = {
+        vector:[{
+          value: 'ESRI Shapefile',
+          label: 'Shapefile'
+        },{
+          value: 'MapInfo File',
+          label: 'MapInfo'
+        },{
+          value: 'GML',
+          label: 'GML'
+        },{
+          value: 'KML',
+          label: 'KML'
+        }, {
+          value: 'GeoJSON',
+          label: 'GeoJSON'
+        }],
+        raster:[{
+          value: 'GTiff',
+          label: 'GeoTiff'
+        },{
+          value: 'ECW',
+          label: 'ECW'
+        },{
+          value: 'Jpeg2000',
+          label: 'Jpeg2000'
+        }]
       };
 
       searchSettings.tabOverflow = {

@@ -236,6 +236,10 @@
         if (time) {
           p.TIME = time;
         }
+        var elevation = layer.getSource().getParams().ELEVATION;
+        if (elevation) {
+          p.ELEVATION = elevation;
+        }
 
         var url = gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));

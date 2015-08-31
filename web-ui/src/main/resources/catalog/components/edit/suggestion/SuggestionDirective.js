@@ -94,6 +94,9 @@
                     scope.params).then(function() {
                   scope.processing = false;
                   scope.processed = true;
+                  if (angular.isDefined(attrs['id'])) {
+                    $('#' + attrs['id'] + '-popup').modal('hide');
+                  }
                 });
               };
               gnSuggestion.register(initParams);

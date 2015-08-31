@@ -65,8 +65,10 @@
             }
 
             if (!featureOverlay) {
-              featureOverlay = new ol.FeatureOverlay();
-              featureOverlay.setMap(scope.map);
+              featureOverlay = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                map: scope.map
+              });
             }
             if (drawInteraction) {
               scope.map.removeInteraction(drawInteraction);

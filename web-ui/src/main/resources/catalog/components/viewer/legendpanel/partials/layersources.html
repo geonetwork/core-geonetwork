@@ -4,7 +4,12 @@
       <h5>{{layer.get('label')}}</h5>
       <div>
          <span translate="">sources</span>
-         {{layer.get('attribution')}}
+         <span ng-if="!layer.get('attributionUrl')">
+           {{layer.get('attribution')}}
+         </span>
+         <span ng-if="layer.get('attributionUrl')">
+           <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+         </span>
       </div>
     </li>
   </ul>

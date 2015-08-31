@@ -91,7 +91,7 @@
         // store the extent into view settings so that it can be used later in
         // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
-        map.getView().fitExtent(extent, map.getSize());
+        map.getView().fit(extent, map.getSize());
 
         // load the resources
         var layers = context.resourceList.layer;

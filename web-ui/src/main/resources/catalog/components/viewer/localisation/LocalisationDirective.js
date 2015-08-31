@@ -34,7 +34,7 @@
                 angular.copy(gnGlobalSettings.modelOptions);
 
             var zoomTo = function(extent, map) {
-              map.getView().fitExtent(extent, map.getSize());
+              map.getView().fit(extent, map.getSize());
             };
             this.onClick = function(loc, map) {
               zoomTo(loc.extent, map);

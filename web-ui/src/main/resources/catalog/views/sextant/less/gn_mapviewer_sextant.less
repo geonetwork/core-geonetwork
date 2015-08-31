@@ -161,6 +161,9 @@
 
   [gn-mapprint] button, [gn-ows-context] button {
     width: 100%;
+    &.disabled {
+      color: #888;
+    }
   }
 
   .sx-toolbar {
@@ -378,6 +381,7 @@
     overflow-y: auto;
     display: none;
     clear: both;
+    font-size: 12px;
     & > .nav-tabs {
       display: none;
     }
@@ -413,9 +417,27 @@
       /*.list-group-item:not(:first-child) {
         border-top: 1px solid #d3d3d3;
       }*/
+      .list-group-item {
+        display: table-row;
+        margin-bottom: .3em;
+      }
+      .gn-order-buttons {
+        display: table-cell;
+        width: 1.2em;
+        float: left;
+        padding: .3em 0;
+        a {
+          display: inline-block;
+        }
+      }
+      label {
+        padding: .3em 0;
+        display: table-cell;
+        vertical-align: middle;
+      }
     }
     [gn-layersources-panel] {
-      div {
+      li div {
         margin-left: 1em;
         color: #808080;
         font-size: @sxt-fontsize;

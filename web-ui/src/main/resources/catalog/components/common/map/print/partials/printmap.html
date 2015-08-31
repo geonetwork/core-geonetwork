@@ -39,9 +39,12 @@
       <textarea class="form-control" data-ng-model="mapComment"></textarea>
     </div>
   </div>
-  <button class="btn btn-default btn-block"
+  <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
           data-ng-click="submit()">
-    <i class="fa fa-print"></i>&nbsp;
-    {{'Print'|translate}}
+      <i class="fa fa-print" ng-if="!printing"></i>
+      <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
+      &nbsp;
+      <span ng-if="!printing">{{'Print'|translate}}</span>
+      <span ng-if="printing">{{'Printing'|translate}}</span>
   </button>
 </form>

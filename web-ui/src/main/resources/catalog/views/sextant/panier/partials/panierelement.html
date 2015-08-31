@@ -1,4 +1,4 @@
-<li class="list-group-item clearfix">
+<li class="list-group-item clearfix panier-element">
   <button type="button" class="btn btn-default sxt-panier-remove" ng-click="del(element, form)">
     <i class="fa fa-trash-o"></i>
   </button>
@@ -21,7 +21,7 @@
     <div class="form-group">
       <label for="formatPF" class="control-label" translate>format</label>&nbsp;:&nbsp;
       <select class="form-control input-sm" id="formatPF" data-ng-model="form.output.format" sxt-select>
-        <option data-ng-repeat="f in settings.formats" value="{{f.value}}"
+        <option data-ng-repeat="f in formats" value="{{f.value}}"
         data-ng-selected="f.value == form.output.format">{{f.label}}</option>
       </select>
     </div>

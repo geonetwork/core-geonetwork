@@ -12,7 +12,8 @@
         require: '^ngSearchForm',
         scope: {
           config: '=gnPagination',
-          values: '=hitsValues'
+          values: '=hitsValues',
+          enableHotKeys: '@'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -76,25 +77,26 @@
           };
           controller.activatePagination();
 
-          hotkeys.bindTo(scope)
-            .add({
-                combo: 'ctrl+left',
-                description: $translate('hotkeyFirstPage'),
-                callback: scope.first
-              }).add({
-                combo: 'left',
-                description: $translate('hotkeyPreviousPage'),
-                callback: scope.previous
-              }).add({
-                combo: 'right',
-                description: $translate('hotkeyNextPage'),
-                callback: scope.next
-              }).add({
-                combo: 'ctrl+right',
-                description: $translate('hotkeyLastPage'),
-                callback: scope.last
-              });
-
+          if (angular.isDefined(attrs.enableHotKeys)) {
+            hotkeys.bindTo(scope)
+              .add({
+                  combo: 'ctrl+left',
+                  description: $translate('hotkeyFirstPage'),
+                  callback: scope.first
+                }).add({
+                  combo: 'left',
+                  description: $translate('hotkeyPreviousPage'),
+                  callback: scope.previous
+                }).add({
+                  combo: 'right',
+                  description: $translate('hotkeyNextPage'),
+                  callback: scope.next
+                }).add({
+                  combo: 'ctrl+right',
+                  description: $translate('hotkeyLastPage'),
+                  callback: scope.last
+                });
+          }
         }
       };
     }]);

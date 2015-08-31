@@ -97,19 +97,6 @@
 
       $scope.gnUrl = gnGlobalSettings.gnUrl || '';
 
-      // Manage routing
-      if (!$location.path()) {
-        gnSearchLocation.setSearch();
-      }
-
-      gnMdView.initFormatter(gnSearchSettings.formatterTarget || '.gn');
-      gnSearchLocation.initTabRouting($scope.mainTabs);
-
-      $scope.gotoPanier = function() {
-        $location.path('/panier');
-      };
-
-      //
       if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
@@ -359,6 +346,18 @@
 
       // Manage tabs height for api
       $scope.tabOverflow = gnSearchSettings.tabOverflow;
+
+      // Manage routing
+      if (!$location.path()) {
+        gnSearchLocation.setSearch();
+      }
+
+      gnMdView.initFormatter(gnSearchSettings.formatterTarget || '.gn');
+      gnSearchLocation.initTabRouting($scope.mainTabs);
+
+      $scope.gotoPanier = function() {
+        $location.path('/panier');
+      };
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
