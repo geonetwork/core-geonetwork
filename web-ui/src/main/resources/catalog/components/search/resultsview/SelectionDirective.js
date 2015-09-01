@@ -6,9 +6,9 @@
 
   module.directive('gnSelectionWidget', [
     '$translate', 'hotkeys',
-    'gnHttp', 'gnMetadataActions',
+    'gnHttp', 'gnMetadataActions', 'gnSearchSettings',
     function($translate, hotkeys,
-             gnHttp, gnMetadataActions) {
+             gnHttp, gnMetadataActions, gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -17,6 +17,7 @@
             'selection-widget.html',
         link: function(scope, element, attrs) {
 
+          scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
           scope.withoutActionMenu =
