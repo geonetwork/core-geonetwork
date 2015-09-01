@@ -785,6 +785,8 @@
     "system/oai/mdmode-valueTemporaExtent": "시간적 범위",
     "system/oai/tokentimeout": "재개 토큰 시간 초과",
     "system/oai/tokentimeout-help": "OAI 결과셋은 캐쉬에 수초간 유지되고 OAI 재개토큰은 스크롤되어집니다. 주의:할성화 하면 GeoNetwork를 재시작합니다.",
+    "system/oai/maxrecords": "Maximum records",
+    "system/oai/maxrecords-help": "Number of maximum records to return in OAI responses",
     "system/platform": "카탈로그",
     "system/platform/subVersion": "마이너 버전",
     "system/platform/subVersion-help": "서브 버전:",
