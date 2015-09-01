@@ -71,7 +71,7 @@ public class ResumptionTokenCache extends Thread {
 		Date now = getUTCTime();
 
 		for (Map.Entry entry : map.entrySet() ) {
-			if ( ((GeonetworkResumptionToken)entry.getValue()).getExpirDate().getSeconds() < (now.getTime()/1000)  ) {
+			if ( ((GeonetworkResumptionToken)entry.getValue()).getExpirDate().toDate().getTime()/1000 < (now.getTime()/1000)  ) {
 				map.remove(entry.getKey());
                 if(Log.isDebugEnabled(Geonet.OAI_HARVESTER))
                     Log.debug(Geonet.OAI_HARVESTER,"OAI cache ::expunge removing:"+entry.getKey());
