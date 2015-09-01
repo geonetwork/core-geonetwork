@@ -4,6 +4,8 @@
 
   <xsl:param name="view" select="'default'"/>
 
+  <xsl:param name="css" select="''"/>
+
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
                 select="/root/info/record/datainfo/schemaid"/>
