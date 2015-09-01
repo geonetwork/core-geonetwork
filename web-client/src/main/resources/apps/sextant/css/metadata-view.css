@@ -419,6 +419,7 @@ div.help ul li {
     /*line-height: 2.428571;*/
     min-height: 20px;
     font-style: normal !important;
+    font-size: 125%;
 }
 .gn-metadata-view dl dt {
     float: left;
