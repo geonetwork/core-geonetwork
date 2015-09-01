@@ -1,0 +1,96 @@
+<div class="gn-md-links">
+  <!--Edit button-->
+  <a class="gn-md-edit-btn"
+     data-ng-show="user.canEditRecord(md)"
+     data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
+     title="{{'edit' | translate}}">
+    <i class="fa fa-pencil"></i>
+  </a>
+
+  <div class="btn-group"
+       data-ng-class="::links.length > 0 ? '' : 'hidden'">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            title="{{'weblink' | translate}}">
+      <span class="fa fa-link"></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="link in ::links">
+        <a href="{{::link.url}}"
+           target="_blank">{{::link.desc}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="btn-group"
+       data-ng-if="isMapViewerEnabled"
+       data-ng-class="layers.length > 0 ? '' : 'hidden'">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            title="{{'layers' | translate}}">
+      <span class="fa fa-globe"></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="layer in ::layers">
+        <a href="" data-ng-click="resultviewFns.addMdLayerToMap(layer, md)">
+                  <span class="fa fa-google"
+                        data-ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
+                  <span class="fa fa-globe"
+                        data-ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
+          &nbsp;{{::layer.desc}}</a></li>
+      <li data-ng-show="layers.length > 1"
+          class="divider"></li>
+      <li data-ng-show="layers.length > 1">
+        <a href=""
+           data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
+          <i class="fa fa-plus"></i>&nbsp;
+                  <span data-translate=""
+                        data-translate-values="{number: '{{layers.length}}'}">
+                    addAllLayersToMap</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="btn-group"
+       data-ng-if="isMapViewerEnabled"
+       data-ng-class="maps.length > 0 ? '' : 'invisible'">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            title="{{'maps' | translate}}">
+      <span class="fa fa-map-marker"></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="map in ::maps">
+        <a href="" data-ng-click="resultviewFns.loadMap(map, md)">
+          <span class="fa fa-map-marker"></span>
+          &nbsp;{{map.desc || map.name}}</a></li>
+    </ul>
+  </div>
+
+  <div class="btn-group"
+       data-ng-class="::downloads.length > 0 ? '' : 'hidden'">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            title="{{'downloads' | translate}}">
+      <span class="fa fa-download"></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="link in ::downloads">
+        <a href="{{::link.url}}"
+           title="{{::link.desc}}">
+                  <span class="fa fa-file-zip-o"
+                        data-ng-if="link.contentType=='application/zip'"></span>
+          {{link.desc || (link.name + ' - ' + link.contentType) }}</a>
+      </li>
+    </ul>
+  </div>
+</div>

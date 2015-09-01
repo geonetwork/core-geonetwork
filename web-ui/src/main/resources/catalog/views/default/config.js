@@ -4,6 +4,9 @@
 
   var module = angular.module('gn_search_default_config', []);
 
+  module.value('gnTplResultlistLinksbtn',
+      '../../catalog/views/default/directives/partials/linksbtn.html');
+
   module
       .run([
         'gnSearchSettings',
