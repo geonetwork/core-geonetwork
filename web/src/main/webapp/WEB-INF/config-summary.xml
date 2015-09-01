@@ -106,7 +106,7 @@
           <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
           <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
-          <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
+          <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
           <item facet="keyword" max="15"/>
           <item facet="orgName" max="25"/>
           <item facet="sourceCatalog" translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
