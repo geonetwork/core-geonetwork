@@ -477,14 +477,15 @@ div.help ul li {
     font-size: 17.6px;
     color: #1b75bc;
     text-transform: uppercase;
+    font-style: normal;
     width: 33%;
     padding-top: 8px;
-    padding-left: 4px;
     padding-bottom: 4px;
 }
 
 .gn-metadata-view h3 * h3 {
     font-size: 14px;
+    font-style: normal;
 }
 .gn-metadata-view h3 button {
     position: absolute;
@@ -503,10 +504,7 @@ div.help ul li {
     }
 }
 .gn-metadata-view h3 i {
-    display: inline-block;
-    width: 14px;
-    transition: transform .4s;
-    transform: rotate(0deg);
+    display: none;
 }
 .gn-metadata-view h3 .closed i {
     transform: rotate(90deg);
@@ -524,7 +522,7 @@ div.help ul li {
 }
 .gn-metadata-view .dl-horizontal .dl-horizontal dt {
     font-weight: normal;
-    font-style: italic;
+    font-style: normal;
     color: #555555;
     clear: none;
 }
