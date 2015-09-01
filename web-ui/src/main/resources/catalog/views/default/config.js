@@ -160,6 +160,14 @@
             }]
           };
 
+          // Mapping for md links in search result list.
+          searchSettings.linkTypes = {
+            links: ['LINK'],
+            downloads: ['DOWNLOAD'],
+            layers:['OGC', 'kml'],
+            maps: ['ows']
+          };
+
           // Set the default template to use
           searchSettings.resultTemplate =
               searchSettings.resultViewTpls[0].tplUrl;
