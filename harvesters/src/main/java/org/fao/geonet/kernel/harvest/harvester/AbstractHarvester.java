@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -69,6 +70,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -125,7 +127,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         try {
             AbstractHarvester<?> ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
             ah.setContext(context);
-
             return ah;
         } catch (Exception e) {
             throw new OperationAbortedEx("Cannot instantiate harvester", e);
@@ -139,6 +140,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected void setContext(ServiceContext context) {
         this.context = context;
+        this.dataMan = context.getBean(DataManager.class);
+        this.settingMan = context.getBean(HarvesterSettingsManager.class);
     }
 
     /**
@@ -997,9 +1000,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
 
     protected ServiceContext context;
-    @Autowired
+
     protected HarvesterSettingsManager settingMan;
-    @Autowired
+
     protected DataManager dataMan;
 
     protected AbstractParams params;
