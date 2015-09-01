@@ -41,6 +41,10 @@
           md = gnMdViewObj.records[index];
         }
 
+        // Set the route
+        this.setLocationUuid(md.getUuid());
+        gnUtilityService.scrollTo();
+
         angular.extend(md, {
           links: md.getLinksByType('LINK'),
           downloads: md.getLinksByType('DOWNLOAD'),
@@ -56,9 +60,6 @@
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
-        // Set the route
-        this.setLocationUuid(md.getUuid());
-        gnUtilityService.scrollTo();
       };
 
       /**
