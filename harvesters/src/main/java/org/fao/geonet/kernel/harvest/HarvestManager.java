@@ -6,6 +6,8 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.sql.SQLException;
 import javax.annotation.Nonnull;
@@ -135,4 +137,6 @@ public interface HarvestManager {
     boolean isReadOnly();
 
     void setReadOnly(boolean readOnly);
+
+    public ConfigurableApplicationContext getApplicationContext();
 }
