@@ -27,17 +27,23 @@
              gnUrlUtils, gnUtilityService) {
 
       // Keep where the metadataview come from to get back on close
-      $rootScope.$on('$locationChangeStart', function(o, v) {
+      var initFromConfig = function() {
         if (!gnSearchLocation.isMdView()) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
-      });
+      };
+      $rootScope.$on('$locationChangeStart', initFromConfig);
+      initFromConfig();
 
       this.feedMd = function(index, md, records) {
         gnMdViewObj.records = records || gnMdViewObj.records;
         if (angular.isUndefined(md)) {
           md = gnMdViewObj.records[index];
         }
+
+        // Set the route
+        this.setLocationUuid(md.getUuid());
+        gnUtilityService.scrollTo();
 
         angular.extend(md, {
           links: md.getLinksByType('LINK'),
@@ -54,9 +60,6 @@
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
-        // Set the route
-        this.setLocationUuid(md.getUuid());
-        gnUtilityService.scrollTo();
       };
 
       /**

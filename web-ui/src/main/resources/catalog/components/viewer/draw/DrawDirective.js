@@ -52,122 +52,229 @@
           var map = scope.map;
           var source = new ol.source.Vector();
 
-          var txtStyleCache = {};
-          var featureStyle = new ol.style.Style({
-            fill: new ol.style.Fill({
-              color: 'rgba(255, 255, 255, 0.4)'
-            }),
-            stroke: new ol.style.Stroke({
-              color: '#ffcc33',
-              width: 2
-            }),
-            image: new ol.style.Circle({
-              radius: 7,
-              fill: new ol.style.Fill({
-                color: '#ffcc33'
-              })
-            })
-          });
-
-          var textStyleCfg = {
-            fill: {
-              color: 'rgba(255, 255, 255, 0.6)'
-            },
-            stroke: {
-              color: '#319FD3',
-              width: 1,
-              lineDash: [0]
-            },
-            text: {
-              font: '14px Calibri,sans-serif',
-              fill: {
-                color: '#000'
-              },
-              stroke: {
-                color: '#fff',
-                width: 3
-              }
+          /**
+           * Style function of the drawn features vector.
+           * The feature styles are stored in a `_style` attribute instead of
+           * directly in its style to avoid to sotre style in the feature (cause
+           * it will have priority on select layer style function).
+           *
+           * @param {ol.Feature} feature
+           * @return {*[]} styles array
+           */
+          var drawVectorStyleFn = function(feature) {
+            if (feature.get('_style')) {
+              return [feature.get('_style')];
             }
           };
+
+          /**
+           * Style function of the select interaction intern layer.
+           * The slected feature will take same style as original feature but
+           * will also display the vertexes (expect for text).
+           *
+           * @param {ol.Feature} feature
+           * @return {*[]} styles array
+           */
+          var selectVectorStyleFn = function(feature) {
+            if (feature.get('_style')) {
+              var fStyle = feature.get('_style');
+
+              // If text, just display text
+              if (feature.get('name')) {
+                return [fStyle];
+              }
+              var selectStyle = new ol.style.Style({
+                image: new ol.style.Circle(
+                    feature.getGeometry().getType() == 'Point' ? {
+                      radius: fStyle.getImage().getRadius() + 5,
+                      fill: new ol.style.Fill({
+                        color: fStyle.getImage().getFill().getColor()
+                      })
+                    } : {
+                      radius: fStyle.getStroke().getWidth() + 5,
+                      fill: new ol.style.Fill({
+                        color: fStyle.getStroke().getColor()
+                      })
+
+                    }),
+                // Draw the vertexes of the features
+                geometry: function(feature) {
+                  var coordinates;
+                  var geom = feature.getGeometry();
+                  if (geom.getType() == 'Polygon') {
+                    coordinates = geom.getCoordinates()[0];
+                  }
+                  else if (geom.getType() == 'LineString') {
+                    coordinates = geom.getCoordinates();
+                  }
+                  else {
+                    return geom;
+                  }
+                  return new ol.geom.MultiPoint(coordinates);
+                }
+              });
+              return [fStyle, selectStyle];
+            }
+          };
+
+          // Mapping with style form
           scope.featureStyleCfg = {
             fill: {
               color: 'rgba(255, 255, 255, 0.6)'
             },
-            stroke: {
-              color: '#ff0000',
-              width: 1
-            },
-            image: {
-              radius: 7,
-              fill: {
-                color: '#ffcc33'
-              }
-            },
+            stroke: {color: '#ff0000', width: 1},
+            image: {radius: 7, fill: {color: '#ffcc33'}},
             text: {
               width: 14,
-              fill: {
-                color: '#000'
-              },
-              stroke: {
-                color: '#fff',
-                width: 2
-              }
+              fill: {color: '#000'},
+              stroke: {color: '#fff', width: 2}
             }
-
           };
 
-          var drawTextStyleFn = function(feature, resolution) {
+          /**
+           * Style fn just use for the text overlay before it's drawn.
+           * @return {*[]} the style corresponding to text style form
+           */
+          var drawTextStyleFn = function() {
+            var style = scope.featureStyleCfg;
             return [new ol.style.Style({
               fill: new ol.style.Fill({
-                color: textStyleCfg.fill.color
+                color: style.fill.color
               }),
               stroke: new ol.style.Stroke({
-                color: textStyleCfg.stroke.color,
-                width: textStyleCfg.stroke.width
+                color: style.stroke.color,
+                width: style.stroke.width
               }),
               text: new ol.style.Text({
-                font: textStyleCfg.text.font,
+                font: style.text.font,
                 text: scope.text,
                 fill: new ol.style.Fill({
-                  color: textStyleCfg.text.fill.color
+                  color: style.text.fill.color
                 }),
                 stroke: new ol.style.Stroke({
-                  color: textStyleCfg.text.stroke.color,
-                  width: textStyleCfg.text.stroke.width
+                  color: style.text.stroke.color,
+                  width: style.text.stroke.width
                 })
               })
             })];
           };
 
+          // The vector that will contains all drawn features
           var vector = new ol.layer.Vector({
             source: source,
-            style: featureStyle,
-            temporary: true
+            temporary: true,
+            style: drawVectorStyleFn
           });
           scope.vector = vector;
 
-          var onDrawend = function(evt) {
-            if (evt) {
-              var style = scope.featureStyleCfg;
-              evt.feature.setStyle(new ol.style.Style({
+          /**
+           * Create a `ol.style.Style` object from style config mapped with
+           * style form.
+           *
+           * @param {ol.Feature} feature to know if it's text or not
+           * @param {object} styleCfg the style config object
+           * @return {ol.style.Style} the ol style
+           */
+          var createStyleFromConfig = function(feature, styleCfg) {
+            var styleObjCfg = {
+              fill: new ol.style.Fill({
+                color: styleCfg.fill.color
+              }),
+              stroke: new ol.style.Stroke({
+                color: styleCfg.stroke.color,
+                width: styleCfg.stroke.width
+              })
+            };
+
+            // It is a Text feature
+            if (feature.get('name')) {
+              styleObjCfg.text = new ol.style.Text({
+                font: styleCfg.text.font,
+                text: feature.get('name'),
                 fill: new ol.style.Fill({
-                  color: style.fill.color
+                  color: styleCfg.text.fill.color
                 }),
-                stroke: new ol.style.Stroke({
-                  color: style.stroke.color,
-                  width: style.stroke.width
-                }),
-                image: new ol.style.Circle({
-                  radius: style.image.radius,
-                  fill: new ol.style.Fill({
-                    color: style.image.fill.color
-                  })
-                })
-              }));
+                stroke: styleCfg.text.stroke.width > 0 ?
+                    new ol.style.Stroke({
+                      color: styleCfg.text.stroke.color,
+                      width: styleCfg.text.stroke.width
+                    }) : undefined
+              });
             }
+            else if (feature.getGeometry().getType() == 'Point') {
+              styleObjCfg.image = new ol.style.Circle({
+                radius: styleCfg.image.radius,
+                fill: new ol.style.Fill({
+                  color: styleCfg.image.fill.color
+                })
+              });
+            }
+            return new ol.style.Style(styleObjCfg);
+          };
+
+          /**
+           * Serialize an `ol.style.Style` to a JSON object.
+           * Used to store the style as feature property in the GeoJSON.
+           * @param {ol.Feature} feature
+           * @return {Object} serialized style
+           */
+          getStyleObjFromFeature = function(feature) {
+            var st = feature.get('_style');
+            if (angular.isFunction(st)) {
+              st = st(feature)[0];
+            }
+
+            var styleObj = {
+              fill: {
+                color: st.getFill().getColor()
+              },
+              stroke: {
+                color: st.getStroke().getColor(),
+                width: st.getStroke().getWidth()
+              }
+            };
+            if (st.getText()) {
+              styleObj.text = {
+                text: st.getText().getText(),
+                font: st.getText().getFont(),
+                stroke: {
+                  color: st.getText().getStroke().getColor(),
+                  width: st.getText().getStroke().getWidth()
+                },
+                fill: {
+                  color: st.getText().getFill().getColor()
+                },
+                width: parseInt(new RegExp('([0-9]{1,3})(?=px)').
+                    exec(st.getText().getFont())[0])
+              };
+            }
+            else if (feature.getGeometry().getType() == 'Point') {
+              styleObj.image = {
+                radius: st.getImage().getRadius(),
+                fill: {
+                  color: st.getImage().getFill().getColor()
+                }
+              };
+            }
+            return styleObj;
+          };
+
+          /**
+           * Called for each draw end (point, line, polygon, text).
+           * Create the `ol.style.Style` depending on style form and attach
+           * it to the feature as a `_style` parameter.
+           * This is done not to save style into the feature so the modify
+           * layer style Fn is not overloaded.
+           *
+           * @param {object} evt ol3 event draw end
+           */
+          var onDrawend = function(evt) {
+            var f = evt.feature;
+            f.set('_style', createStyleFromConfig(f, scope.featureStyleCfg));
             scope.$apply();
           };
 
+          // Draw interactions
           var drawPolygon = new ol.interaction.Draw(({
             type: 'Polygon',
             source: source
@@ -205,38 +312,63 @@
           }));
           drawText.on('drawend', function(evt) {
             evt.feature.set('name', scope.text);
-            evt.feature.setStyle(new ol.style.Style({
-              fill: new ol.style.Fill({
-                color: textStyleCfg.fill.color
-              }),
-              stroke: new ol.style.Stroke({
-                color: textStyleCfg.stroke.color,
-                width: textStyleCfg.stroke.width
-              }),
-              text: new ol.style.Text({
-                font: scope.featureStyleCfg.text.font,
-                text: scope.text,
-                fill: new ol.style.Fill({
-                  color: scope.featureStyleCfg.text.fill.color
-                }),
-                stroke: scope.featureStyleCfg.text.stroke.width > 0 ?
-                    new ol.style.Stroke({
-                      color: scope.featureStyleCfg.text.stroke.color,
-                      width: scope.featureStyleCfg.text.stroke.width
-                    }) : undefined
-              })
-            }));
-            onDrawend();
+            onDrawend(evt);
           });
           ngeoDecorateInteraction(drawText, map);
           drawText.active = false;
           scope.drawText = drawText;
           map.addInteraction(drawText);
 
-          var select = new ol.interaction.Select();
+          scope.interactions = [{
+            interaction: drawPoint,
+            label: 'Point'
+          }, {
+            interaction: drawLine,
+            label: 'Linestring'
+          }, {
+            interaction: drawPolygon,
+            label: 'Polygon'
+          }, {
+            interaction: drawText,
+            label: 'Text'
+          }];
+
+          // Manage selection
+          var select = new ol.interaction.Select({
+            multi: false,
+            style: selectVectorStyleFn
+          });
           var modify = new ol.interaction.Modify({
             features: select.getFeatures()
           });
+
+          var unregisterSelectFn;
+          select.getFeatures().on('change:length', function(evt) {
+            scope.editedFeature = select.getFeatures().item(0);
+            if (scope.editedFeature) {
+              angular.extend(scope.featureStyleCfg,
+                  getStyleObjFromFeature(scope.editedFeature));
+              unregisterSelectFn = scope.$watch('featureStyleCfg',
+                  function(sCfg) {
+                    scope.editedFeature.set('_style',
+                        createStyleFromConfig(scope.editedFeature, sCfg));
+                  }, true);
+            }
+            else {
+              unregisterSelectFn && unregisterSelectFn();
+            }
+            scope.$applyAsync();
+          });
+
+
+          scope.getActiveDrawLabel = function() {
+            for (var i = 0; i < scope.interactions.length; i++) {
+              if (scope.interactions[i].interaction.active) {
+                return scope.interactions[i].label;
+              }
+            }
+            return 'add';
+          };
 
           /*
           function saves the currently drawn geometries as geoJSON
@@ -258,34 +390,7 @@
                     map.getView().getProjection(), 'EPSG:4326');
 
                 // Save the feature style
-                var st = feature.getStyle();
-                if (angular.isFunction(st)) {
-                  st = st(feature)[0];
-                }
-
-                var styleObj = {
-                  fill: {
-                    color: st.getFill().getColor()
-                  },
-                  stroke: {
-                    color: st.getStroke().getColor(),
-                    width: st.getStroke().getWidth()
-                  }
-                };
-                if (st.getText()) {
-                  styleObj.text = {
-                    text: st.getText().getText(),
-                    font: st.getText().getFont(),
-                    stroke: {
-                      color: st.getText().getStroke().getColor(),
-                      width: st.getText().getStroke().getWidth()
-                    },
-                    fill: {
-                      color: st.getText().getFill().getColor()
-                    }
-                  };
-                }
-                clone.set('_style', styleObj);
+                clone.set('_style', getStyleObjFromFeature(feature));
                 features.push(clone);
               });
 
@@ -302,6 +407,9 @@
             fileInput.click();
           });
 
+          /**
+           * Load features file
+           */
           angular.element(fileInput).bind('change', function(changeEvent) {
             if (fileInput.files.length > 0) {
               readAsText(fileInput.files[0], function(text) {
@@ -312,28 +420,7 @@
 
                 // Set each feature its style
                 angular.forEach(features, function(f, i) {
-                  var st = f.get('_style');
-                  var style = new ol.style.Style({
-                    fill: new ol.style.Fill({
-                      color: st.fill.color
-                    }),
-                    stroke: new ol.style.Stroke({
-                      color: st.stroke.color,
-                      width: st.stroke.width
-                    }),
-                    text: st.text ? new ol.style.Text({
-                      font: st.text.font,
-                      text: st.text.text,
-                      fill: new ol.style.Fill({
-                        color: st.text.fill.color
-                      }),
-                      stroke: new ol.style.Stroke({
-                        color: st.text.stroke.color,
-                        width: st.text.stroke.width
-                      })
-                    }) : undefined
-                  });
-                  f.setStyle(style);
+                  f.set('_style', createStyleFromConfig(f, f.get('_style')));
                 });
                 source.addFeatures(features);
                 $('#features-file-input')[0].value = '';
@@ -391,6 +478,13 @@
           });
 
           scope.getActiveDrawType = function() {
+            if (scope.editedFeature) {
+              if (scope.editedFeature.get('name')) {
+                return 'text';
+              }
+              return scope.editedFeature.getGeometry().getType().
+                  toLocaleLowerCase();
+            }
             if (scope.drawPoint.active) return 'point';
             else if (scope.drawLine.active) return 'line';
             else if (scope.drawPolygon.active) return 'polygon';

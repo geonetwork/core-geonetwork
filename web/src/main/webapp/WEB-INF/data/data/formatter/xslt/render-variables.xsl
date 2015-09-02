@@ -2,6 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <xsl:param name="view" select="'default'"/>
+
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
                 select="/root/info/record/datainfo/schemaid"/>
@@ -14,7 +16,8 @@
                 select="/root/undefined"/>
   <xsl:variable name="language"
                 select="/root/lang/text()"/>
-
+  <xsl:variable name="baseUrl"
+                select="/root/url"/>
 
   <!-- Date formating -->
   <xsl:variable name="dateFormats">
@@ -31,10 +34,9 @@
 
 
   <xsl:variable name="schemaStrings"
-                select="/root/schemas/*[name() = $schema]/*[3]"/>
+                select="/root/schemas/*[name() = $schema]/strings"/>
 
   <!-- Get params from requests parameters or use the first view configured -->
-  <xsl:param name="view" select="$configuration/editor/views/view[1]/@name"/>
   <xsl:variable name="viewConfig" select="$configuration/editor/views/view[@name = $view]"/>
 
   <!-- Flat mode is defined in the first tab of the view -->

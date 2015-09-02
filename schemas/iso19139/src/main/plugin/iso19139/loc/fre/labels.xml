@@ -3548,12 +3548,8 @@ diffusion restreinte.
     </element>
     <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
         <label>Spécification</label>
-        <description>Nom avec lequel la ressource en question est connue</description>
-        <help>
-            <!-- [2] -->
-            Nom caractéristique et souvent unique sous lequel la ressource est connue.
-
-            Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
+        <description>Titre de la spécification</description>
+        <help></help>
         <helper editorMode="radio_linebreak"
             displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[name() = 'gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']">
             <option value="COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</option>

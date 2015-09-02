@@ -30,6 +30,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 public class TranslatorFactory {
@@ -55,6 +56,24 @@ public class TranslatorFactory {
         }
     }
 
+    private static enum TranslatorTypes {
+        CODELIST("codelist"),
+        APPLOC("apploc"),
+        TERM("term"),
+        DB("db");
+
+        public final String name;
+
+        private TranslatorTypes(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    };
+
     private Translator getTranslatorUnhandled(String translatorString, final String langCode) 
             throws Exception {
         if (translatorString == null || translatorString.length() == 0) {
@@ -65,16 +84,20 @@ public class TranslatorFactory {
         String[] parts = translatorString.split(":", 2);
         if (parts.length != 2) {
             throw new AssertionError(
-                    "the 'translation' element of the config-summary.xml must be of the form nameOfTranslator:TranslatorParam");
+                    String.format(
+                            "Check the translator configuration '%s' of the config-summary.xml. It must be of the form nameOfTranslator:TranslatorParam.",
+                            translatorString));
         }
         String type = parts[0];
         final String param = parts[1];
 
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         Translator translator;
-        if (type.equals("codelist")) {
+        if (TranslatorTypes.CODELIST.toString().equals(type)) {
             translator = new CodeListTranslator(context.getBean(SchemaManager.class), langCode, param);
-        } else if (type.equals("term")) {
+        } else if (TranslatorTypes.APPLOC.toString().equals(type)) {
+            translator = new  JSONLocTranslator(context, langCode, param);
+        } else if (TranslatorTypes.TERM.toString().equals(type)) {
             translator = JeevesCacheManager.findInEternalCache(key, new Callable<Translator>() {
                 public Translator call() {
                     try {
@@ -85,7 +108,7 @@ public class TranslatorFactory {
                     }
                 }
             });
-        } else if (type.equals("db")) {
+        } else if (TranslatorTypes.DB.toString().equals(type)) {
             translator = JeevesCacheManager.findInTenSecondCache(key, new Callable<Translator>() {
                 public Translator call() {
                     try {
@@ -96,7 +119,9 @@ public class TranslatorFactory {
                 }
             });
         } else {
-            throw new AssertionError(type + " is not a recognized type of translator");
+            throw new AssertionError(
+                    String.format("'%s' is not a recognized type of translator. Supported types are: %s",
+                            type, Arrays.asList(TranslatorTypes.values())));
         }
 
         return translator;

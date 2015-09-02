@@ -131,21 +131,21 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     try {
                         uuid = dataMan.extractUUID(schema, xml);
                     } catch (Exception e) {
-                        log.warning("Failed to extract metadata UUID for file " + filePath
-                                +
-                                ". Error is: " + e.getMessage());
+                        log.debug("Failed to extract metadata UUID for file " + filePath +
+                                " using XSL extract-uuid. The record is probably " +
+                                "a subtemplate. Will check uuid attribute on root element.");
 
                         // Extract UUID from uuid attribute in subtemplates
                         String uuidAttribute = xml.getAttributeValue("uuid");
                         if (uuidAttribute != null) {
-                            log.warning("Using uuid attribute " + uuidAttribute +
+                            log.debug("Found uuid attribute " + uuidAttribute +
                                     " for file " + filePath +
                                     ".");
                             uuid = uuidAttribute;
                         } else {
                             // Assigning a new UUID
                             uuid = UUID.randomUUID().toString();
-                            log.warning("Using random uuid " + uuid +
+                            log.debug("No UUID found, the record will be assigned a random uuid " + uuid +
                                     " for file " + filePath +
                                     ".");
                         }

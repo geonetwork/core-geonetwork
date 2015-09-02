@@ -886,7 +886,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
       }
       
-      boolean keepXlinkAttributes = false;
+      boolean keepXlinkAttributes = true;
       boolean forEditing = false;
       boolean withValidationErrors = false;
       Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);

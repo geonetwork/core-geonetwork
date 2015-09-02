@@ -55,5 +55,11 @@
       <a href="" ng-click="mdService.deleteMd()"
          data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
       <i class="fa fa-times"></i>&nbsp;<span translate>delete</span></a></li>
+
+    <!--Custom actions-->
+    <li data-ng-repeat="a in customActions">
+      <a href="" data-ng-click="a.fn()">
+        <i class="fa" data-ng-class="a.icon"></i>&nbsp;<span>{{a.label | translate}}</span></a></li>
+
   </ul>
 </div>

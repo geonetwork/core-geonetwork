@@ -71,7 +71,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
@@ -183,6 +185,19 @@ public class GetRelated implements Service, RelatedMetadata {
         _config = config;
     }
 
+    /**
+     *
+     * @param lang
+     * @param id
+     * @param uuid
+     * @param type List of comma or "|" separated types
+     * @param from
+     * @param to
+     * @param fast
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/{lang}/xml.relation")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                        @RequestParam (required = false) Integer id,
@@ -304,7 +319,10 @@ public class GetRelated implements Service, RelatedMetadata {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
-
+        List<String> listOfTypes = new ArrayList<String>(Arrays.asList(type.split(",|\\|")));
+        if (listOfTypes != null && listOfTypes.size() == 1 && "".equals(listOfTypes.get(0))) {
+            listOfTypes.clear();
+        }
         // Get the cached version (use by classic GUI)
         Element md = Show.getCached(context.getUserSession(), id);
         if (md == null) {
@@ -321,12 +339,12 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         // Search for children of this record
-        if (type.equals("") || type.contains("children")) {
+        if (listOfTypes.size() == 0 || listOfTypes.contains("children")) {
             relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
         }
 
         // Get parent record from this record
-        if (schemaPlugin != null && (type.equals("") || type.contains("parent"))) {
+        if (schemaPlugin != null && (listOfTypes.size() == 0 || listOfTypes.contains("parent"))) {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
@@ -335,7 +353,7 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         // Get aggregates from this record
-        if (schemaPlugin != null && (type.equals("") || type.contains("siblings"))) {
+        if (schemaPlugin != null && (listOfTypes.size() == 0 || listOfTypes.contains("siblings"))) {
             Element response = new Element("response");
 
             Set<AssociatedResource> listOfAssociatedResources = schemaPlugin.getAssociatedResourcesUUIDs(md);
@@ -355,21 +373,21 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         // Search for records where an aggregate point to this record
-        if (type.equals("") || type.contains("associated")) {
+        if (listOfTypes.size() == 0 || listOfTypes.contains("associated")) {
             relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
         }
 
         // Search for services
-        if (type.equals("") || type.contains("service")) {
+        if (listOfTypes.size() == 0 || listOfTypes.contains("service")) {
             relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
         }
 
         // Related record from uuiref attributes in metadata record
         if (schemaPlugin != null && (
-                type.equals("") || type.contains("dataset") || type.contains("fcat") || type.contains("source")
+                listOfTypes.size() == 0 || listOfTypes.contains("dataset") || listOfTypes.contains("fcat") || listOfTypes.contains("source")
         )) {
             // Get datasets related to service search
-            if (type.equals("") || type.contains("dataset")) {
+            if (listOfTypes.size() == 0 || listOfTypes.contains("dataset")) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
@@ -377,7 +395,7 @@ public class GetRelated implements Service, RelatedMetadata {
                 }
             }
             // if source, return source datasets defined in the current record
-            if (type.equals("") || type.contains("source")) {
+            if (listOfTypes.size() == 0 || listOfTypes.contains("source")) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
@@ -385,7 +403,7 @@ public class GetRelated implements Service, RelatedMetadata {
                 }
             }
             // if fcat
-            if (type.equals("") || type.contains("fcat")) {
+            if (listOfTypes.size() == 0 || listOfTypes.contains("fcat")) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
@@ -395,13 +413,13 @@ public class GetRelated implements Service, RelatedMetadata {
         }
 
         // 
-        if (type.equals("") || type.contains("hassource")) {
+        if (listOfTypes.size() == 0 || listOfTypes.contains("hassource")) {
             // Return records where this record is a source dataset
             relatedRecords.addContent(search(uuid, "hassource", context, from, to, fast));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
-        if (type.equals("") || type.contains("related")) {
+        if (listOfTypes.size() == 0 || listOfTypes.contains("related")) {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
@@ -410,7 +428,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
-        if (md != null && (type.equals("") || type.contains("online") || type.contains("thumbnail"))) {
+        if (md != null && (listOfTypes.size() == 0 || listOfTypes.contains("online") || listOfTypes.contains("thumbnail"))) {
             relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
         }
 

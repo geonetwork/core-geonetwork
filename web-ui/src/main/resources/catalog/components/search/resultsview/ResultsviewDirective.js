@@ -77,17 +77,19 @@
           };
 
           if (scope.map) {
-            scope.hoverOL = new ol.FeatureOverlay({
+            scope.hoverOL = new ol.layer.Vector({
+              source: new ol.source.Vector(),
               style: gnSearchSettings.olStyles.mdExtentHighlight
             });
 
             /**
              * Draw md bbox on search
              */
-            var fo = new ol.FeatureOverlay({
+            var fo = new ol.layer.Vector({
+              source: new ol.source.Vector(),
+              map: scope.map,
               style: gnSearchSettings.olStyles.mdExtent
             });
-            fo.setMap(scope.map);
           }
 
           scope.$watchCollection('searchResults.records', function(rec) {
@@ -97,7 +99,7 @@
 
             // get md extent boxes
             if (scope.map) {
-              fo.getFeatures().clear();
+              fo.getSource().clear();
 
               if (!angular.isArray(rec) ||
                   angular.isUndefined(scope.map.getTarget())) {
@@ -106,17 +108,17 @@
               for (var i = 0; i < rec.length; i++) {
                 var feat = gnMap.getBboxFeatureFromMd(rec[i],
                     scope.map.getView().getProjection());
-                fo.addFeature(feat);
+                fo.getSource().addFeature(feat);
               }
               var extent = ol.extent.createEmpty();
-              fo.getFeatures().forEach(function(f) {
+              fo.getSource().forEachFeature(function(f) {
                 var g = f.getGeometry();
                 if (g) {
                   ol.extent.extend(extent, g.getExtent());
                 }
               });
               if (!ol.extent.isEmpty(extent)) {
-                scope.map.getView().fitExtent(extent, scope.map.getSize());
+                scope.map.getView().fit(extent, scope.map.getSize());
               }
             }
           });
@@ -139,7 +141,7 @@
             var feat = gnMap.getBboxFeatureFromMd(md,
                 scope.map.getView().getProjection());
             if (feat) {
-              map.getView().fitExtent(
+              map.getView().fit(
                   feat.getGeometry().getExtent(),
                   map.getSize());
             }
@@ -157,17 +159,17 @@
    * As we cannot use nested ng-repeat on a getLinksByType()
    * function, we have to load them once into the scope on rendering.
    */
-  module.directive('gnFixMdlinks', [
-    function() {
+  module.directive('gnFixMdlinks', [ 'gnSearchSettings',
+    function(gnSearchSettings) {
 
       return {
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD');
-          scope.layers = scope.md.getLinksByType('OGC', 'kml');
-          scope.maps = scope.md.getLinksByType('ows');
+          var obj = gnSearchSettings.linkTypes;
+          for(var p in obj) {
+            scope[p] = scope.md.getLinksByType.apply(scope.md, obj[p]);
+          }
         }
       };
     }]);
@@ -189,12 +191,12 @@
             var feat = gnMap.getBboxFeatureFromMd(scope.md,
                 scope.map.getView().getProjection());
             if (feat) {
-              scope.hoverOL.addFeature(feat);
+              scope.hoverOL.getSource().addFeature(feat);
             }
           });
 
           element.bind('mouseleave', function() {
-            scope.hoverOL.getFeatures().clear();
+            scope.hoverOL.getSource().clear();
           });
         }
       };

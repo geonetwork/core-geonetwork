@@ -275,9 +275,11 @@
           return {
             restrict: 'A',
             require: '^ngSearchForm',
-            templateUrl: '../../catalog/components/search/formfields/' +
-                'partials/sortByCombo.html',
-            scope: {
+            templateUrl: function(elem, attrs) {
+              return attrs.template ||
+                  '../../catalog/components/search/formfields/' +
+                  'partials/sortByCombo.html';
+            }, scope: {
               params: '=',
               values: '=gnSortbyValues'
             },
@@ -618,25 +620,139 @@
    *  - subtemplate
    */
   .directive('gnRecordtypesCombo', ['$http', function($http) {
-    return {
+        return {
 
-      restrict: 'A',
-      templateUrl: '../../catalog/components/search/formfields/' +
-          'partials/recordTypesCombo.html',
-      scope: {
-        template: '=gnRecordtypesCombo'
-      },
+          restrict: 'A',
+          templateUrl: '../../catalog/components/search/formfields/' +
+              'partials/recordTypesCombo.html',
+          scope: {
+            template: '=gnRecordtypesCombo'
+          },
 
-      link: function (scope, element, attrs) {
-        scope.recordTypes = [
-          {key: 'METADATA', value: 'n'},
-          {key: 'TEMPLATE', value: 'y'},
-          {key: 'SUB_TEMPLATE', value: 's'}
-        ];
+          link: function(scope, element, attrs) {
+            scope.recordTypes = [
+              {key: 'METADATA', value: 'n'},
+              {key: 'TEMPLATE', value: 'y'},
+              {key: 'SUB_TEMPLATE', value: 's'}
+            ];
 
-      }
-    }
-  }]);
+          }
+        };
+      }])
 
 
+      /**
+   * @ngdoc directive
+   * @name gn_formfields.directive:gnBboxInput
+   * @restrict A
+   * @requires gnMap
+   * @requires ngeoDecorateInteraction
+   *
+   * @description
+   * The `gnBboxInput` directive provides an input widget for bounding boxes.
+   */
+  .directive('gnBboxInput', [
+        'gnMap',
+        'ngeoDecorateInteraction',
+        function(gnMap, goDecoI) {
+
+          var extentFromValue = function(value) {
+            if (!value) {
+              return ['', '', '', ''];
+            }
+            return value.split(',');
+          };
+
+          var valueFromExtent = function(extent) {
+            return extent.join(',');
+          };
+
+          return {
+            restrict: 'AE',
+            scope: {
+              crs: '=',
+              value: '=',
+              map: '='
+            },
+            templateUrl: '../../catalog/components/search/formfields/' +
+                'partials/bboxInput.html',
+
+            link: function(scope, element, attrs) {
+              scope.crs = scope.crs || 'EPSG:4326';
+
+              var style = new ol.style.Style({
+                fill: new ol.style.Fill({
+                  color: 'rgba(255,0,0,0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                  color: '#FF0000',
+                  width: 1.25
+                })
+              });
+
+              var dragboxInteraction = new ol.interaction.DragBox({
+                style: style
+              });
+              scope.map.addInteraction(dragboxInteraction);
+
+              // Create overlay to show bbox
+              var featureOverlay = new ol.FeatureOverlay({
+                style: style
+              });
+              featureOverlay.setMap(scope.map);
+
+              var clearMap = function() {
+                featureOverlay.getFeatures().clear();
+              };
+
+              dragboxInteraction.on('boxstart', clearMap);
+              goDecoI(dragboxInteraction);
+              dragboxInteraction.active = false;
+
+              scope.clear = function() {
+                scope.value = '';
+                scope.extent = extentFromValue(scope.value);
+                scope.updateMap();
+              };
+
+              scope.updateMap = function() {
+                featureOverlay.getFeatures().clear();
+                if (scope.extent == ['', '', '', '']) {
+                  return;
+                }
+                var coordinates, geom, f;
+                coordinates = gnMap.getPolygonFromExtent(scope.extent);
+                geom = new ol.geom.Polygon(coordinates)
+              .transform(scope.crs, scope.map.getView().getProjection());
+                f = new ol.Feature();
+                f.setGeometry(geom);
+                featureOverlay.addFeature(f);
+              };
+
+              dragboxInteraction.on('boxend', function() {
+                dragboxInteraction.active = false;
+                var g = dragboxInteraction.getGeometry().clone();
+                var geom = g.clone()
+              .transform(scope.map.getView().getProjection(), scope.crs);
+                var extent = geom.getExtent();
+                scope.extent = extent.map(function(coord) {
+                  return Math.round(coord * 10000) / 10000;
+                }); scope.value = valueFromExtent(scope.extent);
+                scope.updateMap();
+              });
+              scope.dragboxInteraction = dragboxInteraction;
+
+              scope.onBboxChange = function() {
+                scope.value = valueFromExtent(scope.extent);
+                scope.updateMap();
+              };
+
+              element.on('$destroy', function() {
+                clearMap();
+                scope.map.removeLayer(featureOverlay);
+              });
+            }
+          };
+        }
+      ]);
 })();

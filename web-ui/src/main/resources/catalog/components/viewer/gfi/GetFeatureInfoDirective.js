@@ -36,10 +36,14 @@
           mapElement.find('.ol-overlaycontainer-stopevent').append(element);
 
           var format = new ol.format.WMSGetFeatureInfo();
-          var fo = new ol.FeatureOverlay();
-          fo.setMap(map);
+          var fo = new ol.layer.Vector({
+            source: new ol.source.Vector({
+              useSpatialIndex: false
+            }),
+            map: map
+          });
 
-          scope.results = fo.getFeatures().getArray();
+          scope.results = fo.getSource().getFeatures();
           scope.pending = 0;
           var overlay = new ol.Overlay({
             positioning: 'center-center',
@@ -49,7 +53,7 @@
           map.addOverlay(overlay);
 
           scope.close = function() {
-            fo.getFeatures().clear();
+            fo.getSource().clear();
             scope.pending = 0;
             overlay.setPosition(undefined);
           };
@@ -65,7 +69,7 @@
               }
             }
 
-            fo.getFeatures().clear();
+            fo.getSource().clear();
             var layers = map.getLayers().getArray().filter(function(layer) {
               return layer.getSource() instanceof ol.source.ImageWMS ||
                   layer.getSource() instanceof ol.source.TileWMS;
@@ -106,8 +110,12 @@
                   features.forEach(function(f) {
                     f.layer = layer.get('label');
                   });
-                  fo.getFeatures().extend(features);
-                  overlay.setPosition(coordinate);
+                  fo.getSource().getFeaturesCollection().extend(features);
+                  if (features.length > 0) {
+                    overlay.setPosition(coordinate);
+                  } else {
+                    overlay.setPosition();
+                  }
                 }
                 scope.pending = Math.max(0, scope.pending - 1);
               }).error(function() {

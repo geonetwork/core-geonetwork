@@ -46,6 +46,17 @@
     }
   ]);
 
+  module.directive('gnLinksBtn', [ 'gnTplResultlistLinksbtn',
+    function(gnTplResultlistLinksbtn) {
+      return {
+        restrict: 'E',
+        replace: true,
+        scope: true,
+        templateUrl: gnTplResultlistLinksbtn
+      };
+    }
+  ]);
+
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
     function(gnMetadataActions) {
       return {
@@ -60,6 +71,10 @@
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
           });
+
+          scope.getScope = function() {
+            return scope;
+          }
         }
       };
     }

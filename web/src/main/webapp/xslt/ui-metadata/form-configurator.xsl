@@ -158,16 +158,42 @@
         <xsl:when test="$isDisplayed and not(@templateModeOnly)">
           <xsl:variable name="configName" select="@name"/>
 
+
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
-            <saxon:call-template name="{concat('dispatch-', $schema)}">
-              <xsl:with-param name="base" select="."/>
-              <xsl:with-param name="overrideLabel"
-                              select="if ($configName != '')
-                                      then $strings/*[name() = $configName]
-                                      else ''"/>
-            </saxon:call-template>
+
+            <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
+            <xsl:if test="$configName != '' and not($overrideLabel)">
+              <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
+            </xsl:if>
+
+            <xsl:choose>
+              <xsl:when test="count($nodes/*) = 1">
+                <xsl:variable name="originalNode"
+                              select="gn-fn-metadata:getOriginalNode($metadata, $nodes)"/>
+                <saxon:call-template name="{concat('dispatch-', $schema)}">
+                  <xsl:with-param name="base" select="$originalNode"/>
+                  <xsl:with-param name="overrideLabel"
+                                  select="if ($configName != '' and $overrideLabel != '')
+                                        then $overrideLabel
+                                        else ''"/>
+                </saxon:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each select="$nodes/*">
+                  <xsl:variable name="originalNode"
+                                select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+                  <saxon:call-template name="{concat('dispatch-', $schema)}">
+                    <xsl:with-param name="base" select="$originalNode"/>
+                    <xsl:with-param name="overrideLabel"
+                                    select="if ($configName != '' and $overrideLabel != '')
+                                        then $overrideLabel
+                                        else ''"/>
+                  </saxon:call-template>
+                </xsl:for-each>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:for-each>
 
 
@@ -311,9 +337,11 @@
                     <!-- propose the helper matching the current node type -->
                     <xsl:choose>
                       <xsl:when test="count($helper) > 1 and $node">
+                        <xsl:variable name="originalNode"
+                                      select="gn-fn-metadata:getOriginalNode($metadata, $node)"/>
                         <!-- If more than one, get the one matching the context of the matching element. -->
                         <xsl:variable name="chooseHelperBasedOnElement"
-                                      select="gn-fn-metadata:getHelper($helper, $node)"/>
+                                      select="gn-fn-metadata:getHelper($helper, $originalNode)"/>
                         <xsl:copy-of select="$chooseHelperBasedOnElement"/>
                       </xsl:when>
                       <xsl:otherwise>

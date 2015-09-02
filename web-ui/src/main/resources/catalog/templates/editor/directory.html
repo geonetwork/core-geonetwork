@@ -123,7 +123,8 @@
         <div class="panel-heading">
           <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
           <div class="pull-right">
-            <div data-gn-metadata-group-updater="activeEntry.groupOwner"/>
+            <div data-gn-metadata-group-updater="activeEntry.groupOwner"
+                 data-metadata-id="activeEntry['geonet:info'].id"/>
 
             <button type="button" class="btn btn-default"
                     data-ng-click="startSharing()"

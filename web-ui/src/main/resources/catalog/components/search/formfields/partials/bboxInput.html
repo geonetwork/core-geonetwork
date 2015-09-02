@@ -1,0 +1,52 @@
+<div class="gn-bbox-input">
+
+  <div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+      <div class="form-group">
+        <input type="number" step="any"
+               data-ng-model="extent[3]"
+               data-ng-change="onBboxChange()"
+               class="input-sm form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input type="number" step="any"
+               data-ng-model="extent[0]"
+               data-ng-change="onBboxChange()"
+               class="input-sm form-control">
+      </div>
+    </div>
+    <!--Draw buttons-->
+    <div ngeo-btn-group class="col-sm-4">
+      <button class="btn btn-default" ng-model="dragboxInteraction.active" ngeo-btn>
+        <span class="fa fa-pencil-square-o"></span>
+      </button>
+      <button class="btn btn-default" data-ng-click="clear()">
+        <span class="fa fa-trash-o"></span>
+      </button>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input type="number" step="any"
+               data-ng-model="extent[2]"
+               data-ng-change="onBboxChange()"
+               class="input-sm form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+      <div class="form-group">
+        <input type="number" step="any"
+               data-ng-model="extent[1]"
+               data-ng-change="onBboxChange()"
+               class="input-sm form-control">
+      </div>
+    </div>
+  </div>
+
+</div>

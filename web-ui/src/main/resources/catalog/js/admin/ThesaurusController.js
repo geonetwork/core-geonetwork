@@ -387,15 +387,23 @@
        * Create the keyword in the thesaurus
        */
       $scope.createKeyword = function() {
-        $http.post('thesaurus.keyword.add', buildKeyword(), {
+        $http.post('thesaurus.keyword.add?_content_type=json', buildKeyword(), {
           headers: {'Content-type': 'application/xml'}
         })
           .success(function(data) {
+            if (data[0] && data[0]['@message']) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('keywordCreationError'),
+                msg: data[0]['@message'],
+                timeout: 0,
+                type: 'danger'});
+            } else  {
               $scope.keywordSelected = null;
               $('#keywordModal').modal('hide');
               searchThesaurusKeyword();
               creatingKeyword = false;
-            })
+            }
+          })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('keywordCreationError'),

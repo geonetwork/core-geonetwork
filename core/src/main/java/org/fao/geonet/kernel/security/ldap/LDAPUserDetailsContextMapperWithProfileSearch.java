@@ -29,6 +29,7 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
             String defaultGroup, Map<String, ArrayList<String>> userInfo,
             LDAPUser userDetails) {
 
-        if (!"".equals(groupQuery)) {
+        if (! StringUtils.isEmpty(groupQuery)) {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nGroup attribute: \t" + groupAttribute);
@@ -102,31 +103,35 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     String profileName = (String) sr.getAttributes()
                             .get(privilegeAttribute).get();
 
-                    Matcher m = privilegeQueryPatternCompiled
-                            .matcher(profileName);
+                    Matcher m = privilegeQueryPatternCompiled.matcher(profileName);
                     boolean b = m.matches();
                     if (b) {
+                        // Try to figure out the profile
                         Profile p = Profile.findProfileIgnoreCase(m.group(1));
                         if (p == null) {
                             Log.debug(Geonet.LDAP, "profile is null " + getClass() + ".setProfilesAndPrivileges()");
-                        }
-                        if (profileMapping != null) {
-                            Profile mapped = profileMapping.get(m.group(1));
-                            if (mapped != null) {
-                                p = mapped;
+                            // Else try to figure it out via the mapping
+                            // provided
+                            if (profileMapping != null) {
+                                Profile mapped = profileMapping.get(m.group(1));
+                                if (mapped != null) {
+                                    p = mapped;
+                                    if (Log.isDebugEnabled(Geonet.LDAP)) {
+                                        Log.debug(Geonet.LDAP, "ldap profileName is " + profileName
+                                                + ", pattern matched " + m.group(1) + " adding profile " + p.name());
+                                    }
+                                }
                             }
                         }
-                        Log.debug(Geonet.LDAP, "ldap profileName is " + profileName + ", pattern matched " + m.group(1) + " adding profile " + p.name());
-
-                        profileList.add(p);
+                        if (p != null) {
+                            profileList.add(p);
+                        }
                     } else {
-                        Log.error(Geonet.LDAP, "LDAP profile '" + profileName
-                                + "' does not match search pattern '"
-                                + privilegeQueryPattern
-                                + "'. Information ignored.");
+                        Log.error(Geonet.LDAP, "LDAP profile '" + profileName + "' does not match search pattern '"
+                                + privilegeQueryPattern + "'. Information ignored.");
                     }
                 }
-                
+
                 //First time, to get a default profile in case profilIndexInPattern fails
                 Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[profileList.size()]));
                 if (highestUserProfile != null) {
@@ -138,6 +143,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 }
                 
                 // If no profile defined, use default profile
+
                 if (userDetails.getUser().getProfile() == null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP,

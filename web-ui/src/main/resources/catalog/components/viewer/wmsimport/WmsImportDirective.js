@@ -41,7 +41,9 @@
          */
           this.addLayer = function(getCapLayer) {
             if ($scope.format == 'wms') {
-              return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              var layer = gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              gnMap.feedLayerMd(layer);
+              return layer;
             }
             else if ($scope.format == 'wmts') {
               return gnMap.addWmtsToMapFromCap($scope.map, getCapLayer,
@@ -172,6 +174,7 @@
 
             var vector = new ol.layer.Vector({
               source: kmlSource,
+              getinfo: true,
               label: 'Fichier externe : ' + url.split('/').pop()
             });
 
@@ -193,7 +196,7 @@
             ngeoDecorateLayer(layer);
             layer.displayInLayerManager = true;
             map.getLayers().push(layer);
-            map.getView().fitExtent(layer.getSource().getExtent(),
+            map.getView().fit(layer.getSource().getExtent(),
                 map.getSize());
 
             gnAlertService.addAlert({
@@ -240,6 +243,7 @@
 
             var layer = new ol.layer.Vector({
               source: vectorSource,
+              getinfo: true,
               label: 'Fichier local : ' + event.file.name
             });
             scope.addToMap(layer, scope.map);
@@ -280,12 +284,19 @@
             model.getEntryFile(entry, 'Blob', function(blobURL) {
               entry.loading = true;
               scope.$apply();
+              var source = new ol.source.Vector();
+              $.ajax(blobURL).then(function(response) {
+                var format = new ol.format.KML();
+                var features = format.readFeatures(response, {
+                  featureProjection: 'EPSG:3857'
+                });
+                source.addFeatures(features);
+              });
+
               var vector = new ol.layer.Vector({
                 label: 'Fichier local : ' + entry.filename,
-                source: new ol.source.KML({
-                  projection: 'EPSG:3857',
-                  url: blobURL
-                })
+                getinfo: true,
+                source: source
               });
               var listenerKey = vector.getSource().on('change', function(evt) {
                 if (vector.getSource().getState() == 'ready') {

@@ -134,15 +134,16 @@
 
         var deregisterFeature;
 
-        var featureOverlay = new ol.FeatureOverlay({
+        var featureOverlay = new ol.layer.Vector({
+          source: new ol.source.Vector(),
+          map: map,
           style: options.drawStyleFunction
         });
-        featureOverlay.setMap(map);
 
         // define the draw interaction used for measure
         mInteraction = new ol.interaction.Draw({
           type: 'Polygon',
-          features: featureOverlay.getFeatures(),
+          features: featureOverlay.getSource().getFeatures(),
           style: options.drawStyleFunction
         });
 
@@ -155,14 +156,14 @@
               map.addInteraction(mInteraction);
             } else {
               map.removeInteraction(mInteraction);
-              featureOverlay.getFeatures().clear();
+              featureOverlay.getSource().clear();
             }
           }
         });
 
         mInteraction.on('drawstart',
             function(evt) {
-              featureOverlay.getFeatures().clear();
+              featureOverlay.getSource().clear();
 
               areaFeature = evt.feature;
               var firstPoint = areaFeature.getGeometry().getCoordinates()[0][0];
@@ -187,7 +188,7 @@
               distFeature.getGeometry().setCoordinates(lineCoords);
 
               updateMeasuresFn();
-              featureOverlay.addFeature(distFeature);
+              featureOverlay.getSource().addFeature(distFeature);
               areaFeature.unByKey(deregisterFeature);
             }, this);
       };

@@ -29,6 +29,7 @@
     "avgViewsPerDay": "Mean views by day",
     "avgViewsPerMonth": "Mean views by month",
     "batchProcess": "Batch process",
+    "keywordCreationError": "Error creating keyword",
     "batchProcessParameters": "Process parameters",
     "batchProcessTypeUnsupported": "Process type {{type}} unsupported",
     "batchreplacer-addReplacement": "Add replacement",

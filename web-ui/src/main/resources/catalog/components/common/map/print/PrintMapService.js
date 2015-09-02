@@ -207,6 +207,7 @@
             baseURL: config.wmsUrl || url,
             layers: layers,
             styles: styles,
+            legend: layer.get('legend'),
             format: 'image/' + (config.format || 'png'),
             customParams: {
               'EXCEPTIONS': 'XML',
@@ -309,23 +310,16 @@
         }
       },
       'legends' : {
-        'ga_urllegend': function(layer, config) {
-          var format = '.png';
-          if ($scope.options.pdfLegendList.indexOf(layer.bodId) != -1) {
-            format = pdfLegendString;
+        'base': function(layer, config) {
+          if (!layer.get('legend')) {
+            return;
           }
-          var enc = self.encoders.legends.base.call(this, config);
-          enc.classes.push({
-            name: '',
-            icon: $scope.options.legendUrl +
-                layer.bodId + '_' + $translate.uses() + format
-          });
-          return enc;
-        },
-        'base': function(config) {
           return {
-            name: config.label,
-            classes: []
+            name: layer.get('title') || layer.get('label'),
+            classes: [{
+              name: '',
+              icon: layer.get('legend')
+            }]
           };
         }
       }

@@ -235,7 +235,7 @@
 
               scope.setIcon = function(icon) {
                 scope.logo = icon;
-              }
+              };
             }
           };
         }]);

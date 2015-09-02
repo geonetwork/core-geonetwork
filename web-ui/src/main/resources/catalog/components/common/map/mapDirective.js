@@ -196,7 +196,7 @@
                map.setTarget(scope.mapId);
                drawBbox();
                if (gnMap.isValidExtent(scope.extent.map)) {
-                 map.getView().fitExtent(scope.extent.map, map.getSize());
+                 map.getView().fit(scope.extent.map, map.getSize());
                }
              });
 
@@ -218,7 +218,7 @@
                reprojExtent('form', 'md');
                setDcOutput();
                drawBbox();
-               map.getView().fitExtent(scope.extent.map, map.getSize());
+               map.getView().fit(scope.extent.map, map.getSize());
              };
 
              /**
@@ -237,7 +237,7 @@
                  reprojExtent('md', 'form');
                  setDcOutput();
                  drawBbox();
-                 map.getView().fitExtent(scope.extent.map, map.getSize());
+                 map.getView().fit(scope.extent.map, map.getSize());
                });
              };
            }

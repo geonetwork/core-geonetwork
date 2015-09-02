@@ -200,8 +200,28 @@
           return $http.get('q?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false').
               then(function(resp) {
-            return new Metadata(resp.data.metadata);
-          });
+                return new Metadata(resp.data.metadata);
+              });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#updateMdObj
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Update the metadata object
+         *
+         * @param {object } md to reload
+         * @return {HttpPromise} of the $http get
+         */
+        updateMdObj: function(md) {
+          return this.getMdObjByUuid(md.getUuid()).then(
+              function(md_) {
+                angular.extend(md, md_);
+                return md;
+              }
+          );
         }
       };
     }
@@ -317,7 +337,8 @@
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
-    facetConfig: 'search/facet/config'
+    facetConfig: 'search/facet/config',
+    selectionLayers: 'selection.layers'
   });
 
   /**
