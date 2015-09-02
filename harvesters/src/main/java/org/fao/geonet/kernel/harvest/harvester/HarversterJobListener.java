@@ -7,6 +7,8 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Put the AbstractHarvester in JobExecutionContext so that HarvesterJob can access them.
@@ -39,10 +41,12 @@ public class HarversterJobListener implements JobListener {
         if (context.getJobInstance() instanceof HarvesterJob) {
 
             HarvesterJob harvesterJob = (HarvesterJob) context.getJobInstance();
+            ConfigurableApplicationContext applicationContext = null;
             AbstractHarvester<?> harvester = null;
             for (HarvestManager manager : listOfManager) {
                 harvester = manager.getHarvester(harvesterJob.getHarvesterId());
                 if (harvester != null) {
+                    applicationContext = manager.getApplicationContext();
                     // Harvester found
                     break;
                 }
@@ -52,6 +56,7 @@ public class HarversterJobListener implements JobListener {
             // }
 
             harvesterJob.setHarvester(harvester);
+            harvesterJob.setApplicationContext(applicationContext);
         }
     }
 

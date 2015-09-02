@@ -212,8 +212,7 @@ public class Aligner extends BaseAligner
                     String id = dataMan.getMetadataId(ri.uuid);
     
                     // look up value of localrating/enable
-                    GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                    SettingManager settingManager = gc.getBean(SettingManager.class);
+                    SettingManager settingManager = context.getBean(SettingManager.class);
                     boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
                     
                     if (id == null) {
