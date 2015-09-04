@@ -8,6 +8,7 @@
      "success":true, 
      "msg": "<xsl:value-of select="/root/gui/strings/fileUploadSuccessful"/>",
      "id" : "<xsl:value-of select="/root/response/id"/>",
+     "uuid" : "<xsl:value-of select="/root/response/uuid"/>",
      "records" : "<xsl:value-of select="/root/response/records"/>"
     }
   </xsl:template>
