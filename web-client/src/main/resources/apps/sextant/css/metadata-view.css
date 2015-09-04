@@ -438,8 +438,12 @@ div.help ul li {
 .gn-metadata-view .extent {
     display: inline-block;
     position: relative;
-    margin: 2em 0 0 8em;
+    margin: 2em 0 2em 8em;
 }
+.gn-metadata-view .extent input {
+    width: 100px;
+}
+
 .gn-metadata-view .coord {
     position: absolute;
     width: 150px;

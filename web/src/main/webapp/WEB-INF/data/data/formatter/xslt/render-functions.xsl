@@ -13,11 +13,24 @@
 
     <xsl:variable name="nameInStrings"
                   select="$strings/*[name() = $key]"/>
-<xsl:message><xsl:copy-of select="$strings"/>==</xsl:message>
     <xsl:value-of select="if ($nameInStrings != '')
                           then $nameInStrings
                           else $key"/>
   </xsl:function>
+
+
+
+  <!-- Return if a node is empty
+  TODO: more attribute exception may be added
+  -->
+  <xsl:function name="gn-fn-render:is-empty" as="xs:boolean">
+    <xsl:param name="node" as="node()"/>
+
+    <xsl:value-of select="count($node//*/text()[normalize-space(.) != '']) = 0  and
+                          count($node//@*[. != '' and
+                                name() != 'codeList']) = 0"/>
+  </xsl:function>
+
 
   <!-- Render coordinates of bbox and an images of the geometry
   using the region API -->

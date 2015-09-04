@@ -107,9 +107,10 @@
             select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
     <div id="gn-section-{generate-id()}">
-      <h3 class="view-header">
+      <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
+        <xsl:attribute name="class" select="'view-header'"/>
         <xsl:value-of select="$title"/>
-      </h3>
+      </xsl:element>
       <xsl:apply-templates mode="render-view" select="*|@*"/>
     </div>
   </xsl:template>
