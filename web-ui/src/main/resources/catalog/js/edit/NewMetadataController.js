@@ -14,14 +14,27 @@
     'gnSearchManagerService',
     'gnUtilityService',
     'gnMetadataManager',
+    'gnConfigService',
+    'gnConfig',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService, 
             gnUtilityService,
-            gnMetadataManager) {
+            gnMetadataManager,
+            gnConfigService,
+            gnConfig) {
 
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
       $scope.mdList = null;
+
+      $scope.authority = "";
+      $scope.uniqueid = "";
+
+      gnConfigService.load().then(function(c) {
+        $scope.generateUuid = gnConfig['system.metadatacreate.generateUuid'];
+        $scope.uuidPrefix = gnConfig['system.metadatacreate.uuidPrefix'];
+      });
+
 
       // A map of icon to use for each types
       var icons = {
@@ -159,12 +172,18 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
+        var metadataUuid = "";
+        if (!$scope.generateUuid) {
+          metadataUuid = $scope.uuidPrefix + $scope.authority + "::" + $scope.uniqueid;
+        }
+
         return gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
             isPublic || false,
             $scope.isTemplate,
-            $routeParams.childOf ? true : false
+            $routeParams.childOf ? true : false,
+            metadataUuid
         );
       };
 

@@ -9,6 +9,33 @@
     <div class="progress-bar" style="width: 100%"/>
   </div>
 
+  <div class="row" data-ng-show="hasTemplates && !generateUuid">
+    <!-- TODO: Display it in a popup dialog? or at least format it properly ... -->
+    <div class="col-sm-12 ">
+      <div class="form-group">
+        <strong>URN of metadata:</strong>
+      </div>
+
+      <div class="form-inline">
+        <div class="form-group">
+          <strong>{{uuidPrefix}}  :</strong>
+        </div>
+        <div class="form-group">
+          <label for="authority" class="hide">Authority</label>
+          <input type="text" id="authority" name="authority" size="20" data-ng-model="authority" placeholder="Authority"/>
+        </div>
+        <div class="form-group">
+          <strong> :: </strong>
+        </div>
+        <div class="form-group">
+          <label for="uniqueid" class="hide">Unique Id</label>
+          <input type="text" id="uniqueid" name="uniqueid" size="20" data-ng-model="uniqueid" placeholder="Unique Identifier"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="row" data-ng-show="hasTemplates">
     <div class="col-sm-2">
       <div class="panel panel-default dynamic-list">
@@ -60,13 +87,13 @@
       <div class="btn-group">
         <button type="button" class="btn btn-success btn-lg"
           data-gn-click-and-spin="createNewMetadata()"
-          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid)) && ((authority.length == 0) || (uniqueid.length == 0)))}">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
         <button type="button"
                 class="btn btn-success btn-lg dropdown-toggle"
-                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}"
+                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid)) && ((authority.length == 0) || (uniqueid.length == 0)))}"
                 data-toggle="dropdown">
           <span class="caret"></span>&nbsp;
         </button>
