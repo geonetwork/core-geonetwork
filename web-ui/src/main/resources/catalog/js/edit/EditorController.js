@@ -179,17 +179,21 @@
                 // types of ISO19139 record with different characteristics
                 // like standardName and would like to open the editor
                 // in custom view based on the standard.
+                var firstTabDispatcher = function(md) {
+                  if (md.standardName && md.standardName.match(/medsea checkpoint/i)) {
+                    return 'characteristics';
+                  } else if (md.standardName && md.standardName.match(/medsea targeted/i)) {
+                    return 'medsea-what';
+                  } else if (md.standardName && md.standardName.match(/emodnet - hydrography/i)) {
+                    return 'emodnetHydrography-what';
+                  }
+                  return defaultTab;
+                };
                 var schemaCustomConfig = {
                   // Example : open ISO19139 record having
                   // standardName containing medsea in advanced mode
-                  'iso19139': function(md) {
-                    if (md.standardName && md.standardName.match(/medsea/i)) {
-                      return 'characteristics';
-                    } else if (md.standardName && md.standardName.match(/emodnet - hydrography/i)) {
-                      return 'emodnetHydrography-what';
-                    }
-                    return defaultTab;
-                  }
+                  'iso19139': firstTabDispatcher,
+                  'iso19115-3': firstTabDispatcher
                 };
                 if (schemaCustomConfig) {
                   var fn = schemaCustomConfig[$scope.mdSchema];
