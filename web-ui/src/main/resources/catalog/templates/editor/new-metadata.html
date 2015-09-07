@@ -9,33 +9,6 @@
     <div class="progress-bar" style="width: 100%"/>
   </div>
 
-  <div class="row" data-ng-show="hasTemplates && !generateUuid">
-    <!-- TODO: Display it in a popup dialog? or at least format it properly ... -->
-    <div class="col-sm-12 ">
-      <div class="form-group">
-        <strong>URN of metadata:</strong>
-      </div>
-
-      <div class="form-inline">
-        <div class="form-group">
-          <strong>{{uuidPrefix}}  :</strong>
-        </div>
-        <div class="form-group">
-          <label for="authority" class="hide">Authority</label>
-          <input type="text" id="authority" name="authority" size="20" data-ng-model="authority" placeholder="Authority"/>
-        </div>
-        <div class="form-group">
-          <strong> :: </strong>
-        </div>
-        <div class="form-group">
-          <label for="uniqueid" class="hide">Unique Id</label>
-          <input type="text" id="uniqueid" name="uniqueid" size="20" data-ng-model="uniqueid" placeholder="Unique Identifier"/>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
   <div class="row" data-ng-show="hasTemplates">
     <div class="col-sm-2">
       <div class="panel panel-default dynamic-list">
@@ -84,6 +57,26 @@
       </div>
     </div>
     <div class="col-sm-3">
+      <div class="panel-default panel" data-ng-show="hasTemplates && !generateUuid">
+        <div class="panel-heading">
+          <span data-translate="">createMetadataUniformResourceName</span>
+          <strong data-translate="">createMetadataUniformResourceNameFormat</strong>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+              <label for="prefix" data-translate="">metadataURNPrefix</label>
+              <input type="text" id="prefix" name="prefix" data-ng-model="uuidPrefix" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+              <label for="authority" data-translate="">metadataURNAuthority</label>
+              <input type="text" id="authority" name="authority" data-ng-model="authority" placeholder="{{'metadataURNAuthority-placeholder' | translate}}"/>
+            </div>
+            <div class="form-group">
+              <label for="uniqueid" data-translate="">metadataURNUniqueId</label>
+              <input type="text" id="uniqueid" name="uniqueid" data-ng-model="uniqueid" placeholder="{{'metadataURNUniqueId-placeholder' | translate}}"/>
+            </div>
+        </div>
+      </div>
       <div class="btn-group">
         <button type="button" class="btn btn-success btn-lg"
           data-gn-click-and-spin="createNewMetadata()"
@@ -107,4 +100,7 @@
       </div>
     </div>
   </div>
+</div>
+
+<div data-ng-include="'../../catalog/templates/info.html'">
 </div>

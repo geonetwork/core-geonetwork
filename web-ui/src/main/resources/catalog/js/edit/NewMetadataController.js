@@ -183,8 +183,15 @@
             isPublic || false,
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
+            undefined,
             metadataUuid
-        );
+        ).error(function (data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate('createMetadataError'),
+              error: data.error,
+              timeout: 0,
+              type: 'danger'});
+          });
       };
 
       init();

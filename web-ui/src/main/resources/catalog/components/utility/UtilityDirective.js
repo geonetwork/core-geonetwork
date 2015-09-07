@@ -451,6 +451,8 @@
               try {
                 callback().then(function() {
                   done();
+                }, function() {
+                  done();
                 });
               }
               catch (e) {
