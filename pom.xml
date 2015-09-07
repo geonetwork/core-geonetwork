@@ -1230,7 +1230,6 @@
       <modules>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <module>web-ui-docs</module>
         <module>web-client</module>
         <module>web</module>
         <module>e2e-tests</module>
@@ -1242,6 +1241,7 @@
       <id>with-doc</id>
       <modules>
         <module>docs</module>
+        <module>web-ui-docs</module>
       </modules>
     </profile>
     <profile>
