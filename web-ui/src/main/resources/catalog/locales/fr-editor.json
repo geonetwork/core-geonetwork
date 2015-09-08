@@ -72,7 +72,7 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Ressources en ligne",
     "hasFeatureCatalog": "Utilisant ce catalogue d'attributs",
-    "importCPResult": "Un enregistrement importé. L'identificateur d'enregistrement est: {{id}}.",
+    "importCPResult": "Un enregistrement importé. L'identificateur d'enregistrement est: {{id}}.<br/>UUID: {{uuid}}",
     "importEntry": "Importer un élément dans un annuaire",
     "importFromDir": "Importer un ensemble de fichiers d'un dossier sur le serveur",
     "importFromDirReport": "{{success}}/{{records}} fiches(s) importée(s) en {{time}} secondes.",
