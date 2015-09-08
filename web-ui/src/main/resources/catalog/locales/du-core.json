@@ -12,6 +12,9 @@
     "Reviewer": "Reviewer",
     "SUB_TEMPLATE": "telefoonboekvermelding",
     "TEMPLATE": "Sjabloon",
+    "recordType-y": "Template",
+    "recordType-n": "Metadata",
+    "recordType-s": "Directory entry",
     "UserAdmin": "Gebruikersbeheerder",
     "_cat": "Categorie",
     "categories": "Categoriën",
@@ -32,6 +35,9 @@
     "VALID": "Valide",
     "INVALID": "ongeldig",
     "NEVER_CALCULATED": "Nooit gevalideerd",
+    "validStatus-1": "Valid",
+    "validStatus-0": "Invalid",
+    "validStatus--1": "Never validated",
     "fre": "Français",
     "ara": "عربي",
     "kor": "Koreaans",
@@ -167,6 +173,7 @@
     "south": "Zuid",
     "siblings": "Overige inhoud",
     "sourceDatasets": "bron datasets",
+    "isSourceOfDatasets": "Is source dataset of",
     "spa": "Español",
     "spatialRepresentationTypes": "Representation types",
     "spatialRepresentationType": "Representation type",
@@ -251,5 +258,6 @@
     "addRecord": "Voeg nieuw bestand toe",
     "ImportRecord": "Importeer nieuwe records",
     "directoryManager": "Beheer directory",
-    "typeOfRecord": "Type of record"
+    "typeOfRecord": "Type of record",
+    "load": "Load"
 }

@@ -29,6 +29,7 @@
     "avgViewsPerDay": "Druchschnittliche Anzahl Besuche auf der Seite pro Tag",
     "avgViewsPerMonth": "Druchschnittliche Anzahl Besuche auf der Seite pro Monat",
     "batchProcess": "Batch Verarbeitung",
+    "keywordCreationError": "Error creating keyword",
     "batchProcessParameters": "Prozess-Parameter",
     "batchProcessTypeUnsupported": "Verarbeitungstyp {{type}} wird nicht unterstützt",
     "batchreplacer-addReplacement": "Ersatz hinzufügen",

@@ -12,6 +12,9 @@
     "Reviewer": "Relecteur",
     "SUB_TEMPLATE": "Annuaire",
     "TEMPLATE": "Modèle de fiche",
+    "recordType-y": "Modèle",
+    "recordType-n": "Fiche",
+    "recordType-s": "Annuaire",
     "UserAdmin": "Utilisateur administrateur",
     "_cat": "Catégorie",
     "categories": "Catégories",
@@ -32,6 +35,9 @@
     "VALID": "Valide",
     "INVALID": "Invalide",
     "NEVER_CALCULATED": "Non validé",
+    "validStatus-1": "Valide",
+    "validStatus-0": "Invalide",
+    "validStatus--1": "Non validé",
     "fre": "Français",
     "ara": "عربي",
     "kor": "Coréen",
@@ -167,6 +173,7 @@
     "south": "Sud",
     "siblings": "Autres ressources",
     "sourceDatasets": "Données sources",
+    "isSourceOfDatasets": "Est une source pour",
     "spa": "Espagnol",
     "spatialRepresentationTypes": "Types de représentation",
     "spatialRepresentationType": "Type de représentation",
@@ -251,5 +258,6 @@
     "addRecord": "Ajouter une fiche",
     "ImportRecord": "Importer des fiches",
     "directoryManager": "Gestion des annuaires",
-    "typeOfRecord": "Type de fiche"
+    "typeOfRecord": "Type de fiche",
+    "load": "Charger"
 }
