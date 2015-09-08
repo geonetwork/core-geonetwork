@@ -1,0 +1,207 @@
+================================================================================
+===
+=== GeoNetwork 3.0.2: List of changes
+===
+================================================================================
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Status change / Update URL to Angular app.
+- Show UUID of imported metadata as well as internal id.
+- Batch validation #1172 / Add validation and workflow status.
+- Metadata actions menu uses the select text cursor when hovering over the options #826.
+- Merge pull request #1170 from fxprunayre/improvement/facet-json-translator
+- Facet / Add JSON translator.
+- Make Register Formatter service more robust
+- SVN / Incorrect position for error message.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Merge pull request #1168 from fxprunayre/fix/multinode-harvester
+- Update link to source map. #1148.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Facet / INSPIRE themes with acronym is only used on home page using the facet config hits. Remove it from details used in main search.
+- Harvester admin / Avoid to load wrong file when scope is not yet initialized.
+- WOR4J / Cannot build valid CacheKey from request: /geonetwork/static/angularjs-color-picker.min.map #1148.
+- ISO19139 / Fix label for specification.
+- Multinode / Fix harvester due to missing application context.
+- ui: be sure absUrl is updated before we extend the md object - fix #1160
+- Merge pull request #1167 from fgravin/customExtract
+- Multinode / Fix harvester due to missing application context.
+- #1166 OAI-PMH resumption token cache expire - date comparison is wrong
+- ui: can add custom actions in settings for the selection button     gnSearchSettings.customSelectActions = [{       icon: 'fa-globe',       fn: function() {         georLinkActionsService.extractMetadata('mapfishapp');       },       label: 'viewLayers'     }, {       icon: 'fa-eject',       fn: function() {         georLinkActionsService.extractMetadata('extractLayers');       },       label: 'viewLayers'     }]
+- ui: allow to extend default main search controller if the directive is defined, you can extend mainCtrl scope
+- ui: put link buttons into a directive also make its template customisable by gnTplResultlistLinksbtn value
+- ui: make binding between links btn and resource protocol customisable this concerns the search result list link buttons
+- service - move metadata.service.extract to springmvc service and rename it to selection.layers
+- Improve log messages when loading samples and templates.
+- Up and down control shouldn't have focus when using tabs. Tabindex set to -1 for up and down angle.
+- Merge pull request #1159 from pmauduit/georchestra-gn3-integration-fixes
+- Add legend to print
+- Add spinner when printing in progress
+- jslint
+- map: fix gfi with ol3 without featureOverlay
+- map : Add graticule the graticule can be displayed on map, and all coordinates are displayed on the edges of the screen
+- Merge pull request #1161 from fgravin/lastOL
+- Update ngeo and ol3 to 3.7
+- fixing images logo urls
+- LDAPUser - fixing potential NPE
+- Fixing ldapsync job
+- ldap - fixing profile lookup
+- user profile mapping - fixing several logic errors
+- ISO19115-3 / Follow INSPIRE rule for CRS encoding.
+- Editor / Search subtemplate #1155 - Fix a limit to avoid browser freeze. Needs more work.
+- Editor / Close suggestion popup after processing #1154.
+- Formatter / XSL / Fix link to getmap when formatter used outside GN context.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Search / Keyboard shortcut for previous/next page does not work #1153.
+- map: fix mdview dismiss redirection was failing if you load first the map, then goes to a md and get back, it got back to the search page
+- map : feed layer with its md if come from WMS too
+- fix ngdocs build
+- jslint
+- ui: add method to reaload md object after change used here to update md action menu after status change
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Updates from transifex.
+- harvester: fix the set of groupOwner to metadatas
+- harvester: fix recordtype persistance
+- map: improve bbox input & wps layout and features
+- ui: can set custom templateUrl to sortByCombo directive
+- Merge pull request #1151 from fgravin/drawExp
+- jslint
+- map: edit draw feature can now edit style
+- map: fix digest loop on mouse move
+- map: use combo for drawing types
+- map: add 'add' button to activate drawing
+- Editor board / Add basic support for subtemplate #1150.
+- Directory / Change group owner of a context entry fails #1149.
+- Enable workflow automatically when record is created in a specific group. #1117 - fix file import.
+- Filesystem harvest can harvest subtemplates #1129 - Improve debug message.
+- Editor / cancel edit destroys xlink #1146.
+- Admin group / can't edit details of a group #1144.
+- can not add more than one element to a local thesaurus #1143.
+- Formatter / Improve XSLT formatter based on editor-config.xml / Display requested view by formatter parameter.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Schema templates evaluating an element xpath doesn't work properly #875.
+- Merge pull request #1030 from arnaud-morvan/wps-client
+- Defaults fall down to {}
+- Set map as a scope property
+- Finises on wps module
+- Add gnBboxInput directive in search formfields
+- Updates from transifex.
+- ISO19139 / Avoid indexing error on multiple phone number.
+- Add missing translation.
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Add extent type code to formatter, still need translations
+- ISO19139 / Display UUIDREF attribute with the parent element name as read only.
+- Protect against null email when downloading
+- Related resource / Properly identify a link to a service and a service metadata record.
+- Related resource / add link from and to ISO19110 records.
+- Related resource / Define which separator can be used to define a list of types. , or | are accepted. Angular UI use |.
+- Related resource / Remove first empty element if type parameter is not set.
+- Related resourced / Add lineage source navigation in both direction.
+- Associated record / hassource and source are mixed #1142.
+- ISO19139 / Box graphicOverview in simpleview.
+- Dublin core / Facet on year is not set #1140.
+- Add facet on source catalog #1141.
+- Add facet on source catalog #1141.
+- Editor board / Open a template will not be displayed #1139.
+- OAIPMH / Harvester config metadata format can't be defined if no set defined #1138.
+- Dublin core / Indexing error #1137.
+- Search / Mini map is hidden when you load metadata view page #1131.
+- Search result / Grid layout improvement - following feedback from EEA, GrandLyon, Ifremer.
+- Admin / Record with indexing error / Provide access to error in case metadata has no title - happens on XSLT errors during indexing.
+- ISO19139 / More robust contact indexing.
+- Indexing fails if something goes wrong with taxonomy writer #1136.
+- Facet on multilingual field does not work - need more work. Related to #1133.
+- Drop jeeves md.formatter.register moved to spring in 70a636c6dfeeca6b2e7e75450adc989a1e11b3d1.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Search results / Add toggle button for the minimap to be able to view partially visible record which may be hidden by the minimap.
+- HTTP Proxy / More useful error message.
+- Merge pull request #1133 from fxprunayre/improvement/facet-hierachy
+- Merge pull request #1113 from fxprunayre/thesaurus/update-regions-with-naturalearth-and-seavox
+- Proxy reject KMZ file #1135.
+- Related resources / Improve WCS layout #1134.
+- Dublin core / dct:references and dc:relation are not indexed in link field #1132.
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/facet-hierachy
+- group: add logopicker to chose logo from existing one or to upload one
+- Facet / Add hierarchical facet support.
+- create new logo-picker directive used in harvesters
+- formatter: move md.formatter.register to spring mvc service this fix uploading issues
+- Avoid NPE.
+- Facet / Fix drilldown on indexKey for multilingual field.
+- Make extradumpfields processing more robust.
+- fix ngDoc build error
+- formatter: add some methods to get md object from uuid
+- search: you can set a config function to choose what formatter to use denpending on metadata
+- ui - jslint
+- prefix gn-recordtype directive name
+- no-msg
+- harvester: get uuid from submtemplate is there is no in gmd:fileidentifier improve error reporting if no uuid has been found set a random uuid for document that haven't any
+- Add record type parameter for filesystem harvesters
+- Updates and misc improvements
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/facet-hierachy
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- User session warning. #126. Session is not defined on static content - cookie was not properly set on some cases.
+- move isWorkfloEnable method in Metadata object
+- gn-collapse needs double click to be initialized #1130.
+- Thesaurus / Update regions.rdf - Add country, dependency and EU groups.
+- map : fix save context button the button only worked if you clik on right corner. Nothing happend if you cliked in the middle of the button
+- map: add color picker for drawing styles
+- Merge remote-tracking branch 'origin/3.0.x' into thesaurus/update-regions-with-naturalearth-and-seavox
+- map: check worldextent on layer cextent transform
+- map: add new url parameter for layer group : layerGroup
+- map: improve text drawing styles
+- map: avoid gfi on draw select/modify/delete
+- [geonetwork] fix annotations buttons size
+- ISO19139 / PDF Print fails on thumbnails #1125.
+- ISO19139 / Add capability to search for non obsolete records #1127
+- ISO19139 / Add capability to search for non obsolete records #1127
+- Merge pull request #1126 from fxprunayre/improvement/alert-on-session-timeout
+- Inject ngCookies.
+- User session warning.
+- Editor should be able to set privileges #1119 - Display only user groups if admin settings is set.
+- Editor should be able to set privileges #1119 - Editor should not try to save privileges for internal groups.
+- Editor should be able to set privileges #1119.
+- ISO19139 / Fieldset on resourceConstraints.
+- JSLint.
+- Record view does not display multiple contacts #1118.
+- Record view / Display and handle multiple resource identifier.
+- ISO19139 / Handle units encoded using URI.
+- ISO19139 / Index MD_Identifier and RS_Identifier the same way.
+- Record view / Display properly representation type.
+- Record view / Display crs.
+- Merge pull request #1117 from fxprunayre/improvement/workflow/draft-when-in-group
+- Enable workflow automatically when record is create in a specific group.
+- Findbugs: stupid check, we already check it above
+- Some findbugs fixes related to nullpointers. They will only happen if the schema is wrong, but better to check...
+- Findbug fixes: catch errors on weird data directories
+- Findbugs fix: check that the data directory is correct on schemas
+- Findbugs fix: check that the data directory is correct
+- Findbugs fixing: if there were no sufficient connections, we were still returning ok result
+- Fixing findbugs... and findbugs was right. Recursive call was missing the return statement
+- Error catching when removing metadata
+- Zoom to Extent button also working with WFS
+- Check SRS/CRS before loading WFS layer. Check also bounding box and center the map. Extent button still not working
+- First cleanup not supported INSPIRE extensions when processing a wfs getCapabilities
+- ExtJS app / Metadata status field name changed.
+- Thesaurus / Update regions.rdf
+- draw: improve text drawing
+- Add 3.0.1 to 3.0.2 migration step.
+- Fix missing space in labels.
+- Fixed typo in codelist url.
+- Multinode / Fix utility script.
+- Fix multinode configuration script to properly set servlet.
+- Properly display calendar for date element (not having dateType).
+- Use ISO19139 subTemplates in ISO19115-3 records #1102.
+- Cleaning.
+- Search & replace / Add option to remove empty elements #1103
+- Update to latest ISO19115-3 namespaces.
+- New location of ISO19139 to ISO19115-3 conversion.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Cleaning & formatting.
+- Use ISO19139 subTemplates in ISO19115-3 records #1102.
+- Merge pull request #1107 from grootstebozewolf/surefirePluginUpgrade
+- Update version to 3.0.2-SNAPSHOT. Add migration script.
+- Search / Add facet on resolution #1106.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.0.x
+- Update version to 3.0.1-SNAPSHOT
+- Updated surefire-plugin
+- Reduce log level for message when an LDAP profile is not recognized. The default profile is assigned and user is created.
