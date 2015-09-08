@@ -31,7 +31,7 @@ Metadatas concerned by this change are the following:
 %s
 
 Records are available from the following URL:
-%s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
+%scatalog.search#/search?_status=%s&amp;_statusChangeDate=%s
 	</statusSendEmail>
 	<statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
 	<metadata-versioning-log>Metadata versioning log</metadata-versioning-log>

@@ -12,6 +12,9 @@
     "Reviewer": "Revisor",
     "SUB_TEMPLATE": "Entrada de Directorio",
     "TEMPLATE": "Plantilla",
+    "recordType-y": "Template",
+    "recordType-n": "Metadata",
+    "recordType-s": "Directory entry",
     "UserAdmin": "Usuario administrador",
     "_cat": "Categoría",
     "categories": "Categorías",
@@ -32,6 +35,9 @@
     "VALID": "Válido",
     "INVALID": "Inválido",
     "NEVER_CALCULATED": "Nunca ha sido validado",
+    "validStatus-1": "Valid",
+    "validStatus-0": "Invalid",
+    "validStatus--1": "Never validated",
     "fre": "Francés",
     "ara": "عربي",
     "kor": "Koreano",
@@ -167,6 +173,7 @@
     "south": "Sur",
     "siblings": "Otros recursos",
     "sourceDatasets": "Conjutos de datos fuente",
+    "isSourceOfDatasets": "Is source dataset of",
     "spa": "Español",
     "spatialRepresentationTypes": "Representation types",
     "spatialRepresentationType": "Representation type",
@@ -251,5 +258,6 @@
     "addRecord": "Añadir una nueva entrada",
     "ImportRecord": "Importar nuevas entradas",
     "directoryManager": "Administrar directorio",
-    "typeOfRecord": "Tipo de entrada"
+    "typeOfRecord": "Tipo de entrada",
+    "load": "Load"
 }

@@ -12,6 +12,9 @@
     "Reviewer": "Reviewer",
     "SUB_TEMPLATE": "Directory entry",
     "TEMPLATE": "Modello",
+    "recordType-y": "Template",
+    "recordType-n": "Metadata",
+    "recordType-s": "Directory entry",
     "UserAdmin": "User administrator",
     "_cat": "Category",
     "categories": "Categorie",
@@ -32,6 +35,9 @@
     "VALID": "Valido",
     "INVALID": "Invalid",
     "NEVER_CALCULATED": "Never validated",
+    "validStatus-1": "Valid",
+    "validStatus-0": "Invalid",
+    "validStatus--1": "Never validated",
     "fre": "Français",
     "ara": "عربي",
     "kor": "Korean",
@@ -167,6 +173,7 @@
     "south": "South",
     "siblings": "Other resources",
     "sourceDatasets": "Source datasets",
+    "isSourceOfDatasets": "Is source dataset of",
     "spa": "Español",
     "spatialRepresentationTypes": "Representation types",
     "spatialRepresentationType": "Representation type",
@@ -251,5 +258,6 @@
     "addRecord": "Add new record",
     "ImportRecord": "Import new records",
     "directoryManager": "Manage directory",
-    "typeOfRecord": "Type of record"
+    "typeOfRecord": "Type of record",
+    "load": "Load"
 }

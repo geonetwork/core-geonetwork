@@ -23,7 +23,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %scatalog.search#/search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
 
 	<recurse>Also search in subfolders</recurse>
 	<otherValue>Other:</otherValue>

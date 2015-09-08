@@ -29,6 +29,7 @@
     "avgViewsPerDay": "Gemiddeld aantal keren bekeken per dag",
     "avgViewsPerMonth": "Gemiddeld aantal keren bekeken per maand",
     "batchProcess": "Batchproces",
+    "keywordCreationError": "Error creating keyword",
     "batchProcessParameters": "Procesparameters",
     "batchProcessTypeUnsupported": "Proces type {{type}} niet ondersteund",
     "batchreplacer-addReplacement": "Voeg vervanging toe",
