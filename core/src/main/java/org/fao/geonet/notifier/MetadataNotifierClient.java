@@ -114,10 +114,7 @@ public class MetadataNotifierClient {
                 try {
                     // Free the connection closing the body input stream
                     final InputStream instream = response.getBody();
-
-                    if (instream != null) {
-                        IOUtils.closeQuietly(instream);
-                    }
+                    IOUtils.closeQuietly(instream);
                 } catch (final IOException ignore) {
                     // Silently ignore
                 }
