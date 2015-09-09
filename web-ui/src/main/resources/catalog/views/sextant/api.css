@@ -203,7 +203,7 @@ yx-axis
   /* Pagination */
 }
 .gn > div:first-of-type {
-  height: auto;
+  height: 4em;
 }
 .gn > div:only-child {
   height: 100%;
