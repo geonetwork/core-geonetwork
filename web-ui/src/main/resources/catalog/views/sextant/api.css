@@ -14473,6 +14473,61 @@ yx-axis
   position: relative;
   margin-top: -4em;
 }
+.gn [sxt-main-viewer] .layers .sxt-layertree {
+  min-height: 200px;
+  max-height: calc(400px);
+}
+.gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
+  height: 200px;
+}
+.gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
+  height: 400px;
+}
+@media (max-height: 866px) {
+  .gn [sxt-main-viewer] .sxt-layers-tabset {
+    height: 150px;
+  }
+  .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 150px;
+    max-height: 300px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
+    height: 150px;
+  }
+  .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
+    height: 300px;
+  }
+}
+@media (max-height: 766px) {
+  .gn [sxt-main-viewer] .sxt-layers-tabset {
+    height: 100px;
+  }
+  .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 100px;
+    max-height: 200px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
+    height: 100px;
+  }
+  .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
+    height: 200px;
+  }
+}
+@media (max-height: 666px) {
+  .gn [sxt-main-viewer] .sxt-layers-tabset {
+    height: 50px;
+  }
+  .gn [sxt-main-viewer] .layers .sxt-layertree {
+    min-height: 50px;
+    max-height: 100px;
+  }
+  .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
+    height: 50px;
+  }
+  .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
+    height: 100px;
+  }
+}
 .popover {
   height: auto;
   border-radius: 2px;
