@@ -11306,6 +11306,9 @@ yx-axis
   padding-right: 5px;
   width: auto;
 }
+.gn [sxt-main-viewer] .gn-draw-styleform .gn-draw-text-stroke {
+  display: none;
+}
 .gn [sxt-main-viewer] .gn-draw-styleform div.btn-group {
   flex: 1;
 }
@@ -14468,6 +14471,11 @@ yx-axis
 }
 .gn table th {
   background-color: transparent;
+}
+@media (min-width: 1680px) {
+  .gn .sxt-main-tabs .btn-group.sxt-panel-button {
+    margin-left: calc(25% + 1.2em);
+  }
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
