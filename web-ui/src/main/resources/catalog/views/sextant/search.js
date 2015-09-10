@@ -449,10 +449,13 @@
         scope: {
           size: '@sxtSize'
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs) {
           if (scope.size == 'auto') {
             var fitHeight = function() {
               var height = $(document.body).height() - $(element).offset().top;
+              if (attrs['sxtSizeDiff']) {
+                height -= parseInt(attrs['sxtSizeDiff'], 10);
+              }
               element.css('height', height+'px');
             };
             $(window).on('resize', fitHeight);

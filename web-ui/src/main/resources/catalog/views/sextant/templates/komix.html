@@ -67,10 +67,14 @@
 
   <style>
     body {
-      background-image: url(http://ifremer.komix.fr/extension/ezwebin/design/ezwebin/images/body_bg.png)
+      background-image: url(http://ifremer.komix.fr/extension/espben/design/espben/images/body-bg.jpg)
     }
     .gn ul.gn-resultview li.gn-grid .ellipsis p {
       color: #808080;
+    }
+    div#columns-position {
+      width: 95% !important;
+      margin: 0px 2.5% !important;
     }
   </style>
 </head>
@@ -117,15 +121,6 @@
     </ul>
   </nav>    <!-- Top menu area: END -->
 
-  <!-- Path area: START -->
-  <div id="path">
-    <!-- Path content: START -->
-    <p>
-      <a href="/athlas_benthos">eZ Publish</a>
-      <span class="path-separator">/</span>      <a href="/athlas_benthos">Contenus athlas_benthos</a>
-      <span class="path-separator">/</span>      <span class="path-text">Catalogue</span>
-    </p>
-    <!-- Path content: END -->  </div>    <!-- Path area: END -->
 
   <!-- Toolbar area: START -->
   <!-- Toolbar area: END -->
@@ -173,8 +168,9 @@
 
                     <div ng-app="gn_search_sextant"
                          ng-controller="GnCatController"
-                         class="gn sxt-max-md"
+                         class="gn"
                          sxt-size="auto"
+                         sxt-size-diff="100"
                          ng-include="'../../catalog/views/sextant/templates/index.html'">
                     </div>
 
