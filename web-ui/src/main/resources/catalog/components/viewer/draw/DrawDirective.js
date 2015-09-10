@@ -127,7 +127,7 @@
             text: {
               width: 14,
               fill: {color: '#000'},
-              stroke: {color: '#fff', width: 2}
+              stroke: {color: '#fff', width: 0}
             }
           };
 
@@ -150,10 +150,6 @@
                 text: scope.text,
                 fill: new ol.style.Fill({
                   color: style.text.fill.color
-                }),
-                stroke: new ol.style.Stroke({
-                  color: style.text.stroke.color,
-                  width: style.text.stroke.width
                 })
               })
             })];
