@@ -66,7 +66,9 @@
 
             if (!featureOverlay) {
               featureOverlay = new ol.layer.Vector({
-                source: new ol.source.Vector(),
+                source: new ol.source.Vector({
+                  useSpatialIndex: false
+                }),
                 map: scope.map
               });
             }
@@ -75,11 +77,11 @@
             }
 
             drawInteraction = new ol.interaction.Draw({
-              features: featureOverlay.getFeatures(),
+              features: featureOverlay.getSource().getFeaturesCollection(),
               type: type
             });
             drawInteraction.on('drawstart', function(evt) {
-              featureOverlay.getFeatures().clear();
+              featureOverlay.getSource().clear();
             });
 
             drawInteraction.on('drawend',
