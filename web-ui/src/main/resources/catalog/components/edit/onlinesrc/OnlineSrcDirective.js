@@ -271,6 +271,7 @@
                 autoUpload: false,
                 url: 'md.thumbnail.upload',
                 maxNumberOfFiles: 1,
+                singleUpload: true,
                 dropZone: $('#gn-upload-thumbnail'),
                 //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
                 done: uploadThumbnailDone,
@@ -448,6 +449,7 @@
                 autoUpload: false,
                 url: 'resource.upload.and.link',
                 dropZone: $('#gn-upload-onlinesrc'),
+                singleUpload: true,
                 // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                 done: uploadOnlinesrcDone,
                 fail: uploadOnlineSrcError
