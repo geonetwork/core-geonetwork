@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
@@ -50,11 +52,14 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.collect.Maps;
 
@@ -87,17 +92,11 @@ public class Insert {
         this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
     }
 
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
     @RequestMapping(value = { "/{lang}/md.insert",
             "/{lang}/xml.metadata.insert",
             "/{lang}/xml.metadata.insert.paste" }, produces = {
-                    MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_JSON_VALUE })
-    public InsertResponse serviceSpecificExec(HttpSession session,
+    public @ResponseBody InsertResponse serviceSpecificExec(HttpSession session,
             @RequestParam(value = Params.DATA) String data,
             @RequestParam(value = Params.GROUP) String group,
             @RequestParam(value = Params.TEMPLATE, required = false, defaultValue = "n") String metadataType_st,
@@ -109,6 +108,41 @@ public class Insert {
             final @RequestParam(value = Params.UUID_ACTION, required = false, defaultValue = Params.NOTHING) String uuidAction)
                     throws Exception {
 
+        return process(data, group, metadataType_st, style, validate_st, schema,
+                category, extra, uuidAction);
+    }
+
+    @RequestMapping(value = { "/{lang}/md.insert",
+            "/{lang}/xml.metadata.insert",
+            "/{lang}/xml.metadata.insert.paste" }, consumes = {
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.TEXT_XML_VALUE }, produces = {
+                            MediaType.APPLICATION_XML_VALUE})
+    @Deprecated
+    public @ResponseBody InsertResponse oldXmlService(HttpSession session,
+            @RequestBody String request) throws Exception {
+
+        Element params = Xml.loadString(request, false);
+        String metadataType_st = Util.getParam(params, Params.TEMPLATE, "n");
+        String validate_st = Util.getParam(params, Params.VALIDATE, "off");
+        String data = Util.getParam(params, Params.DATA);
+        String group = Util.getParam(params, Params.GROUP);
+        String style = Util.getParam(params, Params.STYLESHEET, "_none_");
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        String uuidAction = Util.getParam(params, Params.UUID_ACTION,
+                Params.NOTHING);
+        String category = Util.getParam(params, Params.CATEGORY, "");
+        String extra = Util.getParam(params, "extra", null);
+
+        return process(data, group, metadataType_st, style, validate_st, schema,
+                category, extra, uuidAction);
+    }
+
+    private InsertResponse process(String data, String group,
+            String metadataType_st, String style, String validate_st,
+            String schema, final String category,  final String extra,
+            final String uuidAction)
+                    throws IOException, JDOMException, Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder
                 .get();
         DataManager dataMan = appContext.getBean(DataManager.class);
@@ -214,17 +248,29 @@ public class Insert {
         private static final long serialVersionUID = 496130056479944137L;
         private String id;
         private String uuid;
-        
+
         public String getId() {
             return id;
         }
-        
+
         public String getUuid() {
             return uuid;
         }
+        
+        public void setId(String id) {
+            this.id = id;
+        }
+        
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+        
+        InsertResponse() {
+            super();
+        }
 
         InsertResponse(String id, String uuid) {
-            super();
+            this();
             this.id = id;
             this.uuid = uuid;
         }
