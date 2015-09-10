@@ -52,6 +52,26 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnMetadataManager#validate
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Validate a metadata from catalog
+         *
+         * @param {string} id Internal id of the metadata
+         * @return {HttpPromise} Future object
+         */
+        validate: function(id) {
+          var url = gnUrlUtils.append('md.validate@json',
+            gnUrlUtils.toKeyValue({
+              id: id
+            })
+          );
+          return $http.get(url);
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#copy
            * @methodOf gnMetadataManager
@@ -311,6 +331,7 @@
 
     mdPrivileges: 'md.privileges.update@json',
     mdPrivilegesBatch: 'md.privileges.batch.update@json',
+    mdValidateBatch: 'md.validation',
     publish: 'md.publish',
     unpublish: 'md.unpublish',
 
