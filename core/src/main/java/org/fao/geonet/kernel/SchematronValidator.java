@@ -22,6 +22,7 @@ import org.jdom.filter.ElementFilter;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -69,8 +70,10 @@ public class SchematronValidator {
                                                            final MetadataSchema metadataSchema) {
         List<ApplicableSchematron> applicableSchematron = Lists.newArrayList();
         SchematronRepository schematronRepository = ApplicationContextHolder.get().getBean(SchematronRepository.class);
-        
+
         final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
+
+        Collections.sort(schematronList, Schematron.DISPLAY_PRIORITY_COMPARATOR);
 
         //Loop through all xsl files
         for (Schematron schematron : schematronList) {

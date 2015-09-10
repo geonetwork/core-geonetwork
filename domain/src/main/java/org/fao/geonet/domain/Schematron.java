@@ -1,8 +1,25 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
 import java.io.File;
+import java.util.Comparator;
 import java.util.Map;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 /**
  * An entity representing a schematron. It contains the file to the schematron
@@ -19,8 +36,14 @@ import java.util.Map;
 @SequenceGenerator(name= Schematron.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Schematron extends Localized {
     static final String ID_SEQ_NAME = "schematron_id_seq";
+    public static final Comparator<? super Schematron> DISPLAY_PRIORITY_COMPARATOR = new Comparator<Schematron>() {
+        @Override
+        public int compare(Schematron o1, Schematron o2) {
+            return Integer.compare(o1.getDisplayPriority(), o2.getDisplayPriority());
+        }
+    };
 
-	private int id;
+    private int id;
 	private String schemaName;
 	private String file;
 	private int displayPriority = 0;
@@ -96,6 +119,11 @@ public class Schematron extends Localized {
         }
     }
 
+    /**
+     * Defines the order in which the rules should be displayed in the schematron report.
+     *
+     * 0 is highest priority and should be first in the list.
+     */
     public int getDisplayPriority() {
         return displayPriority;
     }
