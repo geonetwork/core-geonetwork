@@ -46,8 +46,9 @@
         $scope.importing = false;
         var response = new DOMParser().parseFromString(
             data.jqXHR.responseText, 'text/xml');
+        var msgEl = response.getElementsByTagName('message')[0];
         var report = {
-          message: response.getElementsByTagName('message')[0].innerHTML
+          message: msgEl.innerHTML ? msgEl.innerHTML : msgEl.textContent
         };
         $scope.reports.push(report);
       };
