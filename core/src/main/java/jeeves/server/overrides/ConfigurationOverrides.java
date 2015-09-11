@@ -1,6 +1,7 @@
 package jeeves.server.overrides;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
@@ -43,6 +44,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -619,6 +621,17 @@ public class ConfigurationOverrides {
 
     public static abstract class ResourceLoader {
         protected InputStream loadInputStream(String resource) throws IOException {
+            // resolves env variables before trying to resolve the actual file
+            Pattern p = Pattern.compile("\\$\\{env:([^\\}]*)\\}");
+            Matcher m = p.matcher(resource);
+            while (m.find()) {
+                String repl = m.group();
+                String subst = System.getProperty(m.group(1), "");
+                if (StringUtils.isEmpty(subst)) {
+                    Log.warning(Log.JEEVES, "Unable to resolve environmnent variable " + m.group(1) + ", replacing with empty string");
+                }
+                resource = resource.replace((CharSequence) repl, subst);
+            }
             Path file = resolveFile(resource);
             if(file == null) {
                 return fallbackInputStream(resource);
