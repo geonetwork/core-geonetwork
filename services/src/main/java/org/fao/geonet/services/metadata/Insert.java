@@ -32,13 +32,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
@@ -56,7 +56,6 @@ import org.jdom.JDOMException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -64,15 +63,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.common.collect.Maps;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
 
 /**
- * Insert a metadata sending an XML document.
+ * Insert a metadata into the catalog. You have to be logged in as editor to use
+ * this service.
  * 
- * Parameters are: insert_mode: 0 template: The type of record (y or n or s)
- * data: The XML to insert group:
+ * <ul>
+ * <li>String <strong>data</strong>: XML string of the metadata</li>
+ * <li>Integer <strong>group</strong>: Id of the group to insert this metadata
+ * into</li>
+ * <li>[y|n]<strong>template</strong> (optional): Is it a template or a
+ * metadata?</li>
+ * <li>String <strong>styleSheet</strong> (optional): Stylesheet to apply to the
+ * inserted metadata. Based on xsl/conversion/import</li>
+ * <li>[on|off] <strong>validate</strong> (optional): Enable validation for this
+ * metadata</li>
+ * <li>String <strong>schema</strong> (optional): Schema of this metadata. If
+ * not defined, it will try to extract it from the metadata structure</li>
+ * <li>String <strong>category</strong> (optional): Category to assign to the
+ * metadata</li>
+ * <li>String <strong>extra</strong> (optional): Extra data</li>
+ * <li>[generateUuid] <strong>uuidAction</strong> (optional): Action to do with
+ * the uuid</li>
+ * </ul>
  * 
  */
 
@@ -80,22 +96,10 @@ import jeeves.services.ReadWriteController;
 @ReadWriteController
 public class Insert {
 
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Init
-    // ---
-    // --------------------------------------------------------------------------
+    private Path stylePath = null;
 
-    private Path stylePath;
-
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-        this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
-    }
-
-    @RequestMapping(value = { "/{lang}/md.insert",
-            "/{lang}/xml.metadata.insert",
-            "/{lang}/xml.metadata.insert.paste" }, produces = {
-                    MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(value = "/{lang}/md.insert", produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public @ResponseBody InsertResponse serviceSpecificExec(HttpSession session,
             @RequestParam(value = Params.DATA) String data,
             @RequestParam(value = Params.GROUP) String group,
@@ -112,35 +116,9 @@ public class Insert {
                 category, extra, uuidAction);
     }
 
-    @RequestMapping(value = { "/{lang}/md.insert",
-            "/{lang}/xml.metadata.insert",
-            "/{lang}/xml.metadata.insert.paste" }, consumes = {
-                    MediaType.APPLICATION_XML_VALUE,
-                    MediaType.TEXT_XML_VALUE }, produces = {
-                            MediaType.APPLICATION_XML_VALUE})
-    @Deprecated
-    public @ResponseBody InsertResponse oldXmlService(HttpSession session,
-            @RequestBody String request) throws Exception {
-
-        Element params = Xml.loadString(request, false);
-        String metadataType_st = Util.getParam(params, Params.TEMPLATE, "n");
-        String validate_st = Util.getParam(params, Params.VALIDATE, "off");
-        String data = Util.getParam(params, Params.DATA);
-        String group = Util.getParam(params, Params.GROUP);
-        String style = Util.getParam(params, Params.STYLESHEET, "_none_");
-        String schema = Util.getParam(params, Params.SCHEMA, null);
-        String uuidAction = Util.getParam(params, Params.UUID_ACTION,
-                Params.NOTHING);
-        String category = Util.getParam(params, Params.CATEGORY, "");
-        String extra = Util.getParam(params, "extra", null);
-
-        return process(data, group, metadataType_st, style, validate_st, schema,
-                category, extra, uuidAction);
-    }
-
     private InsertResponse process(String data, String group,
             String metadataType_st, String style, String validate_st,
-            String schema, final String category,  final String extra,
+            String schema, final String category, final String extra,
             final String uuidAction)
                     throws IOException, JDOMException, Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder
@@ -152,18 +130,12 @@ public class Insert {
         MetadataType metadataType = MetadataType.lookup(metadataType_st);
         boolean validate = validate_st.equals("on");
 
-        // Sub template does not need a title.
-        // if (isTemplate.equals("s") && title.length() == 0)
-        // throw new MissingParameterEx("title");
-
-        // -----------------------------------------------------------------------
-        // --- add the DTD to the input xml to perform validation
-
         Element xml = Xml.loadString(data, false);
 
         // Apply a stylesheet transformation if requested
-        if (!style.equals("_none_"))
-            xml = Xml.transform(xml, stylePath.resolve(style));
+        if (!style.equals("_none_")) {
+            xml = Xml.transform(xml, getStylePath(appContext).resolve(style));
+        }
 
         if (schema == null) {
             schema = dataMan.autodetectSchema(xml);
@@ -176,9 +148,7 @@ public class Insert {
         if (validate)
             DataManager.validateMetadata(schema, xml, context);
 
-        // -----------------------------------------------------------------------
-        // --- if the uuid does not exist we generate it for metadata and
-        // templates
+        // if the uuid does not exist we generate it for metadata and templates
         String uuid;
         if (metadataType == MetadataType.SUB_TEMPLATE) {
             uuid = UUID.randomUUID().toString();
@@ -240,7 +210,17 @@ public class Insert {
         // Return response
         return new InsertResponse(String.valueOf(iId),
                 String.valueOf(dataMan.getMetadataUuid(id.get(0))));
-    };
+    }
+
+    private Path getStylePath(ConfigurableApplicationContext appContext) {
+        if (this.stylePath == null) {
+            ServletPathFinder finder = new ServletPathFinder(
+                    appContext.getBean(ServletContext.class));
+            Path appPath = finder.getAppPath();
+            this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
+        }
+        return this.stylePath;
+    }
 
     @XmlRootElement(name = Jeeves.Elem.RESPONSE)
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -256,15 +236,15 @@ public class Insert {
         public String getUuid() {
             return uuid;
         }
-        
+
         public void setId(String id) {
             this.id = id;
         }
-        
+
         public void setUuid(String uuid) {
             this.uuid = uuid;
         }
-        
+
         InsertResponse() {
             super();
         }
