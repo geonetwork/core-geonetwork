@@ -67,7 +67,7 @@ public class ListIdentifiers extends AbstractTokenLister
 
 		int num = 0;
 
-		while (num<Lib.MAX_RECORDS && pos < result.getIds().size())
+		while (num < getMaxRecords() && pos < result.getIds().size())
 		{
 			int id = result.getIds().get(pos);
 

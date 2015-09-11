@@ -45,8 +45,6 @@ import java.util.List;
 
 public class Lib
 {
-	public static final int MAX_RECORDS = 10;
-
 	public static final String SESSION_OBJECT = "oai-list-records-result";
 
 	//---------------------------------------------------------------------------
