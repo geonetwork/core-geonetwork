@@ -514,6 +514,11 @@ public class ConfigurationOverrides {
             String propKey = matcher.group(1);
             String propValue = properties.getProperty(propKey);
 
+            // if property begins with "env:", it will be replaced later on
+            if (propKey.startsWith("env:")) {
+                continue;
+            }
+
             if (propValue == null) {
                 throw new IllegalArgumentException("Found a reference to a variable: " + propKey + " which is not a valid property.  Check the spelling");
             }
