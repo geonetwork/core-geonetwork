@@ -71,10 +71,6 @@ public class CreateTest extends AbstractServiceIntegrationTest {
         StringWriter writer = new StringWriter();
         IOUtils.copy(is, writer, "UTF-8");
         String data = writer.toString();
-        
-        System.out.println("___________________________");
-        System.out.println(data);
-        System.out.println("___________________________");
 
         Insert.InsertResponse response = insertService.serviceSpecificExec(
                 session, data, sampleGroup.toString(), "n", "_none_", "off", null,
