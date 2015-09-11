@@ -55,7 +55,6 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testCreateNormalMetadata() throws Exception {
-        System.out.println("___________________________");
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
