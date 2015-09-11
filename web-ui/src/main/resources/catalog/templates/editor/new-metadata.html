@@ -57,16 +57,41 @@
       </div>
     </div>
     <div class="col-sm-3">
+      <div class="panel-default panel" data-ng-show="hasTemplates && !generateUuid">
+        <div class="panel-heading">
+          <span data-translate="">createMetadataUniformResourceName</span>
+          <!--<strong data-translate="">createMetadataUniformResourceNameFormat</strong>-->
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+              <label for="urnTemplates" data-translate="">template</label>
+              <select id="urnTemplates" name="urnTemplates" data-ng-model="urnSelectedTemplate" data-ng-change="updateURNTemplate()">
+                <option data-ng-repeat="option in urnTemplates" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div>
+          <div class="form-group">
+            <span>{{urnSelectedTemplateForLabel}}</span>
+          </div>
+          <div class="form-group" ng-repeat="(key, val) in urnTemplateTokens" data-ng-show="!showCustomURNField()">
+            <label>{{ val.label }}</label>
+            <input type="text" class="form-control" name="{{ val.label }}" data-ng-model="val.value" data-ng-change="updateURNTemplateLabel()" />
+          </div>
+          <div class="form-group" data-ng-show="showCustomURNField()">
+            <label for="urnTemplates" data-translate="">urn</label>
+            <input type="text" class="form-control" name="urn" data-ng-model="urnCustom" />
+          </div>
+        </div>
+      </div>
       <div class="btn-group">
         <button type="button" class="btn btn-success btn-lg"
           data-gn-click-and-spin="createNewMetadata()"
-          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isURNFilled())) )}">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
         <button type="button"
                 class="btn btn-success btn-lg dropdown-toggle"
-                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}"
+                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isURNFilled())) )}"
                 data-toggle="dropdown">
           <span class="caret"></span>&nbsp;
         </button>
@@ -80,4 +105,7 @@
       </div>
     </div>
   </div>
+</div>
+
+<div data-ng-include="'../../catalog/templates/info.html'">
 </div>

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -78,7 +80,10 @@ public class Create extends NotInReadOnlyModeService {
 		String id;
 		String uuid;
 		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
-		
+
+        SettingManager sm = gc.getBean(SettingManager.class);
+        boolean generateUuid = sm.getValueAsBool("system/metadatacreate/generateUuid");
+
 		// does the request contain a UUID ?
 		try {
 			uuid = Util.getParam(params, Params.UUID);
@@ -96,8 +101,21 @@ public class Create extends NotInReadOnlyModeService {
 				throw new Exception("Request must contain a UUID or an ID");
 			}		
 		}
-		
-		String groupOwner= Util.getParam(params, Params.GROUP);
+
+
+        // User assigned uuid: check if already exists
+        String metadataUuid;
+        if (!generateUuid) {
+            metadataUuid = Util.getParam(params, "metadataUuid");
+            if (StringUtils.isNotEmpty(dm.getMetadataId(metadataUuid))) {
+                throw new Exception("The metadata UUID already exists. Choose another one");
+            }
+        } else {
+            metadataUuid = UUID.randomUUID().toString();
+        }
+
+
+        String groupOwner= Util.getParam(params, Params.GROUP);
 		
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
@@ -117,7 +135,7 @@ public class Create extends NotInReadOnlyModeService {
         SettingManager settingManager = gc.getBean(SettingManager.class);
         String newId = dm.createMetadata(context, id, groupOwner,
                 settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
-                (child.equals("n") ? null : uuid), isTemplate, haveAllRights);
+                (child.equals("n") ? null : uuid), isTemplate, haveAllRights, metadataUuid);
 
 
         dm.activateWorkflowIfConfigured(context, newId, groupOwner);
