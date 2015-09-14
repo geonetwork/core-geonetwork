@@ -9,6 +9,7 @@
   goog.require('gn_scroll_spy');
   goog.require('gn_sources_controller');
   goog.require('gn_system_settings_controller');
+  goog.require('gn_metadata_urn_templates_controller');
 
   var module = angular.module('gn_settings_controller',
       ['gn_system_settings_controller',
@@ -18,6 +19,7 @@
        'gn_csw_test_controller',
        'gn_logo_settings_controller',
        'gn_sources_controller',
+       'gn_metadata_urn_templates_controller',
        'gn_scroll_spy']
       );
 
@@ -60,6 +62,11 @@
               icon: 'fa-globe',
               label: 'manageMapServers',
               href: '#/settings/mapservers'
+            },{
+              type: 'metadata-urn-templates',
+              icon: 'fa-icon-list',
+              label: 'manageUrnTemplates',
+              href: '#/settings/metadata-urn-templates'
             }]};
     }]);
 })();

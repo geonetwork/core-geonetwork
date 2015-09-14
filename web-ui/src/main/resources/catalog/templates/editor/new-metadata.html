@@ -60,13 +60,12 @@
       <div class="panel-default panel" data-ng-show="hasTemplates && !generateUuid">
         <div class="panel-heading">
           <span data-translate="">createMetadataUniformResourceName</span>
-          <!--<strong data-translate="">createMetadataUniformResourceNameFormat</strong>-->
         </div>
         <div class="panel-body">
             <div class="form-group">
               <label for="urnTemplates" data-translate="">template</label>
-              <select id="urnTemplates" name="urnTemplates" data-ng-model="urnSelectedTemplate" data-ng-change="updateURNTemplate()">
-                <option data-ng-repeat="option in urnTemplates" value="{{option.id}}">{{option.name}}</option>
+              <select id="urnTemplates" name="urnTemplates" data-ng-model="urnSelectedTemplateId" data-ng-change="updateURNTemplate()">
+                <option data-ng-repeat="option in urnTemplates | orderBy:'id'" value="{{option.id}}">{{option.name}}</option>
               </select>
             </div>
           <div class="form-group">
