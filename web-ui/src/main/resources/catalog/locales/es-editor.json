@@ -72,7 +72,7 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Recursos en línea",
     "hasFeatureCatalog": "Usar este catálogo de features",
-    "importCPResult": "One record imported. Record identifier is: {{id}}.",
+    "importCPResult": "One record imported. Record identifier is: {{id}} <br/> UUID: {{uuid}}.",
     "importEntry": "Importar una entrada del directorio",
     "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} entrada(s) importadas con éxito en {{time}} segundos.",

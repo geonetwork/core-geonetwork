@@ -72,7 +72,7 @@
     "mcc:MD_BrowseGraphic": "로고",
     "gmd:MD_Distribution": "온라인 자원",
     "hasFeatureCatalog": "이 피처 카탈로그 사용",
-    "importCPResult": "하나의 레코드를 가져왔습니다. 레코드 식별자: {{id}}.",
+    "importCPResult": "One record imported. Record identifier is: {{id}} <br/> UUID: {{uuid}}.",
     "importEntry": "디렉토리 엔트리 가져오기",
     "importFromDir": "서버의 폴더에서 여러파일 가져오기",
     "importFromDirReport": "{{success}}/{{records}} 레코드(들)을  {{time}}초에 성공적으로 가져왔습니다.",
