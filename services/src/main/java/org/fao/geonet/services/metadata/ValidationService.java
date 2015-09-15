@@ -53,7 +53,7 @@ public class ValidationService implements ApplicationContextAware {
 
     private ApplicationContext context;
 
-    private Map<String, Set<Integer>> reports;
+    private Map<String, Set<Integer>> report;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
@@ -80,11 +80,11 @@ public class ValidationService implements ApplicationContextAware {
         ServiceContext serviceContext = ServiceContext.get();
         UserSession session = serviceContext.getUserSession();
 
-        this.reports = new HashMap<>();
-        this.reports.put("records", new HashSet<Integer>());
-        this.reports.put("validRecords", new HashSet<Integer>());
-        this.reports.put("notFoundRecords", new HashSet<Integer>());
-        this.reports.put("notOwnerRecords", new HashSet<Integer>());
+        this.report = new HashMap<>();
+        this.report.put("records", new HashSet<Integer>());
+        this.report.put("validRecords", new HashSet<Integer>());
+        this.report.put("notFoundRecords", new HashSet<Integer>());
+        this.report.put("notOwnerRecords", new HashSet<Integer>());
 
         final Set<String> setOfUuidsToValidate;
 
@@ -102,13 +102,13 @@ public class ValidationService implements ApplicationContextAware {
 
         // index records
         DataManager dataMan = context.getBean(DataManager.class);
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, this.reports.get("records"));
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, this.report.get("records"));
         r.process();
 
         return new StatusResponse(String.format(
                 "%d record(s) validated. %d record(s) valid.",
-                this.reports.get("records").size(),
-                this.reports.get("validRecords").size()));
+                this.report.get("records").size(),
+                this.report.get("validRecords").size()));
     }
 
 
@@ -123,9 +123,9 @@ public class ValidationService implements ApplicationContextAware {
         for (String uuid : setOfUuidsToValidate) {
             Metadata record = metadataRepository.findOneByUuid(uuid);
             if (record == null) {
-                this.reports.get("notFoundRecords").add(record.getId());
+                this.report.get("notFoundRecords").add(record.getId());
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
-                this.reports.get("notOwnerRecords").add(record.getId());
+                this.report.get("notOwnerRecords").add(record.getId());
             } else {
                 String idString = String.valueOf(record.getId());
                 boolean isValid = dataMan.doValidate(record.getDataInfo().getSchemaId(),
@@ -133,9 +133,9 @@ public class ValidationService implements ApplicationContextAware {
                         new Document(record.getXmlData(false)),
                         serviceContext.getLanguage());
                 if (isValid) {
-                    this.reports.get("validRecords").add(record.getId());
+                    this.report.get("validRecords").add(record.getId());
                 }
-                this.reports.get("records").add(record.getId());
+                this.report.get("records").add(record.getId());
             }
         }
     }
