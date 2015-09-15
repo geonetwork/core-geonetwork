@@ -47,7 +47,6 @@
     "createMetadataForGroup": "Maken en publiceren voor groep redacteuren",
     "createMetadataForGroup-help": "De record wordt bewerkbaar door alle leden van de groep",
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
-    "createMetadataUniformResourceNameFormat": "Format: prefix:authority::uniqueid",
     "createNewMetadata": "Voeg een nieuw record",
     "createSmall": "Maak kleine",
     "current": "huidige",

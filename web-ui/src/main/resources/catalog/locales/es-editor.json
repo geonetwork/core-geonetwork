@@ -48,7 +48,6 @@
     "createMetadataForGroup": "Crear y publicar para el grupo de editores",
     "createMetadataForGroup-help": "La entrada será editable por todos los miembros del grupo",
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
-    "createMetadataUniformResourceNameFormat": "Format: prefix:authority::uniqueid",
     "createNewMetadata": "Añadir una nueva entrada",
     "createSmall": "Crear miniatura",
     "current": "actual",

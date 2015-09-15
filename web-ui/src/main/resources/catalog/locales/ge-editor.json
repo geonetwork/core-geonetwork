@@ -48,7 +48,6 @@
     "createMetadataForGroup": "Estellen und veröffentlichen für Gruppen Editoren",
     "createMetadataForGroup-help": "Der Datensatz kann von allen Mitgliedern dieser Gruppe bearbeitet werden.",
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
-    "createMetadataUniformResourceNameFormat": "Format: prefix:authority::uniqueid",
     "createNewMetadata": "Neue Metadaten erfassen",
     "createSmall": "Erstelle kleine Ausgabe",
     "current": "aktuell",
