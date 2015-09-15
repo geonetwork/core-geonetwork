@@ -1,4 +1,6 @@
 {
+  "validateConstraints": "Valider les limites/contraintes d'utilisation",
+  "basketCancel": "Annuler",
   "textFillColor": "Couleur",
   "searchPlaces": "Chercher un lieu…",
   "filter": "Filtrer…",
