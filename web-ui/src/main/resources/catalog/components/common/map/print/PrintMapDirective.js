@@ -14,6 +14,8 @@
       graticule: false
     };
 
+    $scope.enableLegends = true;
+
     /**
      * Return print configuration from Mapfishprint service
      * @return {*} promise
@@ -217,7 +219,7 @@
         dpi: $scope.config.dpi.value,
         layers: encLayers,
         legends: encLegends,
-        enableLegends: (encLegends && encLegends.length > 0),
+        enableLegends: $scope.enableLegends,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(
