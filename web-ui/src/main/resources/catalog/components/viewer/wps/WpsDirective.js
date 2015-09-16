@@ -20,7 +20,8 @@
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
-    function(gnWpsService) {
+    '$timeout',
+    function(gnWpsService, $timeout) {
 
       var inputTypes = {
         string: 'text',
@@ -43,47 +44,78 @@
         link: function(scope, element, attrs) {
           var defaults = scope.defaults || {};
 
-          scope.status = 'loading';
+          scope.describeState = 'sended';
+          scope.executeState = '';
+
           gnWpsService.describeProcess(scope.uri, scope.processId)
           .then(
-              function(data) {
-                scope.processDescription = data.processDescription[0];
-                angular.forEach(scope.processDescription.dataInputs.input,
-                    function(input) {
-                    if (input.literalData) {
-                      // Input type
-                      input.type = inputTypes[input.literalData.dataType.value];
+              function(response) {
+                scope.describeState = 'succeeded';
+                scope.describeResponse = response;
 
-                      // Default value
-                      var value = undefined;
-                      if (input.literalData.defaultValue != undefined) {
-                        value = input.literalData.defaultValue;
+                if (response.processDescription != undefined) {
+                  scope.processDescription = response.processDescription[0];
+                  angular.forEach(scope.processDescription.dataInputs.input,
+                      function(input) {
+                        if (input.literalData) {
+                          // Input type
+                          input.type = inputTypes[input.literalData.dataType.value];
+
+                          // Default value
+                          var value = undefined;
+                          if (input.literalData.defaultValue != undefined) {
+                            value = input.literalData.defaultValue;
+                          }
+                          if (defaults[input.identifier.value] != undefined) {
+                            value = defaults[input.identifier.value];
+                          }
+                          switch (input.literalData.dataType.value) {
+                            case 'float':
+                              value = parseFloat(value); break;
+                            case 'string':
+                              value = value || ''; break;
+                          }
+                          input.value = value;
+                        }
+                        if (input.boundingBoxData) {
+                          input.value = '';
+                        }
                       }
-                      if (defaults[input.identifier.value] != undefined) {
-                        value = defaults[input.identifier.value];
+                  );
+
+                  angular.forEach(scope.processDescription.processOutputs.output,
+                      function(output) {
+                        output.value = true;
+                        output.asReference = true;
                       }
-                      switch (input.literalData.dataType.value) {
-                        case 'float':
-                          value = parseFloat(value); break;
-                        case 'string':
-                          value = value || ''; break;
-                      }
-                      input.value = value;
-                    }
-                    if (input.boundingBoxData) {
-                      input.value = '';
-                    }
-                  });
-                scope.status = 'loaded';
+                  );
+                  scope.outputsVisible = false;
+
+                  scope.responseDocument = {
+                    lineage: false,
+                    storeExecuteResponse: true,
+                    status: false
+                  };
+
+                  scope.optionsVisible = false;
+                }
               },
-              function(data) {
-                scope.exception = data;
-                scope.status = 'error';
+              function(response) {
+                scope.describeState = 'failed';
+                scope.describeResponse = response;
               }
-              );
+          );
 
           scope.close = function() {
             element.remove();
+          };
+
+          scope.toggleOutputs = function() {
+            scope.outputsVisible = !scope.outputsVisible;
+          };
+
+          scope.toggleOptions = function() {
+             scope.optionsVisible = !scope.optionsVisible;
           };
 
           scope.submit = function() {
@@ -109,25 +141,85 @@
                   return o;
                 }, {});
 
+            var outputs = [];
+            angular.forEach(scope.processDescription.processOutputs.output,
+                function(output) {
+                  if (output.value == true) {
+                    outputs.push({
+                      asReference: output.asReference,
+                      identifier: {
+                        value: output.identifier.value
+                      }
+                    });
+                  }
+                }, {});
+            scope.responseDocument.output = outputs;
+
+            updateStatus = function(statusLocation) {
+              gnWpsService.getStatus(statusLocation).then(
+                  function(response) {
+                    processResponse(response);
+                  },
+                  function(response) {
+                    scope.executeState = 'failed';
+                    scope.executeResponse = response;
+                  }
+              );
+            };
+
+            processResponse = function(response) {
+              if (response.TYPE_NAME = 'OWS_1_1_0.ExceptionReport') {
+                scope.executeState = 'finished';
+              }
+              if (response.TYPE_NAME = 'WPS_1_0_0.ExecuteResponse') {
+                if (response.status != undefined) {
+                  if (response.status.processAccepted != undefined ||
+                      response.status.processPaused != undefined ||
+                      response.status.processStarted != undefined) {
+                    scope.executeState = 'pending';
+                    scope.statusPromise = $timeout(function() { updateStatus(response.statusLocation); }, 1000, true);
+                  }
+                  if (response.status.ProcessSucceeded != undefined ||
+                      response.status.ProcessFailed != undefined) {
+                    scope.executeState = 'finished';
+                  }
+                }
+              }
+              scope.executeResponse = response;
+            };
+
             scope.running = true;
+            scope.executeState = 'sended';
             gnWpsService.execute(
                 scope.uri,
                 scope.processId,
                 inputs,
-                scope.processDescription.processOutputs.
-                    output[0].identifier.value,
-                false
+                scope.responseDocument
             ).then(
-                function(data) {
-                  window.open(data);
+                function(response) {
+                  processResponse(response);
                 },
-                function(data) {
-                  scope.exception = data;
+                function(response) {
+                  scope.executeState = 'failed';
+                  scope.executeResponse = response;
                 }
             ).finally (
                 function() {
                   scope.running = false;
                 });
+          };
+
+          scope.cancel = function() {
+            if ($timeout.cancel(scope.statusPromise)) {
+              scope.statusPromise = undefined;
+              scope.executeState = 'cancelled';
+            }
+          };
+
+          scope.responseDocumentStatusChanged = function() {
+            if (scope.responseDocument.status == true) {
+              scope.responseDocument.storeExecuteResponse = true;
+            }
           };
         }
       };
