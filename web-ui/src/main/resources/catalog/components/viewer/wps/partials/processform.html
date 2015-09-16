@@ -13,8 +13,16 @@
         <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
           <label for="{{::input.identifier.value}}">{{::input.title.value}}</label>
           <div ng-if="::input.literalData">
-            <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
+            <div ng-if="::input.literalData.allowedValues">
+              <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value">
+                <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
+              </select>
+            </div>
+            <div ng-if="::input.literalData.allowedValues == undefined">
+              <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
+            </div>
           </div>
+                
           <div ng-if="::input.boundingBoxData">
             <gn-bbox-input id="{{::input.identifier.value}}"
                 data-crs="input._default.crs"
