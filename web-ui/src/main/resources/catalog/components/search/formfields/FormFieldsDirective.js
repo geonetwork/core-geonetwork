@@ -742,8 +742,11 @@
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;
-                }); scope.value = valueFromExtent(scope.extent);
+                });
+                scope.value = valueFromExtent(scope.extent);
                 scope.updateMap();
+
+                scope.$apply();
               });
               scope.dragboxInteraction = dragboxInteraction;
 
