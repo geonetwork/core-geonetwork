@@ -413,8 +413,8 @@
       </gmd:descriptiveKeywords>
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
-          <gmd:useLimitation gco:nilReason="missing">
-            <gco:CharacterString/>
+          <gmd:useLimitation>
+            <gco:CharacterString>Public</gco:CharacterString>
           </gmd:useLimitation>
           <gmd:accessConstraints>
             <gmd:MD_RestrictionCode codeListValue=""
