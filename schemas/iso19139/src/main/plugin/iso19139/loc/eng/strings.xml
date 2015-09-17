@@ -118,8 +118,11 @@
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth (meters)</minDepth>
-  <maxDepth>Max depth (meters)</maxDepth>
+  <minDepth>Min. depth (>0 below Sea Level)</minDepth>
+  <maxDepth>Max. depth (>0 below Sea Level)</maxDepth>
+  <emodnetGeomTitle>Geometry</emodnetGeomTitle>
+  <emodnetPixelOrigin>Pixel origin position</emodnetPixelOrigin>
+  <emodnetAbs>Dataset description abstract</emodnetAbs>
   <verticalResolution>Vertical resolution (meters)</verticalResolution>
   <listOfObservationLevel>Vertical observation levels (meters > 0 above sea level)</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
@@ -188,7 +191,7 @@
 
   <!-- Emodnet hydrography -->
   <emodnetHydrography-what>What</emodnetHydrography-what>
-  <emodnetHydrography-details>Details</emodnetHydrography-details>
+  <emodnetHydrography-details>Quality</emodnetHydrography-details>
   <emodnetHydrography-where>Where</emodnetHydrography-where>
   <emodnetHydrography-when>When</emodnetHydrography-when>
   <emodnetHydrography-who>Who</emodnetHydrography-who>
@@ -215,6 +218,7 @@
   <emodnetWhereTitle>Where</emodnetWhereTitle>
   <emodnetWhenTitle>When</emodnetWhenTitle>
   <emodnetWhoTitle>Who</emodnetWhoTitle>
+  <emodnetSuitabilty>Suitability</emodnetSuitabilty>
   <emodnetSpatialResolution>Spatial resolution</emodnetSpatialResolution>
   <emodnetOriginatorTitle>Originator</emodnetOriginatorTitle>
   <emodnetDataHoldingCenterTitle>Data Holding Center</emodnetDataHoldingCenterTitle>

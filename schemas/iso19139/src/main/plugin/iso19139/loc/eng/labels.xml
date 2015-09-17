@@ -2936,7 +2936,7 @@
 		<description>Has</description>
 	</element>
 	<element name="gmd:MD_PixelOrientationCode">
-		<label>Pixel orientation code</label>
+		<label>Pixel origin position</label>
 		<description>Point in a pixel corresponding to the Earth location of the pixel</description>
 	</element>
 	<element name="gmd:MD_ObligationCode">

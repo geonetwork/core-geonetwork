@@ -115,6 +115,9 @@
   <p01>Parameter Usage Vocabulary (P01)</p01>
   <production-mode>Production mode</production-mode>
   <readyness>Readyness</readyness>
+  <emodnetGeomTitle>Geometry</emodnetGeomTitle>
+  <emodnetAbs>Dataset description abstract</emodnetAbs>
+  <emodnetPixelOrigin>Pixel origin position</emodnetPixelOrigin>
   <losi>Level of service information</losi>
   <level-of-characteristics>Processing level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of production*</providerSpecification>
@@ -124,8 +127,8 @@
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information - meter(s)</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min depth (meters)</minDepth>
-  <maxDepth>Max depth (meters)</maxDepth>
+  <minDepth>Min. depth (>0 below Sea Level)</minDepth>
+  <maxDepth>Max. depth (>0 below Sea Level)</maxDepth>
   <verticalResolution>Vertical resolution (meters)</verticalResolution>
   <listOfObservationLevel>Vertical observation levels (meters > 0 above sea level)</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
@@ -192,7 +195,7 @@
 
   <!-- Emodnet hydrography -->
   <emodnetHydrography-what>What</emodnetHydrography-what>
-  <emodnetHydrography-details>Details</emodnetHydrography-details>
+  <emodnetHydrography-details>Quality</emodnetHydrography-details>
   <emodnetHydrography-where>Where</emodnetHydrography-where>
   <emodnetHydrography-when>When</emodnetHydrography-when>
   <emodnetHydrography-who>Who</emodnetHydrography-who>
@@ -204,6 +207,7 @@
   <emodnetDisseminationLevel>Dissemination level</emodnetDisseminationLevel>
   <emodnetIdentificationTitle>Identification</emodnetIdentificationTitle>
   <emodnetWhatTitle>What</emodnetWhatTitle>
+  <emodnetSuitabilty>Suitability</emodnetSuitabilty>
   <emodnetAbstractTitle>Abstract</emodnetAbstractTitle>
   <emodnetNbLinesTitle>Number of lines</emodnetNbLinesTitle>
   <emodnetNbColumnsTitle>Number of columns</emodnetNbColumnsTitle>

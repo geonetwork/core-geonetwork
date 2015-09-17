@@ -1381,6 +1381,11 @@
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'NVS.P02')]"/>
 
+        </section>
+
+
+        <section name="emodnetGeomTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
 
           <field name="emodnetNbColumnsTitle"
                  xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
@@ -1394,7 +1399,8 @@
                             gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/
                                   @codeListValue = 'row']/gmd:dimensionSize"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+          <field name="emodnetPixelOrigin"
+                 xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
                           gmd:MD_Georectified/gmd:pointInPixel/
                             gmd:MD_PixelOrientationCode"/>
 
@@ -1408,7 +1414,8 @@
 
 
         <section name="emodnetAbstractTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
+          <field name="emodnetAbs"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
@@ -1443,7 +1450,11 @@
         <section name="emodnetQualityTitle">
           <section name="emodnetHorAccuracyTitle">
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:measureDescription"/>
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                           gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:value"/>
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:evaluationMethodDescription"/>
           </section>
           <section name="emodnetVertAccuracyTitle">
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
@@ -1457,30 +1468,13 @@
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                           gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:measureDescription"/>
 
-          <field name="emodnetSuitabilityTitle"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+          <section name="emodnetSuitabilty">
+            <field name="emodnetSuitabilityTitle"
+                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+          </section>
         </section>
 
-        <section name="emodnetIntellectualPropertyTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
-        </section>
-
-
-        <section name="emodnetMetadataInfo">
-          <field xpath="/gmd:MD_Metadata/gmd:language"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
-        </section>
       </tab>
 
       <tab id="emodnetHydrography-where"
@@ -1999,6 +1993,27 @@
               </snippet>
             </template>
           </action>
+        </section>
+
+
+        <section name="emodnetIntellectualPropertyTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+        </section>
+
+
+        <section name="emodnetMetadataInfo">
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
         </section>
       </tab>
     </view>
