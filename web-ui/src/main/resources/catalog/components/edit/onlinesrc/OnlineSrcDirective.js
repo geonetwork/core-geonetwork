@@ -362,7 +362,9 @@
         'gnOwsCapabilities',
         'gnEditor',
         'gnCurrentEdit',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit) {
+        '$rootScope',
+        '$translate',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit, $rootScope, $translate) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -384,19 +386,19 @@
                   // not multilingual {"fre":"#"}
                   if (Object.keys(scope.mdLangs).length > 1) {
                     scope.isMdMultilingual = true;
-                    scope.mdLang = gnCurrentEdit.mdLanguage;
+                  scope.mdLang = gnCurrentEdit.mdLanguage;
 
                     for (var p in scope.mdLangs) {
-                      var v = scope.mdLangs[p];
+                    var v = scope.mdLangs[p];
                       if (v.indexOf('#') == 0) {
-                        var l = v.substr(1);
+                      var l = v.substr(1);
                         if (!l) {
-                          l = scope.mdLang;
-                        }
-                        scope.mdLangs[p] = l;
+                        l = scope.mdLang;
                       }
+                      scope.mdLangs[p] = l;
                     }
                   }
+                }
                   else {
                     scope.isMdMultilingual = false;
                   }
@@ -411,6 +413,7 @@
 
               // the form parms that will be submited
               scope.params = {};
+              scope.params.selectedLayers = [];
 
               // Tells if we need to display layer grid and send
               // layers to the submit
@@ -419,11 +422,15 @@
               scope.onlinesrcService = gnOnlinesrc;
 
               var resetForm = function() {
+
+                scope.layers = [];
                 if (scope.params) {
                   scope.params.desc = scope.isMdMultilingual ? {} : '';
                   scope.params.url = '';
                   scope.params.name = scope.isMdMultilingual ? {} : '';
                   scope.params.protocol = '';
+                  scope.params.selectedLayers = [];
+                  scope.params.layers = [];
                 }
                 scope.clear(scope.queue);
               };
@@ -491,6 +498,18 @@
                 scope.onlinesrcService.reload = true;
               };
 
+              function handleError(reportError, error) {
+                if (reportError && error != undefined) {
+                  var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
+                                    $translate('linkToServiceWithoutURLError') + ": " + error :
+                                    $translate(error);
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate('error'),
+                    timeout: 0,
+                    msg: errorMsg,
+                    type: 'danger'});
+                }
+              }
               /**
                * loadWMSCapabilities
                *
@@ -498,18 +517,20 @@
                * Update params.layers scope value, that will be also
                * passed to the layers grid directive.
                */
-              scope.loadWMSCapabilities = function() {
+              scope.loadWMSCapabilities = function(reportError) {
                 if (scope.isWMSProtocol) {
                   gnOwsCapabilities.getWMSCapabilities(scope.params.url)
-                  .then(function(capabilities) {
-                        scope.layers = [];
-                        angular.forEach(capabilities.layers, function(l) {
-                          if (angular.isDefined(l.Name)) {
-                            scope.layers.push(l);
-                          }
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          angular.forEach(capabilities.layers, function(l) {
+                            if (angular.isDefined(l.Name)) {
+                              scope.layers.push(l);
+                            }
+                          });
+                        }).catch(function(error) {
+                          handleError(reportError, error);
                         });
-                      });
-                }
+                    }
               };
 
               /**
