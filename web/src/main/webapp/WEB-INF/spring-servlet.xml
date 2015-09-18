@@ -10,9 +10,9 @@
 	    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 
-    <context:component-scan base-package="org.fao.geonet" />
+   	<context:component-scan base-package="org.fao.geonet, org.openwis" />
 
-    <bean id="configPath" class="java.lang.String">
+	<bean id="configPath" class="java.lang.String">
         <constructor-arg index="0" value="/WEB-INF/" />
     </bean>
 

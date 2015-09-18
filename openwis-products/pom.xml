@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>geonetwork</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>3.0.2-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>openwis-products</artifactId>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.ws</groupId>
+      <artifactId>spring-ws-core</artifactId>
+      <version>2.2.2.RELEASE</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.12.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaLanguage>WSDL</schemaLanguage>
+          <generatePackage>org.openwis.products.client</generatePackage>
+          <schemas>
+            <!--<schema>
+              <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+            </schema>-->
+            <schema>
+              <fileset>
+                <!-- Defaults to schemaDirectory. -->
+                <directory>${basedir}/src/main/resources/schemas</directory>
+                <!-- Defaults to schemaIncludes. -->
+                <includes>
+                  <!--<include>*.xsd</include>-->
+                  <include>*.xsd</include>
+                </includes>
+                <!-- Defaults to schemaIncludes -->
+                <excludes>
+                  <exclude>*.xs</exclude>
+                </excludes>
+              </fileset>
+            </schema>
+          </schemas>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <rootProjectDir>${basedir}/..</rootProjectDir>
+  </properties>
+</project>
