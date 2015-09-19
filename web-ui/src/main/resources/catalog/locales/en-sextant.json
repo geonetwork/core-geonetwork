@@ -1,4 +1,9 @@
 {
+  "print_legend": "Legends",
+  "print_legend_field": "Include legends",
+  "validateConstraints": "Validate limits/constraints of use",
+  "basketCancel": "Cancel",
+  "Télécharger": "Download",
   "textFillColor": "Color",
   "searchPlaces": "Search a place…",
   "filter": "Filter…",

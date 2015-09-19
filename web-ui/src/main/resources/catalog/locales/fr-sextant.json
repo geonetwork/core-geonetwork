@@ -1,4 +1,8 @@
 {
+  "print_legend": "Légendes",
+  "print_legend_field": "Inclure les légendes",
+  "validateConstraints": "Valider les limites/contraintes d'utilisation",
+  "basketCancel": "Annuler",
   "textFillColor": "Couleur",
   "searchPlaces": "Chercher un lieu…",
   "filter": "Filtrer…",
