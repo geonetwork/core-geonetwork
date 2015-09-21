@@ -22,7 +22,7 @@ public class MetadataIdentifierTemplate extends GeonetEntity {
     private int _id;
     private String _name;
     private String _template;
-    private char _default = 'n';
+    private char _systemProvided = 'n';
 
     /**
      * Get the id of the metadata identifier template.
@@ -114,31 +114,31 @@ public class MetadataIdentifierTemplate extends GeonetEntity {
     }
 
     /**
-     * Return true if the notifier is enabled and should be notified of changes.
+     * Return true if the metadata identifier template is provided by GeoNetwork.
      *
-     * @return true if the notifier is enabled and should be notified of changes.
+     * @return true if the metadata identifier template is provided by GeoNetwork.
      */
     @Transient
-    public boolean isDefault() {
-        return Constants.toBoolean_fromYNChar(getDefault_JPAWorkaround());
+    public boolean isSystemProvided() {
+        return Constants.toBoolean_fromYNChar(getSystemProvided_JPAWorkaround());
     }
 
     /**
-     * Set true if the notifier is enabled and should be notified of changes.
+     * Set true if the metadata identifier template is provided by GeoNetwork.
      *
-     * @param isDefault true if the notifier is enabled and should be notified of changes.
+     * @param isSystemProvided true if the metadata identifier template is provided by GeoNetwork.
      */
-    public void setDefault(boolean isDefault) {
-        setDefault_JPAWorkaround(Constants.toYN_EnabledChar(isDefault));
+    public void setSystemDefault(boolean isSystemProvided) {
+        setSystemProvided_JPAWorkaround(Constants.toYN_EnabledChar(isSystemProvided));
     }
 
     /**
      * For backwards compatibility we need the enabled column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "isdefault", length = 1, nullable = false, columnDefinition="Char(1) default 'n'")
-    protected char getDefault_JPAWorkaround() {
-        return _default;
+    @Column(name = "isprovided", length = 1, nullable = false, columnDefinition="Char(1) default 'n'")
+    protected char getSystemProvided_JPAWorkaround() {
+        return _systemProvided;
     }
 
     /**
@@ -146,8 +146,8 @@ public class MetadataIdentifierTemplate extends GeonetEntity {
      *
      * @param _default either Constants.YN_ENABLED for true or Constants.YN_DISABLED for false
      */
-    protected void setDefault_JPAWorkaround(char _default) {
-        this._default = _default;
+    protected void setSystemProvided_JPAWorkaround(char _default) {
+        this._systemProvided = _default;
     }
 
 }

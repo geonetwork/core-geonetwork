@@ -66,7 +66,8 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
-           * @param {string} metadataUuid, the uuid of the metadata to create (when metadata uuid is set to manual)
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges, 
@@ -173,7 +174,8 @@
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} tab is the metadata editor tab to open
-           * @param {string} metadataUuid, the uuid of the metadata to create (when metadata uuid is set to manual)
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 

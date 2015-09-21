@@ -22,20 +22,20 @@ public class MetadataIdentifierTemplateSpecsTest  extends AbstractSpringDataTest
     private MetadataIdentifierTemplateRepository mdIdentifierTemplateRepository;
 
     @Test
-    public void testIsDefault() throws Exception {
+    public void testIsSystemProvided() throws Exception {
         MetadataIdentifierTemplate template1 = MetadataIdentifierTemplateRepositoryTest.newMetadataUrnTemplate(_inc);
-        template1.setDefault(true);
+        template1.setSystemDefault(true);
         template1 = mdIdentifierTemplateRepository.save(template1);
 
         MetadataIdentifierTemplate template2 = mdIdentifierTemplateRepository.save(MetadataIdentifierTemplateRepositoryTest.newMetadataUrnTemplate(_inc));
         MetadataIdentifierTemplate template3 = mdIdentifierTemplateRepository.save(MetadataIdentifierTemplateRepositoryTest.newMetadataUrnTemplate(_inc));
 
-        final Specification<MetadataIdentifierTemplate> specificationDefault = MetadataIdentifierTemplateSpecs.isDefault(true);
+        final Specification<MetadataIdentifierTemplate> specificationDefault = MetadataIdentifierTemplateSpecs.isSystemProvided(true);
 
         long numDefaultTemplates = mdIdentifierTemplateRepository.count(specificationDefault);
         assertEquals(1, numDefaultTemplates);
 
-        final Specification<MetadataIdentifierTemplate> specificationNoDefault = MetadataIdentifierTemplateSpecs.isDefault(false);
+        final Specification<MetadataIdentifierTemplate> specificationNoDefault = MetadataIdentifierTemplateSpecs.isSystemProvided(false);
 
         long numNoDefaultTemplates = mdIdentifierTemplateRepository.count(specificationNoDefault);
         assertEquals(2, numNoDefaultTemplates);

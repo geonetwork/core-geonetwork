@@ -17,14 +17,14 @@ public class MetadataIdentifierTemplateSpecs {
         // don't permit instantiation
     }
 
-    public static Specification<MetadataIdentifierTemplate> isDefault(final boolean isDefault) {
+    public static Specification<MetadataIdentifierTemplate> isSystemProvided(final boolean isSystemProvided) {
         return new Specification<MetadataIdentifierTemplate>() {
             @Override
             public Predicate toPredicate(Root<MetadataIdentifierTemplate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
-                Path<Character> defaultAttributePath = root.get(MetadataIdentifierTemplate_.default_JPAWorkaround);
-                Predicate equalDefaultPredicate = cb.equal(defaultAttributePath,  cb.literal(Constants.toYN_EnabledChar(isDefault)));
-                return equalDefaultPredicate;
+                Path<Character> defaultAttributePath = root.get(MetadataIdentifierTemplate_.systemProvided_JPAWorkaround);
+                Predicate systemProvidedDefaultPredicate = cb.equal(defaultAttributePath,  cb.literal(Constants.toYN_EnabledChar(isSystemProvided)));
+                return systemProvidedDefaultPredicate;
             }
         };
     }
