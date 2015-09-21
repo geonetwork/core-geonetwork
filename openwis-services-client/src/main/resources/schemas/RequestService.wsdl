@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RequestService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://dataservice.openwis.org/" schemaLocation="RequestService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getLastProcessedRequest">
+    <wsdl:part name="parameters" element="tns:getLastProcessedRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestsByUsers">
+    <wsdl:part name="parameters" element="tns:getRequestsByUsers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestsByUsersCountResponse">
+    <wsdl:part name="parameters" element="tns:getRequestsByUsersCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteRequest">
+    <wsdl:part name="parameters" element="tns:deleteRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestsByUsersCount">
+    <wsdl:part name="parameters" element="tns:getRequestsByUsersCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestsByUsersResponse">
+    <wsdl:part name="parameters" element="tns:getRequestsByUsersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLastProcessedRequestResponse">
+    <wsdl:part name="parameters" element="tns:getLastProcessedRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteRequestResponse">
+    <wsdl:part name="parameters" element="tns:deleteRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteRequestByUser">
+    <wsdl:part name="parameters" element="tns:deleteRequestByUser">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createRequestResponse">
+    <wsdl:part name="parameters" element="tns:createRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequest">
+    <wsdl:part name="parameters" element="tns:getRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteRequestByUserResponse">
+    <wsdl:part name="parameters" element="tns:deleteRequestByUserResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRequestResponse">
+    <wsdl:part name="parameters" element="tns:getRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createRequest">
+    <wsdl:part name="parameters" element="tns:createRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RequestService">
+    <wsdl:operation name="getRequestsByUsersCount">
+      <wsdl:input name="getRequestsByUsersCount" message="tns:getRequestsByUsersCount">
+    </wsdl:input>
+      <wsdl:output name="getRequestsByUsersCountResponse" message="tns:getRequestsByUsersCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastProcessedRequest">
+      <wsdl:input name="getLastProcessedRequest" message="tns:getLastProcessedRequest">
+    </wsdl:input>
+      <wsdl:output name="getLastProcessedRequestResponse" message="tns:getLastProcessedRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestsByUsers">
+      <wsdl:input name="getRequestsByUsers" message="tns:getRequestsByUsers">
+    </wsdl:input>
+      <wsdl:output name="getRequestsByUsersResponse" message="tns:getRequestsByUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createRequest">
+      <wsdl:input name="createRequest" message="tns:createRequest">
+    </wsdl:input>
+      <wsdl:output name="createRequestResponse" message="tns:createRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRequest">
+      <wsdl:input name="deleteRequest" message="tns:deleteRequest">
+    </wsdl:input>
+      <wsdl:output name="deleteRequestResponse" message="tns:deleteRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequest">
+      <wsdl:input name="getRequest" message="tns:getRequest">
+    </wsdl:input>
+      <wsdl:output name="getRequestResponse" message="tns:getRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRequestByUser">
+      <wsdl:input name="deleteRequestByUser" message="tns:deleteRequestByUser">
+    </wsdl:input>
+      <wsdl:output name="deleteRequestByUserResponse" message="tns:deleteRequestByUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RequestServiceSoapBinding" type="tns:RequestService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getLastProcessedRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getLastProcessedRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLastProcessedRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestsByUsersCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getRequestsByUsersCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRequestsByUsersCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestsByUsers">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getRequestsByUsers">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRequestsByUsersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteRequestByUser">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteRequestByUser">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteRequestByUserResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RequestService">
+    <wsdl:port name="RequestServicePort" binding="tns:RequestServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RequestServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

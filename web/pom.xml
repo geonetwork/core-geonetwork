@@ -477,7 +477,7 @@
     <!--  OpenWIS -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>openwis-products</artifactId>
+      <artifactId>openwis-services-client</artifactId>
       <version>${project.version}</version>
     </dependency>
 

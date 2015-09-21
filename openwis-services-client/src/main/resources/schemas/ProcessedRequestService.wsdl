@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ProcessedRequestService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://dataservice.openwis.org/" schemaLocation="ProcessedRequestService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getAllProcessedRequestsByRequestCountResponse">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByRequestCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateProcessedRequest">
+    <wsdl:part name="parameters" element="tns:updateProcessedRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addProcessedRequestToSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:addProcessedRequestToSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequestWithAdHoc">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequestWithAdHoc">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProcessedRequestForAdhoc">
+    <wsdl:part name="parameters" element="tns:getProcessedRequestForAdhoc">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateProcessedRequestResponse">
+    <wsdl:part name="parameters" element="tns:updateProcessedRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="extract">
+    <wsdl:part name="parameters" element="tns:extract">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByUsersCountResponse">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByUsersCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullProcessedRequest">
+    <wsdl:part name="parameters" element="tns:getFullProcessedRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequests">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequests">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByUsersCount">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByUsersCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="clearProcessedRequestStagingPostByUri">
+    <wsdl:part name="parameters" element="tns:clearProcessedRequestStagingPostByUri">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addProcessedRequestToSubscription">
+    <wsdl:part name="parameters" element="tns:addProcessedRequestToSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="clearProcessedRequestStagingPostResponse">
+    <wsdl:part name="parameters" element="tns:clearProcessedRequestStagingPostResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByUsers">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByUsers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProcessedRequestForAdhocResponse">
+    <wsdl:part name="parameters" element="tns:getProcessedRequestForAdhocResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByRequest">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequestsByRequestResponse">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequestsByRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProcessedRequest">
+    <wsdl:part name="parameters" element="tns:getProcessedRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="monitorExtractionResponse">
+    <wsdl:part name="parameters" element="tns:monitorExtractionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="clearProcessedRequestStagingPost">
+    <wsdl:part name="parameters" element="tns:clearProcessedRequestStagingPost">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullProcessedRequestForAdhocResponse">
+    <wsdl:part name="parameters" element="tns:getFullProcessedRequestForAdhocResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequestsByRequest">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequestsByRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequestsResponse">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequestsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="monitorExtraction">
+    <wsdl:part name="parameters" element="tns:monitorExtraction">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullProcessedRequestForAdhoc">
+    <wsdl:part name="parameters" element="tns:getFullProcessedRequestForAdhoc">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByUsersResponse">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByUsersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullProcessedRequestResponse">
+    <wsdl:part name="parameters" element="tns:getFullProcessedRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProcessedRequestResponse">
+    <wsdl:part name="parameters" element="tns:getProcessedRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProcessedRequestWithAdHocResponse">
+    <wsdl:part name="parameters" element="tns:deleteProcessedRequestWithAdHocResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByRequestResponse">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="clearProcessedRequestStagingPostByUriResponse">
+    <wsdl:part name="parameters" element="tns:clearProcessedRequestStagingPostByUriResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProcessedRequestsByRequestCount">
+    <wsdl:part name="parameters" element="tns:getAllProcessedRequestsByRequestCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="extractResponse">
+    <wsdl:part name="parameters" element="tns:extractResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ProcessedRequestService">
+    <wsdl:operation name="getFullProcessedRequest">
+      <wsdl:input name="getFullProcessedRequest" message="tns:getFullProcessedRequest">
+    </wsdl:input>
+      <wsdl:output name="getFullProcessedRequestResponse" message="tns:getFullProcessedRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByUsers">
+      <wsdl:input name="getAllProcessedRequestsByUsers" message="tns:getAllProcessedRequestsByUsers">
+    </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByUsersResponse" message="tns:getAllProcessedRequestsByUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="extract">
+      <wsdl:input name="extract" message="tns:extract">
+    </wsdl:input>
+      <wsdl:output name="extractResponse" message="tns:extractResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addProcessedRequestToSubscription">
+      <wsdl:input name="addProcessedRequestToSubscription" message="tns:addProcessedRequestToSubscription">
+    </wsdl:input>
+      <wsdl:output name="addProcessedRequestToSubscriptionResponse" message="tns:addProcessedRequestToSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProcessedRequestForAdhoc">
+      <wsdl:input name="getProcessedRequestForAdhoc" message="tns:getProcessedRequestForAdhoc">
+    </wsdl:input>
+      <wsdl:output name="getProcessedRequestForAdhocResponse" message="tns:getProcessedRequestForAdhocResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProcessedRequest">
+      <wsdl:input name="getProcessedRequest" message="tns:getProcessedRequest">
+    </wsdl:input>
+      <wsdl:output name="getProcessedRequestResponse" message="tns:getProcessedRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByRequestCount">
+      <wsdl:input name="getAllProcessedRequestsByRequestCount" message="tns:getAllProcessedRequestsByRequestCount">
+    </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByRequestCountResponse" message="tns:getAllProcessedRequestsByRequestCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByUsersCount">
+      <wsdl:input name="getAllProcessedRequestsByUsersCount" message="tns:getAllProcessedRequestsByUsersCount">
+    </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByUsersCountResponse" message="tns:getAllProcessedRequestsByUsersCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearProcessedRequestStagingPost">
+      <wsdl:input name="clearProcessedRequestStagingPost" message="tns:clearProcessedRequestStagingPost">
+    </wsdl:input>
+      <wsdl:output name="clearProcessedRequestStagingPostResponse" message="tns:clearProcessedRequestStagingPostResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullProcessedRequestForAdhoc">
+      <wsdl:input name="getFullProcessedRequestForAdhoc" message="tns:getFullProcessedRequestForAdhoc">
+    </wsdl:input>
+      <wsdl:output name="getFullProcessedRequestForAdhocResponse" message="tns:getFullProcessedRequestForAdhocResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequestsByRequest">
+      <wsdl:input name="deleteProcessedRequestsByRequest" message="tns:deleteProcessedRequestsByRequest">
+    </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestsByRequestResponse" message="tns:deleteProcessedRequestsByRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequests">
+      <wsdl:input name="deleteProcessedRequests" message="tns:deleteProcessedRequests">
+    </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestsResponse" message="tns:deleteProcessedRequestsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearProcessedRequestStagingPostByUri">
+      <wsdl:input name="clearProcessedRequestStagingPostByUri" message="tns:clearProcessedRequestStagingPostByUri">
+    </wsdl:input>
+      <wsdl:output name="clearProcessedRequestStagingPostByUriResponse" message="tns:clearProcessedRequestStagingPostByUriResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequestWithAdHoc">
+      <wsdl:input name="deleteProcessedRequestWithAdHoc" message="tns:deleteProcessedRequestWithAdHoc">
+    </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestWithAdHocResponse" message="tns:deleteProcessedRequestWithAdHocResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateProcessedRequest">
+      <wsdl:input name="updateProcessedRequest" message="tns:updateProcessedRequest">
+    </wsdl:input>
+      <wsdl:output name="updateProcessedRequestResponse" message="tns:updateProcessedRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="monitorExtraction">
+      <wsdl:input name="monitorExtraction" message="tns:monitorExtraction">
+    </wsdl:input>
+      <wsdl:output name="monitorExtractionResponse" message="tns:monitorExtractionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByRequest">
+      <wsdl:input name="getAllProcessedRequestsByRequest" message="tns:getAllProcessedRequestsByRequest">
+    </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByRequestResponse" message="tns:getAllProcessedRequestsByRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ProcessedRequestServiceSoapBinding" type="tns:ProcessedRequestService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getAllProcessedRequestsByUsers">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllProcessedRequestsByUsers">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByUsersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullProcessedRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFullProcessedRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFullProcessedRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="extract">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="extract">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="extractResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addProcessedRequestToSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addProcessedRequestToSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addProcessedRequestToSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProcessedRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProcessedRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProcessedRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProcessedRequestForAdhoc">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProcessedRequestForAdhoc">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProcessedRequestForAdhocResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByRequestCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllProcessedRequestsByRequestCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByRequestCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByUsersCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllProcessedRequestsByUsersCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByUsersCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearProcessedRequestStagingPost">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="clearProcessedRequestStagingPost">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="clearProcessedRequestStagingPostResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequestsByRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProcessedRequestsByRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestsByRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullProcessedRequestForAdhoc">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFullProcessedRequestForAdhoc">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFullProcessedRequestForAdhocResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequests">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProcessedRequests">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearProcessedRequestStagingPostByUri">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="clearProcessedRequestStagingPostByUri">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="clearProcessedRequestStagingPostByUriResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProcessedRequestWithAdHoc">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProcessedRequestWithAdHoc">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProcessedRequestWithAdHocResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="monitorExtraction">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="monitorExtraction">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="monitorExtractionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateProcessedRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateProcessedRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateProcessedRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProcessedRequestsByRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllProcessedRequestsByRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllProcessedRequestsByRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ProcessedRequestService">
+    <wsdl:port name="ProcessedRequestServicePort" binding="tns:ProcessedRequestServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ProcessedRequestServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

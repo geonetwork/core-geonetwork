@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SubscriptionService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://dataservice.openwis.org/" schemaLocation="SubscriptionService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="resumeSubscription">
+    <wsdl:part name="parameters" element="tns:resumeSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setBackup">
+    <wsdl:part name="parameters" element="tns:setBackup">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:createSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="suspendSubscription">
+    <wsdl:part name="parameters" element="tns:suspendSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:getSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateSubscriptionConfigResponse">
+    <wsdl:part name="parameters" element="tns:updateSubscriptionConfigResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateSubscriptionConfig">
+    <wsdl:part name="parameters" element="tns:updateSubscriptionConfig">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionsByUsersCountResponse">
+    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkUsersSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:checkUsersSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findLastProcessedRequest">
+    <wsdl:part name="parameters" element="tns:findLastProcessedRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkUserSubscription">
+    <wsdl:part name="parameters" element="tns:checkUserSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:getFullSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateSubscription">
+    <wsdl:part name="parameters" element="tns:updateSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionsByUsersCount">
+    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:updateSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkUserSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:checkUserSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resumeSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:resumeSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setBackupResponse">
+    <wsdl:part name="parameters" element="tns:setBackupResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscription">
+    <wsdl:part name="parameters" element="tns:getSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscription">
+    <wsdl:part name="parameters" element="tns:deleteSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkUsersSubscription">
+    <wsdl:part name="parameters" element="tns:checkUsersSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFullSubscription">
+    <wsdl:part name="parameters" element="tns:getFullSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findLastProcessedRequestResponse">
+    <wsdl:part name="parameters" element="tns:findLastProcessedRequestResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="suspendSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:suspendSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteSubscriptionResponse">
+    <wsdl:part name="parameters" element="tns:deleteSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionsByUsers">
+    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSubscription">
+    <wsdl:part name="parameters" element="tns:createSubscription">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionsByUsersResponse">
+    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SubscriptionService">
+    <wsdl:operation name="createSubscription">
+      <wsdl:input name="createSubscription" message="tns:createSubscription">
+    </wsdl:input>
+      <wsdl:output name="createSubscriptionResponse" message="tns:createSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setBackup">
+      <wsdl:input name="setBackup" message="tns:setBackup">
+    </wsdl:input>
+      <wsdl:output name="setBackupResponse" message="tns:setBackupResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkUserSubscription">
+      <wsdl:input name="checkUserSubscription" message="tns:checkUserSubscription">
+    </wsdl:input>
+      <wsdl:output name="checkUserSubscriptionResponse" message="tns:checkUserSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscription">
+      <wsdl:input name="getSubscription" message="tns:getSubscription">
+    </wsdl:input>
+      <wsdl:output name="getSubscriptionResponse" message="tns:getSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionsByUsersCount">
+      <wsdl:input name="getSubscriptionsByUsersCount" message="tns:getSubscriptionsByUsersCount">
+    </wsdl:input>
+      <wsdl:output name="getSubscriptionsByUsersCountResponse" message="tns:getSubscriptionsByUsersCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findLastProcessedRequest">
+      <wsdl:input name="findLastProcessedRequest" message="tns:findLastProcessedRequest">
+    </wsdl:input>
+      <wsdl:output name="findLastProcessedRequestResponse" message="tns:findLastProcessedRequestResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="resumeSubscription">
+      <wsdl:input name="resumeSubscription" message="tns:resumeSubscription">
+    </wsdl:input>
+      <wsdl:output name="resumeSubscriptionResponse" message="tns:resumeSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionsByUsers">
+      <wsdl:input name="getSubscriptionsByUsers" message="tns:getSubscriptionsByUsers">
+    </wsdl:input>
+      <wsdl:output name="getSubscriptionsByUsersResponse" message="tns:getSubscriptionsByUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullSubscription">
+      <wsdl:input name="getFullSubscription" message="tns:getFullSubscription">
+    </wsdl:input>
+      <wsdl:output name="getFullSubscriptionResponse" message="tns:getFullSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateSubscription">
+      <wsdl:input name="updateSubscription" message="tns:updateSubscription">
+    </wsdl:input>
+      <wsdl:output name="updateSubscriptionResponse" message="tns:updateSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="suspendSubscription">
+      <wsdl:input name="suspendSubscription" message="tns:suspendSubscription">
+    </wsdl:input>
+      <wsdl:output name="suspendSubscriptionResponse" message="tns:suspendSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscription">
+      <wsdl:input name="deleteSubscription" message="tns:deleteSubscription">
+    </wsdl:input>
+      <wsdl:output name="deleteSubscriptionResponse" message="tns:deleteSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkUsersSubscription">
+      <wsdl:input name="checkUsersSubscription" message="tns:checkUsersSubscription">
+    </wsdl:input>
+      <wsdl:output name="checkUsersSubscriptionResponse" message="tns:checkUsersSubscriptionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateSubscriptionConfig">
+      <wsdl:input name="updateSubscriptionConfig" message="tns:updateSubscriptionConfig">
+    </wsdl:input>
+      <wsdl:output name="updateSubscriptionConfigResponse" message="tns:updateSubscriptionConfigResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SubscriptionServiceSoapBinding" type="tns:SubscriptionService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkUserSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="checkUserSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="checkUserSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setBackup">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setBackup">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setBackupResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionsByUsersCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getSubscriptionsByUsersCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubscriptionsByUsersCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findLastProcessedRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findLastProcessedRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findLastProcessedRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="resumeSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="resumeSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="resumeSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFullSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFullSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFullSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionsByUsers">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getSubscriptionsByUsers">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubscriptionsByUsersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="suspendSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="suspendSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="suspendSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkUsersSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="checkUsersSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="checkUsersSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSubscription">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateSubscriptionConfig">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateSubscriptionConfig">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateSubscriptionConfigResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SubscriptionService">
+    <wsdl:port name="SubscriptionServicePort" binding="tns:SubscriptionServiceSoapBinding">
+      <soap:address location="http://localhost:9090/SubscriptionServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
