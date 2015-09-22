@@ -6,6 +6,13 @@
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
+  </require>  
+  <require pathOnDisk="openwis-web-ui/src/main/resources" >
+      <jsSource webappPath="/catalog/js/" />
+      <jsSource webappPath="/catalog/views/" />
+      <jsSource webappPath="/catalog/components/" />
+      <cssSource webappPath="/catalog/views/" />
+      <cssSource webappPath="/catalog/style/" />
   </require>
   <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>

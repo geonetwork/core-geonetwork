@@ -422,6 +422,13 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>openwis-web-ui</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>domain</artifactId>
@@ -615,6 +622,9 @@
               <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>-->
             <resource>
+                  <directory>${project.basedir}/../openwis-web-ui/src/main/resources</directory>
+            </resource>
+            <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
             <resource>
@@ -679,6 +689,7 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <configuration>
+            <war>${project.basedir}/target/geonetwork</war>
             <contextXml>${basedir}/jetty-context.xml</contextXml>
             <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
@@ -704,19 +715,7 @@
           <webApp>
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
-            <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-           <!--
-              Enable to use ExtJS UI
-              Add
-              ${rootProjectDir}/web-client/src/main/resources/
-              to resourcesAsCSV
-            -->
-            <resourcesAsCSV>
-              ${project.basedir}/src/main/webapp,
-              ${rootProjectDir}/web-ui/src/main/resources/,
-              ${build.webapp.resources}
-              </resourcesAsCSV>
-            </baseResource>
+          
           </webApp>
           <systemProperties>
             <systemProperty>
