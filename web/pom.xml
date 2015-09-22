@@ -633,6 +633,9 @@
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
             <resource>
+                  <directory>${project.basedir}/../openwis-web-ui/src/main/resources</directory>
+            </resource>
+            <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
 
@@ -720,7 +723,6 @@
           <webApp>
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
-          
           </webApp>
           <systemProperties>
             <systemProperty>
