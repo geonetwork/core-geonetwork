@@ -422,6 +422,13 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>openwis-web-ui</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>domain</artifactId>
@@ -618,6 +625,9 @@
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
             </resource>
             <resource>
+                  <directory>${project.basedir}/../openwis-web-ui/src/main/resources</directory>
+            </resource>
+            <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
 
@@ -714,6 +724,7 @@
             <resourcesAsCSV>
               ${project.basedir}/src/main/webapp,
               ${rootProjectDir}/web-ui/src/main/resources/,
+              ${rootProjectDir}/openwis-web-ui/src/main/resources/,
               ${build.webapp.resources}
               </resourcesAsCSV>
             </baseResource>
