@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://cache.dataservice.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://cache.dataservice.openwis.org/" version="1.0">
+<xs:element name="addCacheIndexEntry" type="tns:addCacheIndexEntry"/>
+<xs:element name="addCacheIndexEntryResponse" type="tns:addCacheIndexEntryResponse"/>
+<xs:element name="backupLastCollectDate" type="tns:backupLastCollectDate"/>
+<xs:element name="backupLastCollectDateResponse" type="tns:backupLastCollectDateResponse"/>
+<xs:element name="getAllMetadataUrnsForCachedFile" type="tns:getAllMetadataUrnsForCachedFile"/>
+<xs:element name="getAllMetadataUrnsForCachedFileResponse" type="tns:getAllMetadataUrnsForCachedFileResponse"/>
+<xs:element name="getBackupLastCollectDate" type="tns:getBackupLastCollectDate"/>
+<xs:element name="getBackupLastCollectDateResponse" type="tns:getBackupLastCollectDateResponse"/>
+<xs:element name="getCacheContent" type="tns:getCacheContent"/>
+<xs:element name="getCacheContentCount" type="tns:getCacheContentCount"/>
+<xs:element name="getCacheContentCountResponse" type="tns:getCacheContentCountResponse"/>
+<xs:element name="getCacheContentFilteredSorted" type="tns:getCacheContentFilteredSorted"/>
+<xs:element name="getCacheContentFilteredSortedResponse" type="tns:getCacheContentFilteredSortedResponse"/>
+<xs:element name="getCacheContentResponse" type="tns:getCacheContentResponse"/>
+<xs:element name="getCacheContentSorted" type="tns:getCacheContentSorted"/>
+<xs:element name="getCacheContentSortedResponse" type="tns:getCacheContentSortedResponse"/>
+<xs:element name="getCachedFile" type="tns:getCachedFile"/>
+<xs:element name="getCachedFileById" type="tns:getCachedFileById"/>
+<xs:element name="getCachedFileByIdResponse" type="tns:getCachedFileByIdResponse"/>
+<xs:element name="getCachedFileResponse" type="tns:getCachedFileResponse"/>
+<xs:element name="listAllCachedFiles" type="tns:listAllCachedFiles"/>
+<xs:element name="listAllCachedFilesResponse" type="tns:listAllCachedFilesResponse"/>
+<xs:element name="listCachedFiles" type="tns:listCachedFiles"/>
+<xs:element name="listCachedFilesBetweenDates" type="tns:listCachedFilesBetweenDates"/>
+<xs:element name="listCachedFilesBetweenDatesResponse" type="tns:listCachedFilesBetweenDatesResponse"/>
+<xs:element name="listCachedFilesResponse" type="tns:listCachedFilesResponse"/>
+<xs:element name="listFilesByMetadataUrnAndDate" type="tns:listFilesByMetadataUrnAndDate"/>
+<xs:element name="listFilesByMetadataUrnAndDateResponse" type="tns:listFilesByMetadataUrnAndDateResponse"/>
+<xs:element name="listFilesByMetadataUrnAndTime" type="tns:listFilesByMetadataUrnAndTime"/>
+<xs:element name="listFilesByMetadataUrnAndTimeResponse" type="tns:listFilesByMetadataUrnAndTimeResponse"/>
+<xs:element name="ping" type="tns:ping"/>
+<xs:element name="pingResponse" type="tns:pingResponse"/>
+<xs:element name="setLastCollectDate" type="tns:setLastCollectDate"/>
+<xs:element name="setLastCollectDateResponse" type="tns:setLastCollectDateResponse"/>
+<xs:complexType name="getAllMetadataUrnsForCachedFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getAllMetadataUrnsForCachedFileResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listAllCachedFiles">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="listAllCachedFilesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="cachedFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="checksum" type="xs:string"/>
+      <xs:element minOccurs="0" name="filename" type="xs:string"/>
+      <xs:element minOccurs="0" name="filesize" type="xs:long"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="insertionDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="internalFilename" type="xs:string"/>
+      <xs:element name="numberOfChecksumBytes" type="xs:int"/>
+      <xs:element minOccurs="0" name="path" type="xs:string"/>
+      <xs:element name="priority" type="xs:int"/>
+      <xs:element name="receivedFromGTS" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listFilesByMetadataUrnAndTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listFilesByMetadataUrnAndTimeResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContentCount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="filenameFilterExpression" type="xs:string"/>
+      <xs:element minOccurs="0" name="metadataFilterExpression" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContentCountResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCachedFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCachedFileResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addCacheIndexEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:fileInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="fileInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="checksum" type="xs:string"/>
+      <xs:element minOccurs="0" name="extension" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileURL" type="xs:string"/>
+      <xs:element minOccurs="0" name="gtsCategory" type="tns:gtScategory"/>
+      <xs:element minOccurs="0" name="insertionDate" type="xs:dateTime"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="metadataIDList" nillable="true" type="xs:long"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="metadataURNList" nillable="true" type="xs:string"/>
+      <xs:element name="numberOfChecksumBytes" type="xs:int"/>
+      <xs:element minOccurs="0" name="originator" type="xs:string"/>
+      <xs:element minOccurs="0" name="priority" type="xs:int"/>
+      <xs:element minOccurs="0" name="productDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="productFilename" type="xs:string"/>
+      <xs:element name="receivedFromGTS" type="xs:boolean"/>
+      <xs:element name="size" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="addCacheIndexEntryResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listCachedFilesBetweenDates">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listCachedFilesBetweenDatesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listCachedFiles">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listCachedFilesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContentSorted">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sortField" type="xs:string"/>
+      <xs:element minOccurs="0" name="sortOrder" type="xs:string"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContentSortedResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFileInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="cachedFileInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="checksum" type="xs:string"/>
+      <xs:element minOccurs="0" name="insertionDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="metadataUrn" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="origin" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listFilesByMetadataUrnAndDate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="listFilesByMetadataUrnAndDateResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContent">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getCacheContentResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFileInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="ping">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="pingResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getBackupLastCollectDate">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getBackupLastCollectDateResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setLastCollectDate">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setLastCollectDateResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="backupLastCollectDate">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="backupLastCollectDateResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getCacheContentFilteredSorted">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="filenameFilterExpression" type="xs:string"/>
+      <xs:element minOccurs="0" name="metadataFilterExpression" type="xs:string"/>
+      <xs:element minOccurs="0" name="sortField" type="xs:string"/>
+      <xs:element minOccurs="0" name="sortOrder" type="xs:string"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCacheContentFilteredSortedResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:cachedFileInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCachedFileById">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getCachedFileByIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:cachedFile"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="gtScategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GLOBAL"/>
+      <xs:enumeration value="LOCAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

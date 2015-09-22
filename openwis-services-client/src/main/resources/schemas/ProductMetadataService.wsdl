@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ProductMetadataService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://dataservice.openwis.org/" schemaLocation="ProductMetadataService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getProductsMetadataByUrnsResponse">
+    <wsdl:part name="parameters" element="tns:getProductsMetadataByUrnsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductMetadataByUrnResponse">
+    <wsdl:part name="parameters" element="tns:getProductMetadataByUrnResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductMetadataById">
+    <wsdl:part name="parameters" element="tns:getProductMetadataById">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProductsMetadata">
+    <wsdl:part name="parameters" element="tns:getAllProductsMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadataByURN">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadataByURN">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createProductMetadataResponse">
+    <wsdl:part name="parameters" element="tns:createProductMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllPatternMetadataMappingResponse">
+    <wsdl:part name="parameters" element="tns:getAllPatternMetadataMappingResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateProductMetadataResponse">
+    <wsdl:part name="parameters" element="tns:updateProductMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createStopGapMetadataResponse">
+    <wsdl:part name="parameters" element="tns:createStopGapMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadata">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllPatternMetadataMapping">
+    <wsdl:part name="parameters" element="tns:getAllPatternMetadataMapping">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadatasWithURN">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadatasWithURN">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CannotDeleteAllProductMetadataException">
+    <wsdl:part name="CannotDeleteAllProductMetadataException" element="tns:CannotDeleteAllProductMetadataException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CannotDeleteProductMetadataException">
+    <wsdl:part name="CannotDeleteProductMetadataException" element="tns:CannotDeleteProductMetadataException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductsMetadataCountResponse">
+    <wsdl:part name="parameters" element="tns:getProductsMetadataCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductsMetadataByUrns">
+    <wsdl:part name="parameters" element="tns:getProductsMetadataByUrns">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateProductMetadata">
+    <wsdl:part name="parameters" element="tns:updateProductMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLastStopGapMetadata">
+    <wsdl:part name="parameters" element="tns:getLastStopGapMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createStopGapMetadata">
+    <wsdl:part name="parameters" element="tns:createStopGapMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createProductMetadata">
+    <wsdl:part name="parameters" element="tns:createProductMetadata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductsMetadataCount">
+    <wsdl:part name="parameters" element="tns:getProductsMetadataCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLastStopGapMetadataResponse">
+    <wsdl:part name="parameters" element="tns:getLastStopGapMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllProductsMetadataResponse">
+    <wsdl:part name="parameters" element="tns:getAllProductsMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductMetadataByUrn">
+    <wsdl:part name="parameters" element="tns:getProductMetadataByUrn">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadataByURNResponse">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadataByURNResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadataResponse">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProductMetadatasWithURNResponse">
+    <wsdl:part name="parameters" element="tns:deleteProductMetadatasWithURNResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProductMetadataByIdResponse">
+    <wsdl:part name="parameters" element="tns:getProductMetadataByIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ProductMetadataService">
+    <wsdl:operation name="getProductMetadataById">
+      <wsdl:input name="getProductMetadataById" message="tns:getProductMetadataById">
+    </wsdl:input>
+      <wsdl:output name="getProductMetadataByIdResponse" message="tns:getProductMetadataByIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProductMetadataByURN">
+      <wsdl:input name="deleteProductMetadataByURN" message="tns:deleteProductMetadataByURN">
+    </wsdl:input>
+      <wsdl:output name="deleteProductMetadataByURNResponse" message="tns:deleteProductMetadataByURNResponse">
+    </wsdl:output>
+      <wsdl:fault name="CannotDeleteProductMetadataException" message="tns:CannotDeleteProductMetadataException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getLastStopGapMetadata">
+      <wsdl:input name="getLastStopGapMetadata" message="tns:getLastStopGapMetadata">
+    </wsdl:input>
+      <wsdl:output name="getLastStopGapMetadataResponse" message="tns:getLastStopGapMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllPatternMetadataMapping">
+      <wsdl:input name="getAllPatternMetadataMapping" message="tns:getAllPatternMetadataMapping">
+    </wsdl:input>
+      <wsdl:output name="getAllPatternMetadataMappingResponse" message="tns:getAllPatternMetadataMappingResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProductMetadata">
+      <wsdl:input name="deleteProductMetadata" message="tns:deleteProductMetadata">
+    </wsdl:input>
+      <wsdl:output name="deleteProductMetadataResponse" message="tns:deleteProductMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductsMetadataByUrns">
+      <wsdl:input name="getProductsMetadataByUrns" message="tns:getProductsMetadataByUrns">
+    </wsdl:input>
+      <wsdl:output name="getProductsMetadataByUrnsResponse" message="tns:getProductsMetadataByUrnsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProductMetadatasWithURN">
+      <wsdl:input name="deleteProductMetadatasWithURN" message="tns:deleteProductMetadatasWithURN">
+    </wsdl:input>
+      <wsdl:output name="deleteProductMetadatasWithURNResponse" message="tns:deleteProductMetadatasWithURNResponse">
+    </wsdl:output>
+      <wsdl:fault name="CannotDeleteAllProductMetadataException" message="tns:CannotDeleteAllProductMetadataException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createStopGapMetadata">
+      <wsdl:input name="createStopGapMetadata" message="tns:createStopGapMetadata">
+    </wsdl:input>
+      <wsdl:output name="createStopGapMetadataResponse" message="tns:createStopGapMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateProductMetadata">
+      <wsdl:input name="updateProductMetadata" message="tns:updateProductMetadata">
+    </wsdl:input>
+      <wsdl:output name="updateProductMetadataResponse" message="tns:updateProductMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createProductMetadata">
+      <wsdl:input name="createProductMetadata" message="tns:createProductMetadata">
+    </wsdl:input>
+      <wsdl:output name="createProductMetadataResponse" message="tns:createProductMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductsMetadataCount">
+      <wsdl:input name="getProductsMetadataCount" message="tns:getProductsMetadataCount">
+    </wsdl:input>
+      <wsdl:output name="getProductsMetadataCountResponse" message="tns:getProductsMetadataCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProductsMetadata">
+      <wsdl:input name="getAllProductsMetadata" message="tns:getAllProductsMetadata">
+    </wsdl:input>
+      <wsdl:output name="getAllProductsMetadataResponse" message="tns:getAllProductsMetadataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductMetadataByUrn">
+      <wsdl:input name="getProductMetadataByUrn" message="tns:getProductMetadataByUrn">
+    </wsdl:input>
+      <wsdl:output name="getProductMetadataByUrnResponse" message="tns:getProductMetadataByUrnResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ProductMetadataServiceSoapBinding" type="tns:ProductMetadataService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="deleteProductMetadataByURN">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProductMetadataByURN">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProductMetadataByURNResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CannotDeleteProductMetadataException">
+        <soap:fault name="CannotDeleteProductMetadataException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getProductMetadataById">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProductMetadataById">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProductMetadataByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllPatternMetadataMapping">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllPatternMetadataMapping">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllPatternMetadataMappingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastStopGapMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getLastStopGapMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLastStopGapMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProductMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProductMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProductMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductsMetadataByUrns">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProductsMetadataByUrns">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProductsMetadataByUrnsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteProductMetadatasWithURN">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProductMetadatasWithURN">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProductMetadatasWithURNResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CannotDeleteAllProductMetadataException">
+        <soap:fault name="CannotDeleteAllProductMetadataException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createStopGapMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createStopGapMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createStopGapMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateProductMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateProductMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateProductMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createProductMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createProductMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createProductMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductsMetadataCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProductsMetadataCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProductsMetadataCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllProductsMetadata">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllProductsMetadata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllProductsMetadataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductMetadataByUrn">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProductMetadataByUrn">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProductMetadataByUrnResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ProductMetadataService">
+    <wsdl:port name="ProductMetadataServicePort" binding="tns:ProductMetadataServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ProductMetadataServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

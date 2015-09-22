@@ -1149,6 +1149,8 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
+    <module>openwis-services-client</module>
+    <module>openwis-events</module>
   </modules>
 
   <profiles>

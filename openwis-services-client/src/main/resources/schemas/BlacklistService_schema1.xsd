@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://dataservice.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://dataservice.openwis.org/" version="1.0">
+<xs:element name="blacklistInfoResult" type="tns:blacklistInfoResult"/>
+<xs:element name="checkAndUpdateDisseminatedData" type="tns:checkAndUpdateDisseminatedData"/>
+<xs:element name="checkAndUpdateDisseminatedDataResponse" type="tns:checkAndUpdateDisseminatedDataResponse"/>
+<xs:element name="getUserBlackListInfo" type="tns:getUserBlackListInfo"/>
+<xs:element name="getUserBlackListInfoIfExists" type="tns:getUserBlackListInfoIfExists"/>
+<xs:element name="getUserBlackListInfoIfExistsResponse" type="tns:getUserBlackListInfoIfExistsResponse"/>
+<xs:element name="getUserBlackListInfoResponse" type="tns:getUserBlackListInfoResponse"/>
+<xs:element name="getUsersBlackListInfo" type="tns:getUsersBlackListInfo"/>
+<xs:element name="getUsersBlackListInfoByUser" type="tns:getUsersBlackListInfoByUser"/>
+<xs:element name="getUsersBlackListInfoByUserResponse" type="tns:getUsersBlackListInfoByUserResponse"/>
+<xs:element name="getUsersBlackListInfoResponse" type="tns:getUsersBlackListInfoResponse"/>
+<xs:element name="isUserBlacklisted" type="tns:isUserBlacklisted"/>
+<xs:element name="isUserBlacklistedResponse" type="tns:isUserBlacklistedResponse"/>
+<xs:element name="setUserBlacklisted" type="tns:setUserBlacklisted"/>
+<xs:element name="setUserBlacklistedResponse" type="tns:setUserBlacklistedResponse"/>
+<xs:element name="updateUserBlackListInfo" type="tns:updateUserBlackListInfo"/>
+<xs:element name="updateUserBlackListInfoResponse" type="tns:updateUserBlackListInfoResponse"/>
+<xs:complexType name="getUsersBlackListInfo">
+    <xs:sequence>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+      <xs:element minOccurs="0" name="column" type="tns:BlacklistInfoColumn"/>
+      <xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUsersBlackListInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:blacklistInfoResult"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="blacklistInfoResult">
+    <xs:sequence>
+      <xs:element name="count" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:blacklistInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="blacklistInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element name="nbDisseminationWarnThreshold" type="xs:long"/>
+      <xs:element name="nbDisseminationBlacklistThreshold" type="xs:long"/>
+      <xs:element name="volDisseminationWarnThreshold" type="xs:long"/>
+      <xs:element name="volDisseminationBlacklistThreshold" type="xs:long"/>
+      <xs:element minOccurs="0" name="status" type="tns:BlacklistStatus"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateUserBlackListInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="blacklistInfo" type="tns:blacklistInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateUserBlackListInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:blacklistInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUserBlackListInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element name="arg1" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUserBlackListInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:blacklistInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="isUserBlacklisted">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="isUserBlacklistedResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUsersBlackListInfoByUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="startWith" type="xs:string"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+      <xs:element minOccurs="0" name="column" type="tns:BlacklistInfoColumn"/>
+      <xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUsersBlackListInfoByUserResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:blacklistInfoResult"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setUserBlacklisted">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element name="blacklisted" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setUserBlacklistedResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getUserBlackListInfoIfExists">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getUserBlackListInfoIfExistsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:blacklistInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="checkAndUpdateDisseminatedData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element minOccurs="0" name="email" type="xs:string"/>
+      <xs:element minOccurs="0" name="date" type="xs:string"/>
+      <xs:element name="nbFiles" type="xs:int"/>
+      <xs:element name="totalSize" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="checkAndUpdateDisseminatedDataResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="BlacklistInfoColumn">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="USER"/>
+      <xs:enumeration value="NB_WARN"/>
+      <xs:enumeration value="NB_BLACKLIST"/>
+      <xs:enumeration value="VOL_WARN"/>
+      <xs:enumeration value="VOL_BLACKLIST"/>
+      <xs:enumeration value="STATUS"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="SortDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ASC"/>
+      <xs:enumeration value="DESC"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="BlacklistStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="WARNED_BY_NUMBER_OF_DISSEMINATIONS"/>
+      <xs:enumeration value="WARNED_BY_VOLUME_OF_DISSEMINATIONS"/>
+      <xs:enumeration value="BLACKLISTED_BY_ADMIN"/>
+      <xs:enumeration value="BLACKLISTED_BY_NUMBER_OF_DISSEMINATIONS"/>
+      <xs:enumeration value="BLACKLISTED_BY_VOLUME_OF_DISSEMINATIONS"/>
+      <xs:enumeration value="NOT_BLACKLISTED_BY_ADMIN"/>
+      <xs:enumeration value="NOT_BLACKLISTED"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

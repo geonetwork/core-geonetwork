@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://dataservice.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://dataservice.openwis.org/" version="1.0">
+<xs:element name="DataPolicyOperations" type="tns:dataPolicyOperations"/>
+<xs:element name="UserDataPolicyOperations" type="tns:userDataPolicyOperations"/>
+<xs:element name="checkUserSubscription" type="tns:checkUserSubscription"/>
+<xs:element name="checkUserSubscriptionResponse" type="tns:checkUserSubscriptionResponse"/>
+<xs:element name="checkUsersSubscription" type="tns:checkUsersSubscription"/>
+<xs:element name="checkUsersSubscriptionResponse" type="tns:checkUsersSubscriptionResponse"/>
+<xs:element name="createSubscription" type="tns:createSubscription"/>
+<xs:element name="createSubscriptionResponse" type="tns:createSubscriptionResponse"/>
+<xs:element name="deleteSubscription" type="tns:deleteSubscription"/>
+<xs:element name="deleteSubscriptionResponse" type="tns:deleteSubscriptionResponse"/>
+<xs:element name="findLastProcessedRequest" type="tns:findLastProcessedRequest"/>
+<xs:element name="findLastProcessedRequestResponse" type="tns:findLastProcessedRequestResponse"/>
+<xs:element name="getFullSubscription" type="tns:getFullSubscription"/>
+<xs:element name="getFullSubscriptionResponse" type="tns:getFullSubscriptionResponse"/>
+<xs:element name="getSubscription" type="tns:getSubscription"/>
+<xs:element name="getSubscriptionResponse" type="tns:getSubscriptionResponse"/>
+<xs:element name="getSubscriptionsByUsers" type="tns:getSubscriptionsByUsers"/>
+<xs:element name="getSubscriptionsByUsersCount" type="tns:getSubscriptionsByUsersCount"/>
+<xs:element name="getSubscriptionsByUsersCountResponse" type="tns:getSubscriptionsByUsersCountResponse"/>
+<xs:element name="getSubscriptionsByUsersResponse" type="tns:getSubscriptionsByUsersResponse"/>
+<xs:element name="resumeSubscription" type="tns:resumeSubscription"/>
+<xs:element name="resumeSubscriptionResponse" type="tns:resumeSubscriptionResponse"/>
+<xs:element name="setBackup" type="tns:setBackup"/>
+<xs:element name="setBackupResponse" type="tns:setBackupResponse"/>
+<xs:element name="suspendSubscription" type="tns:suspendSubscription"/>
+<xs:element name="suspendSubscriptionResponse" type="tns:suspendSubscriptionResponse"/>
+<xs:element name="updateSubscription" type="tns:updateSubscription"/>
+<xs:element name="updateSubscriptionConfig" type="tns:updateSubscriptionConfig"/>
+<xs:element name="updateSubscriptionConfigResponse" type="tns:updateSubscriptionConfigResponse"/>
+<xs:element name="updateSubscriptionResponse" type="tns:updateSubscriptionResponse"/>
+<xs:complexType name="createSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscription" type="tns:subscription"/>
+      <xs:element minOccurs="0" name="metadataUrn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="subscription">
+    <xs:complexContent>
+      <xs:extension base="tns:request">
+        <xs:sequence>
+          <xs:element name="valid" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="state" type="tns:SubscriptionState"/>
+          <xs:element minOccurs="0" name="frequency" type="tns:frequency"/>
+          <xs:element minOccurs="0" name="startingDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="lastEventDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="subscriptionBackup" type="tns:subscriptionBackup"/>
+          <xs:element name="backup" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="request">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="primaryDissemination" type="tns:dissemination"/>
+      <xs:element minOccurs="0" name="secondaryDissemination" type="tns:dissemination"/>
+      <xs:element minOccurs="0" name="productMetadata" type="tns:productMetadata"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="tns:parameter"/>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element minOccurs="0" name="email" type="xs:string"/>
+      <xs:element minOccurs="0" name="classOfService" type="tns:classOfService"/>
+      <xs:element minOccurs="0" name="extractMode" type="tns:extractMode"/>
+      <xs:element minOccurs="0" name="requestType" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType abstract="true" name="frequency">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="zipped" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="eventBasedFrequency">
+    <xs:complexContent>
+      <xs:extension base="tns:frequency">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="recurrentFrequency">
+    <xs:complexContent>
+      <xs:extension base="tns:frequency">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="reccurencePeriod" type="xs:int"/>
+          <xs:element minOccurs="0" name="reccurentScale" type="tns:recurrentScale"/>
+          <xs:element minOccurs="0" name="nextDate" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="subscriptionBackup">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element name="subscriptionId" type="xs:long"/>
+      <xs:element minOccurs="0" name="deployment" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType abstract="true" name="dissemination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="zipMode" type="tns:disseminationZipMode"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="shoppingCartDissemination">
+    <xs:complexContent>
+      <xs:extension base="tns:dissemination">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="rmdcnDissemination">
+    <xs:complexContent>
+      <xs:extension base="tns:dissemination">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="diffusion" type="tns:diffusion"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="diffusion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="mailDiffusion">
+    <xs:complexContent>
+      <xs:extension base="tns:diffusion">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="address" type="xs:string"/>
+          <xs:element minOccurs="0" name="fileName" type="xs:string"/>
+          <xs:element minOccurs="0" name="headerLine" type="xs:string"/>
+          <xs:element minOccurs="0" name="subject" type="xs:string"/>
+          <xs:element minOccurs="0" name="mailDispatchMode" type="tns:mailDispatchMode"/>
+          <xs:element minOccurs="0" name="mailAttachmentMode" type="tns:mailAttachmentMode"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="ftpDiffusion">
+    <xs:complexContent>
+      <xs:extension base="tns:diffusion">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="checkFileSize" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="fileName" type="xs:string"/>
+          <xs:element minOccurs="0" name="host" type="xs:string"/>
+          <xs:element minOccurs="0" name="passive" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="encrypted" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="password" type="xs:string"/>
+          <xs:element minOccurs="0" name="path" type="xs:string"/>
+          <xs:element minOccurs="0" name="port" type="xs:string"/>
+          <xs:element minOccurs="0" name="user" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="publicDissemination">
+    <xs:complexContent>
+      <xs:extension base="tns:dissemination">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="diffusion" type="tns:diffusion"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="mssfssDissemination">
+    <xs:complexContent>
+      <xs:extension base="tns:dissemination">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="channel" type="tns:mssfssChannel"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="mssfssChannel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="channel" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="productMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="creationDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="urn" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataPolicy" type="xs:string"/>
+      <xs:element minOccurs="0" name="fed" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="fncPattern" type="xs:string"/>
+      <xs:element minOccurs="0" name="gtsCategory" type="xs:string"/>
+      <xs:element minOccurs="0" name="ingested" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="localDataSource" type="xs:string"/>
+      <xs:element minOccurs="0" name="originator" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenDataPolicy" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenGtsCategory" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenFncPattern" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenPriority" type="xs:int"/>
+      <xs:element minOccurs="0" name="priority" type="xs:int"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="title" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileExtension" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenFileExtension" type="xs:string"/>
+      <xs:element minOccurs="0" name="updateFrequency" type="tns:updateFrequency"/>
+      <xs:element minOccurs="0" name="stopGap" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType abstract="true" name="updateFrequency">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="temporal">
+    <xs:complexContent>
+      <xs:extension base="tns:updateFrequency">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="from" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="to" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="recurrentUpdateFrequency">
+    <xs:complexContent>
+      <xs:extension base="tns:updateFrequency">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="recurrentScale" type="tns:recurrentScale"/>
+          <xs:element name="recurrentPeriod" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="parameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="tns:value"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="value">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="adHoc">
+    <xs:complexContent>
+      <xs:extension base="tns:request">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="createSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setBackup">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deploymentName" type="xs:string"/>
+      <xs:element name="activateBackup" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="dateFrom" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setBackupResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="checkUserSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="userOperationsAllowed" type="tns:dataPolicyOperations"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="dataPolicyOperations">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dataPolicy" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="operations" type="tns:Operation"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="checkUserSubscriptionResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersCount">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersCountResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="findLastProcessedRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="findLastProcessedRequestResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:processedRequest"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="processedRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element name="version" type="xs:long"/>
+      <xs:element minOccurs="0" name="creationDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="submittedDisseminationDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="completedDate" type="xs:dateTime"/>
+      <xs:element name="size" type="xs:long"/>
+      <xs:element minOccurs="0" name="requestResultStatus" type="tns:requestResultStatus"/>
+      <xs:element minOccurs="0" name="request" type="tns:request"/>
+      <xs:element minOccurs="0" name="uri" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resumeSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscription" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resumeSubscriptionResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getSubscriptionsByUsers">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="userNames" type="xs:string"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+      <xs:element minOccurs="0" name="column" type="tns:SubscriptionColumn"/>
+      <xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getFullSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getFullSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscription" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="suspendSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscription" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="suspendSubscriptionResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="deleteSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="deleteSubscriptionResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="checkUsersSubscription">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="operationsAllowed" type="tns:userDataPolicyOperations"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="userDataPolicyOperations">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dataPolicyOperations" type="tns:dataPolicyOperations"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="checkUsersSubscriptionResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="updateSubscriptionConfig">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionId" type="xs:long"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="ssp" type="tns:parameter"/>
+      <xs:element minOccurs="0" name="primaryDissemination" type="tns:dissemination"/>
+      <xs:element minOccurs="0" name="secondaryDissemination" type="tns:dissemination"/>
+      <xs:element minOccurs="0" name="frequency" type="tns:frequency"/>
+      <xs:element minOccurs="0" name="startingDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="updateSubscriptionConfigResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="SubscriptionState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACTIVE"/>
+      <xs:enumeration value="SUSPENDED_BACKUP"/>
+      <xs:enumeration value="SUSPENDED"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="recurrentScale">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HOUR"/>
+      <xs:enumeration value="DAY"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="disseminationZipMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NONE"/>
+      <xs:enumeration value="ZIPPED"/>
+      <xs:enumeration value="WMO_FTP"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="mailDispatchMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TO"/>
+      <xs:enumeration value="CC"/>
+      <xs:enumeration value="BCC"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="mailAttachmentMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EMBEDDED_IN_BODY"/>
+      <xs:enumeration value="AS_ATTACHMENT"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="classOfService">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SILVER"/>
+      <xs:enumeration value="GOLD"/>
+      <xs:enumeration value="BRONZE"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="extractMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NOT_IN_LOCAL_CACHE"/>
+      <xs:enumeration value="GLOBAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="Operation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="View"/>
+      <xs:enumeration value="Editing"/>
+      <xs:enumeration value="Download"/>
+      <xs:enumeration value="PublicEmail"/>
+      <xs:enumeration value="PublicFTP"/>
+      <xs:enumeration value="RMDCNEmail"/>
+      <xs:enumeration value="RMDCNFTP"/>
+      <xs:enumeration value="FTPSecured"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="requestResultStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INITIAL"/>
+      <xs:enumeration value="CREATED"/>
+      <xs:enumeration value="EXTRACTED"/>
+      <xs:enumeration value="ONGOING_DISSEMINATION"/>
+      <xs:enumeration value="ONGOING_EXTRACTION"/>
+      <xs:enumeration value="DISSEMINATED"/>
+      <xs:enumeration value="FAILED"/>
+      <xs:enumeration value="WAITING_FOR_DISSEMINATION"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="SubscriptionColumn">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="URN"/>
+      <xs:enumeration value="TITLE"/>
+      <xs:enumeration value="USER"/>
+      <xs:enumeration value="ID"/>
+      <xs:enumeration value="STATUS"/>
+      <xs:enumeration value="BACKUP"/>
+      <xs:enumeration value="STARTING_DATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+<xs:simpleType name="SortDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ASC"/>
+      <xs:enumeration value="DESC"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

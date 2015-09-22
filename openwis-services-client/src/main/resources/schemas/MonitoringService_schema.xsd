@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://dataservice.openwis.org/"
+        targetNamespace="http://dataservice.openwis.org/"
+        elementFormDefault="unqualified" version="1.0">
+
+  <!-- Alarms – Recent events -->
+  <xsd:element name="GetRecentEvents">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="startTime" type="xsd:dateTime" minOccurs="0"></xsd:element>
+        <xsd:element name="endTime" type="xsd:dateTime" minOccurs="0"></xsd:element>
+        <xsd:element name="maxRecordCount" type="xsd:integer" minOccurs="0"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetRecentEventsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="report" type="xsd:string" minOccurs="0"></xsd:element>
+        <xsd:element name="elements" type="tns:AlarmEventType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="AlarmEventType">
+    <xsd:annotation>
+      <xsd:documentation>A recorded alarm event reported by a component of the OpenWIS system</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="date" type="xsd:dateTime" minOccurs="0" />
+      <xsd:element name="component" type="xsd:string" minOccurs="0" />
+      <xsd:element name="process" type="xsd:string" minOccurs="0" />
+      <xsd:element name="severity" type="xsd:string" minOccurs="0" />
+      <xsd:element name="description" type="xsd:string" minOccurs="0" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- Volume of data disseminated per day and per user -->
+  <xsd:element name="GetDisseminatedDataStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="maxRecordCount" type="xsd:integer" minOccurs="0"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetDisseminatedDataStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="report" type="xsd:string" minOccurs="0"></xsd:element>
+        <xsd:element name="elements" type="tns:DisseminatedDataType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="DisseminatedDataType">
+    <xsd:annotation>
+      <xsd:documentation>Volume of data disseminated per day and per user.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="date" type="xsd:dateTime" minOccurs="0" />
+      <xsd:element name="user" type="xsd:string" minOccurs="0" />
+      <xsd:element name="size" type="xsd:long" minOccurs="0" />
+      <xsd:element name="threshold" type="xsd:long" minOccurs="0" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- Volume of data disseminated and extracted per day -->
+  <xsd:element name="GetExchangedDataStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="maxRecordCount" type="xsd:integer" minOccurs="0"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetExchangedDataStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="report" type="xsd:string" minOccurs="0"></xsd:element>
+        <xsd:element name="elements" type="tns:ExchangedDataType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ExchangedDataType">
+    <xsd:annotation>
+      <xsd:documentation>Volume of data disseminated and extracted per day.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="date" type="xsd:dateTime" minOccurs="0" />
+      <xsd:element name="extractedSize" type="xsd:long" minOccurs="0" />
+      <xsd:element name="disseminatedSize" type="xsd:long" minOccurs="0" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- Volume of data ingested per day -->
+  <xsd:element name="GetIngestedDataStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="maxRecordCount" type="xsd:integer" minOccurs="0"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetIngestedDataStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="report" type="xsd:string" minOccurs="0"></xsd:element>
+        <xsd:element name="elements" type="tns:IngestedDataType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="IngestedDataType">
+    <xsd:annotation>
+      <xsd:documentation>Volume of data ingested per day.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="date" type="xsd:dateTime" minOccurs="0" />
+      <xsd:element name="size" type="xsd:long" minOccurs="0" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- Volume of data replicated per day -->
+  <xsd:element name="GetReplicatedDataStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="in" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetReplicatedDataStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="out" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="GetGlobalReports">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="in" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetGlobalReportsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="out" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCatalogStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="in" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCatalogStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="out" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCacheStatistics">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="in" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCacheStatisticsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="out" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCacheContents">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="in" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="GetCacheContentsResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <xsd:element name="out" type="xsd:string"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>

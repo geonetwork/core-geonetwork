@@ -69,7 +69,7 @@ public class ListRecords extends AbstractTokenLister
 
 		//--- loop to retrieve metadata
 
-		while (num<Lib.MAX_RECORDS && pos < result.getIds().size())
+		while (num < getMaxRecords() && pos < result.getIds().size())
 		{
 			int id = result.getIds().get(pos);
 

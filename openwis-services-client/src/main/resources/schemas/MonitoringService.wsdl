@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://dataservice.openwis.org/"
+  targetNamespace="http://dataservice.openwis.org/" name="MonitoringService">
+  <wsdl:documentation></wsdl:documentation>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://dataservice.openwis.org/" schemaLocation="MonitoringService_schema.xsd" />
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="GetRecentEventsRequest">
+    <wsdl:part name="parameters" element="tns:GetRecentEvents"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecentEventsResponse">
+    <wsdl:part name="parameters" element="tns:GetRecentEventsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetGlobalReportsRequest">
+    <wsdl:part name="parameters" element="tns:GetGlobalReports"/>
+  </wsdl:message>
+  <wsdl:message name="GetGlobalReportsResponse">
+    <wsdl:part name="parameters" element="tns:GetGlobalReportsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetExchangedDataStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetExchangedDataStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetExchangedDataStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetExchangedDataStatisticsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetDisseminatedDataStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetDisseminatedDataStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetDisseminatedDataStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetDisseminatedDataStatisticsResponse"/>
+  </wsdl:message>  <wsdl:message name="GetIngestedDataStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetIngestedDataStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetIngestedDataStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetIngestedDataStatisticsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetReplicatedDataStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetReplicatedDataStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetReplicatedDataStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetReplicatedDataStatisticsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCatalogStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetCatalogStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetCatalogStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetCatalogStatisticsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCacheStatisticsRequest">
+    <wsdl:part name="parameters" element="tns:GetCacheStatistics"/>
+  </wsdl:message>
+  <wsdl:message name="GetCacheStatisticsResponse">
+    <wsdl:part name="parameters" element="tns:GetCacheStatisticsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCacheContentsRequest">
+    <wsdl:part name="parameters" element="tns:GetCacheContents"/>
+  </wsdl:message>
+  <wsdl:message name="GetCacheContentsResponse">
+    <wsdl:part name="parameters" element="tns:GetCacheContentsResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="MonitoringService">
+    <wsdl:operation name="GetRecentEvents">
+      <wsdl:documentation>The recent events (alarms) gathered by the system</wsdl:documentation>
+      <wsdl:input message="tns:GetRecentEventsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetRecentEventsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobalReports">
+      <wsdl:documentation>The statistics (reports) gathered by the system</wsdl:documentation>
+      <wsdl:input message="tns:GetGlobalReportsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetGlobalReportsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExchangedDataStatistics">
+      <wsdl:documentation>Volume of data disseminated and extracted per day</wsdl:documentation>
+      <wsdl:input message="tns:GetExchangedDataStatisticsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetExchangedDataStatisticsResponse"></wsdl:output>
+    </wsdl:operation>    <wsdl:operation name="GetDisseminatedDataStatistics">      <wsdl:documentation>Volume of data disseminated per day and per use</wsdl:documentation>      <wsdl:input message="tns:GetDisseminatedDataStatisticsRequest"></wsdl:input>      <wsdl:output message="tns:GetDisseminatedDataStatisticsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIngestedDataStatistics">
+      <wsdl:documentation>Volume of data ingested per day</wsdl:documentation>
+      <wsdl:input message="tns:GetIngestedDataStatisticsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetIngestedDataStatisticsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCatalogStatistics">
+      <wsdl:input message="tns:GetCatalogStatisticsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetCatalogStatisticsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheStatistics">
+      <wsdl:input message="tns:GetCacheStatisticsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetCacheStatisticsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheContents">
+      <wsdl:input message="tns:GetCacheContentsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetCacheContentsResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MonitoringServiceSOAP" type="tns:MonitoringService">
+
+
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetRecentEvents">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetRecentEvents" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobalReports">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetGlobalReports" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExchangedDataStatistics">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetExchangedDataStatistics" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDisseminatedDataStatistics">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetDisseminatedDataStatistics" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIngestedDataStatistics">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetIngestedDataStatistics" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCatalogStatistics">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetCatalogStatistics" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheStatistics">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetCacheStatistics" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheContents">
+
+      <soap:operation soapAction="http://dataservice.openwis.org/GetCacheContents" />
+      <wsdl:input>
+
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MonitoringService">
+    <wsdl:port binding="tns:MonitoringServiceSOAP" name="MonitoringServicePort">
+      <soap:address location="http://localhost:9090/MonitoringServicePort" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

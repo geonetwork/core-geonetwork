@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="BlacklistService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://dataservice.openwis.org/" schemaLocation="BlacklistService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getUsersBlackListInfoByUser">
+    <wsdl:part name="parameters" element="tns:getUsersBlackListInfoByUser">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkAndUpdateDisseminatedData">
+    <wsdl:part name="parameters" element="tns:checkAndUpdateDisseminatedData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserBlackListInfo">
+    <wsdl:part name="parameters" element="tns:getUserBlackListInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isUserBlacklisted">
+    <wsdl:part name="parameters" element="tns:isUserBlacklisted">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersBlackListInfoByUserResponse">
+    <wsdl:part name="parameters" element="tns:getUsersBlackListInfoByUserResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkAndUpdateDisseminatedDataResponse">
+    <wsdl:part name="parameters" element="tns:checkAndUpdateDisseminatedDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersBlackListInfoResponse">
+    <wsdl:part name="parameters" element="tns:getUsersBlackListInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserBlackListInfoIfExistsResponse">
+    <wsdl:part name="parameters" element="tns:getUserBlackListInfoIfExistsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersBlackListInfo">
+    <wsdl:part name="parameters" element="tns:getUsersBlackListInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isUserBlacklistedResponse">
+    <wsdl:part name="parameters" element="tns:isUserBlacklistedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setUserBlacklistedResponse">
+    <wsdl:part name="parameters" element="tns:setUserBlacklistedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserBlackListInfo">
+    <wsdl:part name="parameters" element="tns:updateUserBlackListInfo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserBlackListInfoResponse">
+    <wsdl:part name="parameters" element="tns:getUserBlackListInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserBlackListInfoIfExists">
+    <wsdl:part name="parameters" element="tns:getUserBlackListInfoIfExists">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserBlackListInfoResponse">
+    <wsdl:part name="parameters" element="tns:updateUserBlackListInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setUserBlacklisted">
+    <wsdl:part name="parameters" element="tns:setUserBlacklisted">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BlacklistService">
+    <wsdl:operation name="getUsersBlackListInfo">
+      <wsdl:input name="getUsersBlackListInfo" message="tns:getUsersBlackListInfo">
+    </wsdl:input>
+      <wsdl:output name="getUsersBlackListInfoResponse" message="tns:getUsersBlackListInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserBlackListInfo">
+      <wsdl:input name="updateUserBlackListInfo" message="tns:updateUserBlackListInfo">
+    </wsdl:input>
+      <wsdl:output name="updateUserBlackListInfoResponse" message="tns:updateUserBlackListInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserBlackListInfo">
+      <wsdl:input name="getUserBlackListInfo" message="tns:getUserBlackListInfo">
+    </wsdl:input>
+      <wsdl:output name="getUserBlackListInfoResponse" message="tns:getUserBlackListInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isUserBlacklisted">
+      <wsdl:input name="isUserBlacklisted" message="tns:isUserBlacklisted">
+    </wsdl:input>
+      <wsdl:output name="isUserBlacklistedResponse" message="tns:isUserBlacklistedResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersBlackListInfoByUser">
+      <wsdl:input name="getUsersBlackListInfoByUser" message="tns:getUsersBlackListInfoByUser">
+    </wsdl:input>
+      <wsdl:output name="getUsersBlackListInfoByUserResponse" message="tns:getUsersBlackListInfoByUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setUserBlacklisted">
+      <wsdl:input name="setUserBlacklisted" message="tns:setUserBlacklisted">
+    </wsdl:input>
+      <wsdl:output name="setUserBlacklistedResponse" message="tns:setUserBlacklistedResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserBlackListInfoIfExists">
+      <wsdl:input name="getUserBlackListInfoIfExists" message="tns:getUserBlackListInfoIfExists">
+    </wsdl:input>
+      <wsdl:output name="getUserBlackListInfoIfExistsResponse" message="tns:getUserBlackListInfoIfExistsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkAndUpdateDisseminatedData">
+      <wsdl:input name="checkAndUpdateDisseminatedData" message="tns:checkAndUpdateDisseminatedData">
+    </wsdl:input>
+      <wsdl:output name="checkAndUpdateDisseminatedDataResponse" message="tns:checkAndUpdateDisseminatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BlacklistServiceSoapBinding" type="tns:BlacklistService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getUsersBlackListInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUsersBlackListInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUsersBlackListInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserBlackListInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateUserBlackListInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateUserBlackListInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserBlackListInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUserBlackListInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUserBlackListInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isUserBlacklisted">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="isUserBlacklisted">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="isUserBlacklistedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersBlackListInfoByUser">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUsersBlackListInfoByUser">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUsersBlackListInfoByUserResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setUserBlacklisted">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setUserBlacklisted">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setUserBlacklistedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserBlackListInfoIfExists">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUserBlackListInfoIfExists">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUserBlackListInfoIfExistsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkAndUpdateDisseminatedData">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="checkAndUpdateDisseminatedData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="checkAndUpdateDisseminatedDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BlacklistService">
+    <wsdl:port name="BlacklistServicePort" binding="tns:BlacklistServiceSoapBinding">
+      <soap:address location="http://localhost:9090/BlacklistServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

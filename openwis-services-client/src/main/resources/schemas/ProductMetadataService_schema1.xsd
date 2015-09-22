@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://dataservice.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://dataservice.openwis.org/">
+  <xs:element name="createProductMetadata" type="tns:createProductMetadata"/>
+  <xs:element name="createProductMetadataResponse" type="tns:createProductMetadataResponse"/>
+  <xs:element name="createStopGapMetadata" type="tns:createStopGapMetadata"/>
+  <xs:element name="createStopGapMetadataResponse" type="tns:createStopGapMetadataResponse"/>
+  <xs:element name="deleteProductMetadata" type="tns:deleteProductMetadata"/>
+  <xs:element name="deleteProductMetadataByURN" type="tns:deleteProductMetadataByURN"/>
+  <xs:element name="deleteProductMetadataByURNResponse" type="tns:deleteProductMetadataByURNResponse"/>
+  <xs:element name="deleteProductMetadataResponse" type="tns:deleteProductMetadataResponse"/>
+  <xs:element name="deleteProductMetadatasWithURN" type="tns:deleteProductMetadatasWithURN"/>
+  <xs:element name="deleteProductMetadatasWithURNResponse" type="tns:deleteProductMetadatasWithURNResponse"/>
+  <xs:element name="getAllPatternMetadataMapping" type="tns:getAllPatternMetadataMapping"/>
+  <xs:element name="getAllPatternMetadataMappingResponse" type="tns:getAllPatternMetadataMappingResponse"/>
+  <xs:element name="getAllProductsMetadata" type="tns:getAllProductsMetadata"/>
+  <xs:element name="getAllProductsMetadataResponse" type="tns:getAllProductsMetadataResponse"/>
+  <xs:element name="getLastStopGapMetadata" type="tns:getLastStopGapMetadata"/>
+  <xs:element name="getLastStopGapMetadataResponse" type="tns:getLastStopGapMetadataResponse"/>
+  <xs:element name="getProductMetadataById" type="tns:getProductMetadataById"/>
+  <xs:element name="getProductMetadataByIdResponse" type="tns:getProductMetadataByIdResponse"/>
+  <xs:element name="getProductMetadataByUrn" type="tns:getProductMetadataByUrn"/>
+  <xs:element name="getProductMetadataByUrnResponse" type="tns:getProductMetadataByUrnResponse"/>
+  <xs:element name="getProductsMetadataByUrns" type="tns:getProductsMetadataByUrns"/>
+  <xs:element name="getProductsMetadataByUrnsResponse" type="tns:getProductsMetadataByUrnsResponse"/>
+  <xs:element name="getProductsMetadataCount" type="tns:getProductsMetadataCount"/>
+  <xs:element name="getProductsMetadataCountResponse" type="tns:getProductsMetadataCountResponse"/>
+  <xs:element name="updateProductMetadata" type="tns:updateProductMetadata"/>
+  <xs:element name="updateProductMetadataResponse" type="tns:updateProductMetadataResponse"/>
+  <xs:complexType name="getProductMetadataById">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProductMetadataByIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="productMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="creationDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="urn" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataPolicy" type="xs:string"/>
+      <xs:element minOccurs="0" name="fed" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="fncPattern" type="xs:string"/>
+      <xs:element minOccurs="0" name="gtsCategory" type="xs:string"/>
+      <xs:element minOccurs="0" name="ingested" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="localDataSource" type="xs:string"/>
+      <xs:element minOccurs="0" name="originator" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenDataPolicy" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenGtsCategory" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenFncPattern" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenPriority" type="xs:int"/>
+      <xs:element minOccurs="0" name="priority" type="xs:int"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="title" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileExtension" type="xs:string"/>
+      <xs:element minOccurs="0" name="overridenFileExtension" type="xs:string"/>
+      <xs:element minOccurs="0" name="updateFrequency" type="tns:updateFrequency"/>
+      <xs:element minOccurs="0" name="stopGap" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="updateFrequency">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="temporal">
+    <xs:complexContent>
+      <xs:extension base="tns:updateFrequency">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="from" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="to" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="recurrentUpdateFrequency">
+    <xs:complexContent>
+      <xs:extension base="tns:updateFrequency">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="recurrentScale" type="tns:recurrentScale"/>
+          <xs:element name="recurrentPeriod" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadataByURN">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="productMetadataUrn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadataByURNResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getLastStopGapMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="since" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLastStopGapMetadataResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAllPatternMetadataMapping">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getAllPatternMetadataMappingResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:patternMetadataMapping"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="patternMetadataMapping">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="pattern" type="xs:string"/>
+      <xs:element minOccurs="0" name="productMetadata" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="productMetadataId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadataResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getProductsMetadataByUrns">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="urns" type="xs:string"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+      <xs:element minOccurs="0" name="column" type="tns:ProductMetadataColumn"/>
+      <xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProductsMetadataByUrnsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadatasWithURN">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteProductMetadatasWithURNResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="createStopGapMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ttaaii" type="xs:string"/>
+      <xs:element minOccurs="0" name="originator" type="xs:string"/>
+      <xs:element name="priority" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createStopGapMetadataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateProductMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="productMetadata" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateProductMetadataResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="createProductMetadata">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="productMetadata" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createProductMetadataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProductsMetadataCount">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getProductsMetadataCountResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAllProductsMetadata">
+    <xs:sequence>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="maxResults" type="xs:int"/>
+      <xs:element minOccurs="0" name="column" type="tns:ProductMetadataColumn"/>
+      <xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAllProductsMetadataResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProductMetadataByUrn">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="productMetadataUrn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProductMetadataByUrnResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:productMetadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="recurrentScale">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HOUR"/>
+      <xs:enumeration value="DAY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ProductMetadataColumn">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="URN"/>
+      <xs:enumeration value="FED"/>
+      <xs:enumeration value="GTS_CATEGORY"/>
+      <xs:enumeration value="INGESTED"/>
+      <xs:enumeration value="LOCAL_DATASOURCE"/>
+      <xs:enumeration value="ORIGINATOR"/>
+      <xs:enumeration value="PROCESS"/>
+      <xs:enumeration value="TITLE"/>
+      <xs:enumeration value="UPDATE_FREQUENCY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="SortDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ASC"/>
+      <xs:enumeration value="DESC"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CannotDeleteProductMetadataException" type="tns:CannotDeleteProductMetadataException"/>
+  <xs:complexType name="CannotDeleteProductMetadataException">
+    <xs:sequence>
+      <xs:element name="urn" nillable="true" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CannotDeleteAllProductMetadataException" type="tns:CannotDeleteAllProductMetadataException"/>
+  <xs:complexType name="CannotDeleteAllProductMetadataException">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="urns" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

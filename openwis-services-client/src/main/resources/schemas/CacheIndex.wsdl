@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CacheIndexImplService" targetNamespace="http://cache.dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://cache.dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://cache.dataservice.openwis.org/" schemaLocation="CacheIndex_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getAllMetadataUrnsForCachedFile">
+    <wsdl:part name="parameters" element="tns:getAllMetadataUrnsForCachedFile">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentSortedResponse">
+    <wsdl:part name="parameters" element="tns:getCacheContentSortedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContent">
+    <wsdl:part name="parameters" element="tns:getCacheContent">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listCachedFilesBetweenDatesResponse">
+    <wsdl:part name="parameters" element="tns:listCachedFilesBetweenDatesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addCacheIndexEntry">
+    <wsdl:part name="parameters" element="tns:addCacheIndexEntry">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getBackupLastCollectDateResponse">
+    <wsdl:part name="parameters" element="tns:getBackupLastCollectDateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listFilesByMetadataUrnAndTime">
+    <wsdl:part name="parameters" element="tns:listFilesByMetadataUrnAndTime">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllCachedFilesResponse">
+    <wsdl:part name="parameters" element="tns:listAllCachedFilesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentCount">
+    <wsdl:part name="parameters" element="tns:getCacheContentCount">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="backupLastCollectDate">
+    <wsdl:part name="parameters" element="tns:backupLastCollectDate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pingResponse">
+    <wsdl:part name="parameters" element="tns:pingResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listCachedFilesBetweenDates">
+    <wsdl:part name="parameters" element="tns:listCachedFilesBetweenDates">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listFilesByMetadataUrnAndTimeResponse">
+    <wsdl:part name="parameters" element="tns:listFilesByMetadataUrnAndTimeResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllCachedFiles">
+    <wsdl:part name="parameters" element="tns:listAllCachedFiles">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listFilesByMetadataUrnAndDateResponse">
+    <wsdl:part name="parameters" element="tns:listFilesByMetadataUrnAndDateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllMetadataUrnsForCachedFileResponse">
+    <wsdl:part name="parameters" element="tns:getAllMetadataUrnsForCachedFileResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ping">
+    <wsdl:part name="parameters" element="tns:ping">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addCacheIndexEntryResponse">
+    <wsdl:part name="parameters" element="tns:addCacheIndexEntryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCachedFileById">
+    <wsdl:part name="parameters" element="tns:getCachedFileById">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listCachedFiles">
+    <wsdl:part name="parameters" element="tns:listCachedFiles">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listFilesByMetadataUrnAndDate">
+    <wsdl:part name="parameters" element="tns:listFilesByMetadataUrnAndDate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setLastCollectDate">
+    <wsdl:part name="parameters" element="tns:setLastCollectDate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentResponse">
+    <wsdl:part name="parameters" element="tns:getCacheContentResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getBackupLastCollectDate">
+    <wsdl:part name="parameters" element="tns:getBackupLastCollectDate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCachedFileResponse">
+    <wsdl:part name="parameters" element="tns:getCachedFileResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentFilteredSortedResponse">
+    <wsdl:part name="parameters" element="tns:getCacheContentFilteredSortedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setLastCollectDateResponse">
+    <wsdl:part name="parameters" element="tns:setLastCollectDateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentFilteredSorted">
+    <wsdl:part name="parameters" element="tns:getCacheContentFilteredSorted">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCachedFile">
+    <wsdl:part name="parameters" element="tns:getCachedFile">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentCountResponse">
+    <wsdl:part name="parameters" element="tns:getCacheContentCountResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCacheContentSorted">
+    <wsdl:part name="parameters" element="tns:getCacheContentSorted">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="backupLastCollectDateResponse">
+    <wsdl:part name="parameters" element="tns:backupLastCollectDateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listCachedFilesResponse">
+    <wsdl:part name="parameters" element="tns:listCachedFilesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCachedFileByIdResponse">
+    <wsdl:part name="parameters" element="tns:getCachedFileByIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CacheIndexWebService">
+    <wsdl:operation name="getAllMetadataUrnsForCachedFile">
+      <wsdl:input name="getAllMetadataUrnsForCachedFile" message="tns:getAllMetadataUrnsForCachedFile">
+    </wsdl:input>
+      <wsdl:output name="getAllMetadataUrnsForCachedFileResponse" message="tns:getAllMetadataUrnsForCachedFileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listAllCachedFiles">
+      <wsdl:input name="listAllCachedFiles" message="tns:listAllCachedFiles">
+    </wsdl:input>
+      <wsdl:output name="listAllCachedFilesResponse" message="tns:listAllCachedFilesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listFilesByMetadataUrnAndTime">
+      <wsdl:input name="listFilesByMetadataUrnAndTime" message="tns:listFilesByMetadataUrnAndTime">
+    </wsdl:input>
+      <wsdl:output name="listFilesByMetadataUrnAndTimeResponse" message="tns:listFilesByMetadataUrnAndTimeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentCount">
+      <wsdl:input name="getCacheContentCount" message="tns:getCacheContentCount">
+    </wsdl:input>
+      <wsdl:output name="getCacheContentCountResponse" message="tns:getCacheContentCountResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCachedFile">
+      <wsdl:input name="getCachedFile" message="tns:getCachedFile">
+    </wsdl:input>
+      <wsdl:output name="getCachedFileResponse" message="tns:getCachedFileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addCacheIndexEntry">
+      <wsdl:input name="addCacheIndexEntry" message="tns:addCacheIndexEntry">
+    </wsdl:input>
+      <wsdl:output name="addCacheIndexEntryResponse" message="tns:addCacheIndexEntryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listCachedFilesBetweenDates">
+      <wsdl:input name="listCachedFilesBetweenDates" message="tns:listCachedFilesBetweenDates">
+    </wsdl:input>
+      <wsdl:output name="listCachedFilesBetweenDatesResponse" message="tns:listCachedFilesBetweenDatesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listCachedFiles">
+      <wsdl:input name="listCachedFiles" message="tns:listCachedFiles">
+    </wsdl:input>
+      <wsdl:output name="listCachedFilesResponse" message="tns:listCachedFilesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentSorted">
+      <wsdl:input name="getCacheContentSorted" message="tns:getCacheContentSorted">
+    </wsdl:input>
+      <wsdl:output name="getCacheContentSortedResponse" message="tns:getCacheContentSortedResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listFilesByMetadataUrnAndDate">
+      <wsdl:input name="listFilesByMetadataUrnAndDate" message="tns:listFilesByMetadataUrnAndDate">
+    </wsdl:input>
+      <wsdl:output name="listFilesByMetadataUrnAndDateResponse" message="tns:listFilesByMetadataUrnAndDateResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContent">
+      <wsdl:input name="getCacheContent" message="tns:getCacheContent">
+    </wsdl:input>
+      <wsdl:output name="getCacheContentResponse" message="tns:getCacheContentResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ping">
+      <wsdl:input name="ping" message="tns:ping">
+    </wsdl:input>
+      <wsdl:output name="pingResponse" message="tns:pingResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBackupLastCollectDate">
+      <wsdl:input name="getBackupLastCollectDate" message="tns:getBackupLastCollectDate">
+    </wsdl:input>
+      <wsdl:output name="getBackupLastCollectDateResponse" message="tns:getBackupLastCollectDateResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLastCollectDate">
+      <wsdl:input name="setLastCollectDate" message="tns:setLastCollectDate">
+    </wsdl:input>
+      <wsdl:output name="setLastCollectDateResponse" message="tns:setLastCollectDateResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="backupLastCollectDate">
+      <wsdl:input name="backupLastCollectDate" message="tns:backupLastCollectDate">
+    </wsdl:input>
+      <wsdl:output name="backupLastCollectDateResponse" message="tns:backupLastCollectDateResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentFilteredSorted">
+      <wsdl:input name="getCacheContentFilteredSorted" message="tns:getCacheContentFilteredSorted">
+    </wsdl:input>
+      <wsdl:output name="getCacheContentFilteredSortedResponse" message="tns:getCacheContentFilteredSortedResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCachedFileById">
+      <wsdl:input name="getCachedFileById" message="tns:getCachedFileById">
+    </wsdl:input>
+      <wsdl:output name="getCachedFileByIdResponse" message="tns:getCachedFileByIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CacheIndexImplServiceSoapBinding" type="tns:CacheIndexWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getAllMetadataUrnsForCachedFile">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllMetadataUrnsForCachedFile">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllMetadataUrnsForCachedFileResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listAllCachedFiles">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listAllCachedFiles">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listAllCachedFilesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listFilesByMetadataUrnAndTime">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listFilesByMetadataUrnAndTime">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listFilesByMetadataUrnAndTimeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentCount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCacheContentCount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCacheContentCountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addCacheIndexEntry">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addCacheIndexEntry">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addCacheIndexEntryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCachedFile">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCachedFile">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCachedFileResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listCachedFilesBetweenDates">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listCachedFilesBetweenDates">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listCachedFilesBetweenDatesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listCachedFiles">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listCachedFiles">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listCachedFilesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentSorted">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCacheContentSorted">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCacheContentSortedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listFilesByMetadataUrnAndDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listFilesByMetadataUrnAndDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listFilesByMetadataUrnAndDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContent">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCacheContent">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCacheContentResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ping">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ping">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBackupLastCollectDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getBackupLastCollectDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getBackupLastCollectDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLastCollectDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setLastCollectDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setLastCollectDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="backupLastCollectDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="backupLastCollectDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="backupLastCollectDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCacheContentFilteredSorted">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCacheContentFilteredSorted">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCacheContentFilteredSortedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCachedFileById">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCachedFileById">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCachedFileByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CacheIndexImplService">
+    <wsdl:port name="CacheIndexWebServicePort" binding="tns:CacheIndexImplServiceSoapBinding">
+      <soap:address location="http://localhost:9090/CacheIndexWebServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
