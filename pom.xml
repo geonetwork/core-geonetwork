@@ -1147,6 +1147,7 @@
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
+    <module>openwis-services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
     <module>openwis-services-client</module>
