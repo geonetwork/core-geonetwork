@@ -7,12 +7,14 @@
   goog.require('gn_dashboard_search_stat_controller');
   goog.require('gn_dashboard_status_controller');
   goog.require('gn_vcs_controller');
+  goog.require('gn_openwis_monitoring_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
        'gn_dashboard_search_stat_controller',
        'gn_dashboard_content_stat_controller',
-       'gn_vcs_controller']);
+       'gn_vcs_controller',
+       'gn_openwis_monitoring_controller']);
 
 
   /**
@@ -66,6 +68,7 @@
       }).error(function(data) {
         // TODO
       });
+      
 
     }]);
 

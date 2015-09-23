@@ -12,11 +12,16 @@
     <name>OpenWis specific services</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
-			<artifactId>services</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>services</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>openwis-services-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
     <profiles>
 		<profile>
