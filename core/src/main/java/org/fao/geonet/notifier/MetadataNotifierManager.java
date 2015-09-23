@@ -111,7 +111,7 @@ public class MetadataNotifierManager {
         final ConfigurableApplicationContext applicationContext = context.getApplicationContext();
         ScheduledThreadPoolExecutor timer = applicationContext.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
 
-        timer.schedule(new UpdateTask(metadataElement, id, uuid), 10, TimeUnit.MILLISECONDS);
+        timer.schedule(new UpdateTask(metadataElement, id, uuid), 10, TimeUnit.SECONDS);
     }
 
     /**
@@ -124,7 +124,7 @@ public class MetadataNotifierManager {
     public void deleteMetadata(String id, String uuid, ServiceContext context) {
         final ConfigurableApplicationContext applicationContext = context.getApplicationContext();
         ScheduledThreadPoolExecutor timer = applicationContext.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
-        timer.schedule(new DeleteTask(id, uuid), 10, TimeUnit.MILLISECONDS);
+        timer.schedule(new DeleteTask(id, uuid), 10, TimeUnit.SECONDS);
     }
 
 
