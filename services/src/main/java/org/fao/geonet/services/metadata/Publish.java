@@ -15,8 +15,10 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -98,6 +100,7 @@ public class Publish {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
         OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
+        MetadataNotifierManager notifierManager =  appContext.getBean(MetadataNotifierManager.class);
 
         final PublishReport report = new PublishReport();
 
@@ -135,6 +138,13 @@ public class Publish {
         BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, toIndex);
         r.process(testing || toIndex.size() < 5);
 
+        // Notify changes
+        for (Integer modifiedId : toIndex) {
+            String modifiedIdString = Integer.toString(modifiedId);
+            String uuid = dataManager.getMetadataUuid(modifiedIdString);
+            Element metadata = dataManager.getMetadata(modifiedIdString);
+            notifierManager.publishMetadata(metadata, modifiedIdString, uuid, publish, serviceContext);
+        }
 
         return report;
     }

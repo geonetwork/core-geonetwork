@@ -74,7 +74,29 @@ public class MetadataNotifierManager {
                     client.webUpdate(notifier, metadata.getData(), metadata.getUuid());
 
                     // mark metadata as notified for current notifier service
-                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, false);
+                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, MetadataNotificationAction.UPDATE);
+                }
+
+                final Map<Metadata, MetadataNotification> unregisteredMetadataToPublish = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.PUBLISH);
+                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadataToPublish.entrySet()) {
+                    Metadata metadata = entry.getKey();
+
+                    // Update/insert notification
+                    client.webPublish(notifier, metadata.getData(), metadata.getUuid());
+
+                    // mark metadata as notified for current notifier service
+                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, MetadataNotificationAction.PUBLISH);
+                }
+
+                final Map<Metadata, MetadataNotification> unregisteredMetadataToUnpublish = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.UNPUBLISH);
+                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadataToUnpublish.entrySet()) {
+                    Metadata metadata = entry.getKey();
+
+                    // Update/insert notification
+                    client.webUnpublish(notifier, metadata.getData(), metadata.getUuid());
+
+                    // mark metadata as notified for current notifier service
+                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, MetadataNotificationAction.UNPUBLISH);
                 }
 
                 Map<Metadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
@@ -89,7 +111,7 @@ public class MetadataNotifierManager {
                     client.webDelete(notifier, uuid);
 
                     // mark metadata as notified for current notifier service
-                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, true);
+                    setMetadataNotified(metadata.getId(), metadata.getUuid(), notifier, MetadataNotificationAction.DELETE);
                 }
 
             } catch (Exception ex) {
@@ -125,6 +147,24 @@ public class MetadataNotifierManager {
         final ConfigurableApplicationContext applicationContext = context.getApplicationContext();
         ScheduledThreadPoolExecutor timer = applicationContext.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
         timer.schedule(new DeleteTask(id, uuid), 10, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Notification sent when a metadata is published/unpublished.
+     *
+     * @param metadataElement Metadata content.
+     * @param id GeoNetwork identifier for the metadata
+     * @param uuid UUID unique identifier of the metadata.
+     * @param publish true is the metadata has been published, false if it has been unpublished.
+     * @param serviceContext GeoNetwork context.
+     */
+    public void publishMetadata(final Element metadataElement, final String id, final String uuid, final boolean publish,
+                                final ServiceContext serviceContext) {
+        final ConfigurableApplicationContext applicationContext = serviceContext.getApplicationContext();
+        ScheduledThreadPoolExecutor timer = applicationContext.getBean("timerThreadPool", ScheduledThreadPoolExecutor.class);
+        timer.schedule(new UpdateTask(metadataElement, id, uuid, publish), 10, TimeUnit.SECONDS);
+
+
     }
 
 
@@ -180,11 +220,11 @@ public class MetadataNotifierManager {
     /**
      * Marks a metadata record as notified for a notifier service.
      *
-     * @param deleteNotification Indicates if the notification was a delete action
+     * @param action Indicates if the notification was a delete action
      * @throws Exception
      */
     private void setMetadataNotified(final int metadataId, final String uuid, final MetadataNotifier notifier,
-                                     final boolean deleteNotification) {
+                                     final MetadataNotificationAction action) {
 
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         MetadataNotificationRepository metadataNotificationRepository = applicationContext.getBean(MetadataNotificationRepository.class);
@@ -199,11 +239,8 @@ public class MetadataNotifierManager {
         }
         notification.setMetadataUuid(uuid);
         notification.setNotified(true);
-        if (deleteNotification) {
-            notification.setAction(MetadataNotificationAction.DELETE);
-        } else {
-            notification.setAction(MetadataNotificationAction.UPDATE);
-        }
+        notification.setAction(action);
+
         metadataNotificationRepository.save(notification);
 
 
@@ -220,7 +257,7 @@ public class MetadataNotifierManager {
      * @throws Exception
      */
     private void setMetadataNotifiedError(final int metadataId, final String uuid, final MetadataNotifier notifier,
-                                          final boolean deleteNotification, final String error) {
+                                          final MetadataNotificationAction action, final String error) {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
             Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError");
         }
@@ -237,11 +274,8 @@ public class MetadataNotifierManager {
                 errorNotification.setId(id);
                 errorNotification.setNotified(true);
                 errorNotification.setMetadataUuid(uuid);
-                if (deleteNotification) {
-                    errorNotification.setAction(MetadataNotificationAction.DELETE);
-                } else {
-                    errorNotification.setAction(MetadataNotificationAction.UPDATE);
-                }
+                errorNotification.setAction(action);
+
                 metadataNotificationRepository.save(errorNotification);
             } else {
                 // notification already exists. Update it.
@@ -249,12 +283,7 @@ public class MetadataNotifierManager {
                     @Override
                     public void apply(@Nonnull MetadataNotification entity) {
                         entity.setErrorMessage(error);
-                        if (deleteNotification) {
-                            entity.setAction(MetadataNotificationAction.DELETE);
-                        } else {
-                            entity.setAction(MetadataNotificationAction.UPDATE);
-
-                        }
+                        entity.setAction(action);
                     }
                 });
             }
@@ -267,6 +296,8 @@ public class MetadataNotifierManager {
             throw ex;
         }
     }
+
+
 
     @SuppressWarnings("serial")
     static final class MetadataNotifierException extends Exception {
@@ -283,11 +314,18 @@ public class MetadataNotifierManager {
         private final int metadataId;
         private final Element metadataElement;
         private final String uuid;
+        private final Boolean publish;
 
         UpdateTask(Element metadataElement, String metadataId, String uuid) {
+            this(metadataElement, metadataId, uuid, null);
+        }
+
+        public UpdateTask(Element metadataElement, String metadataId, String uuid, Boolean publish) {
             this.metadataId = Integer.parseInt(metadataId);
             this.uuid = uuid;
             this.metadataElement = metadataElement;
+            this.publish = publish;
+
         }
 
         public void run() {
@@ -299,30 +337,50 @@ public class MetadataNotifierManager {
 
                 final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
                 MetadataNotifierClient client = applicationContext.getBean(MetadataNotifierClient.class);
+                final MetadataNotificationAction action;
+                if (publish == null) {
+                    action = MetadataNotificationAction.UPDATE;
+                } else if (publish) {
+                    action = MetadataNotificationAction.PUBLISH;
+                } else {
+                    action = MetadataNotificationAction.UNPUBLISH;
+                }
 
                 for (MetadataNotifier service : loadNotifiers()) {
 
                     // Catch individual errors
                     try {
-                        client.webUpdate(service, metadataString, uuid);
+                        switch (action) {
+                            case UPDATE:
+                                client.webUpdate(service, metadataString, uuid);
+                                break;
+                            case PUBLISH:
+                                client.webPublish(service, metadataString, uuid);
+                                break;
+                            case UNPUBLISH:
+                                client.webUnpublish(service, metadataString, uuid);
+                                break;
+                            default:
+                                break;
+                        }
 
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
-                            Log.debug("MetadataNotifierManager", "updateMetadata (uuid): " + uuid);
+                            Log.debug("MetadataNotifierManager", "updateMetadata: " + action + " (uuid): " + uuid);
                         }
 
                         // mark metadata as notified for current notifier service
-                        setMetadataNotified(metadataId, uuid, service, false);
+                        setMetadataNotified(metadataId, uuid, service, action);
 
                     } catch (Exception ex) {
-                        Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url "
+                        Log.error("MetadataNotifierManager", "updateMetadata " + action + " ERROR (uuid): " + uuid + "notifier url "
                                 + service.getUrl() + " " + ex.getMessage());
                         ex.printStackTrace();
 
                         // mark metadata as not notified for current notifier service
                         try {
-                            setMetadataNotifiedError(metadataId, uuid, service, false, ex.getMessage());
+                            setMetadataNotifiedError(metadataId, uuid, service, action, ex.getMessage());
                         } catch (Exception ex2) {
-                            Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
+                            Log.error("MetadataNotifierManager", "updateMetadata " + action + " ERROR (uuid): " + uuid + "notifier url " +
                                     service.getUrl() + " " + ex2.getMessage());
                         }
                     }
@@ -349,6 +407,7 @@ public class MetadataNotifierManager {
             try {
                 final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
                 MetadataNotifierClient client = applicationContext.getBean(MetadataNotifierClient.class);
+                final MetadataNotificationAction action = MetadataNotificationAction.DELETE;
 
                 for (MetadataNotifier service : loadNotifiers()) {
                     int notifierId = service.getId();
@@ -358,7 +417,9 @@ public class MetadataNotifierManager {
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
                             Log.debug("MetadataNotifierManager", "deleteMetadata before (uuid): " + uuid);
                         }
+
                         client.webDelete(service, uuid);
+
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
                             Log.debug("MetadataNotifierManager", "deleteMetadata (uuid): " + uuid);
                         }
@@ -366,19 +427,19 @@ public class MetadataNotifierManager {
                         System.out.println("deleteMetadata (id): " + metadataId + " notifier id: " + notifierId);
 
                         // mark metadata as notified for current notifier service
-                        setMetadataNotified(metadataId, uuid, service, true);
+                        setMetadataNotified(metadataId, uuid, service, action);
                     } catch (Exception ex) {
                         System.out.println("deleteMetadata ERROR:" + ex.getMessage());
 
-                        Log.error("MetadataNotifierManager", "deleteMetadata ERROR (uuid): " + uuid + " " + ex.getMessage());
+                        Log.error("MetadataNotifierManager", "deleteMetadata " + action + " ERROR (uuid): " + uuid + " " + ex.getMessage());
                         ex.printStackTrace();
 
 
                         // mark metadata as not notified for current notifier service
                         try {
-                            setMetadataNotifiedError(metadataId, uuid, service, true, ex.getMessage());
+                            setMetadataNotifiedError(metadataId, uuid, service, action, ex.getMessage());
                         } catch (Exception ex2) {
-                            Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
+                            Log.error("MetadataNotifierManager", "updateMetadata " + action + " ERROR (uuid): " + uuid + "notifier url " +
                                     notifierUrl + " " + ex2.getMessage());
                         }
                     }

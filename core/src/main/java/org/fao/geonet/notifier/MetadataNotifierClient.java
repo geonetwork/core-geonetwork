@@ -72,6 +72,41 @@ public class MetadataNotifierClient {
         execute(notifier, data);
     }
 
+    /**
+     * Use the notifier publish service to handle publishing metadata.
+     * @param notifier the notifier.
+     * @param metadataXml the metadata'c content published.
+     * @param metadataUuid the metadta UUID.
+     *
+     * @throws MetadataNotifierClientException
+     */
+    public void webPublish(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
+        List<? extends NameValuePair> data = Arrays.asList(
+                new BasicNameValuePair("action", "publish"),
+                new BasicNameValuePair("uuid", metadataUuid),
+                new BasicNameValuePair("XMLFile", metadataXml)
+        );
+        execute(notifier, data);
+    }
+
+    /**
+     * Use the notifier unpublish service to handle unpublishing metadata.
+     * @param notifier the notifier.
+     * @param metadataXml the metadata'c content unpublished.
+     * @param metadataUuid the metadta UUID.
+     *
+     * @throws MetadataNotifierClientException
+     */
+    public void webUnpublish(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
+        List<? extends NameValuePair> data = Arrays.asList(
+                new BasicNameValuePair("action", "unpublish"),
+                new BasicNameValuePair("uuid", metadataUuid),
+                new BasicNameValuePair("XMLFile", metadataXml)
+        );
+        execute(notifier, data);
+    }
+
+
     private void execute(final MetadataNotifier notifier, List<? extends NameValuePair> data) throws MetadataNotifierClientException {
         try {
 
