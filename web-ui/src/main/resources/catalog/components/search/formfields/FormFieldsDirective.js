@@ -656,11 +656,13 @@
         'ngeoDecorateInteraction',
         function(gnMap, goDecoI) {
 
-          var extentFromValue = function(value) {
-            if (!value) {
+          var extentFromValue = function(str) {
+            if (str === undefined || str === '') {
               return ['', '', '', ''];
             }
-            return value.split(',');
+            return str.split(',').map(function(val) {
+                return parseFloat(val);
+            });
           };
 
           var valueFromExtent = function(extent) {
@@ -679,6 +681,7 @@
 
             link: function(scope, element, attrs) {
               scope.crs = scope.crs || 'EPSG:4326';
+              scope.extent = extentFromValue(scope.value);
 
               var style = new ol.style.Style({
                 fill: new ol.style.Fill({
