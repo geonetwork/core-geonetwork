@@ -32,7 +32,7 @@
               name : 'recentEvents'
             }
         ];
-        
+
         $scope.isSimple = true;
 
         $http.get($scope.url + 'xml.info?type=groups&_content_type=json')
@@ -64,13 +64,25 @@
                   + $scope.options[$scope.monitorType].name).success(
               function(data) {
 
-                if(data && data.data && $.isArray(data.data)) {
+                if (data && data.data && $.isArray(data.data)) {
                   $scope.data = data.data;
                   $scope.isSimple = false;
                 } else {
                   $scope.isSimple = true;
                   $scope.data = data;
                 }
+
+//                $("#graphic").empty();
+//
+//                if (!$scope.isSimple) {
+//                  var chart = nv.models.multiBarChart().reduceXTicks(true)
+//                      .rotateLabels(0).showControls(true);
+//                  chart.xAxis.tickFormat(d3.format(',f'));
+//
+//                  chart.yAxis.tickFormat(d3.format(',.1f'));
+//
+//                  d3.select('#graphic').datum({values: $scope.data}).call(chart);
+//                }
               }).error(function(data) {
             // TODO
           });
