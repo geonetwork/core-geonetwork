@@ -3,16 +3,23 @@ package org.openwis.metadata.product;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.openwis.products.client.ProductMetadata;
 import org.openwis.products.client.RecurrentScale;
 import org.openwis.products.client.RecurrentUpdateFrequency;
 import org.openwis.products.client.UpdateFrequency;
+import org.openwis.util.GeonetOpenwis;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -22,6 +29,11 @@ import java.util.List;
 public class ProductMetadataISO19139Extractor implements IProductMetadataExtractor {
     private static List<Namespace> nsListGMDGCO = new ArrayList<Namespace>();
     private static List<Namespace> nsListGMDGMX = new ArrayList<Namespace>();
+
+    //TODO: Make this configurable?
+    private static final List<String> ACCEPTED_FILE_EXTENSIONS = Arrays.asList("tiff", "xml", "Z", "met", "tif", "gif",
+            "png", "jpg", "ps", "mpg", "txt", "htm", "bin", "doc", "wpd", "ua", "ub", "a", "b", "f");
+
 
     private static final List<String> TEXT_EXTENSION = Arrays.asList("1", "B", "C", "D", "F", "G",
             "K", "N", "S", "U", "V", "W", "X");
@@ -56,7 +68,7 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
         fncPattern = Xml.selectString(metadata.getXmlData(false), xpath, nsListGMDGMX);
         fncPattern = StringUtils.abbreviate(fncPattern, MAX_LENGTH_FNC_PATTERN);
 
-        //Log.info(Geonet.EXTRACT_PRODUCT_METADATA, "Extracted FNC Pattern: " + fncPattern);
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, "Extracted FNC Pattern: " + fncPattern);
 
         return StringUtils.isBlank(fncPattern) ? null : fncPattern;
     }
@@ -68,8 +80,8 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
         String originator = Xml.selectString(metadata.getXmlData(false), xpath, nsListGMDGCO);
         originator = StringUtils.abbreviate(originator, MAX_LENGTH_ORIGINATOR);
 
-        //Log.info(Geonet.EXTRACT_PRODUCT_METADATA,
-        //        MessageFormat.format("Extracted Originator: {0}", originator));
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                MessageFormat.format("Extracted Originator: {0}", originator));
 
         return originator;
     }
@@ -81,8 +93,8 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
         String title = Xml.selectString(metadata.getXmlData(false), xpath, nsListGMDGCO);
         title = StringUtils.abbreviate(title, MAX_LENGTH_TITLE);
 
-        //Log.info(Geonet.EXTRACT_PRODUCT_METADATA,
-        //        MessageFormat.format("Extracted Title: {0}", title));
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                MessageFormat.format("Extracted Title: {0}", title));
 
         return title;
     }
@@ -93,8 +105,8 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
         String localDS = Xml.selectString(metadata.getXmlData(false), xpath, nsListGMDGCO);
         localDS = StringUtils.abbreviate(localDS, MAX_LENGTH_LOCAL_DATASOURCE);
 
-        //Log.info(Geonet.EXTRACT_PRODUCT_METADATA,
-        //        MessageFormat.format("Extracted Local Data Source: {0}", localDS));
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                MessageFormat.format("Extracted Local Data Source: {0}", localDS));
 
         return localDS;
     }
@@ -110,8 +122,8 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
 
         // FIXME create an update frequency object ...
         updateFrequency = Xml.selectString(metadata.getXmlData(false), xpath, nsListGMDGCO);
-        //Log.debug(Geonet.EXTRACT_PRODUCT_METADATA, "Extracted update frequency (ignored): "
-        //        + updateFrequency);
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, "Extracted update frequency (ignored): "
+                + updateFrequency);
 
         // FIXME the recurrentUpdateFrequency should have a period also ...
         RecurrentUpdateFrequency recurrentUpdateFrequency = new RecurrentUpdateFrequency();
@@ -160,12 +172,12 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
             }
         }
 
-        //TODO: Review this code
+
         // In any case, filter file extensions to keep only valid FNC extension
-        /*if (result != null && !ACCEPTED_FILE_EXTENSIONS.contains(result)) {
-            Log.info(Geonet.EXTRACT_PRODUCT_METADATA, "Ignored file extension: " + result);
+        if (result != null && !ACCEPTED_FILE_EXTENSIONS.contains(result)) {
+            Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, "Ignored file extension: " + result);
             result = null;
-        }*/
+        }
 
         return result;
     }
@@ -174,10 +186,11 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
     public void extractGTSCategoryGTSPriorityAndDataPolicy(Metadata metadata, ProductMetadata pm) throws Exception {
         // TODO: Review code
 
-       /* List<String> xpathList = OpenwisMetadataPortalConfig.getList(ConfigurationConstants.EXTRACT_XPATH);
+        List<String> xpathList = new ArrayList<String>();
+        xpathList.add("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString");
         List<Element> useLimitationElts = new ArrayList<Element>();
         for (String xpath : xpathList) {
-            useLimitationElts.addAll((List<Element>) Xml.selectNodes(metadata.getData(), xpath,
+            useLimitationElts.addAll((List<Element>) Xml.selectNodes(metadata.getXmlData(false), xpath,
                     nsListGMDGCO));
         }
 
@@ -196,11 +209,12 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
                     || Pattern.matches(GTS_CATEGORY_ADDITIONAL, useLimitationStr)) {
                 pm.setGtsCategory(useLimitationStr);
                 // Extract the datapolicy
-                pm.setDataPolicy(extractDatapolicy(useLimitationStr, metadata.getData()));
+                pm.setDataPolicy(extractDatapolicy(useLimitationStr, metadata.getXmlData(false)));
 
-                Log.info(Geonet.EXTRACT_PRODUCT_METADATA, MessageFormat.format(
+                Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, MessageFormat.format(
                         "Extracted GTS Category: {0} - Data Policy: {1}", useLimitationStr,
                         pm.getDataPolicy()));
+
                 isGlobal = true;
             } else if (Pattern.matches(GTS_PRIORITY, useLimitationStr)) {
                 pm.setPriority(extractGtsPriority(useLimitationStr));
@@ -213,9 +227,9 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
         if (pm.getGtsCategory() != null
                 && Pattern.matches(GTS_CATEGORY_ADDITIONAL, pm.getGtsCategory()) && otherDP != null) {
             // Try to apply another DP for additional product
-            //Log.info(Geonet.EXTRACT_PRODUCT_METADATA,
-            //        MessageFormat.format("Possible Data Policy for Additional product: {0}", otherDP));
-            pm.setDataPolicy(otherDP);
+            Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                    MessageFormat.format("Possible Data Policy for Additional product: {0}", otherDP));
+                    pm.setDataPolicy(otherDP);
         } else if (StringUtils.isBlank(pm.getGtsCategory())) {
             // Custom GTS category / data policy name
             if (otherDP == null) {
@@ -223,14 +237,14 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
                 assignUnkownDataPolicy(pm);
             } else {
                 otherDP = StringUtils.abbreviate(otherDP, MAX_LENGTH_GTS_CATEGORY);
-                Log.info(Geonet.EXTRACT_PRODUCT_METADATA, MessageFormat.format(
+                Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, MessageFormat.format(
                         "Possible value for GTS Category and Data Policy: {0}", otherDP));
-                pm.setDataPolicy(otherDP);
+                        pm.setDataPolicy(otherDP);
                 pm.setGtsCategory(otherDP);
             }
         }
 
-        checkFNCPattern(pm, isGlobal);*/
+        checkFNCPattern(pm, isGlobal);
     }
 
     /**
@@ -239,20 +253,71 @@ public class ProductMetadataISO19139Extractor implements IProductMetadataExtract
      * - the md URN matches a given regexp
      */
     private void checkFNCPattern(ProductMetadata pm, boolean isGlobal) {
-        // TODO: Review code
-
-        /*if (pm.getFncPattern() == null) {
+        if (pm.getFncPattern() == null) {
             return;
         }
         if (!isGlobal) {
-            //Log.info(Geonet.EXTRACT_PRODUCT_METADATA, "FNC Pattern ignored for non Global product");
+            Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, "FNC Pattern ignored for non Global product");
             pm.setFncPattern(null);
         } else {
             // Check URN matches exclude pattern
             if (Pattern.matches(URN_PATTERN_FOR_IGNORED_FNC_PATTERN, pm.getUrn())) {
-                Log.info(Geonet.EXTRACT_PRODUCT_METADATA, "FNC Pattern ignored because of URN exclude pattern");
+                Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, "FNC Pattern ignored because of URN exclude pattern");
                 pm.setFncPattern(null);
             }
-        }*/
+        }
+    }
+
+    /**
+     * Extract the data policy.
+     *
+     * @param useLimitationStr
+     * @param data
+     * @throws JDOMException
+     */
+    private String extractDatapolicy(String useLimitationStr, Element data) throws JDOMException {
+        if (Pattern.matches(GTS_CATEGORY_ESSENTIAL, useLimitationStr)) {
+            return PUBLIC_DATAPOLICY;
+        }
+
+        if (Pattern.matches(GTS_CATEGORY_ADDITIONAL, useLimitationStr)) {
+            return DEFAULT_ADDITIONAL_DATAPOLICY;
+        }
+        return null;
+    }
+
+    /**
+     * Extract the priority from the GTS priority string.
+     *
+     * @param useLimitation
+     * @return the priority or null
+     */
+    private Integer extractGtsPriority(String useLimitation) {
+        Integer priority = null;
+        Matcher matcher = Pattern.compile(GTS_PRIORITY).matcher(useLimitation);
+        if (matcher.find()) {
+            String priorityStr = matcher.group(1);
+            if (StringUtils.isNumericSpace(priorityStr)) {
+                priority = Integer.parseInt(priorityStr.trim());
+            }
+            Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                    MessageFormat.format("Extracted GTS Priority: {0}", priority));
+        }
+
+        return priority;
+    }
+    /**
+     * Assign Unknown data policy and category (in case no proper information was found)
+     *
+     * @param pm the {@link ProductMetadata}
+     */
+    private void assignUnkownDataPolicy(ProductMetadata pm) {
+        Log.warning(GeonetOpenwis.PRODUCT_METADATA_EXTRACT,
+                "Unable to extract the GTS category (and Data Policy)");
+        Log.info(GeonetOpenwis.PRODUCT_METADATA_EXTRACT, MessageFormat.format(
+                "Assigning GTS Category: {0} - Data Policy: {1}", GTS_CATEGORY_NONE,
+                UNKNOWN_DATAPOLICY));
+        pm.setGtsCategory(GTS_CATEGORY_NONE);
+        pm.setDataPolicy(UNKNOWN_DATAPOLICY);
     }
 }

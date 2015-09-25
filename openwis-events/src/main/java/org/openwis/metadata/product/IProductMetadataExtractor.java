@@ -63,5 +63,51 @@ public interface IProductMetadataExtractor {
      */
     static final int MAX_LENGTH_TITLE = 255;
 
+    /**
+     * The GTS Category Unknown.
+     */
+    static final String GTS_CATEGORY_NONE = "Unknown";
+
+    /**
+     * The GTS Category Essential.
+     */
+    static final String GTS_CATEGORY_ESSENTIAL = "WMO\\\\s*Essential";
+
+    /**
+     * The GTS Category Additional.
+     */
+    static final String GTS_CATEGORY_ADDITIONAL = "WMO\\\\s*Additional";
+
+    /**
+     * The GTS priority.
+     */
+    static final String GTS_PRIORITY = "GTS\\\\s*Priority\\\\s*(\\\\d)";
+
+
+    /**
+     * The default additional data policy.
+     */
+    static final String DEFAULT_ADDITIONAL_DATAPOLICY = "additional-default";
+
+
+    /**
+     * The Public Data policy.
+     */
+    static final String PUBLIC_DATAPOLICY = "public";
+
+    /**
+     * The Unknown Data policy.
+     */
+    static final String UNKNOWN_DATAPOLICY = "unknown";
+
+    /**
+     * Max string length for GTS Category
+     */
+    static final int MAX_LENGTH_GTS_CATEGORY = 255;
+
+    /**
+     * The pattern applied on URN to determine if FNC Pattern should be ignored
+     */
+    static final String URN_PATTERN_FOR_IGNORED_FNC_PATTERN = "^urn:x-wmo:md:int.wmo.wis::\\\\D\\\\D\\\\D\\\\D\\\\d\\\\d\\\\D\\\\D\\\\D\\\\D$";
 
 }

@@ -6,6 +6,7 @@ import org.fao.geonet.events.md.MetadataAdd;
 import org.fao.geonet.utils.Log;
 import org.openwis.metadata.product.ProductMetadataManager;
 import org.openwis.products.client.ProductMetadata;
+import org.openwis.util.GeonetOpenwis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductMetadataCreate implements ApplicationListener<MetadataAdd> {
-    private static Logger log = Log.createLogger("openwis");
 
     @Autowired
     ProductMetadataManager productMetadataManager;
@@ -26,18 +26,13 @@ public class ProductMetadataCreate implements ApplicationListener<MetadataAdd> {
         Metadata metadata = event.getMd();
 
         try {
-            // TODO: Fill the product metadata information
+            Log.info(GeonetOpenwis.PRODUCT_METADATA, "Create - ProductMetadata (urn):" + metadata.getUuid());
             ProductMetadata pm = productMetadataManager.extract(metadata, false);
-
-            //pm.setUrn(metadata.getUuid());
-            //pm.setFed(false);
-            //pm.setIngested(false);
 
             productMetadataManager.saveOrUpdate(pm);
 
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error(ex);
+            Log.error(GeonetOpenwis.PRODUCT_METADATA, ex.getMessage(), ex);
         }
     }
 

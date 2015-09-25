@@ -2,8 +2,10 @@ package org.openwis.metadata.product;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.utils.Log;
 import org.openwis.products.client.ProductMetadata;
 import org.openwis.products.client.ProductMetadataClient;
+import org.openwis.util.GeonetOpenwis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,9 +44,9 @@ public class ProductMetadataManager implements IProductMetadataManager {
 
         // ProductMetadata was not supposed to be found in case of creation (isExisting=false)
         if (!isExisting && pmExisting != null) {
-            //Log.warning(Geonet.DATA_MANAGER,
-            //        "Found unexpected ProductMetata with URN " + metadata.getUrn()
-            //                + "; will be overwritten");
+            Log.warning(GeonetOpenwis.PRODUCT_METADATA,
+                    "Found unexpected ProductMetata with URN " + metadata.getUuid()
+                    + "; will be overwritten");
             pmExisting.setProcess(null);
             pmExisting.setPriority(null);
             pmExisting.setOriginator(null);
