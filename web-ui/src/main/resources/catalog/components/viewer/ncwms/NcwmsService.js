@@ -184,6 +184,10 @@
         } else if (service == 'transect') {
           p.REQUEST = 'GetTransect';
           p.LINESTRING = gnMap.getTextFromCoordinates(geom);
+          var elevation = layer.getSource().getParams().ELEVATION;
+          if (elevation) {
+            p.ELEVATION = elevation;
+          }
         }
         return gnUrlUtils.append(layer.getSource().getUrls(),
             gnUrlUtils.toKeyValue(p));
