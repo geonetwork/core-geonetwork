@@ -1,13 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans 
-		http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context
-		http://www.springframework.org/schema/context/spring-context.xsd" >
-    
-	<context:component-scan base-package="org.openwis.metadata.product" />
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation=" 
+        http://www.springframework.org/schema/web-services
+        http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd">
+
+	<context:component-scan base-package="org.openwis" />
+	<bean class="org.openwis.blacklist.client.BlacklistClient">
+		<property name="webServiceTemplate" ref="webServiceTemplate" />
+	</bean>
+	<bean class="org.openwis.products.client.ProductMetadataClient">
+		<property name="webServiceTemplate" ref="productWebServiceTemplate" />
+	</bean>
+
+	<oxm:jaxb2-marshaller id="marshaller"
+		contextPath="org.openwis.blacklist.client:org.openwis.cacheindex.client:org.openwis.monitoring.client" />
+
+	<oxm:jaxb2-marshaller id="productmarshaller"
+		contextPath="org.openwis.products.client" />
+
+	<oxm:jaxb2-marshaller id="subscriptionmarshaller"
+		contextPath="org.openwis.subscription.client" />
+
+
+	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="marshaller" />
+		<property name="unmarshaller" ref="marshaller" />
+		<property name="defaultUri" value="http://localhost:8088/openwis" />
+	</bean>
+
+	<bean id="productWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="productmarshaller" />
+		<property name="unmarshaller" ref="productmarshaller" />
+		<property name="defaultUri" value="http://localhost:8088/openwis" />
+	</bean>
+
+	<bean id="subscriptionWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="subscriptionmarshaller" />
+		<property name="unmarshaller" ref="subscriptionmarshaller" />
+		<property name="defaultUri" value="http://localhost:8088/openwis" />
+	</bean>
+
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
 </beans>

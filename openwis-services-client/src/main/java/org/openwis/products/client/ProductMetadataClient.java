@@ -1,35 +1,39 @@
 package org.openwis.products.client;
 
-import org.springframework.stereotype.Component;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.soap.client.core.SoapActionCallback;
-
 import javax.xml.bind.JAXBElement;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
 /**
  * Client for ProductMetadata web service.
  *
  * @author Jose García
  */
-public class ProductMetadataClient extends WebServiceGatewaySupport {
+public class ProductMetadataClient {
+
+    @Autowired
+    private WebServiceTemplate webServiceTemplate;
 
     /**
      * Retrieves a product metadata by the metadata urn.
      *
-     * @param metadataUrn   Metadata Urn
+     * @param metadataUrn
+     *            Metadata Urn
      * @return
      */
     public ProductMetadata retrieveProductMetadataByUrn(String metadataUrn) {
         ObjectFactory objFact = new ObjectFactory();
 
-        GetProductMetadataByUrn request =  objFact.createGetProductMetadataByUrn();
+        GetProductMetadataByUrn request = objFact
+                .createGetProductMetadataByUrn();
         request.setProductMetadataUrn(metadataUrn);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(
-                objFact.createGetProductMetadataByUrn(request),
-                new SoapActionCallback(
-                        "http://localhost:8088/mockProductMetadataServiceSoapBinding"));
-        GetProductMetadataByUrnResponse responseType = (GetProductMetadataByUrnResponse) response.getValue();
+        @SuppressWarnings("unchecked")
+        JAXBElement<GetProductMetadataByUrnResponse> response = (JAXBElement<GetProductMetadataByUrnResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createGetProductMetadataByUrn(request));
+        GetProductMetadataByUrnResponse responseType = response.getValue();
 
         return responseType.getReturn();
 
@@ -44,16 +48,16 @@ public class ProductMetadataClient extends WebServiceGatewaySupport {
     public long createProductMetadata(ProductMetadata productMetadata) {
         ObjectFactory objFact = new ObjectFactory();
 
-        CreateProductMetadata request =  objFact.createCreateProductMetadata();
+        CreateProductMetadata request = objFact.createCreateProductMetadata();
         request.setProductMetadata(productMetadata);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(
-                objFact.createCreateProductMetadata(request),
-                new SoapActionCallback(
-                        "http://localhost:8088/mockProductMetadataServiceSoapBinding"));
-        CreateProductMetadataResponse responseType = (CreateProductMetadataResponse) response.getValue();
+        @SuppressWarnings("unchecked")
+        JAXBElement<CreateProductMetadataResponse> response = (JAXBElement<CreateProductMetadataResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createCreateProductMetadata(request));
+        CreateProductMetadataResponse responseType = response.getValue();
 
-      return responseType.getReturn();
+        return responseType.getReturn();
 
     }
 
@@ -62,17 +66,18 @@ public class ProductMetadataClient extends WebServiceGatewaySupport {
      *
      * @param productMetadata
      */
-    public void updateProductMetadata(ProductMetadata productMetadata) {
+    public UpdateProductMetadataResponse updateProductMetadata(
+            ProductMetadata productMetadata) {
         ObjectFactory objFact = new ObjectFactory();
 
-        UpdateProductMetadata request =  objFact.createUpdateProductMetadata();
+        UpdateProductMetadata request = objFact.createUpdateProductMetadata();
         request.setProductMetadata(productMetadata);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(
-                objFact.createUpdateProductMetadata(request),
-                new SoapActionCallback(
-                        "http://localhost:8088/mockProductMetadataServiceSoapBinding"));
-        UpdateProductMetadataResponse responseType = (UpdateProductMetadataResponse) response.getValue();
+        @SuppressWarnings("unchecked")
+        JAXBElement<UpdateProductMetadataResponse> response = (JAXBElement<UpdateProductMetadataResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createUpdateProductMetadata(request));
+        return response.getValue();
     }
 
     /**
@@ -80,36 +85,47 @@ public class ProductMetadataClient extends WebServiceGatewaySupport {
      *
      * @param productMetadataId
      */
-    public void deleteProductMetadataById(Long productMetadataId) {
+    public DeleteProductMetadataResponse deleteProductMetadataById(
+            Long productMetadataId) {
         ObjectFactory objFact = new ObjectFactory();
 
-        DeleteProductMetadata request =  objFact.createDeleteProductMetadata();
+        DeleteProductMetadata request = objFact.createDeleteProductMetadata();
         request.setProductMetadataId(productMetadataId);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(
-                objFact.createDeleteProductMetadata(request),
-                new SoapActionCallback(
-                        "http://localhost:8088/mockProductMetadataServiceSoapBinding"));
-        DeleteProductMetadataResponse responseType = (DeleteProductMetadataResponse) response.getValue();
+        @SuppressWarnings("unchecked")
+        JAXBElement<DeleteProductMetadataResponse> response = (JAXBElement<DeleteProductMetadataResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createDeleteProductMetadata(request));
+        return response.getValue();
     }
 
     /**
      * Deletes a product metadata using the metadata URN.
      *
-     * @param metadataUrn   Metadata Urn
+     * @param metadataUrn
+     *            Metadata Urn
      */
-    public void deleteProductMetadataByURN(String metadataUrn) {
+    public DeleteProductMetadataByURNResponse deleteProductMetadataByURN(
+            String metadataUrn) {
         ObjectFactory objFact = new ObjectFactory();
 
-        DeleteProductMetadataByURN request =  objFact.createDeleteProductMetadataByURN();
+        DeleteProductMetadataByURN request = objFact
+                .createDeleteProductMetadataByURN();
         request.setProductMetadataUrn(metadataUrn);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(
-                objFact.createDeleteProductMetadataByURN(request),
-                new SoapActionCallback(
-                        "http://localhost:8088/mockProductMetadataServiceSoapBinding"));
+        @SuppressWarnings("unchecked")
+        JAXBElement<DeleteProductMetadataByURNResponse> response = (JAXBElement<DeleteProductMetadataByURNResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createDeleteProductMetadataByURN(request));
 
+        return response.getValue();
+    }
 
-        DeleteProductMetadataByURNResponse responseType = (DeleteProductMetadataByURNResponse) response.getValue();
+    public WebServiceTemplate getWebServiceTemplate() {
+        return webServiceTemplate;
+    }
+
+    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+        this.webServiceTemplate = webServiceTemplate;
     }
 }
