@@ -551,10 +551,17 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 -- === Table: Settings
 -- ======================================================================
 
+<<<<<<< HEAD
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'Catalogue Sextant - MyOcean', 0, 110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '52d62b80-a2a4-11e2-9e96-0800200c9a66', 0, 120, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'Ifremer', 0, 130, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '3.0.2', 0, 150, 'n');
+=======
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'My organization', 0, 130, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '3.0.3', 0, 150, 'n');
+>>>>>>> upstream/3.0.x
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', 'localhost', 0, 210, 'n');
@@ -584,12 +591,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/contactId', NULL, 0, 1220, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', 'false', 2, 1310, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/use', 'false', 2, 1710, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/path', '/geonetwork/srv/en/shib.user.login', 0, 1720, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/username', 'REMOTE_USER', 0, 1740, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/surname', 'Shib-Person-surname', 0, 1750, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/firstname', 'Shib-InetOrgPerson-givenName', 0, 1760, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/shib/profile', 'Shib-EP-Entitlement', 0, 1770, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', 'true', 2, 1911, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/clickablehyperlinks/enable', 'true', 2, 2010, 'y');
@@ -613,7 +614,8 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/mdmode', '1', 0, 7010, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/tokentimeout', '3600', 1, 7020, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '60', 1, 7030, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'true', 2, 7210, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/maxrecords', '10', 1, 7040, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'false', 2, 7210, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enableSearchPanel', 'false', 2, 7220, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', 'disabled', 0, 7230, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '0 0 0/24 ? * *', 0, 7240, 'y');

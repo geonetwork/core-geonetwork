@@ -52,6 +52,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -423,7 +425,6 @@ public class MetadataSchema
 
         final Path schematronDir = schemaDir.resolve(SCHEMATRON_DIR);
         if (Files.exists(schematronDir)) {
-            int displayPriority = 0;
 
             Map<String, Schematron> existing = Maps.newHashMap();
 
@@ -433,14 +434,13 @@ public class MetadataSchema
 
             try (DirectoryStream<Path> schematronFiles = Files.newDirectoryStream(schematronDir, new SchematronReportRulesFilter())) {
                 for (Path schematronFile : schematronFiles) {
-                    displayPriority++;
                     final String schematronFileName = schematronFile.getFileName().toString();
                     saSchemas.add(schematronFileName);
 
                     org.fao.geonet.domain.Schematron schematron = new org.fao.geonet.domain.Schematron();
                     schematron.setSchemaName(schemaName);
                     schematron.setFile(schematronFileName);
-                    schematron.setDisplayPriority(displayPriority);
+                    schematron.setDisplayPriority(0);
 
                     //if schematron not already exists
                     if (existing.containsKey(schematron.getRuleName())) {
@@ -468,12 +468,30 @@ public class MetadataSchema
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+			setSchematronPriorities();
         }
 
         setSchematronRules(saSchemas.toArray(new String[saSchemas.size()]));
     }
 
-    public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
+	private void setSchematronPriorities() {
+		List<Schematron> schematronList = schemaRepo.findAllBySchemaName(schemaName);
+
+		Collections.sort(schematronList, Schematron.DISPLAY_PRIORITY_COMPARATOR);
+
+		List<Schematron> updated = Lists.newArrayList();
+		for(int i = 0; i < schematronList.size(); i++) {
+			Schematron schematron = schematronList.get(i);
+			if (schematron.getDisplayPriority() != i) {
+				schematron.setDisplayPriority(i);
+				updated.add(schematron);
+			}
+		}
+		this.schemaRepo.save(updated);
+	}
+
+	public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
         this.hmOperationFilters = operationFilters;
     }
 

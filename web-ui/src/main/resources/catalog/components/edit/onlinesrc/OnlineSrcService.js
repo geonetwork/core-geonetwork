@@ -89,6 +89,7 @@
           });
         }
         delete params.layers;
+        delete params.selectedLayers;
         return params;
       };
 

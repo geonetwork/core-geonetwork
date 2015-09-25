@@ -102,7 +102,11 @@
                   cache: true
                 })
                   .success(function(data, status, headers, config) {
-                      defer.resolve(displayFileContent(data));
+                      try {
+                        defer.resolve(displayFileContent(data));
+                      } catch (e) {
+                        defer.reject("capabilitiesParseError");
+                      }
                     })
                   .error(function(data, status, headers, config) {
                       defer.reject(status);

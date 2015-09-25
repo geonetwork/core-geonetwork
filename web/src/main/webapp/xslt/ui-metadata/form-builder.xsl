@@ -1074,11 +1074,11 @@
         <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
-          data-direction="up" href=""></a>
+          data-direction="up" href="" tabindex="-1"></a>
         <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
-          data-direction="down" href=""></a>
+          data-direction="down" href="" tabindex="-1"></a>
       </div>
     </xsl:if>
   </xsl:template>

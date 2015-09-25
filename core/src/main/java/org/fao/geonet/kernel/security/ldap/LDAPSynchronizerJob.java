@@ -75,7 +75,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 Log.debug(Geonet.LDAP, "LDAPSynchronizerJob starting ...");
             }
 
-            // Retrieve application context. A defautl SpringBeanJobFactory
+            // Retrieve application context. A default SpringBeanJobFactory
             // will not provide the application context to the job. Use
             // AutowiringSpringBeanJobFactory.
             applicationContext = (ConfigurableApplicationContext) jobExecContext
@@ -190,7 +190,9 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 return input.getId();
             }
         });
-        userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, userIds);
+        if (!userIds.isEmpty()) {
+            userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, userIds);
+        }
         for (User u : usersFound) {
             long nbOfUserRecord = metadataRepository.count(MetadataSpecs.isOwnedByUser(u.getId()));
             if (nbOfUserRecord > 0) {

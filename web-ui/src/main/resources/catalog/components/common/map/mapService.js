@@ -759,7 +759,7 @@
               }
 
               if (extent) {
-                map.getView().fitExtent(extent, map.getSize());
+                map.getView().fit(extent, map.getSize());
               }
 
               var layer = new ol.layer.Vector({

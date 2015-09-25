@@ -35,9 +35,11 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnMap',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
+            gnMap) {
       $scope.version = '0.0.1';
       // TODO : add language
       var url = gnGlobalSettings.gnUrl || location.href;
@@ -47,10 +49,11 @@
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es'};
+        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cze': 'cz'};
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
-        'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의', 'spa': 'Español'};
+        'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
+        'spa': 'Español', 'cze': 'Czech'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -92,8 +95,7 @@
 
       gnConfigService.load().then(function(c) {
         // Config loaded
-        //gnMap.importProj4js();
-        // TODO: make map proj load in mapService.config instead of here
+        gnMap.importProj4js();
       });
 
       /**
@@ -130,7 +132,7 @@
                 // That could be useful to append to catalog image URL
                 // in order to trigger a reload of the logo when info are
                 // reloaded.
-                $scope.info.site.lastUpdate = new Date();
+                $scope.info.site.lastUpdate = new Date().getTime();
                 $scope.initialized = true;
               }).
               error(function(data, status, headers, config) {

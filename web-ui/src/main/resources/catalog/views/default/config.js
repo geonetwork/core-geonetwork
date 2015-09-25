@@ -4,6 +4,9 @@
 
   var module = angular.module('gn_search_default_config', []);
 
+  module.value('gnTplResultlistLinksbtn',
+      '../../catalog/views/default/directives/partials/linksbtn.html');
+
   module
       .run([
         'gnSearchSettings',
@@ -158,6 +161,14 @@
                 return 'md.format.xml?xsl=full_view&uuid=' + md.getUuid();
               }*/
             }]
+          };
+
+          // Mapping for md links in search result list.
+          searchSettings.linkTypes = {
+            links: ['LINK'],
+            downloads: ['DOWNLOAD'],
+            layers:['OGC', 'kml'],
+            maps: ['ows']
           };
 
           // Set the default template to use

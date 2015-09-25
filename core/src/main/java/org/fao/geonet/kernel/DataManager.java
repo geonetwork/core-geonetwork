@@ -2107,7 +2107,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                                               String lang, List<MetadataValidation> validations) {
         final SchematronValidator schematronValidator = getApplicationContext().getBean(SchematronValidator.class);
         return schematronValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-                        }
+    }
 
     /**
      * Saves validation status information into the database for the current record.

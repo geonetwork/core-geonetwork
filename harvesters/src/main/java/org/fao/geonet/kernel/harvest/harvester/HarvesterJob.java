@@ -1,11 +1,8 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.quartz.DisallowConcurrentExecution;
-import org.quartz.InterruptableJob;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.UnableToInterruptJobException;
+import org.fao.geonet.ApplicationContextHolder;
+import org.quartz.*;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * A Quartz job that obtains the Harvester from the JobExecutionContext and executes it.
@@ -20,7 +17,7 @@ import org.quartz.UnableToInterruptJobException;
  */
 @DisallowConcurrentExecution
 public class HarvesterJob implements Job, InterruptableJob {
-    
+
     public static final String ID_FIELD = "harvesterId";
     String harvesterId;
     AbstractHarvester<?> harvester;
@@ -29,7 +26,6 @@ public class HarvesterJob implements Job, InterruptableJob {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             harvester.harvest();
-
         } catch (Throwable t) {
             throw new JobExecutionException(t, false);
         }
@@ -38,7 +34,9 @@ public class HarvesterJob implements Job, InterruptableJob {
     public String getHarvesterId() {
         return harvesterId;
     }
-
+    public void setApplicationContext(ConfigurableApplicationContext applicationContext) {
+        ApplicationContextHolder.set(applicationContext);
+    }
     public void setHarvesterId(String harvesterId) {
         this.harvesterId = harvesterId;
     }

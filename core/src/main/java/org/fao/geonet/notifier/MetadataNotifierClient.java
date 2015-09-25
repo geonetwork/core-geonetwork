@@ -23,7 +23,7 @@
 package org.fao.geonet.notifier;
 
 import com.google.common.base.Function;
-import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -34,35 +34,36 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataNotifier;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Metadata notifier client to manage the communication with notification servlet.
- *  
  */
 public class MetadataNotifierClient {
     @Autowired
     SettingManager settingManager;
     @Autowired
     GeonetHttpRequestFactory requestFactory;
+
     /**
      * Uses the notifier update service to handle insertion and updates of metadata.
      *
      * @throws MetadataNotifierClientException
      */
-	public void webUpdate(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
+    public void webUpdate(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
         List<? extends NameValuePair> data = Arrays.asList(
                 new BasicNameValuePair("action", "update"),
                 new BasicNameValuePair("uuid", metadataUuid),
@@ -83,7 +84,7 @@ public class MetadataNotifierClient {
             method.setEntity(entity);
 
             final boolean authenticationEnabled = StringUtils.isNotBlank(notifier.getUsername()) && notifier.getPassword() != null &&
-                                                  notifier.getPassword().length > 0;
+                    notifier.getPassword().length > 0;
             configBuilder.setAuthenticationEnabled(authenticationEnabled);
 
             method.setConfig(configBuilder.build());
@@ -92,42 +93,48 @@ public class MetadataNotifierClient {
             ClientHttpResponse response = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
                 @Nullable
                 @Override
-                public Void apply(@Nullable HttpClientBuilder input) {
-                    final CredentialsProvider provider = Lib.net.setupProxy(settingManager, input, requestHost);
+                public Void apply(@Nullable HttpClientBuilder requestBuilder) {
+                    final CredentialsProvider provider = Lib.net.setupProxy(settingManager, requestBuilder, requestHost);
                     if (authenticationEnabled) {
-                        System.out.println("webUpdate: SET USER");
-                        provider.setCredentials( AuthScope.ANY, new UsernamePasswordCredentials(notifier.getUsername(), String.copyValueOf(notifier.getPassword())));
+                        Log.debug("MetadataNotifierClient", "webUpdate: SET USER -> " + notifier.getUsername());
+                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(notifier.getUsername(), String.copyValueOf(notifier.getPassword())));
 
                         configBuilder.setAuthenticationEnabled(true);
                     }
                     return null;
                 }
             });
+            try {
 
-			// Execute the method.
-			if (response.getStatusCode() != HttpStatus.OK) {
-				throw new MetadataNotifierClientException("Method failed: " + response.getStatusText());
-			}
+                // Execute the method.
+                if (response.getStatusCode() != HttpStatus.OK) {
+                    throw new MetadataNotifierClientException("Method failed: " + response.getStatusText());
+                }
 
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
+                try {
+                    // Free the connection closing the body input stream
+                    final InputStream instream = response.getBody();
+                    IOUtils.closeQuietly(instream);
+                } catch (final IOException ignore) {
+                    // Silently ignore
+                }
 
-			// Deal with the response.
-			// Use caution: ensure correct character encoding and is not binary data
-			// System.out.println(new String(responseBody));
+            } finally {
+                method.releaseConnection();
+            }
 
-		} catch (IOException e) {
-			throw new MetadataNotifierClientException(e);
-		}
+        } catch (IOException e) {
+            throw new MetadataNotifierClientException(e);
+        }
     }
 
     /**
      * Uses the notifier delete service to handle deletion of metadata.
      *
-     * @param metadataUuid
+     * @param metadataUuid medatada UUID identifier
      * @throws MetadataNotifierClientException
      */
-	public void webDelete(MetadataNotifier notifier, String metadataUuid) throws MetadataNotifierClientException {
+    public void webDelete(MetadataNotifier notifier, String metadataUuid) throws MetadataNotifierClientException {
 
         List<? extends NameValuePair> data = Arrays.asList(
                 new BasicNameValuePair("action", "delete"),
@@ -136,6 +143,6 @@ public class MetadataNotifierClient {
         );
 
         execute(notifier, data);
-	}
+    }
 
 }

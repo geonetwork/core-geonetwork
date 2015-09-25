@@ -6,7 +6,7 @@
           <span data-translate="">currentCatalogLogo</span>
         </div>
         <div class="panel-body thumbnail gn-thumbnail">
-          <img src="../../images/logos/{{info.site.siteId}}.png?{{info.site.lastUpdate}}"/>
+          <img data-ng-src="../../images/logos/{{info.site.siteId}}.png?{{info.site.lastUpdate}}"/>
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@
                 data-ng-click="removeLogo(l)"/>
             </p>
           </div>
-          <img src="{{logoPath}}{{l}}" alt="{{l}}"/>
+          <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}"/>
         </div>
       </div>
     </div>

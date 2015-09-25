@@ -49,7 +49,7 @@ import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
@@ -71,14 +71,16 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     //--- Vars
     //---
     //---------------------------------------------------------------------------
-    @Autowired
     private HarvesterSettingsManager settingMan;
-    @Autowired
     private DataManager    dataMan;
     private Path xslPath;
     private ServiceContext context;
     private boolean readOnly;
+    private ConfigurableApplicationContext applicationContext;
 
+    public ConfigurableApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
     private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
     private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
     
@@ -87,9 +89,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     "url", "capabUrl", "baseUrl", "host", "useAccount",
                     "ogctype", "options", "status", "info", "lastRun",
                     "ownerGroup");
-    
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---              searchProfiles
 	//--- Constructor
 	//---
@@ -106,6 +107,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 	@Override
     public void init(ServiceContext context, boolean isReadOnly) throws Exception {
 		this.context = context;
+        this.dataMan = context.getBean(DataManager.class);
+        this.settingMan = context.getBean(HarvesterSettingsManager.class);
+        applicationContext = context.getApplicationContext();
+
         this.readOnly = isReadOnly;
         Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
 		xslPath    = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("xml/harvesting/");

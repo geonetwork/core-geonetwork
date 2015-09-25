@@ -39,6 +39,14 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 	}
 
 	/**
+	 *
+	 * @return
+	 */
+	public int getMaxRecords() {
+		return settingMan.getValueAsInt("system/oai/maxrecords");
+	}
+
+	/**
 	 * Get the dateFrom
 	 * Possible values are taken from the LuceneQueryBuilder class (hard coding)
 	 * @return the dateFrom
@@ -143,7 +151,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 				throw new NoRecordsMatchException("No results");
 
 			// we only need a new token if the result set is big enough
-			if (result.getIds().size() > Lib.MAX_RECORDS ) {
+			if (result.getIds().size() > getMaxRecords() ) {
 				token = new GeonetworkResumptionToken(req,result);
 				cache.storeResumptionToken(token);
 			}

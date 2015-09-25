@@ -101,7 +101,7 @@
                 $scope.mdTypes = types;
 
                 // Select the default one or the first one
-                if (defaultType && $.inArray(defaultType, $scope.mdTypes)) {
+                if (defaultType && $.inArray(defaultType, $scope.mdTypes) > -1) {
                   $scope.getTemplateNamesByType(defaultType);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
