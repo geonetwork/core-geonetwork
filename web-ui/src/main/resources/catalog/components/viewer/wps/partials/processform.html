@@ -5,42 +5,6 @@
   </div>
   <div class="panel-body panel-wps">
 
-<<<<<<< HEAD
-    <div ng-switch="status">
-
-      <div ng-switch-when="loading">
-        <h5><span translate>wpsLoadingProcessDescription</span></h5>
-      </div>
-
-      <div ng-switch-when="loaded">
-        <form>
-          <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
-            <label for="{{::input.identifier.value}}">{{::input.title.value}}</label>
-            <div ng-if="::input.literalData">
-              <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value"></input>
-            </div>
-            <div ng-if="::input.boundingBoxData">
-              <gn-bbox-input id="{{::input.identifier.value}}"
-                             data-crs="input._default.crs"
-                             data-value="input.value"
-                             data-map="map"
-                      />
-            </div>
-            <div ng-if="input.invalid">
-              <p class="text-danger">{{input.invalid}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn" data-ng-click="submit()" data-ng-class="{disabled : running}">
-              <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>&nbsp;<span translate>wpsExecute</span>
-            </button>
-          </div>
-        </form>
-        <div ng-if="exception">
-          <h4>{{exception.msg|translate}}</h4>
-          <div ng-if="exception.owsExceptionReport">
-            <div ng-repeat="exception in exception.owsExceptionReport.exception">
-=======
   <div ng-switch="describeState">
 
     <div ng-switch-when="sended">
@@ -67,7 +31,6 @@
       <div ng-if="describeResponse.processDescription">
         <div ng-repeat="processDescription in describeResponse.processDescription">
           <form>
-            <h5>{{::processDescription.title.value}}</h5>
 
             <!-- Inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
@@ -96,7 +59,7 @@
 
             <!-- ResponseDocument -->
             <div>
-              <div class="form-group">
+              <div class="form-group optional">
                 <label><a role="button" ng-click="toggleOutputs()"><span class="caret"></span> Outputs</a></label>
                 <div class="form-inline" ng-class="{'collapse': true, 'in': outputsVisible}">
                   <div class="form-group" ng-repeat="output in processDescription.processOutputs.output">
@@ -114,7 +77,7 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group optional">
                 <label><a role="button" ng-click="toggleOptions()"><span class="caret"></span> Options</a></label>
                 <div ng-class="{'collapse': true, 'in': optionsVisible}">
                   <div class="checkbox">
@@ -189,27 +152,11 @@
           <div ng-if="executeResponse.exception">
             <h4><span translate>wpsExecuteFailed</span></h4>
             <div ng-repeat="exception in executeResponse.exception">
->>>>>>> upstream/3.0.x
               <div ng-repeat="(key, value) in exception">
                 {{key}}: {{value}}
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-          <div ng-if="exception.httpResponse">
-            <div><span translate>wpsErrorCodeReturned</span> {{exception.httpResponse.status}} - {{exception.httpResponse.statusText}}</div>
-            <div>{{exception.httpResponse.data}}</div>
-          </div>
-        </div>
-      </div>
-
-      <div ng-switch-when="load-error">
-        <h4>{{exception.msg|translate}}</h4>
-        <div ng-if="exception.owsExceptionReport">
-          <div ng-repeat="exception in exception.owsExceptionReport.exception">
-            <div ng-repeat="(key, value) in exception">
-              {{key}}: {{value}}
-=======
 
           <div ng-if="executeResponse.status.processFailed">
             <h4><span translate>wpsProcessFailed</span></h4>
@@ -219,7 +166,6 @@
                   {{key}}: {{value}}
                 </div>
               </div>
->>>>>>> upstream/3.0.x
             </div>
           </div>
 
@@ -230,7 +176,7 @@
               <div class="row" ng-repeat="output in executeResponse.processOutputs.output">
 
                 <div ng-if="::output.data.complexData">
-                  <h5 class="col-sm-6">{{::output.title.value}}</h4>
+                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{::output.identifier.value}}_modal-dialog">Display</button>
                   </div>
@@ -265,7 +211,7 @@
                 </div> <!-- ng-if="::output.data.complexData" -->
 
                 <div ng-if="::output.reference">
-                  <h5 class="col-sm-6">{{::output.title.value}}</h4>
+                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
                     <a class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
                   </div>
@@ -281,19 +227,6 @@
         <div ng-switch-default>
           <p>{{executeState}}</p>
         </div>
-<<<<<<< HEAD
-        <div ng-if="exception.httpResponse">
-          <div><span translate>wpsErrorCodeReturned</span> {{exception.httpResponse.status}} - {{exception.httpResponse.statusText}}</div>
-          <div>{{exception.httpResponse.data}}</div>
-        </div>
-      </div>
-
-      <div ng-switch-default>
-        <p>{{status}}</p>
-      </div>
-    </div>
-  </div>
-=======
 
       </div> <!-- ng-switch="executeState" -->
 
@@ -302,8 +235,7 @@
     <div ng-switch-default>
       <p>{{describeState}}</p>
     </div>
+  </div>
 
   </div> <!-- ng-switch="describeState" -->
-
->>>>>>> upstream/3.0.x
 </div>
