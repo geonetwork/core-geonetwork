@@ -1,4 +1,7 @@
 {
+  "resetFilter": "Reset filters",
+  "view": "View",
+  "links": "Links",
   "print_legend": "Legends",
   "print_legend_field": "Include legends",
   "validateConstraints": "Validate limits/constraints of use",
