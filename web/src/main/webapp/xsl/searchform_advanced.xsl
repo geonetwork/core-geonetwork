@@ -231,7 +231,7 @@
 								<xsl:value-of select="/root/gui/strings/any"/>
 							</option>
 							<xsl:for-each select="/root/gui/groups/record">
-								<xsl:sort order="ascending" select="name"/>
+								<xsl:sort order="ascending" select="label/child::*[name() = $mylang]"/>
 								<option value="{id}">
 									<!-- after a search, many groups are defined in 
 									searchDefaults (FIXME ?) and the last group in group list
@@ -240,7 +240,7 @@
 									<xsl:if test="id=/root/gui/searchDefaults/group and count(/root/gui/searchDefaults/group)=1">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
-									<xsl:value-of select="name"/>
+									<xsl:value-of select="label/child::*[name() = $mylang]"/>
 								</option>
 							</xsl:for-each>
 						</select>
