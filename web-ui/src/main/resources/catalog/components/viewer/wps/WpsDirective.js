@@ -99,7 +99,11 @@
         },
 
         link: function(scope, element, attrs) {
-          var defaults = parseKvpParams(scope.defaults);
+          var defaults;
+
+          if(scope.defaults) {
+            defaults = parseKvpParams(scope.defaults);
+          }
 
           scope.describeState = 'sended';
           scope.executeState = '';
@@ -116,9 +120,11 @@
                       function(input) {
                         var value;
                         var defaultValue;
-                        var datainput = defaults.datainputs[input.identifier.value];
-                        if (datainput != undefined) {
-                          defaultValue = datainput.value;
+                        if(defaults) {
+                          var datainput = defaults.datainputs[input.identifier.value];
+                          if (datainput != undefined) {
+                            defaultValue = datainput.value;
+                          }
                         }
 
                         if (input.literalData != undefined) {
@@ -157,7 +163,7 @@
                       function(output) {
                         output.asReference = true;
 
-                        var outputDefault = defaults.responsedocument[output.identifier.value]
+                        var outputDefault = defaults && defaults.responsedocument[output.identifier.value]
                         if (outputDefault) {
                           output.value = true;
                           var defaultAsReference = outputDefault.attributes['asreference'];
@@ -173,9 +179,9 @@
                   scope.outputsVisible = true;
 
                   scope.responseDocument = {
-                    lineage: toBool(defaults.lineage, false),
-                    storeExecuteResponse: toBool(defaults.storeexecuteresponse, false),
-                    status: toBool(defaults.status, false)
+                    lineage: toBool(defaults && defaults.lineage, false),
+                    storeExecuteResponse: toBool(defaults && defaults.storeexecuteresponse, false),
+                    status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
                 }
