@@ -1,13 +1,10 @@
 package org.openwis.metadata.product;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.openwis.products.client.ProductMetadata;
 import org.openwis.products.client.ProductMetadataClient;
-import org.openwis.products.client.ProductMetadataConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,6 +13,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ProductMetadataManager implements IProductMetadataManager {
+    
+    @Autowired
+    private ProductMetadataClient serviceClient;
+    
     @Override
     public ProductMetadata getProductMetadataByUrn(String urn) {
         return getServiceClient().retrieveProductMetadataByUrn(urn);
@@ -117,11 +118,12 @@ public class ProductMetadataManager implements IProductMetadataManager {
         return pm;
     }
 
-    private ProductMetadataClient getServiceClient() {
-        ApplicationContext context =
-                new AnnotationConfigApplicationContext(ProductMetadataConfiguration.class);
-        ProductMetadataClient client = context.getBean(ProductMetadataClient.class);
-
-        return client;
+    public ProductMetadataClient getServiceClient() {
+        return serviceClient;
     }
+
+    public void setServiceClient(ProductMetadataClient serviceClient) {
+        this.serviceClient = serviceClient;
+    }
+
 }
