@@ -35,9 +35,11 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
+    'gnMap',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService) {
+            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
+            gnMap) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -92,8 +94,7 @@
 
       gnConfigService.load().then(function(c) {
         // Config loaded
-        //gnMap.importProj4js();
-        // TODO: make map proj load in mapService.config instead of here
+        gnMap.importProj4js();
       });
 
       /**
