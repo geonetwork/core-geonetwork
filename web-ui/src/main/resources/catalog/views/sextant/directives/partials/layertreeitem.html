@@ -45,7 +45,7 @@
             <span class="caret"></span>
           </div>
           <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p)">{{p.name}}</a></li>
+            <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p)">{{p.desc || p.name}}</a></li>
           </ul>
         </li>
 

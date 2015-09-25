@@ -582,7 +582,8 @@
         desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4],
-        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined
+        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+        applicationProfile: linkInfos[6]
       };
     }
     function parseLink(sLink) {

@@ -604,7 +604,8 @@
           <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
           <xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
           <xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
-          <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+		  <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+		  <xsl:variable name="applicationProfile" select="normalize-space(gmd:applicationProfile/gco:CharacterString)"/>
           <xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
 
           <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
@@ -635,7 +636,7 @@
 
           <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
           <xsl:if test="not($wmsLinkNoProtocol)">
-            <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition)}" store="true" index="false"/>
+            <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
 
           <!-- Add KML link if WMS -->
@@ -644,23 +645,23 @@
             <!-- FIXME : relative path -->
             <Field name="link" string="{concat($title, '|', $desc, '|',
               '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
-              '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition)}" store="true" index="false"/>
+              '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
 
           <!-- Try to detect Web Map Context by checking protocol or file extension -->
           <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-              $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition)}" store="true" index="false"/>
+              $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
           <!-- Try to detect OWS Context by checking protocol or file extension -->
           <xsl:if test="starts-with($protocol,'OGC:OWS-C') or contains($linkage,'.ows')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-						$linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition)}" store="true" index="false"/>
+						$linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
 
           <xsl:if test="$wmsLinkNoProtocol">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-						$linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition)}" store="true" index="false"/>
+						$linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
         </xsl:for-each>
       </xsl:for-each>

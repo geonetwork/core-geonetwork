@@ -23,7 +23,8 @@
             var scope = $scope.$new();
             scope.wpsUri = process.url;
             scope.wpsProcessId = process.name;
-            var el = angular.element('<gn-wps-process-form map="map" data-uri="wpsUri" data-process-id="wpsProcessId"></gn-wps-process-form>');
+            scope.applicationProfile = process.applicationProfile;
+            var el = angular.element('<gn-wps-process-form map="map" data-uri="wpsUri" data-process-id="wpsProcessId" defaults="applicationProfile"></gn-wps-process-form>');
             $compile(el)(scope);
             var element = $('.sxt-wps-panel');
             element.empty();
