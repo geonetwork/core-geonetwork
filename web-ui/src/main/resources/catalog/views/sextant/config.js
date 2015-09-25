@@ -369,7 +369,10 @@
         }
       }
 
-      searchSettings.hiddenParams = {};
+      searchSettings.hiddenParams = {
+        type: 'dataset or series or publication or nonGeographicDataset or ' +
+            'feature or featureCatalog or map'
+      };
       searchSettings.configWho = searchSettings.configWho || '';
       if(searchSettings.configWho) {
         angular.extend(searchSettings.hiddenParams, {
