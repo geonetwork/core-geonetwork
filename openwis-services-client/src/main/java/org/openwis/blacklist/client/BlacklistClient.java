@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 /**
@@ -14,7 +13,6 @@ import org.springframework.ws.client.core.WebServiceTemplate;
  */
 public class BlacklistClient {
 
-    @Autowired
     private WebServiceTemplate webServiceTemplate;
 
     /**
@@ -64,6 +62,47 @@ public class BlacklistClient {
         UpdateUserBlackListInfoResponse responseType = response.getValue();
 
         return responseType.getReturn();
+    }
+
+    /**
+     * Updates a user blacklist status.
+     * 
+     * @param isBlacklisted
+     * @return
+     */
+    public SetUserBlacklistedResponse setBlacklisted(Boolean isBlacklisted, String user) {
+        ObjectFactory objFact = new ObjectFactory();
+
+        SetUserBlacklisted request = objFact.createSetUserBlacklisted();
+        request.setBlacklisted(isBlacklisted);
+        request.setUser(user);
+
+        @SuppressWarnings("unchecked")
+        JAXBElement<SetUserBlacklistedResponse> response = (JAXBElement<SetUserBlacklistedResponse>) webServiceTemplate
+                .marshalSendAndReceive(
+                        objFact.createSetUserBlacklisted(request));
+        return response.getValue();
+
+    }
+    
+    /**
+     * Check if a user is blacklisted.
+     * 
+     * @param isBlacklisted
+     * @return
+     */
+    public IsUserBlacklistedResponse getBlacklisted(String user) {
+        ObjectFactory objFact = new ObjectFactory();
+
+        IsUserBlacklisted request = objFact.createIsUserBlacklisted();
+        request.setUser(user);
+
+        @SuppressWarnings("unchecked")
+        JAXBElement<IsUserBlacklistedResponse> response = (JAXBElement<IsUserBlacklistedResponse>) webServiceTemplate
+                .marshalSendAndReceive(
+                        objFact.createIsUserBlacklisted(request));
+        return response.getValue();
+
     }
 
     public WebServiceTemplate getWebServiceTemplate() {

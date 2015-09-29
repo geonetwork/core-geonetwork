@@ -12,7 +12,6 @@ import org.springframework.ws.client.core.WebServiceTemplate;
  */
 public class ProductMetadataClient {
 
-    @Autowired
     private WebServiceTemplate webServiceTemplate;
 
     /**
