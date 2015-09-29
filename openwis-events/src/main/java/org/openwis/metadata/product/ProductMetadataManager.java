@@ -95,7 +95,14 @@ public class ProductMetadataManager implements IProductMetadataManager {
 
         // Set the process type
         if (metadata.getSourceInfo() != null) {
-            //pm.setProcess(metadata.getSourceInfo().getProcessType().toString());
+            String processType = "LOCAL";
+            String catalogueSiteId = settingManager.getSiteId();
+
+            // TODO: Check in actual implementation as is used also the value SYNCHRO
+            if (!catalogueSiteId.equals(metadata.getSourceInfo().getSourceId())) {
+                processType = "HARVEST";
+            }
+            pm.setProcess(processType);
         }
 
         // Extract the update frequency
