@@ -23,6 +23,10 @@ public class ProductMetadataManager implements IProductMetadataManager {
     @Autowired
     private SettingManager settingManager;
 
+    @Autowired
+    ProductMetadataIndexerLucene indexer;
+
+
     @Override
     public ProductMetadata getProductMetadataByUrn(String urn) {
         return getServiceClient().retrieveProductMetadataByUrn(urn);
@@ -35,6 +39,8 @@ public class ProductMetadataManager implements IProductMetadataManager {
         } else {
             getServiceClient().updateProductMetadata(pm);
         }
+
+        indexer.index(pm);
     }
 
     @Override

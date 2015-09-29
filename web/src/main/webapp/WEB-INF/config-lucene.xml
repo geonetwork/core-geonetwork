@@ -156,6 +156,22 @@
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
+
+      <!-- OpenWIS -->
+      <field name="_process" tagName="process"/>
+      <field name="_gtsCategory" tagName="gtsCategory"/>
+      <field name="_overriddenGtsCategory" tagName="overriddenGtsCategory"/>
+      <field name="_fncPattern" tagName="fncPattern"/>
+      <field name="_overriddenFncPattern" tagName="overriddenFncPattern"/>
+      <field name="_fileExtension" tagName="fileExtension"/>
+      <field name="_overriddenFileExtension" tagName="overriddenFileExtension"/>
+      <field name="_dataPolicy" tagName="dataPolicy"/>
+      <field name="_localDataResource" tagName="localDataResource"/>
+      <field name="_originator" tagName="originator"/>
+      <field name="_creationDate" tagName="creationDate"/>
+      <field name="_isFed" tagName="isFed"/>
+      <field name="_isIngested" tagName="isIngested"/>
+      <field name="_isStopGap" tagName="isStopGap"/>
     </dumpFields>
   </search>
 
