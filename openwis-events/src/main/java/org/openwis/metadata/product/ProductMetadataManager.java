@@ -2,6 +2,7 @@ package org.openwis.metadata.product;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.openwis.products.client.ProductMetadata;
 import org.openwis.products.client.ProductMetadataClient;
@@ -18,7 +19,10 @@ public class ProductMetadataManager implements IProductMetadataManager {
     
     @Autowired
     private ProductMetadataClient serviceClient;
-    
+
+    @Autowired
+    private SettingManager settingManager;
+
     @Override
     public ProductMetadata getProductMetadataByUrn(String urn) {
         return getServiceClient().retrieveProductMetadataByUrn(urn);
