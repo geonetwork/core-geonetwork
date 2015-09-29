@@ -1,6 +1,5 @@
 package org.openwis.event.metadata.product;
 
-import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.events.md.MetadataRemove;
 import org.fao.geonet.utils.Log;
