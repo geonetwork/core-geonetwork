@@ -1,6 +1,7 @@
 package org.openwis.event.metadata.product;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.events.md.MetadataUpdate;
 import org.fao.geonet.utils.Log;
 import org.openwis.metadata.product.ProductMetadataManager;
@@ -19,11 +20,12 @@ public class ProductMetadataUpdate implements ApplicationListener<MetadataUpdate
     @Autowired
     ProductMetadataManager productMetadataManager;
 
-
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void onApplicationEvent(MetadataUpdate event) {
         Metadata metadata = event.getMd();
+
+        if (!metadata.getDataInfo().getType().equals(MetadataType.METADATA)) return;
 
         try {
             Log.info(GeonetOpenwis.PRODUCT_METADATA, "Update - ProductMetadata (urn):" + metadata.getUuid());
