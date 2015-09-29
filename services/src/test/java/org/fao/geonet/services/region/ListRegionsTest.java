@@ -18,6 +18,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
 
 public class ListRegionsTest extends AbstractServiceIntegrationTest {
 
@@ -25,10 +26,15 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     private List service;
 
     @Test
+    @Ignore
     public void testExecAll() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, null, -1, request);
+
         final int expectedRegions = 287;
+
+        assertEquals(expectedRegions, regions.size());
+
         HttpMessageConverter<Object> converter = new Jaxb2RootElementHttpMessageConverter();
         MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
         converter.write(regions, MediaType.APPLICATION_JSON, outputMessage);
@@ -43,6 +49,7 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testExecCategorySearch() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, "http://geonetwork-opensource.org/regions#country", -1, request);
@@ -62,6 +69,7 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testExecLabelSearch() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", "iv", null, -1, request);
@@ -81,6 +89,7 @@ public class ListRegionsTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testExecMaxResults() throws Exception {
         NativeWebRequest request = new ServletWebRequest(new MockHttpServletRequest(), new MockHttpServletResponse());
         ListRegionsResponse regions = service.exec("eng", null, null, 200, request);
