@@ -10,19 +10,21 @@
 							type="text">
 					</div>
 					<div style="display: inline">
-						<label for="numResults" data-translate="">numResults</label> <input
+						<label for="numResults" data-translate="">Records per page</label> <input
 							data-ng-change="updateData()" data-ng-model="numResults"
 							type="number">
 					</div>
 				</div>
 				<table class="table">
 					<tr>
-						<th>User </th>
+						<th>User <input data-ng-change="updateData()" id="direction"
+							data-ng-model="direction" type="checkbox" class="asc_desc"></input><label
+							for="direction"></label></th>
 						<th>Nb Warn</th>
 						<th>Vol Warn</th>
 						<th>Nb Blacklist</th>
 						<th>Vol Blacklist</th>
-						<th>Blacklist</th>
+						<th>Status</th>
 					</tr>
 					<tr data-ng-repeat="element in data track by $index">
 						<td>{{element.user}}</td>
@@ -36,7 +38,7 @@
 					</tr>
 				</table>
 				<div id="editBlackList" class="modal fade" tabindex="-1"
-					role="dialog" style="display:none"
+					role="dialog" style="display: none"
 					data-ng-controller="GnOpenwisBlacklistModalController">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -48,26 +50,30 @@
 									<label>Username:</label> <input disabled="disabled" type="text"
 										data-ng-model="element.user" />
 								</div>
-                                <div>
-                                    <label style="width: 290px">Nb Dissemination Warning Threshold:</label> <input type="text"
-                                        data-ng-model="element['nbDisseminationWarnThreshold']" />
-                                </div>
-                                <div>
-                                    <label style="width: 290px">Vol Dissemination Warning Threshold:</label> <input type="text"
-                                        data-ng-model="element['volDisseminationWarnThreshold']" />
-                                </div>
-                                <div>
-                                    <label style="width: 290px">Nb Dissemination Blacklist Threshold:</label> <input type="text"
-                                        data-ng-model="element['nbDisseminationBlacklistThreshold']" />
-                                </div>
-                                <div>
-                                    <label style="width: 290px">Vol Dissemination Blacklist Threshold:</label> <input type="text"
-                                        data-ng-model="element['volDisseminationBlacklistThreshold']" />
-                                </div>
-                                <div>
-                                    <label style="width: 290px">Blacklist:</label> <input type="checkbox"
-                                        data-ng-model="element['isBlacklisted']" />
-                                </div>
+								<div>
+									<label style="width: 290px">Nb Dissemination Warning
+										Threshold:</label> <input type="text"
+										data-ng-model="element['nbDisseminationWarnThreshold']" />
+								</div>
+								<div>
+									<label style="width: 290px">Vol Dissemination Warning
+										Threshold:</label> <input type="text"
+										data-ng-model="element['volDisseminationWarnThreshold']" />
+								</div>
+								<div>
+									<label style="width: 290px">Nb Dissemination Blacklist
+										Threshold:</label> <input type="text"
+										data-ng-model="element['nbDisseminationBlacklistThreshold']" />
+								</div>
+								<div>
+									<label style="width: 290px">Vol Dissemination Blacklist
+										Threshold:</label> <input type="text"
+										data-ng-model="element['volDisseminationBlacklistThreshold']" />
+								</div>
+								<div>
+									<label style="width: 290px">Blacklist:</label> <input
+										type="checkbox" data-ng-model="element['isBlacklisted']" />
+								</div>
 							</div>
 							<div class="modal-footer">
 								<button class="btn btn-primary" type="button"

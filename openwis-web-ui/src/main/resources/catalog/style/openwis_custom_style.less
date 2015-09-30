@@ -1,0 +1,15 @@
+.asc_desc[type="checkbox"] {
+    display:none;
+}
+.asc_desc[type="checkbox"] + label:before{
+    position: relative;
+    display: block;
+    width: 11px;
+    height: 11px;
+    border: none;
+    content: "\f0d7";
+    background: transparent;
+}
+.asc_desc[type="checkbox"]:checked + label:before{
+    content: "\f0d8";
+}

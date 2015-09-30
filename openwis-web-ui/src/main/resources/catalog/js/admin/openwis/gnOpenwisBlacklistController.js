@@ -12,22 +12,24 @@
 
         $scope.data = [];
         $scope.numResults = 20;
+        $scope.username = '';
+        $scope.direction = false;
 
         $scope.updateData = function() {
 
           // TODO paginate
           $http.get(
               $scope.url + 'openwis.blacklisting.search?startWith='
-                  + $scope.username + '&maxResults=' + $scope.numResults)
-              .success(function(data) {
-                $scope.data = data;
-              }).error(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title : 'Error',
-                  msg : 'Error getting user details. Please reload.',
-                  type : 'danger'
-                });
-              });
+                  + $scope.username + '&maxResults=' + $scope.numResults
+                  + '&direction=' + $scope.direction).success(function(data) {
+            $scope.data = data;
+          }).error(function(data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title : 'Error',
+              msg : 'Error getting user details. Please reload.',
+              type : 'danger'
+            });
+          });
         };
 
         $scope.updateData();

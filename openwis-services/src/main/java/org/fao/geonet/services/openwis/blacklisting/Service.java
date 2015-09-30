@@ -50,9 +50,12 @@ public class Service {
             @RequestParam(required = false, defaultValue = "0") Integer firstResult,
             @RequestParam(required = false, defaultValue = "20") Integer maxResults,
             @RequestParam(required = false, defaultValue = "") String column,
-            @RequestParam(required = false, defaultValue = "ASC") String direction) {
+            @RequestParam(required = false, defaultValue = "false") Boolean direction) {
 
-        SortDirection sort = SortDirection.fromValue(direction);
+        SortDirection sort = SortDirection.DESC;
+        if(direction) {
+            sort = SortDirection.ASC;
+        }
         return client.retrieveUsersBlackListInfoByUser(firstResult, maxResults,
                 sort);
 

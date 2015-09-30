@@ -1042,5 +1042,17 @@
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
 	  "logActivity" : "Activity",
-    "selectExistingLogo": "Select from existing logos"
+    "selectExistingLogo": "Select from existing logos",
+    "blacklist": "BlackList",
+    "openwis-stats": "OpenWis Statistics",
+    "maxRecords": "Records per page",
+    "catalogStatistics": "Catalog Statistics",
+    "dataStatistics": "Data Statistics",
+    "cacheContents": "Cache Contents",
+    "cacheStatistics": "Cache Statistics",
+    "globalReports" : "Global Reports",
+    "ingestedDataStatistics": "Ingested Data Statistics",
+    "recentEvents": "Recent Events",
+    "iniDate" : "From",
+    "endDate" : "To"
 }
