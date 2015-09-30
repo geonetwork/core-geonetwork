@@ -89,7 +89,8 @@ public class AddDefault implements Service {
 
 			Path templatesDir = schemaMan.getSchemaTemplatesDir(schemaName);
 			if (templatesDir == null) {
-				Log.error(Geonet.DATA_MANAGER, "Skipping - No templates?");
+				Log.warning(Geonet.DATA_MANAGER,
+                        String.format("Skipping - No templates found for schema '%s'.", schemaName));
 				continue;
 			}
             final String prefix = "sub-";
@@ -104,7 +105,8 @@ public class AddDefault implements Service {
 
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER,
-                                " - Adding template file (for schema " + schemaName + "): " + templateName);
+                                String.format(" - Adding %s template file %s ...",
+                                        schemaName, templateName));
                     }
 
                     try {
@@ -136,8 +138,10 @@ public class AddDefault implements Service {
                         status = "loaded";
                     } catch (Exception e) {
                         serviceStatus = "false";
-                        Log.error(Geonet.DATA_MANAGER, "Error loading template: "
-                                                       + e.getMessage());
+                        Log.error(Geonet.DATA_MANAGER,
+                                String.format("Error loading %s template file %s. Error is %s.",
+                                        schemaName, temp, e.getMessage()),
+                                e);
                     }
                     template.setAttribute("status", status);
                     schema.addContent(template);

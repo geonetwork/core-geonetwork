@@ -36,6 +36,7 @@
         $scope.importing = false;
         var report = {
           id: data.jqXHR.responseJSON.id,
+          uuid: data.jqXHR.responseJSON.uuid,
           success: data.jqXHR.responseJSON.success,
           message: data.jqXHR.responseJSON.msg
         };
@@ -45,8 +46,9 @@
         $scope.importing = false;
         var response = new DOMParser().parseFromString(
             data.jqXHR.responseText, 'text/xml');
+        var msgEl = response.getElementsByTagName('message')[0];
         var report = {
-          message: response.getElementsByTagName('message')[0].innerHTML
+          message: msgEl.innerHTML ? msgEl.innerHTML : msgEl.textContent
         };
         $scope.reports.push(report);
       };
@@ -55,7 +57,8 @@
       $scope.mdImportUploadOptions = {
         autoUpload: false,
         done: uploadImportMdDone,
-        fail: uploadImportMdError
+        fail: uploadImportMdError,
+        singleUpload: true
       };
       /** --- */
 

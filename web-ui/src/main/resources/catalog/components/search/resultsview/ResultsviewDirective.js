@@ -159,17 +159,17 @@
    * As we cannot use nested ng-repeat on a getLinksByType()
    * function, we have to load them once into the scope on rendering.
    */
-  module.directive('gnFixMdlinks', [
-    function() {
+  module.directive('gnFixMdlinks', [ 'gnSearchSettings',
+    function(gnSearchSettings) {
 
       return {
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD');
-          scope.layers = scope.md.getLinksByType('OGC', 'kml');
-          scope.maps = scope.md.getLinksByType('ows');
+          var obj = gnSearchSettings.linkTypes;
+          for(var p in obj) {
+            scope[p] = scope.md.getLinksByType.apply(scope.md, obj[p]);
+          }
         }
       };
     }]);

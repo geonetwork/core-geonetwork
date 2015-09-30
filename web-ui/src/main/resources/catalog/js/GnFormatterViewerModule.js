@@ -19,7 +19,8 @@
   goog.require('gn_popup_directive');
   goog.require('gn_popup_service');
   goog.require('gn_search_default_directive');
-  goog.require('gn_utility_directive');
+  goog.require('gn_utility');
+  goog.require('gn_utility');
 
 
 
@@ -29,12 +30,14 @@
 
 
   var module = angular.module('gn_formatter_viewer',
-      ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service',
+      ['ngRoute', 'gn', 'gn_utility', 'gn_catalog_service',
         'gn_search_default_directive',
         'gn_popup_service', 'gn_mdactions_service', 'gn_alert']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core']);
+
+  module.constant('gnSearchSettings', {});
 
   module.controller('GnFormatterViewer',
       ['$scope', '$http', '$sce', '$routeParams', 'Metadata',

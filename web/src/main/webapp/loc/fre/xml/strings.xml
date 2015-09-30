@@ -30,7 +30,7 @@ Commentaire de l'utilisateur lors du changement d'état :
 La liste des métadonnées concernées par le changement est la suivante:
 %s
 La liste des changements d'état sont accessibles ici :
-%s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
+%scatalog.search#/search?_status=%s&amp;_statusChangeDate=%s
 	</statusSendEmail>
   <statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
 	<otherValue>Autre :</otherValue>

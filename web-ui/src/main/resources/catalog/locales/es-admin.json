@@ -29,6 +29,7 @@
     "avgViewsPerDay": "Búsquedas por día",
     "avgViewsPerMonth": "Visualizaciones por mes",
     "batchProcess": "Procesamiento por lotes",
+    "keywordCreationError": "Error creating keyword",
     "batchProcessParameters": "Parámetros del proceso",
     "batchProcessTypeUnsupported": "Tipo de proceso {{type}} no soportado",
     "batchreplacer-addReplacement": "Añadir reemplazo",

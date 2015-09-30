@@ -92,12 +92,23 @@
                                 file.$submit = submit;
                             }
                             scope.$apply(function () {
-                                var method = scope.option('prependFiles') ?
+                                if(scope.option('singleUpload')) {
+                                  if(scope.queue.length > 0) {
+                                    scope.queue.pop();
+                                  }
+                                  Array.prototype['push'].apply(
+                                      scope.queue,
+                                      data.files
+                                  );
+                                }
+                                else {
+                                    var method = scope.option('prependFiles') ?
                                         'unshift' : 'push';
-                                Array.prototype[method].apply(
-                                    scope.queue,
-                                    data.files
-                                );
+                                    Array.prototype[method].apply(
+                                        scope.queue,
+                                        data.files
+                                    );
+                                }
                                 if (file.$submit &&
                                         (scope.option('autoUpload') ||
                                         data.autoUpload) &&

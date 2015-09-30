@@ -24,23 +24,19 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.io.ByteStreams;
-import jeeves.interfaces.Service;
-
 import com.vividsolutions.jts.util.Assert;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
-import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.oaipmh.exceptions.BadArgumentException;
-import org.jdom.Element;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,9 +45,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.DirectoryStream;
@@ -59,6 +52,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
 
 import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XSL_FILENAME;
 
@@ -112,9 +106,22 @@ public class Register extends AbstractFormatService {
                     throw new BadArgumentException(
                             "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
                 }
-                ZipUtil.extract(zipFs, newBundle);
 
-            } catch (IllegalArgumentException e) {
+                Path viewXslContainerDir = null;
+                for (Path root : zipFs.getRootDirectories()) {
+                    viewXslContainerDir = findViewXslContainerDir(root);
+                    if (viewXslContainerDir != null) {
+                        break;
+                    }
+                }
+
+                if (viewXslContainerDir == null) {
+                    throw new IllegalArgumentException(uploadedFile + " does not have a view.xsl file within it");
+                }
+
+                IO.copyDirectoryOrFile(viewXslContainerDir, newBundle, false);
+
+            } catch (IllegalArgumentException | UnsupportedOperationException e) {
                 handleRawXsl(uploadedFile, newBundle);
             } catch (Exception e){
                 IO.deleteFileOrDirectory(newBundle);
@@ -131,6 +138,22 @@ public class Register extends AbstractFormatService {
         } finally {
             IO.deleteFile(uploadedFile, false, Geonet.FORMATTER);
         }
+    }
+
+    private Path findViewXslContainerDir(Path dir) throws IOException {
+        if (Files.exists(dir.resolve(FormatterConstants.VIEW_XSL_FILENAME))) {
+            return dir;
+        }
+
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, IO.DIRECTORIES_FILTER)) {
+            for (Path childDir: paths) {
+                Path container = findViewXslContainerDir(childDir);
+                if (container != null) {
+                    return container;
+                }
+            }
+        }
+        return null;
     }
 
     private Path findViewFile(FileSystem zipFs) throws IOException {

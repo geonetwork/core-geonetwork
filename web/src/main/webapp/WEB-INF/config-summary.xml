@@ -73,7 +73,7 @@
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
-        <facet name="isValid" indexKey="_valid" label="isValid" localized="true"/>
+        <facet name="isValid" indexKey="_valid" label="isValid"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
         <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
         <facet name="status" indexKey="cl_status" label="status"/>
@@ -106,7 +106,7 @@
           <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
           <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
-          <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
+          <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
           <item facet="keyword" max="15"/>
           <item facet="orgName" max="25"/>
           <item facet="sourceCatalog" translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
@@ -133,14 +133,14 @@
         <item facet="mdStatus" max="10" sortBy="value"
               translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
         <item facet="sourceCatalog" translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
-        <item facet="isValid" max="3" sortBy="value"/>
+        <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
         <item facet="groupOwner" max="199" sortBy="value"
               translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
         <item facet="publishedForGroup" max="199" sortBy="value"
               translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
         <item facet="standard" max="15" sortBy="value"/>
-        <item facet="isHarvested" max="2" sortBy="value"/>
-        <item facet="metadataType" max="3" sortBy="value"/>
+        <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
+        <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
       </summaryType>
 
       <!-- (deprecated) old-style configuration supporting only

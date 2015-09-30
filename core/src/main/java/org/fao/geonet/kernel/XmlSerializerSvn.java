@@ -139,9 +139,8 @@ public class XmlSerializerSvn extends XmlSerializer {
 		try {
 			SvnManager svnMan = context.getBean(SvnManager.class);
 			svnMan.deleteDir(id, context);
-			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
 		} catch (NoSuchBeanDefinitionException e) {
-
+            Log.error(Geonet.DATA_MANAGER, "SVN manager not found. No SVN repository available.");
 		}
 	}
 
