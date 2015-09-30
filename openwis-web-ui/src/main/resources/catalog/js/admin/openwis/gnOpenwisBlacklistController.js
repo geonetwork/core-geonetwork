@@ -32,9 +32,6 @@
 
         $scope.updateData();
 
-        $("#editBlackList").modal();
-        $("#editBlackList").modal('hide');
-
         $scope.edit = function(element) {
           $scope.element = element;
           $http({
