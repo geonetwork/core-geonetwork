@@ -16,7 +16,35 @@ public class BlacklistClient {
     private WebServiceTemplate webServiceTemplate;
 
     /**
-     * Retrieves a paginated list of users black listed, group by user.
+     * Retrieves a paginated list of users black listed starting with string
+     *
+     * @param firstResult
+     * @param maxResults
+     * @param sort
+     * @return A paginated list of users black listed.
+     */
+    public List<BlacklistInfo> retrieveUsersBlackListInfoByUser(int firstResult,
+            int maxResults, SortDirection sort, String startWith) {
+        ObjectFactory objFact = new ObjectFactory();
+
+        GetUsersBlackListInfoByUser request = objFact
+                .createGetUsersBlackListInfoByUser();
+        request.setFirstResult(firstResult);
+        request.setMaxResults(maxResults);
+        request.setSortDirection(sort);
+        request.setStartWith(startWith);
+
+        @SuppressWarnings("unchecked")
+        JAXBElement<GetUsersBlackListInfoByUserResponse> response = (JAXBElement<GetUsersBlackListInfoByUserResponse>) webServiceTemplate
+                .marshalSendAndReceive(
+                        objFact.createGetUsersBlackListInfoByUser(request));
+        GetUsersBlackListInfoByUserResponse responseType = response.getValue();
+
+        return responseType.getReturn().getList();
+    }
+    
+    /**
+     * Retrieves a paginated list of users black listed.
      *
      * @param firstResult
      * @param maxResults
@@ -27,17 +55,17 @@ public class BlacklistClient {
             int maxResults, SortDirection sort) {
         ObjectFactory objFact = new ObjectFactory();
 
-        GetUsersBlackListInfoByUser request = objFact
-                .createGetUsersBlackListInfoByUser();
+        GetUsersBlackListInfo request = objFact
+                .createGetUsersBlackListInfo();
         request.setFirstResult(firstResult);
         request.setMaxResults(maxResults);
         request.setSortDirection(sort);
 
         @SuppressWarnings("unchecked")
-        JAXBElement<GetUsersBlackListInfoByUserResponse> response = (JAXBElement<GetUsersBlackListInfoByUserResponse>) webServiceTemplate
+        JAXBElement<GetUsersBlackListInfoResponse> response = (JAXBElement<GetUsersBlackListInfoResponse>) webServiceTemplate
                 .marshalSendAndReceive(
-                        objFact.createGetUsersBlackListInfoByUser(request));
-        GetUsersBlackListInfoByUserResponse responseType = response.getValue();
+                        objFact.createGetUsersBlackListInfo(request));
+        GetUsersBlackListInfoResponse responseType = response.getValue();
 
         return responseType.getReturn().getList();
     }

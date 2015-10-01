@@ -13,7 +13,7 @@
         $scope.data = [];
         $scope.numResults = 20;
         $scope.username = '';
-        $scope.direction = false;
+        $scope.direction = true;
 
         $scope.updateData = function() {
 
@@ -33,6 +33,13 @@
         };
 
         $scope.updateData();
+        
+        $scope.changeBlacklist = function() {
+          $scope.element.status = "NOT_BLACKLISTED_BY_ADMIN";
+          if($scope.element.isBlacklisted) {
+            $scope.element.status = "BLACKLISTED_BY_ADMIN";
+          }
+        }
 
         $scope.edit = function(element) {
           $scope.element = element;
@@ -44,7 +51,6 @@
             $scope.element.isBlacklisted = data;
             $("#editBlackList").modal();
           }).error(function(data) {
-            console.log(data);
             $scope.updateData();
             $rootScope.$broadcast('StatusUpdated', {
               title : 'Error',
@@ -67,7 +73,6 @@
         $scope.updateData();
         $("#editBlackList").modal('hide');
       }).error(function(data) {
-        console.log(data);
         $scope.updateData();
         $rootScope.$broadcast('StatusUpdated', {
           title : 'Error',

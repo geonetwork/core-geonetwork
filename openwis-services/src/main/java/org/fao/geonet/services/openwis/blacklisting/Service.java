@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.openwis.blacklist.client.BlacklistClient;
 import org.openwis.blacklist.client.BlacklistInfo;
+import org.openwis.blacklist.client.BlacklistStatus;
 import org.openwis.blacklist.client.SetUserBlacklistedResponse;
 import org.openwis.blacklist.client.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +54,18 @@ public class Service {
             @RequestParam(required = false, defaultValue = "false") Boolean direction) {
 
         SortDirection sort = SortDirection.DESC;
-        if(direction) {
+        if (direction) {
             sort = SortDirection.ASC;
         }
-        return client.retrieveUsersBlackListInfoByUser(firstResult, maxResults,
-                sort);
+
+        if (startWith == null || startWith.trim().isEmpty()) {
+            return client.retrieveUsersBlackListInfoByUser(firstResult,
+                    maxResults, sort);
+        } else {
+            return client.retrieveUsersBlackListInfoByUser(firstResult,
+                    maxResults, sort, startWith);
+
+        }
 
     }
 
@@ -88,7 +96,8 @@ public class Service {
      * @return
      */
     public BlacklistInfo set(String user, Long id, Long nbBlacklist,
-            Long nbWarn, Long volWarn, Long volBlacklist) {
+            Long nbWarn, Long volWarn, Long volBlacklist,
+            BlacklistStatus status) {
 
         BlacklistInfo info = new BlacklistInfo();
         info.setId(id);
@@ -97,6 +106,7 @@ public class Service {
         info.setNbDisseminationWarnThreshold(nbWarn);
         info.setVolDisseminationBlacklistThreshold(volBlacklist);
         info.setVolDisseminationWarnThreshold(volWarn);
+        info.setStatus(status);
 
         return client.updateUserBlackListInfo(info);
     }
@@ -130,13 +140,14 @@ public class Service {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody BlacklistInfo set(@RequestParam String user,
             @RequestParam Long id, @RequestParam Boolean isBlacklisted,
-            @RequestParam(required = false, defaultValue = "0", value="nbDisseminationBlacklistThreshold") Long nbBlacklist,
-            @RequestParam(required = false, defaultValue = "0", value="nbDisseminationWarnThreshold") Long nbWarn,
-            @RequestParam(required = false, defaultValue = "0", value="volDisseminationWarnThreshold") Long volWarn,
-            @RequestParam(required = false, defaultValue = "0", value="volDisseminationBlacklistThreshold") Long volBlacklist) {
+            @RequestParam(value = "nbDisseminationBlacklistThreshold") Long nbBlacklist,
+            @RequestParam(value = "nbDisseminationWarnThreshold") Long nbWarn,
+            @RequestParam(value = "volDisseminationWarnThreshold") Long volWarn,
+            @RequestParam(value = "volDisseminationBlacklistThreshold") Long volBlacklist,
+            @RequestParam BlacklistStatus status) {
 
         set(user, isBlacklisted);
-        return set(user, id, nbBlacklist, nbWarn, volWarn, volBlacklist);
+        return set(user, id, nbBlacklist, nbWarn, volWarn, volBlacklist, status);
     }
 
     public BlacklistClient getClient() {
