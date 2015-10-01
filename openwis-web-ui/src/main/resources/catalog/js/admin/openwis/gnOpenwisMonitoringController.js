@@ -57,6 +57,18 @@
 
         $scope.data = [];
 
+        $scope.isGroupDisabled = function() {
+          return $scope.options[$scope.monitorType].id == 1
+              || $scope.options[$scope.monitorType].id > 4;
+        }
+
+        $scope.isMaxRecordsDisabled = function() {
+          return $scope.options[$scope.monitorType].id == 0
+              || $scope.options[$scope.monitorType].id == 2
+              || $scope.options[$scope.monitorType].id == 3
+              || $scope.options[$scope.monitorType].id == 4;
+        }
+
         $scope.updateData = function() {
 
           $http.get(
@@ -72,17 +84,18 @@
                   $scope.data = data;
                 }
 
-//                $("#graphic").empty();
-//
-//                if (!$scope.isSimple) {
-//                  var chart = nv.models.multiBarChart().reduceXTicks(true)
-//                      .rotateLabels(0).showControls(true);
-//                  chart.xAxis.tickFormat(d3.format(',f'));
-//
-//                  chart.yAxis.tickFormat(d3.format(',.1f'));
-//
-//                  d3.select('#graphic').datum({values: $scope.data}).call(chart);
-//                }
+                // $("#graphic").empty();
+                //
+                // if (!$scope.isSimple) {
+                // var chart = nv.models.multiBarChart().reduceXTicks(true)
+                // .rotateLabels(0).showControls(true);
+                // chart.xAxis.tickFormat(d3.format(',f'));
+                //
+                // chart.yAxis.tickFormat(d3.format(',.1f'));
+                //
+                // d3.select('#graphic').datum({values:
+                // $scope.data}).call(chart);
+                // }
               }).error(function(data) {
             // TODO
           });

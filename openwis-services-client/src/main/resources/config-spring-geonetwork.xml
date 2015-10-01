@@ -21,9 +21,13 @@
 		<property name="webServiceTemplate" ref="blackListWebServiceTemplate" />
 	</bean>
 
-	<bean class="org.openwis.products.client.ProductMetadataClient">
-		<property name="webServiceTemplate" ref="productWebServiceTemplate" />
-	</bean>
+    <bean class="org.openwis.products.client.ProductMetadataClient">
+        <property name="webServiceTemplate" ref="productWebServiceTemplate" />
+    </bean>
+
+    <bean class="org.openwis.monitoring.client.MonitoringClient">
+        <property name="webServiceTemplate" ref="monitoringWebServiceTemplate" />
+    </bean>
 
 	<!-- Initialize marshallers (one for each client) -->
 	<oxm:jaxb2-marshaller id="cacheMarshaller"
@@ -68,14 +72,14 @@
 		<constructor-arg ref="messageFactory" />
 		<property name="marshaller" ref="productmarshaller" />
 		<property name="unmarshaller" ref="productmarshaller" />
-		<property name="defaultUri" value="http://localhost:8088/openwis" />
+		<property name="defaultUri" value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/ProductMetadataService" />
 	</bean>
 
 	<bean id="subscriptionWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
 		<constructor-arg ref="messageFactory" />
 		<property name="marshaller" ref="subscriptionmarshaller" />
 		<property name="unmarshaller" ref="subscriptionmarshaller" />
-		<property name="defaultUri" value="http://localhost:8088/openwis" />
+		<property name="defaultUri" value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/SubscriptionService" />
 	</bean>
 
 	<!-- Common message factory -->
