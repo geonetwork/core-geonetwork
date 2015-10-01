@@ -22,6 +22,11 @@
             <artifactId>openwis-services-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>openwis-events</artifactId>
+          <version>${project.version}</version>
+        </dependency>
 	</dependencies>
     <profiles>
 		<profile>

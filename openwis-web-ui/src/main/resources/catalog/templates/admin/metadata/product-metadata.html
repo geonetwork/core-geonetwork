@@ -1,0 +1,130 @@
+<div class="row" data-ng-controller="GnOpenwisProductMetadataController">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">productMetadata</div>
+      <div class="panel-body">
+        <div>
+          <div style="display: inline">
+            <label for="numResults" data-translate="">Records per page</label> <input
+            class="form-control" data-ng-change="updateData()" data-ng-model="numResults"
+            type="number">
+          </div>
+        </div>
+        <table class="table">
+          <tr>
+            <th>Metadata Identifier <input data-ng-change="updateData()" id="direction"
+                            data-ng-model="direction" type="checkbox" class="asc_desc"></input><label
+              for="direction"></label></th>
+            <th>Metadata Title</th>
+            <th>Metadata Category</th>
+            <th>Originator</th>
+            <th>Process</th>
+            <th>GTS Category</th>
+            <th>FNC Pattern</th>
+            <th>Data Policy</th>
+            <th>Local Data Resource</th>
+
+          </tr>
+          <tr data-ng-repeat="element in data track by $index">
+            <td>{{element.metadataUrn}}</td>
+            <td>{{element.metadataTitle}}</td>
+            <td>{{element.metadataCategory}}</td>
+            <td>{{element.originator}}</td>
+            <td>{{element.process}}</td>
+            <td>{{element.gtsCategory}}</td>
+            <td>{{element.fncPattern}}</td>
+            <td>{{element.dataPolicy}}</td>
+            <td>{{element.localDataResource}}</td>
+            <td><button type="button" class="btn btn-default"
+                        data-translate="" data-ng-click="edit(element)">Edit</button></td>
+          </tr>
+        </table>
+        <div id="editProductMetadata" class="modal fade" tabindex="-1"
+             role="dialog" style="display: none"
+             data-ng-controller="GnOpenwisProductMetadataModalController">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Edit Product Metadata</h3>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <strong>Metadata URN:</strong>
+                    </div>
+                    <div class="col-sm-8">
+                      {{product.urn}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <strong>Metadata Title:</strong>
+                    </div>
+                    <div class="col-sm-8">
+                      {{product.title}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <strong>Originator:</strong>
+                    </div>
+                    <div class="col-sm-8">
+                      {{product.originator}}
+                    </div>
+                  </div>
+
+                  <hr/>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                        <strong>GTS Category:</strong>{{product.gtsCategory}}
+                    </div>
+
+                    <div class="col-sm-6 form-group">
+                      <label class="control-label "> Overriden GTS Category:</label> <input type="text" class="form-control" name="overridenGtsCategory" data-ng-model="product.overridenGtsCategory" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <strong>FNC Pattern:</strong>{{product.fncPattern}}
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <label>Overriden FNC Pattern:</label> <input type="text" name="overridenFncPattern" class="form-control" data-ng-model="product.overridenFncPattern" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <strong>GTS Priority:</strong>{{element.priority}}
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <label>Overriden GTS Priority:</label> <input type="number" name="overridenPriority" class="form-control" data-ng-model="product.overridenPriority" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <strong>File Extension:</strong>{{element.fileExtension}}
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <label>Overriden File Extension:</label> <input type="text" name="overridenFileExtension" class="form-control" data-ng-model="product.overridenFileExtension" />
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="button"
+                        data-ng-click="ok()" data-translate="">Save</button>
+                <button class="btn btn-warning" type="button"
+                        data-ng-click="cancel()" data-translate="">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
