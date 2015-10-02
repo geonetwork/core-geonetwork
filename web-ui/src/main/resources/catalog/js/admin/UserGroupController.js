@@ -95,6 +95,8 @@
                       u.allowedcategoriessimp.push(c.id);
                     }
                   });
+                } else {
+                  u.enableallowedcategories = false;
                 }
               });
               $scope.isLoadingGroups = false;
