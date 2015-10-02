@@ -399,7 +399,9 @@
 					<param name="type" value="status" />
 				</call>
 				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
+				<call name="sources" class=".guiservices.util.Sources">
+					<param name="onlyLinkedSources" value="true" />
+				</call>
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
 				</call>
