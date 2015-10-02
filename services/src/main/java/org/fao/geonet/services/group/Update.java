@@ -72,6 +72,10 @@ public class Update extends NotInReadOnlyModeService {
         final String copyLogo = Util.getParam(params, "copyLogo", null);
         final String email = params.getChildText(Params.EMAIL);
         final String category = Util.getParam(params, Params.CATEGORY, "-1");
+        
+        final java.util.List<Integer> allowedCategories = Util.getParamsAsInt(params, "allowedCategories");
+        final Boolean enableAllowedCategories = Util.getParam(params, "enableAllowedCategories", false);
+        
         String website = params.getChildText("website");
         if (website != null && website.length() > 0 && !website.startsWith("http://")) {
             website = "http://" + website;
@@ -109,7 +113,12 @@ public class Update extends NotInReadOnlyModeService {
                     .setEmail(email)
                     .setLogo(logoUUID)
                     .setWebsite(website)
-                    .setDefaultCategory(cat);
+                    .setDefaultCategory(cat)
+                    .setEnableAllowedCategories(enableAllowedCategories);
+            
+            setUpAllowedCategories(allowedCategories, enableAllowedCategories,
+                    catRepository, group);
+            
 
             final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
             java.util.List<Language> allLanguages = langRepository.findAll();
@@ -129,7 +138,12 @@ public class Update extends NotInReadOnlyModeService {
                             .setName(name)
                             .setDescription(description)
                             .setWebsite(finalWebsite)
-                            .setDefaultCategory(cat);
+                            .setDefaultCategory(cat)
+                            .setEnableAllowedCategories(enableAllowedCategories);
+                    
+                    setUpAllowedCategories(allowedCategories, enableAllowedCategories,
+                            catRepository, entity);
+                    
                     if (!deleteLogo && logoUUID != null) {
                         entity.setLogo(logoUUID);
                     }
@@ -143,6 +157,25 @@ public class Update extends NotInReadOnlyModeService {
         }
 
         return elRes;
+    }
+
+    private void setUpAllowedCategories(
+            final java.util.List<Integer> allowedCategories,
+            final Boolean enableAllowedCategories,
+            final MetadataCategoryRepository catRepository, Group group) {
+        
+        if(enableAllowedCategories) {
+            group.getAllowedCategories().clear();
+            
+            for(Integer i : allowedCategories) {
+                try{
+                    MetadataCategory c = catRepository.findOne(i);
+                    group.getAllowedCategories().add(c);
+                }catch(Throwable t) {
+                    //Not a valid category
+                }
+            }
+        }
     }
 
     private String copyLogoFromRequest(ServiceContext context, String logoFile) throws IOException {
