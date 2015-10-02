@@ -424,7 +424,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
             }
 
-            List subList = metadataIds.subList(start, nbRecords);
+            List<?> subList = metadataIds.subList(start, nbRecords);
 
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, subList.toString());
@@ -1532,7 +1532,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
                 .setSourceId(source);
-
+        
+        //If there is a default category for the group, use it:
+        Group group = getApplicationContext()
+                .getBean(GroupRepository.class)
+                .findOne(Integer.valueOf(groupOwner));
+        if(group.getDefaultCategory() != null) {
+            newMetadata.getCategories().add(group.getDefaultCategory());
+        }
         Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
                 new Predicate<MetadataCategory>() {
                     @Override
@@ -1605,6 +1612,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                 throw new IllegalArgumentException("No category found with name: "+category);
             }
             newMetadata.getCategories().add(metadataCategory);
+        } else if(groupOwner != null) {
+            //If the group has a default category, use it
+            Group group = getApplicationContext()
+                    .getBean(GroupRepository.class)
+                    .findOne(Integer.valueOf(groupOwner));
+            if(group.getDefaultCategory() != null) {
+                newMetadata.getCategories().add(group.getDefaultCategory());
+            }
         }
 
         boolean fullRightsForGroup = false;
@@ -2945,7 +2960,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
-            List config = getSettingManager().getAllAsXML(true).cloneContent();
+            List<?> config = getSettingManager().getAllAsXML(true).cloneContent();
             for (Object c : config) {
                 Element settings = (Element) c;
                 env.addContent(settings);

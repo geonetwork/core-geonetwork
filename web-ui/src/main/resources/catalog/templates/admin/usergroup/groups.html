@@ -78,6 +78,16 @@
             <textarea name="description" class="form-control"
               data-ng-model="groupSelected.description"/>
             <p class="help-block" data-translate="">groupDescriptionHelp</p>
+
+            <label data-translate="">category</label>
+            <select name="category" data-ng-model="groupSelected.defaultcategory.id">
+                <option value="none">&nbsp;</option>
+                <option value="{{category['@id']}}" data-ng-selected="category['@id']==groupSelected.defaultcategory.id"
+                        data-ng-repeat="category in categories track by $index">
+                        {{category.label[lang]}}</option>
+            </select>
+            <p class="help-block" data-translate="">categoryDescriptionHelp</p>
+
             <div
               data-ng-class="gnGroupEdit.email.$error.email || gnGroupEdit.email.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">groupEmail</label>

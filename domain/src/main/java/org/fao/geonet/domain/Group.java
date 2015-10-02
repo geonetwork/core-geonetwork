@@ -1,11 +1,30 @@
 package org.fao.geonet.domain;
 
-import org.fao.geonet.entitylistener.GroupEntityListenerManager;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
-import java.util.Map;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.fao.geonet.entitylistener.GroupEntityListenerManager;
 
 /**
  * An entity representing group of users. Groups in conjunction with {@link Operation}s control what operations users can perform on
@@ -33,6 +52,7 @@ public class Group extends Localized {
     private Integer _referrer;
     private String logo;
     private String website;
+    private MetadataCategory defaultCategory;
 
     /**
      * Get the id of the group.
@@ -244,5 +264,20 @@ public class Group extends Localized {
     @Nullable
     public String getWebsite() {
         return website;
+    }
+    
+    /**
+     * Default category for this group
+     * @return
+     */
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    public MetadataCategory getDefaultCategory() {
+        return defaultCategory;
+    }
+
+    public Group setDefaultCategory(MetadataCategory defaultCategory) {
+        this.defaultCategory = defaultCategory;
+        return this;
     }
 }

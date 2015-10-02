@@ -214,6 +214,7 @@
     "cantDeleteUserHavingRecords": "User having records can't be deleted. Transfert records to another user.",
     "catalogInformation": "Catalog information",
     "categories": "Categories",
+    "categoryDescriptionHelp": "Default category for metadata created in this group",
     "categoryName": "Identifier",
     "categoryUpdated": "Category updated",
     "chooseAFile": "Choose a file",
