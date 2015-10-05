@@ -20,6 +20,7 @@ public class ProductMetadataDTO {
     private String localDataResource;
     private String originator;
     private String creationDate;
+    private String priority;
     private boolean isFed;
     private boolean isIngested;
     private boolean isStopGap;
@@ -40,9 +41,18 @@ public class ProductMetadataDTO {
         setLocalDataResource(metadata.getChildText("localDataResource"));
         setOriginator(metadata.getChildText("originator"));
         setCreationDate(metadata.getChildText("creationDate"));
+        setPriority(metadata.getChildText("priority"));
         setIsFed(Boolean.parseBoolean(metadata.getChildText("isFed")));
         setIsIngested(Boolean.parseBoolean(metadata.getChildText("isIngested")));
         setIsStopGap(Boolean.parseBoolean(metadata.getChildText("isStopGap")));
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     public String getMetadataUrn() {

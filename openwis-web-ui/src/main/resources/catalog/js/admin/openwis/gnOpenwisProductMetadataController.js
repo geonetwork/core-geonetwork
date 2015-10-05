@@ -1,7 +1,7 @@
 (function() {
   goog.provide('gn_openwis_productmetadata_controller');
 
-  var module = angular.module('gn_openwis_productmetadata_controller', ['datatables']);
+  var module = angular.module('gn_openwis_productmetadata_controller', ['datatables', 'datatables.fixedcolumns']);
 
   module.controller('GnOpenwisProductMetadataController', [
       '$scope',
@@ -22,20 +22,39 @@
           .withDataProp('data')
           .withOption('processing', true)
           .withOption('serverSide', true)
+          .withOption('iDisplayLength', 25)
+          .withOption('scrollX', '100%')
+          .withOption('scrollCollapse', true)
+          .withOption('autoWidth', false)
+          .withFixedColumns({
+            leftColumns: 0,
+            rightColumns: 1
+          })
           .withPaginationType('full_numbers');
 
         $scope.dtColumns = [
-          DTColumnBuilder.newColumn('metadataUrn'),
-          DTColumnBuilder.newColumn('metadataTitle'),
-          DTColumnBuilder.newColumn('metadataCategory'),
-          DTColumnBuilder.newColumn('originator'),
-          DTColumnBuilder.newColumn('process'),
-          DTColumnBuilder.newColumn('gtsCategory'),
-          DTColumnBuilder.newColumn('fncPattern'),
-          DTColumnBuilder.newColumn('dataPolicy'),
-          DTColumnBuilder.newColumn('localDataResource'),
+          DTColumnBuilder.newColumn('metadataUrn').withOption('name', '_uuid'),
+          DTColumnBuilder.newColumn('metadataTitle').withOption('name', '_title'),
+          DTColumnBuilder.newColumn('metadataCategory').withOption('name', '_cat'),
+          DTColumnBuilder.newColumn('originator').withOption('name', '_originator'),
+          DTColumnBuilder.newColumn('process').withOption('name', '_process'),
+          DTColumnBuilder.newColumn('gtsCategory').withOption('name', '_gtsCategory'),
+          DTColumnBuilder.newColumn('fncPattern').withOption('name', '_fncPattern'),
+          DTColumnBuilder.newColumn('dataPolicy').withOption('name', '_dataPolicy'),
+          DTColumnBuilder.newColumn('priority').withOption('name', '_priority'),
+          DTColumnBuilder.newColumn('localDataResource').withOption('name', '_localDataResource'),
           DTColumnBuilder.newColumn('actions').renderWith(function(data, type, full) {
-            return "<button class=\"btn btn-default\" onclick=\"angular.element(this).scope().edit('"+full.metadataUrn+"')\">Edit</button>";
+            return "<div class=\"dropdown\" style=\"width:130px\">\n" +
+              "  <button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Actions" +
+              "  <span class=\"caret\"></span></button>" +
+              "  <ul class=\"dropdown-menu\" style=\"min-width:100px\">" +
+              "    <li><a class=\"fa fa-eye\" href=\"catalog.search#/metadata/" + full.metadataUrn + "\">View</a></li>" +
+              "    <li><a class=\"fa fa-edit\" onclick=\"angular.element(this).scope().edit('" + full.metadataUrn + "')\">Edit</a></li>" +
+              "    <li><a class=\"fa fa-edit\" href=\"catalog.edit#/metadata/" + full.metadataUrn + "\">Edit metadata</a></li>" +
+              "    <li><a class=\"fa fa-copy\" href=\"catalog.edit#/create?from=" + full.metadataUrn + "\">Duplicate</a></li>" +
+              "    <li><a class=\"fa fa-eye\" href=\"#\">Remove</a></li>" +
+              "  </ul>" +
+              "</div>";
           })
         ];
 

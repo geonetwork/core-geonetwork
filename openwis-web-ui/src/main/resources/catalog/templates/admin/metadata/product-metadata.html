@@ -3,16 +3,17 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">productMetadata</div>
       <div class="panel-body">
-        <table datatable dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover" edit-row="edit(item)">
+        <table datatable dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover" style="width: 1800px">
           <thead>
           <tr>
-            <th>Metadata URN</th>
+            <th>Metadata Identifier</th>
             <th>Metadata Title</th>
             <th>Metadata Category</th>
             <th>Originator</th>
             <th>Process</th>
             <th>GTS Category</th>
             <th>FNC Pattern</th>
+            <th>Priority</th>
             <th>Data Policy</th>
             <th>Local Data Resource</th>
             <th>Actions</th>
@@ -28,9 +29,10 @@
             <td>{{ m.process }}</td>
             <td>{{ m.gtsCategory }}</td>
             <td>{{ m.fncPattern }}</td>
+            <td>{{ m.priority }}</td>
             <td>{{ m.dataPolicy }}</td>
             <td>{{ m.localDataResource }}</td>
-            <td></td>
+            <td ></td>
           </tr>
           </tbody>
         </table>

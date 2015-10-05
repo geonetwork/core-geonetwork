@@ -28,6 +28,7 @@
 
     <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/jquery.dataTables.min.css" rel="stylesheet" media="screen"></link>
+    <link href="{/root/gui/url}/static/dataTables.fixedColumns.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
     <link href="{/root/gui/url}/static/openwis_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
@@ -104,7 +105,6 @@
         <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
 
         <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables/media/js/jquery.dataTables.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.directive.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.util.js"></script>
@@ -113,6 +113,9 @@
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.options.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.factory.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.renderer.js"></script>
+
+        <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables-fixedcolumns/js/dataTables.fixedColumns.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.min.js"></script>
         <!--</xsl:if>-->
 
       </xsl:when>

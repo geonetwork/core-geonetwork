@@ -67,6 +67,7 @@ public class ProductMetadataIndexerLucene implements IProductMetadataIndexer {
                 addIndexField(doc, "_creationDate", creationDate);
                 addIndexField(doc, "_isFed", pm.isFed().toString());
                 addIndexField(doc, "_isIngested", pm.isIngested().toString());
+                addIndexField(doc, "_priority", pm.getPriority().toString());
                 // TODO: Check if required, seem not used
                 //addIndexField(doc, "_isStopGap", pm.isStopGap().toString());
 

@@ -172,6 +172,7 @@
       <field name="_isFed" tagName="isFed"/>
       <field name="_isIngested" tagName="isIngested"/>
       <field name="_isStopGap" tagName="isStopGap"/>
+      <field name="_priority" tagName="priority"/>
     </dumpFields>
   </search>
 

@@ -44,9 +44,9 @@ public class ProductMetadataController {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
     DataListResponse list(@PathVariable String lang,
-                  @RequestParam Long start,
-                  @RequestParam(required = false) Long maxRecords,
-                  HttpServletRequest request) {
+                          @RequestParam Long start,
+                          @RequestParam(value = "length", required = false) Long maxRecords,
+                          HttpServletRequest request) {
 
         // Data-tables start param starts at 0
         start = start + 1;
@@ -59,14 +59,21 @@ public class ProductMetadataController {
         ServiceContext context = serviceManager.createServiceContext("openwis.productmetadata.search", lang, request);
 
         try {
-
             if (maxRecords == null) maxRecords = new Long(20);
+
+            String orderColumnIdx = request.getParameter("order[0][column]");
+            String orderColumnName = request.getParameter("columns[" + orderColumnIdx + "][name]");
+            String orderDir = request.getParameter("order[0][dir]");
+            if (orderDir.equalsIgnoreCase("desc")) orderDir = "";
 
             // Create search request
             Element requestEl = new Element("request");
 
             requestEl.addContent(new Element("from").setText(start + ""));
             requestEl.addContent(new Element("to").setText((start + maxRecords) + ""));
+            requestEl.addContent(new Element("sortBy").setText(orderColumnName));
+            requestEl.addContent(new Element("sortOrder").setText(orderDir));
+
             requestEl.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.RESULTS));
             requestEl.addContent(new Element(Geonet.SearchResult.FAST).setText("index"));
             requestEl.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("true"));
@@ -93,6 +100,7 @@ public class ProductMetadataController {
 
             response.setRecordsTotal(new Long(total));
             response.setRecordsFiltered(new Long(total));
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
