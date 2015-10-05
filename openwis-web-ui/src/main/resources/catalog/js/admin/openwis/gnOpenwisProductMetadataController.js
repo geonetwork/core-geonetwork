@@ -1,21 +1,50 @@
 (function() {
   goog.provide('gn_openwis_productmetadata_controller');
 
-  var module = angular.module('gn_openwis_productmetadata_controller', []);
+  var module = angular.module('gn_openwis_productmetadata_controller', ['datatables']);
 
   module.controller('GnOpenwisProductMetadataController', [
       '$scope',
       '$routeParams',
       '$http',
       '$rootScope',
-      function($scope, $routeParams, $http, $rootScope) {
+      'DTOptionsBuilder',
+      'DTColumnBuilder',
+      function($scope, $routeParams, $http, $rootScope, DTOptionsBuilder, DTColumnBuilder) {
 
-        $scope.data = [];
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+          .withOption('ajax', {
+            // Either you specify the AjaxDataProp here
+            // dataSrc: 'data',
+            url:  $scope.url + 'openwis.productmetadata.search',
+            type: 'GET'
+          })
+          .withDataProp('data')
+          .withOption('processing', true)
+          .withOption('serverSide', true)
+          .withPaginationType('full_numbers');
+
+        $scope.dtColumns = [
+          DTColumnBuilder.newColumn('metadataUrn'),
+          DTColumnBuilder.newColumn('metadataTitle'),
+          DTColumnBuilder.newColumn('metadataCategory'),
+          DTColumnBuilder.newColumn('originator'),
+          DTColumnBuilder.newColumn('process'),
+          DTColumnBuilder.newColumn('gtsCategory'),
+          DTColumnBuilder.newColumn('fncPattern'),
+          DTColumnBuilder.newColumn('dataPolicy'),
+          DTColumnBuilder.newColumn('localDataResource'),
+          DTColumnBuilder.newColumn('actions').renderWith(function(data, type, full) {
+            return '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
+          })
+        ];
+
+
         $scope.numResults = 20;
         $scope.position = 1;
         $scope.direction = false;
 
-        $scope.updateData = function() {
+        /*$scope.updateData = function() {
 
           // TODO paginate
           $http.get(
@@ -32,7 +61,7 @@
           });
         };
 
-        $scope.updateData();
+        $scope.updateData();*/
 
         $scope.edit = function(element) {
           $http({

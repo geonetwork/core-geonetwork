@@ -14,6 +14,8 @@
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
+      <cssSource webappPath="/catalog/lib/angular-datatables/vendor/datatables/media/css" />
+    <cssSource webappPath="/catalog/lib/angular-datatables/vendor/datatables/media/images" />
   </require>
   <declarative name="libcesium" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/ol3cesium/Cesium/Cesium.js"/>
@@ -66,5 +68,15 @@
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>
+
+
+    <!--<jsSource webappPath="/catalog/lib/angular-datatables/vendor/highlightjs/highlight.pack.js"/>
+    <jsSource webappPath="/catalog/lib/angular-datatables/vendor/backtotop/backtotop.min.js"/>
+    <jsSource webappPath="/catalog/lib/angular-datatables/vendor/angular-highlightjs/angular-highlightjs.min.js"/>
+    <jsSource webappPath="/catalog/lib/angular-datatables/vendor/angular-resource/angular-resource.min.js"/>
+    <jsSource webappPath="/catalog/lib/angular-datatables/vendor/angular-ui-router/release/angular-ui-router.min.js"/>-->
+
+    <jsSource webappPath="/catalog/lib/angular-datatables/vendor/datatables/media/js/jquery.dataTables.min.js"/>
+    <jsSource webappPath="/catalog/lib/angular-datatables/dist/angular-datatables.min.js"/>
   </declarative>
 </sources>

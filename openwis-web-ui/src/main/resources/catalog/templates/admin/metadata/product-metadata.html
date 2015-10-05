@@ -3,14 +3,39 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">productMetadata</div>
       <div class="panel-body">
-        <div>
-          <div style="display: inline">
-            <label for="numResults" data-translate="">Records per page</label> <input
-            class="form-control" data-ng-change="updateData()" data-ng-model="numResults"
-            type="number">
-          </div>
-        </div>
-        <table class="table">
+        <table datatable dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover">
+          <thead>
+          <tr>
+            <th>Metadata URN</th>
+            <th>Metadata Title</th>
+            <th>Metadata Category</th>
+            <th>Originator</th>
+            <th>Process</th>
+            <th>GTS Category</th>
+            <th>FNC Pattern</th>
+            <th>Data Policy</th>
+            <th>Local Data Resource</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr ng-repeat="m in data">
+            <td>{{ m.metadataUrn }}</td>
+            <td>{{ m.metadataTitle }}</td>
+            <td>{{ m.metadataCategory }}</td>
+            <td>{{ m.originator }}</td>
+            <td>{{ m.process }}</td>
+            <td>{{ m.gtsCategory }}</td>
+            <td>{{ m.fncPattern }}</td>
+            <td>{{ m.dataPolicy }}</td>
+            <td>{{ m.localDataResource }}</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
+
+        <!--<table class="table">
           <tr>
             <th>Metadata Identifier <input data-ng-change="updateData()" id="direction"
                             data-ng-model="direction" type="checkbox" class="asc_desc"></input><label
@@ -38,7 +63,7 @@
             <td><button type="button" class="btn btn-default"
                         data-translate="" data-ng-click="edit(element)">Edit</button></td>
           </tr>
-        </table>
+        </table>-->
         <div id="editProductMetadata" class="modal fade" tabindex="-1"
              role="dialog" style="display: none"
              data-ng-controller="GnOpenwisProductMetadataModalController">

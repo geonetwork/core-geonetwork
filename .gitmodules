@@ -14,3 +14,6 @@
 [submodule "web-ui/src/main/resources/catalog/lib/bootstrap-table"]
 	path = web-ui/src/main/resources/catalog/lib/bootstrap-table
 	url = https://github.com/wenzhixin/bootstrap-table.git
+[submodule "web-ui/src/main/resources/catalog/lib/angular-datatables"]
+	path = web-ui/src/main/resources/catalog/lib/angular-datatables
+	url = https://github.com/l-lin/angular-datatables.git

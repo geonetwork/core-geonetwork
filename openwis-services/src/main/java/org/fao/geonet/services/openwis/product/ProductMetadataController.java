@@ -43,12 +43,15 @@ public class ProductMetadataController {
     @RequestMapping(value = { "/{lang}/openwis.productmetadata.search" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
-    List<ProductMetadataResponse> list(@PathVariable String lang,
+    ProductMetadataResponse list(@PathVariable String lang,
                   @RequestParam Long start,
                   @RequestParam(required = false) Long maxRecords,
                   HttpServletRequest request) {
 
-        List<ProductMetadataResponse> response = new ArrayList<ProductMetadataResponse>();
+        // Data-tables start param starts at 0
+        start = start + 1;
+
+        ProductMetadataResponse response = new ProductMetadataResponse();
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
@@ -66,7 +69,7 @@ public class ProductMetadataController {
             requestEl.addContent(new Element("to").setText((start + maxRecords) + ""));
             requestEl.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.RESULTS));
             requestEl.addContent(new Element(Geonet.SearchResult.FAST).setText("index"));
-            requestEl.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+            requestEl.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("true"));
 
             MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
             ServiceConfig config = new ServiceConfig();
@@ -74,13 +77,22 @@ public class ProductMetadataController {
             searcher.search(context, requestEl, config);
             Element resultsEl = searcher.present(context, requestEl, config);
 
-            // Process results
-            for(Element resultEl : (List<Element>) resultsEl.getChildren()) {
-                ProductMetadataResponse productMdResponse = new ProductMetadataResponse(resultEl);
+            Element summary = (Element) resultsEl.getChildren().get(0);
 
-                response.add(productMdResponse);
+            int total = Integer.parseInt(summary.getAttributeValue("count"));
+
+            // Process results
+            boolean ignore = true;
+            for(Element resultEl : (List<Element>) resultsEl.getChildren()) {
+                if (ignore) {
+                    ignore = false;
+                    continue;
+                }
+                response.add(resultEl);
             }
 
+            response.setRecordsTotal(total);
+            response.setRecordsFiltered(total);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
