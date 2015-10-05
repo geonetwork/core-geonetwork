@@ -9,7 +9,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.openwis.DataListResponse;
 import org.jdom.Element;
 import org.openwis.metadata.product.ProductMetadataManager;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

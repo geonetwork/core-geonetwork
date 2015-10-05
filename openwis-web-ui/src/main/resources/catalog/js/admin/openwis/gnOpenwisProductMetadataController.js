@@ -35,39 +35,15 @@
           DTColumnBuilder.newColumn('dataPolicy'),
           DTColumnBuilder.newColumn('localDataResource'),
           DTColumnBuilder.newColumn('actions').renderWith(function(data, type, full) {
-            return '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
+            return "<button class=\"btn btn-default\" onclick=\"angular.element(this).scope().edit('"+full.metadataUrn+"')\">Edit</button>";
           })
         ];
 
-
-        $scope.numResults = 20;
-        $scope.position = 1;
-        $scope.direction = false;
-
-        /*$scope.updateData = function() {
-
-          // TODO paginate
-          $http.get(
-              $scope.url + 'openwis.productmetadata.search?start='
-                  + $scope.position + '&maxResults=' + $scope.numResults
-                  + '&direction=' + $scope.direction).success(function(data) {
-            $scope.data = data;
-          }).error(function(data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title : 'Error',
-              msg : 'Error getting user details. Please reload.',
-              type : 'danger'
-            });
-          });
-        };
-
-        $scope.updateData();*/
-
-        $scope.edit = function(element) {
+        $scope.edit = function(metadataUrn) {
           $http({
             url : $scope.url + 'openwis.productmetadata.get',
             method : 'GET',
-            params : {urn: element.metadataUrn}
+            params : {urn: metadataUrn}
           }).success(function(data) {
             $scope.product = data;
 
@@ -81,9 +57,6 @@
               type : 'danger'
             });
           });
-
-          //$scope.element = element;
-          //$("#editProductMetadata").modal();
         };
 
       }
