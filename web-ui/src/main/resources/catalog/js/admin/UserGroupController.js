@@ -72,14 +72,33 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
-
-
+      
+      $http.get('info?type=categories&_content_type=json').
+        success(function(data) {
+          $scope.categories = data.metadatacategory;
+      });
+      
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
         $http.get('admin.group.list?_content_type=json').
             success(function(data) {
               $scope.groups = data !== 'null' ? data : null;
+              //Fixing true not equal to "true" and
+              //Simplifying the allowed categories list
+              angular.forEach($scope.groups, function(u) {
+                if (u.enableallowedcategories == "true") {
+                  u.enableallowedcategories = true;
+                  u.allowedcategoriessimp = [];
+                  angular.forEach(u.allowedcategories, function(c) {
+                    if(c.id) {
+                      u.allowedcategoriessimp.push(c.id);
+                    }
+                  });
+                } else {
+                  u.enableallowedcategories = false;
+                }
+              });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
               // TODO

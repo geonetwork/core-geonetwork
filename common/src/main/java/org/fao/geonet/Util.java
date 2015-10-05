@@ -23,14 +23,16 @@
 
 package org.fao.geonet;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.jdom.Element;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Map;
 
 //=============================================================================
 
@@ -61,25 +63,48 @@ public final class Util
 		return param;
 	}
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static String getParam(Element el, String name) throws BadInputEx
-	{
-		if (el == null)
-			throw new MissingParameterEx(name);
+    public static String getParam(Element el, String name) throws BadInputEx
+    {
+        if (el == null)
+            throw new MissingParameterEx(name);
 
-		Element param = el.getChild(name);
+        Element param = el.getChild(name);
 
-		if (param == null)
-			throw new MissingParameterEx(name, el);
+        if (param == null)
+            throw new MissingParameterEx(name, el);
 
-		String value = param.getTextTrim();
+        String value = param.getTextTrim();
 
-		if (value.length() == 0)
-			throw new BadParameterEx(name, value);
+        if (value.length() == 0)
+            throw new BadParameterEx(name, value);
 
-		return value;
-	}
+        return value;
+    }
+    
+    //--------------------------------------------------------------------------
+
+    public static List<String> getParams(Element el, String name) throws BadInputEx
+    {
+        if (el == null)
+            throw new MissingParameterEx(name);
+
+        List<String> values = new LinkedList<String>();
+        
+        for(Object obj : el.getChildren(name)) {
+            Element param = (Element) obj;
+    
+            String value = param.getTextTrim();
+    
+            if (value.length() == 0)
+                throw new BadParameterEx(name, value);
+    
+            values.add(value);
+        }
+        
+        return values;
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -101,21 +126,41 @@ public final class Util
 		return value;
 	}
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public static int getParamAsInt(Element el, String name) throws BadInputEx
-	{
-		String value = getParam(el, name);
+    public static int getParamAsInt(Element el, String name) throws BadInputEx
+    {
+        String value = getParam(el, name);
 
-		try
-		{
-			return Integer.parseInt(value);
-		}
-		catch(NumberFormatException e)
-		{
-			throw new BadParameterEx(name, value);
-		}
-	}
+        try
+        {
+            return Integer.parseInt(value);
+        }
+        catch(NumberFormatException e)
+        {
+            throw new BadParameterEx(name, value);
+        }
+    }
+
+    //--------------------------------------------------------------------------
+
+    public static List<Integer> getParamsAsInt(Element el, String name) throws BadInputEx
+    {
+        
+        List<Integer> values = new LinkedList<Integer>();
+        for(String value : getParams(el, name)) {
+            try
+            {
+                values.add(Integer.parseInt(value));
+            }
+            catch(NumberFormatException e)
+            {
+                throw new BadParameterEx(name, value);
+            }
+        }
+        
+        return values;
+    }
 
 	//--------------------------------------------------------------------------
 

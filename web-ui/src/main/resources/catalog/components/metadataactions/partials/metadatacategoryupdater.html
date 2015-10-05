@@ -10,11 +10,13 @@
     <li role="presentation" class="dropdown-header"
         data-translate="">setMetadataCategories</li>
     <li data-ng-repeat="c in categories | orderBy:sortByLabel"
+        data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c['@id']) == -1"
         data-ng-class="ids.indexOf(c['@id']) === -1 ? 'disabled' : ''">
       <a data-ng-click="assign(c, $event)" href="">
 		<span class="fa gn-icon-{{c.name}}"></span>
-        {{c.label[lang] | translate}}
+        {{c.label[lang] | translate}} 
       </a>
     </li>
   </ul>
+  
 </div>
