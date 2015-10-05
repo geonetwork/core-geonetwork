@@ -10,6 +10,7 @@ import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;;
+import org.fao.geonet.services.openwis.DataListResponse;
 import org.jdom.Element;
 import org.openwis.metadata.product.ProductMetadataManager;
 import org.openwis.products.client.ProductMetadata;
@@ -43,7 +44,7 @@ public class ProductMetadataController {
     @RequestMapping(value = { "/{lang}/openwis.productmetadata.search" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
-    ProductMetadataResponse list(@PathVariable String lang,
+    DataListResponse list(@PathVariable String lang,
                   @RequestParam Long start,
                   @RequestParam(required = false) Long maxRecords,
                   HttpServletRequest request) {
@@ -51,7 +52,7 @@ public class ProductMetadataController {
         // Data-tables start param starts at 0
         start = start + 1;
 
-        ProductMetadataResponse response = new ProductMetadataResponse();
+        DataListResponse<ProductMetadataDTO> response = new DataListResponse<>();
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
@@ -88,11 +89,11 @@ public class ProductMetadataController {
                     ignore = false;
                     continue;
                 }
-                response.add(resultEl);
+                response.addData(new ProductMetadataDTO(resultEl));
             }
 
-            response.setRecordsTotal(total);
-            response.setRecordsFiltered(total);
+            response.setRecordsTotal(new Long(total));
+            response.setRecordsFiltered(new Long(total));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
