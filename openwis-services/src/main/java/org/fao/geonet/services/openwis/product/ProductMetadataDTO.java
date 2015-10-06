@@ -7,7 +7,7 @@ import org.jdom.Namespace;
  * Created by jose on 05/10/15.
  */
 public class ProductMetadataDTO {
-
+    private String metadataId;
     private String metadataUrn;
     private String metadataTitle;
     private String metadataCategory;
@@ -21,6 +21,7 @@ public class ProductMetadataDTO {
     private String originator;
     private String creationDate;
     private String priority;
+    private String fileExtension;
     private boolean isFed;
     private boolean isIngested;
     private boolean isStopGap;
@@ -28,6 +29,7 @@ public class ProductMetadataDTO {
     public ProductMetadataDTO(Element metadata) {
         Element info = metadata.getChild("info", Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
 
+        setMetadataId(info.getChildText("id"));
         setMetadataUrn(info.getChildText("uuid"));
         setMetadataTitle(metadata.getChildText("title"));
         // TODO: Check if return several. In OpenWIS 3 implementation seem returning only the first one
@@ -42,9 +44,18 @@ public class ProductMetadataDTO {
         setOriginator(metadata.getChildText("originator"));
         setCreationDate(metadata.getChildText("creationDate"));
         setPriority(metadata.getChildText("priority"));
+        setFileExtension(metadata.getChildText("fileExtension"));
         setIsFed(Boolean.parseBoolean(metadata.getChildText("isFed")));
         setIsIngested(Boolean.parseBoolean(metadata.getChildText("isIngested")));
         setIsStopGap(Boolean.parseBoolean(metadata.getChildText("isStopGap")));
+    }
+
+    public String getMetadataId() {
+        return metadataId;
+    }
+
+    public void setMetadataId(String metadataId) {
+        this.metadataId = metadataId;
     }
 
     public String getPriority() {
@@ -149,6 +160,14 @@ public class ProductMetadataDTO {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getFileExtension() {
+        return fileExtension;
+    }
+
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
     public boolean isFed() {

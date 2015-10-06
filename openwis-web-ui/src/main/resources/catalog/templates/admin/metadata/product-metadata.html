@@ -3,9 +3,10 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">productMetadata</div>
       <div class="panel-body">
-        <table datatable dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover" style="width: 1800px">
+        <table datatable dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance" class="row-border hover" style="width: 1800px">
           <thead>
           <tr>
+            <th>Metadata Id</th>
             <th>Metadata Identifier</th>
             <th>Metadata Title</th>
             <th>Metadata Category</th>
@@ -16,12 +17,16 @@
             <th>Priority</th>
             <th>Data Policy</th>
             <th>Local Data Resource</th>
+            <th>Ingested</th>
+            <th>Fed</th>
+            <th>File Extension</th>
             <th>Actions</th>
           </tr>
           </thead>
 
           <tbody>
           <tr ng-repeat="m in data">
+            <td>{{ m.metadataId }}</td>
             <td>{{ m.metadataUrn }}</td>
             <td>{{ m.metadataTitle }}</td>
             <td>{{ m.metadataCategory }}</td>
@@ -32,40 +37,58 @@
             <td>{{ m.priority }}</td>
             <td>{{ m.dataPolicy }}</td>
             <td>{{ m.localDataResource }}</td>
+            <td>{{ m.isIngested }}</td>
+            <td>{{ m.isFed }}</td>
+            <td>{{ m.fileExtension }}</td>
             <td ></td>
           </tr>
           </tbody>
+
+          <tfoot>
+          <tr>
+            <th>Metadata Id</th>
+          <th>Metadata Identifier</th>
+          <th>Metadata Title</th>
+          <th>Metadata Category</th>
+          <th>Originator</th>
+          <th>Process</th>
+          <th>GTS Category</th>
+          <th>FNC Pattern</th>
+          <th>Priority</th>
+          <th>Data Policy</th>
+          <th>Local Data Resource</th>
+          <th>Ingested</th>
+          <th>Fed</th>
+          <th>File Extension</th>
+          <th>Actions</th>
+          </tr>
+          </tfoot>
         </table>
 
-        <!--<table class="table">
-          <tr>
-            <th>Metadata Identifier <input data-ng-change="updateData()" id="direction"
-                            data-ng-model="direction" type="checkbox" class="asc_desc"></input><label
-              for="direction"></label></th>
-            <th>Metadata Title</th>
-            <th>Metadata Category</th>
-            <th>Originator</th>
-            <th>Process</th>
-            <th>GTS Category</th>
-            <th>FNC Pattern</th>
-            <th>Data Policy</th>
-            <th>Local Data Resource</th>
+        <div id="deleteMetadata" class="modal fade" tabindex="-1"
+             role="dialog" style="display: none"
+             data-ng-controller="GnOpenwisMetadataDeleteModalController">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Delete Metadata</h3>
+              </div>
+              <div class="modal-body">
+                <p>Do you want to delete the metadata?</p>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="button"
+                        data-ng-click="ok()" data-translate="">Yes</button>
+                <button class="btn btn-warning" type="button"
+                        data-ng-click="cancel()" data-translate="">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          </tr>
-          <tr data-ng-repeat="element in data track by $index">
-            <td>{{element.metadataUrn}}</td>
-            <td>{{element.metadataTitle}}</td>
-            <td>{{element.metadataCategory}}</td>
-            <td>{{element.originator}}</td>
-            <td>{{element.process}}</td>
-            <td>{{element.gtsCategory}}</td>
-            <td>{{element.fncPattern}}</td>
-            <td>{{element.dataPolicy}}</td>
-            <td>{{element.localDataResource}}</td>
-            <td><button type="button" class="btn btn-default"
-                        data-translate="" data-ng-click="edit(element)">Edit</button></td>
-          </tr>
-        </table>-->
+
+
+
         <div id="editProductMetadata" class="modal fade" tabindex="-1"
              role="dialog" style="display: none"
              data-ng-controller="GnOpenwisProductMetadataModalController">
@@ -110,6 +133,21 @@
 
                     <div class="col-sm-6 form-group">
                       <label class="control-label "> Overriden GTS Category:</label> <input type="text" class="form-control" name="overridenGtsCategory" data-ng-model="product.overridenGtsCategory" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <strong>Data Policy:</strong>{{product.dataPolicy}}
+                    </div>
+
+                    <div class="col-sm-6 form-group">
+                      <label class="control-label ">Overriden Data Policy:</label>
+                      <select lass="form-control" name="overridenDataPolicy" data-ng-model="product.overridenDataPolicy">
+                        <option value="additional-default">Additional Default</option>
+                        <option value="public">Public</option>
+                        <option value="unknown">Unknown</option>
+                      </select>
                     </div>
                   </div>
 

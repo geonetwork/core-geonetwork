@@ -4,6 +4,7 @@ package org.fao.geonet.services.openwis.product;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.responses.OkResponse;
@@ -44,8 +45,8 @@ public class ProductMetadataController {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
     DataListResponse list(@PathVariable String lang,
-                          @RequestParam Long start,
-                          @RequestParam(value = "length", required = false) Long maxRecords,
+                          @RequestParam(value = "iDisplayStart") Long start,
+                          @RequestParam(value = "iDisplayLength", required = false) Long maxRecords,
                           HttpServletRequest request) {
 
         // Data-tables start param starts at 0
@@ -61,18 +62,29 @@ public class ProductMetadataController {
         try {
             if (maxRecords == null) maxRecords = new Long(20);
 
-            String orderColumnIdx = request.getParameter("order[0][column]");
-            String orderColumnName = request.getParameter("columns[" + orderColumnIdx + "][name]");
-            String orderDir = request.getParameter("order[0][dir]");
+            String orderColumnIdx = request.getParameter("iSortCol_0");
+            String orderColumnName = request.getParameter("sColumns").split(",")[Integer.valueOf(orderColumnIdx)];
+            String orderDir = request.getParameter("sSortDir_0");
             if (orderDir.equalsIgnoreCase("desc")) orderDir = "";
+
 
             // Create search request
             Element requestEl = new Element("request");
 
             requestEl.addContent(new Element("from").setText(start + ""));
             requestEl.addContent(new Element("to").setText((start + maxRecords) + ""));
-            requestEl.addContent(new Element("sortBy").setText(orderColumnName));
-            requestEl.addContent(new Element("sortOrder").setText(orderDir));
+            if (StringUtils.isNotEmpty(orderColumnName)) {
+                requestEl.addContent(new Element("sortBy").setText(orderColumnName));
+                requestEl.addContent(new Element("sortOrder").setText(orderDir));
+            }
+
+            // TODO: Update to generic search
+            // Sample to search by title
+            //String search = request.getParameter("sSearch_3");
+            //if (StringUtils.isNotEmpty(search)) {
+            //    requestEl.addContent(new Element("title").setText(search));
+            //}
+            requestEl.addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("n"));
 
             requestEl.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.RESULTS));
             requestEl.addContent(new Element(Geonet.SearchResult.FAST).setText("index"));
@@ -128,6 +140,7 @@ public class ProductMetadataController {
     OkResponse save(@PathVariable String lang,
                     @RequestParam String urn,
                     @RequestParam String overridenGtsCategory,
+                    @RequestParam String overridenDataPolicy,
                     @RequestParam String overridenFncPattern,
                     @RequestParam Integer overridenPriority,
                     @RequestParam String overridenFileExtension) {
@@ -137,6 +150,7 @@ public class ProductMetadataController {
 
         if (pm != null) {
             pm.setOverridenGtsCategory(overridenGtsCategory);
+            pm.setOverridenDataPolicy(overridenDataPolicy);
             pm.setOverridenFncPattern(overridenFncPattern);
             pm.setOverridenPriority(overridenPriority);
             pm.setOverridenFileExtension(overridenFileExtension);

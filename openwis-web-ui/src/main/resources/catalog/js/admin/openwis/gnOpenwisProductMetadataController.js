@@ -1,7 +1,7 @@
 (function() {
   goog.provide('gn_openwis_productmetadata_controller');
 
-  var module = angular.module('gn_openwis_productmetadata_controller', ['datatables', 'datatables.fixedcolumns']);
+  var module = angular.module('gn_openwis_productmetadata_controller', ['datatables', 'datatables.fixedcolumns', 'datatables.columnfilter']);
 
   module.controller('GnOpenwisProductMetadataController', [
       '$scope',
@@ -12,27 +12,57 @@
       'DTColumnBuilder',
       function($scope, $routeParams, $http, $rootScope, DTOptionsBuilder, DTColumnBuilder) {
 
+        $scope.dtInstance = {},
+
         $scope.dtOptions = DTOptionsBuilder.newOptions()
-          .withOption('ajax', {
-            // Either you specify the AjaxDataProp here
-            // dataSrc: 'data',
-            url:  $scope.url + 'openwis.productmetadata.search',
-            type: 'GET'
-          })
-          .withDataProp('data')
+          .withOption("sAjaxSource", $scope.url + 'openwis.productmetadata.search')
+          //.withDataProp('data')
           .withOption('processing', true)
           .withOption('serverSide', true)
           .withOption('iDisplayLength', 25)
           .withOption('scrollX', '100%')
           .withOption('scrollCollapse', true)
           .withOption('autoWidth', false)
+          .withPaginationType('full_numbers')
           .withFixedColumns({
             leftColumns: 0,
             rightColumns: 1
           })
-          .withPaginationType('full_numbers');
+          .withColumnFilter({
+            aoColumns: [{
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            },{
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, {
+              type: 'text'
+            }, null
+            ]
+          });
 
         $scope.dtColumns = [
+          DTColumnBuilder.newColumn('metadataId').notVisible(),
           DTColumnBuilder.newColumn('metadataUrn').withOption('name', '_uuid'),
           DTColumnBuilder.newColumn('metadataTitle').withOption('name', '_title'),
           DTColumnBuilder.newColumn('metadataCategory').withOption('name', '_cat'),
@@ -43,17 +73,16 @@
           DTColumnBuilder.newColumn('dataPolicy').withOption('name', '_dataPolicy'),
           DTColumnBuilder.newColumn('priority').withOption('name', '_priority'),
           DTColumnBuilder.newColumn('localDataResource').withOption('name', '_localDataResource'),
+          DTColumnBuilder.newColumn('ingested').withOption('name', '_isIngested'),
+          DTColumnBuilder.newColumn('fed').withOption('name', '_isStopGap'),
+          DTColumnBuilder.newColumn('fileExtension').withOption('name', '_fileExtension'),
           DTColumnBuilder.newColumn('actions').renderWith(function(data, type, full) {
-            return "<div class=\"dropdown\" style=\"width:130px\">\n" +
-              "  <button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Actions" +
-              "  <span class=\"caret\"></span></button>" +
-              "  <ul class=\"dropdown-menu\" style=\"min-width:100px\">" +
-              "    <li><a class=\"fa fa-eye\" href=\"catalog.search#/metadata/" + full.metadataUrn + "\">View</a></li>" +
-              "    <li><a class=\"fa fa-edit\" onclick=\"angular.element(this).scope().edit('" + full.metadataUrn + "')\">Edit</a></li>" +
-              "    <li><a class=\"fa fa-edit\" href=\"catalog.edit#/metadata/" + full.metadataUrn + "\">Edit metadata</a></li>" +
-              "    <li><a class=\"fa fa-copy\" href=\"catalog.edit#/create?from=" + full.metadataUrn + "\">Duplicate</a></li>" +
-              "    <li><a class=\"fa fa-eye\" href=\"#\">Remove</a></li>" +
-              "  </ul>" +
+            return "<div style=\"width:120px\">" +
+              "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.search#/metadata/" + full.metadataUrn + "\" title=\"View\"><i class=\"fa fa-eye\"></i></a>" +
+              "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().edit('" + full.metadataUrn + "')\" title=\"Edit product info\"><i class=\"fa fa-edit\"></i></a>" +
+              "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.edit#/metadata/" + full.metadataId + "\" title=\"Edit metadata\"><i class=\"fa fa-pencil\"></i></a>" +
+              "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.edit#/create?from=" + full.metadataId + "\"  title=\"Duplicate\"><i class=\"fa fa-copy\"></i></a>" +
+              "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().delete('" + full.metadataId + "')\" title=\"Remove\"><i class=\"fa fa-times text-danger\"></i></a>" +
               "</div>";
           })
         ];
@@ -78,7 +107,19 @@
           });
         };
 
-      }
+        $scope.delete = function(metadataId) {
+          $scope.metadataId = metadataId;
+          $("#deleteMetadata").modal();
+        };
+
+        $scope.updateData = function() {
+          // Refresh the table
+          $scope.dtInstance.reloadData();
+        };
+
+
+ }
+
   ]);
 
   module.controller('GnOpenwisProductMetadataModalController', function($scope,
@@ -104,6 +145,33 @@
 
     $scope.cancel = function() {
       $("#editProductMetadata").modal('hide');
+    };
+  });
+
+
+  module.controller('GnOpenwisMetadataDeleteModalController', function($scope,
+                                                                        $http, $rootScope) {
+    $scope.ok = function() {
+      $http({
+        url : $scope.url + 'xml.metadata.delete',
+        method : 'POST',
+        params : {id: $scope.metadataId }
+      }).success(function(data) {
+        $scope.updateData();
+        $("#deleteProductMetadata").modal('hide');
+      }).error(function(data) {
+        console.log(data);
+        $scope.updateData();
+        $rootScope.$broadcast('StatusUpdated', {
+          title : 'Error',
+          msg : 'Error saving product metadadata details. Please try again.',
+          type : 'danger'
+        });
+      });
+    };
+
+    $scope.cancel = function() {
+      $("#deleteMetadata").modal('hide');
     };
   });
 

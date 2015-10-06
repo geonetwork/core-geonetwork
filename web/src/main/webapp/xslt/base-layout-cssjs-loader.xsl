@@ -116,6 +116,10 @@
 
         <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables-fixedcolumns/js/dataTables.fixedColumns.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.min.js"></script>
+
+        <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables-columnfilter/js/dataTables.columnFilter.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.min.js"></script>
+
         <!--</xsl:if>-->
 
       </xsl:when>
