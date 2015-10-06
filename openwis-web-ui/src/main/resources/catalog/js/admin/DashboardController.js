@@ -8,12 +8,14 @@
   goog.require('gn_dashboard_status_controller');
   goog.require('gn_vcs_controller');
   goog.require('gn_openwis_monitoring_controller');
+  goog.require('gn_openwis_cache_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
        'gn_dashboard_search_stat_controller',
        'gn_dashboard_content_stat_controller',
        'gn_vcs_controller',
+       'gn_openwis_cache_controller',
        'gn_openwis_monitoring_controller']);
 
 
@@ -58,6 +60,11 @@
               label: 'openwis-stats',
               icon: 'fa-list-ul',
               href: '#/dashboard/openwis'
+            },{
+              type: 'openwis-cache',
+              label: 'openwis-cache',
+              icon: 'fa-list-ul',
+              href: '#/dashboard/openwis-cache'
             }]
       };
 
