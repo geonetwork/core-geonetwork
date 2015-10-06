@@ -1494,7 +1494,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     //--------------------------------------------------------------------------
 
     /**
-     * Creates a new metadata duplicating an existing template.
+     * Creates a new metadata duplicating an existing template creating a random uuid.
      *
      * @param context
      * @param templateId
@@ -1510,6 +1510,28 @@ public class DataManager implements ApplicationEventPublisherAware {
     public String createMetadata(ServiceContext context, String templateId, String groupOwner,
                                  String source, int owner,
                                  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
+
+        return createMetadata(context, templateId, groupOwner, source,
+                owner, parentUuid, isTemplate, fullRightsForGroup, UUID.randomUUID().toString());
+    }
+
+    /**
+     * Creates a new metadata duplicating an existing template with an specified uuid.
+     *
+     * @param context
+     * @param templateId
+     * @param groupOwner
+     * @param source
+     * @param owner
+     * @param parentUuid
+     * @param isTemplate TODO
+     * @param fullRightsForGroup TODO
+     * @return
+     * @throws Exception
+     */
+    public String createMetadata(ServiceContext context, String templateId, String groupOwner,
+                                 String source, int owner,
+                                 String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
         Metadata templateMetadata = getMetadataRepository().findOne(templateId);
         if (templateMetadata == null) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
@@ -1517,7 +1539,6 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         String schema = templateMetadata.getDataInfo().getSchemaId();
         String data   = templateMetadata.getData();
-        String uuid   = UUID.randomUUID().toString();
         Element xml = Xml.loadString(data, false);
         if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
