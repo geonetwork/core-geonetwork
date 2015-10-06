@@ -19,6 +19,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -490,4 +491,15 @@ public final class XslUtil
 
 		return ret;
 	}
+
+    public static String getSiteUrl() {
+        ServiceContext context = ServiceContext.get();
+        SettingInfo si = new SettingInfo();
+        return si.getSiteUrl() + "/" + context.getBaseUrl();
+    }
+
+    public static String getLanguage() {
+        ServiceContext context = ServiceContext.get();
+        return context.getLanguage();
+    }
 }

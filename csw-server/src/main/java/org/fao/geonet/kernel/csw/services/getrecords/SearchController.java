@@ -294,6 +294,8 @@ public class SearchController {
             prefix = "iso";
         } else if (outputSchema == OutputSchema.OWN) {
             prefix = "own";
+        } else if (outputSchema == OutputSchema.DCAT) {
+            prefix = "dcat";
         } else {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
