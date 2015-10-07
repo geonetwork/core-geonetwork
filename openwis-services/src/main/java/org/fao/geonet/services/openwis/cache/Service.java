@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fao.geonet.services.openwis.cache.Request.ColumnCriterias;
 import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
-import org.fao.geonet.services.openwis.cache.Request.SearchCriterias;
 import org.openwis.cacheindex.client.CacheIndexClient;
 import org.openwis.cacheindex.client.CachedFile;
 import org.openwis.cacheindex.client.CachedFileInfo;
@@ -53,16 +52,10 @@ public class Service {
     @RequestMapping(value = { "/{lang}/openwis.cache.search" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Response search(@ModelAttribute Request request,
-            HttpSession session) {
+            HttpServletRequest httpRequest) {
 
-        // Check ajax concurrency
-        Integer oldDraw = (Integer) session
-                .getAttribute("openwis-cache-search-draw");
-        // if (oldDraw != null && oldDraw > request.getDraw()) {
-        // throw new ConcurrencyFailureException(
-        // oldDraw + " > " + request.getDraw());
-        // }
-        session.setAttribute("openwis-cache-search-draw", request.getDraw());
+        // if using sAjax, this is needed
+        request.populate(httpRequest);
 
         // Setup fields to search, filter and order.
         String sortOrder = "ASC";
@@ -81,28 +74,33 @@ public class Service {
             }
         }
 
-        System.out.println(request.getSearch().get(SearchCriterias.regex));
-        System.out.println(request.getSearch().get(SearchCriterias.value));
-        
         // TODO metadata filter
         String metadataFilter = "";
 
-        // TODO metadata filter
-        String fileNameFilter = "";
-        
-        
-//        cf.filename, cf.checksum, cf.received_from_gts, cf.insertion_date
-        
-        
+        StringBuilder fileNameFilter = new StringBuilder();
+
+        for (Map<ColumnCriterias, String> column : request.getColumns()) {
+            if (!column.get(ColumnCriterias.searchValue).isEmpty()) {
+                if (column.get(ColumnCriterias.name) != "urn") {
+                    if(fileNameFilter.length() != 0) {
+                        fileNameFilter.append(" AND ");
+                    }
+                    fileNameFilter.append(column.get(ColumnCriterias.name)
+                            + " like '%"
+                            + column.get(ColumnCriterias.searchValue) + "%'");
+                }
+            }
+        }
+
         Response response = new Response();
         response.setDraw(request.getDraw());
         response.setRecordsTotal(client.getTotal());
-        response.setRecordsFiltered(
-                client.getTotalCurrentQuery(metadataFilter, fileNameFilter));
+        response.setRecordsFiltered(client.getTotalCurrentQuery(metadataFilter,
+                fileNameFilter.toString()));
 
         List<CachedFileInfo> list = client.retrieveCacheContentFilteredSorted(
                 request.getStart(), request.getLength(), sortField, sortOrder,
-                metadataFilter, fileNameFilter);
+                metadataFilter, fileNameFilter.toString());
         for (CachedFileInfo cfi : list) {
             Map<String, String> element = new HashMap<String, String>();
             element.put("filename", cfi.getName());

@@ -23,7 +23,7 @@ public class Response {
     private Long recordsTotal;
     private Long recordsFiltered;
     private List<Map<String, String>> data = new LinkedList<Map<String, String>>();
-    
+
     public Integer getDraw() {
         return draw;
     }
@@ -51,5 +51,23 @@ public class Response {
     public void addData(Map<String, String> data) {
         this.data.add(data);
     }
+    
+    //sAjax
+    public Integer getsEcho() {
+        return draw;
+    }
+    
+    public Long getiTotalRecords() {
+        return recordsTotal;
+    }
+
+    public Long getiTotalDisplayRecords() {
+        return recordsFiltered;
+    }
+
+    public  List<Map<String, String>> getAaData() {
+        return data;
+    }
+    
 
 }
