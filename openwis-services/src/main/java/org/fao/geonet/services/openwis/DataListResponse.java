@@ -53,4 +53,13 @@ public class DataListResponse<T> {
     public void addData(T element) {
         data.add(element);
     }
+
+    /**
+     * Adds a new element to the list.
+     *
+     * @param elements
+     */
+    public void addAllData(List<T> elements) {
+        data.addAll(elements);
+    }
 }

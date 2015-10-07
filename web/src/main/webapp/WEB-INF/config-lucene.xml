@@ -328,6 +328,15 @@
     <Field name="specificationTitle"/>
     <Field name="levelName"/>
     <Field name="subject"/>
+
+    <!-- OpenWIS -->
+    <field name="_process" tagName="process"/>
+    <field name="_gtsCategory" tagName="gtsCategory"/>
+    <field name="_fncPattern" tagName="fncPattern"/>
+    <field name="_fileExtension" tagName="fileExtension"/>
+    <field name="_dataPolicy" tagName="dataPolicy"/>
+    <field name="_localDataResource" tagName="localDataResource"/>
+    <field name="_originator" tagName="originator"/>
   </tokenized>
 
   <!-- All Lucene numeric fields.

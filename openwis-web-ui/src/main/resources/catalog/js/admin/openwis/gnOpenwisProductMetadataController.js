@@ -16,7 +16,7 @@
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
           .withOption("sAjaxSource", $scope.url + 'openwis.productmetadata.search')
-          //.withDataProp('data')
+          .withDataProp('data')
           .withOption('processing', true)
           .withOption('serverSide', true)
           .withOption('iDisplayLength', 25)
@@ -29,9 +29,7 @@
             rightColumns: 1
           })
           .withColumnFilter({
-            aoColumns: [{
-              type: 'text'
-            }, {
+            aoColumns: [null, {
               type: 'text'
             }, {
               type: 'text'
@@ -125,6 +123,9 @@
   module.controller('GnOpenwisProductMetadataModalController', function($scope,
                                                                   $http, $rootScope) {
     $scope.ok = function() {
+
+      $scope.product.overridenGtsCategory = $scope.product.overridenGtsCategory || "";
+
       $http({
         url : $scope.url + 'openwis.productmetadata.set',
         method : 'POST',

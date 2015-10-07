@@ -1,6 +1,9 @@
 package org.openwis.metadata.product;
 
+import org.jdom.Element;
 import org.openwis.products.client.ProductMetadata;
+
+import java.util.Vector;
 
 
 /**
@@ -9,5 +12,5 @@ import org.openwis.products.client.ProductMetadata;
  * @author Jose García
  */
 public interface IProductMetadataIndexer {
-    void index(ProductMetadata pm);
+    Vector<Element> index(ProductMetadata pm);
 }

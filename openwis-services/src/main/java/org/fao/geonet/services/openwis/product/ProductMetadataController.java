@@ -62,39 +62,13 @@ public class ProductMetadataController {
         try {
             if (maxRecords == null) maxRecords = new Long(20);
 
-            String orderColumnIdx = request.getParameter("iSortCol_0");
-            String orderColumnName = request.getParameter("sColumns").split(",")[Integer.valueOf(orderColumnIdx)];
-            String orderDir = request.getParameter("sSortDir_0");
-            if (orderDir.equalsIgnoreCase("desc")) orderDir = "";
-
-
-            // Create search request
-            Element requestEl = new Element("request");
-
-            requestEl.addContent(new Element("from").setText(start + ""));
-            requestEl.addContent(new Element("to").setText((start + maxRecords) + ""));
-            if (StringUtils.isNotEmpty(orderColumnName)) {
-                requestEl.addContent(new Element("sortBy").setText(orderColumnName));
-                requestEl.addContent(new Element("sortOrder").setText(orderDir));
-            }
-
-            // TODO: Update to generic search
-            // Sample to search by title
-            //String search = request.getParameter("sSearch_3");
-            //if (StringUtils.isNotEmpty(search)) {
-            //    requestEl.addContent(new Element("title").setText(search));
-            //}
-            requestEl.addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("n"));
-
-            requestEl.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.RESULTS));
-            requestEl.addContent(new Element(Geonet.SearchResult.FAST).setText("index"));
-            requestEl.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("true"));
+            Element searchRequestEl = createSearchRequest(request, start, maxRecords);
 
             MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
             ServiceConfig config = new ServiceConfig();
 
-            searcher.search(context, requestEl, config);
-            Element resultsEl = searcher.present(context, requestEl, config);
+            searcher.search(context, searchRequestEl, config);
+            Element resultsEl = searcher.present(context, searchRequestEl, config);
 
             Element summary = (Element) resultsEl.getChildren().get(0);
 
@@ -139,11 +113,11 @@ public class ProductMetadataController {
     public @ResponseBody
     OkResponse save(@PathVariable String lang,
                     @RequestParam String urn,
-                    @RequestParam String overridenGtsCategory,
-                    @RequestParam String overridenDataPolicy,
-                    @RequestParam String overridenFncPattern,
-                    @RequestParam Integer overridenPriority,
-                    @RequestParam String overridenFileExtension) {
+                    @RequestParam(required = false) String overridenGtsCategory,
+                    @RequestParam(required = false) String overridenDataPolicy,
+                    @RequestParam(required = false) String overridenFncPattern,
+                    @RequestParam(required = false) Integer overridenPriority,
+                    @RequestParam(required = false) String overridenFileExtension) {
 
 
         ProductMetadata pm = manager.getProductMetadataByUrn(urn);
@@ -163,5 +137,63 @@ public class ProductMetadataController {
         return new OkResponse();
     }
 
+
+    /**
+     * Builds the GeoNetwork search request element.
+     *
+     * @param request
+     * @param start
+     * @param maxRecords
+     * @return
+     */
+    private Element createSearchRequest(HttpServletRequest request, Long start, Long maxRecords) {
+        // Create search request
+        Element requestEl = new Element("request");
+
+        String[] columns = request.getParameter("sColumns").split(",");
+
+        // Get sort info
+        String orderColumnIdx = request.getParameter("iSortCol_0");
+        String orderColumnName = columns[Integer.valueOf(orderColumnIdx)];
+        String orderDir = request.getParameter("sSortDir_0");
+        if (orderDir.equalsIgnoreCase("desc")) orderDir = "";
+
+
+        // Get search fields
+        int numColumns = Integer.parseInt(request.getParameter("iColumns"));
+        for (int i = 0; i < numColumns; i++) {
+            String sortColumnValue =   request.getParameter("sSearch_" + i);
+            if (StringUtils.isNotEmpty(sortColumnValue)) {
+                // The counter in sSearch_X terms seem 1 more than the column index in the column array
+                String sortColumnName = columns[i-1];
+                // Special management for title field : _title is used for sorting, but title is used for searching
+                if (sortColumnName.equalsIgnoreCase("_title")) sortColumnName = "title";
+                requestEl.addContent(new Element(sortColumnName).setText(sortColumnValue + "*"));
+            }
+        }
+
+
+        String searchText = request.getParameter("sSearch");
+        if (StringUtils.isNotEmpty(searchText)) {
+            // Search in the any field (metadata full text) and the specific fields for category and product metadata
+            requestEl.addContent(new Element("any_OR__cat_OR__process_OR__gtsCategory_OR__fncPattern_OR" +
+                    "__fileExtension_OR__dataPolicy_OR__localDataResource").setText(searchText + "*"));
+        }
+
+        requestEl.addContent(new Element("from").setText(start + ""));
+        requestEl.addContent(new Element("to").setText((start + maxRecords) + ""));
+        if (StringUtils.isNotEmpty(orderColumnName)) {
+            requestEl.addContent(new Element("sortBy").setText(orderColumnName));
+            requestEl.addContent(new Element("sortOrder").setText(orderDir));
+        }
+
+        requestEl.addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("n"));
+
+        requestEl.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.RESULTS));
+        requestEl.addContent(new Element(Geonet.SearchResult.FAST).setText("index"));
+        requestEl.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("true"));
+
+        return requestEl;
+    }
 
 }

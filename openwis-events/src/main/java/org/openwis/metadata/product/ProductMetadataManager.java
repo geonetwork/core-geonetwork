@@ -39,8 +39,6 @@ public class ProductMetadataManager implements IProductMetadataManager {
         } else {
             getServiceClient().updateProductMetadata(pm);
         }
-
-        indexer.index(pm);
     }
 
     @Override
