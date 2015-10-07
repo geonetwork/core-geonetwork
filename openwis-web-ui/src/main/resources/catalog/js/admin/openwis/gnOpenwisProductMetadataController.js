@@ -123,9 +123,6 @@
   module.controller('GnOpenwisProductMetadataModalController', function($scope,
                                                                   $http, $rootScope) {
     $scope.ok = function() {
-
-      $scope.product.overridenGtsCategory = $scope.product.overridenGtsCategory || "";
-
       $http({
         url : $scope.url + 'openwis.productmetadata.set',
         method : 'POST',
