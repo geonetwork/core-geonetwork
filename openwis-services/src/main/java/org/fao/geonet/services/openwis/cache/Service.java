@@ -13,14 +13,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.fao.geonet.services.openwis.cache.Request.ColumnCriterias;
 import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
 import org.openwis.cacheindex.client.CacheIndexClient;
-import org.openwis.cacheindex.client.CachedFile;
 import org.openwis.cacheindex.client.CachedFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jeeves.services.ReadWriteController;
@@ -74,7 +72,7 @@ public class Service {
             }
         }
 
-        // TODO metadata filter
+        // FIXME this is not used
         String metadataFilter = "";
 
         StringBuilder fileNameFilter = new StringBuilder();
@@ -82,7 +80,7 @@ public class Service {
         for (Map<ColumnCriterias, String> column : request.getColumns()) {
             if (!column.get(ColumnCriterias.searchValue).isEmpty()) {
                 if (column.get(ColumnCriterias.name) != "urn") {
-                    if(fileNameFilter.length() != 0) {
+                    if (fileNameFilter.length() != 0) {
                         fileNameFilter.append(" AND ");
                     }
                     fileNameFilter.append(column.get(ColumnCriterias.name)
@@ -90,6 +88,15 @@ public class Service {
                             + column.get(ColumnCriterias.searchValue) + "%'");
                 }
             }
+        }
+
+        if (request.getsSearch() != null
+                && !request.getsSearch().trim().isEmpty()) {
+            if (fileNameFilter.length() != 0) {
+                fileNameFilter.append(" AND ");
+            }
+            fileNameFilter.append("(filename LIKE '%" + request.getsSearch()
+                    + "%' OR checksum LIKE '%" + request.getsSearch() + "%')");
         }
 
         Response response = new Response();
@@ -114,21 +121,5 @@ public class Service {
         }
 
         return response;
-    }
-
-    @RequestMapping(value = { "/{lang}/openwis.cache.get" }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody CachedFile search(@RequestParam Long id) {
-
-        return client.retrieveCachedFileById(id);
-
-    }
-
-    public CacheIndexClient getClient() {
-        return client;
-    }
-
-    public void setClient(CacheIndexClient client) {
-        this.client = client;
     }
 }

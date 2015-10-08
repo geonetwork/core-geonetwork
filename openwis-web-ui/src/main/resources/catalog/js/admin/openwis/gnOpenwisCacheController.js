@@ -29,16 +29,13 @@
                       aoColumns : [
                           {
                             type : 'text'
-                          }, {}, {
+                          }, null, {
                             type : 'text'
-                          }, {
-
-                          }, {
-
-                          }, {
-
-                          }, null
+                          }, null, null, null
                       ]
+                    }).withFixedColumns({
+                      leftColumns : 0,
+                      rightColumns : 1
                     });
 
                 $scope.dtColumns = [
@@ -55,9 +52,16 @@
                         .newColumn('actions')
                         .renderWith(
                             function(data, type, full) {
-                              return "<button class=\"btn btn-default\" data-ng-click=\"alert('wa')\">View</button>";
+                              return "<a class=\"btn btn-link\" target=\"_blank\" onclick='"
+                                  + "angular.element(this).scope().show(" + JSON.stringify(full) + ")"
+                                  + "'><i class=\"fa fa-eye\"></i></a>";
                             })
                 ];
+
+                $scope.show = function(tis) {
+                  $scope.selected = tis;
+                  $("#viewCachedFile").modal();
+                }
 
                 $scope.planify = function(data) {
                   if (data.columns) {
