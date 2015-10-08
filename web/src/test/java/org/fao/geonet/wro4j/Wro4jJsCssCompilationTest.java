@@ -7,6 +7,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
@@ -76,6 +77,7 @@ public class Wro4jJsCssCompilationTest {
 
 
     @Test
+    @Ignore
     public void testCssCompilation() throws Exception {
         createModel();
 //        testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
