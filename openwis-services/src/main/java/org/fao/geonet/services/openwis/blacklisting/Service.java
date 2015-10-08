@@ -3,16 +3,27 @@
  */
 package org.fao.geonet.services.openwis.blacklisting;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.fao.geonet.services.openwis.cache.Request;
+import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
+import org.fao.geonet.services.openwis.cache.Request.SearchCriterias;
+import org.fao.geonet.services.openwis.cache.Response;
 import org.openwis.blacklist.client.BlacklistClient;
 import org.openwis.blacklist.client.BlacklistInfo;
 import org.openwis.blacklist.client.BlacklistStatus;
 import org.openwis.blacklist.client.SetUserBlacklistedResponse;
 import org.openwis.blacklist.client.SortDirection;
+import org.openwis.cacheindex.client.CachedFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,26 +57,54 @@ public class Service {
     @RequestMapping(value = {
             "/{lang}/openwis.blacklisting.search" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody List<BlacklistInfo> search(
-            @RequestParam(required = false) String startWith,
-            @RequestParam(required = false, defaultValue = "0") Integer firstResult,
-            @RequestParam(required = false, defaultValue = "20") Integer maxResults,
-            @RequestParam(required = false, defaultValue = "") String column,
-            @RequestParam(required = false, defaultValue = "false") Boolean direction) {
+    public @ResponseBody Response search(@ModelAttribute Request request,
+            HttpServletRequest httpRequest) {
 
         SortDirection sort = SortDirection.DESC;
-        if (direction) {
-            sort = SortDirection.ASC;
-        }
+
+        sort = SortDirection.valueOf(request.getOrder().get(0)
+                .get(OrderCriterias.dir).toUpperCase());
+
+        String startWith = request.getSearch().get(SearchCriterias.value);
+        Integer firstResult = request.getStart();
+        Integer maxResults = request.getLength();
+
+        List<BlacklistInfo> list = null;
 
         if (startWith == null || startWith.trim().isEmpty()) {
-            return client.retrieveUsersBlackListInfoByUser(firstResult,
+            list = client.retrieveUsersBlackListInfoByUser(firstResult,
                     maxResults, sort);
         } else {
-            return client.retrieveUsersBlackListInfoByUser(firstResult,
+            list = client.retrieveUsersBlackListInfoByUser(firstResult,
                     maxResults, sort, startWith);
-
         }
+
+        Response response = new Response();
+        response.setDraw(request.getDraw());
+        // response.setRecordsTotal(client.getTotal());
+        // response.setRecordsFiltered(client.getTotalCurrentQuery(startWith));
+
+        for (BlacklistInfo bli : list) {
+            Map<String, String> element = new HashMap<String, String>();
+            element.put("user", bli.getUser());
+            element.put("nbDisseminationWarnThreshold",
+                    Long.toString(bli.getNbDisseminationWarnThreshold()));
+            element.put("volDisseminationWarnThreshold",
+                    Long.toString(bli.getVolDisseminationWarnThreshold()));
+            element.put("nbDisseminationBlacklistThreshold",
+                    Long.toString(bli.getNbDisseminationBlacklistThreshold()));
+            element.put("volDisseminationBlacklistThreshold",
+                    Long.toString(bli.getVolDisseminationBlacklistThreshold()));
+            element.put("id", bli.getId().toString());
+            if (bli.getStatus() != null) {
+                element.put("status", bli.getStatus().value());
+            } else {
+                element.put("status", "");
+            }
+            response.addData(element);
+        }
+
+        return response;
 
     }
 
@@ -147,7 +186,8 @@ public class Service {
             @RequestParam BlacklistStatus status) {
 
         set(user, isBlacklisted);
-        return set(user, id, nbBlacklist, nbWarn, volWarn, volBlacklist, status);
+        return set(user, id, nbBlacklist, nbWarn, volWarn, volBlacklist,
+                status);
     }
 
     public BlacklistClient getClient() {

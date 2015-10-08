@@ -3,40 +3,35 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" data-translate="">blacklist</div>
 			<div class="panel-body">
-				<div>
-					<div style="display: inline">
-						<label for="username" data-translate="">username</label><input
-							data-ng-change="updateData()" data-ng-model="username"
-							type="text">
-					</div>
-					<div style="display: inline">
-						<label for="numResults" data-translate="">Records per page</label> <input
-							data-ng-change="updateData()" data-ng-model="numResults"
-							type="number">
-					</div>
-				</div>
-				<table class="table">
-					<tr>
-						<th>User <input data-ng-change="updateData()" id="direction"
-							data-ng-model="direction" type="checkbox" class="asc_desc"></input><label
-							for="direction"></label></th>
-						<th>Nb Warn</th>
-						<th>Vol Warn</th>
-						<th>Nb Blacklist</th>
-						<th>Vol Blacklist</th>
-						<th>Status</th>
-					</tr>
-					<tr data-ng-repeat="element in data track by $index">
-						<td>{{element.user}}</td>
-						<td>{{element['nbDisseminationWarnThreshold']}}</td>
-						<td>{{element['volDisseminationWarnThreshold']}}</td>
-						<td>{{element['nbDisseminationBlacklistThreshold']}}</td>
-						<td>{{element['volDisseminationBlacklistThreshold']}}</td>
-						<td>{{element['status']}}</td>
-						<td><button type="button" class="btn btn-default"
-								data-translate="" data-ng-click="edit(element)">Edit</button></td>
-					</tr>
+				<table data-datatable data-dt-options="dtOptions"
+					data-dt-columns="dtColumns" class="row-border hover">
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Nb Warn</th>
+							<th>Vol Warn</th>
+							<th>Nb Blacklist</th>
+							<th>Vol Blacklist</th>
+							<th>Status</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>User</th>
+							<th>Nb Warn</th>
+							<th>Vol Warn</th>
+							<th>Nb Blacklist</th>
+							<th>Vol Blacklist</th>
+							<th>Status</th>
+							<th>&nbsp;</th>
+						</tr>
+					</tfoot>
 				</table>
+
+
 				<div id="editBlackList" class="modal fade" tabindex="-1"
 					role="dialog" style="display: none"
 					data-ng-controller="GnOpenwisBlacklistModalController">
@@ -45,35 +40,36 @@
 							<div class="modal-header">
 								<h3 class="modal-title">Edit Blacklist</h3>
 							</div>
-							<div class="modal-body">
+							<div class="modal-body" style="display: inline">
 								<div>
-									<label>Username:</label> <input disabled="disabled" type="text"
+									<label class="col-sm-6">Username</label> <input
+										class="col-sm-6" disabled="disabled" type="text"
 										data-ng-model="element.user" />
 								</div>
 								<div>
 									<label class="col-sm-6">Nb Dissemination Warning
-										Threshold:</label> <input type="text"
+										Threshold</label> <input class="col-sm-6" type="text"
 										data-ng-model="element['nbDisseminationWarnThreshold']" />
 								</div>
 								<div>
 									<label class="col-sm-6">Vol Dissemination Warning
-										Threshold:</label> <input type="text"
+										Threshold</label> <input class="col-sm-6" type="text"
 										data-ng-model="element['volDisseminationWarnThreshold']" />
 								</div>
 								<div>
 									<label class="col-sm-6">Nb Dissemination Blacklist
-										Threshold:</label> <input type="text"
+										Threshold</label> <input class="col-sm-6" type="text"
 										data-ng-model="element['nbDisseminationBlacklistThreshold']" />
 								</div>
 								<div>
 									<label class="col-sm-6">Vol Dissemination Blacklist
-										Threshold:</label> <input type="text"
+										Threshold</label> <input class="col-sm-6" type="text"
 										data-ng-model="element['volDisseminationBlacklistThreshold']" />
 								</div>
-								<div>
-									<label class="col-sm-6">Blacklist:</label> <input
-										type="checkbox" data-ng-model="element['isBlacklisted']" 
-										data-ng-change="changeBlacklist()"/>
+								<div class="col-sm-6">
+									<label>Blacklist</label> <input class="col-sm-1"
+										type="checkbox" data-ng-model="element['isBlacklisted']"
+										data-ng-change="changeBlacklist()" />
 								</div>
 							</div>
 							<div class="modal-footer">
@@ -85,6 +81,8 @@
 						</div>
 					</div>
 				</div>
+
+
 			</div>
 		</div>
 	</div>
