@@ -14494,6 +14494,9 @@ yx-axis
   position: relative;
   margin-top: -4em;
 }
+.gn [sxt-main-viewer] .sxt-layers-tabset {
+  height: 200px;
+}
 .gn [sxt-main-viewer] .layers .sxt-layertree {
   min-height: 200px;
   max-height: calc(400px);
