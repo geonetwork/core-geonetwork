@@ -213,19 +213,16 @@
 
       var feedLayerWithDownloads = function(layer, linkGroup) {
         var md = layer.get('md');
-        var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
+        var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
 
         // Tells if onlinesrc are spread in different transferOptions
         if(!transferOpts) {
           var downloads = md && md.getLinksByType(linkGroup,
               'WWW:DOWNLOAD-1.0-link--download', 'FILE', 'DB',
               'WFS', 'WCS', 'COPYFILE');
-
           layer.set('downloads', downloads);
 
-          var process = md && md.getLinksByType(linkGroup,
-              'OGC:WPS');
-
+          var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
           layer.set('processes', process);
         }
       };
@@ -538,7 +535,7 @@
 
       scope.links = md.getLinksByType('LINK');
 
-      var transferOpts = md.getLinksByType('OGC:WMS').length > 1;
+      var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
       if(transferOpts) {
         scope.downloads = md.getLinksByType('#FILE',
             '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
