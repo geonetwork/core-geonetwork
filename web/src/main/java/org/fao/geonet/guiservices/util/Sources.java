@@ -23,20 +23,31 @@
 
 package org.fao.geonet.guiservices.util;
 
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+import org.jdom.xpath.XPath;
+
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
 public class Sources implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	private ServiceConfig _config;
+	
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		this._config = params;
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -66,8 +77,30 @@ public class Sources implements Service
 		Element nodes = dbms.select("SELECT uuid as siteId, name FROM Sources");
 		nodes.addContent(local);
 
-
-		return nodes;
+		Element harvestingNode = sm.get("/harvesting", -1);
+		
+		String onlyLinkedSources = _config.getValue("onlyLinkedSources");
+		if(harvestingNode == null || onlyLinkedSources==null || !onlyLinkedSources.equals("true")){
+			return nodes;
+		}
+		
+		// remove from the source list those are in the harvesting/settings table
+		XPath xpathExpression = XPath.newInstance("children/node[value/text()='geonetwork']/children/site/children/name/value");
+		Collection<Element> geonetworkHarvesting = xpathExpression.selectNodes(harvestingNode);
+		List<String> harvestingSources = new LinkedList<String>();
+		for(Element el : geonetworkHarvesting){
+			harvestingSources.add(el.getText());
+		}
+		
+		Element response = new Element(Jeeves.Elem.RESPONSE);
+		String elName = null;
+		for(Element el : (List<Element>)nodes.getChildren()){
+			elName = el.getChild("name").getText();
+			if(!harvestingSources.contains(elName)){
+				response.addContent((Element)el.clone());
+			}
+		}
+		return response;
 	}
 }
 
