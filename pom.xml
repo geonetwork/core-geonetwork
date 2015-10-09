@@ -906,15 +906,16 @@
       <name>Geotools repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
+    
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
-      <url>http://developer.k-int.com/maven2/</url>
+      <url>http://maven.k-int.com/content/repositories/releases</url>
     </repository>
-
+    
     <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
     <repository>
@@ -934,6 +935,7 @@
       <name>Repository that has juniversalchardet</name>
       <url>http://mvnrepository.com/artifact</url>
     </repository>
+
 
   </repositories>
 
