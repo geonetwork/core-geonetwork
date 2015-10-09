@@ -1,35 +1,30 @@
 package org.fao.geonet.services.openwis.subscription;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.fao.geonet.domain.responses.OkResponse;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.openwis.DataListResponse;
-import org.fao.geonet.services.openwis.product.ProductMetadataDTO;
-import org.fao.geonet.services.openwis.product.ProductMetadataNotFoundException;
-import org.jdom.Element;
-import org.openwis.metadata.product.ProductMetadataManager;
-import org.openwis.products.client.ProductMetadata;
+import org.fao.geonet.services.openwis.cache.Request;
+import org.fao.geonet.services.openwis.cache.Response;
+import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
+import org.openwis.blacklist.client.BlacklistInfo;
+import org.openwis.subscription.client.Parameter;
+import org.openwis.subscription.client.ProductMetadata;
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Controller class for Subscriptions.
@@ -39,53 +34,198 @@ import java.util.List;
 @Controller("openwis.subscription")
 public class SubscriptionController {
 
-
     @Autowired
     private SubscriptionManager manager;
 
-    @RequestMapping(value = { "/{lang}/openwis.subscription.search" }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    DataListResponse list(@PathVariable String lang,
-                          @RequestParam(value = "iDisplayStart") Integer start,
-                          @RequestParam(value = "iDisplayLength", required = false) Integer maxRecords,
-                          HttpServletRequest request) {
+    @RequestMapping(value = {
+            "/{lang}/openwis.subscription.search" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Response search(@ModelAttribute Request request,
+            HttpServletRequest httpRequest) {
 
-        // Data-tables start param starts at 0
+        SortDirection sort = SortDirection.DESC;
 
-        // TODO: Manage sorting
+        sort = SortDirection.valueOf(request.getOrder().get(0)
+                .get(OrderCriterias.dir).toUpperCase());
 
-        DataListResponse<Subscription> response = new DataListResponse<>();
+        List<Subscription> subscriptions = manager.retrieveSubscriptionsByUsers(
+                request.getStart(), request.getLength(), sort);
 
-        List<Subscription> subscriptions =
-                manager.retrieveSubscriptionsByUsers(start, maxRecords, SortDirection.ASC);
-        response.addAllData(subscriptions);
+        // TODO total
+        Response response = new Response();
+        response.setDraw(request.getDraw());
+        // response.setRecordsTotal(manager.getTotal());
+        // response.setRecordsFiltered(manager.getTotalCurrentQuery(startWith));
+
+        for (Subscription s : subscriptions) {
+            Map<String, String> element = new HashMap<String, String>();
+            element.put("email", s.getEmail());
+            element.put("requestType", s.getRequestType());
+            element.put("user", s.getUser());
+            element.put("classOfService", s.getClassOfService().name());
+            element.put("extractMode", s.getExtractMode().name());
+            element.put("frequency", s.getFrequency().isZipped().toString());
+            element.put("id", s.getId().toString());
+
+            XMLGregorianCalendar lastEventDate = s.getLastEventDate();
+            if (lastEventDate != null) {
+                element.put("lastEventDate",
+                        lastEventDate.getDay() + "/" + lastEventDate.getMonth()
+                                + "/" + lastEventDate.getYear());
+            } else {
+                element.put("lastEventDate", "");
+            }
+
+            if (s.getParameters() != null && !s.getParameters().isEmpty()) {
+                StringBuilder params = new StringBuilder();
+
+                for (Parameter p : s.getParameters()) {
+                    // TODO do we need all the elements?
+                }
+
+                params.append("]");
+
+                element.put("parameters", params.toString());
+            } else {
+                element.put("parameters", "[]");
+            }
+
+            if (s.getPrimaryDissemination() != null) {
+                element.put("primaryDissemination",
+                        s.getPrimaryDissemination().getId().toString());
+                element.put("primaryDisseminationZipMode",
+                        s.getPrimaryDissemination().getZipMode().name());
+            } else {
+                element.put("primaryDissemination", "");
+                element.put("primaryDisseminationZipMode", "");
+            }
+
+            ProductMetadata productMetadata = s.getProductMetadata();
+            if (productMetadata != null) {
+                element.put("productMetadataDataPolicy",
+                        productMetadata.getDataPolicy());
+                element.put("productMetadataFileExtension",
+                        productMetadata.getFileExtension());
+                element.put("productMetadataFncPattern",
+                        productMetadata.getFncPattern());
+                element.put("productMetadataGtsCategory",
+                        productMetadata.getGtsCategory());
+                element.put("productMetadataLocalDataSource",
+                        productMetadata.getLocalDataSource());
+                element.put("productMetadataOriginator",
+                        productMetadata.getOriginator());
+                element.put("productMetadataOverridenDataPolicy",
+                        productMetadata.getOverridenDataPolicy());
+                element.put("productMetadataOverridenFileExtension",
+                        productMetadata.getOverridenFileExtension());
+                element.put("productMetadataOverridenFncPattern",
+                        productMetadata.getOverridenFncPattern());
+                element.put("productMetadataOverridenGtsCategory",
+                        productMetadata.getOverridenGtsCategory());
+                element.put("productMetadataProcess",
+                        productMetadata.getProcess());
+                element.put("productMetadataTitle", productMetadata.getTitle());
+                element.put("productMetadataUrn", productMetadata.getUrn());
+
+                XMLGregorianCalendar creationDate = productMetadata
+                        .getCreationDate();
+                if (creationDate != null) {
+                    element.put("productMetadataCreationDate",
+                            creationDate.getDay() + "/"
+                                    + creationDate.getMonth() + "/"
+                                    + creationDate.getYear());
+                } else {
+                    element.put("productMetadataCreationDate", "");
+                }
+
+                element.put("productMetadataId",
+                        productMetadata.getId().toString());
+                element.put("productMetadataOverridenPriority",
+                        productMetadata.getOverridenPriority().toString());
+                element.put("productMetadataPriority",
+                        productMetadata.getPriority().toString());
+                element.put("productMetadataupdateFrequency",
+                        productMetadata.getUpdateFrequency().toString());
+            } else {
+                element.put("productMetadataDataPolicy", "");
+                element.put("productMetadataFileExtension", "");
+                element.put("productMetadataFncPattern", "");
+                element.put("productMetadataGtsCategory", "");
+                element.put("productMetadataLocalDataSource", "");
+                element.put("productMetadataOriginator", "");
+                element.put("productMetadataOverridenDataPolicy", "");
+                element.put("productMetadataOverridenFileExtension", "");
+                element.put("productMetadataOverridenFncPattern", "");
+                element.put("productMetadataOverridenGtsCategory", "");
+                element.put("productMetadataProcess", "");
+                element.put("productMetadataTitle", "");
+                element.put("productMetadataUrn", "");
+                element.put("productMetadataCreationDate", "");
+                element.put("productMetadataId", "");
+                element.put("productMetadataOverridenPriority", "");
+                element.put("productMetadataPriority", "");
+                element.put("productMetadataupdateFrequency", "");
+            }
+
+            if (s.getSecondaryDissemination() != null) {
+                element.put("secondaryDissemination",
+                        s.getSecondaryDissemination().getId().toString());
+                element.put("secondaryDisseminationZipMode",
+                        s.getSecondaryDissemination().getZipMode().name());
+            } else {
+                element.put("secondaryDissemination", "");
+                element.put("secondaryDisseminationZipMode", "");
+            }
+
+            XMLGregorianCalendar startingDate = s.getStartingDate();
+            if (lastEventDate != null) {
+                element.put("startingDate",
+                        startingDate.getDay() + "/" + startingDate.getMonth()
+                                + "/" + startingDate.getYear());
+            } else {
+                element.put("startingDate", "");
+            }
+
+            element.put("state", s.getState().name());
+
+            if (s.getSubscriptionBackup() != null) {
+                element.put("subscriptionBackup",
+                        s.getSubscriptionBackup().getDeployment());
+                element.put("subscriptionBackupId",
+                        Long.toString(s.getSubscriptionBackup().getId()));
+                element.put("subscriptionBackupSubscriptionId", Long.toString(
+                        s.getSubscriptionBackup().getSubscriptionId()));
+            } else {
+                element.put("subscriptionBackup", "");
+                element.put("subscriptionBackupId", "");
+                element.put("subscriptionBackupSubscriptionId", "");
+            }
+            response.addData(element);
+        }
 
         return response;
     }
 
-
     @RequestMapping(value = { "/{lang}/openwis.subscription.get" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    Subscription retrieve(@PathVariable String lang,
-                             @RequestParam Long subscriptionId) {
+    public @ResponseBody Subscription retrieve(@PathVariable String lang,
+            @RequestParam Long subscriptionId) {
 
-
-        Subscription subscription = manager.retrieveSubscription(subscriptionId);
-        if (subscription == null) throw new SubscriptionNotFoundException();
+        Subscription subscription = manager
+                .retrieveSubscription(subscriptionId);
+        if (subscription == null)
+            throw new SubscriptionNotFoundException();
 
         return subscription;
     }
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.set" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    OkResponse save(@PathVariable String lang,
-                    @RequestParam Long subscriptionId) {
+    public @ResponseBody OkResponse save(@PathVariable String lang,
+            @RequestParam Long subscriptionId) {
 
-
-        Subscription subscription = manager.retrieveSubscription(subscriptionId);
+        Subscription subscription = manager
+                .retrieveSubscription(subscriptionId);
 
         if (subscription != null) {
             // TODO: Set subscription fields
@@ -97,6 +237,5 @@ public class SubscriptionController {
 
         return new OkResponse();
     }
-
 
 }
