@@ -17,6 +17,10 @@
 	<context:component-scan base-package="org.openwis" />
 
 	<!-- Initialize clients -->
+    <bean class="org.openwis.subscription.client.SubscriptionClient">
+        <property name="webServiceTemplate" ref="subscriptionWebServiceTemplate" />
+    </bean>
+    
 	<bean class="org.openwis.blacklist.client.BlacklistClient">
 		<property name="webServiceTemplate" ref="blackListWebServiceTemplate" />
 	</bean>
