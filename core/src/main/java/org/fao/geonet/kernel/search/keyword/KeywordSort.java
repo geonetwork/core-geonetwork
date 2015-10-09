@@ -96,32 +96,32 @@ public final class KeywordSort {
         for (int i = 0; i < lowercase.length(); i++) {
             char currChar = lowercase.charAt(i);
             switch (currChar) {
-                case 'Ã¶':
-                case 'Ã²':
-                case 'Ã´':
+                case '\u00f6'://ö
+                case '\u00f2'://ò
+                case '\u00f4'://ô
                     builder.append('o');
                     break;
-                case 'Ã¼':
-                case 'Ã¹':
-                case 'Ã»':
+                case '\u00fc'://ü
+                case '\u00f9'://ù
+                case '\u00fb'://û
                     builder.append('u');
                     break;
-                case 'Ã©':
-                case 'Ãª':
-                case 'Ã¨':
+                case '\u00e9'://é
+                case '\u00ea'://ê
+                case '\u00e8'://è
                     builder.append('e');
                     break;
-                case 'Ã¤':
-                case 'Ã ':
-                case 'Ã¢':
-                case 'Ã¡':
+                case '\u00e4'://ä
+                case '\u00e0'://à
+                case '\u00e2'://â
+                case '\u00e1'://á
                     builder.append('a');
                     break;
-                case 'Ã§':
+                case '\u00e7'://ç
                     builder.append('c');
                     break;
-                case 'Ã¬':
-                case 'Ã®':
+                case '\u00ec'://ì
+                case '\u00ee'://î
                     builder.append('i');
                     break;
                 default:
