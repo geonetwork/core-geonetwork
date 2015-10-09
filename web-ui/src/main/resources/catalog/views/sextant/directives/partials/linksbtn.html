@@ -62,7 +62,9 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li ng-repeat="link in links">
-        <a href="{{link.url}}" target="_blank">{{link.desc || link.name}}</a></li>
+      <a href="{{link.url}}" target="_blank" title="{{link.desc || link.name}}">
+        {{link.desc || link.name}}
+      </a></li>
     </ul>
   </div>
 </div>

@@ -8751,6 +8751,12 @@ yx-axis
   color: #428bca;
   background-color: transparent;
 }
+.gn .dropdown-menu li {
+  cursor: pointer !important;
+}
+.gn .dropdown-menu li.disabled {
+  cursor: not-allowed !important;
+}
 .gn .gn-popup {
   display: none;
   overflow: hidden;
@@ -11305,6 +11311,9 @@ yx-axis
   padding-left: 5px;
   padding-right: 5px;
   width: auto;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .form-group.optional {
+  display: none;
 }
 .gn [sxt-main-viewer] .gn-draw-styleform .gn-draw-text-stroke {
   display: none;
@@ -14457,6 +14466,10 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
+}
+.gn ul.gn-resultview li.gn-grid .gn-md-relations .dropdown-menu,
+.gn ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
+  max-width: 195px;
 }
 .gn h4 {
   display: block;
