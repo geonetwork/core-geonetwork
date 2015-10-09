@@ -68,7 +68,9 @@ import org.quartz.Trigger;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.quartz.JobKey.jobKey;
 
@@ -216,25 +218,26 @@ public abstract class AbstractHarvester extends BaseAligner
 	  * It is used to remove harvested metadata.
 	  */
 
-	public synchronized void destroy(Dbms dbms) throws Exception
-	{
-	    doUnschedule();
+    public synchronized void destroy(Dbms dbms) throws Exception {
+        doUnschedule();
 
-		//--- remove all harvested metadata
+        //--- remove all harvested metadata
+        String getQuery = "SELECT source, id FROM Metadata WHERE harvestUuid=?";
 
-		String getQuery = "SELECT id FROM Metadata WHERE harvestUuid=?";
+        Set<String> sourceUuids = new HashSet<String>();
 
-		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren())
-		{
-			Element el = (Element) o;
-			String  id = el.getChildText("id");
+        for (Object o : dbms.select(getQuery, getParams().uuid).getChildren()) {
+            Element el = (Element) o;
+            String id = el.getChildText("id");
+            String source = el.getChildText("source");
+            sourceUuids.add(source);
 
-			dataMan.deleteMetadata(context, dbms, id);
-			dbms.commit();
-		}
+            dataMan.deleteMetadata(context, dbms, id);
+            dbms.commit();
+        }
 
-		doDestroy(dbms);
-	}
+        doDestroy(dbms, sourceUuids);
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -540,7 +543,16 @@ public abstract class AbstractHarvester extends BaseAligner
 
 	protected abstract void doInit(Element entry) throws BadInputEx;
 
-	protected abstract void doDestroy(Dbms dbms) throws SQLException;
+    protected abstract void doDestroy(Dbms dbms) throws SQLException;
+
+    /**
+     * @param sources the source names related to the removed metadata.
+     */
+    protected void doDestroy(Dbms dbms, Set<String> sources) throws SQLException {
+        // Most harvesters do not need these info,
+        // the ones which do should override this method.
+        doDestroy(dbms);
+    }
 
 	protected abstract String doAdd(Dbms dbms, Element node)
 											throws BadInputEx, SQLException;

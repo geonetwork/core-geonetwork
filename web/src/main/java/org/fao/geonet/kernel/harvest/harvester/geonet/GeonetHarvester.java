@@ -38,6 +38,7 @@ import org.jdom.Element;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.UUID;
 
 //=============================================================================
@@ -79,14 +80,50 @@ public class GeonetHarvester extends AbstractHarvester
 	//--- doDestroy
 	//---
 	//---------------------------------------------------------------------------
+    @Override
+    protected void doDestroy(Dbms dbms) throws SQLException {
+        log.error("This doDestroy method should not be reachable.");
+        doDestroy(dbms, null);
 
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
+    }
 
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
-	}
+    /**
+     * This harvester adds entries in the source table according to the
+     * data reported by the remote GN. We should remove all the sources that have
+     * been inserted in this way.
+     *
+     * Note that some sources may be imported from different harvesters due to
+     * transitive harvesting.
+     *
+     * @param sources the source uuid related to the removed metadata.
+     */
+    @Override
+    protected void doDestroy(Dbms dbms, Set<String> sources) throws SQLException {
+        File icon = new File(Resources.locateLogosDir(context), params.uuid + ".gif");
+        icon.delete();
+
+        // delete the source linked to this harvester
+        Lib.sources.delete(dbms, params.uuid);
+
+        if (sources != null) {
+            // Get all the referred sources. If a source is still referred in the metadata table
+            // it has been harvested by another harvester and we should leave it there.
+            String sourceQuery = "SELECT DISTINCT source FROM Metadata";
+            for (Object o : dbms.select(sourceQuery).getChildren()) {
+                if (sources.isEmpty()) {
+                    break;
+                }
+                Element el = (Element) o;
+                String source = el.getChildText("source");
+                sources.remove(source);
+            }
+
+            for (String source : sources) {
+                log.info("Removing Source " + source + " associated to harvester " + getType() + " " + getID());
+                Lib.sources.delete(dbms, source);
+            }
+        }
+    }
 
 	//---------------------------------------------------------------------------
 	//---
