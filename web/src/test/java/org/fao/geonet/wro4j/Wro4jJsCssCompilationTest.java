@@ -77,12 +77,11 @@ public class Wro4jJsCssCompilationTest {
 
 
     @Test
-    @Ignore
     public void testCssCompilation() throws Exception {
         createModel();
-//        testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
-//                Predicates.equalTo("gn_viewer") // currently broken
-//                )));
+        testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
+                Predicates.equalTo("gn_viewer") // currently broken
+                )));
         testResourcesOfType(ResourceType.CSS, Predicates.<String>alwaysTrue());
     }
     @Test
