@@ -377,8 +377,7 @@
 
   .sxt-layers-tabset {
     height: @tmp-max-height;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     display: none;
     clear: both;
     font-size: 12px;
@@ -393,7 +392,7 @@
         height: 100%;
         .panel-carousel {
           height: 100%;
-          overflow-y: scroll;
+          overflow-y: scroll;
         }
       }
     }
@@ -685,6 +684,7 @@
       color: @sxt-base-color;
     }
   }
+
   .panel-ncwms-container {
     border: none;
     font-size: @sxt-fontsize;
@@ -714,6 +714,11 @@
   }
   .panel-carousel {
     flex: 1;
+  }
+
+  .wps-container {
+    height: 100%;
+    overflow-y: auto;
   }
 
   .fu {

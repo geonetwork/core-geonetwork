@@ -492,8 +492,13 @@
         restrict: 'A',
         link: {
           post: function(scope, element, attrs) {
+            var axis = attrs['axis'] || 'y';
+
             element.mCustomScrollbar({
               theme: 'dark-3',
+              axis: axis,
+              advanced:{ updateOnContentResize: false },
+              // alwaysShowScrollbar: 2,
               scrollButtons: {
                 enable: true
               },
@@ -503,6 +508,7 @@
                 }
               }
             });
+
           }
         }
       };
