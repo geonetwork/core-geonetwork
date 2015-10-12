@@ -10935,8 +10935,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset {
   height: 350px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   display: none;
   clear: both;
   font-size: 12px;
@@ -10954,7 +10953,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset .tab-content .tab-pane .panel-carousel {
   height: 100%;
-  overflow-y:  scroll;
+  overflow-y: scroll;
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset .list-group,
 .gn [sxt-main-viewer] .sxt-layers-tabset .list-group-item {
@@ -11279,6 +11278,10 @@ yx-axis
 }
 .gn [sxt-main-viewer] .panel-carousel {
   flex: 1;
+}
+.gn [sxt-main-viewer] .wps-container {
+  height: 100%;
+  overflow-y: auto;
 }
 .gn [sxt-main-viewer] .fu button {
   width: 100%;
@@ -14489,6 +14492,9 @@ yx-axis
   .gn .sxt-main-tabs .btn-group.sxt-panel-button {
     margin-left: calc(25% + 1.2em);
   }
+}
+.gn.sxt-max-sm .sxt-main-tabs .btn-group.sxt-panel-button {
+  margin-left: 29.7em;
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
