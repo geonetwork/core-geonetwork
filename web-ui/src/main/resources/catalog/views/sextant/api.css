@@ -14057,7 +14057,7 @@ yx-axis
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations .dropdown-menu,
 .gn ul.gn-resultview li.gn-grid .gn-md-links .dropdown-menu {
-  max-width: 300px;
+  max-width: 250px;
   font-size: 12px;
 }
 .gn ul.gn-resultview li.gn-grid .gn-md-relations .dropdown-menu li a,
