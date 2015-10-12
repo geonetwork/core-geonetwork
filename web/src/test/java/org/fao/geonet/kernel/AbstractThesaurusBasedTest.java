@@ -12,6 +12,8 @@ import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -36,29 +38,26 @@ public abstract class AbstractThesaurusBasedTest {
     protected final String[] languages = {"eng","ger","fre","ita"};
     private final boolean readonly;
 
+    @Rule
+    public TestName name = new TestName();
+
     public AbstractThesaurusBasedTest(boolean readonly) {
         this.readonly = readonly;
     }
-    
+
     @Before
     public void beforeTest() throws Exception {
         generateTestThesaurus();
 
-        if(!readonly) {
-            File directory = new File(getClass().getResource(getClass().getSimpleName()+".class").getFile()).getParentFile();
+        if (!readonly) {
+            String thisClassName = getClass().getSimpleName();
+            File directory = new File(getClass().getResource(thisClassName + ".class").getFile()).getParentFile();
             File template = thesaurusFile;
-            
-            // Now make copy for this test
-            this.thesaurusFile = new File(directory, getClass().getSimpleName()+"TestThesaurus.rdf");
+
+            // Force the use of a brand new file for each test method
+            this.thesaurusFile = File.createTempFile(thisClassName + "_" + name.getMethodName(), "TestThesaurus.rdf", directory);
+            System.out.println("Cloned thesaurus: " + this.thesaurusFile);
             this.thesaurusFile.deleteOnExit();
-            FileChannel to = new FileOutputStream(thesaurusFile).getChannel();
-            FileChannel from = new FileInputStream(template).getChannel();
-            try {
-            	to.transferFrom(from, 0, template.length());
-            } finally {
-            	IOUtils.closeQuietly(from);
-            	IOUtils.closeQuietly(to);
-            }
             FileUtils.copyFile(template, thesaurusFile);
             this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept");
         }
@@ -155,7 +154,7 @@ public abstract class AbstractThesaurusBasedTest {
                 thesaurus.addRelation(code,KeywordRelation.RELATED, namespace+(i-3));
             }
         }
-        
+
         System.out.println("100");
     }
 

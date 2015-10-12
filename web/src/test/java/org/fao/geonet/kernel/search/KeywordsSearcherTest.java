@@ -23,7 +23,9 @@ import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
@@ -34,16 +36,22 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     private Thesaurus thesaurusFoo;
     private int smallWords = 20;
 
+    @Rule
+    public TestName name = new TestName();
+
     public KeywordsSearcherTest() {
         super(true);
     }
     
     @Before
     public synchronized void createExtraThesauri() throws Exception {
-        File directory = new File(KeywordsSearcherTest.class.getResource(KeywordsSearcherTest.class.getSimpleName()+".class").getFile()).getParentFile();
+        File directory = new File(KeywordsSearcherTest.class.getResource(KeywordsSearcherTest.class.getSimpleName() + ".class").getFile()).getParentFile();
+        // force the use of brand new files for each test method
+        directory = new File(directory, name.getMethodName());
+        directory.mkdir();
 
-        thesaurusBlah = createThesaurus(directory, "blah");
-        thesaurusFoo = createThesaurus(directory, "foo");
+        thesaurusBlah = initThesaurus(directory, "blah");
+        thesaurusFoo = initThesaurus(directory, "foo");
         
         this.thesaurusFinder = new ThesaurusFinder() {
             
@@ -71,20 +79,30 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         };
     }
     
-    private Thesaurus createThesaurus(File directory, String string) throws Exception {
-        File thesaurusBlahFile = new  File(directory, string+".rdf");
-        Thesaurus thes = new Thesaurus(isoLangMapper, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
+    private Thesaurus initThesaurus(File directory, String string) throws Exception {
+        File thesaurusBlahFile = new File(directory, string + ".rdf");
+        Thesaurus thes = new Thesaurus(isoLangMapper, string + ".rdf", string + "__", null, Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://" + string + ".com", false);
         setRepository(thes);
-        if(!thesaurusBlahFile.exists() || thesaurusBlahFile.length() == 0) {
-            populateThesaurus(thes, smallWords, "http://"+string+".com#", string+"Val", string+"Note", languages);
+        if (!thesaurusBlahFile.exists() || thesaurusBlahFile.length() == 0) {
+            populateThesaurus(thes, smallWords, "http://" + string + ".com#", string + "Val", string + "Note", languages);
+
+            // uninitialized thesauri may have problems, so create a new initialized one
+            Thesaurus ret = new Thesaurus(isoLangMapper, string + ".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://" + string + ".com");
+            setRepository(ret);
+            return ret;
+        } else {
+            return thes;
         }
-        return thes;
     }
 
     @After
     public synchronized void deleteExtraThesauri() {
-        thesaurusBlah.getRepository().shutDown();
-        thesaurusFoo.getRepository().shutDown();
+        if (thesaurusBlah != null) {
+            thesaurusBlah.getRepository().shutDown();
+        }
+        if (thesaurusFoo != null) {
+            thesaurusFoo.getRepository().shutDown();
+        }
     }
 
     private String createBlahLabel(int i, String lang) {
@@ -518,7 +536,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         		addContent(new Element("pLanguage").setText("eng")).
         		addContent(new Element("pKeyword").setText(keywordId));
         searcher.search("fra", params);
-        
+
         assertEquals(1, searcher.getResults().size());
         assertEquals(keywordId, searcher.getResults().get(0).getUriCode());
     }
