@@ -8,19 +8,19 @@
   </button>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a data-ng-href="" data-ng-click="mdService.getPermalink(md)">
+      <a data-ng-href="" data-ng-click="mdService.getPermalink(md, gnUrl)">
         <i class="fa fa-link"/>&nbsp;
         <span data-translate="">sxtPermalink</span>
       </a>
     </li>
     <li>
-      <a data-ng-href="xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">
+      <a data-ng-href="{{gnUrl}}xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">sxtExportXML</span>
       </a>
     </li>
     <li>
-      <a data-ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid())">
+      <a data-ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid(), gnUrl)">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">sxtExportPDF</span>
       </a>

@@ -82,11 +82,12 @@
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.
        * @param {Object|string} params
+       * @param {string} prefix
        */
-      this.metadataPrint = function(params) {
-        var url;
+      this.metadataPrint = function(params, prefix) {
+        var url = (prefix) ? prefix : '';
         if (angular.isObject(params) && params.sortBy) {
-          url = gnHttp.getService('mdGetPDFSelection');
+          url += gnHttp.getService('mdGetPDFSelection');
           url += '?sortBy=' + params.sortBy;
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
@@ -94,7 +95,7 @@
         }
         else if (angular.isString(params)) {
           // TODO: May depend on schema
-          url = gnSearchSettings.formatter.defaultPdfUrl + params;
+          url += gnSearchSettings.formatter.defaultPdfUrl + params;
         }
         if (url) {
           location.replace(url);
@@ -321,11 +322,12 @@
       /**
        * Get html formatter link for the given md
        * @param {Object} md
+       * @param {String} prefix
        */
-      this.getPermalink = function(md) {
+      this.getPermalink = function(md, prefix) {
 
-        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
-            md.getUuid();
+        var url = ( (prefix) ? prefix : $location.absUrl().split('#')[0] )
+            + '#/metadata/' + md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
           content: '<div gn-permalink-input="' + url + '"></div>'
