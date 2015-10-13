@@ -10954,7 +10954,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset .tab-content .tab-pane .panel-carousel {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .gn [sxt-main-viewer] .sxt-layers-tabset .list-group,
 .gn [sxt-main-viewer] .sxt-layers-tabset .list-group-item {

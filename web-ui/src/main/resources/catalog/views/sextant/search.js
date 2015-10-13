@@ -497,7 +497,10 @@
             element.mCustomScrollbar({
               theme: 'dark-3',
               axis: axis,
-              advanced:{ updateOnContentResize: false },
+              advanced:{
+                updateOnContentResize: true,
+                updateOnImageLoad: true
+              },
               // alwaysShowScrollbar: 2,
               scrollButtons: {
                 enable: true
