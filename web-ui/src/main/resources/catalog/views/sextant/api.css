@@ -201,6 +201,7 @@ yx-axis
 }
 */
   /* Pagination */
+  /* @media (max-width: @screen-md) { */
 }
 .gn > div:first-of-type {
   height: 4em;
@@ -14239,7 +14240,7 @@ yx-axis
   right: 1.1em;
   top: 1.5em;
   bottom: 0;
-  z-index: 1100;
+  z-index: 1040;
 }
 .gn [gn-metadata-display] .overview .gn-metadata-display {
   margin: 2em 0 0 -2em;
@@ -14495,6 +14496,14 @@ yx-axis
 }
 .gn.sxt-max-sm .sxt-main-tabs .btn-group.sxt-panel-button {
   margin-left: 29.7em;
+}
+@media (max-width: 991px) {
+  .gn .tab-pane.active .gn-main-viewer #sxt-tabswitcher {
+    display: inline-block;
+  }
+  .gn .tab-pane.active .gn-main-viewer [gn-localisation-input] {
+    display: none;
+  }
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
