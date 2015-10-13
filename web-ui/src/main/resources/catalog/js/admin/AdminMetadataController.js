@@ -39,6 +39,11 @@
               label: 'schematron',
               icon: 'fa-check',
               href: '#/metadata/schematron'
+            },{
+              type: 'metadata-identifier-templates',
+              icon: 'fa-icon-list',
+              label: 'manageMetadataIdentifierTemplates',
+              href: '#/metadata/metadata-identifier-templates'
             }]
       };
 

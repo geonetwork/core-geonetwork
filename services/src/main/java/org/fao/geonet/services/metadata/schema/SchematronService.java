@@ -1,13 +1,13 @@
 package org.fao.geonet.services.metadata.schema;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.domain.Schematron_;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 
@@ -29,7 +29,7 @@ public class SchematronService extends AbstractSchematronService {
 
         Element result;
         if (id == null) {
-            result = repository.findAllAsXml();
+            result = repository.findAllAsXml(SortUtils.createSort(Schematron_.displayPriority));
         } else {
             final Schematron one = repository.findOne(Integer.parseInt(id));
             if (one == null) {

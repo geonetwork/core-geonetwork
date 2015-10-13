@@ -30,3 +30,4 @@ DELETE FROM STATUSVALUESDES;
 DELETE FROM StatusValues;
 DELETE FROM Settings;
 DELETE FROM HarvesterSettings;
+DELETE FROM MetadataIdentifierTemplate;

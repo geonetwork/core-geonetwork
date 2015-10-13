@@ -656,11 +656,13 @@
         'ngeoDecorateInteraction',
         function(gnMap, goDecoI) {
 
-          var extentFromValue = function(value) {
-            if (!value) {
+          var extentFromValue = function(str) {
+            if (str === undefined || str === '') {
               return ['', '', '', ''];
             }
-            return value.split(',');
+            return str.split(',').map(function(val) {
+                return parseFloat(val);
+            });
           };
 
           var valueFromExtent = function(extent) {
@@ -679,6 +681,7 @@
 
             link: function(scope, element, attrs) {
               scope.crs = scope.crs || 'EPSG:4326';
+              scope.extent = extentFromValue(scope.value);
 
               var style = new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -696,13 +699,18 @@
               scope.map.addInteraction(dragboxInteraction);
 
               // Create overlay to show bbox
-              var featureOverlay = new ol.FeatureOverlay({
-                style: style
+              var layer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                  useSpatialIndex: false
+                }),
+                style: style,
+                updateWhileAnimating: true,
+                updateWhileInteracting: true
               });
-              featureOverlay.setMap(scope.map);
+              scope.map.addLayer(layer);
 
               var clearMap = function() {
-                featureOverlay.getFeatures().clear();
+                layer.getSource().clear();
               };
 
               dragboxInteraction.on('boxstart', clearMap);
@@ -716,7 +724,7 @@
               };
 
               scope.updateMap = function() {
-                featureOverlay.getFeatures().clear();
+                layer.getSource().clear();
                 if (scope.extent == ['', '', '', '']) {
                   return;
                 }
@@ -726,7 +734,7 @@
               .transform(scope.crs, scope.map.getView().getProjection());
                 f = new ol.Feature();
                 f.setGeometry(geom);
-                featureOverlay.addFeature(f);
+                layer.getSource().addFeature(f);
               };
 
               dragboxInteraction.on('boxend', function() {
@@ -737,8 +745,11 @@
                 var extent = geom.getExtent();
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;
-                }); scope.value = valueFromExtent(scope.extent);
+                });
+                scope.value = valueFromExtent(scope.extent);
                 scope.updateMap();
+
+                scope.$apply();
               });
               scope.dragboxInteraction = dragboxInteraction;
 
@@ -749,7 +760,7 @@
 
               element.on('$destroy', function() {
                 clearMap();
-                scope.map.removeLayer(featureOverlay);
+                scope.map.removeLayer(layer);
               });
             }
           };

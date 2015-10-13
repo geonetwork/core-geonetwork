@@ -29,7 +29,7 @@
    *
    * A body-level scope makes sense for example:
    *
-   *     <body ng-controller="GnCatController">
+   *  <body ng-controller="GnCatController">
    */
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
@@ -46,10 +46,11 @@
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = {'eng': 'en', 'dut': 'du', 'fre': 'fr',
-        'ger': 'ge', 'kor': 'ko', 'spa': 'es'};
+        'ger': 'ge', 'kor': 'ko', 'spa': 'es', 'cze': 'cz'};
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
-        'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의', 'spa': 'Español'};
+        'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
+        'spa': 'Español', 'cze': 'Czech'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -91,8 +92,11 @@
 
       gnConfigService.load().then(function(c) {
         // Config loaded
-        //gnMap.importProj4js();
-        // TODO: make map proj load in mapService.config instead of here
+        if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
+          angular.forEach(gnConfig['map.proj4js'], function(item) {
+            proj4.defs(item.code, item.value);
+          });
+        }
       });
 
       /**
