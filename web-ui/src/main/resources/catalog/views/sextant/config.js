@@ -229,7 +229,7 @@
           }
           return url;
         },
-        defaultPdfUrl: 'md.format.pdf?xsl=sxt_view&uuid=',
+        defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
         list: [
           {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
         ]
