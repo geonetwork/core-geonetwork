@@ -8,18 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.fao.geonet.services.openwis.cache.Request;
-import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
-import org.fao.geonet.services.openwis.cache.Request.SearchCriterias;
-import org.fao.geonet.services.openwis.cache.Response;
+import org.fao.geonet.services.openwis.util.Request;
+import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
+import org.fao.geonet.services.openwis.util.Request.SearchCriterias;
+import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.blacklist.client.BlacklistClient;
 import org.openwis.blacklist.client.BlacklistInfo;
 import org.openwis.blacklist.client.BlacklistStatus;
 import org.openwis.blacklist.client.SetUserBlacklistedResponse;
 import org.openwis.blacklist.client.SortDirection;
-import org.openwis.cacheindex.client.CachedFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

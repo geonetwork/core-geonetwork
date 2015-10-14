@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="ReplicatedDataStatistics" targetNamespace="http://monitoring.management.openwis.org/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://monitoring.management.openwis.org/" version="1.0" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="getReplicatedData" type="tns:getReplicatedData" />
+<xs:element name="getReplicatedDataFromSource" type="tns:getReplicatedDataFromSource" />
+<xs:element name="getReplicatedDataFromSourceInInterval" type="tns:getReplicatedDataFromSourceInInterval" />
+<xs:element name="getReplicatedDataFromSourceInIntervalResponse" type="tns:getReplicatedDataFromSourceInIntervalResponse" />
+<xs:element name="getReplicatedDataFromSourceResponse" type="tns:getReplicatedDataFromSourceResponse" />
+<xs:element name="getReplicatedDataInInterval" type="tns:getReplicatedDataInInterval" />
+<xs:element name="getReplicatedDataInIntervalResponse" type="tns:getReplicatedDataInIntervalResponse" />
+<xs:element name="getReplicatedDataResponse" type="tns:getReplicatedDataResponse" />
+<xs:element name="getReplicatedDataStatistics" type="tns:getReplicatedDataStatistics" />
+<xs:element name="getReplicatedDataStatisticsResponse" type="tns:getReplicatedDataStatisticsResponse" />
+<xs:element name="updateReplicatedData" type="tns:updateReplicatedData" />
+<xs:element name="updateReplicatedDataResponse" type="tns:updateReplicatedDataResponse" />
+<xs:complexType name="getReplicatedDataStatistics">
+<xs:sequence>
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxItemsCount" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:ReplicatedDataColumn " />
+<xs:element minOccurs="0" name="dir" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataStatisticsResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:replicatedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="replicatedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:dateTime" />
+<xs:element minOccurs="0" name="size" type="xs:long" />
+<xs:element minOccurs="0" name="source" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataFromSource">
+<xs:sequence>
+<xs:element minOccurs="0" name="source" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataFromSourceResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:replicatedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:replicatedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:replicatedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateReplicatedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="source" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element name="size" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateReplicatedDataResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getReplicatedDataFromSourceInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="source" type="xs:string" />
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getReplicatedDataFromSourceInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:replicatedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="ReplicatedDataColumn ">
+<xs:restriction base="xs:string">
+<xs:enumeration value="DATE" />
+<xs:enumeration value="SIZE" />
+<xs:enumeration value="SOURCE" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SortDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASC" />
+<xs:enumeration value="DESC" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getReplicatedData">
+    <wsdl:part element="tns:getReplicatedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataFromSourceInIntervalResponse">
+    <wsdl:part element="tns:getReplicatedDataFromSourceInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataResponse">
+    <wsdl:part element="tns:getReplicatedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateReplicatedData">
+    <wsdl:part element="tns:updateReplicatedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataInInterval">
+    <wsdl:part element="tns:getReplicatedDataInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataStatisticsResponse">
+    <wsdl:part element="tns:getReplicatedDataStatisticsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataFromSourceInInterval">
+    <wsdl:part element="tns:getReplicatedDataFromSourceInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataFromSource">
+    <wsdl:part element="tns:getReplicatedDataFromSource" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateReplicatedDataResponse">
+    <wsdl:part element="tns:updateReplicatedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataFromSourceResponse">
+    <wsdl:part element="tns:getReplicatedDataFromSourceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataInIntervalResponse">
+    <wsdl:part element="tns:getReplicatedDataInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getReplicatedDataStatistics">
+    <wsdl:part element="tns:getReplicatedDataStatistics" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ReplicatedDataStatistics">
+    <wsdl:operation name="getReplicatedDataStatistics">
+      <wsdl:input message="tns:getReplicatedDataStatistics" name="getReplicatedDataStatistics">
+    </wsdl:input>
+      <wsdl:output message="tns:getReplicatedDataStatisticsResponse" name="getReplicatedDataStatisticsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataFromSource">
+      <wsdl:input message="tns:getReplicatedDataFromSource" name="getReplicatedDataFromSource">
+    </wsdl:input>
+      <wsdl:output message="tns:getReplicatedDataFromSourceResponse" name="getReplicatedDataFromSourceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataInInterval">
+      <wsdl:input message="tns:getReplicatedDataInInterval" name="getReplicatedDataInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getReplicatedDataInIntervalResponse" name="getReplicatedDataInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedData">
+      <wsdl:input message="tns:getReplicatedData" name="getReplicatedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getReplicatedDataResponse" name="getReplicatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateReplicatedData">
+      <wsdl:input message="tns:updateReplicatedData" name="updateReplicatedData">
+    </wsdl:input>
+      <wsdl:output message="tns:updateReplicatedDataResponse" name="updateReplicatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataFromSourceInInterval">
+      <wsdl:input message="tns:getReplicatedDataFromSourceInInterval" name="getReplicatedDataFromSourceInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getReplicatedDataFromSourceInIntervalResponse" name="getReplicatedDataFromSourceInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ReplicatedDataStatisticsSoapBinding" type="tns:ReplicatedDataStatistics">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getReplicatedDataStatistics">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getReplicatedDataStatistics">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getReplicatedDataStatisticsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataFromSource">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getReplicatedDataFromSource">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getReplicatedDataFromSourceResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getReplicatedDataInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getReplicatedDataInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getReplicatedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getReplicatedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateReplicatedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateReplicatedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateReplicatedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReplicatedDataFromSourceInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getReplicatedDataFromSourceInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getReplicatedDataFromSourceInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReplicatedDataStatistics">
+    <wsdl:port binding="tns:ReplicatedDataStatisticsSoapBinding" name="ReplicatedDataStatisticsPort">
+      <soap:address location="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/ReplicatedDataStatistics" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

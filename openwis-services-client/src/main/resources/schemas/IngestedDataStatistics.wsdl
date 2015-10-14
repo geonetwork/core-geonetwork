@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="IngestedDataStatistics" targetNamespace="http://monitoring.management.openwis.org/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://monitoring.management.openwis.org/" version="1.0" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="getIngestedData" type="tns:getIngestedData" />
+<xs:element name="getIngestedDataInInterval" type="tns:getIngestedDataInInterval" />
+<xs:element name="getIngestedDataInIntervalResponse" type="tns:getIngestedDataInIntervalResponse" />
+<xs:element name="getIngestedDataResponse" type="tns:getIngestedDataResponse" />
+<xs:element name="getIngestedDataStatistics" type="tns:getIngestedDataStatistics" />
+<xs:element name="getIngestedDataStatisticsResponse" type="tns:getIngestedDataStatisticsResponse" />
+<xs:element name="updateIngestedData" type="tns:updateIngestedData" />
+<xs:element name="updateIngestedDataResponse" type="tns:updateIngestedDataResponse" />
+<xs:complexType name="getIngestedDataStatistics">
+<xs:sequence>
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxItemsCount" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:IngestedDataColumn " />
+<xs:element minOccurs="0" name="dir" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getIngestedDataStatisticsResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:ingestedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ingestedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:dateTime" />
+<xs:element minOccurs="0" name="size" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getIngestedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getIngestedDataResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:ingestedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getIngestedDataInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getIngestedDataInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:ingestedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateIngestedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element name="size" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateIngestedDataResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:simpleType name="IngestedDataColumn ">
+<xs:restriction base="xs:string">
+<xs:enumeration value="DATE" />
+<xs:enumeration value="SIZE" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SortDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASC" />
+<xs:enumeration value="DESC" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getIngestedDataResponse">
+    <wsdl:part element="tns:getIngestedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestedDataStatisticsResponse">
+    <wsdl:part element="tns:getIngestedDataStatisticsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestedDataStatistics">
+    <wsdl:part element="tns:getIngestedDataStatistics" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateIngestedData">
+    <wsdl:part element="tns:updateIngestedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateIngestedDataResponse">
+    <wsdl:part element="tns:updateIngestedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestedDataInIntervalResponse">
+    <wsdl:part element="tns:getIngestedDataInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestedDataInInterval">
+    <wsdl:part element="tns:getIngestedDataInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIngestedData">
+    <wsdl:part element="tns:getIngestedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IngestedDataStatistics">
+    <wsdl:operation name="getIngestedDataStatistics">
+      <wsdl:input message="tns:getIngestedDataStatistics" name="getIngestedDataStatistics">
+    </wsdl:input>
+      <wsdl:output message="tns:getIngestedDataStatisticsResponse" name="getIngestedDataStatisticsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestedData">
+      <wsdl:input message="tns:getIngestedData" name="getIngestedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getIngestedDataResponse" name="getIngestedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestedDataInInterval">
+      <wsdl:input message="tns:getIngestedDataInInterval" name="getIngestedDataInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getIngestedDataInIntervalResponse" name="getIngestedDataInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateIngestedData">
+      <wsdl:input message="tns:updateIngestedData" name="updateIngestedData">
+    </wsdl:input>
+      <wsdl:output message="tns:updateIngestedDataResponse" name="updateIngestedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="IngestedDataStatisticsSoapBinding" type="tns:IngestedDataStatistics">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getIngestedDataStatistics">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getIngestedDataStatistics">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getIngestedDataStatisticsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getIngestedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getIngestedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getIngestedDataInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getIngestedDataInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getIngestedDataInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateIngestedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateIngestedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateIngestedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IngestedDataStatistics">
+    <wsdl:port binding="tns:IngestedDataStatisticsSoapBinding" name="IngestedDataStatisticsPort">
+      <soap:address location="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/IngestedDataStatistics" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

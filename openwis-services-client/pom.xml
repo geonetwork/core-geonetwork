@@ -197,14 +197,14 @@
           </execution>
 
           <execution>
-            <id>monitoring</id>
+            <id>disseminatedDataStatistics</id>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
               <schemaLanguage>WSDL</schemaLanguage>
-              <generatePackage>org.openwis.monitoring.client</generatePackage>
-              <generateDirectory>${project.build.directory}/generated-sources/monitoring</generateDirectory>
+              <generatePackage>org.openwis.disseminatedDataStatistics.client</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/disseminatedDataStatistics</generateDirectory>
 
               <schemas>
                 <!--<schema>
@@ -217,7 +217,91 @@
                     <!-- Defaults to schemaIncludes. -->
                     <includes>
                       <!--<include>*.xsd</include>-->
-                      <include>MonitoringService.wsdl</include>
+                      <include>DisseminatedDataStatistics.wsdl</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+            </configuration>
+          </execution>
+          <execution>
+            <id>exchangedDataStatistics</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemaLanguage>WSDL</schemaLanguage>
+              <generatePackage>org.openwis.exchangedDataStatistics.client</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/exchangedDataStatistics</generateDirectory>
+
+              <schemas>
+                <!--<schema>
+                  <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+                </schema>-->
+                <schema>
+                  <fileset>
+                    <!-- Defaults to schemaDirectory. -->
+                    <directory>${basedir}/src/main/resources/schemas</directory>
+                    <!-- Defaults to schemaIncludes. -->
+                    <includes>
+                      <!--<include>*.xsd</include>-->
+                      <include>ExchangedDataStatistics.wsdl</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+            </configuration>
+          </execution>
+          <execution>
+            <id>replicatedDataStatistics</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemaLanguage>WSDL</schemaLanguage>
+              <generatePackage>org.openwis.replicatedDataStatistics.client</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/replicatedDataStatistics</generateDirectory>
+
+              <schemas>
+                <!--<schema>
+                  <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+                </schema>-->
+                <schema>
+                  <fileset>
+                    <!-- Defaults to schemaDirectory. -->
+                    <directory>${basedir}/src/main/resources/schemas</directory>
+                    <!-- Defaults to schemaIncludes. -->
+                    <includes>
+                      <!--<include>*.xsd</include>-->
+                      <include>ReplicatedDataStatistics.wsdl</include>
+                    </includes>
+                  </fileset>
+                </schema>
+              </schemas>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ingestedDataStatistics</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <schemaLanguage>WSDL</schemaLanguage>
+              <generatePackage>org.openwis.ingestedDataStatistics.client</generatePackage>
+              <generateDirectory>${project.build.directory}/generated-sources/ingestedDataStatistics</generateDirectory>
+
+              <schemas>
+                <!--<schema>
+                  <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+                </schema>-->
+                <schema>
+                  <fileset>
+                    <!-- Defaults to schemaDirectory. -->
+                    <directory>${basedir}/src/main/resources/schemas</directory>
+                    <!-- Defaults to schemaIncludes. -->
+                    <includes>
+                      <!--<include>*.xsd</include>-->
+                      <include>IngestedDataStatistics.wsdl</include>
                     </includes>
                   </fileset>
                 </schema>

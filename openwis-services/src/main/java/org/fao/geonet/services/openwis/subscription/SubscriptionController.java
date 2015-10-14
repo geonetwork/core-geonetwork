@@ -9,9 +9,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.services.openwis.DataListResponse;
-import org.fao.geonet.services.openwis.cache.Request;
-import org.fao.geonet.services.openwis.cache.Response;
-import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
+import org.fao.geonet.services.openwis.util.Request;
+import org.fao.geonet.services.openwis.util.Response;
+import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.openwis.blacklist.client.BlacklistInfo;
 import org.openwis.subscription.client.Parameter;
 import org.openwis.subscription.client.ProductMetadata;

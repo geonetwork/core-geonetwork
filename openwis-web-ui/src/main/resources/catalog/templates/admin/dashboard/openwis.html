@@ -1,48 +1,32 @@
 <div class="row" data-ng-controller="GnOpenwisMonitoringController">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-heading" data-gn-slide-toggle="" data-translate="">{{options[monitorType].name
+			<div class="panel-heading" data-translate="">{{options[monitorType].name
 				| translate}}</div>
 			<div class="panel-body">
-				<div>
-					<select data-ng-model="monitorType" name="monitorType"
-						data-ng-change="updateData()">
-						<option data-ng-repeat="option in options track by option.id"
-							value="{{option.id}}" data-translate="">{{option.name}}</option>
+				<select data-ng-model="monitorType" name="monitorType"
+					data-ng-change="updateData()">
+					<option data-ng-repeat="option in options track by option.id"
+						value="{{option.id}}" data-translate="">{{option.name}}</option>
 
-					</select> <select data-ng-model="group" name="group"
-						data-ng-change="updateData()" data-ng-disabled="isGroupDisabled()">
-						<option data-ng-repeat="option in groups track by option.id"
-							value="{{option.id}}" data-translate="">{{option.name}}</option>
-					</select>
-					<div style="display: inline">
-						<label for="maxRecords" data-translate="">maxRecords</label><input
-							data-ng-model="maxRecords" data-ng-change="updateData()"
-							id="maxRecords" data-ng-disabled="isMaxRecordsDisabled()"
-							type="number">
-					</div>
-					<div style="display: inline">
-						<label for="iniDate" data-translate="">iniDate</label><input
-							data-ng-model="iniDate" data-ng-change="updateData()"
-							id="iniDate" type="date">
-					</div>
-					<div style="display: inline">
-						<label for="endDate" data-translate="">endDate</label><input
-							data-ng-model="endDate" data-ng-change="updateData()"
-							id="endDate" type="date">
-					</div>
-				</div>
-				<div id="graphic"></div>
-				<table class="table">
-					<tr>
-						<th data-ng-repeat="(key, value) in data[0] track by $index">{{key
-							| translate}}</th>
-					</tr>
-					<tr data-ng-repeat="element in data track by $index">
-						<td data-ng-hide="isSimple"
-							data-ng-repeat="(key, value) in element track by $index">{{value}}</td>
-						<td data-ng-hide="!isSimple">{{element}}</td>
-					</tr>
+				</select>
+				<table data-datatable data-dt-options="dtOptions"
+					data-dt-instance="dtInstance" data-dt-columns="dtColumns"
+					class="row-border hover">
+					<thead>
+						<tr>
+							<th
+								data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th
+								data-ng-repeat="elem in dtColumns">{{elem.mData}}</th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>

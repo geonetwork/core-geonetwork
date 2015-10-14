@@ -25,8 +25,8 @@
                   }
                 };
 
-                $scope.dtOptions = DTOptionsBuilder.newOptions().withOption(
-                    'ajax', {
+                $scope.dtInstance = {}, $scope.dtOptions = DTOptionsBuilder
+                    .newOptions().withOption('ajax', {
                       url : $scope.url + 'openwis.blacklisting.search',
                       data : function(data) {
                         $scope.planify(data);
@@ -98,8 +98,10 @@
         method : 'POST',
         params : $scope.element
       }).success(function(data) {
+        $scope.dtInstance.reloadData();
         $("#editBlackList").modal('hide');
       }).error(function(data) {
+        $scope.dtInstance.reloadData();
         $rootScope.$broadcast('StatusUpdated', {
           title : 'Error',
           msg : 'Error saving user details. Please try again.',
@@ -109,6 +111,7 @@
     };
 
     $scope.cancel = function() {
+      $scope.dtInstance.reloadData();
       $("#editBlackList").modal('hide');
     };
   });

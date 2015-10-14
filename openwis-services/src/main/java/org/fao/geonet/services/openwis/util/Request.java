@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.fao.geonet.services.openwis.cache;
+package org.fao.geonet.services.openwis.util;
 
 import java.util.HashMap;
 import java.util.LinkedList;

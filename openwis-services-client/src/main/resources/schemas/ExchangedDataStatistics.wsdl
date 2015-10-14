@@ -1,0 +1,267 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="ExchangedDataStatistics" targetNamespace="http://monitoring.management.openwis.org/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://monitoring.management.openwis.org/" version="1.0" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="getExchangedData" type="tns:getExchangedData" />
+<xs:element name="getExchangedDataInIntervalBySources" type="tns:getExchangedDataInIntervalBySources" />
+<xs:element name="getExchangedDataInIntervalBySourcesResponse" type="tns:getExchangedDataInIntervalBySourcesResponse" />
+<xs:element name="getExchangedDataInIntervalForAllSources" type="tns:getExchangedDataInIntervalForAllSources" />
+<xs:element name="getExchangedDataInIntervalForAllSourcesResponse" type="tns:getExchangedDataInIntervalForAllSourcesResponse" />
+<xs:element name="getExchangedDataResponse" type="tns:getExchangedDataResponse" />
+<xs:element name="getExchangedDataStatistics" type="tns:getExchangedDataStatistics" />
+<xs:element name="getExchangedDataStatisticsResponse" type="tns:getExchangedDataStatisticsResponse" />
+<xs:element name="getTotalExchangedDataInInterval" type="tns:getTotalExchangedDataInInterval" />
+<xs:element name="getTotalExchangedDataInIntervalResponse" type="tns:getTotalExchangedDataInIntervalResponse" />
+<xs:element name="updateExchangedData" type="tns:updateExchangedData" />
+<xs:element name="updateExchangedDataResponse" type="tns:updateExchangedDataResponse" />
+<xs:complexType name="updateExchangedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element minOccurs="0" name="source" type="xs:string" />
+<xs:element name="nbMetadata" type="xs:long" />
+<xs:element name="totalSize" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateExchangedDataResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getExchangedDataInIntervalForAllSources">
+<xs:sequence>
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxCount" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:ExchangedDataColumn " />
+<xs:element minOccurs="0" name="dir" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataInIntervalForAllSourcesResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:exchangedDataResult" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="exchangedDataResult">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:exchangedData" />
+<xs:element name="count" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="exchangedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="date" type="xs:dateTime" />
+<xs:element minOccurs="0" name="totalSize" type="xs:long" />
+<xs:element minOccurs="0" name="nbMetadata" type="xs:long" />
+<xs:element minOccurs="0" name="source" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getTotalExchangedDataInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getTotalExchangedDataInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:exchangedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataInIntervalBySources">
+<xs:sequence>
+<xs:element minOccurs="0" name="source" type="xs:string" />
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxCount" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:ExchangedDataColumn " />
+<xs:element minOccurs="0" name="dir" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataInIntervalBySourcesResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:exchangedDataResult" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element minOccurs="0" name="source" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:exchangedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataStatistics">
+<xs:sequence>
+<xs:element name="maxItemsCount" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getExchangedDataStatisticsResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:exchangedData" />
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="ExchangedDataColumn ">
+<xs:restriction base="xs:string">
+<xs:enumeration value="DATE" />
+<xs:enumeration value="TOTAL_SIZE" />
+<xs:enumeration value="METADATA_NUMBER" />
+<xs:enumeration value="SOURCE" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SortDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASC" />
+<xs:enumeration value="DESC" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="updateExchangedDataResponse">
+    <wsdl:part element="tns:updateExchangedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataStatisticsResponse">
+    <wsdl:part element="tns:getExchangedDataStatisticsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTotalExchangedDataInInterval">
+    <wsdl:part element="tns:getTotalExchangedDataInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataInIntervalBySources">
+    <wsdl:part element="tns:getExchangedDataInIntervalBySources" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExchangedData">
+    <wsdl:part element="tns:updateExchangedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataInIntervalBySourcesResponse">
+    <wsdl:part element="tns:getExchangedDataInIntervalBySourcesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataResponse">
+    <wsdl:part element="tns:getExchangedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTotalExchangedDataInIntervalResponse">
+    <wsdl:part element="tns:getTotalExchangedDataInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataStatistics">
+    <wsdl:part element="tns:getExchangedDataStatistics" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataInIntervalForAllSources">
+    <wsdl:part element="tns:getExchangedDataInIntervalForAllSources" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedDataInIntervalForAllSourcesResponse">
+    <wsdl:part element="tns:getExchangedDataInIntervalForAllSourcesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExchangedData">
+    <wsdl:part element="tns:getExchangedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ExchangedDataStatistics">
+    <wsdl:operation name="updateExchangedData">
+      <wsdl:input message="tns:updateExchangedData" name="updateExchangedData">
+    </wsdl:input>
+      <wsdl:output message="tns:updateExchangedDataResponse" name="updateExchangedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataInIntervalForAllSources">
+      <wsdl:input message="tns:getExchangedDataInIntervalForAllSources" name="getExchangedDataInIntervalForAllSources">
+    </wsdl:input>
+      <wsdl:output message="tns:getExchangedDataInIntervalForAllSourcesResponse" name="getExchangedDataInIntervalForAllSourcesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTotalExchangedDataInInterval">
+      <wsdl:input message="tns:getTotalExchangedDataInInterval" name="getTotalExchangedDataInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getTotalExchangedDataInIntervalResponse" name="getTotalExchangedDataInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataInIntervalBySources">
+      <wsdl:input message="tns:getExchangedDataInIntervalBySources" name="getExchangedDataInIntervalBySources">
+    </wsdl:input>
+      <wsdl:output message="tns:getExchangedDataInIntervalBySourcesResponse" name="getExchangedDataInIntervalBySourcesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedData">
+      <wsdl:input message="tns:getExchangedData" name="getExchangedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getExchangedDataResponse" name="getExchangedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataStatistics">
+      <wsdl:input message="tns:getExchangedDataStatistics" name="getExchangedDataStatistics">
+    </wsdl:input>
+      <wsdl:output message="tns:getExchangedDataStatisticsResponse" name="getExchangedDataStatisticsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ExchangedDataStatisticsSoapBinding" type="tns:ExchangedDataStatistics">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="updateExchangedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateExchangedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateExchangedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataInIntervalForAllSources">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getExchangedDataInIntervalForAllSources">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getExchangedDataInIntervalForAllSourcesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataInIntervalBySources">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getExchangedDataInIntervalBySources">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getExchangedDataInIntervalBySourcesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTotalExchangedDataInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getTotalExchangedDataInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getTotalExchangedDataInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getExchangedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getExchangedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExchangedDataStatistics">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getExchangedDataStatistics">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getExchangedDataStatisticsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ExchangedDataStatistics">
+    <wsdl:port binding="tns:ExchangedDataStatisticsSoapBinding" name="ExchangedDataStatisticsPort">
+      <soap:address location="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/ExchangedDataStatistics" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

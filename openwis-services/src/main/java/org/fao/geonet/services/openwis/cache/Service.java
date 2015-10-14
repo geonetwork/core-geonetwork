@@ -10,8 +10,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.fao.geonet.services.openwis.cache.Request.ColumnCriterias;
-import org.fao.geonet.services.openwis.cache.Request.OrderCriterias;
+import org.fao.geonet.services.openwis.util.Request;
+import org.fao.geonet.services.openwis.util.Response;
+import org.fao.geonet.services.openwis.util.Request.ColumnCriterias;
+import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.openwis.cacheindex.client.CacheIndexClient;
 import org.openwis.cacheindex.client.CachedFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;

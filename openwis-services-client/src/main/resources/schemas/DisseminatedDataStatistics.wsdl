@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="DisseminatedDataStatistics" targetNamespace="http://monitoring.management.openwis.org/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://monitoring.management.openwis.org/" version="1.0" xmlns:tns="http://monitoring.management.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="getDisseminatedData" type="tns:getDisseminatedData" />
+<xs:element name="getDisseminatedDataInInterval" type="tns:getDisseminatedDataInInterval" />
+<xs:element name="getDisseminatedDataInIntervalResponse" type="tns:getDisseminatedDataInIntervalResponse" />
+<xs:element name="getDisseminatedDataResponse" type="tns:getDisseminatedDataResponse" />
+<xs:element name="getDisseminatedDataStatistics" type="tns:getDisseminatedDataStatistics" />
+<xs:element name="getDisseminatedDataStatisticsResponse" type="tns:getDisseminatedDataStatisticsResponse" />
+<xs:element name="getUserDisseminatedData" type="tns:getUserDisseminatedData" />
+<xs:element name="getUserDisseminatedDataInInterval" type="tns:getUserDisseminatedDataInInterval" />
+<xs:element name="getUserDisseminatedDataInIntervalResponse" type="tns:getUserDisseminatedDataInIntervalResponse" />
+<xs:element name="getUserDisseminatedDataResponse" type="tns:getUserDisseminatedDataResponse" />
+<xs:element name="getUsersDisseminatedData" type="tns:getUsersDisseminatedData" />
+<xs:element name="getUsersDisseminatedDataByUser" type="tns:getUsersDisseminatedDataByUser" />
+<xs:element name="getUsersDisseminatedDataByUserResponse" type="tns:getUsersDisseminatedDataByUserResponse" />
+<xs:element name="getUsersDisseminatedDataResponse" type="tns:getUsersDisseminatedDataResponse" />
+<xs:element name="updateUserDisseminatedByToolData" type="tns:updateUserDisseminatedByToolData" />
+<xs:element name="updateUserDisseminatedByToolDataResponse" type="tns:updateUserDisseminatedByToolDataResponse" />
+<xs:element name="updateUserExtractedData" type="tns:updateUserExtractedData" />
+<xs:element name="updateUserExtractedDataResponse" type="tns:updateUserExtractedDataResponse" />
+<xs:complexType name="getDisseminatedDataStatistics">
+<xs:sequence>
+<xs:element name="maxItemsCount" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getDisseminatedDataStatisticsResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:userDisseminationData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="userDisseminationData">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="date" type="xs:dateTime" />
+<xs:element minOccurs="0" name="userId" type="xs:string" />
+<xs:element minOccurs="0" name="size" type="xs:long" />
+<xs:element minOccurs="0" name="nbFiles" type="xs:int" />
+<xs:element minOccurs="0" name="dissToolSize" type="xs:long" />
+<xs:element minOccurs="0" name="dissToolNbFiles" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUsersDisseminatedDataByUser">
+<xs:sequence>
+<xs:element minOccurs="0" name="user" type="xs:string" />
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxResults" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:UserDisseminatedDataColumn " />
+<xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUsersDisseminatedDataByUserResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:disseminatedDataResult" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="disseminatedDataResult">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="tns:userDisseminationData" />
+<xs:element name="count" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateUserExtractedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="userId" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element name="nbFiles" type="xs:int" />
+<xs:element name="totalSize" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateUserExtractedDataResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getUserDisseminatedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="userId" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUserDisseminatedDataResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:userDisseminationData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUsersDisseminatedData">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="users" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUsersDisseminatedDataResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:userDisseminationData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getDisseminatedDataInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="arg0" type="xs:string" />
+<xs:element minOccurs="0" name="arg1" type="xs:string" />
+<xs:element name="arg2" type="xs:int" />
+<xs:element name="arg3" type="xs:int" />
+<xs:element minOccurs="0" name="arg4" type="tns:UserDisseminatedDataColumn " />
+<xs:element minOccurs="0" name="arg5" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getDisseminatedDataInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:disseminatedDataResult" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateUserDisseminatedByToolData">
+<xs:sequence>
+<xs:element minOccurs="0" name="userId" type="xs:string" />
+<xs:element minOccurs="0" name="date" type="xs:string" />
+<xs:element name="nbFiles" type="xs:int" />
+<xs:element name="totalSize" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateUserDisseminatedByToolDataResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getUserDisseminatedDataInInterval">
+<xs:sequence>
+<xs:element minOccurs="0" name="userId" type="xs:string" />
+<xs:element minOccurs="0" name="from" type="xs:string" />
+<xs:element minOccurs="0" name="to" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getUserDisseminatedDataInIntervalResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:userDisseminationData" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getDisseminatedData">
+<xs:sequence>
+<xs:element minOccurs="0" name="date" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getDisseminatedDataResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:userDisseminationData" />
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="UserDisseminatedDataColumn ">
+<xs:restriction base="xs:string">
+<xs:enumeration value="DATE" />
+<xs:enumeration value="TOTAL_SIZE" />
+<xs:enumeration value="FILES_NUMBER" />
+<xs:enumeration value="DISS_TOOL_TOTAL_SIZE" />
+<xs:enumeration value="DISS_TOOL_FILES_NUMBER" />
+<xs:enumeration value="USER" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SortDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASC" />
+<xs:enumeration value="DESC" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getUsersDisseminatedDataResponse">
+    <wsdl:part element="tns:getUsersDisseminatedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserDisseminatedDataInInterval">
+    <wsdl:part element="tns:getUserDisseminatedDataInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserDisseminatedByToolDataResponse">
+    <wsdl:part element="tns:updateUserDisseminatedByToolDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserDisseminatedDataInIntervalResponse">
+    <wsdl:part element="tns:getUserDisseminatedDataInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedDataStatistics">
+    <wsdl:part element="tns:getDisseminatedDataStatistics" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedData">
+    <wsdl:part element="tns:getDisseminatedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedDataResponse">
+    <wsdl:part element="tns:getDisseminatedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserExtractedDataResponse">
+    <wsdl:part element="tns:updateUserExtractedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersDisseminatedDataByUserResponse">
+    <wsdl:part element="tns:getUsersDisseminatedDataByUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedDataInInterval">
+    <wsdl:part element="tns:getDisseminatedDataInInterval" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserDisseminatedByToolData">
+    <wsdl:part element="tns:updateUserDisseminatedByToolData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersDisseminatedDataByUser">
+    <wsdl:part element="tns:getUsersDisseminatedDataByUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersDisseminatedData">
+    <wsdl:part element="tns:getUsersDisseminatedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserExtractedData">
+    <wsdl:part element="tns:updateUserExtractedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedDataStatisticsResponse">
+    <wsdl:part element="tns:getDisseminatedDataStatisticsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserDisseminatedDataResponse">
+    <wsdl:part element="tns:getUserDisseminatedDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserDisseminatedData">
+    <wsdl:part element="tns:getUserDisseminatedData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDisseminatedDataInIntervalResponse">
+    <wsdl:part element="tns:getDisseminatedDataInIntervalResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DisseminatedDataStatistics">
+    <wsdl:operation name="getDisseminatedDataStatistics">
+      <wsdl:input message="tns:getDisseminatedDataStatistics" name="getDisseminatedDataStatistics">
+    </wsdl:input>
+      <wsdl:output message="tns:getDisseminatedDataStatisticsResponse" name="getDisseminatedDataStatisticsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDisseminatedDataByUser">
+      <wsdl:input message="tns:getUsersDisseminatedDataByUser" name="getUsersDisseminatedDataByUser">
+    </wsdl:input>
+      <wsdl:output message="tns:getUsersDisseminatedDataByUserResponse" name="getUsersDisseminatedDataByUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserExtractedData">
+      <wsdl:input message="tns:updateUserExtractedData" name="updateUserExtractedData">
+    </wsdl:input>
+      <wsdl:output message="tns:updateUserExtractedDataResponse" name="updateUserExtractedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserDisseminatedData">
+      <wsdl:input message="tns:getUserDisseminatedData" name="getUserDisseminatedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getUserDisseminatedDataResponse" name="getUserDisseminatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDisseminatedData">
+      <wsdl:input message="tns:getUsersDisseminatedData" name="getUsersDisseminatedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getUsersDisseminatedDataResponse" name="getUsersDisseminatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDisseminatedDataInInterval">
+      <wsdl:input message="tns:getDisseminatedDataInInterval" name="getDisseminatedDataInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getDisseminatedDataInIntervalResponse" name="getDisseminatedDataInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserDisseminatedByToolData">
+      <wsdl:input message="tns:updateUserDisseminatedByToolData" name="updateUserDisseminatedByToolData">
+    </wsdl:input>
+      <wsdl:output message="tns:updateUserDisseminatedByToolDataResponse" name="updateUserDisseminatedByToolDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserDisseminatedDataInInterval">
+      <wsdl:input message="tns:getUserDisseminatedDataInInterval" name="getUserDisseminatedDataInInterval">
+    </wsdl:input>
+      <wsdl:output message="tns:getUserDisseminatedDataInIntervalResponse" name="getUserDisseminatedDataInIntervalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDisseminatedData">
+      <wsdl:input message="tns:getDisseminatedData" name="getDisseminatedData">
+    </wsdl:input>
+      <wsdl:output message="tns:getDisseminatedDataResponse" name="getDisseminatedDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DisseminatedDataStatisticsSoapBinding" type="tns:DisseminatedDataStatistics">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getDisseminatedDataStatistics">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getDisseminatedDataStatistics">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getDisseminatedDataStatisticsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDisseminatedDataByUser">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getUsersDisseminatedDataByUser">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getUsersDisseminatedDataByUserResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserExtractedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateUserExtractedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateUserExtractedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserDisseminatedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getUserDisseminatedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getUserDisseminatedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDisseminatedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getUsersDisseminatedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getUsersDisseminatedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDisseminatedDataInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getDisseminatedDataInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getDisseminatedDataInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserDisseminatedByToolData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="updateUserDisseminatedByToolData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateUserDisseminatedByToolDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserDisseminatedDataInInterval">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getUserDisseminatedDataInInterval">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getUserDisseminatedDataInIntervalResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDisseminatedData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getDisseminatedData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getDisseminatedDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DisseminatedDataStatistics">
+    <wsdl:port binding="tns:DisseminatedDataStatisticsSoapBinding" name="DisseminatedDataStatisticsPort">
+      <soap:address location="http://localhost:8061/openwis-management-service-openwis-management-service-ejb/DisseminatedDataStatistics" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
