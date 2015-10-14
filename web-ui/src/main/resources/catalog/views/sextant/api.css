@@ -10693,6 +10693,7 @@ yx-axis
   width: auto;
   display: block;
   line-height: 1.1em;
+  overflow-y: hidden;
 }
 .gn [sxt-main-viewer] .panel-tools.force-hide {
   display: none;
