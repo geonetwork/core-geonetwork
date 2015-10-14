@@ -48,7 +48,7 @@ layouts:
     mainPage:
       rotation: true
       pageSize: A4
-      backgroundPdf: '${configDir}/template.pdf'
+      # backgroundPdf: '${configDir}/template.pdf'
       header:
         height: 1
       items:
@@ -61,12 +61,21 @@ layouts:
               font: Helvetica
               fontSize: 24
               text: '${title}'
+        - !columns
+          absoluteX: 10
+          absoluteY: 782
+          width: 575
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 11
+                text: '${comment}'
         - !map
           spacingAfter: 10
           width: 575
           height: 680
           absoluteX:10
-          absoluteY:790
+          absoluteY:700
         - !columns
           absoluteX: 15
           absoluteY: 130
@@ -87,15 +96,6 @@ layouts:
               maxHeight: 30
               url: 'file://${configDir}/Arrow_North_CFCF.svg'
               rotation: '${rotation}'
-        - !columns
-          absoluteX: 10
-          absoluteY: 90
-          width: 575
-          items:
-            - !text
-                font: Helvetica
-                fontSize: 11
-                text: '${comment}'
         - !columns
           absoluteX: 10
           absoluteY: 19
