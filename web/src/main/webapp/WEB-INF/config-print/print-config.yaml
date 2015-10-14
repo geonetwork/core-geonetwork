@@ -136,11 +136,11 @@ layouts:
       backgroundPdf: '${configDir}/template-thumbnail.pdf'
       items:
         - !map
-          spacingAfter: 0
-          width: 1008
-          height: 612
-          absoluteX: 0
-          absoluteY: 612
+          spacingAfter: 10
+          width: 988
+          height: 542
+          absoluteX: 10
+          absoluteY: 552
         - !columns
           absoluteX: 10
           absoluteY: 600
@@ -150,6 +150,15 @@ layouts:
               font: Helvetica
               fontSize: 24
               text: '${title}'
+        - !columns
+          absoluteX: 400
+          absoluteY: 600
+          width: 575
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 11
+                text: '${comment}'
         - !columns
           absoluteX: 15
           absoluteY: 30
