@@ -14506,6 +14506,9 @@ yx-axis
     display: none;
   }
 }
+.gn [gn-popup] {
+  max-height: none;
+}
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
   margin-top: -4em;
