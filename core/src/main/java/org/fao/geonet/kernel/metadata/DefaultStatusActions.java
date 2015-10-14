@@ -344,7 +344,7 @@ public class DefaultStatusActions implements StatusActions {
      */
     protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage, String mdChanged) throws Exception {
         String message = String.format(LangUtils.translate(context.getApplicationContext(), "statusSendEmail").get(this.language),
-                changeMessage, mdChanged, siteUrl, status, changeDate);
+                changeMessage, mdChanged, siteUrl, status, changeDate, siteUrl, status, changeDate);
 
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
