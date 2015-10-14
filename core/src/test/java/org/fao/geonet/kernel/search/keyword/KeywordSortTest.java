@@ -44,6 +44,11 @@ public class KeywordSortTest {
     @Test
     public void testNormalizeDesc() throws Exception {
         assertEquals("aoeᶚ能", KeywordSort.normalizeDesc("{(aöÈᶚ能͓}"));
-
+        assertEquals("", KeywordSort.normalizeDesc(null));
+        assertEquals("", KeywordSort.normalizeDesc(""));
+        assertEquals("", KeywordSort.normalizeDesc("            ")); // test whitespaces: 4 spaces and 1 tab
+        assertEquals("", KeywordSort.normalizeDesc("'"));
+        assertEquals("1", KeywordSort.normalizeDesc(".[{#$£)(//&1@"));
+        assertEquals("o", KeywordSort.normalizeDesc("\u00F6"));
     }
 }

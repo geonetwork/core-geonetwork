@@ -66,10 +66,12 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild) {
+            isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
                 _content_type: 'json',
@@ -77,7 +79,8 @@
                 id: id,
                 template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
                 child: isChild ? 'y' : 'n',
-                fullPrivileges: withFullPrivileges ? 'true' : 'false'
+                fullPrivileges: withFullPrivileges ? 'true' : 'false',
+                metadataUuid: metadataUuid
               })
               );
           return $http.get(url);
@@ -170,12 +173,15 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
+           * @param {string} tab is the metadata editor tab to open
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild, tab, useExtEditor) {
+            isTemplate, isChild, tab, metadataUuid, useExtEditor) {
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild).success(function(data) {
+              isTemplate, isChild, metadataUuid).success(function(data) {
             // Sextant / use ExtJS editor for all but not MedSea
             if (useExtEditor) {
               window.location.replace('../../apps/sextant/?edit=' + data.id);

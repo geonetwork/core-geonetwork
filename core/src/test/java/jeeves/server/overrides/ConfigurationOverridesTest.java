@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -225,8 +226,8 @@ public class ConfigurationOverridesTest {
                     exCaught);
 
             // Same defining the previously missing env variables
-
-            System.setProperty("geonetwork.datadir", u.toURI().getPath());
+            File f = new File(u.toURI());
+            System.setProperty("geonetwork.datadir", f.getAbsolutePath());
             System.setProperty("another_one", "test-spring-config.xml");
 
             exCaught = false;
