@@ -144,7 +144,7 @@
                   ol.extent.extend(extent, waitingLayers[i].get('cextent'));
                 }
                 if (!ol.extent.isEmpty(extent)) {
-                  viewerMap.getView().fitExtent(extent, viewerMap.getSize());
+                  viewerMap.getView().fit(extent, viewerMap.getSize());
                 }
                 if (loadLayerPromises) delete loadLayerPromises;
                 if (waitingLayers) delete waitingLayers;
