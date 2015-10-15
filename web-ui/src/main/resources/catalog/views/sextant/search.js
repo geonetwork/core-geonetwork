@@ -213,7 +213,7 @@
 
       var feedLayerWithDownloads = function(layer, linkGroup) {
         var md = layer.get('md');
-        var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
+        var transferOpts = md.getLinksByType(linkGroup, 'OGC:WMS').length != 1;
 
         // Tells if onlinesrc are spread in different transferOptions
         if(!transferOpts) {
