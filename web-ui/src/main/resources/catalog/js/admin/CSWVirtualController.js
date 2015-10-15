@@ -115,7 +115,7 @@
       $scope.setFilterValue = function(field, value) {
         $scope.virtualCSWSelected.serviceParameters[field] = {
           value: value,
-          occur: '='
+          occur: $scope.virtualCSWSelected.serviceParameters[field].occur || '+'
         };
       };
 
