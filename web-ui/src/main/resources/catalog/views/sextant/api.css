@@ -10706,6 +10706,9 @@ yx-axis
 .gn [sxt-main-viewer] [gn-ows-context] button.disabled {
   color: #888;
 }
+.gn [sxt-main-viewer] [gn-mapprint] input[type=checkbox] {
+  margin-top: 0;
+}
 .gn [sxt-main-viewer] .sx-toolbar {
   position: absolute;
   top: 1em;

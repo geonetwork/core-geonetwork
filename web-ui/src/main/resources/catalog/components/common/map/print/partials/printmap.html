@@ -1,35 +1,26 @@
 <form>
+
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">mapTitle</label>
+    <label class="control-label" data-translate="">mapTitle</label>
     <div class="">
       <input class="form-control" type="text" data-ng-model="mapTitle"/>
     </div>
   </div>
+
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">print_layout</label>
+    <label class="control-label" data-translate="">print_layout</label>
     <div class="">
       <select class="form-control"
               data-ng-model="config.layout"
               data-ng-options="l.name for l in config.layouts"></select>
     </div>
   </div>
-  <div class="form-group">
 
-    <label class="control-label"
-           data-translate="">print_scale</label>
+  <div class="form-group">
+    <label class="control-label" data-translate="">print_scale</label>
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="auto"> {{'Auto'|translate}}
-      </label>
-    </div>
-
-    <label class="control-label"
-           data-translate="">print_legend</label>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" ng-model="enableLegends"> {{'print_legend_field'|translate}}
       </label>
     </div>
 
@@ -40,6 +31,16 @@
               data-ng-options="l.name for l in config.scales"></select>
     </div>
   </div>
+
+  <div class="form-group">
+    <label class="control-label" data-translate="">print_legend</label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="enableLegends"> {{'print_legend_field'|translate}}
+      </label>
+    </div>
+  </div>
+
   <div class="form-group">
     <label class="control-label"
            data-translate="">mapComment</label>
@@ -47,6 +48,7 @@
       <textarea class="form-control" data-ng-model="mapComment"></textarea>
     </div>
   </div>
+
   <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
           data-ng-click="submit()">
       <i class="fa fa-print" ng-if="!printing"></i>
