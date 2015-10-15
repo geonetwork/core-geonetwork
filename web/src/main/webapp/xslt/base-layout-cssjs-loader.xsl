@@ -26,7 +26,6 @@
 
     <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet" media="screen" />
 
-    <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/jquery.dataTables.min.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/dataTables.fixedColumns.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
@@ -102,8 +101,7 @@
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
-        <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
-
+        
         <script src="{$uiResourcesPath}lib/angular-datatables/vendor/datatables/media/js/jquery.dataTables.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.js"></script>
         <script src="{$uiResourcesPath}lib/angular-datatables/src/angular-datatables.directive.js"></script>
