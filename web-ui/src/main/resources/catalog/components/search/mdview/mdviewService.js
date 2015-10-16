@@ -225,8 +225,13 @@
 
       this.load = function(uuid, selector, scope) {
         $rootScope.$broadcast('mdLoadingStart');
-        var newscope = scope ? scope.$new() :
-            angular.element($('#sxt-controller')).scope().$new();
+        var newscope;
+        if(scope) {
+          newscope = scope.$new();
+        } else {
+          newscope = angular.element($('#sxt-controller')).scope().$new();
+          newscope.$parent.md = undefined;
+        }
 
         this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
             newscope, uuid).then(function(url) {
