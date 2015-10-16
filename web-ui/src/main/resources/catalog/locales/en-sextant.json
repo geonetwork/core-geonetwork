@@ -48,6 +48,7 @@
   "accessData": "Data access",
   "process": "Process",
   "Printing": "Printing in progress",
-  "toimport": "Import"
+  "toimport": "Import",
+  "noResult" : "No result."
 
 }

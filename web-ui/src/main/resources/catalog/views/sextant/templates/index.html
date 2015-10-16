@@ -41,7 +41,7 @@
 
               <div class="maincol hfull sxt-center-panel col-md-8">
                 <div class="panel panel-default hfull">
-                  <div class="panel-heading">
+                  <div class="panel-heading" data-ng-show="searchResults.count > 0">
 
                       <!--sort by combo-->
                       <div sortby-combo params="searchObj.params"
@@ -55,7 +55,10 @@
                       </div>
                   </div>
                   <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
-                  <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
+                  <div class="noresult alert alert-warning ng-scope" role="alert" ng-if="!searching && searchResults.count == 0">
+                    <span data-translate="">noResult</span>
+                  </div>
+                  <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap" data-ng-show="searchResults.count > 0">
                   </div>
                 </div>
               </div>
