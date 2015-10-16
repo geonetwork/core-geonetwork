@@ -523,7 +523,13 @@ public class Handlers {
                 contacts : contacts,
                 orgs : orgs
         ]
-        return handlers.fileResult("html/sxt-contacts.html", replacements)
+
+        if(!contacts)  {
+            return ""
+        }
+        else {
+            return handlers.fileResult("html/sxt-contacts.html", replacements)
+        }
     }
 
     def constraintsElSxt = { els ->

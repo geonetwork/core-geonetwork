@@ -1,17 +1,17 @@
 <ul class="container-list">
-  <li>
+  <li data-fmt-if="useLimitation">
     <strong>{{useLimitationLabel}}</strong>
     <ul class="md-value-list">
       <li>{{useLimitation}}</li>
     </ul>
   </li>
-  <li>
+  <li data-fmt-if="accessConstraints">
     <strong>{{accessConstraintsLabel}}</strong>
     <ul class="md-value-list">
       <li>{{accessConstraints}}</li>
     </ul>
   </li>
-  <li>
+  <li data-fmt-if="useConstraints">
     <strong>{{useConstraintsLabel}}</strong>
     <ul class="md-value-list">
       <li>{{useConstraints}}</li>
