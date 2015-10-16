@@ -16,24 +16,24 @@
 
 					<!-- Nav tabs -->
 					<ul class="nav nav-pills nav-wizard" role="tablist">
-						<li role="presentation" class="active"><a href="#param3"
-							aria-controls="param3" role="tab" data-toggle="tab">Sub-selection
-								parameters</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#primary3" aria-controls="primary3" role="tab"
+						<li role="presentation" class="active"><a
+							data-target="#param3" aria-controls="param3" role="tab"
+							data-toggle="tab">Sub-selection parameters</a>
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#primary3" aria-controls="primary3" role="tab"
 							data-toggle="tab">Primary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#secondary3" aria-controls="secondary3" role="tab"
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#secondary3" aria-controls="secondary3" role="tab"
 							data-toggle="tab">Secondary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#backup3" aria-controls="backup3" role="tab"
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#backup3" aria-controls="backup3" role="tab"
 							data-toggle="tab">Backup selection</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#summary3" aria-controls="summary3" role="tab"
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#summary3" aria-controls="summary3" role="tab"
 							data-toggle="tab">Summary</a></li>
 					</ul>
 
@@ -137,13 +137,13 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">
 					<i class="fa fa-times"></i> Cancel
 				</button>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default" data-ng-click="prev()">
 					<i class="fa fa-chevron-left"></i> Previous
 				</button>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default" data-ng-click="next()">
 					Next <i class="fa fa-chevron-right"></i>
 				</button>
-				<button type="button" class="btn btn-primary">
+				<button type="button" class="btn btn-primary" data-ng-click="save()">
 					<i class="fa fa-check"></i> Save
 				</button>
 			</div>

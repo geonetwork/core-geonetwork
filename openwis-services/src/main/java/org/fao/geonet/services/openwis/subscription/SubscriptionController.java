@@ -8,11 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fao.geonet.domain.responses.OkResponse;
-import org.fao.geonet.services.openwis.DataListResponse;
 import org.fao.geonet.services.openwis.util.Request;
-import org.fao.geonet.services.openwis.util.Response;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
-import org.openwis.blacklist.client.BlacklistInfo;
+import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.subscription.client.Parameter;
 import org.openwis.subscription.client.ProductMetadata;
 import org.openwis.subscription.client.SortDirection;
@@ -208,7 +206,7 @@ public class SubscriptionController {
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.get" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody Subscription retrieve(@PathVariable String lang,
+    public @ResponseBody Subscription retrieve(
             @RequestParam Long subscriptionId) {
 
         Subscription subscription = manager
@@ -236,6 +234,17 @@ public class SubscriptionController {
         }
 
         return new OkResponse();
+    }
+
+    @RequestMapping(value = { "/{lang}/openwis.subscription.new" }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Long create(@RequestParam String metadataUrn,
+            @RequestParam Long id) {
+
+        Subscription subscription = retrieve(id);
+        //TODO FIXME wtf?
+        subscription.setUser("currentUser");
+        return manager.create(metadataUrn, subscription);
     }
 
 }

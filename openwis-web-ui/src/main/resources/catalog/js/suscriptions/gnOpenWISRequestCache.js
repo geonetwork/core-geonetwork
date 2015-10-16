@@ -6,7 +6,17 @@
   module.controller('gnOpenWISRequestCache', [
       '$scope',
       function($scope) {
-        console.log("gnOpenWISRequestCache");
+        $scope.next = function() {
+        setTimeout($("li.active", "#requestCacheModal").next('li').find('a')
+            .trigger('click'));
+      }
+      $scope.prev = function() {
+        setTimeout($("li.active", "#requestCacheModal").prev('li').find('a')
+            .trigger('click'));
+      }
+      $scope.save = function() {
+        alert("Not implemented");
+      }
       }
   ]);
 

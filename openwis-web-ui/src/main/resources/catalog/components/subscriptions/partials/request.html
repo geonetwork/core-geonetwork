@@ -1,5 +1,6 @@
 <div class="modal fade bs-example-modal-lg" id="requestModal"
-	tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	data-ng-controller="gnOpenWISRequest" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -8,68 +9,218 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="myModalLabel">
-					<i class="fa fa-download"></i> Send a request
+					<i class="fa fa-download"></i> <span data-translate="">openwisSendRequest</span>
 				</h4>
 			</div>
 			<div class="modal-body">
 				<div>
 					<!-- Nav tabs -->
 					<ul class="nav nav-pills nav-wizard" role="tablist">
-						<li role="presentation" class="active"><a href="#param2"
-							aria-controls="param2" role="tab" data-toggle="tab">Sub-selection
-								parameters</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#primary2" aria-controls="primary2" role="tab"
-							data-toggle="tab">Primary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#secondary2" aria-controls="secondary2" role="tab"
-							data-toggle="tab">Secondary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#summary2" aria-controls="summary2" role="tab"
-							data-toggle="tab">Summary</a></li>
+						<li role="presentation" class="active"><a
+							data-target="#param2" aria-controls="param2" role="tab"
+							data-toggle="tab" data-translate="">openwisSubSelection</a>
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#primary2" aria-controls="primary2" role="tab"
+							data-toggle="tab" data-translate="">openwisFirstDissemination</a>
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#secondary2" aria-controls="secondary2" role="tab"
+							data-toggle="tab" data-translate="">openwisSecondDissemination</a>
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#summary2" aria-controls="summary2" role="tab"
+							data-toggle="tab" data-translate="">openwisSummary</a></li>
 					</ul>
 
 					<!-- Tab panes -->
-					<div class="tab-content">
+					<div class="tab-content" role="tablist"
+						aria-multiselectable="false">
 						<div role="tabpanel" class="tab-pane active" id="param2">
-							<h4>File selection (UTC time)</h4>
-							From: <input name="myDate" type="date"> <input
-								name="myTime" type="time"> to: <input name="myDate2"
-								type="date"><input name="myTime2" type="time">
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th>File</th>
-										<th>Checksum</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>1499554_920094441336782_1754691732374858713_n</td>
-										<td>7935845_266509652</td>
-									</tr>
-									<tr>
-										<td>1499554_920094441336782_1754691732374858713_n</td>
-										<td>7935845_266509652</td>
-									</tr>
-									<tr>
-										<td>1499554_920094441336782_1754691732374858713_n</td>
-										<td>7935845_266509652</td>
-									</tr>
-								</tbody>
-							</table>
+							<span data-translate="">openwisNotImplemented</span>
 						</div>
 						<div role="tabpanel" class="tab-pane" id="primary2">
-							<h4>Primary dissemination</h4>
+							<div class="panel-group col-xs-12" id="primaryAccordion">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a data-toggle="collapse" data-parent="#primaryAccordion"
+												aria-controls="mssmfs" data-target="#mssmfs"
+												data-translate="">MSS/MFS</a>
+										</h4>
+									</div>
+									<div id="mssmfs" class="panel-collapse collapse">
+										<div class="panel-body">???</div>
+									</div>
+								</div>
+
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a data-toggle="collapse" data-parent="#primaryAccordion"
+												aria-controls="publicDissemination"
+												data-target="#publicDissemination" data-translate="">Public
+												Dissemination</a>
+										</h4>
+									</div>
+									<div id="publicDissemination" class="panel-collapse collapse">
+										<div class="panel-body">
+											<div>
+												<label class="col-xs-3" data-translate="">Compression</label>
+												<select>
+													<option data-translate="">NONE</option>
+													<option data-translate="">Zipped</option>
+													<option data-translate="">WMO_FTP</option>
+												</select>
+											</div>
+											<div class="panel-group col-xs-12">
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<h5 class="panel-title">
+															<a data-toggle="collapse" aria-controls="ftp"
+																data-target="#ftp" data-translate="">FTP</a>
+														</h5>
+													</div>
+													<div id="ftp" class="panel-collapse">
+														<div class="panel-body">
+															<div>
+																<label class="col-xs-3" data-translate="">Host*</label>
+																<input type="text" data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Path*</label>
+																<input type="text" data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">User*</label>
+																<input type="text" data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Password*</label>
+																<input type="password" data-ng-required="true"></input>
+															</div>
+
+															<div class="panel panel-default">
+																<div class="panel-heading">
+																	<h5 class="panel-title">
+																		<a data-toggle="collapse" aria-controls="advanced"
+																			data-target="#advanced" data-translate="">Advanced</a>
+																	</h5>
+																</div>
+																<div id="advanced" class="panel-collapse collapse">
+																	<div class="panel-body">
+																		<div>
+																			<label class="col-xs-3" data-translate="">Port</label>
+																			<input type="text"></input>
+																		</div>
+																		<div>
+																			<label class="col-xs-3" data-translate="">Passive</label>
+																			<input type="text"></input>
+																		</div>
+																		<div>
+																			<label class="col-xs-3" data-translate="">File
+																				name</label> <input type="text"></input>
+																		</div>
+
+																		<div>
+																			<label class="col-xs-3" data-translate="">Check
+																				file size</label> <input type="checkbox"></input>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<h5 class="panel-title">
+															<a data-toggle="collapse" aria-controls="mail"
+																data-target="#mail" data-translate="">Mail</a>
+														</h5>
+													</div>
+													<div id="mail" class="panel-collapse collapse">
+														<div class="panel-body">
+															<div>
+																<label class="col-xs-3" data-ng-required="true"
+																	data-translate="">Email address*</label> <input
+																	type="email"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Header
+																	line</label> <input type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Email
+																	to/cc/bcc</label> <input type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Subject</label>
+																<input type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">Attachment
+																	mode</label> <input type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">File
+																	name</label> <input type="text"></input>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a data-toggle="collapse" data-parent="#primaryAccordion"
+												aria-controls="stagingPost" data-target="#stagingPost"
+												data-translate="">Staging Post</a>
+										</h4>
+									</div>
+									<div id="stagingPost" class="panel-collapse collapse">
+										<div>
+											<label class="col-xs-3" data-translate="">Compression</label>
+											<select>
+												<option>NONE</option>
+												<option>Zipped</option>
+												<option>WMO_FTP</option>
+											</select> <label class="col-xs-12" data-translate="">Warning:
+												your product will be purged from the Shopping cart after 5
+												days</label>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="secondary2">
-							<h4>Secondary dissemination</h4>
-						</div>
+
+						<div role="tabpanel" class="tab-pane" id="secondary2">//TODO
+							copy primary one</div>
 						<div role="tabpanel" class="tab-pane" id="summary2">
-							<h4>Summary</h4>
+							<div>
+								<label class="col-xs-3" data-translate="">User</label>
+								{{user.username}}
+							</div>
+							<div>
+								<label class="col-xs-3" data-translate="">Request ID</label>
+								{{requestID}}
+							</div>
+							<div>
+								<label class="col-xs-3" data-translate="">DataSource</label>
+								{{dataSource}}
+							</div>
+							<div>
+								<label class="col-xs-3" data-translate="">Product
+									metadata URN</label> {{urn}}
+							</div>
+							<div>
+								<label class="col-xs-3" data-translate="">Product
+									metadata title</label> {{mdTitle}}
+							</div>
 						</div>
 					</div>
 
@@ -77,16 +228,16 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">
-					<i class="fa fa-times"></i> Cancel
+					<i class="fa fa-times"></i> <span data-translate="">openwisCancel</span>
 				</button>
-				<button type="button" class="btn btn-default">
-					<i class="fa fa-chevron-left"></i> Previous
+				<button type="button" class="btn btn-default" data-ng-click="prev()">
+					<i class="fa fa-chevron-left"></i> <span data-translate="">openwisPrevious</span>
 				</button>
-				<button type="button" class="btn btn-default">
-					Next <i class="fa fa-chevron-right"></i>
+				<button type="button" class="btn btn-default" data-ng-click="next()">
+					<i class="fa fa-chevron-right"></i><span data-translate="">openwisNext</span>
 				</button>
-				<button type="button" class="btn btn-primary">
-					<i class="fa fa-check"></i> Save
+				<button type="button" class="btn btn-primary" data-ng-click="save()">
+					<i class="fa fa-check"></i> <span data-translate="">openwisSave</span>
 				</button>
 			</div>
 		</div>

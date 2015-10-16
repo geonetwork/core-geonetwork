@@ -30,6 +30,10 @@ public class SubscriptionManager {
         getServiceClient().deleteSubscription(subscriptionId);
     }
 
+    public Long create(String metadataUrn, Subscription subscription) {
+        return getServiceClient().createSubscription(metadataUrn, subscription);
+    }
+
     public void resume(Long subscriptionId) {
         getServiceClient().resumeSubscription(subscriptionId);
     }

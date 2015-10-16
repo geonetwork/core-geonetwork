@@ -95,6 +95,7 @@ public class SubscriptionClient extends WebServiceGatewaySupport {
      * @param subscription
      * @return Subscription id.
      */
+    @SuppressWarnings("unchecked")
     public Long createSubscription(String metadataUrn,
             Subscription subscription) {
         ObjectFactory objFact = new ObjectFactory();
@@ -103,11 +104,10 @@ public class SubscriptionClient extends WebServiceGatewaySupport {
         request.setMetadataUrn(metadataUrn);
         request.setSubscription(subscription);
 
-        JAXBElement response = (JAXBElement) getWebServiceTemplate()
+        JAXBElement<CreateSubscriptionResponse> response = (JAXBElement<CreateSubscriptionResponse>) getWebServiceTemplate()
                 .marshalSendAndReceive(
                         objFact.createCreateSubscription(request));
-        CreateSubscriptionResponse responseType = (CreateSubscriptionResponse) response
-                .getValue();
+        CreateSubscriptionResponse responseType = response.getValue();
 
         return responseType.getReturn();
     }

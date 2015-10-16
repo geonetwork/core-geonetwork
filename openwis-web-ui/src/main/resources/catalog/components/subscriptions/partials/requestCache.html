@@ -15,20 +15,20 @@
 				<div>
 					<!-- Nav tabs -->
 					<ul class="nav nav-pills nav-wizard" role="tablist">
-						<li role="presentation" class="active"><a href="#param1"
-							aria-controls="param1" role="tab" data-toggle="tab">Sub-selection
-								parameters</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#primary1" aria-controls="primary1" role="tab"
+						<li role="presentation" class="active"><a
+							data-target="#param1" aria-controls="param1" role="tab"
+							data-toggle="tab">Sub-selection parameters</a>
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#primary1" aria-controls="primary1" role="tab"
 							data-toggle="tab">Primary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#secondary1" aria-controls="secondary1" role="tab"
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#secondary1" aria-controls="secondary1" role="tab"
 							data-toggle="tab">Secondary dissemination</a>
-						<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div>
-							<a href="#summary1" aria-controls="summary1" role="tab"
+							<div class="nav-arrow"></div></li>
+						<li role="presentation"><div class="nav-wedge"></div> <a
+							data-target="#summary1" aria-controls="summary1" role="tab"
 							data-toggle="tab">Summary</a></li>
 					</ul>
 
@@ -79,13 +79,16 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">
 					<i class="fa fa-times"></i> Cancel
 				</button>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default"
+                data-ng-click="prev()">
 					<i class="fa fa-chevron-left"></i> Previous
 				</button>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default"
+                data-ng-click="next()">
 					Next <i class="fa fa-chevron-right"></i>
 				</button>
-				<button type="button" class="btn btn-primary">
+				<button type="button" class="btn btn-primary"
+                data-ng-click="save()">
 					<i class="fa fa-check"></i> Save
 				</button>
 			</div>
