@@ -149,6 +149,7 @@
           if (uuid) {
             gnMdFormatter.load(uuid,
                 selector, $this.getCurrentMdScope());
+            $this.setCurrentMdScope();
           }
         };
         loadFormatter();
