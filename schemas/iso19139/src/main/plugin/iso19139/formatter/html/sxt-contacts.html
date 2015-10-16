@@ -1,14 +1,13 @@
-<div><dt fmt-translate="" translate="">Contacts</dt>
-  <dd>
-    <ul class="md-value-list nocolon">
-      <li fmt-repeat="c in contacts">{{c}}</li>
-    </ul>
-  </dd>
-
+<ul class="md-value-list nocolon">
+  <li fmt-repeat="c in contacts">{{c.name}}
+    <a fmt-if="c.mail" href="mailto:{{c.mail}}" target="_top"><sup class="fa fa-envelope"></sup></a>
+  </li>
+</ul>
+<!--
   <dt fmt-translate="" translate="">orgs</dt>
   <dd>
     <ul>
       <li fmt-repeat="o in orgs">{{o}}</li>
     </ul>
   </dd>
-</div>
+-->

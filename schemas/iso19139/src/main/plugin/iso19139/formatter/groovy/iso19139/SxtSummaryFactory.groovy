@@ -54,6 +54,7 @@ class SxtSummaryFactory {
         configureDataQualityInfo(metadata, summary)
         configureDates(metadata, summary)
         configureContacts(metadata, summary)
+        configureConstraints(metadata, summary)
 
         //createCollapsablePanel()
 
@@ -97,6 +98,13 @@ class SxtSummaryFactory {
         def contacts = metadata."**".findAll{it.name() == 'gmd:CI_ResponsibleParty'}
         if (!contacts.isEmpty()) {
             summary.contacts = this.isoHandlers.contactsElSxt(contacts).toString()
+        }
+    }
+
+    def configureConstraints(metadata, summary) {
+        def constraints = metadata."**".findAll{it.name() == 'gmd:MD_LegalConstraints'}
+        if (!constraints.isEmpty()) {
+            summary.constraints = this.isoHandlers.constraintsElSxt(constraints).toString()
         }
     }
 

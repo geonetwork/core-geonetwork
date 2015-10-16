@@ -508,9 +508,12 @@ public class Handlers {
         def idx = 0
         els.each { el ->
             def name = el.'gmd:individualName'
+            def mail = el.'gmd:contactInfo'.'gmd:CI_Contact'.'gmd:address'.'gmd:CI_Address'.'gmd:electronicMailAddress'
             def org = el.'gmd:organisationName'
-            if(name && contacts.indexOf(name) < 0) {
-                contacts.push(name)
+            def contact = [name : name, mail : mail]
+
+            if(name && name != "" && contacts.indexOf(name) < 0) {
+                contacts.push(contact)
             }
             if(org && orgs.indexOf(org) < 0) {
                 orgs.push(org)
@@ -523,4 +526,39 @@ public class Handlers {
         return handlers.fileResult("html/sxt-contacts.html", replacements)
     }
 
+    def constraintsElSxt = { els ->
+        def useLimitation
+        def accessConstraints
+        def useConstraints
+        def otherConstraints
+        def useLimitationLabel
+        def accessConstraintsLabel
+        def useConstraintsLabel
+        def otherConstraintsLabel
+
+        els.each { el ->
+            useLimitationLabel = f.nodeLabel(el."gmd:useLimitation")
+            accessConstraintsLabel = f.nodeLabel(el."gmd:accessConstraints")
+            useConstraintsLabel = f.nodeLabel(el."gmd:useConstraints")
+            otherConstraintsLabel = f.nodeLabel(el."gmd:otherConstraints")
+
+            useLimitation = el."gmd:useLimitation"
+            accessConstraints = f.codelistValueLabel(el."gmd:accessConstraints"."gmd:MD_RestrictionCode")
+            useConstraints = f.codelistValueLabel(el."gmd:useConstraints"."gmd:MD_RestrictionCode")
+            otherConstraints = el.collectNested {it.'**'.findAll{it.name() == 'gmd:otherConstraints'}}.flatten()
+        }
+
+        def replacements = [
+                useLimitation : useLimitation,
+                accessConstraints : accessConstraints,
+                useConstraints : useConstraints,
+                otherConstraints : otherConstraints,
+                useLimitationLabel : useLimitationLabel,
+                accessConstraintsLabel : accessConstraintsLabel,
+                useConstraintsLabel : useConstraintsLabel,
+                otherConstraintsLabel : otherConstraintsLabel
+        ]
+
+        return handlers.fileResult("html/sxt-constraints.html", replacements)
+    }
 }

@@ -17,6 +17,7 @@ class SxtSummary extends Summary {
     def script;
     def dates;
     def contacts;
+    def constraints;
 
     public SxtSummary(Handlers handlers, Environment env, Functions functions) throws Exception {
         super(handlers, env, functions)
@@ -45,6 +46,7 @@ class SxtSummary extends Summary {
         params.put("isPDF", env.getFormatType() == FormatType.pdf);
         params.put("dates", dates);
         params.put("contacts", contacts);
+        params.put("constraints", constraints);
 
         return handlers.fileResult("html/sxt-view-header.html", params);
     }
