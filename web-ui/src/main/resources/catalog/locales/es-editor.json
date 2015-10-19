@@ -44,10 +44,10 @@
     "createChildOf": "Crear una entrada hija",
     "createCopyOf": "Crear una copia de",
     "createMetadata": "Crear",
-    "createMetadataError": "Create metadata error",
+    "createMetadataError": "Error al crear el metadato",
     "createMetadataForGroup": "Crear y publicar para el grupo de editores",
     "createMetadataForGroup-help": "La entrada será editable por todos los miembros del grupo",
-    "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
+    "createMetadataUniformResourceName": "Nombre del Recurso Uniformado del Metadato",
     "createNewMetadata": "Añadir una nueva entrada",
     "createSmall": "Crear miniatura",
     "current": "actual",
@@ -74,7 +74,7 @@
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Recursos en línea",
     "hasFeatureCatalog": "Usar este catálogo de features",
-    "importCPResult": "One record imported. Record identifier is: {{id}} <br/> UUID: {{uuid}}.",
+    "importCPResult": "Un registro importado. Registro identificado como: {{id}} <br/> UUID: {{uuid}}.",
     "importEntry": "Importar una entrada del directorio",
     "importFromDir": "Import a set of files from a folder on the server",
     "importFromDirReport": "{{success}}/{{records}} entrada(s) importadas con éxito en {{time}} segundos.",
@@ -196,5 +196,6 @@
     "minorEdit": "Edición menor",
     "notEvaluated": "Not evaluated",
     "notConformant": "Not conformant",
+    "capabilitiesParseError": "Error parseando las capacidades del WMS",
     "conformant": "Conformant"
 }
