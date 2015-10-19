@@ -19,6 +19,7 @@
         },
         link: function(scope) {
           scope.lang = scope.$parent.lang;
+          var user = scope.$parent.user;
           scope.newStatus = {value: '0'};
 
           var metadataId = scope.md.getId();
@@ -59,6 +60,11 @@
                     type: 'danger'});
                 });
           };
+
+          scope.cantStatus = function(status) {
+            return ((status == 4 || status == 2 || status == 3)
+                && !user.isReviewerOrMore());
+          }
 
           init();
         }
