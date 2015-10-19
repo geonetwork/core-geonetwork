@@ -661,7 +661,7 @@
               return ['', '', '', ''];
             }
             return str.split(',').map(function(val) {
-                return parseFloat(val);
+              return parseFloat(val);
             });
           };
 

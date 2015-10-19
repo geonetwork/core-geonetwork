@@ -391,19 +391,22 @@
           headers: {'Content-type': 'application/xml'}
         })
           .success(function(data) {
-            if (data[0] && data[0]['@message']) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('keywordCreationError'),
-                msg: data[0]['@message'],
-                timeout: 0,
-                type: 'danger'});
-            } else  {
-              $scope.keywordSelected = null;
-              $('#keywordModal').modal('hide');
-              searchThesaurusKeyword();
-              creatingKeyword = false;
-            }
-          })
+              var response = data[0];
+              if (response && response['@message']) {
+                var statusConfig = {
+                  title: $translate('keywordCreationError'),
+                  msg: response['@message'],
+                  timeout: 0,
+                  type: 'danger'
+                };
+                $rootScope.$broadcast('StatusUpdated', statusConfig);
+              } else {
+                $scope.keywordSelected = null;
+                $('#keywordModal').modal('hide');
+                searchThesaurusKeyword();
+                creatingKeyword = false;
+              }
+            })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('keywordCreationError'),
@@ -441,7 +444,7 @@
       $scope.deleteKeyword = function(k) {
         $scope.keywordSelected = k;
         $http.get('thesaurus.keyword.remove?pThesaurus=' + k.thesaurus.key +
-                  '&id=' + encodeURIComponent(k.uri))
+            '&id=' + encodeURIComponent(k.uri))
           .success(function(data) {
               searchThesaurusKeyword();
             })
