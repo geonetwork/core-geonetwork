@@ -4,13 +4,17 @@
   var module = angular.module('gn_printmap_directive', []);
 
   var mapPrintController = function($scope, gnPrint, $http,
-                                    $translate, $window) {
+                                    $translate, $window, gnGlobalSettings) {
 
     var printRectangle;
     var deregister;
 
+    var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ?
+        gnGlobalSettings.gnUrl : '';
+
     var options = {
-      printConfigUrl: '../../pdf/info.json?url=..%2F..%2Fpdf',
+      printConfigUrl: printConfigUrlPrefix + '../../pdf/info.json?url=' +
+          printConfigUrlPrefix + '..%2F..%2Fpdf',
       graticule: false
     };
 
@@ -153,14 +157,6 @@
       refreshComp();
     };
 
-    $scope.downloadUrl = function(url) {
-      if (8 == 9) {
-        $window.open(url);
-      } else {
-        $window.location = url;
-      }
-    };
-
     $scope.printing = false;
 
     $scope.submit = function() {
@@ -231,11 +227,13 @@
           }, defaultPage)
         ]
       };
+
       var http = $http.post($scope.config.createURL + '?url=' +
-          encodeURIComponent('../../pdf'), spec);
+          encodeURIComponent(printConfigUrlPrefix + '../../pdf'), spec);
       http.success(function(data) {
         $scope.printing = false;
-        $scope.downloadUrl(data.getURL);
+        $window.location = data.getURL;
+
         //After standard print, download the pdf Legends
         //if there are any
         for (var i = 0; i < pdfLegendsToDownload.length; i++) {
