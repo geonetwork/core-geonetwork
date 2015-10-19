@@ -56,17 +56,16 @@
 										<h4 class="panel-title">
 											<a data-toggle="collapse" data-parent="#primaryAccordion"
 												aria-controls="publicDissemination"
-												data-target="#publicDissemination" data-translate="">Public
-												Dissemination</a>
+												data-target="#publicDissemination" data-translate="">openwisPublicDissemination</a>
 										</h4>
 									</div>
 									<div id="publicDissemination" class="panel-collapse collapse in">
 										<div class="panel-body">
 											<div>
-												<label class="col-xs-3" data-translate="">Compression</label>
+												<label class="col-xs-3" data-translate="">openwisCompression</label>
 												<select>
-													<option data-translate="">NONE</option>
-													<option data-translate="">Zipped</option>
+													<option data-translate="">openwisNONE</option>
+													<option data-translate="">openwisZipped</option>
 													<option data-translate="">WMO_FTP</option>
 												</select>
 											</div>
@@ -81,19 +80,19 @@
 													<div id="ftp" class="panel-collapse">
 														<div class="panel-body">
 															<div>
-																<label class="col-xs-3" data-translate="">Host*</label>
+																<label class="col-xs-3" data-translate="">openwisHost</label>
 																<input type="text" data-ng-required="true"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Path*</label>
+																<label class="col-xs-3" data-translate="">openwisPath</label>
 																<input type="text" data-ng-required="true"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">User*</label>
+																<label class="col-xs-3" data-translate="">openwisUser</label>
 																<input type="text" data-ng-required="true"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Password*</label>
+																<label class="col-xs-3" data-translate="">openwisPassword</label>
 																<input type="password" data-ng-required="true"></input>
 															</div>
 
@@ -101,27 +100,25 @@
 																<div class="panel-heading">
 																	<h5 class="panel-title">
 																		<a data-toggle="collapse" aria-controls="advanced"
-																			data-target="#advanced" data-translate="">Advanced</a>
+																			data-target="#advanced" data-translate="">openwisAdvanced</a>
 																	</h5>
 																</div>
 																<div id="advanced" class="panel-collapse collapse">
 																	<div class="panel-body">
 																		<div>
-																			<label class="col-xs-3" data-translate="">Port</label>
+																			<label class="col-xs-3" data-translate="">openwisPort</label>
 																			<input type="text"></input>
 																		</div>
 																		<div>
-																			<label class="col-xs-3" data-translate="">Passive</label>
+																			<label class="col-xs-3" data-translate="">openwisPassive</label>
 																			<input type="text"></input>
 																		</div>
 																		<div>
-																			<label class="col-xs-3" data-translate="">File
-																				name</label> <input type="text"></input>
+																			<label class="col-xs-3" data-translate="">openwisFileName</label> <input type="text"></input>
 																		</div>
 
 																		<div>
-																			<label class="col-xs-3" data-translate="">Check
-																				file size</label> <input type="checkbox"></input>
+																			<label class="col-xs-3" data-translate="">openwisFileSize</label> <input type="checkbox"></input>
 																		</div>
 																	</div>
 																</div>
@@ -134,35 +131,31 @@
 													<div class="panel-heading">
 														<h5 class="panel-title">
 															<a data-toggle="collapse" aria-controls="mail"
-																data-target="#mail" data-translate="">Mail</a>
+																data-target="#mail" data-translate="">openwisMail</a>
 														</h5>
 													</div>
 													<div id="mail" class="panel-collapse collapse">
 														<div class="panel-body">
 															<div>
 																<label class="col-xs-3" data-ng-required="true"
-																	data-translate="">Email address*</label> <input
+																	data-translate="">openwisEmail</label> <input
 																	type="email"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Header
-																	line</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisHeaderLine</label> <input type="text"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Email
-																	to/cc/bcc</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisEmailTo</label> <input type="text"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Subject</label>
+																<label class="col-xs-3" data-translate="">openwisSubject</label>
 																<input type="text"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">Attachment
-																	mode</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisAttachmentMode</label> <input type="text"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">File
-																	name</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisFileName</label> <input type="text"></input>
 															</div>
 														</div>
 													</div>
@@ -176,19 +169,17 @@
 										<h4 class="panel-title">
 											<a data-toggle="collapse" data-parent="#primaryAccordion"
 												aria-controls="stagingPost" data-target="#stagingPost"
-												data-translate="">Staging Post</a>
+												data-translate="">openwisStagingPost</a>
 										</h4>
 									</div>
 									<div id="stagingPost" class="panel-collapse collapse">
 										<div>
-											<label class="col-xs-3" data-translate="">Compression</label>
+											<label class="col-xs-3" data-translate="">openwisCompression</label>
 											<select>
-												<option>NONE</option>
-												<option>Zipped</option>
+												<option data-translate="">openwisNONE</option>
+												<option data-translate="">openwisZipped</option>
 												<option>WMO_FTP</option>
-											</select> <label class="col-xs-12" data-translate="">Warning:
-												your product will be purged from the Shopping cart after 5
-												days</label>
+											</select> <label class="col-xs-12" data-translate="">openwisPurgeWarning</label>
 										</div>
 									</div>
 								</div>
@@ -199,24 +190,22 @@
 							copy primary one</div>
 						<div role="tabpanel" class="tab-pane" id="summary2">
 							<div>
-								<label class="col-xs-3" data-translate="">User</label>
+								<label class="col-xs-3" data-translate="">username</label>
 								{{user.username}}
 							</div>
 							<div>
-								<label class="col-xs-3" data-translate="">Request ID</label>
+								<label class="col-xs-3" data-translate="">openwisRequestID</label>
 								{{requestID}}
 							</div>
 							<div>
-								<label class="col-xs-3" data-translate="">DataSource</label>
+								<label class="col-xs-3" data-translate="">openwisDataSource</label>
 								{{dataSource}}
 							</div>
 							<div>
-								<label class="col-xs-3" data-translate="">Product
-									metadata URN</label> {{urn}}
+								<label class="col-xs-3" data-translate="">openwisUrn</label> {{md['geonet:info'].uuid}}
 							</div>
 							<div>
-								<label class="col-xs-3" data-translate="">Product
-									metadata title</label> {{mdTitle}}
+								<label class="col-xs-3" data-translate="">openwisProductTitle</label> {{md['geonet:info']}}
 							</div>
 						</div>
 					</div>
