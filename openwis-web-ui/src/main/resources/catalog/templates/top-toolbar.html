@@ -116,7 +116,19 @@
     </ul>
   </div>
   
-  <div data-gn-openwis-request-directive></div>
-  <div data-gn-openwis-request-cache-directive></div>
-  <div data-gn-openwis-subscribe-directive></div>
+  <div data-ng-controller="gnOpenWISSubscribe">
+    <div data-gn-openwis-subscribe-directive 
+            data-type="subscribe">
+    </div>
+  </div>
+  <div data-ng-controller="gnOpenWISDeliver">
+	  <div data-gn-openwis-subscribe-directive 
+	       data-type="deliver">
+    </div>
+  </div>
+  <div data-ng-controller="gnOpenWISDownload">
+    <div data-gn-openwis-subscribe-directive 
+            data-type="download">
+    </div>
+  </div>
 </div>

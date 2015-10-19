@@ -9,8 +9,19 @@
           function() {
             return {
               restrict : 'AE',
+              link : function(scope, elem, attrs) {
+                scope.type = attrs.type;
+                $('.panel-heading h4 > a', elem).on(
+                    'click',
+                    function(e) {
+                      if ($(this).parents('.panel').children('.panel-collapse')
+                          .hasClass('in')) {
+                        e.stopPropagation();
+                      }
+                    });
+              },
               replace : true,
-              templateUrl : '../../catalog/components/subscriptions/partials/subscribe.html'
+              templateUrl : '../../catalog/components/subscriptions/partials/request.html'
             };
           });
 

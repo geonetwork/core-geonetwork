@@ -1,6 +1,5 @@
-<div class="modal fade bs-example-modal-lg" id="requestModal"
-	data-ng-controller="gnOpenWISRequest" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel">
+<div class="modal fade bs-example-modal-lg" id="{{type}}Modal"
+	tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -44,9 +43,7 @@
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h4 class="panel-title">
-											<a data-toggle="collapse" data-parent="#primaryAccordion"
-												aria-controls="mssmfs" data-target="#mssmfs"
-												data-translate="">MSS/MFS</a>
+											<a>MSS/MFS</a>
 										</h4>
 									</div>
 									<div id="mssmfs" class="panel-collapse collapse">
@@ -63,7 +60,7 @@
 												Dissemination</a>
 										</h4>
 									</div>
-									<div id="publicDissemination" class="panel-collapse collapse">
+									<div id="publicDissemination" class="panel-collapse collapse in">
 										<div class="panel-body">
 											<div>
 												<label class="col-xs-3" data-translate="">Compression</label>

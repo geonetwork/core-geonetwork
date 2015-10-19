@@ -136,6 +136,8 @@
     "organization": "Organization",
     "owner": "Owner",
     "openwisCancel": "Cancel",
+    "openwisDeliver": "Deliver",
+    "openwisDownload": "Download",
     "openwisFirstDissemination": "Primary dissemination",
     "openwisNext": "Next",
     "openwisNotImplemented": "This functionality is not available at the moment",

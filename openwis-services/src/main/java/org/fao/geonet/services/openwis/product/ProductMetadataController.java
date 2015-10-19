@@ -98,8 +98,7 @@ public class ProductMetadataController {
     @RequestMapping(value = { "/{lang}/openwis.productmetadata.get" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody
-    ProductMetadata retrieve(@PathVariable String lang,
-                             @RequestParam String urn) {
+    ProductMetadata retrieve(@RequestParam String urn) {
 
 
         ProductMetadata pm = manager.getProductMetadataByUrn(urn);

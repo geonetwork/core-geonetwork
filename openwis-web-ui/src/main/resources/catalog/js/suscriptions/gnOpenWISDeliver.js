@@ -1,17 +1,18 @@
 (function() {
-  goog.provide('gn_openwis_request');
+  goog.provide('gn_openwis_deliver');
 
-  var module = angular.module('gn_openwis_request', []);
+  var module = angular.module('gn_openwis_deliver', []);
 
-  module.controller('gnOpenWISRequest', [
+  module.controller('gnOpenWISDeliver', [
       '$scope',
       function($scope) {
+        
         $scope.next = function() {
-          setTimeout($("li.active", "#requestModal").next('li').find('a')
+          setTimeout($("li.active", "#deliverModal").next('li').find('a')
               .trigger('click'));
         }
         $scope.prev = function() {
-          setTimeout($("li.active", "#requestModal").prev('li').find('a')
+          setTimeout($("li.active", "#deliverModal").prev('li').find('a')
               .trigger('click'));
         }
         $scope.save = function() {

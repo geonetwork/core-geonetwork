@@ -77,4 +77,28 @@ public class CacheIndexClient extends WebServiceGatewaySupport {
 
         return responseType.getReturn();
     }
+
+    /**
+     * Retrieves the cache content filtered and sorted.
+     *
+     * @return
+     */
+    public List<CachedFile> listFilesByMetadataUrnAndDate(String urn,
+            String startDateString, String endDateString) {
+        ObjectFactory objFact = new ObjectFactory();
+
+        ListFilesByMetadataUrnAndDate request = objFact
+                .createListFilesByMetadataUrnAndDate();
+        request.setArg0(urn);
+        request.setArg1(startDateString);
+        request.setArg2(endDateString);
+        
+        JAXBElement<ListFilesByMetadataUrnAndDateResponse> response = (JAXBElement<ListFilesByMetadataUrnAndDateResponse>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createListFilesByMetadataUrnAndDate(request));
+        ListFilesByMetadataUrnAndDateResponse responseType = response
+                .getValue();
+
+        return responseType.getReturn();
+    }
 }

@@ -109,31 +109,12 @@
              data-title="{{'associatedResources' | translate}}">
         </div>
         
-        <div class="gn-related-resources">
-		    <h2 data-translate="">openwisSubscribeTitle</h2>
-		    <div class="row list-group-item gn-related-item">
-        
-                <div class="col-xs-1">
-                    <strong>
-                        <i class="fa fa-2x fa-rss">&nbsp;</i>
-                    </strong>
-                </div>
-                <div class="col-xs-7">
-                    <h4 data-translate="">openwisRequest</h4>
-                </div>
-                <div class="col-xs-4">
-                   <button type="button"
-                                    class="btn btn-default btn-lg btn-block"
-                      data-toggle="modal" data-target="#requestModal">
-        
-                        <span class="visible-lg-*" data-translate="">
-                           openwisRequest 
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="row list-group-item gn-related-item">
-        
+        <div class="gn-related-resources" 
+             data-ng-controller="gnOpenWISCheckSubscriptionButton"
+             data-ng-show="isVisible && exists">
+		    <h2 data-translate="">openwisSubscribeTitle</h2>  
+		    <div class="row list-group-item gn-related-item"
+		     data-ng-show="isVisible && exists">
                 <div class="col-xs-1">
                     <strong>
                         <i class="fa fa-2x fa-refresh">&nbsp;</i>
@@ -153,7 +134,8 @@
                     </button>
                 </div>
             </div>
-            <div class="row list-group-item gn-related-item">
+		    <div class="row list-group-item gn-related-item"
+		     data-ng-show="isVisible && exists && isAvailable">
         
                 <div class="col-xs-1">
                     <strong>
@@ -161,15 +143,38 @@
                     </strong>
                 </div>
                 <div class="col-xs-7">
-                    <h4 data-translate="">openwisRequestCache</h4>
+                    <h4 data-translate="">openwisDeliver</h4>
                 </div>
                 <div class="col-xs-4">
                    <button type="button"
                                     class="btn btn-default btn-lg btn-block"
-                      data-toggle="modal" data-target="#requestCacheModal">
+                      data-toggle="modal" data-target="#deliverModal">
         
                         <span class="visible-lg-*" data-translate="">
-                           openwisRequestCache
+                           openwisDeliver 
+                        </span>
+                    </button>
+                </div>
+            </div>
+          
+            <div class="row list-group-item gn-related-item"
+             data-ng-show="isVisible && exists && isAvailable">
+        
+                <div class="col-xs-1">
+                    <strong>
+                        <i class="fa fa-2x fa-rss">&nbsp;</i>
+                    </strong>
+                </div>
+                <div class="col-xs-7">
+                    <h4 data-translate="">openwisDownload</h4>
+                </div>
+                <div class="col-xs-4">
+                   <button type="button"
+                                    class="btn btn-default btn-lg btn-block"
+                      data-toggle="modal" data-target="#downloadModal">
+        
+                        <span class="visible-lg-*" data-translate="">
+                           openwisDownload
                         </span>
                     </button>
                 </div>

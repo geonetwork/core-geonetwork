@@ -6,6 +6,7 @@
   module.controller('gnOpenWISSubscribe', [
       '$scope',
       function($scope) {
+        
         $scope.next = function() {
           setTimeout($("li.active", "#subscribeModal").next('li').find('a')
               .trigger('click'));
