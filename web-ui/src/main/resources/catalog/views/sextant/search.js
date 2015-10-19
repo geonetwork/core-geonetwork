@@ -542,6 +542,12 @@
         md.icon = {cls: 'fa-globe', title: 'service'}
       }
 
+      var status = md.mdStatus;
+      var user = scope.user;
+      scope.cantStatus = ((status == 4 || status == 2 || status == 3)
+          && !user.isReviewerOrMore());
+
+
       scope.links = md.getLinksByType('LINK');
 
       var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
