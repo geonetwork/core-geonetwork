@@ -44,8 +44,8 @@
           scope.$watch('user', function(user) {
             if(user) {
               angular.extend(scope.formObj.user, {
-                lastname: user.name,
-                firstname: user.surname,
+                lastname: user.surname,
+                firstname: user.name,
                 mail: angular.isArray(user.email) ?
                     user.email[0] : user.email,
                 org: user.organisation
@@ -117,6 +117,8 @@
               /** To iniate combo box values */
               scope.settings = gnPanierSettings;
 
+              scope.isCopyfile = scope.element.link.protocol == 'COPYFILE';
+
               /** Use to know if we need to zoom on the md extent or not */
               var rendered = false;
 
@@ -165,57 +167,61 @@
                 }
               };
 
-              /** Map useed to draw the bbox */
-              scope.map = new ol.Map({
-                layers: [
-                  new ol.layer.Tile({
-                    source: new ol.source.OSM()
+              if(!scope.isCopyfile) {
+
+                /** Map useed to draw the bbox */
+                scope.map = new ol.Map({
+                  layers: [
+                    new ol.layer.Tile({
+                      source: new ol.source.OSM()
+                    })
+                  ],
+                  controls:[],
+                  view: new ol.View({
+                    center: [0, 0],
+                    zoom: 2
                   })
-                ],
-                controls:[],
-                view: new ol.View({
-                  center: [0, 0],
-                  zoom: 2
-                })
-              });
-
-              // Set initial extent to draw the BBOX
-              var extents = gnMap.getBboxFromMd(scope.element.md);
-              var extent = extents.length > 0 && extents[0];
-              if (extent) {
-
-                // Fixed feature overlay to show extent of the md
-                var feature = new ol.Feature();
-                var featureOverlay = new ol.layer.Vector({
-                  source: new ol.source.Vector({
-                    useSpatialIndex: false
-                  }),
-                  style: gnSearchSettings.olStyles.mdExtent,
-                  map: scope.map
                 });
 
-                featureOverlay.getSource().addFeature(feature);
+                // Set initial extent to draw the BBOX
+                var extents = gnMap.getBboxFromMd(scope.element.md);
+                var extent = extents.length > 0 && extents[0];
+                if (extent) {
 
-                var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(),
-                    extent) ?
-                    ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                    proj.getExtent();
+                  // Fixed feature overlay to show extent of the md
+                  var feature = new ol.Feature();
+                  var featureOverlay = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                      useSpatialIndex: false
+                    }),
+                    style: gnSearchSettings.olStyles.mdExtent,
+                    map: scope.map
+                  });
 
-                // Set coords in the scope to pass it to the mapField directive
-                scope.extentCoords = gnMap.getPolygonFromExtent(extent);
-                feature.setGeometry(new ol.geom.Polygon(scope.extentCoords));
+                  featureOverlay.getSource().addFeature(feature);
+
+                  var proj = scope.map.getView().getProjection();
+                  extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                      extent) ?
+                      ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                      proj.getExtent();
+
+                  // Set coords in the scope to pass it to the mapField directive
+                  scope.extentCoords = gnMap.getPolygonFromExtent(extent);
+                  feature.setGeometry(new ol.geom.Polygon(scope.extentCoords));
+                }
+
+                // To update size on first maps render
+                scope.$on('renderPanierMap', function() {
+                  scope.map.updateSize();
+                  if (feature && !rendered) {
+                    scope.map.getView().fit(
+                        feature.getGeometry().getExtent(), scope.map.getSize());
+                  }
+                  rendered = true;
+                });
               }
 
-              // To update size on first maps render
-              scope.$on('renderPanierMap', function() {
-                scope.map.updateSize();
-                if (feature && !rendered) {
-                  scope.map.getView().fit(
-                      feature.getGeometry().getExtent(), scope.map.getSize());
-                }
-                rendered = true;
-              });
             },
             post: function preLink(scope, iElement, iAttrs, controller) {
 
