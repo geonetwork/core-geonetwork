@@ -11030,6 +11030,13 @@ yx-axis
 .gn [sxt-main-viewer] .layers-tools-expanded .sxt-layertree {
   height: 350px;
 }
+.gn [sxt-main-viewer] #importLayer .panel-carousel {
+  min-height: 350px;
+  max-height: 700px;
+}
+.gn [sxt-main-viewer] #importLayer .panel-carousel .mCSB_container {
+  min-height: 100%;
+}
 .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layertree {
   display: none;
 }
@@ -11037,6 +11044,9 @@ yx-axis
   height: 700px;
 }
 @media (max-height: 866px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    max-height: 600px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 300px;
   }
@@ -11052,6 +11062,10 @@ yx-axis
   }
 }
 @media (max-height: 766px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    min-height: 250px;
+    max-height: 500px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 250px;
   }
@@ -11067,6 +11081,10 @@ yx-axis
   }
 }
 @media (max-height: 666px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    min-height: 200px;
+    max-height: 400px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 200px;
   }
@@ -11255,6 +11273,9 @@ yx-axis
 }
 .gn [sxt-main-viewer] .layerTree .fa-plus-square-o:before {
   content: "\f0fe";
+}
+.gn [sxt-main-viewer] .ncwms-root {
+  height: 100%;
 }
 .gn [sxt-main-viewer] .panel-ncwms-container {
   border: none;
@@ -14516,6 +14537,13 @@ yx-axis
   position: relative;
   margin-top: -4em;
 }
+.gn [sxt-main-viewer] #importLayer .panel-carousel {
+  min-height: 200px;
+  max-height: 400px;
+}
+.gn [sxt-main-viewer] #importLayer .panel-carousel .mCSB_container {
+  min-height: 100%;
+}
 .gn [sxt-main-viewer] .sxt-layers-tabset {
   height: 200px;
 }
@@ -14530,6 +14558,9 @@ yx-axis
   height: 400px;
 }
 @media (max-height: 866px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    max-height: 300px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 150px;
   }
@@ -14545,6 +14576,9 @@ yx-axis
   }
 }
 @media (max-height: 766px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    max-height: 200px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 100px;
   }
@@ -14560,6 +14594,9 @@ yx-axis
   }
 }
 @media (max-height: 666px) {
+  .gn [sxt-main-viewer] #importLayer .panel-carousel {
+    max-height: 100px;
+  }
   .gn [sxt-main-viewer] .sxt-layers-tabset {
     height: 50px;
   }
