@@ -19,6 +19,7 @@
   "inbasket": "dans le panier",
   "addAllLayersToPanier": "Ajouter les {{number}} couches au panier",
   "toAdmin": "Administrer",
+  "adminConsole": "Administrer",
   "paginationInfo": "Résultats {{from}} à {{to}} <em> sur {{total}}</em> :",
   "byPage": "par page",
   "sortBy": "Tri par",
