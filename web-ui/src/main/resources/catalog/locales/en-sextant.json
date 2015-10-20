@@ -50,6 +50,8 @@
   "process": "Process",
   "Printing": "Printing in progress",
   "toimport": "Import",
-  "noResult" : "No result."
+  "noResult" : "No result.",
+  "inspireThemes_en": "Inspire Themes",
+  "inspireThemes_fr": "Inspire Themes"
 
 }

@@ -49,5 +49,7 @@
   "process": "Traitement",
   "Printing": "En cours d'impression",
   "toimport": "Importer",
-  "noResult" : "Aucun résultat."
+  "noResult" : "Aucun résultat.",
+  "inspireThemes_en": "Thèmes Inspire",
+  "inspireThemes_fr": "Thèmes Inspire"
 }

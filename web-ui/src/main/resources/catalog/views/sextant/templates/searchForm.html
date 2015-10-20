@@ -31,7 +31,8 @@
     </div>
 
     <!--TEST FACET MULTI-->
-    <div gn-facet-multiselect="inspireTheme" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme')}}"></div>
+    <div data-ng-if="::(lang == 'eng')" gn-facet-multiselect="inspireTheme_en" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme_en')}}"></div>
+    <div data-ng-if="::(lang == 'fre')" gn-facet-multiselect="inspireTheme_fr" gn-facet-multiselect-collapsed="{{isFacetsCollapse('inspireTheme_fr')}}"></div>
     <div gn-facet-multiselect="keyword" gn-facet-multiselect-collapsed="{{isFacetsCollapse('keyword')}}"></div>
     <div gn-facet-multiselect="orgName" gn-facet-multiselect-collapsed="{{isFacetsCollapse('orgName')}}"></div>
     <div gn-facet-multiselect="createDateYear" gn-facet-multiselect-collapsed="{{isFacetsCollapse('createDateYear')}}"></div>
