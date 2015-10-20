@@ -150,7 +150,8 @@
             <debug>false</debug>
             <includeTests>false</includeTests>
           </configuration>
-          <executions>
+<!--
+         <executions>
             <execution>
               <goals>
                 <goal>check</goal>
@@ -158,6 +159,7 @@
               <phase>test</phase>
             </execution>
           </executions>
+-->
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -191,7 +193,7 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
+<!--      <plugin>
           <groupId>org.codehaus.groovy.maven</groupId>
           <artifactId>gmaven-plugin</artifactId>
           <version>1.0</version>
@@ -246,7 +248,7 @@
                   </configuration>
               </execution>
           </executions>
-      </plugin>
+      </plugin>-->
       <!--     Compilation.                                        -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -331,8 +333,8 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.18.1</version>
             <configuration>
-                <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M</argLine>
-                <rerunFailingTestsCount>5</rerunFailingTestsCount>
+                <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=256M</argLine>
+                <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
                 <runOrder>alphabetical</runOrder>
                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 <forkCount>4</forkCount>

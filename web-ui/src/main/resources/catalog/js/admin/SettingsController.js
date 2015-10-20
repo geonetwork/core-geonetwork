@@ -6,6 +6,7 @@
   goog.require('gn_csw_virtual_controller');
   goog.require('gn_logo_settings_controller');
   goog.require('gn_mapserver_controller');
+  goog.require('gn_metadata_identifier_templates_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_sources_controller');
   goog.require('gn_system_settings_controller');
@@ -18,6 +19,7 @@
        'gn_csw_test_controller',
        'gn_logo_settings_controller',
        'gn_sources_controller',
+       'gn_metadata_identifier_templates_controller',
        'gn_scroll_spy']
       );
 

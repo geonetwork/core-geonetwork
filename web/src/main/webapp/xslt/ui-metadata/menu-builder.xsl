@@ -51,7 +51,7 @@
               </li>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:for-each select="$config/editor/views/view[not(@disabled)]">
+              <xsl:for-each select="$config/editor/views/view[not(@disabled='true')]">
 
                 <xsl:variable name="isViewDisplayed" as="xs:boolean">
                   <!-- Evaluate XPath expression to

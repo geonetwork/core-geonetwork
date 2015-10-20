@@ -14,6 +14,8 @@
       graticule: false
     };
 
+    $scope.enableLegends = true;
+
     /**
      * Return print configuration from Mapfishprint service
      * @return {*} promise
@@ -217,7 +219,7 @@
         dpi: $scope.config.dpi.value,
         layers: encLayers,
         legends: encLegends,
-        enableLegends: (encLegends && encLegends.length > 0),
+        enableLegends: $scope.enableLegends,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(
@@ -295,8 +297,8 @@
       }
 
       encLegend = gnPrint.encoders.legends['base'].call(
-        this, layer, layerConfig
-      );
+          this, layer, layerConfig
+          );
 
       if (encLegend && encLegend.classes[0] && !encLegend.classes[0].icon) {
         encLegend = undefined;

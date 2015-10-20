@@ -47,6 +47,15 @@ public class ListRegionsResponse {
 
     }
 
+    protected int size() {
+        return region.size();
+    }
+
+    public Collection<RegionResponse> getRegions() {
+        return region;
+    }
+
+
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class RegionResponse {

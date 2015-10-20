@@ -44,8 +44,10 @@
     "createChildOf": "Create a child record",
     "createCopyOf": "Create copy of",
     "createMetadata": "Create",
+    "createMetadataError": "Create metadata error",
     "createMetadataForGroup": "Create and publish for group editors",
     "createMetadataForGroup-help": "The record will be editable by all members of the group",
+    "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Add a new record",
     "createSmall": "Create small",
     "current": "current",
@@ -194,5 +196,6 @@
     "minorEdit": "Minor edit",
     "notEvaluated": "Not evaluated",
     "notConformant": "Not conformant",
+    "capabilitiesParseError": "Error parsing WMS capabilities",
     "conformant": "Conformant"
 }

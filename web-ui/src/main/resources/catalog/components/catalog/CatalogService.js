@@ -86,10 +86,12 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild) {
+            isTemplate, isChild, metadataUuid) {
           var url = gnUrlUtils.append('md.create',
               gnUrlUtils.toKeyValue({
                 _content_type: 'json',
@@ -97,7 +99,8 @@
                 id: id,
                 template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
                 child: isChild ? 'y' : 'n',
-                fullPrivileges: withFullPrivileges ? 'true' : 'false'
+                fullPrivileges: withFullPrivileges ? 'true' : 'false',
+                metadataUuid: metadataUuid
               })
               );
           return $http.get(url);
@@ -190,12 +193,16 @@
            * @param {boolean} withFullPrivileges privileges to assign.
            * @param {boolean} isTemplate type of the metadata
            * @param {boolean} isChild is child of a parent metadata
+           * @param {string} tab is the metadata editor tab to open
+           * @param {string} metadataUuid, the uuid of the metadata to create
+           *                 (when metadata uuid is set to manual)
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 
-            isTemplate, isChild, tab) {
+            isTemplate, isChild, tab, metadataUuid) {
+
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild).success(function(data) {
+              isTemplate, isChild, metadataUuid).success(function(data) {
             var path = '/metadata/' + data.id;
             if (tab) {
               path += '/tab/' + tab;
@@ -636,7 +643,7 @@
           groupId = types[0];
           types.splice(0, 1);
         }
-        if (this.linksCache[key]) {
+        if (this.linksCache[key] && !groupId) {
           return this.linksCache[key];
         }
         angular.forEach(this.link, function(link) {

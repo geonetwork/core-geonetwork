@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.sources.http.ServletPathFinder;
+import com.google.common.io.Resources;
 import org.fao.geonet.Constants;
 import org.fao.geonet.util.XslUtil;
 import org.jdom.JDOMException;
@@ -8,13 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import javax.servlet.ServletContext;
 
 /**
  * Create a cache based on JSON translation files.
@@ -41,26 +43,16 @@ public final class JSONLocCacheLoader implements Callable<Map<String, String>> {
     public Map<String, String> call() throws Exception {
         Map<String, String> translations = new HashMap<String, String>();
 
-        ServletPathFinder pathFinder =
-                new ServletPathFinder(applicationContext.getBean(ServletContext.class));
-        Path path = pathFinder.getAppPath();
-
-        // FIXME: When using mvn jetty:run, the app path points
-        // to the web module. In that case the resource is in the web-ui module
-        // Published using overlay by jetty plugin. Can be better ?
-        String devPath = "web/src/main/webapp";
-        if (path.toString().contains(devPath)) {
-            String webUiDeployedModulePath =
-                    path.toString().replace(devPath, "web/target/geonetwork");
-            path = Paths.get(webUiDeployedModulePath);
-        }
+        ServletContext servletContext = applicationContext.getBean(ServletContext.class);
 
         String iso2letterLangCode = XslUtil.twoCharLangCode(langCode, "eng");
 
         for (String file : files) {
-            addJSONLocalizationFile(translations,
-                    path.resolve("catalog").resolve("locales")
-                            .resolve(iso2letterLangCode + "-" + file + ".json"));
+            URL resource = servletContext.getResource("/catalog/locales/" + iso2letterLangCode + "-" + file + ".json");
+            if (resource == null) {
+                resource = servletContext.getResource("/catalog/locales/en-" + file + ".json");
+            }
+            addJSONLocalizationFile(translations, resource);
         }
         return translations;
     }
@@ -78,13 +70,12 @@ public final class JSONLocCacheLoader implements Callable<Map<String, String>> {
      * @throws JDOMException
      */
     @SuppressWarnings("unchecked")
-    private void addJSONLocalizationFile(Map<String, String> translation, Path file)
+    private void addJSONLocalizationFile(Map<String, String> translation, URL file)
             throws IOException, JDOMException {
-        if (Files.exists(file)) {
+        if (file != null) {
             try {
                 JSONObject json =
-                        new JSONObject(
-                                new String(Files.readAllBytes(file), Constants.CHARSET));
+                        new JSONObject(Resources.toString(file, Constants.CHARSET));
 
                 Iterator<String> keys = json.keys();
                 while (keys.hasNext()) {
