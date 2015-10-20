@@ -55,6 +55,7 @@
     "comments": "Comment",
     "contactDetailsSentTo": "An email has been sent to ",
     "country": "Country",
+    "validateSelectedRecordConfirm": "Do you really want to validate the {{selectedCount}} selected record(s)?",
     "regions": "Regions",
     "gemetKeywords": "GEMET keywords",
     "createAnAccount": "Create an account",

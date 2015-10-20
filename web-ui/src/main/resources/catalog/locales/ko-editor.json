@@ -196,5 +196,6 @@
     "minorEdit": "사소한 편집",
     "notEvaluated": "평가 없음",
     "notConformant": "비준수",
+    "capabilitiesParseError": "Error parsing WMS capabilities",
     "conformant": "준수"
 }

@@ -44,8 +44,10 @@
     "createChildOf": "Vytvořit potomka",
     "createCopyOf": "Vytvořit kopii",
     "createMetadata": "Vytvořit",
+    "createMetadataError": "Create metadata error",
     "createMetadataForGroup": "Vytvořit a zveřejnit pro editory skupiny",
     "createMetadataForGroup-help": "Záznam mohou upravit všichni členové skupiny",
+    "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Přidat nový záznam",
     "createSmall": "Vytvořit malý",
     "current": "stávající",
@@ -194,5 +196,6 @@
     "minorEdit": "Drobná úprava",
     "notEvaluated": "Nebylo vyhodnoceno",
     "notConformant": "Není v souladu",
+    "capabilitiesParseError": "Error parsing WMS capabilities",
     "conformant": "V souladu"
 }
