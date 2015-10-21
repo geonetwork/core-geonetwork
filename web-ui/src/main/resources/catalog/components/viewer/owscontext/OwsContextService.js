@@ -51,9 +51,9 @@
     '$translate',
     '$q',
     '$filter',
-    'gnWmsQueue',
+    '$timeout',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter) {
+             $translate, $q, $filter, $timeout) {
 
       /**
        * @ngdoc method
@@ -91,7 +91,11 @@
         // store the extent into view settings so that it can be used later in
         // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
-        map.getView().fit(extent, map.getSize());
+
+        // $timeout used to avoid map no rendered (eg: null size)
+        $timeout(function(){
+          map.getView().fit(extent, map.getSize(), { nearest: true });
+        }, 0, false);
 
         // load the resources
         var layers = context.resourceList.layer;

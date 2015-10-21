@@ -59,11 +59,11 @@ import java.util.Set;
 public class GetRecordsRequest extends CatalogRequest
 {
 	private String  outputFormat;
-	private String  startPosition;
-	private String  maxRecords;
+    private Integer startPosition;
+    private Integer maxRecords;
 	private String  constrLangVersion;
 	private String  constraint;
-	private String  hopCount = "2";
+    private Integer hopCount = 2;
 	private boolean distribSearch = false;
 
 	private ResultType         resultType;
@@ -101,15 +101,13 @@ public class GetRecordsRequest extends CatalogRequest
 	
 	//---------------------------------------------------------------------------
 
-	public void setStartPosition(String start)
-	{
+    public void setStartPosition(Integer start) {
 		startPosition = start;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public void setMaxRecords(String num)
-	{
+    public void setMaxRecords(Integer num)	{
 		maxRecords = num;
 	}
 
@@ -150,8 +148,7 @@ public class GetRecordsRequest extends CatalogRequest
 	
 	//---------------------------------------------------------------------------
 
-	public void setHopCount(String hopCount)
-	{
+    public void setHopCount(Integer hopCount)	{
         this.hopCount = hopCount;
     }
 	
@@ -243,7 +240,7 @@ public class GetRecordsRequest extends CatalogRequest
 
 			if (hopCount != null)
 			{
-				ds.setAttribute("hopCount", hopCount);
+                            ds.setAttribute("hopCount", hopCount.toString());
 			}
 
 			params.addContent(ds);

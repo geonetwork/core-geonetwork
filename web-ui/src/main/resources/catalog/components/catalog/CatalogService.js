@@ -576,7 +576,7 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type'];
+        'mdLanguage', 'datasetLang', 'type', 'link'];
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
