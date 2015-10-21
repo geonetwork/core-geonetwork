@@ -272,6 +272,9 @@
         value: '4326',
         label: 'Geographique - Datum WGS84'
       },{
+        value: '2154',
+        label: 'Lambert - 93'
+      },{
         value: '27571',
         label: 'Lambert Zone I - Datum NTF'
       },{

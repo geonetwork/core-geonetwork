@@ -125,7 +125,14 @@
               /** object that contains the form values */
               var inputCrs, crs = angular.isArray(scope.element.md.crs) ?
                   scope.element.md.crs[0] : scope.element.md.crs;
-              crs = crs && crs.split('::')[crs.split('::').length-1];
+
+              var crsExp = crs && (/(?:EPSG:)(\d+)/.exec(crs));
+              if(angular.isArray(crsExp)) {
+                crs = crsExp[1];
+              }
+              else {
+                crs = crs && crs.split('::')[crs.split('::').length-1];
+              }
 
               if(crs) {
                 for(var i=0;i<gnPanierSettings.projs.length;i++) {
@@ -220,6 +227,12 @@
                   }
                   rendered = true;
                 });
+              }
+              else {
+                scope.form.input.epsg = '';
+                scope.form.input.format= '';
+                scope.form.output.epsg = '';
+                scope.form.output.format= '';
               }
 
             },
