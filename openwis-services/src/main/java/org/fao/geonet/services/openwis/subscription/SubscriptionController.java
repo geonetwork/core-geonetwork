@@ -11,11 +11,11 @@ import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
-import org.openwis.subscription.client.Parameter;
 import org.openwis.subscription.client.ProductMetadata;
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +34,9 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionManager manager;
+
+    @Autowired
+    private ConversionService conversionService;
 
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.search" }, produces = {
@@ -77,9 +80,9 @@ public class SubscriptionController {
             if (s.getParameters() != null && !s.getParameters().isEmpty()) {
                 StringBuilder params = new StringBuilder();
 
-                for (Parameter p : s.getParameters()) {
-                    // TODO do we need all the elements?
-                }
+                // for (Parameter p : s.getParameters()) {
+                // // TODO do we need all the elements?
+                // }
 
                 params.append("]");
 
@@ -238,13 +241,27 @@ public class SubscriptionController {
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.new" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody Long create(@RequestParam String metadataUrn,
-            @RequestParam Long id) {
+    public @ResponseBody Long create(HttpServletRequest request) {
 
-        Subscription subscription = retrieve(id);
-        //TODO FIXME wtf?
-        subscription.setUser("currentUser");
-        return manager.create(metadataUrn, subscription);
+        DisseminationPair disseminationPair = conversionService
+                .convert(request.getParameter("data"), DisseminationPair.class);
+
+        Subscription subscription = new Subscription();
+        
+        subscription.setUser(disseminationPair.getUsername());
+        subscription.setPrimaryDissemination(disseminationPair.getPrimary());
+        subscription.setSecondaryDissemination(disseminationPair.getSecondary());
+        subscription.setExtractMode(disseminationPair.getExtractMode());
+
+        return manager.create(disseminationPair.getMetadataUrn(), subscription);
+    }
+
+    public ConversionService getConversionService() {
+        return conversionService;
+    }
+
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
     }
 
 }

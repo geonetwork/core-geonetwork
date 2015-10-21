@@ -3,24 +3,30 @@
  */
 package org.fao.geonet.services.openwis.cache;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fao.geonet.services.openwis.util.Request;
-import org.fao.geonet.services.openwis.util.Response;
 import org.fao.geonet.services.openwis.util.Request.ColumnCriterias;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
+import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.cacheindex.client.CacheIndexClient;
+import org.openwis.cacheindex.client.CachedFile;
 import org.openwis.cacheindex.client.CachedFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jeeves.services.ReadWriteController;
@@ -123,5 +129,34 @@ public class Service {
         }
 
         return response;
+    }
+
+    /**
+     * Checks if there are any cache file associated to the UUID/urn
+     * 
+     * @param urn
+     * @return
+     */
+    @RequestMapping(value = { "/{lang}/openwis.cache.check" }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean get(@RequestParam String urn) {
+        Date d = new Date(System.currentTimeMillis());
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "EEE, MMM d, yyyy hh:mm:ss a z");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        String today = sdf.format(d);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        d = cal.getTime();
+        String lastweek = sdf.format(d);
+        
+        List<CachedFile> list = client.listFilesByMetadataUrnAndDate(urn,
+                lastweek, today);
+
+        return !list.isEmpty();
+
     }
 }

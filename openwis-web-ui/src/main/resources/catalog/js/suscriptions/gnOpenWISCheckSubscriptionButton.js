@@ -26,17 +26,13 @@
                 }).error(function(data) {
                   $scope.exists = false;
                 });
+            
+            $scope.isVisible = md['geonet:info'].download;
+            
             $http.get(
-                'openwis.productmetadata.get?urn=' + md['geonet:info'].uuid)
+                'openwis.cache.check?urn=' + md['geonet:info'].uuid)
                 .success(function(data) {
-                  $scope.isVisible = true;
-                }).error(function(data) {
-                  $scope.isVisible = false;
-                });
-            $http.get(
-                'openwis.productmetadata.get?urn=' + md['geonet:info'].uuid)
-                .success(function(data) {
-                  $scope.isAvailable = true;
+                  $scope.isAvailable = data;
                 }).error(function(data) {
                   $scope.isAvailable = false;
                 });

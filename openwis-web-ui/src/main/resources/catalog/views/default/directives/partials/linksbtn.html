@@ -72,12 +72,14 @@
 	</div>
 
 	<!-- OpenWIS -->
-	<div class="btn-group">
+	<div class="btn-group" 
+	   data-ng-controller="gnOpenWISCheckSubscriptionButton" 
+	   data-ng-show="isVisible && exists">
 		<button type="button" class="btn btn-default dropdown-toggle"
 			data-toggle="dropdown" title="{{'openwis-subscribe'| translate}}">
 			<span class="fa fa-rss"></span> <span class="caret"></span>
 		</button>
-		<ul class="dropdown-menu" role="menu" data-ng-controller="gnOpenWISCheckSubscriptionButton">
+		<ul class="dropdown-menu" role="menu">
 			<li data-ng-show="isVisible && exists">
 			 <a data-toggle="modal" data-target="#subscribeModal"><span
 					class="fa fa-refresh" data-translate="">openwisSubscribe</span></a></li>

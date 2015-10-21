@@ -1,5 +1,5 @@
 <div class="modal fade bs-example-modal-lg" id="{{type}}Modal"
-	tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	tabindex="-1" role="dialog" aria-labelledby="{{type}}Modal">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -7,7 +7,7 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">
+				<h4 class="modal-title" id="{{type}}Modal">
 					<i class="fa fa-download"></i> <span data-translate="">openwisSendRequest</span>
 				</h4>
 			</div>
@@ -16,109 +16,145 @@
 					<!-- Nav tabs -->
 					<ul class="nav nav-pills nav-wizard" role="tablist">
 						<li role="presentation" class="active"><a
-							data-target="#param2" aria-controls="param2" role="tab"
-							data-toggle="tab" data-translate="">openwisSubSelection</a>
+							data-target="#{{type}}param2" aria-controls="{{type}}param2"
+							role="tab" data-toggle="tab" data-translate="">openwisSubSelection</a>
 							<div class="nav-arrow"></div></li>
 						<li role="presentation"><div class="nav-wedge"></div> <a
-							data-target="#primary2" aria-controls="primary2" role="tab"
-							data-toggle="tab" data-translate="">openwisFirstDissemination</a>
+							data-target="#{{type}}primary2" aria-controls="{{type}}primary2"
+							role="tab" data-toggle="tab" data-translate="">openwisFirstDissemination</a>
 							<div class="nav-arrow"></div></li>
 						<li role="presentation"><div class="nav-wedge"></div> <a
-							data-target="#secondary2" aria-controls="secondary2" role="tab"
-							data-toggle="tab" data-translate="">openwisSecondDissemination</a>
+							data-target="#{{type}}secondary2"
+							aria-controls="{{type}}secondary2" role="tab" data-toggle="tab"
+							data-translate="">openwisSecondDissemination</a>
 							<div class="nav-arrow"></div></li>
 						<li role="presentation"><div class="nav-wedge"></div> <a
-							data-target="#summary2" aria-controls="summary2" role="tab"
-							data-toggle="tab" data-translate="">openwisSummary</a></li>
+							data-target="#{{type}}summary2" aria-controls="{{type}}summary2"
+							role="tab" data-toggle="tab" data-translate="">openwisSummary</a></li>
 					</ul>
 
 					<!-- Tab panes -->
 					<div class="tab-content" role="tablist"
 						aria-multiselectable="false">
-						<div role="tabpanel" class="tab-pane active" id="param2">
+						<div role="tabpanel" class="tab-pane active" id="{{type}}param2">
 							<span data-translate="">openwisNotImplemented</span>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="primary2">
-							<div class="panel-group col-xs-12" id="primaryAccordion">
+						<div role="tabpanel" class="tab-pane" id="{{type}}primary2">
+							<div class="panel-group col-xs-12" id="{{type}}primaryAccordion">
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a>MSS/MFS</a>
 										</h4>
 									</div>
-									<div id="mssmfs" class="panel-collapse collapse">
-										<div class="panel-body">???</div>
+									<div id="{{type}}mssmfs" class="panel-collapse collapse">
+										<div class="panel-body">Not implemented</div>
 									</div>
 								</div>
 
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h4 class="panel-title">
-											<a data-toggle="collapse" data-parent="#primaryAccordion"
-												aria-controls="publicDissemination"
-												data-target="#publicDissemination" data-translate="">openwisPublicDissemination</a>
+											<a data-toggle="collapse"
+												data-parent="#{{type}}primaryAccordion"
+												aria-controls="{{type}}publicDissemination"
+												data-target="#{{type}}publicDissemination" data-translate="">openwisPublicDissemination</a>
 										</h4>
 									</div>
-									<div id="publicDissemination" class="panel-collapse collapse in">
+									<div id="{{type}}publicDissemination"
+										class="panel-collapse collapse in">
 										<div class="panel-body">
 											<div>
 												<label class="col-xs-3" data-translate="">openwisCompression</label>
-												<select>
-													<option data-translate="">openwisNONE</option>
-													<option data-translate="">openwisZipped</option>
-													<option data-translate="">WMO_FTP</option>
+												<select data-ng-required="true"
+													data-ng-model="data.primary.compression">
+													<option selected="selected" data-translate="" value="NONE">openwisNONE</option>
+													<option data-translate="" value="ZIPPED">openwisZipped</option>
+													<option data-translate="" value="WMO_FTP">WMO_FTP</option>
 												</select>
 											</div>
-											<div class="panel-group col-xs-12">
+											<div class="panel-group col-xs-12"
+												id="{{type}}primaryAccordion2">
 												<div class="panel panel-default">
 													<div class="panel-heading">
 														<h5 class="panel-title">
-															<a data-toggle="collapse" aria-controls="ftp"
-																data-target="#ftp" data-translate="">FTP</a>
+															<a data-toggle="collapse" aria-controls="{{type}}ftp"
+																data-target="#{{type}}ftp" data-translate=""
+																data-parent="#{{type}}primaryAccordion2">FTP</a>
 														</h5>
 													</div>
-													<div id="ftp" class="panel-collapse">
+													<div id="{{type}}ftp" class="panel-collapse in">
 														<div class="panel-body">
 															<div>
 																<label class="col-xs-3" data-translate="">openwisHost</label>
-																<input type="text" data-ng-required="true"></input>
+																<input data-ng-model="data.primary.host" type="text"
+																	data-ng-required="true"></input>
 															</div>
 															<div>
 																<label class="col-xs-3" data-translate="">openwisPath</label>
-																<input type="text" data-ng-required="true"></input>
+																<input data-ng-model="data.primary.path" type="text"
+																	data-ng-required="true"></input>
 															</div>
 															<div>
 																<label class="col-xs-3" data-translate="">openwisUser</label>
-																<input type="text" data-ng-required="true"></input>
+																<input data-ng-model="data.primary.user" type="text"
+																	data-ng-required="true"></input>
 															</div>
 															<div>
 																<label class="col-xs-3" data-translate="">openwisPassword</label>
-																<input type="password" data-ng-required="true"></input>
+																<div class="input-group col-xs-4">
+																	<input class="form-control"
+																		data-ng-model="data.primary.password" type="password"
+																		data-ng-required="true" data-ng-hide="showpassword"
+																		aria-describedby="{{type}}basic-addon-password">
+																	<input class="form-control" data-ng-show="showpassword"
+																		type="text" data-ng-model="data.primary.password"
+																		aria-describedby="{{type}}basic-addon-password"><span
+																		class="input-group-addon"
+																		id="{{type}}basic-addon-password"> <input
+																		type="checkbox" data-ng-model="showpassword"
+																		data-ng-checked="false"></input>&nbsp;Show password
+																	</span>
+																</div>
 															</div>
 
 															<div class="panel panel-default">
 																<div class="panel-heading">
-																	<h5 class="panel-title">
-																		<a data-toggle="collapse" aria-controls="advanced"
-																			data-target="#advanced" data-translate="">openwisAdvanced</a>
-																	</h5>
+																	<h6 class="panel-title">
+																		<a data-toggle="collapse"
+																			aria-controls="{{type}}advanced"
+																			data-target="#{{type}}advanced" data-translate="">openwisAdvanced</a>
+																	</h6>
 																</div>
-																<div id="advanced" class="panel-collapse collapse">
+																<div id="{{type}}advanced"
+																	class="panel-collapse collapse">
 																	<div class="panel-body">
 																		<div>
 																			<label class="col-xs-3" data-translate="">openwisPort</label>
-																			<input type="text"></input>
+																			<input data-ng-model="data.primary.port"
+																				type="number"></input>
 																		</div>
 																		<div>
-																			<label class="col-xs-3" data-translate="">openwisPassive</label>
-																			<input type="text"></input>
-																		</div>
-																		<div>
-																			<label class="col-xs-3" data-translate="">openwisFileName</label> <input type="text"></input>
+																			<label class="col-xs-3" data-translate="">openwisFileName</label>
+																			<input data-ng-model="data.primary.fileName"
+																				type="text"></input>
 																		</div>
 
-																		<div>
-																			<label class="col-xs-3" data-translate="">openwisFileSize</label> <input type="checkbox"></input>
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisFileSize</label>
+																			<input data-ng-model="data.primary.fileSize"
+																				type="checkbox"></input>
+																		</div>
+
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisEncrypted</label>
+																			<input data-ng-model="data.primary.encrypted"
+																				type="checkbox"></input>
+																		</div>
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisPassive</label>
+																			<input data-ng-model="data.primary.passive"
+																				type="checkbox"></input>
 																		</div>
 																	</div>
 																</div>
@@ -130,32 +166,45 @@
 												<div class="panel panel-default">
 													<div class="panel-heading">
 														<h5 class="panel-title">
-															<a data-toggle="collapse" aria-controls="mail"
-																data-target="#mail" data-translate="">openwisMail</a>
+															<a data-toggle="collapse" aria-controls="{{type}}mail"
+																data-target="#{{type}}mail" data-translate=""
+																data-parent="#{{type}}primaryAccordion2">openwisMail</a>
 														</h5>
 													</div>
-													<div id="mail" class="panel-collapse collapse">
+													<div id="{{type}}mail" class="panel-collapse collapse">
 														<div class="panel-body">
 															<div>
 																<label class="col-xs-3" data-ng-required="true"
 																	data-translate="">openwisEmail</label> <input
-																	type="email"></input>
+																	data-ng-model="data.primary.email" type="email"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">openwisHeaderLine</label> <input type="text"></input>
-															</div>
-															<div>
-																<label class="col-xs-3" data-translate="">openwisEmailTo</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisHeaderLine</label>
+																<input data-ng-model="data.primary.headerLine"
+																	type="text"></input>
 															</div>
 															<div>
 																<label class="col-xs-3" data-translate="">openwisSubject</label>
-																<input type="text"></input>
+																<input data-ng-model="data.primary.subject" type="text"></input>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">openwisAttachmentMode</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisAttachmentMode</label>
+																<select data-ng-model="data.primary.attachmentMode">
+																	<option data-translate="" value="EMBEDDED_IN_BODY">openwisEMBEDDED_IN_BODY</option>
+																	<option data-translate="" value="AS_ATTACHMENT">openwisAS_ATTACHMENT</option>
+																</select>
 															</div>
 															<div>
-																<label class="col-xs-3" data-translate="">openwisFileName</label> <input type="text"></input>
+																<label class="col-xs-3" data-translate="">openwisDispatchMode</label>
+																<select data-ng-model="data.primary.dispatchMode">
+																	<option value="TO">TO</option>
+																	<option value="CC">CC</option>
+																	<option value="BCC">BCC</option>
+																</select>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisFileName</label>
+																<input data-ng-model="data.primary.fileName" type="text"></input>
 															</div>
 														</div>
 													</div>
@@ -167,18 +216,20 @@
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h4 class="panel-title">
-											<a data-toggle="collapse" data-parent="#primaryAccordion"
-												aria-controls="stagingPost" data-target="#stagingPost"
-												data-translate="">openwisStagingPost</a>
+											<a data-toggle="collapse"
+												data-parent="#{{type}}primaryAccordion"
+												aria-controls="{{type}}stagingPost"
+												data-target="#{{type}}stagingPost" data-translate="">openwisStagingPost</a>
 										</h4>
 									</div>
-									<div id="stagingPost" class="panel-collapse collapse">
+									<div id="{{type}}stagingPost" class="panel-collapse collapse">
 										<div>
 											<label class="col-xs-3" data-translate="">openwisCompression</label>
-											<select>
-												<option data-translate="">openwisNONE</option>
-												<option data-translate="">openwisZipped</option>
-												<option>WMO_FTP</option>
+											<select data-ng-required="true"
+												data-ng-model="data.primary.compression">
+												<option data-translate="" value="NONE">openwisNONE</option>
+												<option data-translate="" value="ZIPPED">openwisZipped</option>
+												<option value="WMO_FTP">WMO_FTP</option>
 											</select> <label class="col-xs-12" data-translate="">openwisPurgeWarning</label>
 										</div>
 									</div>
@@ -186,26 +237,226 @@
 							</div>
 						</div>
 
-						<div role="tabpanel" class="tab-pane" id="secondary2">//TODO
-							copy primary one</div>
-						<div role="tabpanel" class="tab-pane" id="summary2">
-							<div>
+						<div role="tabpanel" class="tab-pane" id="{{type}}secondary2">
+							<div class="panel-group col-xs-12"
+								id="{{type}}secondaryAccordion">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a>MSS/MFS</a>
+										</h4>
+									</div>
+									<div id="{{type}}mssmfs2" class="panel-collapse collapse">
+										<div class="panel-body">Not implemented</div>
+									</div>
+								</div>
+
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a data-toggle="collapse"
+												data-parent="#{{type}}secondaryAccordion"
+												aria-controls="{{type}}publicDissemination2"
+												data-target="#{{type}}publicDissemination2" data-translate="">openwisPublicDissemination</a>
+										</h4>
+									</div>
+									<div id="{{type}}publicDissemination2"
+										class="panel-collapse collapse in">
+										<div class="panel-body">
+											<div>
+												<label class="col-xs-3" data-translate="">openwisCompression</label>
+												<select data-ng-required="true"
+													data-ng-model="data.secondary.compression">
+													<option selected="selected" data-translate="" value="NONE">openwisNONE</option>
+													<option data-translate="" value="ZIPPED">openwisZipped</option>
+													<option data-translate="" value="WMO_FTP">WMO_FTP</option>
+												</select>
+											</div>
+											<div class="panel-group col-xs-12"
+												id="{{type}}secondaryAccordion2">
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<h5 class="panel-title">
+															<a data-toggle="collapse" aria-controls="{{type}}ftp2"
+																data-target="#{{type}}ftp2" data-translate=""
+																data-parent="#{{type}}secondaryAccordion2">FTP</a>
+														</h5>
+													</div>
+													<div id="{{type}}ftp2" class="panel-collapse in">
+														<div class="panel-body">
+															<div>
+																<label class="col-xs-3" data-translate="">openwisHost</label>
+																<input data-ng-model="data.secondary.host" type="text"
+																	data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisPath</label>
+																<input data-ng-model="data.secondary.path" type="text"
+																	data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisUser</label>
+																<input data-ng-model="data.secondary.user" type="text"
+																	data-ng-required="true"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisPassword</label>
+																<div class="input-group col-xs-4">
+																	<input class="form-control"
+																		data-ng-model="data.secondary.password"
+																		type="password" data-ng-required="true"
+																		data-ng-hide="showpassword"
+																		aria-describedby="{{type}}basic-addon-password2">
+																	<input class="form-control" data-ng-show="showpassword"
+																		type="text" data-ng-model="data.secondary.password"
+																		aria-describedby="{{type}}basic-addon-password2"><span
+																		class="input-group-addon"
+																		id="{{type}}basic-addon-password2"> <input
+																		type="checkbox" data-ng-model="showpassword"
+																		data-ng-checked="false"></input>&nbsp;Show password
+																	</span>
+																</div>
+															</div>
+
+															<div class="panel panel-default">
+																<div class="panel-heading">
+																	<h6 class="panel-title">
+																		<a data-toggle="collapse"
+																			aria-controls="{{type}}advanced2"
+																			data-target="#{{type}}advanced2" data-translate="">openwisAdvanced</a>
+																	</h6>
+																</div>
+																<div id="{{type}}advanced2"
+																	class="panel-collapse collapse">
+																	<div class="panel-body">
+																		<div>
+																			<label class="col-xs-3" data-translate="">openwisPort</label>
+																			<input data-ng-model="data.secondary.port"
+																				type="number"></input>
+																		</div>
+																		<div>
+																			<label class="col-xs-3" data-translate="">openwisFileName</label>
+																			<input data-ng-model="data.secondary.fileName"
+																				type="text"></input>
+																		</div>
+
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisFileSize</label>
+																			<input data-ng-model="data.secondary.fileSize"
+																				type="checkbox"></input>
+																		</div>
+
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisEncrypted</label>
+																			<input data-ng-model="data.secondary.encrypted"
+																				type="checkbox"></input>
+																		</div>
+																		<div style="clear: both">
+																			<label class="col-xs-3" data-translate="">openwisPassive</label>
+																			<input data-ng-model="data.secondary.passive"
+																				type="checkbox"></input>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<h5 class="panel-title">
+															<a data-toggle="collapse" aria-controls="{{type}}mail2"
+																data-target="#{{type}}mail2" data-translate=""
+																data-parent="#{{type}}secondaryAccordion2">openwisMail</a>
+														</h5>
+													</div>
+													<div id="{{type}}mail2" class="panel-collapse collapse">
+														<div class="panel-body">
+															<div>
+																<label class="col-xs-3" data-ng-required="true"
+																	data-translate="">openwisEmail</label> <input
+																	data-ng-model="data.secondary.email" type="email"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisHeaderLine</label>
+																<input data-ng-model="data.secondary.headerLine"
+																	type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisSubject</label>
+																<input data-ng-model="data.secondary.subject"
+																	type="text"></input>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisAttachmentMode</label>
+																<select data-ng-model="data.secondary.attachmentMode">
+																	<option data-translate="" value="EMBEDDED_IN_BODY">openwisEMBEDDED_IN_BODY</option>
+																	<option data-translate="" value="AS_ATTACHMENT">openwisAS_ATTACHMENT</option>
+																</select>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisDispatchMode</label>
+																<select data-ng-model="data.secondary.dispatchMode">
+																	<option value="TO">TO</option>
+																	<option value="CC">CC</option>
+																	<option value="BCC">BCC</option>
+																</select>
+															</div>
+															<div>
+																<label class="col-xs-3" data-translate="">openwisFileName</label>
+																<input data-ng-model="data.secondary.fileName"
+																	type="text"></input>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a data-toggle="collapse"
+												data-parent="#{{type}}secondaryAccordion"
+												aria-controls="{{type}}stagingPost2"
+												data-target="#{{type}}stagingPost2" data-translate="">openwisStagingPost</a>
+										</h4>
+									</div>
+									<div id="{{type}}stagingPost2" class="panel-collapse collapse">
+										<div>
+											<label class="col-xs-3" data-translate="">openwisCompression</label>
+											<select data-ng-required="true"
+												data-ng-model="data.secondary.compression">
+												<option data-translate="" value="NONE">openwisNONE</option>
+												<option data-translate="" value="ZIPPED">openwisZipped</option>
+												<option value="WMO_FTP">WMO_FTP</option>
+											</select> <label class="col-xs-12" data-translate="">openwisPurgeWarning</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="{{type}}summary2">
+							<div style="clear:both">
 								<label class="col-xs-3" data-translate="">username</label>
-								{{user.username}}
+								{{data.username}}
 							</div>
-							<div>
-								<label class="col-xs-3" data-translate="">openwisRequestID</label>
-								{{requestID}}
+							<div style="clear:both">
+								<label class="col-xs-3" data-translate="">openwisUrn</label>
+								{{data.metadataUrn}}
 							</div>
-							<div>
-								<label class="col-xs-3" data-translate="">openwisDataSource</label>
-								{{dataSource}}
+							<div style="clear:both">
+								<label class="col-xs-3" data-translate="">openwisProductTitle</label>
+								{{data.title}}
 							</div>
-							<div>
-								<label class="col-xs-3" data-translate="">openwisUrn</label> {{md['geonet:info'].uuid}}
-							</div>
-							<div>
-								<label class="col-xs-3" data-translate="">openwisProductTitle</label> {{md['geonet:info']}}
+							<div style="clear:both">
+								<label class="col-xs-3" data-translate="">openwisExtractMode</label>
+								<select data-ng-required="true" data-ng-model="data.extractMode">
+									<option data-translate="" value="NOT_IN_LOCAL_CACHE">openwisNOT_IN_LOCAL_CACHE</option>
+									<option data-translate="" value="GLOBAL">openwisGLOBAL</option>
+								</select>
 							</div>
 						</div>
 					</div>
