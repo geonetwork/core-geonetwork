@@ -344,6 +344,7 @@
             + '#/metadata/' + md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
+          container: $('.gn'),
           content: '<div gn-permalink-input="' + url + '"></div>'
         });
       };

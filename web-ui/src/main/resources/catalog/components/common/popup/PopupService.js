@@ -95,7 +95,8 @@
         var newScope = scope || $rootScope.$new();
         element = $compile(element)(newScope);
 
-        $(document.body).append(element);
+        var container = (options.container.length==0) ? document.body : options.container;
+        $(container).append(element);
         element.modal();
         element.on('hidden.bs.modal', function() {
           element.remove();

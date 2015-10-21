@@ -203,6 +203,9 @@ yx-axis
   /* Pagination */
   /* @media (max-width: @screen-md) { */
 }
+.gn div.modal {
+  position: absolute;
+}
 .gn > div:first-of-type {
   height: 4em;
 }
@@ -9042,6 +9045,13 @@ yx-axis
 .gn html[lang=fre] [data-facet=denominators] span.gn-facet-label :before {
   content: "1:";
 }
+.gn .checkbox.disabled label,
+.gn .radio.disabled label,
+.gn fieldset[disabled] .checkbox label,
+.gn fieldset[disabled] .radio label {
+  cursor: not-allowed;
+  color: #d3d3d3;
+}
 .gn [gn-main-viewer],
 .gn .gn-main-viewer {
   position: relative;
@@ -13364,6 +13374,12 @@ yx-axis
   }
   .gn .sxt-search-main-container {
     height: calc(100% -  4em);
+  }
+  .gn .sxt-search-main-container .noresult {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    left: 20px;
   }
   .gn .sxt-scroll {
     position: relative;
