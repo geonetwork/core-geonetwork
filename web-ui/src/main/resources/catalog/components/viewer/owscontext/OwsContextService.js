@@ -51,10 +51,9 @@
     '$translate',
     '$q',
     '$filter',
-    '$rootScope',
     '$timeout',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter, $rootScope, $timeout) {
+             $translate, $q, $filter, $timeout) {
 
       /**
        * @ngdoc method
