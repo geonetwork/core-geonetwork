@@ -310,7 +310,8 @@
     'gnPrint',
     '$http',
     '$translate',
-    '$window'
+    '$window',
+    'gnGlobalSettings'
   ];
 
   module.directive('gnMapprint',
