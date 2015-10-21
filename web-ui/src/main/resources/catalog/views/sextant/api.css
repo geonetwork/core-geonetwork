@@ -10843,6 +10843,7 @@ yx-axis
   margin-bottom: 0;
 }
 .gn [sxt-main-viewer] [gn-gfi] .results table th {
+  color: black;
   font-weight: bold;
   background: #eee;
   border-right: 1px solid #aaa;
