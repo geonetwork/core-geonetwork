@@ -22,6 +22,7 @@
 
     <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
     <xsl:include href="../convert/functions.xsl"/>
+    <xsl:include href="../../../xsl/utils-fn.xsl" />
 
     <!-- ========================================================================================= -->
     <xsl:variable name="isoDocLangId">
@@ -389,13 +390,9 @@
         <!-- === Distribution === -->
 
         <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-            <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name//gmd:LocalisedCharacterString[@locale=$langId]">
-                <Field name="format" string="{string(.)}" store="true" index="true"/>
-            </xsl:for-each>
-
-            <!-- index online protocol -->
-
-          <!-- index online protocol -->
+          <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name//gmd:LocalisedCharacterString[@locale=$langId]">
+              <Field name="format" string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
 
           <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <xsl:variable name="tPosition" select="position()"></xsl:variable>
@@ -406,7 +403,7 @@
               <xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
               <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
               <xsl:variable name="applicationProfile" select="normalize-space(gmd:applicationProfile/gco:CharacterString)"/>
-              <xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
+              <xsl:variable name="mimetype" select="if ($linkage != '') then geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type) else ''"/>
 
               <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
               <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
