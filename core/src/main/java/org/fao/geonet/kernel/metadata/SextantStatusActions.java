@@ -90,8 +90,7 @@ public class SextantStatusActions extends DefaultStatusActions {
 
             if (status.equals(Params.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(Params.Status.DRAFT) ||
-                       status.equals(Params.Status.REJECTED)) {
+            } else if (status.equals(Params.Status.REJECTED)) {
                 unsetAllOperations(mid);
             }
 
