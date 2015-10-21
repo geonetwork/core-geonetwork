@@ -35,14 +35,25 @@
     var catModule = angular.module('gn_cat_controller');
     catModule.config(['gnGlobalSettings',
       function(gnGlobalSettings) {
-        var lang = sxtSettings.lang || 'eng';
+        var lang;
+        if(sxtSettings.langDetector) {
+
+          var res = new RegExp(sxtSettings.langDetector).
+              exec('/fr/web/sextant/geoportail/sextant6_layout');
+          if(angular.isArray(res)) {
+            lang = res[1];
+            if(lang == 'fr') lang == 'fre';
+            else if(lang == 'en') lang == 'eng';
+            else lang = '';
+          }
+        }
+        lang = lang || sxtSettings.lang || 'eng';
         gnGlobalSettings.locale = {
           lang: lang.substr(0,2)
         };
         if(sxtGnUrl) {
           gnGlobalSettings.gnUrl =
               sxtGnUrl + lang + '/';
-          console.log(gnGlobalSettings.gnUrl);
         }
         else {
           console.error('The variable sxtGnUrl is not defined !');
