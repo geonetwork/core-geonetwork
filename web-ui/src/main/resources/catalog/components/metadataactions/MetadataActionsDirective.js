@@ -62,7 +62,7 @@
           };
 
           scope.cantStatus = function(status) {
-            return ((status == 4 || status == 2 || status == 3)
+            return ((status == 5 || status == 2 || status == 3)
                 && !user.isReviewerOrMore());
           }
 
