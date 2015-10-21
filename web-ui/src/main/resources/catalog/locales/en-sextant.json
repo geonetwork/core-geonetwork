@@ -19,7 +19,8 @@
   "basket": "Basket",
   "inbasket": "in basket",
   "addAllLayersToPanier": "Add all {{number}} layers to the basket",
-  "toAdmin": "Admin",
+  "toAdmin": "Administration",
+  "adminConsole": "Admin console",
   "paginationInfo": "Results {{from}} to {{to}} <em> on {{total}}</em> :",
   "byPage": "by page",
   "sortBy": "Sort by",
@@ -49,6 +50,8 @@
   "process": "Process",
   "Printing": "Printing in progress",
   "toimport": "Import",
-  "noResult" : "No result."
+  "noResult" : "No result.",
+  "inspireThemes_en": "Inspire Themes",
+  "inspireThemes_fr": "Inspire Themes"
 
 }

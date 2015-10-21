@@ -4,21 +4,21 @@
   </button>
 
   <!--Map Draw Extent-->
-  <div class="col-md-5" gn-map-field="map" class=""
+  <div data-ng-if="!isCopyfile" class="col-md-5" gn-map-field="map" class=""
        gn-map-field-geom="prop.extent" gn-map-field-extent="extentCoords"></div>
 
   <div class="col-md-6">
     <h4>{{::(element.md.title || element.md.defaultTitle)}}</h4>
     <em>{{::(element.link.desc  || element.link.name)}}</em>
     <!--Panier Form-->
-    <div class="form-group">
+    <div class="form-group" data-ng-if="!isCopyfile">
       <label for="projectionPF" class="control-label" translate>Projection</label>&nbsp;:&nbsp;
       <select class="form-control input-sm" id="projectionPF" data-ng-model="form.output.epsg" sxt-select>
         <option data-ng-repeat="p in settings.projs" value="{{p.value}}"
         data-ng-selected="p.value == form.output.epsg">{{p.label}}</option>
       </select>
     </div>
-    <div class="form-group">
+    <div class="form-group" data-ng-if="!isCopyfile">
       <label for="formatPF" class="control-label" translate>format</label>&nbsp;:&nbsp;
       <select class="form-control input-sm" id="formatPF" data-ng-model="form.output.format" sxt-select>
         <option data-ng-repeat="f in formats" value="{{f.value}}"

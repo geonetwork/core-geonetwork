@@ -124,7 +124,7 @@
     "sortedBy": "Sorted by {{field}}",
     "relevance": "relevancy",
     "rating": "rating",
-    "popularity": "popularity",
+    "popularity": "Popularity",
     "denominatorDesc": "low scale first",
     "denominatorAsc": "high scale first",
     "selected": "selected",
