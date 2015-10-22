@@ -543,6 +543,7 @@
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
+            container: '.gn',
             beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
