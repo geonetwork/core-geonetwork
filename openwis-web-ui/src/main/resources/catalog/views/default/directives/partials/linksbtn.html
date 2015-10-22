@@ -72,22 +72,24 @@
 	</div>
 
 	<!-- OpenWIS -->
-	<div class="btn-group" 
-	   data-ng-controller="gnOpenWISCheckSubscriptionButton" 
-	   data-ng-show="isVisible && exists">
+	<div class="btn-group"
+		data-ng-controller="gnOpenWISCheckSubscriptionButton"
+		data-ng-show="isVisible && exists" 
+		data-md="{{md['geonet:info'].uuid}}" data-mdtitle="{{md.title}}">
 		<button type="button" class="btn btn-default dropdown-toggle"
 			data-toggle="dropdown" title="{{'openwis-subscribe'| translate}}">
 			<span class="fa fa-rss"></span> <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
-			<li data-ng-show="isVisible && exists">
-			 <a data-toggle="modal" data-target="#subscribeModal"><span
+			<li data-ng-show="isVisible && exists"><a data-toggle="modal"
+				data-target="#subscribeModal"
+				data-ng-click="addMetadataObject('gnOpenWISSubscribe')"><span
 					class="fa fa-refresh" data-translate="">openwisSubscribe</span></a></li>
-			<li data-ng-show="isVisible && exists && isAvailable">
-			 <a data-toggle="modal" data-target="#deliverModal"><span
+			<li data-ng-show="isVisible && exists && isAvailable"><a
+				data-toggle="modal" data-target="#deliverModal"><span
 					class="fa fa-download" data-translate="">openwisDeliver</span></a></li>
-			<li data-ng-show="isVisible && exists && isAvailable">
-			 <a data-toggle="modal" data-target="#downloadModal"><span
+			<li data-ng-show="isVisible && exists && isAvailable"><a
+				data-toggle="modal" data-target="#downloadModal"><span
 					class="fa fa-download" data-translate="">openwisDownload</span></a></li>
 		</ul>
 	</div>

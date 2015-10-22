@@ -46,13 +46,7 @@
                       $scope.data.primary.host = null;
                     }
                   }
-                  // TODO fix md extraction
-                  var md = $(
-                      "*[data-ng-controller=gnOpenWISCheckSubscriptionButton]")
-                      .data().$scope.md;
 
-                  $scope.data.metadataUrn = md['geonet:info'].uuid;
-                  $scope.data.title = md['geonet:info'].title;
                   if ($scope.$parent && $scope.$parent.$parent
                       && $scope.$parent.$parent.$parent
                       && $scope.$parent.$parent.$parent.user) {

@@ -6,11 +6,21 @@
   module.controller('gnOpenWISCheckSubscriptionButton', [
       '$scope',
       '$http',
-      function($scope, $http) {
+      '$attrs',
+      function($scope, $http, $attrs) {
 
         $scope.isVisible = false;
         $scope.exists = false;
         $scope.isAvailable = false;
+
+        $scope.addMetadataObject = function(type, md) {
+
+          data = $("*[data-ng-controller=" + type + "]").data().$scope.data;
+
+          data.title = $attrs.mdtitle;
+          data.metadataUrn = $attrs.md;
+          data.username = $scope.user.username;
+        }
 
         $scope.$watch('md', function(md) {
 
@@ -26,11 +36,10 @@
                 }).error(function(data) {
                   $scope.exists = false;
                 });
-            
-            $scope.isVisible = md['geonet:info'].download;
-            
-            $http.get(
-                'openwis.cache.check?urn=' + md['geonet:info'].uuid)
+
+            $scope.isVisible = md['geonet:info'].download && $scope.user.username;
+
+            $http.get('openwis.cache.check?urn=' + md['geonet:info'].uuid)
                 .success(function(data) {
                   $scope.isAvailable = data;
                 }).error(function(data) {
