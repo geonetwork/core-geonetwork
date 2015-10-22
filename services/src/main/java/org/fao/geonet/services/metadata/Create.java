@@ -106,9 +106,15 @@ public class Create extends NotInReadOnlyModeService {
         // User assigned uuid: check if already exists
         String metadataUuid;
         if (!generateUuid) {
-            metadataUuid = Util.getParam(params, "metadataUuid");
-            if (StringUtils.isNotEmpty(dm.getMetadataId(metadataUuid))) {
-                throw new Exception("The metadata UUID already exists. Choose another one");
+            metadataUuid = Util.getParam(params, "metadataUuid", "");
+            if (StringUtils.isEmpty(metadataUuid)) {
+                // Create a random UUID
+                metadataUuid = UUID.randomUUID().toString();
+            } else {
+                // Check if the UUID exists
+                if (StringUtils.isNotEmpty(dm.getMetadataId(metadataUuid))) {
+                    throw new Exception("The metadata UUID already exists. Choose another one");
+                }
             }
         } else {
             metadataUuid = UUID.randomUUID().toString();

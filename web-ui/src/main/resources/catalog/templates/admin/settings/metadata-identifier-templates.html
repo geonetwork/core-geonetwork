@@ -1,0 +1,75 @@
+<div class="row" data-ng-controller="GnMetadataIdentifierTemplatesController">
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">manageMetadataIdentifierTemplates</div>
+      <div class="panel-body">
+        <div class="list-group">
+          <ul class="list-group">
+            <input class="form-control"
+                   data-ng-show="mdIdentifierTemplates.length > 1"
+                   data-ng-model="mdIdentifierTemplatesSearch.$" autofocus=""
+                   placeholder="{{'filter' | translate}}"/>
+            <a class="list-group-item"
+               data-ng-class="mdIdTemplate.id === mdIdentifierTemplateSelected.id ? 'active' : ''"
+               data-ng-click="selectTemplate(mdIdTemplate)"
+               data-ng-repeat="mdIdTemplate in mdIdentifierTemplates | filter:mdIdentifierTemplatesSearch | orderBy:'name'">{{mdIdTemplate.name}}</a>
+          </ul>
+
+          <button type="button" class="btn btn-primary btn-block"
+                  data-ng-click="addMetadataIdentifierTemplate()">
+            <i class="fa fa-plus"/>
+            <span data-translate="">newMetadataIdentifierTemplate</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8" data-ng-hide="mdIdentifierTemplateSelected.id == null">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{mdIdentifierTemplateSelected.name}}
+        <div class="btn-toolbar pull-right">
+          <button type="button" class="btn btn-primary btn-danger"
+                  data-ng-hide="mdIdentifierTemplateSelected.id == ''"
+                  data-ng-click="deleteMetadataIdentifierTemplate(mdIdentifierTemplateSelected.id)">
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">delete</span>
+          </button>
+          <button type="button" class="btn btn-primary pull-right fa fa-floppy-o"
+                  data-ng-disabled="!gnMetadataIdentifierTemplateEdit.$valid && !gnMetadataIdentifierTemplateEdit.$valid"
+                  data-ng-click="saveMetadataIdentifierTemplate()" data-translate="">save</button>
+        </div>
+
+      </div>
+      <div class="panel-body">
+        <form id="gn-metadata-identifier-template-edit" name="gnMetadataIdentifierTemplateEdit" class="form-horizontal">
+          <input type="hidden" name="id" data-ng-model="mdIdentifierTemplateSelected.id"
+                 value="{{mdIdentifierTemplateSelected.id}}"/>
+
+          <div class="form-group" data-ng-class="gnMetadataIdentifierTemplateEdit.name.$valid != true ? 'has-error' : ''">
+            <label class="control-label col-sm-3" data-translate="">metadataIdentifierTemplateName</label>
+
+            <div class="col-sm-9">
+              <input type="text" id="name" name="name" class="form-control"
+
+                     required="required"
+                     data-ng-model="mdIdentifierTemplateSelected.name"/>
+            </div>
+          </div>
+
+          <div class="form-group" data-ng-class="gnMetadataIdentifierTemplateEdit.template.$valid != true ? 'has-error' : ''">
+            <label class="control-label col-sm-3" data-translate="">metadataIdentifierTemplateTemplate</label>
+
+            <div class="col-sm-9">
+              <input type="text" id="template" name="template" class="form-control"
+                     required="required"
+                     data-ng-model="mdIdentifierTemplateSelected.template"/>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
