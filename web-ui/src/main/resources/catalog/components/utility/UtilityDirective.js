@@ -868,8 +868,11 @@
               imgEl.css('opacity', 1);
             });
 
-            $(document.body).append(modalElt);
+            $('.gn').append(modalElt);
             modalElt.modal();
+            modalElt.on('shown.bs.modal', function() {
+              $('.gn').append(modalElt.data('bs.modal').$backdrop);
+            });
             modalElt.on('hidden.bs.modal', function() {
               modalElt.remove();
             });
