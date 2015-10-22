@@ -126,6 +126,13 @@ public class SelectionManager {
 		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
 	}
 
+    public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, ServiceContext context) {
+        // Get the selection manager or create it
+        SelectionManager manager = getManager(session);
+
+        return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, session);
+    }
+
 	/**
 	 * <p>
 	 * Update selected element in session
