@@ -3,7 +3,6 @@ INSERT INTO MetadataIdentifierTemplate (id, name, template, isprovided) VALUES  
 
 DELETE FROM Settings WHERE name LIKE 'system/shib/%';
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
 
 UPDATE Settings SET value='3.0.3' WHERE name='system/platform/version';
