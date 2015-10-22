@@ -17,15 +17,18 @@
 
 	<context:component-scan base-package="org.fao.geonet" />
 
-	<bean id="disseminationPairFormatter"
-		class="org.fao.geonet.services.openwis.subscription.DisseminationPairFormatter" />
+    <bean id="disseminationPairFormatter"
+        class="org.fao.geonet.services.openwis.subscription.DisseminationPairFormatter" />
+    <bean id="disseminationPairRequestFormatter"
+        class="org.fao.geonet.services.openwis.subscription.DisseminationPairRequestFormatter" />
 
 
 	<bean id="conversionService"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
-				<ref bean="disseminationPairFormatter" />
+                <ref bean="disseminationPairFormatter" />
+                <ref bean="disseminationPairRequestFormatter" />
 			</set>
 		</property>
 	</bean>

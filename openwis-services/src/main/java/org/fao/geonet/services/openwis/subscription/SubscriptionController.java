@@ -11,6 +11,8 @@ import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
+import org.openwis.request.client.AdHoc;
+import org.openwis.request.client.RequestClient;
 import org.openwis.subscription.client.ProductMetadata;
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
@@ -34,6 +36,9 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionManager manager;
+
+    @Autowired
+    private RequestClient requestClient;
 
     @Autowired
     private ConversionService conversionService;
@@ -254,6 +259,27 @@ public class SubscriptionController {
         subscription.setExtractMode(disseminationPair.getExtractMode());
 
         return manager.create(disseminationPair.getMetadataUrn(), subscription);
+    }
+
+    @RequestMapping(value = { "/{lang}/openwis.requestdeliver.new" }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Long requestdeliver(HttpServletRequest request) {
+        
+        DisseminationPairRequest disseminationPair = conversionService
+                .convert(request.getParameter("data"), DisseminationPairRequest.class);
+
+        AdHoc adHoc = new AdHoc();
+        adHoc.setExtractMode(disseminationPair.getExtractMode());
+        adHoc.setPrimaryDissemination(disseminationPair.getPrimary());
+        adHoc.setSecondaryDissemination(disseminationPair.getSecondary());
+        adHoc.setClassOfService(disseminationPair.getClassOfService());
+        adHoc.setEmail(disseminationPair.getEmail());
+        adHoc.setRequestType(disseminationPair.getRequestType());
+        adHoc.setUser(disseminationPair.getUsername());
+        
+        String urn = (disseminationPair.getMetadataUrn());
+        
+        return requestClient.create(urn, adHoc);
     }
 
     public ConversionService getConversionService() {

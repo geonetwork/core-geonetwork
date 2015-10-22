@@ -142,7 +142,7 @@ public class Service {
     public @ResponseBody Boolean get(@RequestParam String urn) {
         Date d = new Date(System.currentTimeMillis());
         final SimpleDateFormat sdf = new SimpleDateFormat(
-                "EEE, MMM d, yyyy hh:mm:ss a z");
+                "yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         String today = sdf.format(d);

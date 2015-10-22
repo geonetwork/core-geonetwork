@@ -21,6 +21,9 @@
         <property name="webServiceTemplate" ref="subscriptionWebServiceTemplate" />
     </bean>
     
+    <bean class="org.openwis.request.client.RequestClient">
+        <property name="webServiceTemplate" ref="requestWebServiceTemplate" />
+    </bean>
 	<bean class="org.openwis.blacklist.client.BlacklistClient">
 		<property name="webServiceTemplate" ref="blackListWebServiceTemplate" />
 	</bean>
@@ -70,8 +73,11 @@
 	<oxm:jaxb2-marshaller id="productmarshaller"
 		contextPath="org.openwis.products.client" />
 
-	<oxm:jaxb2-marshaller id="subscriptionmarshaller"
-		contextPath="org.openwis.subscription.client" />
+    <oxm:jaxb2-marshaller id="subscriptionmarshaller"
+        contextPath="org.openwis.subscription.client" />
+        
+    <oxm:jaxb2-marshaller id="requestmarshaller"
+        contextPath="org.openwis.request.client" />
 
 	<!-- Initialize webServiceTemplates (one for each client) -->
 	<bean id="cacheWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
@@ -98,13 +104,21 @@
 			value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/ProductMetadataService" />
 	</bean>
 
-	<bean id="subscriptionWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
-		<constructor-arg ref="messageFactory" />
-		<property name="marshaller" ref="subscriptionmarshaller" />
-		<property name="unmarshaller" ref="subscriptionmarshaller" />
-		<property name="defaultUri"
-			value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/SubscriptionService" />
-	</bean>
+    <bean id="subscriptionWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory" />
+        <property name="marshaller" ref="subscriptionmarshaller" />
+        <property name="unmarshaller" ref="subscriptionmarshaller" />
+        <property name="defaultUri"
+            value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/SubscriptionService" />
+    </bean>
+
+    <bean id="requestWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory" />
+        <property name="marshaller" ref="requestmarshaller" />
+        <property name="unmarshaller" ref="requestmarshaller" />
+        <property name="defaultUri"
+            value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/RequestService" />
+    </bean>
 
 	<bean id="disseminatedDataStatisticsWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
 		<constructor-arg ref="messageFactory" />
