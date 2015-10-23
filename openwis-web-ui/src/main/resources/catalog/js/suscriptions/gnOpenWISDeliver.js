@@ -25,22 +25,22 @@
                 }
 
                 $scope.save = function() {
-                  if (!$("#subscribepublicDissemination").hasClass("in")) {
+                  if (!$("#deliverpublicDissemination").hasClass("in")) {
                     $scope.data.primary.email = null;
                     $scope.data.primary.host = null;
                   } else {
-                    if (!$("#subscribemail").hasClass("in")) {
+                    if (!$("#delivermail").hasClass("in")) {
                       $scope.data.primary.email = null;
                     } else {
                       $scope.data.primary.host = null;
                     }
                   }
 
-                  if (!$("#subscribepublicDissemination2").hasClass("in")) {
+                  if (!$("#deliverpublicDissemination2").hasClass("in")) {
                     $scope.data.primary.email = null;
                     $scope.data.primary.host = null;
                   } else {
-                    if (!$("#subscribemail2").hasClass("in")) {
+                    if (!$("#delivermail2").hasClass("in")) {
                       $scope.data.primary.email = null;
                     } else {
                       $scope.data.primary.host = null;
