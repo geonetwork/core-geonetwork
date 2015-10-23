@@ -543,7 +543,7 @@
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
-            container: '.gn',
+            container: '.g',
             beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
@@ -869,10 +869,10 @@
               imgEl.css('opacity', 1);
             });
 
-            $('.gn').append(modalElt);
+            $('.g').append(modalElt);
             modalElt.modal();
             modalElt.on('shown.bs.modal', function() {
-              $('.gn').append(modalElt.data('bs.modal').$backdrop);
+              $('.g').append(modalElt.data('bs.modal').$backdrop);
             });
             modalElt.on('hidden.bs.modal', function() {
               modalElt.remove();

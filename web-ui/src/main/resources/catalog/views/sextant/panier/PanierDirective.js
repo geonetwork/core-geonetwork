@@ -29,6 +29,12 @@
             scope.panier = v;
           });
 
+          var modal = element.find('.modal');
+          $('.g').append(element.find('.modal'));
+          modal.on('shown.bs.modal', function() {
+            $('.g').append(modal.data('bs.modal').$backdrop);
+          });
+
           scope.locService = gnSearchLocation;
 
           scope.formObj = {
@@ -40,7 +46,7 @@
             },
             layers: []
           };
-          
+
           scope.$watch('user', function(user) {
             if(user) {
               angular.extend(scope.formObj.user, {
@@ -55,7 +61,7 @@
 
           scope.extract = function() {
             sxtPanierService.extract(scope.formObj).then(function(data) {
-              element.find('.modal').modal('hide');
+              modal.modal('hide');
               if(data.data.success) {
                 scope.report = {
                   success: true

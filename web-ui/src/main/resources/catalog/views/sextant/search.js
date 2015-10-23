@@ -30,6 +30,7 @@
     'sxt_linksbtn'
   ]);
 
+  $(document.body).append($('<div class="g"></div>'));
 
   if(typeof sxtSettings != 'undefined') {
     var catModule = angular.module('gn_cat_controller');

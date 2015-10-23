@@ -95,10 +95,10 @@
         var newScope = scope || $rootScope.$new();
         element = $compile(element)(newScope);
 
-        $('.gn').append(element);
+        $('.g').append(element);
         element.modal();
         element.on('shown.bs.modal', function() {
-          $('.gn').append(element.data('bs.modal').$backdrop);
+          $('.g').append(element.data('bs.modal').$backdrop);
         });
         element.on('hidden.bs.modal', function() {
           element.remove();

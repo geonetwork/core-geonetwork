@@ -1,4 +1,4 @@
-.gn {
+.gn, .g {
   display: table;
   width: 100%;
   position: relative;
@@ -6,9 +6,6 @@
   font-family: Roboto, sans-serif;
   color: black;
   letter-spacing: normal;
-  div.modal {
-    position: absolute;
-  }
   & > div:first-of-type {
     height: 4em;
   }
@@ -211,3 +208,20 @@
 }
 
 @import 'gn_popover.less';
+
+.g {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  & > div:first-of-type,
+  & > div:only-child {
+    height: auto;
+  }
+  * {
+    pointer-events: auto;
+  }
+}
+
