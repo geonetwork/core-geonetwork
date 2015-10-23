@@ -1,5 +1,6 @@
 package org.fao.geonet.services.main;
 
+import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Select a list of elements stored in session
@@ -37,7 +39,7 @@ public class Select implements ApplicationContextAware {
      * @return The number of select records
      * @throws Exception
      */
-    @RequestMapping(value = "/{lang}/metadata.select",
+    @RequestMapping(value = {"/{lang}/metadata.select", "/{lang}/md.select"},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -47,12 +49,35 @@ public class Select implements ApplicationContextAware {
             throws Exception {
         ServiceContext serviceContext = ServiceContext.get();
 
-        // Get the selection manager
-        UserSession session = serviceContext.getUserSession();
-        int nbSelected = SelectionManager.updateSelection(type, session,
-                selected, id != null ? Arrays.asList(id) : null, serviceContext);
+        int nbSelected = SelectionManager.updateSelection(type,
+                serviceContext.getUserSession(),
+                selected, id != null ? Arrays.asList(id) : null,
+                serviceContext);
 
         return new String[]{nbSelected + ""};
+    }
+
+    /**
+     *
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{lang}/md.selected",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    Set<String> getCurrentSelection(
+                    @RequestParam(required = false, defaultValue = "metadata") String type)
+            throws Exception {
+        ServiceContext serviceContext = ServiceContext.get();
+
+        SelectionManager selectionManager =
+                SelectionManager.getManager(serviceContext.getUserSession());
+
+        synchronized (selectionManager.getSelection("metadata")) {
+            return selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+        }
     }
 
     /**
@@ -70,10 +95,10 @@ public class Select implements ApplicationContextAware {
             throws Exception {
         ServiceContext serviceContext = ServiceContext.get();
 
-        // Get the selection manager
-        UserSession session = serviceContext.getUserSession();
-        int nbSelected = SelectionManager.updateSelection(type, session,
-                selected, id != null ? Arrays.asList(id) : null, serviceContext);
+        int nbSelected = SelectionManager.updateSelection(type,
+                serviceContext.getUserSession(),
+                selected, id != null ? Arrays.asList(id) : null,
+                serviceContext);
 
         return new SelectServiceResponse().setSelected("" + nbSelected);
     }
