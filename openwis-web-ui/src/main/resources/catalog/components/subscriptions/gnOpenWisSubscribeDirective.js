@@ -17,7 +17,7 @@
                       .attr("data-target");
                 }, function(newValue, oldValue) {
                   $("li.active", "#" + scope.type + "Modal").find('a').attr(
-                      "data-target") == "#subscribesummary2";
+                      "data-target") == "#" + scope.type + "summary2";
                 });
 
                 scope.next = function() {
@@ -33,7 +33,7 @@
                   });
                 }
                 scope.close = function() {
-                  $("#subscribeModal").modal('hide');
+                  $("#" + scope.type + "Modal").modal('hide');
                   $timeout(function() {
                     $($("li", "#" + scope.type + "Modal")[0]).find('a')
                         .trigger('click')
