@@ -1,0 +1,274 @@
+<div class="container gn-batch-editor"
+     data-ng-controller="GnSearchController">
+
+
+  <!--
+  Search/replace row
+  * xpath, search (regex), replace, case insensitive
+  eg. replace gmd:source[@uuiref='%s'], value
+  * list of xpath per schema
+
+
+  Editing
+  * field, value, mode (add if absent, replace existing)
+  eg.
+  Identification:
+  * title
+  * keyword
+  * constraints
+
+  Contact
+  * metadata contact, resource contact, distributor : from directory only XML + role
+
+  Related resources
+  * parentIdentifier
+  * source dataset
+  *
+
+
+  Run / Stop
+  Process report
+
+
+  md.batch.edit
+  xpath_1=
+  value=string or XML
+
+
+
+  -->
+  <div data-ng-controller="GnBatchEditSearchController"
+       data-ng-search-form=""
+       data-runSearch="true">
+
+
+    <ul class="nav nav-tabs">
+      <li role="presentation"
+              data-ng-class="{'active' : selectedStep === 1}"
+              data-ng-click="selectedStep = 1">
+        <a href="" data-translate="">chooseASet</a></li>
+      <li role="presentation"
+          data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
+          data-ng-click="selectedStep = 2">
+        <a href="" data-translate="">defineEdits</a></li>
+      <li role="presentation"
+          data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
+          data-ng-click="selectedStep = 3">
+        <a href="" data-translate="">confirmAndSave</a></li>
+      <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span></li>
+    </ul>
+    <br/>
+
+    <div class="panel panel-default"
+         data-ng-class="{'hidden' : selectedStep !== 1}">
+      <div class="panel-body">
+        <p class="alert alert-info"
+           data-translate="">chooseASetOfRecordHelp</p>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label class="radio-inline">
+              <input type="radio"
+                     name="optionsRadios" value="1"
+                     data-ng-model="selectedStep1Tab"/>
+              <span data-translate="">createSetFromSearch</span>
+            </label>
+            <label class="radio-inline">
+              <input type="radio"
+                     name="optionsRadios" value="2"
+                     data-ng-model="selectedStep1Tab"/>
+              <span data-translate="">chooseAnExistingSet</span>
+            </label>
+          </div>
+        </div>
+        <br/>
+        <div class="row"
+             data-ng-class="{'hidden' : selectedStep1Tab != 2}">
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span data-translate="" class="ng-scope">availableSet</span>
+              </div>
+
+              <div class="panel-body">
+                <input class="form-control ng-pristine ng-valid ng-touched" data-ng-show="$parent.harvesters.length > 1" data-ng-model="harvesterSearch.$" data-ng-change="firstPage()" autofocus="" placeholder="Filter">
+
+                <div class="list-group">
+                  <a href="#" class="list-group-item">All my records</a>
+                  <a href="#" class="list-group-item">All datasets</a>
+                  <a href="#" class="list-group-item">All services</a>
+                  <a href="#" class="list-group-item">All records for project EDMO</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+
+          </div>
+        </div>
+        <div class="row"
+             data-ng-class="{'hidden' : selectedStep1Tab != 1}">
+          <div class="col-sm-12">
+            <form class="form-horizontal"
+                  role="form">
+              <div class="row gn-top-search">
+                <div class="col-md-12">
+                  <div class="input-group gn-form-any">
+
+                    <span class="input-group-addon">
+                      <label>
+                        <input type="checkbox" data-ng-model="onlyMyRecord"
+                               data-ng-click="toggleOnlyMyRecord()">
+                        <span data-translate="">onlyMyRecord</span>
+                      </label>
+                    </span>
+
+                    <input type="text"
+                           class="form-control"
+                           id="gn-any-field"
+                           data-ng-model="searchObj.params.any"
+                           data-ng-model-options="modelOptions"
+                           placeholder="{{'anyPlaceHolder' | translate}}"
+                           data-typeahead="address for address in getAnySuggestions($viewValue)"
+                           data-typeahead-loading="anyLoading" class="form-control"
+                           data-typeahead-min-length="1">
+
+                    <div class="input-group-btn">
+                      <button type="button"
+                              data-ng-click="triggerSearch()"
+                              class="btn btn-primary">
+                        &nbsp;&nbsp;
+                        <i class="fa fa-search"></i>
+                        &nbsp;&nbsp;
+                      </button>
+
+                      <button type="button"
+                              data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.params);"
+                              title="{{'ClearTitle' | translate}}"
+                              class="btn btn-link">
+                        <i class="fa fa-times"></i>
+                      </button>
+
+                      <button type="button"
+                              data-ng-class="{'disabled': searchResults.selectedCount < 1}"
+                              data-ng-click="searchSelection(defaultSearchObj.params);"
+                              title="{{'resetSearchToDisplayAll' | translate}}"
+                              class="btn btn-link">
+                        <i class="fa fa-check-square"></i>
+                        <span data-translate="">displaySelectionOnly</span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </form>
+            <br/>
+            <div class="row"
+                 data-ng-show="searchResults.records.length > 0">
+              <div class="col-md-offset-3 col-md-4 relative">
+                <div data-gn-selection-widget=""
+                     without-action-menu=""
+                     data-results="searchResults"></div>
+              </div>
+              <div class="col-md-5">
+                <div class="pull-right"
+                     data-gn-pagination="paginationInfo"
+                     data-hits-values="searchObj.hitsperpageValues"></div>
+
+                <div class="pull-right"
+                     data-sortby-combo=""
+                     data-params="searchObj.params"
+                     data-gn-sortby-values="searchObj.sortbyValues"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 gn-search-facet">
+
+                <!-- Hierachical facet mode -->
+                <div data-ng-show="searchResults.records.length > 0"
+                     data-gn-facet-dimension-list="searchResults.dimension"
+                     data-params="searchObj.params"
+                     data-facet-type="facetsSummaryType"
+                     data-current-facets="currentFacets">
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="gn-results-heading">
+                  <div data-gn-facet-breadcrumb="currentFacets"></div>
+                </div>
+            <span class="loading fa fa-spinner fa-spin"
+                  data-ng-show="searching"></span>
+
+                <div class="alert alert-warning" role="alert"
+                     ng-if="!searching && searchResults.count == 0">
+                  <i class="fa fa-frown-o"></i>
+                  <span data-translate="">zarooResult</span>
+                </div>
+
+                <div data-ng-show="searchResults.records.length > 0"
+                     data-gn-results-container=""
+                     data-search-results="searchResults"
+                     data-template-url="resultTemplate"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default"
+         data-ng-class="{'hidden' : selectedStep !== 2}">
+      <div class="panel-body">
+        <div class="container">
+          <form class="form-horizontal">
+            <div class="form-group"
+                 data-ng-repeat="field in fieldConfig">
+              <label for="field{{$index}}"
+                     class="col-sm-2 control-label">{{field.label}}</label>
+              <div class="col-sm-8">
+                <input type="text"
+                       class="form-control"
+                       id="field{{$index}}"
+                       data-ng-model="field.value"/>
+                <!-- Add search and replace mode ? -->
+              </div>
+            </div>
+          </form>
+          {{fieldConfig}}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default"
+         data-ng-class="{'hidden' : selectedStep !== 3}">
+
+      <div class="panel-body">
+
+        <div data-ng-show="searchResults.records.length > 0">
+          <h4 data-translate="">aboutToUpdateTheFollowing</h4>
+          <ul>
+            <li data-ng-repeat="record in searchResults.records">
+              {{record.title || record.defaultTitle}}
+            </li>
+          </ul>
+        </div>
+
+        <p class="alert alert-info"
+           data-translate="">applyBatchEditInfo</p>
+
+
+        <button class="btn btn-default"
+                data-gn-click-and-spin="applyChanges()">
+          <i class="fa fa-save"/>
+          <span data-translate="">save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div data-ng-include="'../../catalog/templates/info.html'">
+  </div>
+</div>

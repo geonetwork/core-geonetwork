@@ -1,6 +1,18 @@
 (function() {
   goog.provide('gn_editor_controller');
 
+
+
+
+
+
+
+
+
+
+
+
+  goog.require('gn_batchedit_controller');
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
@@ -14,7 +26,7 @@
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller',
-       'gn_import_controller',
+       'gn_import_controller', 'gn_batchedit_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
@@ -60,6 +72,9 @@
           when('/import', {
             templateUrl: tplFolder + 'import.html',
             controller: 'GnImportController'}).
+          when('/batchedit', {
+            templateUrl: tplFolder + 'batchedit.html',
+            controller: 'GnBatchEditController'}).
           when('/board', {
             templateUrl: tplFolder + 'editorboard.html',
             controller: 'GnEditorBoardController'}).
