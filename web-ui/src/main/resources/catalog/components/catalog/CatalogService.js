@@ -622,7 +622,7 @@
           groupId = types[0];
           types.splice(0, 1);
         }
-        if (this.linksCache[key]) {
+        if (this.linksCache[key] && !groupId) {
           return this.linksCache[key];
         }
         angular.forEach(this.link, function(link) {
