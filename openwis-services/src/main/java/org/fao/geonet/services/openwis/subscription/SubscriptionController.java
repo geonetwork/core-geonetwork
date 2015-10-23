@@ -7,7 +7,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.fao.geonet.domain.OpenwisDownload;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.responses.OkResponse;
+import org.fao.geonet.repository.OpenwisDownloadRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
@@ -26,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+
 /**
  * Controller class for Subscriptions.
  *
@@ -41,8 +49,17 @@ public class SubscriptionController {
     private RequestClient requestClient;
 
     @Autowired
+    private OpenwisDownloadRepository openwisRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ConversionService conversionService;
 
+    @Autowired
+    private ServiceManager serviceManager;
+    
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.search" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -252,21 +269,23 @@ public class SubscriptionController {
                 .convert(request.getParameter("data"), DisseminationPair.class);
 
         Subscription subscription = new Subscription();
-        
+
         subscription.setUser(disseminationPair.getUsername());
         subscription.setPrimaryDissemination(disseminationPair.getPrimary());
-        subscription.setSecondaryDissemination(disseminationPair.getSecondary());
+        subscription
+                .setSecondaryDissemination(disseminationPair.getSecondary());
         subscription.setExtractMode(disseminationPair.getExtractMode());
 
         return manager.create(disseminationPair.getMetadataUrn(), subscription);
     }
 
-    @RequestMapping(value = { "/{lang}/openwis.requestdeliver.new" }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(value = {
+            "/{lang}/openwis.requestdeliver.new" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Long requestdeliver(HttpServletRequest request) {
-        
-        DisseminationPairRequest disseminationPair = conversionService
-                .convert(request.getParameter("data"), DisseminationPairRequest.class);
+
+        DisseminationPairRequest disseminationPair = conversionService.convert(
+                request.getParameter("data"), DisseminationPairRequest.class);
 
         AdHoc adHoc = new AdHoc();
         adHoc.setExtractMode(disseminationPair.getExtractMode());
@@ -276,9 +295,9 @@ public class SubscriptionController {
         adHoc.setEmail(disseminationPair.getEmail());
         adHoc.setRequestType(disseminationPair.getRequestType());
         adHoc.setUser(disseminationPair.getUsername());
-        
+
         String urn = (disseminationPair.getMetadataUrn());
-        
+
         return requestClient.create(urn, adHoc);
     }
 
@@ -290,4 +309,66 @@ public class SubscriptionController {
         this.conversionService = conversionService;
     }
 
+    /**
+     * If there is no pending request associated to the user and the metadata,
+     * returns null. If there is a pending request, returns the id. If there is
+     * a processed request finished, returns the url.
+     * 
+     * @param urn
+     * @return
+     */
+    @RequestMapping(value = {
+            "/{lang}/openwis.processrequest.check" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody String getDownloadURL(HttpServletRequest request,
+            @PathVariable String lang, @RequestParam String urn) {
+        String res = null;
+
+        ServiceContext context = serviceManager.createServiceContext(
+                "openwis.processrequest.check", lang, request);
+        UserSession session = context.getUserSession();
+        User user = session.getPrincipal();
+
+        OpenwisDownload od = openwisRepository.findByUserAndUuid(user, urn);
+
+        if (od != null) {
+            if (od.getUrl() != null) {
+                res = od.getUrl();
+            } else {
+                res = od.getId().toString();
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * Start a new processed request for download
+     * 
+     * @param urn
+     * @return
+     */
+    @RequestMapping(value = {
+            "/{lang}/openwis.processrequest.new" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean startProcessedRequest(
+            HttpServletRequest request, @PathVariable String lang,
+            @RequestParam String urn) {
+        ServiceContext context = serviceManager.createServiceContext(
+                "openwis.processrequest.new", lang, request);
+        UserSession session = context.getUserSession();
+        User user = session.getPrincipal();
+        
+        user = userRepository.findOne(user.getId());
+
+        OpenwisDownload od = new OpenwisDownload();
+        od.setUser(user);
+        od.setUrn(urn);
+
+        openwisRepository.saveAndFlush(od);
+
+        // TODO the thread for checking against the SOAP service
+
+        return true;
+    }
 }

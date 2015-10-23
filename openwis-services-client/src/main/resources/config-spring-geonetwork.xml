@@ -24,6 +24,11 @@
     <bean class="org.openwis.request.client.RequestClient">
         <property name="webServiceTemplate" ref="requestWebServiceTemplate" />
     </bean>
+    
+    <bean class="org.openwis.processedrequest.client.ProcessedRequestClient">
+        <property name="webServiceTemplate" ref="processedRequestWebServiceTemplate" />
+    </bean>
+    
 	<bean class="org.openwis.blacklist.client.BlacklistClient">
 		<property name="webServiceTemplate" ref="blackListWebServiceTemplate" />
 	</bean>
@@ -78,6 +83,9 @@
         
     <oxm:jaxb2-marshaller id="requestmarshaller"
         contextPath="org.openwis.request.client" />
+        
+    <oxm:jaxb2-marshaller id="processedRequestmarshaller"
+        contextPath="org.openwis.processedrequest.client" />
 
 	<!-- Initialize webServiceTemplates (one for each client) -->
 	<bean id="cacheWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
@@ -118,6 +126,14 @@
         <property name="unmarshaller" ref="requestmarshaller" />
         <property name="defaultUri"
             value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/RequestService" />
+    </bean>
+
+    <bean id="processedRequestWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory" />
+        <property name="marshaller" ref="processedRequestmarshaller" />
+        <property name="unmarshaller" ref="processedRequestmarshaller" />
+        <property name="defaultUri"
+            value="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/ProcessedRequestService" />
     </bean>
 
 	<bean id="disseminatedDataStatisticsWebServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
