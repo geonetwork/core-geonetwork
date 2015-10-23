@@ -23,12 +23,15 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.http.client.utils.URIUtils;
+import org.eclipse.jetty.util.URIUtil;
 
 import static org.fao.geonet.wro4j.ClosureDependencyUriLocator.PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE;
 import static org.fao.geonet.wro4j.GeonetWroModelFactory.CLASSPATH_PREFIX;
@@ -116,7 +119,12 @@ public class GeonetWroModelFactoryTest {
         String jsTestBaseDirAsPath = jsTestBaseDir.replace('\\', '/');
         if (jsTestBaseDirAsPath.charAt(0) == '/') {
             jsTestBaseDirAsPath = jsTestBaseDirAsPath.substring(1);
+
+            // let's encode the filesystem path as it should be encoded by wro
+            jsTestBaseDirAsPath = URIUtil.encodePath(jsTestBaseDirAsPath);
+
         }
+
 
         assertEquals(7, resources.size());
         for (Resource resource : resources) {
@@ -202,7 +210,7 @@ public class GeonetWroModelFactoryTest {
     }
 
     @Test
-    public void testCreateDeclaredGroups() throws IOException {
+    public void testCreateDeclaredGroups() throws Exception {
         String sourcesXml = "<sources>\n"
                             + "    <declarative name=\"groupName\" pathOnDisk=\"wro4j/src/test/resources/org/fao/geonet/wro4j\">\n"
                             + "        <jsSource webappPath=\"sampleFile1a.js\" pathOnDisk=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>\n"
@@ -246,11 +254,11 @@ public class GeonetWroModelFactoryTest {
 
     }
 
-    private WroModel createRequireModel(String sourcesXml) throws IOException {
+    private WroModel createRequireModel(String sourcesXml) throws Exception {
         return createRequireModel(sourcesXml, Optional.<File>absent());
     }
 
-    private WroModel createRequireModel(String sourcesXml, Optional<File> sourcesFileOption) throws IOException {
+    private WroModel createRequireModel(String sourcesXml, Optional<File> sourcesFileOption) throws Exception {
 
 
         final File wroSources;
@@ -415,7 +423,7 @@ public class GeonetWroModelFactoryTest {
                + "</sources>";
     }
 
-    public String getGeonetworkRootDirectory() {
+    public String getGeonetworkRootDirectory() throws Exception {
         final File jsTestBaseDir = ClosureRequireDependencyManagerTest.getJsTestBaseDir();
         return GeonetWroModelFactory.findGeonetworkRootDirectory(jsTestBaseDir.getAbsolutePath());
     }
