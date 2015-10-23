@@ -14,7 +14,8 @@
 			<div class="modal-body">
 				<div>
 					<!-- Nav tabs -->
-					<ul class="nav nav-pills nav-wizard" role="tablist">
+					<ul class="nav nav-pills nav-wizard" role="tablist"
+						data-before-select="alert('we')" data-after-select="alert('jir')">
 						<li role="presentation" class="active"><a
 							data-target="#{{type}}param2" aria-controls="{{type}}param2"
 							role="tab" data-toggle="tab" data-translate="">openwisSubSelection</a>
@@ -257,7 +258,8 @@
 											<a data-toggle="collapse"
 												data-parent="#{{type}}secondaryAccordion"
 												aria-controls="{{type}}publicDissemination2"
-												data-target="#{{type}}publicDissemination2" data-translate="">openwisPublicDissemination</a>
+												data-target="#{{type}}publicDissemination2"
+												data-translate="">openwisPublicDissemination</a>
 										</h4>
 									</div>
 									<div id="{{type}}publicDissemination2"
@@ -439,19 +441,19 @@
 							</div>
 						</div>
 						<div role="tabpanel" class="tab-pane" id="{{type}}summary2">
-							<div style="clear:both">
+							<div style="clear: both">
 								<label class="col-xs-3" data-translate="">username</label>
 								{{data.username}}
 							</div>
-							<div style="clear:both">
+							<div style="clear: both">
 								<label class="col-xs-3" data-translate="">openwisUrn</label>
 								{{data.metadataUrn}}
 							</div>
-							<div style="clear:both">
+							<div style="clear: both">
 								<label class="col-xs-3" data-translate="">openwisProductTitle</label>
 								{{data.title}}
 							</div>
-							<div style="clear:both">
+							<div style="clear: both">
 								<label class="col-xs-3" data-translate="">openwisExtractMode</label>
 								<select data-ng-required="true" data-ng-model="data.extractMode">
 									<option data-translate="" value="NOT_IN_LOCAL_CACHE">openwisNOT_IN_LOCAL_CACHE</option>
@@ -464,7 +466,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
+				<button type="button" class="btn btn-default"
+					data-ng-click="close()">
 					<i class="fa fa-times"></i> <span data-translate="">openwisCancel</span>
 				</button>
 				<button type="button" class="btn btn-default" data-ng-click="prev()">

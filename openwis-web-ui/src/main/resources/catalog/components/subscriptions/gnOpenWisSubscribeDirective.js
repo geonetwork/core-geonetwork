@@ -6,27 +6,47 @@
   module
       .directive(
           'gnOpenwisSubscribeDirective',
-          function() {
+          function($timeout) {
             return {
               restrict : 'AE',
               link : function(scope, elem, attrs) {
                 scope.type = attrs.type;
 
                 scope.$watch(function() {
-                  return $("#" + scope.type + "Modal").find(
-                      ".ng-invalid:visible").length;
+                  return $("li.active", "#" + scope.type + "Modal").find('a')
+                      .attr("data-target");
                 }, function(newValue, oldValue) {
-                  scope.isValid = $("#" + scope.type + "Modal").find(
-                      ".ng-invalid:visible").length == 0;
+                  $("li.active", "#" + scope.type + "Modal").find('a').attr(
+                      "data-target") == "#subscribesummary2";
                 });
-                
+
                 scope.next = function() {
-                  setTimeout($("li.active", "#" + scope.type + "Modal").next('li').find('a')
-                      .trigger('click'));
+                  $timeout(function() {
+                    $("li.active", "#" + scope.type + "Modal").next('li').find(
+                        'a').trigger('click')
+                  });
                 }
                 scope.prev = function() {
-                  setTimeout($("li.active", "#" + scope.type + "Modal").prev('li').find('a')
-                      .trigger('click'));
+                  $timeout(function() {
+                    $("li.active", "#" + scope.type + "Modal").prev('li').find(
+                        'a').trigger('click')
+                  });
+                }
+                scope.close = function() {
+                  $("#subscribeModal").modal('hide');
+                  $timeout(function() {
+                    $($("li", "#" + scope.type + "Modal")[0]).find('a')
+                        .trigger('click')
+                  });
+                  scope.data = {
+                    primary : {},
+                    secondary : {}
+                  };
+                  if (scope.$parent && scope.$parent.$parent
+                      && scope.$parent.$parent.$parent
+                      && scope.$parent.$parent.$parent.user) {
+                    scope.data.username = scope.$parent.$parent.$parent.user.username;
+                  }
                 }
 
                 $('.panel-heading h4 > a', elem).on(
