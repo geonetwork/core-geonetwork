@@ -39,8 +39,7 @@
         var lang;
         if(sxtSettings.langDetector) {
 
-          var res = new RegExp(sxtSettings.langDetector).
-              exec('/fr/web/sextant/geoportail/sextant6_layout');
+          var res = new RegExp(sxtSettings.langDetector).exec(location.pathname);
           if(angular.isArray(res)) {
             lang = res[1];
             if(lang == 'fr') lang == 'fre';

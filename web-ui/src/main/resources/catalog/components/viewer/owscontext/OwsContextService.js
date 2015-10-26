@@ -86,8 +86,8 @@
         var extent = ll.concat(ur);
         var projection = bbox.crs;
         // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent, map.getView().getProjection(),
-            projection);
+        extent = ol.proj.transformExtent(extent,
+            projection, map.getView().getProjection());
 
         // store the extent into view settings so that it can be used later in
         // case the map is not visible yet
