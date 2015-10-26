@@ -565,13 +565,12 @@
       var transferOpts = md.getLinksByType('OGC:WMS').length != 1;
       if(transferOpts) {
         scope.downloads = md.getLinksByType('#FILE',
-            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+            '#COPYFILE', '#DB', '#WFS', 'WCS');
         scope.layers = md.getLinksByType('OGC:WMTS',
             'OGC:WMS', 'OGC:OWS-C');
-      }
-      else {
+      } else {
         scope.downloads = md.getGroupedLinksByTypes('#FILE',
-            '#COPYFILE', '#DB', '#WFS', 'WCS', 'WWW:DOWNLOAD');
+            '#COPYFILE', '#DB', '#WFS', 'WCS');
         scope.layers = md.getGroupedLinksByTypes('OGC:WMTS',
             'OGC:WMS', 'OGC:OWS-C');
       }
