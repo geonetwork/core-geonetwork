@@ -12,6 +12,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,8 +73,8 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     }
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterTest.class.getResource("/cswrecord/example.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws Exception {
+        final URL mdFile = FullViewFormatterTest.class.getResource("/cswrecord/example.xml");
+        return new File(mdFile.toURI());
     }
 }
