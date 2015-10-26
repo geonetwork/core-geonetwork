@@ -17,20 +17,44 @@
 
 	<context:component-scan base-package="org.fao.geonet" />
 
-    <bean id="disseminationPairFormatter"
-        class="org.fao.geonet.services.openwis.subscription.DisseminationPairFormatter" />
-    <bean id="disseminationPairRequestFormatter"
-        class="org.fao.geonet.services.openwis.subscription.DisseminationPairRequestFormatter" />
+	<bean id="disseminationPairFormatter"
+		class="org.fao.geonet.services.openwis.subscription.DisseminationPairFormatter" />
+	<bean id="disseminationPairRequestFormatter"
+		class="org.fao.geonet.services.openwis.subscription.DisseminationPairRequestFormatter" />
 
 
 	<bean id="conversionService"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
-                <ref bean="disseminationPairFormatter" />
-                <ref bean="disseminationPairRequestFormatter" />
+				<ref bean="disseminationPairFormatter" />
+				<ref bean="disseminationPairRequestFormatter" />
 			</set>
 		</property>
 	</bean>
 
+	<!-- Job to check Direct Downloads requests -->
+	<bean name="directDownloadJob"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="org.fao.geonet.services.openwis.subscription.job.DirectDownloadJob" />
+	</bean>
+
+	<bean id="cronTriggerDirectDownload"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="directDownloadJob" />
+		<property name="cronExpression" value="0 0/2 * * * ?" />
+		<property name="startDelay" value="30000" />
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobFactory">
+			<bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory" />
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="cronTriggerDirectDownload" />
+			</list>
+		</property>
+	</bean>
 </beans>

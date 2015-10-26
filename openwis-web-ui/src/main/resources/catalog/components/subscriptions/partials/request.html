@@ -20,11 +20,11 @@
 							data-target="#{{type}}param2" aria-controls="{{type}}param2"
 							role="tab" data-toggle="tab" data-translate="">openwisSubSelection</a>
 							<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div> <a
+						<li data-ng-if="type != 'download'" role="presentation"><div class="nav-wedge"></div> <a
 							data-target="#{{type}}primary2" aria-controls="{{type}}primary2"
 							role="tab" data-toggle="tab" data-translate="">openwisFirstDissemination</a>
 							<div class="nav-arrow"></div></li>
-						<li role="presentation"><div class="nav-wedge"></div> <a
+						<li data-ng-if="type != 'download'" role="presentation"><div class="nav-wedge"></div> <a
 							data-target="#{{type}}secondary2"
 							aria-controls="{{type}}secondary2" role="tab" data-toggle="tab"
 							data-translate="">openwisSecondDissemination</a>

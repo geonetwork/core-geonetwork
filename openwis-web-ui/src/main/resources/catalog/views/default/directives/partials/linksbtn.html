@@ -90,8 +90,11 @@
                 data-ng-click="addMetadataObject('gnOpenWISDeliver')"><span
 					class="fa fa-download" data-translate="">openwisDeliver</span></a></li>
 			<li data-ng-show="isVisible && exists && isAvailable"><a
-				data-toggle="modal" data-target="#downloadModal"><span
-					class="fa fa-download" data-translate="">openwisDownload</span></a></li>
+				data-toggle="modal" data-target="#downloadModal"
+                data-ng-click="addMetadataObject('gnOpenWISDownload')"><span
+					class="fa fa-download" data-translate=""
+					data-ng-class="{disabled: isRequested}"
+					data-ng-href="{{directDownload}}">openwisDownload</span></a></li>
 		</ul>
 	</div>
 </div>

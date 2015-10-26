@@ -174,7 +174,10 @@
                 <div class="col-xs-4">
                    <button type="button"
                                     class="btn btn-default btn-lg btn-block"
-                      data-toggle="modal" data-target="#downloadModal">
+                      data-toggle="modal" data-target="#downloadModal"
+                      data-ng-click="addMetadataObject('gnOpenWISDownload')"
+                      data-ng-disabled="{{isRequested}}"
+                      data-ng-href="{{directDownload}}">
         
                         <span class="visible-lg-*" data-translate="">
                            openwisDownload

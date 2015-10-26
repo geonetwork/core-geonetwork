@@ -12,6 +12,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.OpenwisDownloadRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.services.openwis.subscription.job.DirectDownloadJob;
 import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
@@ -59,7 +60,7 @@ public class SubscriptionController {
 
     @Autowired
     private ServiceManager serviceManager;
-    
+
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.search" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -329,45 +330,65 @@ public class SubscriptionController {
         UserSession session = context.getUserSession();
         User user = session.getPrincipal();
 
-        OpenwisDownload od = openwisRepository.findByUserAndUuid(user, urn);
+        try {
+            OpenwisDownload od = openwisRepository.findByUserAndUuid(user, urn);
 
-        if (od != null) {
-            if (od.getUrl() != null) {
-                res = od.getUrl();
-            } else {
-                res = od.getId().toString();
+            if (od != null) {
+                if (od.getUrl() != null) {
+                    res = od.getUrl();
+                } else {
+                    res = od.getId().toString();
+                }
             }
+        } catch (Throwable t) {
         }
-
         return res;
     }
 
     /**
-     * Start a new processed request for download
+     * Start a new processed request for download.
      * 
+     * @see DirectDownloadJob
      * @param urn
+     * @param adHoc
      * @return
      */
     @RequestMapping(value = {
             "/{lang}/openwis.processrequest.new" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Boolean startProcessedRequest(
-            HttpServletRequest request, @PathVariable String lang,
-            @RequestParam String urn) {
+            HttpServletRequest request, @PathVariable String lang) {
+
         ServiceContext context = serviceManager.createServiceContext(
                 "openwis.processrequest.new", lang, request);
         UserSession session = context.getUserSession();
         User user = session.getPrincipal();
-        
+
         user = userRepository.findOne(user.getId());
+
+        DisseminationPairRequest disseminationPair = conversionService.convert(
+                request.getParameter("data"), DisseminationPairRequest.class);
+
+        AdHoc adHoc = new AdHoc();
+        adHoc.setExtractMode(disseminationPair.getExtractMode());
+        adHoc.setClassOfService(disseminationPair.getClassOfService());
+        adHoc.setEmail(disseminationPair.getEmail());
+        adHoc.setRequestType(disseminationPair.getRequestType());
+        adHoc.setUser(disseminationPair.getUsername());
+
+        String urn = (disseminationPair.getMetadataUrn());
+
+        Long idReq = requestClient.create(urn, adHoc);
 
         OpenwisDownload od = new OpenwisDownload();
         od.setUser(user);
         od.setUrn(urn);
+        od.setRequestId(idReq.intValue());
 
         openwisRepository.saveAndFlush(od);
 
-        // TODO the thread for checking against the SOAP service
+        // DirectDownloadJobjava will do the work of preparing the values for
+        // openwis.processrequest.check
 
         return true;
     }

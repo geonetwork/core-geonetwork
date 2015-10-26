@@ -7,11 +7,14 @@
       '$scope',
       '$http',
       '$attrs',
-      function($scope, $http, $attrs) {
+      '$timeout',
+      function($scope, $http, $attrs, $timeout) {
 
         $scope.isVisible = false;
         $scope.exists = false;
         $scope.isAvailable = false;
+        $scope.isRequested = false;
+        $scope.directDownload = false;
 
         $scope.addMetadataObject = function(type, md) {
 
@@ -37,7 +40,8 @@
                   $scope.exists = false;
                 });
 
-            $scope.isVisible = md['geonet:info'].download && $scope.user.username;
+            $scope.isVisible = md['geonet:info'].download
+                && $scope.user.username;
 
             $http.get('openwis.cache.check?urn=' + md['geonet:info'].uuid)
                 .success(function(data) {
@@ -45,8 +49,36 @@
                 }).error(function(data) {
                   $scope.isAvailable = false;
                 });
+
+            $scope.checkDirectDownload();
           }
         });
+
+        $scope.checkDirectDownload = function() {
+          $http.get(
+              'openwis.processrequest.check?urn=' + $scope.md['geonet:info'].uuid)
+              .success(function(data) {
+                if (data) {
+                  $scope.isRequested = false;
+                  $scope.directDownload = false;
+                } else {
+                  $scope.isRequested = true;
+                  if ($.isNumber(data)) {
+                    $scope.directDownload = false;
+                    //try until we get the url directDownload
+                    $timeout($scope.checkDirectDownload, 2000);
+                  } else {
+                    $scope.directDownload = data;
+                  }
+                }
+              }).error(function(data) {
+                $scope.isRequested = false;
+                $scope.directDownload = false;
+                
+                //wait a bit and try again, some error?
+                $timeout($scope.checkDirectDownload, 5000);
+              });
+        };
       }
   ]);
 
