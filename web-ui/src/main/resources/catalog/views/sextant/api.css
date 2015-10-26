@@ -19497,3 +19497,6 @@ yx-axis
 .g * {
   pointer-events: auto;
 }
+.modal-open {
+  overflow: hidden;
+}
