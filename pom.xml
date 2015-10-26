@@ -402,23 +402,6 @@
       	<version>1.3</version>
       </dependency>
 
-      <!-- dependencies for formatters's pdf output -->
-      <dependency>
-    		<groupId>org.xhtmlrenderer</groupId>
-    		<artifactId>flying-saucer-core</artifactId>
-    		<version>9.0.1</version>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.xhtmlrenderer</groupId>
-    		<artifactId>flying-saucer-pdf</artifactId>
-    		<version>9.0.1</version>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.xhtmlrenderer</groupId>
-    		<artifactId>flying-saucer-pdf-itext5</artifactId>
-    		<version>9.0.1</version>
-    	</dependency>
-
       <dependency>
       	<groupId>net.sf.ehcache</groupId>
       	<artifactId>ehcache-core</artifactId>
