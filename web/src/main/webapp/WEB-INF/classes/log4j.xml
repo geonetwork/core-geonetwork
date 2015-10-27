@@ -120,7 +120,7 @@
         <level value="WARN" />
     </logger>
      <logger name="geonetwork.httpproxy">
-        <level value="DEBUG" />
+        <level value="WARN" />
     </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
