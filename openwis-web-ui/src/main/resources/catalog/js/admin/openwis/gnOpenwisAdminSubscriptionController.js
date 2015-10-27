@@ -39,17 +39,9 @@
                     $scope.url + 'openwis.subscription.search?myself='
                         + $scope.myself).withDataProp('data').withOption(
                     'processing', true).withOption('serverSide', true)
-                    .withOption('iDisplayLength', 25).withOption('scrollX',
-                        '100%').withOption('scrollCollapse', true).withOption(
-                        'autoWidth', false).withOption('bFilter', false)
-                    .withPaginationType('full_numbers').withFixedColumns({
-                      leftColumns : 0,
-                      rightColumns : 1
-                    }).withColumnFilter({
-                      aoColumns : [
-                          null, null, null, null, null, null, null, null
-                      ]
-                    });
+                    .withOption('scrollCollapse', true).withOption('autoWidth',
+                        true).withOption('bFilter', false).withPaginationType(
+                        'full_numbers');
 
                 $scope.dtColumns = [
                     DTColumnBuilder.newColumn('id').withOption('name', 'id')
@@ -69,23 +61,29 @@
                         .newColumn('actions')
                         .renderWith(
                             function(data, type, full) {
+
+                              var susres = "<a class=\"btn btn-link\" target=\"_blank\" onclick=\"angular.element(this).scope().resume("
+                                  + full.id
+                                  + ")\"  title=\"Resume\"><i class=\"fa fa-play\"></i></a>";
+
+                              if (full.status == 'ACTIVE') {
+                                susres = "<a class=\"btn btn-link\" target=\"_blank\" onclick=\"angular.element(this).scope().suspend("
+                                    + full.id
+                                    + ")\"  title=\"Suspend\"><i class=\"fa fa-pause\"></i></a>";
+                              }
+
                               return "<div style=\"width:120px\">"
                                   + "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.search#/metadata/"
-                                  + full.metadataUrn
-                                  + "\" title=\"View\"><i class=\"fa fa-eye\"></i></a>"
+                                  + full.urn
+                                  + "\" title=\"View Product\"><i class=\"fa fa-eye\"></i></a>"
                                   + "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().edit('"
-                                  + full.metadataUrn
-                                  + "')\" title=\"Edit product info\"><i class=\"fa fa-edit\"></i></a>"
-                                  + "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.edit#/metadata/"
-                                  + full.metadataId
-                                  + "\" title=\"Edit metadata\"><i class=\"fa fa-pencil\"></i></a>"
-                                  + "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.edit#/create?from="
-                                  + full.metadataId
-                                  + "\"  title=\"Duplicate\"><i class=\"fa fa-copy\"></i></a>"
-                                  + "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().delete('"
-                                  + full.metadataId
-                                  + "')\" title=\"Remove\"><i class=\"fa fa-times text-danger\"></i></a>"
-                                  + "</div>";
+                                  + full.id
+                                  + "')\" title=\"Edit subscription\"><i class=\"fa fa-edit\"></i></a>"
+                                  + susres
+                                  + "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().discard('"
+                                  + full.id
+                                  + "')\" title=\"Discard subscription\"><i class=\"fa fa-times text-danger\">"
+                                  + "</i></a></div>";
                             })
                 ];
 
@@ -94,12 +92,64 @@
                   $scope.dtOptions.sAjaxSource = $scope.url
                       + 'openwis.subscription.search?myself=' + $scope.myself
                       + '&group=' + $scope.group;
-                  if ($scope.dtInstance.reloadData) {
-                    $scope.dtInstance.reloadData();
+                  if ($scope.dtInstance.dataTable) {
+                    $scope.dtInstance.dataTable._fnDraw()
                   }
                 };
 
                 $scope.$watch('group', $scope.updateData);
+
+                $scope.suspend = function(id) {
+                  $http(
+                      {
+                        url : $scope.url
+                            + 'openwis.subscription.suspend?subscriptionId='
+                            + id,
+                        method : 'GET'
+                      }).success(function(data) {
+                    console.log(data);
+                    $scope.updateData();
+                  });
+                };
+
+                $scope.resume = function(id) {
+                  $http(
+                      {
+                        url : $scope.url
+                            + 'openwis.subscription.resume?subscriptionId='
+                            + id,
+                        method : 'GET'
+                      }).success(function(data) {
+                    console.log(data);
+                    $scope.updateData();
+                  });
+                };
+
+                $scope.edit = function(id) {
+                  $http(
+                      {
+                        url : $scope.url
+                            + 'openwis.subscription.get?subscriptionId=' + id,
+                        method : 'GET'
+                      }).success(function(data) {
+                    console.log(data);
+                    $scope.updateData();
+                  });
+                };
+
+                $scope.discard = function(id) {
+                  if (window.confirm('Are you sure you want to delete?')) {
+                    $http(
+                        {
+                          url : $scope.url
+                              + 'openwis.subscription.discard?subscriptionId='
+                              + id,
+                          method : 'GET'
+                        }).success(function(data) {
+                      $scope.updateData();
+                    });
+                  }
+                }
               }
 
           ]);

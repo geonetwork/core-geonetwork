@@ -82,8 +82,8 @@ public class SubscriptionController {
                     MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Response search(@ModelAttribute Request request,
             HttpServletRequest httpRequest,
-            @RequestParam(required = false, defaultValue="null") String group,
-            @RequestParam(required = false, defaultValue="false") Boolean myself,
+            @RequestParam(required = false, defaultValue = "null") String group,
+            @RequestParam(required = false, defaultValue = "false") Boolean myself,
             @PathVariable String lang) {
 
         // Setup fields to search, filter and order.
@@ -201,6 +201,32 @@ public class SubscriptionController {
             throw new SubscriptionNotFoundException();
 
         return subscription;
+    }
+
+    @RequestMapping(value = {
+            "/{lang}/openwis.subscription.discard" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean discard(@RequestParam Long subscriptionId) {
+        manager.discard(subscriptionId);
+        return true;
+    }
+
+
+    @RequestMapping(value = {
+            "/{lang}/openwis.subscription.suspend" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean suspend(@RequestParam Long subscriptionId) {
+        manager.suspend(subscriptionId);
+        return true;
+    }
+
+
+    @RequestMapping(value = {
+            "/{lang}/openwis.subscription.resume" }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean resume(@RequestParam Long subscriptionId) {
+        manager.resume(subscriptionId);
+        return true;
     }
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.set" }, produces = {
@@ -331,6 +357,7 @@ public class SubscriptionController {
 
         AdHoc adHoc = new AdHoc();
         adHoc.setExtractMode(disseminationPair.getExtractMode());
+        adHoc.setPrimaryDissemination(disseminationPair.getPrimary());
         adHoc.setClassOfService(disseminationPair.getClassOfService());
         adHoc.setEmail(disseminationPair.getEmail());
         adHoc.setRequestType(disseminationPair.getRequestType());
