@@ -1,12 +1,13 @@
 package org.fao.geonet.services.openwis.subscription;
 
+import java.util.List;
+
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
 import org.openwis.subscription.client.SubscriptionClient;
+import org.openwis.subscription.client.SubscriptionColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class SubscriptionManager {
@@ -14,8 +15,16 @@ public class SubscriptionManager {
     @Autowired
     private SubscriptionClient serviceClient;
 
-    public List<Subscription> retrieveSubscriptionsByUsers(int firstResult, int maxResults, SortDirection sort) {
-        return getServiceClient().retrieveSubscriptionsByUsers(firstResult, maxResults, sort);
+    public List<Subscription> retrieveSubscriptionsByUsers(int firstResult,
+            int maxResults, SortDirection sort, SubscriptionColumn column,
+            List<String> usernames) {
+        return getServiceClient().retrieveSubscriptionsByUsers(firstResult,
+                maxResults, sort, column, usernames);
+    }
+
+    public int retrieveSubscriptionsByUsersCount(
+            List<String> usernames) {
+        return getServiceClient().retrieveSubscriptionsByUsersCount(usernames);
     }
 
     public Subscription retrieveSubscription(Long subscriptionId) {

@@ -1,19 +1,30 @@
 package org.fao.geonet.services.openwis.subscription;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OpenwisDownload;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.responses.OkResponse;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OpenwisDownloadRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.openwis.subscription.job.DirectDownloadJob;
 import org.fao.geonet.services.openwis.util.Request;
+import org.fao.geonet.services.openwis.util.Request.ColumnCriterias;
 import org.fao.geonet.services.openwis.util.Request.OrderCriterias;
 import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.request.client.AdHoc;
@@ -21,8 +32,10 @@ import org.openwis.request.client.RequestClient;
 import org.openwis.subscription.client.ProductMetadata;
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
+import org.openwis.subscription.client.SubscriptionColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -56,6 +69,9 @@ public class SubscriptionController {
     private UserRepository userRepository;
 
     @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
     private ConversionService conversionService;
 
     @Autowired
@@ -65,30 +81,73 @@ public class SubscriptionController {
             "/{lang}/openwis.subscription.search" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Response search(@ModelAttribute Request request,
-            HttpServletRequest httpRequest) {
+            HttpServletRequest httpRequest,
+            @RequestParam(required = false, defaultValue="null") String group,
+            @RequestParam(required = false, defaultValue="false") Boolean myself,
+            @PathVariable String lang) {
 
-        SortDirection sort = SortDirection.DESC;
+        // Setup fields to search, filter and order.
+        SortDirection sort = SortDirection.ASC;
+        SubscriptionColumn column = SubscriptionColumn.TITLE;
 
-        sort = SortDirection.valueOf(request.getOrder().get(0)
-                .get(OrderCriterias.dir).toUpperCase());
+        if (!request.getOrder().isEmpty()) {
+            sort = SortDirection.valueOf(request.getOrder().get(0)
+                    .get(OrderCriterias.dir).toUpperCase());
+            Integer tmpIndex = Integer.valueOf(
+                    request.getOrder().get(0).get(OrderCriterias.column));
+            if (request.getColumns().size() >= tmpIndex) {
+                String tmp = request.getColumns().get(tmpIndex)
+                        .get(ColumnCriterias.name);
+                if (tmp != null && !tmp.trim().isEmpty()) {
+                    column = SubscriptionColumn.fromValue(tmp.toUpperCase());
+                }
+            }
+        }
+        List<String> usernames = new LinkedList<String>();
+
+        final Group g = groupRepository.findByName(group);
+
+        if (g != null) {
+            Specification<UserGroup> userGroupSpec = new Specification<UserGroup>() {
+                public Predicate toPredicate(Root<UserGroup> root,
+                        CriteriaQuery<?> query, CriteriaBuilder builder) {
+                    return builder.equal(root.get("group"), g);
+                }
+            };
+            for (User u : userRepository
+                    .findAllUsersInUserGroups(userGroupSpec)) {
+                usernames.add(u.getUsername());
+            }
+
+            // Also, add all administrators (who doesn't appear on usergroup)
+            for (User u : userRepository
+                    .findAllByProfile(Profile.Administrator)) {
+                usernames.add(u.getUsername());
+            }
+        }
+
+        if (myself) {
+            ServiceContext context = serviceManager.createServiceContext(
+                    "openwis.subscription.search", lang, httpRequest);
+            UserSession session = context.getUserSession();
+            User user = session.getPrincipal();
+            usernames.add(user.getUsername());
+        }
 
         List<Subscription> subscriptions = manager.retrieveSubscriptionsByUsers(
-                request.getStart(), request.getLength(), sort);
+                request.getStart(), request.getLength(), sort, column,
+                usernames);
 
-        // TODO total
         Response response = new Response();
         response.setDraw(request.getDraw());
-        // response.setRecordsTotal(manager.getTotal());
-        // response.setRecordsFiltered(manager.getTotalCurrentQuery(startWith));
+        response.setRecordsTotal((long) manager
+                .retrieveSubscriptionsByUsersCount(new ArrayList<String>(0)));
+        response.setRecordsFiltered(
+                (long) manager.retrieveSubscriptionsByUsersCount(usernames));
 
         for (Subscription s : subscriptions) {
             Map<String, String> element = new HashMap<String, String>();
-            element.put("email", s.getEmail());
-            element.put("requestType", s.getRequestType());
             element.put("user", s.getUser());
-            element.put("classOfService", s.getClassOfService().name());
-            element.put("extractMode", s.getExtractMode().name());
-            element.put("frequency", s.getFrequency().isZipped().toString());
             element.put("id", s.getId().toString());
 
             XMLGregorianCalendar lastEventDate = s.getLastEventDate();
@@ -99,130 +158,31 @@ public class SubscriptionController {
             } else {
                 element.put("lastEventDate", "");
             }
-
-            if (s.getParameters() != null && !s.getParameters().isEmpty()) {
-                StringBuilder params = new StringBuilder();
-
-                // for (Parameter p : s.getParameters()) {
-                // // TODO do we need all the elements?
-                // }
-
-                params.append("]");
-
-                element.put("parameters", params.toString());
+            lastEventDate = s.getStartingDate();
+            if (lastEventDate != null) {
+                element.put("starting_date",
+                        lastEventDate.getDay() + "/" + lastEventDate.getMonth()
+                                + "/" + lastEventDate.getYear());
             } else {
-                element.put("parameters", "[]");
-            }
-
-            if (s.getPrimaryDissemination() != null) {
-                element.put("primaryDissemination",
-                        s.getPrimaryDissemination().getId().toString());
-                element.put("primaryDisseminationZipMode",
-                        s.getPrimaryDissemination().getZipMode().name());
-            } else {
-                element.put("primaryDissemination", "");
-                element.put("primaryDisseminationZipMode", "");
+                element.put("starting_date", "");
             }
 
             ProductMetadata productMetadata = s.getProductMetadata();
             if (productMetadata != null) {
-                element.put("productMetadataDataPolicy",
-                        productMetadata.getDataPolicy());
-                element.put("productMetadataFileExtension",
-                        productMetadata.getFileExtension());
-                element.put("productMetadataFncPattern",
-                        productMetadata.getFncPattern());
-                element.put("productMetadataGtsCategory",
-                        productMetadata.getGtsCategory());
-                element.put("productMetadataLocalDataSource",
-                        productMetadata.getLocalDataSource());
-                element.put("productMetadataOriginator",
-                        productMetadata.getOriginator());
-                element.put("productMetadataOverridenDataPolicy",
-                        productMetadata.getOverridenDataPolicy());
-                element.put("productMetadataOverridenFileExtension",
-                        productMetadata.getOverridenFileExtension());
-                element.put("productMetadataOverridenFncPattern",
-                        productMetadata.getOverridenFncPattern());
-                element.put("productMetadataOverridenGtsCategory",
-                        productMetadata.getOverridenGtsCategory());
-                element.put("productMetadataProcess",
-                        productMetadata.getProcess());
-                element.put("productMetadataTitle", productMetadata.getTitle());
-                element.put("productMetadataUrn", productMetadata.getUrn());
-
-                XMLGregorianCalendar creationDate = productMetadata
-                        .getCreationDate();
-                if (creationDate != null) {
-                    element.put("productMetadataCreationDate",
-                            creationDate.getDay() + "/"
-                                    + creationDate.getMonth() + "/"
-                                    + creationDate.getYear());
-                } else {
-                    element.put("productMetadataCreationDate", "");
-                }
-
-                element.put("productMetadataId",
-                        productMetadata.getId().toString());
-                element.put("productMetadataOverridenPriority",
-                        productMetadata.getOverridenPriority().toString());
-                element.put("productMetadataPriority",
-                        productMetadata.getPriority().toString());
-                element.put("productMetadataupdateFrequency",
-                        productMetadata.getUpdateFrequency().toString());
+                element.put("title", productMetadata.getTitle());
+                element.put("urn", productMetadata.getUrn());
             } else {
-                element.put("productMetadataDataPolicy", "");
-                element.put("productMetadataFileExtension", "");
-                element.put("productMetadataFncPattern", "");
-                element.put("productMetadataGtsCategory", "");
-                element.put("productMetadataLocalDataSource", "");
-                element.put("productMetadataOriginator", "");
-                element.put("productMetadataOverridenDataPolicy", "");
-                element.put("productMetadataOverridenFileExtension", "");
-                element.put("productMetadataOverridenFncPattern", "");
-                element.put("productMetadataOverridenGtsCategory", "");
-                element.put("productMetadataProcess", "");
-                element.put("productMetadataTitle", "");
-                element.put("productMetadataUrn", "");
-                element.put("productMetadataCreationDate", "");
-                element.put("productMetadataId", "");
-                element.put("productMetadataOverridenPriority", "");
-                element.put("productMetadataPriority", "");
-                element.put("productMetadataupdateFrequency", "");
+                element.put("title", "");
+                element.put("urn", "");
             }
 
-            if (s.getSecondaryDissemination() != null) {
-                element.put("secondaryDissemination",
-                        s.getSecondaryDissemination().getId().toString());
-                element.put("secondaryDisseminationZipMode",
-                        s.getSecondaryDissemination().getZipMode().name());
-            } else {
-                element.put("secondaryDissemination", "");
-                element.put("secondaryDisseminationZipMode", "");
-            }
-
-            XMLGregorianCalendar startingDate = s.getStartingDate();
-            if (lastEventDate != null) {
-                element.put("startingDate",
-                        startingDate.getDay() + "/" + startingDate.getMonth()
-                                + "/" + startingDate.getYear());
-            } else {
-                element.put("startingDate", "");
-            }
-
-            element.put("state", s.getState().name());
+            element.put("status", s.getState().name());
 
             if (s.getSubscriptionBackup() != null) {
-                element.put("subscriptionBackup",
+                element.put("backup",
                         s.getSubscriptionBackup().getDeployment());
-                element.put("subscriptionBackupId",
-                        Long.toString(s.getSubscriptionBackup().getId()));
-                element.put("subscriptionBackupSubscriptionId", Long.toString(
-                        s.getSubscriptionBackup().getSubscriptionId()));
             } else {
-                element.put("subscriptionBackup", "");
-                element.put("subscriptionBackupId", "");
-                element.put("subscriptionBackupSubscriptionId", "");
+                element.put("backup", "");
             }
             response.addData(element);
         }

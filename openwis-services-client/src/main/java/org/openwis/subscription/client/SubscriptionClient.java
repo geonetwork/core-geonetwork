@@ -63,7 +63,8 @@ public class SubscriptionClient extends WebServiceGatewaySupport {
      * @return
      */
     public List<Subscription> retrieveSubscriptionsByUsers(int firstResult,
-            int maxResults, SortDirection sort) {
+            int maxResults, SortDirection sort, SubscriptionColumn column,
+            List<String> usernames) {
         ObjectFactory objFact = new ObjectFactory();
 
         GetSubscriptionsByUsers request = objFact
@@ -71,6 +72,10 @@ public class SubscriptionClient extends WebServiceGatewaySupport {
         request.setFirstResult(firstResult);
         request.setMaxResults(maxResults);
         request.setSortDirection(sort);
+        request.setColumn(column);
+        for (String username : usernames) {
+            request.getUserNames().add(username);
+        }
 
         JAXBElement response = (JAXBElement) getWebServiceTemplate()
                 .marshalSendAndReceive(
@@ -81,11 +86,23 @@ public class SubscriptionClient extends WebServiceGatewaySupport {
         return responseType.getReturn();
     }
 
-    // TODO: Check to implement (getSubscriptionsByUsersCount) if required and
-    // clarify parameters
-    public int retrieveSubscriptionsByUsersCount() {
+    public int retrieveSubscriptionsByUsersCount(List<String> usernames) {
 
-        return -1;
+        ObjectFactory objFact = new ObjectFactory();
+
+        GetSubscriptionsByUsersCount request = objFact
+                .createGetSubscriptionsByUsersCount();
+        for (String username : usernames) {
+            request.getArg0().add(username);
+        }
+
+        JAXBElement response = (JAXBElement) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        objFact.createGetSubscriptionsByUsersCount(request));
+        GetSubscriptionsByUsersCountResponse responseType = (GetSubscriptionsByUsersCountResponse) response
+                .getValue();
+
+        return responseType.getReturn();
     }
 
     /**

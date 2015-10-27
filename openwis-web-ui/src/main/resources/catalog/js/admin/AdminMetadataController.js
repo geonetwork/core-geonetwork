@@ -4,10 +4,13 @@
 
   goog.require('gn_schematronadmin_controller');
   goog.require('gn_openwis_productmetadata_controller');
+  goog.require('gn_openwis_admin_subscription_controller');
 
 
   var module = angular.module('gn_adminmetadata_controller',
-      ['gn_schematronadmin_controller', 'gn_openwis_productmetadata_controller']);
+      ['gn_schematronadmin_controller', 
+       'gn_openwis_productmetadata_controller',
+       'gn_openwis_admin_subscription_controller']);
 
 
   /**
@@ -46,6 +49,16 @@
               label: 'productMetadata',
               icon: 'fa-check',
               href: '#/metadata/product-metadata'
+            },{
+              type: 'subscriptions-mine',
+              label: 'subscriptions-mine',
+              icon: 'fa-rss',
+              href: '#/metadata/subscriptions-mine'
+            },{
+              type: 'subscriptions-admin',
+              label: 'subscriptions-admin',
+              icon: 'fa-rss',
+              href: '#/metadata/subscriptions-admin'
             }]
       };
 

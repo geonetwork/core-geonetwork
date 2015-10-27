@@ -1,340 +1,834 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="SubscriptionService" targetNamespace="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dataservice.openwis.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="SubscriptionService" targetNamespace="http://dataservice.openwis.org/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://dataservice.openwis.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<schema xmlns="http://www.w3.org/2001/XMLSchema">
-  <import namespace="http://dataservice.openwis.org/" schemaLocation="SubscriptionService_schema1.xsd"/>
-</schema>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://dataservice.openwis.org/" version="1.0" xmlns:tns="http://dataservice.openwis.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="DataPolicyOperations" type="tns:dataPolicyOperations" />
+<xs:element name="UserDataPolicyOperations" type="tns:userDataPolicyOperations" />
+<xs:element name="checkUserSubscription" type="tns:checkUserSubscription" />
+<xs:element name="checkUserSubscriptionResponse" type="tns:checkUserSubscriptionResponse" />
+<xs:element name="checkUsersSubscription" type="tns:checkUsersSubscription" />
+<xs:element name="checkUsersSubscriptionResponse" type="tns:checkUsersSubscriptionResponse" />
+<xs:element name="createSubscription" type="tns:createSubscription" />
+<xs:element name="createSubscriptionResponse" type="tns:createSubscriptionResponse" />
+<xs:element name="deleteSubscription" type="tns:deleteSubscription" />
+<xs:element name="deleteSubscriptionResponse" type="tns:deleteSubscriptionResponse" />
+<xs:element name="findLastProcessedRequest" type="tns:findLastProcessedRequest" />
+<xs:element name="findLastProcessedRequestResponse" type="tns:findLastProcessedRequestResponse" />
+<xs:element name="getFullSubscription" type="tns:getFullSubscription" />
+<xs:element name="getFullSubscriptionResponse" type="tns:getFullSubscriptionResponse" />
+<xs:element name="getSubscription" type="tns:getSubscription" />
+<xs:element name="getSubscriptionResponse" type="tns:getSubscriptionResponse" />
+<xs:element name="getSubscriptionsByUsers" type="tns:getSubscriptionsByUsers" />
+<xs:element name="getSubscriptionsByUsersCount" type="tns:getSubscriptionsByUsersCount" />
+<xs:element name="getSubscriptionsByUsersCountResponse" type="tns:getSubscriptionsByUsersCountResponse" />
+<xs:element name="getSubscriptionsByUsersResponse" type="tns:getSubscriptionsByUsersResponse" />
+<xs:element name="resumeSubscription" type="tns:resumeSubscription" />
+<xs:element name="resumeSubscriptionResponse" type="tns:resumeSubscriptionResponse" />
+<xs:element name="setBackup" type="tns:setBackup" />
+<xs:element name="setBackupResponse" type="tns:setBackupResponse" />
+<xs:element name="suspendSubscription" type="tns:suspendSubscription" />
+<xs:element name="suspendSubscriptionResponse" type="tns:suspendSubscriptionResponse" />
+<xs:element name="updateSubscription" type="tns:updateSubscription" />
+<xs:element name="updateSubscriptionConfig" type="tns:updateSubscriptionConfig" />
+<xs:element name="updateSubscriptionConfigResponse" type="tns:updateSubscriptionConfigResponse" />
+<xs:element name="updateSubscriptionResponse" type="tns:updateSubscriptionResponse" />
+<xs:complexType name="createSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscription" type="tns:subscription" />
+<xs:element minOccurs="0" name="metadataUrn" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="subscription">
+<xs:complexContent>
+<xs:extension base="tns:request">
+<xs:sequence>
+<xs:element name="valid" type="xs:boolean" />
+<xs:element minOccurs="0" name="state" type="tns:SubscriptionState" />
+<xs:element minOccurs="0" name="frequency" type="tns:frequency" />
+<xs:element minOccurs="0" name="startingDate" type="xs:dateTime" />
+<xs:element minOccurs="0" name="lastEventDate" type="xs:dateTime" />
+<xs:element minOccurs="0" name="subscriptionBackup" type="tns:subscriptionBackup" />
+<xs:element name="backup" type="xs:boolean" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType abstract="true" name="request">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="primaryDissemination" type="tns:dissemination" />
+<xs:element minOccurs="0" name="secondaryDissemination" type="tns:dissemination" />
+<xs:element minOccurs="0" name="productMetadata" type="tns:productMetadata" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="tns:parameter" />
+<xs:element minOccurs="0" name="user" type="xs:string" />
+<xs:element minOccurs="0" name="email" type="xs:string" />
+<xs:element minOccurs="0" name="classOfService" type="tns:classOfService" />
+<xs:element minOccurs="0" name="extractMode" type="tns:extractMode" />
+<xs:element minOccurs="0" name="requestType" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType abstract="true" name="frequency">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="zipped" type="xs:boolean" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="eventBasedFrequency">
+<xs:complexContent>
+<xs:extension base="tns:frequency">
+<xs:sequence />
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="recurrentFrequency">
+<xs:complexContent>
+<xs:extension base="tns:frequency">
+<xs:sequence>
+<xs:element minOccurs="0" name="reccurencePeriod" type="xs:int" />
+<xs:element minOccurs="0" name="reccurentScale" type="tns:recurrentScale" />
+<xs:element minOccurs="0" name="nextDate" type="xs:dateTime" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="subscriptionBackup">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element name="subscriptionId" type="xs:long" />
+<xs:element minOccurs="0" name="deployment" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType abstract="true" name="dissemination">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="zipMode" type="tns:disseminationZipMode" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="shoppingCartDissemination">
+<xs:complexContent>
+<xs:extension base="tns:dissemination">
+<xs:sequence />
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="rmdcnDissemination">
+<xs:complexContent>
+<xs:extension base="tns:dissemination">
+<xs:sequence>
+<xs:element minOccurs="0" name="diffusion" type="tns:diffusion" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType abstract="true" name="diffusion">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="mailDiffusion">
+<xs:complexContent>
+<xs:extension base="tns:diffusion">
+<xs:sequence>
+<xs:element minOccurs="0" name="address" type="xs:string" />
+<xs:element minOccurs="0" name="fileName" type="xs:string" />
+<xs:element minOccurs="0" name="headerLine" type="xs:string" />
+<xs:element minOccurs="0" name="subject" type="xs:string" />
+<xs:element minOccurs="0" name="mailDispatchMode" type="tns:mailDispatchMode" />
+<xs:element minOccurs="0" name="mailAttachmentMode" type="tns:mailAttachmentMode" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="ftpDiffusion">
+<xs:complexContent>
+<xs:extension base="tns:diffusion">
+<xs:sequence>
+<xs:element minOccurs="0" name="checkFileSize" type="xs:boolean" />
+<xs:element minOccurs="0" name="fileName" type="xs:string" />
+<xs:element minOccurs="0" name="host" type="xs:string" />
+<xs:element minOccurs="0" name="passive" type="xs:boolean" />
+<xs:element minOccurs="0" name="encrypted" type="xs:boolean" />
+<xs:element minOccurs="0" name="password" type="xs:string" />
+<xs:element minOccurs="0" name="path" type="xs:string" />
+<xs:element minOccurs="0" name="port" type="xs:string" />
+<xs:element minOccurs="0" name="user" type="xs:string" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="publicDissemination">
+<xs:complexContent>
+<xs:extension base="tns:dissemination">
+<xs:sequence>
+<xs:element minOccurs="0" name="diffusion" type="tns:diffusion" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="mssfssDissemination">
+<xs:complexContent>
+<xs:extension base="tns:dissemination">
+<xs:sequence>
+<xs:element minOccurs="0" name="channel" type="tns:mssfssChannel" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="mssfssChannel">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="channel" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="productMetadata">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="creationDate" type="xs:dateTime" />
+<xs:element minOccurs="0" name="urn" type="xs:string" />
+<xs:element minOccurs="0" name="dataPolicy" type="xs:string" />
+<xs:element minOccurs="0" name="fed" type="xs:boolean" />
+<xs:element minOccurs="0" name="fncPattern" type="xs:string" />
+<xs:element minOccurs="0" name="gtsCategory" type="xs:string" />
+<xs:element minOccurs="0" name="ingested" type="xs:boolean" />
+<xs:element minOccurs="0" name="localDataSource" type="xs:string" />
+<xs:element minOccurs="0" name="originator" type="xs:string" />
+<xs:element minOccurs="0" name="overridenDataPolicy" type="xs:string" />
+<xs:element minOccurs="0" name="overridenGtsCategory" type="xs:string" />
+<xs:element minOccurs="0" name="overridenFncPattern" type="xs:string" />
+<xs:element minOccurs="0" name="overridenPriority" type="xs:int" />
+<xs:element minOccurs="0" name="priority" type="xs:int" />
+<xs:element minOccurs="0" name="process" type="xs:string" />
+<xs:element minOccurs="0" name="title" type="xs:string" />
+<xs:element minOccurs="0" name="fileExtension" type="xs:string" />
+<xs:element minOccurs="0" name="overridenFileExtension" type="xs:string" />
+<xs:element minOccurs="0" name="updateFrequency" type="tns:updateFrequency" />
+<xs:element minOccurs="0" name="stopGap" type="xs:boolean" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType abstract="true" name="updateFrequency">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="temporal">
+<xs:complexContent>
+<xs:extension base="tns:updateFrequency">
+<xs:sequence>
+<xs:element minOccurs="0" name="from" type="xs:dateTime" />
+<xs:element minOccurs="0" name="to" type="xs:dateTime" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="recurrentUpdateFrequency">
+<xs:complexContent>
+<xs:extension base="tns:updateFrequency">
+<xs:sequence>
+<xs:element minOccurs="0" name="recurrentScale" type="tns:recurrentScale" />
+<xs:element name="recurrentPeriod" type="xs:int" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="parameter">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="code" type="xs:string" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="tns:value" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="value">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element minOccurs="0" name="value" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="adHoc">
+<xs:complexContent>
+<xs:extension base="tns:request">
+<xs:sequence />
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+<xs:complexType name="createSubscriptionResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="setBackup">
+<xs:sequence>
+<xs:element minOccurs="0" name="deploymentName" type="xs:string" />
+<xs:element name="activateBackup" type="xs:boolean" />
+<xs:element minOccurs="0" name="dateFrom" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="setBackupResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="checkUserSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="user" type="xs:string" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="userOperationsAllowed" type="tns:dataPolicyOperations" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="dataPolicyOperations">
+<xs:sequence>
+<xs:element minOccurs="0" name="dataPolicy" type="xs:string" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="operations" type="tns:Operation" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="checkUserSubscriptionResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscriptionId" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getSubscriptionResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersCount">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersCountResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="findLastProcessedRequest">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscriptionId" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="findLastProcessedRequestResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:processedRequest" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="processedRequest">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long" />
+<xs:element name="version" type="xs:long" />
+<xs:element minOccurs="0" name="creationDate" type="xs:dateTime" />
+<xs:element minOccurs="0" name="submittedDisseminationDate" type="xs:dateTime" />
+<xs:element minOccurs="0" name="completedDate" type="xs:dateTime" />
+<xs:element name="size" type="xs:long" />
+<xs:element minOccurs="0" name="requestResultStatus" type="tns:requestResultStatus" />
+<xs:element minOccurs="0" name="request" type="tns:request" />
+<xs:element minOccurs="0" name="uri" type="xs:string" />
+<xs:element minOccurs="0" name="message" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="resumeSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscription" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="resumeSubscriptionResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="getSubscriptionsByUsers">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="userNames" type="xs:string" />
+<xs:element name="firstResult" type="xs:int" />
+<xs:element name="maxResults" type="xs:int" />
+<xs:element minOccurs="0" name="column" type="tns:SubscriptionColumn" />
+<xs:element minOccurs="0" name="sortDirection" type="tns:SortDirection" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getSubscriptionsByUsersResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getFullSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscriptionId" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="getFullSubscriptionResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscription" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateSubscriptionResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="suspendSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscription" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="suspendSubscriptionResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="deleteSubscription">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscriptionId" type="xs:long" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="deleteSubscriptionResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="checkUsersSubscription">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="operationsAllowed" type="tns:userDataPolicyOperations" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="userDataPolicyOperations">
+<xs:sequence>
+<xs:element minOccurs="0" name="user" type="xs:string" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="dataPolicyOperations" type="tns:dataPolicyOperations" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="checkUsersSubscriptionResponse">
+<xs:sequence />
+</xs:complexType>
+<xs:complexType name="updateSubscriptionConfig">
+<xs:sequence>
+<xs:element minOccurs="0" name="subscriptionId" type="xs:long" />
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ssp" type="tns:parameter" />
+<xs:element minOccurs="0" name="primaryDissemination" type="tns:dissemination" />
+<xs:element minOccurs="0" name="secondaryDissemination" type="tns:dissemination" />
+<xs:element minOccurs="0" name="frequency" type="tns:frequency" />
+<xs:element minOccurs="0" name="startingDate" type="xs:string" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="updateSubscriptionConfigResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:subscription" />
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="SubscriptionState">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ACTIVE" />
+<xs:enumeration value="SUSPENDED_BACKUP" />
+<xs:enumeration value="SUSPENDED" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="recurrentScale">
+<xs:restriction base="xs:string">
+<xs:enumeration value="HOUR" />
+<xs:enumeration value="DAY" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="disseminationZipMode">
+<xs:restriction base="xs:string">
+<xs:enumeration value="NONE" />
+<xs:enumeration value="ZIPPED" />
+<xs:enumeration value="WMO_FTP" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="mailDispatchMode">
+<xs:restriction base="xs:string">
+<xs:enumeration value="TO" />
+<xs:enumeration value="CC" />
+<xs:enumeration value="BCC" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="mailAttachmentMode">
+<xs:restriction base="xs:string">
+<xs:enumeration value="EMBEDDED_IN_BODY" />
+<xs:enumeration value="AS_ATTACHMENT" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="classOfService">
+<xs:restriction base="xs:string">
+<xs:enumeration value="SILVER" />
+<xs:enumeration value="GOLD" />
+<xs:enumeration value="BRONZE" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="extractMode">
+<xs:restriction base="xs:string">
+<xs:enumeration value="NOT_IN_LOCAL_CACHE" />
+<xs:enumeration value="GLOBAL" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="Operation">
+<xs:restriction base="xs:string">
+<xs:enumeration value="View" />
+<xs:enumeration value="Editing" />
+<xs:enumeration value="Download" />
+<xs:enumeration value="PublicEmail" />
+<xs:enumeration value="PublicFTP" />
+<xs:enumeration value="RMDCNEmail" />
+<xs:enumeration value="RMDCNFTP" />
+<xs:enumeration value="FTPSecured" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="requestResultStatus">
+<xs:restriction base="xs:string">
+<xs:enumeration value="INITIAL" />
+<xs:enumeration value="CREATED" />
+<xs:enumeration value="EXTRACTED" />
+<xs:enumeration value="ONGOING_DISSEMINATION" />
+<xs:enumeration value="ONGOING_EXTRACTION" />
+<xs:enumeration value="DISSEMINATED" />
+<xs:enumeration value="FAILED" />
+<xs:enumeration value="WAITING_FOR_DISSEMINATION" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SubscriptionColumn">
+<xs:restriction base="xs:string">
+<xs:enumeration value="URN" />
+<xs:enumeration value="TITLE" />
+<xs:enumeration value="USER" />
+<xs:enumeration value="ID" />
+<xs:enumeration value="STATUS" />
+<xs:enumeration value="BACKUP" />
+<xs:enumeration value="STARTING_DATE" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SortDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASC" />
+<xs:enumeration value="DESC" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
   </wsdl:types>
   <wsdl:message name="resumeSubscription">
-    <wsdl:part name="parameters" element="tns:resumeSubscription">
+    <wsdl:part element="tns:resumeSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="setBackup">
-    <wsdl:part name="parameters" element="tns:setBackup">
+    <wsdl:part element="tns:setBackup" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:createSubscriptionResponse">
+    <wsdl:part element="tns:createSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="suspendSubscription">
-    <wsdl:part name="parameters" element="tns:suspendSubscription">
+    <wsdl:part element="tns:suspendSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:getSubscriptionResponse">
+    <wsdl:part element="tns:getSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateSubscriptionConfigResponse">
-    <wsdl:part name="parameters" element="tns:updateSubscriptionConfigResponse">
+    <wsdl:part element="tns:updateSubscriptionConfigResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateSubscriptionConfig">
-    <wsdl:part name="parameters" element="tns:updateSubscriptionConfig">
+    <wsdl:part element="tns:updateSubscriptionConfig" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscriptionsByUsersCountResponse">
-    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersCountResponse">
+    <wsdl:part element="tns:getSubscriptionsByUsersCountResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="checkUsersSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:checkUsersSubscriptionResponse">
+    <wsdl:part element="tns:checkUsersSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLastProcessedRequest">
-    <wsdl:part name="parameters" element="tns:findLastProcessedRequest">
+    <wsdl:part element="tns:findLastProcessedRequest" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="checkUserSubscription">
-    <wsdl:part name="parameters" element="tns:checkUserSubscription">
+    <wsdl:part element="tns:checkUserSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getFullSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:getFullSubscriptionResponse">
+    <wsdl:part element="tns:getFullSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateSubscription">
-    <wsdl:part name="parameters" element="tns:updateSubscription">
+    <wsdl:part element="tns:updateSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscriptionsByUsersCount">
-    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersCount">
+    <wsdl:part element="tns:getSubscriptionsByUsersCount" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:updateSubscriptionResponse">
+    <wsdl:part element="tns:updateSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="checkUserSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:checkUserSubscriptionResponse">
+    <wsdl:part element="tns:checkUserSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="resumeSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:resumeSubscriptionResponse">
+    <wsdl:part element="tns:resumeSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="setBackupResponse">
-    <wsdl:part name="parameters" element="tns:setBackupResponse">
+    <wsdl:part element="tns:setBackupResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscription">
-    <wsdl:part name="parameters" element="tns:getSubscription">
+    <wsdl:part element="tns:getSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteSubscription">
-    <wsdl:part name="parameters" element="tns:deleteSubscription">
+    <wsdl:part element="tns:deleteSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="checkUsersSubscription">
-    <wsdl:part name="parameters" element="tns:checkUsersSubscription">
+    <wsdl:part element="tns:checkUsersSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getFullSubscription">
-    <wsdl:part name="parameters" element="tns:getFullSubscription">
+    <wsdl:part element="tns:getFullSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLastProcessedRequestResponse">
-    <wsdl:part name="parameters" element="tns:findLastProcessedRequestResponse">
+    <wsdl:part element="tns:findLastProcessedRequestResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="suspendSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:suspendSubscriptionResponse">
+    <wsdl:part element="tns:suspendSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteSubscriptionResponse">
-    <wsdl:part name="parameters" element="tns:deleteSubscriptionResponse">
+    <wsdl:part element="tns:deleteSubscriptionResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscriptionsByUsers">
-    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsers">
+    <wsdl:part element="tns:getSubscriptionsByUsers" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createSubscription">
-    <wsdl:part name="parameters" element="tns:createSubscription">
+    <wsdl:part element="tns:createSubscription" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSubscriptionsByUsersResponse">
-    <wsdl:part name="parameters" element="tns:getSubscriptionsByUsersResponse">
+    <wsdl:part element="tns:getSubscriptionsByUsersResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="SubscriptionService">
     <wsdl:operation name="createSubscription">
-      <wsdl:input name="createSubscription" message="tns:createSubscription">
+      <wsdl:input message="tns:createSubscription" name="createSubscription">
     </wsdl:input>
-      <wsdl:output name="createSubscriptionResponse" message="tns:createSubscriptionResponse">
+      <wsdl:output message="tns:createSubscriptionResponse" name="createSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setBackup">
-      <wsdl:input name="setBackup" message="tns:setBackup">
+      <wsdl:input message="tns:setBackup" name="setBackup">
     </wsdl:input>
-      <wsdl:output name="setBackupResponse" message="tns:setBackupResponse">
+      <wsdl:output message="tns:setBackupResponse" name="setBackupResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUserSubscription">
-      <wsdl:input name="checkUserSubscription" message="tns:checkUserSubscription">
+      <wsdl:input message="tns:checkUserSubscription" name="checkUserSubscription">
     </wsdl:input>
-      <wsdl:output name="checkUserSubscriptionResponse" message="tns:checkUserSubscriptionResponse">
+      <wsdl:output message="tns:checkUserSubscriptionResponse" name="checkUserSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscription">
-      <wsdl:input name="getSubscription" message="tns:getSubscription">
+      <wsdl:input message="tns:getSubscription" name="getSubscription">
     </wsdl:input>
-      <wsdl:output name="getSubscriptionResponse" message="tns:getSubscriptionResponse">
+      <wsdl:output message="tns:getSubscriptionResponse" name="getSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscriptionsByUsersCount">
-      <wsdl:input name="getSubscriptionsByUsersCount" message="tns:getSubscriptionsByUsersCount">
+      <wsdl:input message="tns:getSubscriptionsByUsersCount" name="getSubscriptionsByUsersCount">
     </wsdl:input>
-      <wsdl:output name="getSubscriptionsByUsersCountResponse" message="tns:getSubscriptionsByUsersCountResponse">
+      <wsdl:output message="tns:getSubscriptionsByUsersCountResponse" name="getSubscriptionsByUsersCountResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findLastProcessedRequest">
-      <wsdl:input name="findLastProcessedRequest" message="tns:findLastProcessedRequest">
+      <wsdl:input message="tns:findLastProcessedRequest" name="findLastProcessedRequest">
     </wsdl:input>
-      <wsdl:output name="findLastProcessedRequestResponse" message="tns:findLastProcessedRequestResponse">
+      <wsdl:output message="tns:findLastProcessedRequestResponse" name="findLastProcessedRequestResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="resumeSubscription">
-      <wsdl:input name="resumeSubscription" message="tns:resumeSubscription">
+      <wsdl:input message="tns:resumeSubscription" name="resumeSubscription">
     </wsdl:input>
-      <wsdl:output name="resumeSubscriptionResponse" message="tns:resumeSubscriptionResponse">
+      <wsdl:output message="tns:resumeSubscriptionResponse" name="resumeSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscriptionsByUsers">
-      <wsdl:input name="getSubscriptionsByUsers" message="tns:getSubscriptionsByUsers">
+      <wsdl:input message="tns:getSubscriptionsByUsers" name="getSubscriptionsByUsers">
     </wsdl:input>
-      <wsdl:output name="getSubscriptionsByUsersResponse" message="tns:getSubscriptionsByUsersResponse">
+      <wsdl:output message="tns:getSubscriptionsByUsersResponse" name="getSubscriptionsByUsersResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getFullSubscription">
-      <wsdl:input name="getFullSubscription" message="tns:getFullSubscription">
+      <wsdl:input message="tns:getFullSubscription" name="getFullSubscription">
     </wsdl:input>
-      <wsdl:output name="getFullSubscriptionResponse" message="tns:getFullSubscriptionResponse">
+      <wsdl:output message="tns:getFullSubscriptionResponse" name="getFullSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateSubscription">
-      <wsdl:input name="updateSubscription" message="tns:updateSubscription">
+      <wsdl:input message="tns:updateSubscription" name="updateSubscription">
     </wsdl:input>
-      <wsdl:output name="updateSubscriptionResponse" message="tns:updateSubscriptionResponse">
+      <wsdl:output message="tns:updateSubscriptionResponse" name="updateSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="suspendSubscription">
-      <wsdl:input name="suspendSubscription" message="tns:suspendSubscription">
+      <wsdl:input message="tns:suspendSubscription" name="suspendSubscription">
     </wsdl:input>
-      <wsdl:output name="suspendSubscriptionResponse" message="tns:suspendSubscriptionResponse">
+      <wsdl:output message="tns:suspendSubscriptionResponse" name="suspendSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteSubscription">
-      <wsdl:input name="deleteSubscription" message="tns:deleteSubscription">
+      <wsdl:input message="tns:deleteSubscription" name="deleteSubscription">
     </wsdl:input>
-      <wsdl:output name="deleteSubscriptionResponse" message="tns:deleteSubscriptionResponse">
+      <wsdl:output message="tns:deleteSubscriptionResponse" name="deleteSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUsersSubscription">
-      <wsdl:input name="checkUsersSubscription" message="tns:checkUsersSubscription">
+      <wsdl:input message="tns:checkUsersSubscription" name="checkUsersSubscription">
     </wsdl:input>
-      <wsdl:output name="checkUsersSubscriptionResponse" message="tns:checkUsersSubscriptionResponse">
+      <wsdl:output message="tns:checkUsersSubscriptionResponse" name="checkUsersSubscriptionResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateSubscriptionConfig">
-      <wsdl:input name="updateSubscriptionConfig" message="tns:updateSubscriptionConfig">
+      <wsdl:input message="tns:updateSubscriptionConfig" name="updateSubscriptionConfig">
     </wsdl:input>
-      <wsdl:output name="updateSubscriptionConfigResponse" message="tns:updateSubscriptionConfigResponse">
+      <wsdl:output message="tns:updateSubscriptionConfigResponse" name="updateSubscriptionConfigResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="SubscriptionServiceSoapBinding" type="tns:SubscriptionService">
-    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="createSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="createSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="createSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUserSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="checkUserSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="checkUserSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setBackup">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="setBackup">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="setBackupResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="getSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscriptionsByUsersCount">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="getSubscriptionsByUsersCount">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getSubscriptionsByUsersCountResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findLastProcessedRequest">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="findLastProcessedRequest">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="findLastProcessedRequestResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="resumeSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="resumeSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="resumeSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getFullSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="getFullSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getFullSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSubscriptionsByUsers">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="getSubscriptionsByUsers">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getSubscriptionsByUsersResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="suspendSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="suspendSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="suspendSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="updateSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="updateSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUsersSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="checkUsersSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="checkUsersSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteSubscription">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="deleteSubscription">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="deleteSubscriptionResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateSubscriptionConfig">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="" style="document" />
       <wsdl:input name="updateSubscriptionConfig">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="updateSubscriptionConfigResponse">
-        <soap:body use="literal"/>
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="SubscriptionService">
-    <wsdl:port name="SubscriptionServicePort" binding="tns:SubscriptionServiceSoapBinding">
-      <soap:address location="http://localhost:9090/SubscriptionServicePort"/>
+    <wsdl:port binding="tns:SubscriptionServiceSoapBinding" name="SubscriptionServicePort">
+      <soap:address location="http://localhost:8061/openwis-dataservice-openwis-dataservice-server-ejb/SubscriptionService" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
