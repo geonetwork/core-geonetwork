@@ -119,6 +119,9 @@
     <logger name="geonetwork.wro4j">
         <level value="WARN" />
     </logger>
+     <logger name="geonetwork.httpproxy">
+        <level value="DEBUG" />
+    </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">

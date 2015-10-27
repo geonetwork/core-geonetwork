@@ -243,17 +243,24 @@ public class HttpProxyServlet extends HttpServlet {
                         }
                     }
 
-                    // Sets response contentType
+                    StringBuilder cTypeBuilder = new StringBuilder();
+                    for (String cType : contentTypesReturned)
+                        cTypeBuilder.append(cType + ", ");
+
+                    Log.debug(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (1/5) Content type From client response : " + contentType + " parsed :" + cTypeBuilder);
+
+                    // Sets response contentType and encoding
                     response.setContentType(getResponseContentType(contentTypesReturned));
+                    Log.debug(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (2/5) Output encoding : " + response.getCharacterEncoding());
 
                     String responseBody = IOUtils.toString(httpResponse.getEntity().getContent(), response.getCharacterEncoding()).trim();
-
+                    Log.debug(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3/5) Response converted to " + response.getCharacterEncoding());
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
-
+                    Log.debug(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4/5) Response printed to PrintWriter");
                     out.flush();
                     out.close();
-
+                    Log.debug(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (5/5) Response sent to client");
                 } else {
                     returnExceptionMessage(response,
                            httpResponse.getStatusLine().getStatusCode(),
