@@ -46,7 +46,7 @@
         this.destroyed = false;
 
         // Attach popup to body element
-        var target = options.target || $('.gn');
+        var target = options.target || $('.g');
         $(target).append(this.element);
       };
 
