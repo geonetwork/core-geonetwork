@@ -43,7 +43,7 @@
             },{
               type: 'statistics-content',
               label: 'contentStatistics',
-              icon: 'fa-bar-chart',
+              icon: 'fa-pie-chart',
               href: '#/dashboard/statistics-content'
             },{
               type: 'information',
@@ -53,17 +53,17 @@
             },{
               type: 'versioning',
               label: 'versioning',
-              icon: 'fa-rss',
+              icon: 'fa-code-fork',
               href: '#/dashboard/versioning'
             },{
               type: 'openwis',
               label: 'openwis-stats',
-              icon: 'fa-list-ul',
+              icon: 'fa-bar-chart',
               href: '#/dashboard/openwis'
             },{
               type: 'openwis-cache',
               label: 'openwis-cache',
-              icon: 'fa-list-ul',
+              icon: 'fa-table',
               href: '#/dashboard/openwis-cache'
             }]
       };

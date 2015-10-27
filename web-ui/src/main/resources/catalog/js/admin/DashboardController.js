@@ -49,7 +49,7 @@
             },{
               type: 'versioning',
               label: 'versioning',
-              icon: 'fa-rss',
+              icon: 'fa-code-fork',
               href: '#/dashboard/versioning'
             }]
       };
