@@ -34,4 +34,9 @@
 	<uri    name="../../../xsl/utils-fn.xsl"
 					uri="../xsl/utils-fn.xsl"/>
 
+  <uri name="common/functions-core.xsl"
+       uri="../xslt/common/functions-core.xsl"/>
+
+  <uri name="common/functions-metadata.xsl"
+       uri="../xslt/common/functions-metadata.xsl"/>
 </catalog>

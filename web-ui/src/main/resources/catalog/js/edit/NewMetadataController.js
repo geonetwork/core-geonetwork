@@ -114,7 +114,8 @@
                 $scope.mdTypes = types;
 
                 // Select the default one or the first one
-                if (defaultType && $.inArray(defaultType, $scope.mdTypes) > -1) {
+                if (defaultType &&
+                    $.inArray(defaultType, $scope.mdTypes) > -1) {
                   $scope.getTemplateNamesByType(defaultType);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
@@ -172,10 +173,11 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
-        var metadataUuid = "";
+        var metadataUuid = '';
 
         // If no auto-generated metadata identifier, get the value
-        if (!$scope.generateUuid && ($scope.mdIdentifierSelectedTemplateId != 1)) {
+        if (!$scope.generateUuid &&
+            ($scope.mdIdentifierSelectedTemplateId != 1)) {
 
           // Custom identifier
           if ($scope.mdIdentifierSelectedTemplateId == 0) {
@@ -187,7 +189,8 @@
 
             for (key in $scope.mdIdentifierTemplateTokens) {
               var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
-              metadataUuid = metadataUuid.replace("{"+labelKey+"}", $scope.mdIdentifierTemplateTokens[key].value);
+              metadataUuid = metadataUuid.replace('{' + labelKey + '}',
+                  $scope.mdIdentifierTemplateTokens[key].value);
             }
           }
 
@@ -201,17 +204,18 @@
             $routeParams.childOf ? true : false,
             undefined,
             metadataUuid
-        ).error(function (data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('createMetadataError'),
-              error: data.error,
-              timeout: 0,
-              type: 'danger'});
-          });
+        ).error(function(data) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('createMetadataError'),
+            error: data.error,
+            timeout: 0,
+            type: 'danger'});
+        });
       };
 
       /**
-       * Executed when the metadata identifier template is changed. Creates the model with the tokens of the template,
+       * Executed when the metadata identifier template is changed.
+       * Creates the model with the tokens of the template,
        * to fill from the template fields in the form.
        *
        */
@@ -221,44 +225,50 @@
         var selectedTemplate = getSelectedMdIdentifierTemplate();
 
         $scope.mdIdSelectedTemplateForLabel = selectedTemplate.template
-          .replaceAll("{", " ").replaceAll("}", " ");
+          .replaceAll('{', ' ').replaceAll('}', ' ');
 
-        var tokens =  selectedTemplate.template.match(/\{(.+?)\}/g);
+        var tokens = selectedTemplate.template.match(/\{(.+?)\}/g);
 
         $scope.mdIdentifierTemplateTokens = {};
 
-        for(var i = 0; i < tokens.length; i++) {
-          var labelValue = tokens[i].replace("{", "").replace("}", "");
+        for (var i = 0; i < tokens.length; i++) {
+          var labelValue = tokens[i].replace('{', '').replace('}', '');
           $scope.mdIdentifierTemplateTokens[i] = {label: labelValue, value: ''};
         }
 
       };
 
       /**
-       * Updates the metadata identifier template label with the values filled by the user.
+       * Updates the metadata identifier template label
+       * with the values filled by the user.
        *
        */
       $scope.updateMdIdentifierTemplateLabel = function() {
-        $scope.mdIdSelectedTemplateForLabel = getSelectedMdIdentifierTemplate().template;
+        $scope.mdIdSelectedTemplateForLabel =
+            getSelectedMdIdentifierTemplate().template;
 
         for (key in $scope.mdIdentifierTemplateTokens) {
           if ($scope.mdIdentifierTemplateTokens[key].value) {
             var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
 
-            $scope.mdIdSelectedTemplateForLabel = $scope.mdIdSelectedTemplateForLabel
-              .replace("{"+labelKey+"}",  " " + $scope.mdIdentifierTemplateTokens[key].value + " ");
+            $scope.mdIdSelectedTemplateForLabel =
+                $scope.mdIdSelectedTemplateForLabel
+                .replace('{' + labelKey + '}',
+                ' ' + $scope.mdIdentifierTemplateTokens[key].value + ' ');
           }
         }
 
-        $scope.mdIdSelectedTemplateForLabel = $scope.mdIdSelectedTemplateForLabel
-          .replaceAll("{", " ").replaceAll("}", " ");
+        $scope.mdIdSelectedTemplateForLabel =
+            $scope.mdIdSelectedTemplateForLabel
+            .replaceAll('{', ' ').replaceAll('}', ' ');
 
       };
 
       /**
-       * Function to show the custom metadata idenfifier field or the template URN fields.
+       * Function to show the custom metadata idenfifier
+       * field or the template URN fields.
        *
-       * @returns {boolean}
+       * @return {boolean}
        */
       $scope.showCustomMdIdentifierField = function() {
         if (!$scope.mdIdentifierSelectedTemplateId) return false;
@@ -267,11 +277,12 @@
       };
 
       /**
-       * Returns true if all the metadata identifier form fields are filled.
+       * Returns true if all the metadata identifier
+       * form fields are filled.
        *
-       * For auto-generated metadata identifier returns always true.
+       * For auto-generated metadata identifier returns true.
        *
-       * @returns {*}
+       * @return {boolean}
        */
       $scope.isMdIdentifierFilled = function() {
         if ($scope.mdIdentifierSelectedTemplateId == 1) return true;
@@ -286,20 +297,22 @@
           }
         }
 
-        return  fieldsFilled;
+        return fieldsFilled;
       };
 
-      String.prototype.replaceAll = function (find, replace) {
+      String.prototype.replaceAll = function(find, replace) {
         var str = this;
-        return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+        return str.replace(new RegExp(find
+          .replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
       };
 
 
       function getSelectedMdIdentifierTemplate(id) {
         var selectedTemplate;
 
-        for (var i = 0; i < $scope.mdIdentifierTemplates.length; i ++) {
-          if ($scope.mdIdentifierTemplates[i].id == $scope.mdIdentifierSelectedTemplateId) {
+        for (var i = 0; i < $scope.mdIdentifierTemplates.length; i++) {
+          if ($scope.mdIdentifierTemplates[i].id ==
+              $scope.mdIdentifierSelectedTemplateId) {
             selectedTemplate = $scope.mdIdentifierTemplates[i];
             break;
           }
@@ -312,9 +325,9 @@
 
         $http.get('metadataIdentifierTemplates?_content_type=json')
           .success(function(data) {
-            $scope.mdIdentifierTemplates = data;
+              $scope.mdIdentifierTemplates = data;
 
-          });
+            });
 
       }
 

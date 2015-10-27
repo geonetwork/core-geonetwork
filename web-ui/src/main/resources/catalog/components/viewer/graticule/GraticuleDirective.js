@@ -74,7 +74,9 @@
           var lastX = intersections[intersections.length - 2];
           var lastY = intersections[intersections.length - 1];
           // FIXME ol.geom.SimpleGeometry#equals?
-          if (!angular.isDefined(lastX) || lastX != point[0] || lastY != point[1]) {
+          if (!angular.isDefined(lastX) ||
+              lastX != point[0] ||
+              lastY != point[1]) {
             Array.prototype.push.apply(intersections, point);
           }
         }

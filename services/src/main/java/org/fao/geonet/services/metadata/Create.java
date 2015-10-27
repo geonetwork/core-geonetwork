@@ -80,7 +80,6 @@ public class Create extends NotInReadOnlyModeService {
 		String id;
 		String uuid;
 		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
-
         SettingManager sm = gc.getBean(SettingManager.class);
         boolean generateUuid = sm.getValueAsBool("system/metadatacreate/generateUuid");
 
@@ -121,7 +120,7 @@ public class Create extends NotInReadOnlyModeService {
         }
 
 
-        String groupOwner= Util.getParam(params, Params.GROUP);
+		String groupOwner= Util.getParam(params, Params.GROUP);
 		
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();

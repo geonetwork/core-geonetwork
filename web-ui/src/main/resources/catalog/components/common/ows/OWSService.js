@@ -105,7 +105,7 @@
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
-                        defer.reject("capabilitiesParseError");
+                        defer.reject('capabilitiesParseError');
                       }
                     })
                   .error(function(data, status, headers, config) {

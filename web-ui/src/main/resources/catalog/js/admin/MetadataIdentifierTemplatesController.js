@@ -17,7 +17,7 @@
 
       $scope.$on('$locationChangeStart', function(event) {
         if ($('.ng-dirty').length > 0 &&
-          !confirm($translate('unsavedChangesWarning')))
+            !confirm($translate('unsavedChangesWarning')))
           event.preventDefault();
       });
 
@@ -40,10 +40,11 @@
       function loadMetadataUrnTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get('metadataIdentifierTemplates?_content_type=json&userDefinedOnly=true')
+        $http.get('metadataIdentifierTemplates' +
+            '?_content_type=json&userDefinedOnly=true')
           .success(function(data) {
-            $scope.mdIdentifierTemplates = data;
-          });
+              $scope.mdIdentifierTemplates = data;
+            });
 
       }
 
@@ -58,21 +59,21 @@
       $scope.deleteMetadataIdentifierTemplate = function(id) {
         $http.delete($scope.url + 'metadataIdentifierTemplates?id=' + id)
           .success(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
-            loadMetadataUrnTemplates();
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('metadataUrnTemplateDeleted'),
-              timeout: 2,
-              type: 'success'});
-          })
+              $('.ng-dirty').removeClass('ng-dirty');
+              loadMetadataUrnTemplates();
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('metadataUrnTemplateDeleted'),
+                timeout: 2,
+                type: 'success'});
+            })
           .error(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('metadataUrnTemplateDeletedError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $('.ng-dirty').removeClass('ng-dirty');
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('metadataUrnTemplateDeletedError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       $scope.saveMetadataIdentifierTemplate = function() {
@@ -83,23 +84,24 @@
           template: $scope.mdIdentifierTemplateSelected.template
         };
 
-        $http.post($scope.url + 'metadataIdentifierTemplates', null, {params: params})
+        $http.post($scope.url + 'metadataIdentifierTemplates',
+            null, {params: params})
           .success(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
-            loadMetadataUrnTemplates();
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate('metadataIdentifierTemplateUpdated'),
-              timeout: 2,
-              type: 'success'});
-          })
+              $('.ng-dirty').removeClass('ng-dirty');
+              loadMetadataUrnTemplates();
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('metadataIdentifierTemplateUpdated'),
+                timeout: 2,
+                type: 'success'});
+            })
           .error(function(data) {
-            $('.ng-dirty').removeClass('ng-dirty');
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('metadataIdentifier TemplateUpdateError'),
-              error: data,
-              timeout: 0,
-              type: 'danger'});
-          });
+              $('.ng-dirty').removeClass('ng-dirty');
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('metadataIdentifier TemplateUpdateError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       loadMetadataUrnTemplates();

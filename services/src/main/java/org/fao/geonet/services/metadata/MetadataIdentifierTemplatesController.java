@@ -77,7 +77,7 @@ public class MetadataIdentifierTemplatesController {
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository = appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
         if (userDefinedOnly) {
-            return metadataIdentifierTemplateRepository.findAll(MetadataIdentifierTemplateSpecs.isDefault(false));
+            return metadataIdentifierTemplateRepository.findAll(MetadataIdentifierTemplateSpecs.isSystemProvided(false));
 
         } else {
             return metadataIdentifierTemplateRepository.findAll();

@@ -12,6 +12,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
@@ -73,8 +75,8 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
     }
 
     @Override
-    protected File getTestMetadataFile() {
-        final String mdFile = XmlViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
-        return new File(mdFile);
+    protected File getTestMetadataFile() throws URISyntaxException {
+        final URL mdFile = XmlViewFormatterTest.class.getResource("/iso19139/example.xml");
+        return new File(mdFile.toURI());
     }
 }

@@ -56,6 +56,12 @@ public class Get extends NotInReadOnlyModeService {
 
         // delete the file
         Path file = Lib.resource.getDir(context, access, id).resolve(filename);
+        
+        if(filename.contains("..")
+                || filename.startsWith("://", 1) 
+                || filename.startsWith("/")) {
+            throw new SecurityException("Wrong filename");
+        }
 
         Files.deleteIfExists(file);
 
