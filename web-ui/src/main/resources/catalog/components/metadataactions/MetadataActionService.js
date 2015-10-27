@@ -21,13 +21,17 @@
     '$translate',
     '$q',
     '$http',
+    'gnGlobalSettings',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnPopup,
-             $translate, $q, $http) {
+             $translate, $q, $http, gnGlobalSettings) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
+
+      var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ?
+          gnGlobalSettings.gnUrl : '';
 
       var alertResult = function(msg) {
         gnAlertService.addAlert({
@@ -66,7 +70,7 @@
        * @param {boolean} child
        */
       var duplicateMetadata = function(id, child) {
-        var url = 'catalog.edit#/';
+        var url = printConfigUrlPrefix + 'catalog.edit#/';
         if (id) {
           if (child) {
             url += 'create?childOf=' + id;
