@@ -28,6 +28,8 @@
           element.addClass(options.className);
         }
 
+        this.backdrop = $('<div class="modal-backdrop fade in"></div>');
+
         // Pass some popup functions for clients to be used in content
         var popup = this;
         options.open = function() {popup.open();};
@@ -48,15 +50,18 @@
         // Attach popup to body element
         var target = options.target || $('.g');
         $(target).append(this.element);
+        $(target).append(this.backdrop);
       };
 
       Popup.prototype.open = function(scope) {
         // Show the popup
         this.element.show();
+        this.backdrop.show();
       };
 
       Popup.prototype.close = function() {
         this.element.hide();
+        this.backdrop.hide();
 
         var onCloseCallback = this.scope.options.onCloseCallback;
         if (angular.isFunction(onCloseCallback)) {
@@ -73,6 +78,7 @@
         this.scope = null;
         this.element.remove();
         this.element = null;
+        this.backdrop = null;
         this.destroyed = true;
       };
 

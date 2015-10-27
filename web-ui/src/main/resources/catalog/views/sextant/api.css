@@ -19300,6 +19300,10 @@ yx-axis
 .g .popover {
   height: auto;
 }
+.gn .g,
+.g .g {
+  height: auto;
+}
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input],
 .g [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
   width: 15em;
@@ -19489,6 +19493,7 @@ yx-axis
   right: 0;
   bottom: 0;
   pointer-events: none;
+  height: auto;
 }
 .g > div:first-of-type,
 .g > div:only-child {
