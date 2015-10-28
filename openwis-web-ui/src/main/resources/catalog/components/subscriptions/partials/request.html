@@ -20,7 +20,7 @@
 							data-target="#{{type}}param2" aria-controls="{{type}}param2"
 							role="tab" data-toggle="tab" data-translate="">openwisSubSelection</a>
 							<div class="nav-arrow"></div></li>
-						<li data-ng-if="type != 'download'" role="presentation"><div class="nav-wedge"></div> <a
+						<li role="presentation"><div class="nav-wedge"></div> <a
 							data-target="#{{type}}primary2" aria-controls="{{type}}primary2"
 							role="tab" data-toggle="tab" data-translate="">openwisFirstDissemination</a>
 							<div class="nav-arrow"></div></li>
@@ -41,8 +41,8 @@
 							<span data-translate="">openwisNotImplemented</span>
 						</div>
 						<div role="tabpanel" class="tab-pane" id="{{type}}primary2">
-							<div class="panel-group col-xs-12" id="{{type}}primaryAccordion">
-								<div class="panel panel-default">
+							<div class="panel-group col-xs-12" id="{{type}}primaryAccordion" >
+								<div class="panel panel-default" data-ng-if="type != 'download'" >
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a>MSS/MFS</a>
@@ -53,7 +53,7 @@
 									</div>
 								</div>
 
-								<div class="panel panel-default">
+								<div class="panel panel-default" data-ng-if="type != 'download'" >
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a data-toggle="collapse"
@@ -62,7 +62,7 @@
 												data-target="#{{type}}publicDissemination" data-translate="">openwisPublicDissemination</a>
 										</h4>
 									</div>
-									<div id="{{type}}publicDissemination"
+									<div id="{{type}}publicDissemination" 
 										class="panel-collapse collapse in">
 										<div class="panel-body">
 											<div>

@@ -63,7 +63,7 @@
                   $scope.directDownload = false;
                 } else {
                   $scope.isRequested = true;
-                  if ($.isNumberic(data)) {
+                  if ($.isNumeric(data)) {
                     $scope.directDownload = false;
                     //try until we get the url directDownload
                     $timeout($scope.checkDirectDownload, 2000);
