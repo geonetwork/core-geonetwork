@@ -97,7 +97,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         return false;
     }
 
-    protected abstract File getTestMetadataFile();
+    protected abstract File getTestMetadataFile() throws Exception;
 
     protected Handlers getHandlers(MockHttpServletRequest request, String formatterId) throws Exception {
         final Pair<FormatterImpl, FormatterParams> formatterAndParams = getFormatterFormatterParamsPair(request, formatterId);
