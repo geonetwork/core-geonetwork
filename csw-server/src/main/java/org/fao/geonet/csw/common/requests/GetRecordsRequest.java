@@ -30,6 +30,7 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -224,6 +225,8 @@ public class GetRecordsRequest extends CatalogRequest
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
         // Add queryable namespaces to POST query
         params.addNamespaceDeclaration(Csw.NAMESPACE_DC);
+        // TODO: Should add all typenames namespaces
+        params.addNamespaceDeclaration(ISO19139Namespaces.GMD);
 
 		//--- 'service' and 'version' are common mandatory attributes
 		setAttrib(params, "service", Csw.SERVICE);
