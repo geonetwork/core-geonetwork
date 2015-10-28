@@ -21,6 +21,22 @@ mvn install -Psolr-download
 ```
 
 
+## Creating the default collection 
+
+
+Start Solr and then create the default collection:
+```
+solr-5.2.1/bin/solr create -p 8984 -c catalog -d src/main/solr-cores/catalog
+```
+
+or use maven when running from the source code:
+
+```
+mvn install -Psolr-init
+```
+This will start Solr, create the collection and stop Solr.
+
+
 ## Starting and stopping Solr
 
 Manually start and stop Solr using:
@@ -47,19 +63,3 @@ foreground mode.
 
 TODO
 
-
-
-## Creating the default collection 
-
-
-Start Solr and then create the default collection:
-```
-solr-5.2.1/bin/solr create -p 8984 -c catalog -d src/main/solr-cores/catalog
-```
-
-or use maven when running from the source code:
-
-```
-mvn install -Psolr-init
-```
-This will start Solr, create the collection and stop Solr.
