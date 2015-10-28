@@ -347,7 +347,9 @@
                     viewerMap.addLayer(layer);
                     if(waitingLayers) waitingLayers.push(layer);
                     $scope.addLayerPopover('map');
-                    $scope.mainTabs.map.titleInfo += 1;
+                    if (!$scope.mainTabs.map.active) {
+                      $scope.mainTabs.map.titleInfo += 1;
+                    }
                   });
           if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
         }
