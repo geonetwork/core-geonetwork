@@ -10,6 +10,7 @@
   ]);
 
   module.service('gnMetadataActions', [
+    '$window',
     '$rootScope',
     '$timeout',
     '$location',
@@ -22,7 +23,7 @@
     '$q',
     '$http',
     'gnGlobalSettings',
-    function($rootScope, $timeout, $location, gnHttp,
+    function($window, $rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnPopup,
              $translate, $q, $http, gnGlobalSettings) {
@@ -78,7 +79,7 @@
             url += 'create?from=' + id;
           }
         }
-        window.open(url, '_blank');
+        $window.open(url, '_blank');
       };
 
       /**
@@ -102,7 +103,7 @@
           url += gnSearchSettings.formatter.defaultPdfUrl + params;
         }
         if (url) {
-          location.replace(url);
+          $window.open(url, '_blank');
         }
         else {
           console.error('Error while exporting PDF');
