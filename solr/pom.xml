@@ -10,6 +10,21 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>solr</artifactId>
+  <packaging>pom</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-solrj</artifactId>
+      <version>${solr.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+  </dependencies>
 
   <profiles>
     <profile>
@@ -198,4 +213,8 @@
       </build>
     </profile>
   </profiles>
+  <modules>
+    <module>wfsfeature-harvester</module>
+    <module>camel-test</module>
+  </modules>
 </project>

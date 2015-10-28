@@ -36,6 +36,8 @@ mvn install -Psolr-init
 ```
 This will start Solr, create the collection and stop Solr.
 
+TODO: One collection per node should be created
+
 
 ## Starting and stopping Solr
 
@@ -63,3 +65,26 @@ foreground mode.
 
 TODO
 
+
+## WFS Feature Indexing
+
+Start the sample Camel application:
+
+```
+cd wfsfeature-harvester
+mvn camel:run
+```
+
+
+## Deleting document
+
+```
+curl http://localhost:8984/solr/catalog/update \
+    --data '<delete><query>*:*</query></delete>' \
+    -H 'Content-type:text/xml; charset=utf-8'
+    
+curl http://localhost:8984/solr/catalog/update \
+    --data '<commit/>' \
+    -H 'Content-type:text/xml; charset=utf-8'
+
+```
