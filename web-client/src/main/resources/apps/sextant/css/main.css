@@ -820,3 +820,7 @@ input.md {
     margin-top: -3px;
     padding-right: 4px;
 }
+
+input[type="radio"][disabled] + label {
+    color: #d3d3d3;
+}
