@@ -108,7 +108,7 @@ public class SextantExtractor {
 				out.write(String.format(
 						"<user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
 								+ " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />", us.getName(),
-						us.getSurname(), us.getEmailAddr(), us.getPrincipal().getOrganisation().equals("ifremer"),
+						us.getSurname(), us.getEmailAddr(), us.getEmailAddr().contains("@ifremer.fr"),
 						uidNumberStr, us.getUsername(), jsonExtractionSpec.getUser().getOrg(),
 						jsonExtractionSpec.getUser().getUsage()).getBytes());
 			} else {
