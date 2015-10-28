@@ -64,8 +64,7 @@ public class OpenwisDownloadRepositoryImpl
                     id);
             if (entity != null) {
                 _entityManager.remove(entity);
-                _entityManager.flush();
-                _entityManager.clear();
+                _entityManager.detach(entity);
             }
         }
     }

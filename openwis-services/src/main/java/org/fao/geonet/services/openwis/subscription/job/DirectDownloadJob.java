@@ -11,12 +11,13 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.OpenwisDownload;
 import org.fao.geonet.repository.OpenwisDownloadRepository;
 import org.openwis.processedrequest.client.ProcessedRequestClient;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -29,11 +30,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  */
 public class DirectDownloadJob extends QuartzJobBean {
 
-    @Autowired
-    private ProcessedRequestClient processedRequestClient;
-
-    @Autowired
-    private OpenwisDownloadRepository openwisRepository;
+    private ConfigurableApplicationContext applicationContext;
 
     /**
      * @see org.springframework.scheduling.quartz.QuartzJobBean#executeInternal(org.quartz.JobExecutionContext)
@@ -43,6 +40,20 @@ public class DirectDownloadJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context)
             throws JobExecutionException {
+
+        // Retrieve application context. A default SpringBeanJobFactory
+        // will not provide the application context to the job. Use
+        // AutowiringSpringBeanJobFactory.
+        applicationContext = (ConfigurableApplicationContext) context
+                .getJobDetail().getJobDataMap().get("applicationContext");
+
+        ApplicationContextHolder.set(applicationContext);
+
+        OpenwisDownloadRepository openwisRepository = this.applicationContext
+                .getBean(OpenwisDownloadRepository.class);
+        ProcessedRequestClient processedRequestClient = this.applicationContext
+                .getBean(ProcessedRequestClient.class);
+
         Specification<OpenwisDownload> spec = new Specification<OpenwisDownload>() {
             public Predicate toPredicate(Root<OpenwisDownload> root,
                     CriteriaQuery<?> query, CriteriaBuilder builder) {
@@ -53,7 +64,10 @@ public class DirectDownloadJob extends QuartzJobBean {
 
         List<OpenwisDownload> list = openwisRepository.findAll(spec);
         for (OpenwisDownload od : list) {
-            if (processedRequestClient.isFinished((long) od.getRequestId())) {
+            if (od.getRequestId() == null) {
+                openwisRepository.delete(od);
+            } else if (processedRequestClient
+                    .isFinished((long) od.getRequestId())) {
                 od.setUrl(processedRequestClient
                         .getURL((long) od.getRequestId()));
                 openwisRepository.save(od);
