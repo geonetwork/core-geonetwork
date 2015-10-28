@@ -63,6 +63,7 @@
             sxtPanierService.extract(scope.formObj).then(function(data) {
               modal.modal('hide');
               if(data.data.success) {
+                scope.downloadDisabled = true;
                 scope.report = {
                   success: true
                 };
@@ -164,9 +165,7 @@
               scope.form = {
                 id: scope.element.md.getUuid(),
                 input: {
-                  format: angular.isArray(scope.element.md.format) ?
-                      scope.element.md.format[0] :
-                      scope.formats[0].value,
+                  format: dataType,
                   epsg: inputCrs,
                   protocol: scope.element.link.protocol,
                   linkage: scope.element.link.url

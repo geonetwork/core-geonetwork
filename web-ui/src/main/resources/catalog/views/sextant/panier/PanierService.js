@@ -21,16 +21,6 @@
       };
 
       this.extract = function(panier) {
-
-/*
-        var output = [];
-        angular.forEach(panier, function(elt) {
-          output.push({
-            id: elt.md.getUuid()
-          })
-        });
-        console.log(output);
-*/
         return callExtractService(panier);
       };
     }
