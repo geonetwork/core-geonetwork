@@ -47,17 +47,19 @@
             layers: []
           };
 
-          scope.$watch('user', function(user) {
-            if(user) {
+          var unregisterUserWatch = scope.$watch('user', function(user) {
+            if(user && user.surname) {
               angular.extend(scope.formObj.user, {
                 lastname: user.surname,
                 firstname: user.name,
                 mail: angular.isArray(user.email) ?
                     user.email[0] : user.email,
-                org: user.organisation
+                org: (angular.isArray(user.organisation) ?
+                    user.organisation[0] : user.organisation) || ''
               });
+              unregisterUserWatch();
             }
-          });
+          }, true);
 
           scope.extract = function() {
             sxtPanierService.extract(scope.formObj).then(function(data) {
