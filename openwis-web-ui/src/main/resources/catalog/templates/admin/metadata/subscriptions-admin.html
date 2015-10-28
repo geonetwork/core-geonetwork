@@ -5,8 +5,8 @@
 			<div class="panel-heading" data-translate="">subscriptions-admin</div>
 			<div class="panel-body">
 				<div>
-				    <label data-translate="">Group</label>
-					<select data-ng-model="group" name="group">
+					<label data-translate="">Group</label> <select
+						data-ng-model="group" name="group">
 						<option></option>
 						<option data-ng-repeat="g in groups track by g['@id']"
 							value="{{g.name}}" data-translate="">{{g.label[lang]}}</option>
@@ -45,4 +45,6 @@
 			</div>
 		</div>
 	</div>
+	<ng-include
+		src="'../../catalog/components/subscriptions/partials/request.html'"></ng-include>
 </div>

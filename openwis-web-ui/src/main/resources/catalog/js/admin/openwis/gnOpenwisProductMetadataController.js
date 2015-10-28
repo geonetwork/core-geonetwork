@@ -112,7 +112,9 @@
 
         $scope.updateData = function() {
           // Refresh the table
-          $scope.dtInstance.reloadData();
+          if ($scope.dtInstance.dataTable) {
+            $scope.dtInstance.dataTable._fnDraw()
+          }
         };
 
 

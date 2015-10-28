@@ -17,6 +17,7 @@ import org.openwis.subscription.client.ExtractMode;
  */
 public class DisseminationPair {
 
+    private Long id;
     @Nonnull
     private ExtractMode extractMode;
     private Dissemination primary;
@@ -72,6 +73,14 @@ public class DisseminationPair {
 
     public void setExtractMode(ExtractMode extractMode) {
         this.extractMode = extractMode;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

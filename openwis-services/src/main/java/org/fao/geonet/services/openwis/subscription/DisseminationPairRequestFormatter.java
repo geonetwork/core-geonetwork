@@ -91,11 +91,16 @@ public class DisseminationPairRequestFormatter
 
         if (!json.isEmpty()) {
 
-            if (json.containsKey("email") || json.containsKey("host")) {
+            if ((json.containsKey("email") && json.getString("email") != null
+                    && !json.getString("email").equals("null"))
+                    || (json.containsKey("host")
+                            && json.getString("host") != null)
+                            && !json.getString("host").equals("null")) {
                 d = new PublicDissemination();
 
                 Diffusion dif = null;
-                if (json.containsKey("email")) {
+                if (json.containsKey("email") && json.getString("email") != null
+                        && !json.getString("email").equals("null")) {
                     dif = new MailDiffusion();
                     // mandatory
                     ((MailDiffusion) dif).setAddress(json.getString("email"));

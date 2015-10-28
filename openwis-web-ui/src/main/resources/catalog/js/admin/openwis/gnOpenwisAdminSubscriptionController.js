@@ -15,12 +15,13 @@
               '$rootScope',
               'DTOptionsBuilder',
               'DTColumnBuilder',
-              '$http',
+              '$timeout',
+              '$translate',
               function($scope, $routeParams, $http, $rootScope,
-                  DTOptionsBuilder, DTColumnBuilder, $http) {
+                  DTOptionsBuilder, DTColumnBuilder, $timeout, $translate) {
 
                 $scope.myself = $("*[name='myself']").val();
-
+                $scope.type = "ManageSubscription";
                 $scope.dtInstance = {},
 
                 $scope.groups = [];
@@ -72,12 +73,16 @@
                                     + ")\"  title=\"Suspend\"><i class=\"fa fa-pause\"></i></a>";
                               }
 
-                              return "<div style=\"width:120px\">"
+                              return "<div style=\"width:160px\">"
                                   + "<a class=\"btn btn-link\" target=\"_blank\" href=\"catalog.search#/metadata/"
                                   + full.urn
                                   + "\" title=\"View Product\"><i class=\"fa fa-eye\"></i></a>"
                                   + "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().edit('"
                                   + full.id
+                                  + "', '"
+                                  + full.title
+                                  + "', '"
+                                  + full.urn
                                   + "')\" title=\"Edit subscription\"><i class=\"fa fa-edit\"></i></a>"
                                   + susres
                                   + "<a class=\"btn btn-link\" onclick=\"angular.element(this).scope().discard('"
@@ -125,16 +130,41 @@
                   });
                 };
 
-                $scope.edit = function(id) {
+                $scope.edit = function(id, title, urn) {
                   $http(
                       {
                         url : $scope.url
                             + 'openwis.subscription.get?subscriptionId=' + id,
                         method : 'GET'
-                      }).success(function(data) {
-                    console.log(data);
-                    $scope.updateData();
-                  });
+                      })
+                      .success(
+                          function(data) {
+
+                            data.primary = data.primaryDissemination.diffusion;
+                            data.primary.compression = data.primaryDissemination.zipMode;
+                            data.primary.email = data.primary.address;
+                            data.primary.attachmentMode = data.primary.mailAttachmentMode;
+                            data.primary.dispatchMode = data.primary.mailDispatchMode;
+                            data.primary.port = parseInt(data.primary.port);
+                            data.primary.fileSize = data.primary.checkFileSize;
+
+                            if (data.secondaryDissemination) {
+                              data.secondary = data.secondaryDissemination.diffusion;
+                              data.secondary.compression = data.secondaryDissemination.zipMode;
+                              data.secondary.email = data.secondary.address;
+                              data.secondary.attachmentMode = data.secondary.mailAttachmentMode;
+                              data.secondary.dispatchMode = data.secondary.mailDispatchMode;
+                              data.secondary.port = parseInt(data.secondary.port);
+                              data.secondary.fileSize = data.secondary.checkFileSize;
+                            }
+
+                            data.username = data.user;
+                            data.title = title;
+                            data.metadataUrn = urn;
+
+                            $scope.data = data;
+                            $("#" + $scope.type + "Modal").modal();
+                          });
                 };
 
                 $scope.discard = function(id) {
@@ -149,6 +179,76 @@
                       $scope.updateData();
                     });
                   }
+                }
+
+                $scope.next = function() {
+                  $timeout(function() {
+                    $("li.active", "#" + $scope.type + "Modal").next('li')
+                        .find('a').trigger('click')
+                  });
+                }
+                $scope.prev = function() {
+                  $timeout(function() {
+                    $("li.active", "#" + $scope.type + "Modal").prev('li')
+                        .find('a').trigger('click')
+                  });
+                }
+                $scope.close = function() {
+                  $("#" + $scope.type + "Modal").modal('hide');
+                  $timeout(function() {
+                    $($("li", "#" + $scope.type + "Modal")[0]).find('a')
+                        .trigger('click')
+                  });
+                }
+
+                $scope.save = function() {
+                  if (!$("#subscribepublicDissemination").hasClass("in")) {
+                    $scope.data.primary.email = null;
+                    $scope.data.primary.host = null;
+                  } else {
+                    if (!$("#subscribemail").hasClass("in")) {
+                      $scope.data.primary.email = null;
+                    } else {
+                      $scope.data.primary.host = null;
+                    }
+                  }
+
+                  if (!$("#subscribepublicDissemination2").hasClass("in")) {
+                    $scope.data.primary.email = null;
+                    $scope.data.primary.host = null;
+                  } else {
+                    if (!$("#subscribemail2").hasClass("in")) {
+                      $scope.data.primary.email = null;
+                    } else {
+                      $scope.data.primary.host = null;
+                    }
+                  }
+
+                  $http({
+                    url : 'openwis.subscription.set',
+                    params : {
+                      'data' : JSON.stringify($scope.data)
+                    },
+                    method : 'GET'
+                  }).success(function(data) {
+                    $scope.close();
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title : $translate('openwisSuccessSubscribe'),
+                      message : $translate('openwisSuccessTrackID') + data,
+                      timeout : 0,
+                      type : 'success'
+                    });
+                  }).error(
+                      function(data) {
+                        $rootScope.$broadcast('StatusUpdated', {
+                          title : $translate('openwisError'),
+                          error : data,
+                          message : data.substring(data.indexOf("<body>") + 6,
+                              data.lastIndexOf("</body>")),
+                          timeout : 0,
+                          type : 'danger'
+                        });
+                      });
                 }
               }
 

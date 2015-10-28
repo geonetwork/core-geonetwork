@@ -18,10 +18,10 @@ import org.fao.geonet.domain.OpenwisDownload;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OpenwisDownloadRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.services.openwis.product.ProductMetadataController;
 import org.fao.geonet.services.openwis.subscription.job.DirectDownloadJob;
 import org.fao.geonet.services.openwis.util.Request;
 import org.fao.geonet.services.openwis.util.Request.ColumnCriterias;
@@ -30,9 +30,12 @@ import org.fao.geonet.services.openwis.util.Response;
 import org.openwis.request.client.AdHoc;
 import org.openwis.request.client.RequestClient;
 import org.openwis.subscription.client.ProductMetadata;
+import org.openwis.subscription.client.RecurrentScale;
+import org.openwis.subscription.client.RecurrentUpdateFrequency;
 import org.openwis.subscription.client.SortDirection;
 import org.openwis.subscription.client.Subscription;
 import org.openwis.subscription.client.SubscriptionColumn;
+import org.openwis.subscription.client.Temporal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -76,6 +79,9 @@ public class SubscriptionController {
 
     @Autowired
     private ServiceManager serviceManager;
+
+    @Autowired
+    private ProductMetadataController productMetadataController;
 
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.search" }, produces = {
@@ -211,7 +217,6 @@ public class SubscriptionController {
         return true;
     }
 
-
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.suspend" }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -219,7 +224,6 @@ public class SubscriptionController {
         manager.suspend(subscriptionId);
         return true;
     }
-
 
     @RequestMapping(value = {
             "/{lang}/openwis.subscription.resume" }, produces = {
@@ -231,21 +235,82 @@ public class SubscriptionController {
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.set" }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody OkResponse save(@PathVariable String lang,
-            @RequestParam Long subscriptionId) {
+    public @ResponseBody Subscription save(HttpServletRequest request) {
+        DisseminationPair disseminationPair = conversionService
+                .convert(request.getParameter("data"), DisseminationPair.class);
+        Subscription subscription = new Subscription();
+        subscription.setId(disseminationPair.getId());
 
-        Subscription subscription = manager
-                .retrieveSubscription(subscriptionId);
+        subscription.setUser(disseminationPair.getUsername());
+        subscription.setPrimaryDissemination(disseminationPair.getPrimary());
+        subscription
+                .setSecondaryDissemination(disseminationPair.getSecondary());
+        subscription.setExtractMode(disseminationPair.getExtractMode());
 
-        if (subscription != null) {
-            // TODO: Set subscription fields
+        org.openwis.products.client.ProductMetadata product = productMetadataController
+                .retrieve(disseminationPair.getMetadataUrn());
+        ProductMetadata value = convert(product);
 
-            manager.save(subscription);
-        } else {
-            throw new SubscriptionNotFoundException();
+        subscription.setProductMetadata(value);
+
+        return manager.save(subscription);
+    }
+
+    /**
+     * @param product
+     * @return
+     */
+    private ProductMetadata convert(
+            org.openwis.products.client.ProductMetadata product) {
+        ProductMetadata res = new ProductMetadata();
+        res.setCreationDate(product.getCreationDate());
+        res.setDataPolicy(product.getDataPolicy());
+        res.setFed(product.isFed());
+        res.setFileExtension(product.getFileExtension());
+        res.setFncPattern(product.getFncPattern());
+        res.setGtsCategory(product.getGtsCategory());
+        res.setId(product.getId());
+        res.setIngested(product.isIngested());
+        res.setLocalDataSource(product.getLocalDataSource());
+        res.setOriginator(product.getOriginator());
+        res.setOverridenDataPolicy(product.getOverridenDataPolicy());
+        res.setOverridenFileExtension(product.getOverridenFileExtension());
+        res.setOverridenFncPattern(product.getOverridenFncPattern());
+        res.setOverridenGtsCategory(product.getOverridenGtsCategory());
+        res.setOverridenPriority(product.getOverridenPriority());
+        res.setPriority(product.getPriority());
+        res.setProcess(product.getProcess());
+        res.setStopGap(product.isStopGap());
+        res.setTitle(product.getTitle());
+        res.setUrn(product.getUrn());
+
+        if (product.getUpdateFrequency() != null) {
+            if (product
+                    .getUpdateFrequency() instanceof org.openwis.products.client.RecurrentUpdateFrequency) {
+                RecurrentUpdateFrequency value = new RecurrentUpdateFrequency();
+                value.setId(
+                        ((org.openwis.products.client.RecurrentUpdateFrequency) product
+                                .getUpdateFrequency()).getId());
+                value.setRecurrentPeriod(
+                        ((org.openwis.products.client.RecurrentUpdateFrequency) product
+                                .getUpdateFrequency()).getRecurrentPeriod());
+                value.setRecurrentScale(RecurrentScale.fromValue(
+                        ((org.openwis.products.client.RecurrentUpdateFrequency) product
+                                .getUpdateFrequency()).getRecurrentScale()
+                                        .value()));
+                res.setUpdateFrequency(value);
+            } else {
+                Temporal value = new Temporal();
+                value.setFrom(((org.openwis.products.client.Temporal) product
+                        .getUpdateFrequency()).getFrom());
+                value.setId(((org.openwis.products.client.Temporal) product
+                        .getUpdateFrequency()).getId());
+                value.setTo(((org.openwis.products.client.Temporal) product
+                        .getUpdateFrequency()).getTo());
+                res.setUpdateFrequency(value);
+            }
         }
-
-        return new OkResponse();
+        return res;
     }
 
     @RequestMapping(value = { "/{lang}/openwis.subscription.new" }, produces = {

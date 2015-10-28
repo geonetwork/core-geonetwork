@@ -98,10 +98,14 @@
         method : 'POST',
         params : $scope.element
       }).success(function(data) {
-        $scope.dtInstance.reloadData();
+        if ($scope.dtInstance.dataTable) {
+          $scope.dtInstance.dataTable._fnDraw()
+        }
         $("#editBlackList").modal('hide');
       }).error(function(data) {
-        $scope.dtInstance.reloadData();
+        if ($scope.dtInstance.dataTable) {
+          $scope.dtInstance.dataTable._fnDraw()
+        }
         $rootScope.$broadcast('StatusUpdated', {
           title : 'Error',
           msg : 'Error saving user details. Please try again.',
@@ -111,7 +115,9 @@
     };
 
     $scope.cancel = function() {
-      $scope.dtInstance.reloadData();
+      if ($scope.dtInstance.dataTable) {
+        $scope.dtInstance.dataTable._fnDraw()
+      }
       $("#editBlackList").modal('hide');
     };
   });
