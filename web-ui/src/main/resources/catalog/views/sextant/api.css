@@ -14809,7 +14809,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] #importLayer .panel-carousel,
 .g [sxt-main-viewer] #importLayer .panel-carousel {
-  min-height: 350px;
+  height: 350px;
   max-height: 700px;
 }
 .gn [sxt-main-viewer] #importLayer .panel-carousel .mCSB_container,
@@ -14850,7 +14850,7 @@ yx-axis
 @media (max-height: 766px) {
   .gn [sxt-main-viewer] #importLayer .panel-carousel,
   .g [sxt-main-viewer] #importLayer .panel-carousel {
-    min-height: 250px;
+    height: 250px;
     max-height: 500px;
   }
   .gn [sxt-main-viewer] .sxt-layers-tabset,
@@ -14874,7 +14874,7 @@ yx-axis
 @media (max-height: 666px) {
   .gn [sxt-main-viewer] #importLayer .panel-carousel,
   .g [sxt-main-viewer] #importLayer .panel-carousel {
-    min-height: 200px;
+    height: 200px;
     max-height: 400px;
   }
   .gn [sxt-main-viewer] .sxt-layers-tabset,
@@ -19364,7 +19364,7 @@ yx-axis
   margin-top: -4em;
 }
 .gn [sxt-main-viewer] #importLayer .panel-carousel {
-  min-height: 200px;
+  height: 200px;
   max-height: 400px;
 }
 .gn [sxt-main-viewer] #importLayer .panel-carousel .mCSB_container {
