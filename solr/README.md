@@ -26,7 +26,7 @@ mvn install -Psolr-download
 
 Start Solr and then create the default collection:
 ```
-solr-5.2.1/bin/solr create -p 8984 -c catalog -d src/main/solr-cores/catalog
+solr-5.3.1/bin/solr create -p 8984 -c catalog -d src/main/solr-cores/catalog
 ```
 
 or use maven when running from the source code:
