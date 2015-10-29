@@ -52,6 +52,8 @@
   "toimport": "Import",
   "noResult" : "No result.",
   "inspireThemes_en": "Inspire Themes",
-  "inspireThemes_fr": "Inspire Themes"
+  "inspireThemes_fr": "Inspire Themes",
+  "firstname": "First name",
+  "lastname": "Last name"
 
 }

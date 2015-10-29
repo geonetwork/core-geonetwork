@@ -51,5 +51,7 @@
   "toimport": "Importer",
   "noResult" : "Aucun résultat.",
   "inspireThemes_en": "Thèmes Inspire",
-  "inspireThemes_fr": "Thèmes Inspire"
+  "inspireThemes_fr": "Thèmes Inspire",
+  "firstname": "Prénom",
+  "lastname": "Nom"
 }
