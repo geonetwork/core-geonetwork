@@ -480,7 +480,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/home" access="permitAll"/>
                 <sec:intercept-url pattern="/rewritestatus" access="permitAll"/>
 
-                <sec:intercept-url pattern="/.*" access="denyAll"/>
+              <!--WFS SOLR INDEXING TEMP-->
+              <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/wfs.harvest!?.*" access="permitAll"/>
+
+              <sec:intercept-url pattern="/.*" access="denyAll"/>
             </sec:filter-security-metadata-source>
         </property>
     </bean>

@@ -468,6 +468,13 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>wfsfeature-harvester</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
   </dependencies>
 
   
