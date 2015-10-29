@@ -215,6 +215,5 @@
   </profiles>
   <modules>
     <module>wfsfeature-harvester</module>
-    <module>camel-test</module>
   </modules>
 </project>
