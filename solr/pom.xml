@@ -161,7 +161,7 @@
                     <argument>-p</argument>
                     <argument>${solr.port}</argument>
                     <argument>-c</argument>
-                    <argument>catalog</argument>
+                    <argument>${nodeid}-catalog</argument>
                     <argument>-d</argument>
                     <argument>src/main/solr-cores/catalog/</argument>
                   </arguments>
@@ -213,4 +213,8 @@
       </build>
     </profile>
   </profiles>
+
+  <properties>
+    <nodeid>srv</nodeid>
+  </properties>
 </project>

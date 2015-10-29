@@ -117,6 +117,13 @@
            If you don't need it, consider removing it and the corresponding copyField directive.
       -->
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
+    <!-- TYpe of document. Values are:
+    * feature
+    * metadata
+    -->
+    <field name="docType" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
     <field name="_version_" type="long" indexed="true" stored="true"/>
     <field name="_root_" type="string" indexed="true" stored="false"/>
     <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>

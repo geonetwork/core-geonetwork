@@ -20,7 +20,7 @@ public class FeatureIndexer {
     public void featureToIndexDocument(Exchange exchange) {
         Document feature = exchange.getIn().getBody(Document.class);
 
-        String urlString = "http://localhost:8984/solr/catalog";
+        String urlString = "http://localhost:8984/solr/srv-catalog";
         solr = new HttpSolrClient(urlString);
 
         SolrInputDocument document = new SolrInputDocument();
@@ -28,6 +28,7 @@ public class FeatureIndexer {
 
         // TODO: Discuss unique IDs
         document.addField("id", featureName + "_" + UUID.randomUUID());
+        document.addField("docType", "feature");
 
         NodeList featureAttributes = feature.getFirstChild().getChildNodes();
         if (featureAttributes != null && featureAttributes.getLength() > 0) {
