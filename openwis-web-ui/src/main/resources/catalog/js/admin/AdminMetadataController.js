@@ -50,11 +50,6 @@
               icon: 'fa-check',
               href: '#/metadata/product-metadata'
             },{
-              type: 'subscriptions-mine',
-              label: 'subscriptions-mine',
-              icon: 'fa-rss',
-              href: '#/metadata/subscriptions-mine'
-            },{
               type: 'subscriptions-admin',
               label: 'subscriptions-admin',
               icon: 'fa-rss',

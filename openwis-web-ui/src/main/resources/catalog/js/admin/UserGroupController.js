@@ -3,11 +3,13 @@
 
   goog.require('gn_dbtranslation');
   goog.require('gn_openwis_blacklist_controller');
+  goog.require('gn_openwis_admin_subscription_controller');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'blueimp.fileupload',
-    'gn_openwis_blacklist_controller']);
+    'gn_openwis_blacklist_controller',
+    'gn_openwis_admin_subscription_controller']);
 
 
   /**
@@ -46,6 +48,11 @@
               label: 'blacklist',
               icon: 'fa-unlock-alt',
               href: '#/organization/blacklist'
+            },{
+              type: 'subscriptions-mine',
+              label: 'subscriptions-mine',
+              icon: 'fa-rss',
+              href: '#/organization/subscriptions-mine'
             }]
       };
 

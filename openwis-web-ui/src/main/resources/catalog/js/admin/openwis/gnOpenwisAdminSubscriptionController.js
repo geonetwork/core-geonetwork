@@ -139,7 +139,7 @@
                       })
                       .success(
                           function(data) {
-
+                            // Convert data so the data model understands it
                             data.primary = data.primaryDissemination.diffusion;
                             data.primary.compression = data.primaryDissemination.zipMode;
                             data.primary.email = data.primary.address;
@@ -164,6 +164,33 @@
 
                             $scope.data = data;
                             $("#" + $scope.type + "Modal").modal();
+
+                            // Set up accordion
+                            if (data.primary.email) {
+                              $("*[aria-controls=ManageSubscriptionmail]")
+                                  .trigger('click');
+                            } else if (data.primary.host) {
+                              $("*[aria-controls=ManageSubscriptionadvanced]")
+                                  .trigger('click');
+                            } else {
+                              $(
+                                  "*[aria-controls=ManageSubscriptionstagingPost]")
+                                  .trigger('click');
+                            }
+                            if (data.secondary) {
+                              if (data.secondary.email) {
+                                $("*[aria-controls=ManageSubscriptionmail2]")
+                                    .trigger('click');
+                              } else if (data.secondary.host) {
+                                $(
+                                    "*[aria-controls=ManageSubscriptionadvanced2]")
+                                    .trigger('click');
+                              } else {
+                                $(
+                                    "*[aria-controls=ManageSubscriptionstagingPost2]")
+                                    .trigger('click');
+                              }
+                            }
                           });
                 };
 
