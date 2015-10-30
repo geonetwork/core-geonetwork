@@ -34,7 +34,7 @@
                         'scrollCollapse', true).withOption('autoWidth', true)
                     .withOption('bFilter', false).withPaginationType(
                         'full_numbers');
-                
+
                 $scope.dtColumns = [
                     DTColumnBuilder.newColumn('id').withOption('name', 'id'),
                     DTColumnBuilder.newColumn('url').withOption('name', 'url')
@@ -45,8 +45,8 @@
                         'title'),
                     DTColumnBuilder.newColumn('status').withOption('name',
                         'status'),
-                    DTColumnBuilder.newColumn('starting_date').withOption('name',
-                        'starting_date'),
+                    DTColumnBuilder.newColumn('starting_date').withOption(
+                        'name', 'starting_date'),
                     DTColumnBuilder.newColumn('volume').withOption('name',
                         'volume'),
                     DTColumnBuilder
@@ -95,6 +95,9 @@
                           function(data) {
                             // Convert data so the data model understands it
                             data.primary = data.primaryDissemination.diffusion;
+                            if (!data.primary) {
+                              data.primary = {};
+                            }
                             data.primary.compression = data.primaryDissemination.zipMode;
                             data.primary.email = data.primary.address;
                             data.primary.attachmentMode = data.primary.mailAttachmentMode;
@@ -104,6 +107,9 @@
 
                             if (data.secondaryDissemination) {
                               data.secondary = data.secondaryDissemination.diffusion;
+                              if (!data.secondary) {
+                                data.secondary = {};
+                              }
                               data.secondary.compression = data.secondaryDissemination.zipMode;
                               data.secondary.email = data.secondary.address;
                               data.secondary.attachmentMode = data.secondary.mailAttachmentMode;
@@ -121,28 +127,65 @@
 
                             // Set up accordion
                             if (data.primary.email) {
-                              $("*[aria-controls=" + $scope.type + "mail]")
-                                  .trigger('click');
+                              if (!$("#" + $scope.type + "mail").hasClass("in")) {
+                                $("*[aria-controls=" + $scope.type + "mail]")
+                                    .trigger('click');
+                              }
                             } else if (data.primary.host) {
-                              $("*[aria-controls=" + $scope.type + "advanced]")
-                                  .trigger('click');
+                              if (!$("#" + $scope.type + "advanced").hasClass(
+                                  "in")) {
+                                $(
+                                    "*[aria-controls=" + $scope.type
+                                        + "advanced]").trigger('click');
+                              }
                             } else {
-                              $(
-                                  "*[aria-controls=" + $scope.type
-                                      + "stagingPost]").trigger('click');
+
+                              if (!$("#" + $scope.type + "stagingPost")
+                                  .hasClass("in")) {
+                                $(
+                                    "*[aria-controls=" + $scope.type
+                                        + "stagingPost]").trigger('click');
+                              }
                             }
                             if (data.secondary) {
                               if (data.secondary.email) {
-                                $("*[aria-controls=" + $scope.type + "mail2]")
-                                    .trigger('click');
+                                if (!$(
+                                    "#" + $scope.type + "publicDissemination2")
+                                    .hasClass("in")) {
+                                  $(
+                                      "*[aria-controls=" + $scope.type
+                                          + "publicDissemination2]").trigger(
+                                      'click');
+                                }
+                                if (!$("#" + $scope.type + "mail2").hasClass(
+                                    "in")) {
+                                  $("*[aria-controls=" + $scope.type + "mail2]")
+                                      .trigger('click');
+                                }
                               } else if (data.secondary.host) {
-                                $(
-                                    "*[aria-controls=" + $scope.type
-                                        + "advanced2]").trigger('click');
+
+                                if (!$(
+                                    "#" + $scope.type + "publicDissemination2")
+                                    .hasClass("in")) {
+                                  $(
+                                      "*[aria-controls=" + $scope.type
+                                          + "publicDissemination2]").trigger(
+                                      'click');
+                                }
+
+                                if (!$("#" + $scope.type + "advanced2")
+                                    .hasClass("in")) {
+                                  $(
+                                      "*[aria-controls=" + $scope.type
+                                          + "advanced2]").trigger('click');
+                                }
                               } else {
-                                $(
-                                    "*[aria-controls=" + $scope.type
-                                        + "stagingPost2]").trigger('click');
+                                if (!$("#" + $scope.type + "stagingPost2")
+                                    .hasClass("in")) {
+                                  $(
+                                      "*[aria-controls=" + $scope.type
+                                          + "stagingPost2]").trigger('click');
+                                }
                               }
                             }
                           });
