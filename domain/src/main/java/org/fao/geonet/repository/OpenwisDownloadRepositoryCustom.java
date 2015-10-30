@@ -20,11 +20,6 @@ public interface OpenwisDownloadRepositoryCustom {
      */
     OpenwisDownload findByUserAndUuid(User user, String uuid);
 
-    /**
-     * Delete an OpenwisDownload given the id
-     * 
-     * @param id
-     */
-    void delete(Integer id);
-
+    
+    boolean existsRequestId(Long id);
 }

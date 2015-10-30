@@ -1,0 +1,39 @@
+<div class="row"
+	data-ng-controller="gnOpenwisAdminRequestController">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" data-translate="">requests-mine</div>
+			<div class="panel-body">
+				<table data-datatable data-dt-options="dtOptions"
+					data-dt-columns="dtColumns" data-dt-instance="dtInstance">
+					<thead>
+						<tr>
+							<th data-translate="">Id</th>
+                            <th data-translate=""></th>
+                            <th data-translate=""></th>
+                            <th data-translate="">Product</th>
+							<th data-translate="">Status</th>
+							<th data-translate="">Created</th>
+							<th data-translate="">Volume</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th data-translate="">Id</th>
+                            <th data-translate=""></th>
+                            <th data-translate=""></th>
+							<th data-translate="">Product</th>
+							<th data-translate="">Status</th>
+							<th data-translate="">Created</th>
+							<th data-translate="">Volume</th>
+							<th></th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+	<ng-include
+		src="'../../catalog/components/subscriptions/partials/request.html'"></ng-include>
+</div>

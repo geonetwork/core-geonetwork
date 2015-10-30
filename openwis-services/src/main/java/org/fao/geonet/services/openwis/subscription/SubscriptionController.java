@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -132,11 +133,11 @@ public class SubscriptionController {
             }
         }
 
+        ServiceContext context = serviceManager.createServiceContext(
+                "openwis.subscription.search", lang, httpRequest);
+        UserSession session = context.getUserSession();
+        User user = session.getPrincipal();
         if (myself) {
-            ServiceContext context = serviceManager.createServiceContext(
-                    "openwis.subscription.search", lang, httpRequest);
-            UserSession session = context.getUserSession();
-            User user = session.getPrincipal();
             usernames.add(user.getUsername());
         }
 
@@ -190,6 +191,18 @@ public class SubscriptionController {
             } else {
                 element.put("backup", "");
             }
+
+            // Add url, if exists (direct donwload)
+            if (openwisRepository.existsRequestId(s.getId())) {
+                OpenwisDownload od = openwisRepository.findByUserAndUuid(user,
+                        productMetadata.getUrn());
+                element.put("url", od.getUrl());
+            } else {
+                element.put("url", "");
+            }
+
+            element.put("volume", "");
+
             response.addData(element);
         }
 
@@ -444,4 +457,19 @@ public class SubscriptionController {
 
         return true;
     }
+
+    @RequestMapping(value = { "/{lang}/openwis.request.discard" }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody Boolean discardRequest(@RequestParam Long id) {
+        requestClient.discard(id);
+        openwisRepository.delete(id.intValue());
+        return true;
+    }
+
+    @RequestMapping(value = { "/{lang}/openwis.request.get" }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody AdHoc getRequest(@RequestParam Long id) {
+        return requestClient.get(id);
+    }
+
 }

@@ -73,6 +73,10 @@ public class DirectDownloadJob extends QuartzJobBean {
                 openwisRepository.save(od);
             }
         }
+        
+        //TODO what to do with downloads that are no longer available?
+        // need the specific getRequests method from SOAP to cleanup
+        
         openwisRepository.flush();
     }
 }

@@ -24,8 +24,8 @@
 							data-target="#{{type}}primary2" aria-controls="{{type}}primary2"
 							role="tab" data-toggle="tab" data-translate="">openwisFirstDissemination</a>
 							<div class="nav-arrow"></div></li>
-						<li data-ng-if="type != 'download'" role="presentation"><div class="nav-wedge"></div> <a
-							data-target="#{{type}}secondary2"
+						<li data-ng-if="type != 'download'" role="presentation"><div
+								class="nav-wedge"></div> <a data-target="#{{type}}secondary2"
 							aria-controls="{{type}}secondary2" role="tab" data-toggle="tab"
 							data-translate="">openwisSecondDissemination</a>
 							<div class="nav-arrow"></div></li>
@@ -41,8 +41,8 @@
 							<span data-translate="">openwisNotImplemented</span>
 						</div>
 						<div role="tabpanel" class="tab-pane" id="{{type}}primary2">
-							<div class="panel-group col-xs-12" id="{{type}}primaryAccordion" >
-								<div class="panel panel-default" data-ng-if="type != 'download'" >
+							<div class="panel-group col-xs-12" id="{{type}}primaryAccordion">
+								<div class="panel panel-default" data-ng-if="type != 'download'">
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a>MSS/MFS</a>
@@ -53,7 +53,7 @@
 									</div>
 								</div>
 
-								<div class="panel panel-default" data-ng-if="type != 'download'" >
+								<div class="panel panel-default" data-ng-if="type != 'download'">
 									<div class="panel-heading">
 										<h4 class="panel-title">
 											<a data-toggle="collapse"
@@ -62,7 +62,7 @@
 												data-target="#{{type}}publicDissemination" data-translate="">openwisPublicDissemination</a>
 										</h4>
 									</div>
-									<div id="{{type}}publicDissemination" 
+									<div id="{{type}}publicDissemination"
 										class="panel-collapse collapse in">
 										<div class="panel-body">
 											<div>
@@ -466,8 +466,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default"
-					data-ng-click="close()">
+				<button data-ng-if="type != 'ManageRequests'" type="button"
+					class="btn btn-default" data-ng-click="close()">
 					<i class="fa fa-times"></i> <span data-translate="">openwisCancel</span>
 				</button>
 				<button type="button" class="btn btn-default" data-ng-click="prev()">
@@ -476,8 +476,13 @@
 				<button type="button" class="btn btn-default" data-ng-click="next()">
 					<i class="fa fa-chevron-right"></i><span data-translate="">openwisNext</span>
 				</button>
-				<button type="button" class="btn btn-primary" data-ng-click="save()">
+				<button data-ng-if="type != 'ManageRequests'" type="button"
+					class="btn btn-primary" data-ng-click="save()">
 					<i class="fa fa-check"></i> <span data-translate="">openwisSave</span>
+				</button>
+				<button data-ng-if="type == 'ManageRequests'" type="button"
+					class="btn btn-primary" data-ng-click="close">
+					<i class="fa fa-check"></i> <span data-translate="">Close</span>
 				</button>
 			</div>
 		</div>

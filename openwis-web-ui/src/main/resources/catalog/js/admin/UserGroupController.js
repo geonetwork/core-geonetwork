@@ -4,12 +4,14 @@
   goog.require('gn_dbtranslation');
   goog.require('gn_openwis_blacklist_controller');
   goog.require('gn_openwis_admin_subscription_controller');
+  goog.require('gn_openwis_admin_request_controller');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'blueimp.fileupload',
     'gn_openwis_blacklist_controller',
-    'gn_openwis_admin_subscription_controller']);
+    'gn_openwis_admin_subscription_controller',
+    'gn_openwis_admin_request_controller']);
 
 
   /**
@@ -53,6 +55,11 @@
               label: 'subscriptions-mine',
               icon: 'fa-rss',
               href: '#/organization/subscriptions-mine'
+            },{
+              type: 'requests-mine',
+              label: 'requests-mine',
+              icon: 'fa-download',
+              href: '#/organization/requests-mine'
             }]
       };
 

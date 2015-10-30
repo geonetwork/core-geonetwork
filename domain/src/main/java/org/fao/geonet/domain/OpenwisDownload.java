@@ -25,8 +25,7 @@ import org.fao.geonet.entitylistener.OpenwisDownloadEntityListenerManager;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "openwis_download", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"userId", "urn"}) })
+@Table(name = "openwis_download")
 @EntityListeners(OpenwisDownloadEntityListenerManager.class)
 public class OpenwisDownload extends GeonetEntity {
     private Integer _id;

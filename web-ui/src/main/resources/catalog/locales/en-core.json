@@ -264,6 +264,7 @@
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",
+    "requests-mine": "My requests",
     "statusLogMessage": "Status message",
     "subscriptions-admin": "Manage Subscriptions",
     "subscriptions-mine": "My Subscriptions",

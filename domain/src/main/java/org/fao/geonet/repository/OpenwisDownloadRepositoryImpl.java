@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.fao.geonet.domain.OpenwisDownload;
 import org.fao.geonet.domain.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
  * Implementation object for methods in {@link OpenwisDownloadRepositoryCustom}.
@@ -53,19 +54,42 @@ public class OpenwisDownloadRepositoryImpl
         return entity;
     }
 
+    // /**
+    // * @see
+    // org.fao.geonet.repository.OpenwisDownloadRepositoryCustom#delete(java.lang.Integer)
+    // * @param id
+    // */
+    // @Override
+    // public void delete(Integer id) {
+    // if (id != null) {
+    // OpenwisDownload entity = _entityManager.find(OpenwisDownload.class,
+    // id);
+    // if (entity != null) {
+    // _entityManager.remove(entity);
+    // _entityManager.detach(entity);
+    // }
+    // }
+    // }
+
     /**
-     * @see org.fao.geonet.repository.OpenwisDownloadRepositoryCustom#delete(java.lang.Integer)
+     * @see org.fao.geonet.repository.OpenwisDownloadRepositoryCustom#existsRequestId(java.lang.Long)
      * @param id
+     * @return
      */
     @Override
-    public void delete(Integer id) {
+    public boolean existsRequestId(Long id) {
         if (id != null) {
-            OpenwisDownload entity = _entityManager.find(OpenwisDownload.class,
-                    id);
-            if (entity != null) {
-                _entityManager.remove(entity);
-                _entityManager.detach(entity);
-            }
+            CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+            CriteriaQuery<OpenwisDownload> query = cb
+                    .createQuery(OpenwisDownload.class);
+            Root<OpenwisDownload> root = query.from(OpenwisDownload.class);
+
+            Predicate idEquals = cb.equal(root.get("requestId"), id);
+
+            query.where(idEquals);
+
+            return _entityManager.createQuery(query).getResultList().size() > 0;
         }
+        return false;
     }
 }
