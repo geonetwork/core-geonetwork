@@ -118,13 +118,15 @@ public class DisseminationPairRequestFormatter
                         ((MailDiffusion) dif)
                                 .setSubject(json.getString("subject"));
                     }
-                    if (json.containsKey("attachmentMode")) {
+                    if (json.containsKey("attachmentMode") && !json
+                            .getString("attachmentMode").equals("null")) {
                         ((MailDiffusion) dif).setMailAttachmentMode(
                                 MailAttachmentMode.fromValue(
                                         json.getString("attachmentMode")
                                                 .toUpperCase()));
                     }
-                    if (json.containsKey("dispatchMode")) {
+                    if (json.containsKey("dispatchMode")
+                            && !json.getString("dispatchMode").equals("null")) {
                         ((MailDiffusion) dif)
                                 .setMailDispatchMode(MailDispatchMode.fromValue(
                                         json.getString("dispatchMode")
