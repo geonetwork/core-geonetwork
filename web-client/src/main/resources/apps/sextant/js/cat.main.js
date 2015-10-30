@@ -181,6 +181,14 @@ cat.app = function() {
     function edit(metadataId, create, group, child, isTemplate, schema, record) {
         var record = record || catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
 
+        if (record === undefined) {
+          // No current search available with this record information
+          // Retrieve information in synchrone mode
+          var store = GeoNetwork.data.MetadataResultsFastStore();
+          catalogue.kvpSearch("fast=index&_id=" + metadataId, null, null, null, true, store, null, false);
+          record = store.getAt(store.find('id', metadataId));
+        }
+
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
                 defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
