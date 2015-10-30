@@ -30,6 +30,7 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -191,18 +192,21 @@ public class GetRecordsRequest extends CatalogRequest
 		addParam("startPosition",  startPosition);
 		addParam("maxRecords",     maxRecords);
 		addParam("elementSetName", elemSetName);
-		addParam("constraint",     constraint);
 
-		if (distribSearch) {
-			addParam("distributedSearch", "TRUE");
+        // Optional Default action is to execute an unconstrained query.
+        if (constraint != null) {
+            addParam("constraint",     constraint);
+            addParam("constraintLanguage",          constrLang);
+            addParam("constraint_language_version", constrLangVersion);
+        }
+
+        if (distribSearch) {
+            addParam("distributedSearch", "TRUE");
 
             if (hopCount != null){
                 addParam("hopCount",       hopCount);
             }
-		}
-
-		addParam("constraintLanguage",          constrLang);
-		addParam("constraint_language_version", constrLangVersion);
+        }
 
 		// FIXME : default typeNames to return results
 		// TODO : Check in Capabilities that typename exist
@@ -221,6 +225,8 @@ public class GetRecordsRequest extends CatalogRequest
 		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
         // Add queryable namespaces to POST query
         params.addNamespaceDeclaration(Csw.NAMESPACE_DC);
+        // TODO: Should add all typenames namespaces
+        params.addNamespaceDeclaration(ISO19139Namespaces.GMD);
 
 		//--- 'service' and 'version' are common mandatory attributes
 		setAttrib(params, "service", Csw.SERVICE);
@@ -262,8 +268,10 @@ public class GetRecordsRequest extends CatalogRequest
 		if (hsTypeNames.size()==0)
 			setAttrib(query, "typeNames", "csw:Record");
 		else
-			setAttribComma(query, "typeNames", hsTypeNames, "");
-			
+            setAttribSpaceSeparated(query, "typeNames", hsTypeNames, "");
+
+        // TODO: Add all namespace required for typenames
+
 		addParam (query, "ElementSetName", elemSetName);
 
 		//--- handle constraint
