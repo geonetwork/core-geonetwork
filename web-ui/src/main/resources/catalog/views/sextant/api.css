@@ -202,11 +202,6 @@ yx-axis
 }
 */
   /* Pagination */
-  /* .sxt-panier { */
-  /*   .modal-body { */
-  /*     max-height: 200px; */
-  /*   } */
-  /* } */
   /* @media (max-width: @screen-md) { */
 }
 .gn > div:first-of-type,
@@ -19303,6 +19298,10 @@ yx-axis
 .gn .g,
 .g .g {
   height: auto;
+}
+.gn input.ng-invalid,
+.g input.ng-invalid {
+  border-color: #a94442;
 }
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input],
 .g [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
