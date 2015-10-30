@@ -72,8 +72,12 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
-
-
+      
+      $http.get('info?type=categories&_content_type=json').
+        success(function(data) {
+          $scope.categories = data.metadatacategory;
+      });
+      
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
