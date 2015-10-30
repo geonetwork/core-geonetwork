@@ -196,7 +196,7 @@
       $http({
         url : $scope.url + 'openwis.controlservice.saveingestionfilter',
         method : 'POST',
-        params : {description: $scope.filter.description, regex: $scope.filter.regex },
+        params : {description: $scope.filter.description, regex: $scope.filter.regex }
       }).success(function(data) {
         $scope.updateData();
         $("#addToIngestionFilter").modal('hide');
@@ -215,7 +215,7 @@
       $http({
         url : $scope.url + 'openwis.controlservice.savefeedingfilter',
         method : 'POST',
-        params : {description: $scope.filter.description, regex: $scope.filter.regex },
+        params : {description: $scope.filter.description, regex: $scope.filter.regex }
       }).success(function(data) {
         $scope.updateData();
         $("#addToFeedingFilter").modal('hide');
