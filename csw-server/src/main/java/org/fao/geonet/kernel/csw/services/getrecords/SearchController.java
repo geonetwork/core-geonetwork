@@ -227,16 +227,6 @@ public class SearchController {
 		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
 
-		// --- transform iso19115 record to iso19139
-		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
-		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
-		if (schema.equals("iso19115")) {
-            Path styleSheetPath =
-                    context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
-            res = Xml.transform(res, styleSheetPath);
-			schema = "iso19139";
-		}
-		
 		//--- skip metadata with wrong schemas
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
